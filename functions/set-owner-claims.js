@@ -9,7 +9,10 @@ if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-const TARGET_EMAIL = 'onzimai@dawin.group';
+// TODO(ZeusOS Phase 0 open item #2):
+// Replace with the confirmed Zeus Group super-admin email
+// (likely Jeffrey Amani) before running this script in zeusos.
+const TARGET_EMAIL = process.env.ZEUSOS_OWNER_EMAIL || 'admin@zeusgroup.co.ug';
 
 async function main() {
   // Find user by email
@@ -17,12 +20,13 @@ async function main() {
   console.log('User UID:', user.uid);
   console.log('Current claims:', JSON.stringify(user.customClaims || {}, null, 2));
 
-  // Set claims
+  // Set claims — TODO(ZeusOS Phase 1.B): update subsidiaryId to a Zeus sub-brand
+  // (e.g. 'zeus-the-agency') once the subsidiary key swap lands.
   const newClaims = {
     ...(user.customClaims || {}),
     globalRole: 'owner',
     role: 'platform_admin',
-    subsidiaryId: 'dawin-finishes',
+    subsidiaryId: 'zeus-the-agency',
     subsidiaries: ['dawin-finishes', 'dawin-advisory'],
     isActive: true,
   };

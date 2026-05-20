@@ -61,6 +61,7 @@ dist/
 
 # gcloud `iam service-accounts keys create` (local Firestore / audit)
 .secrets/
+.claude/
 .claude/worktrees/
 tmp/
 

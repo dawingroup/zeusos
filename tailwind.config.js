@@ -51,6 +51,30 @@ export default {
   				border: 'var(--sidebar-border)',
   				ring: 'var(--sidebar-ring)'
   			},
+  			/* Zeus Group brand palette (canonical) */
+  			zeusNavy: {
+  				DEFAULT: 'var(--zeus-navy)',
+  				light: 'var(--zeus-navy-light)',
+  				dark: 'var(--zeus-navy-dark)',
+  				50: 'var(--zeus-navy-50)',
+  				100: 'var(--zeus-navy-100)'
+  			},
+  			zeusRed: {
+  				DEFAULT: 'var(--zeus-red)',
+  				light: 'var(--zeus-red-light)',
+  				dark: 'var(--zeus-red-dark)',
+  				50: 'var(--zeus-red-50)'
+  			},
+  			/* Sub-brand accent palette (one per Zeus agency) */
+  			zeusTheAgency: { DEFAULT: 'var(--zeus-the-agency)' },
+  			zeusDigital:   { DEFAULT: 'var(--zeus-digital)' },
+  			labyrinth:     { DEFAULT: 'var(--labyrinth)' },
+  			oddGorilla:    { DEFAULT: 'var(--odd-gorilla)' },
+  			houseOfZeus:   { DEFAULT: 'var(--house-of-zeus)' },
+
+  			/* Legacy DawinOS aliases — kept until Phase 1.B migrates consumers.
+  			   These now resolve to Zeus colours via the CSS-variable aliases
+  			   in src/index.css. */
   			boysenberry: {
   				DEFAULT: 'var(--boysenberry)',
   				light: 'var(--boysenberry-light)',

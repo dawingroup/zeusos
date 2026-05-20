@@ -27,7 +27,12 @@ const migrateUserDocs = onCall({ cors: ALLOWED_ORIGINS }, async (request) => {
   }
 
   const callerEmail = request.auth.token.email;
-  const SUPER_USERS = ['onzimai@dawin.group'];
+  // TODO(ZeusOS Phase 0 open item #2): replace with Zeus super-admin email(s)
+  // once confirmed by client. Comma-separated list via env var preferred for prod.
+  const SUPER_USERS = (process.env.ZEUSOS_SUPER_USERS || 'admin@zeusgroup.co.ug')
+    .split(',')
+    .map((e) => e.trim())
+    .filter(Boolean);
 
   if (!SUPER_USERS.includes(callerEmail)) {
     // Check if caller is admin/owner in DawinUser

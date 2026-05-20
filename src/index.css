@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 /* ============================================
-   DawinOS Portal — Design Tokens
-   Reference: design_handoff_portal_redesign/styles.css
+   ZeusOS Portal — Design Tokens
+   Forked from DawinOS portal design system.
+   Legacy DawinOS color tokens (boysenberry, golden-bell, etc.)
+   are retained for Phase 1.A back-compat and will be retired
+   in Phase 1.B once consumers are migrated to the Zeus palette.
    ============================================ */
 
 :root {
@@ -14,12 +17,12 @@
   --bg-app: #f6f5f2;
   --bg-surface: #ffffff;
   --bg-sunken: #efede8;
-  --bg-sidebar: #1a1a1c;
-  --bg-sidebar-hover: #26262a;
-  --bg-sidebar-active: #2f2f33;
+  --bg-sidebar: #0a1f4a;            /* Zeus deep navy */
+  --bg-sidebar-hover: #112a5e;
+  --bg-sidebar-active: #1a3870;
 
   /* ---- Foreground ---- */
-  --fg-primary: #1a1a1c;
+  --fg-primary: #0a1f4a;             /* Zeus deep navy on light */
   --fg-secondary: #555358;
   --fg-tertiary: #8a8790;
   --fg-quaternary: #b8b5bd;
@@ -27,29 +30,57 @@
   --fg-on-dark-muted: #8c8a85;
 
   /* ---- Borders ---- */
-  --border-subtle: rgba(20, 20, 22, 0.06);
-  --border-default: rgba(20, 20, 22, 0.1);
-  --border-strong: rgba(20, 20, 22, 0.18);
+  --border-subtle: rgba(10, 31, 74, 0.06);
+  --border-default: rgba(10, 31, 74, 0.1);
+  --border-strong: rgba(10, 31, 74, 0.18);
   --border-on-dark: rgba(255, 255, 255, 0.08);
 
-  /* ---- Brand ---- */
-  --boysenberry: #872e5c;
-  --boysenberry-light: #a34573;
-  --boysenberry-dark: #6a2449;
-  --boysenberry-50: #fbeef4;
-  --boysenberry-100: #f4d5e3;
-  --golden-bell: #e18425;
-  --golden-bell-50: #fdf2e3;
-  --cashmere: #e2caa9;
-  --pesto: #8a7d4b;
-  --seafoam: #7abdcd;
-  --teal: #1a1a1c;
-  --teal-light: #424245;
-  --teal-dark: #000000;
+  /* ============================================
+     Zeus Group Brand Palette
+     Primary: deep navy. Accent: signature red.
+     Sub-brand keys map to the five Zeus agencies.
+     ============================================ */
+  --zeus-navy:       #0a1f4a;
+  --zeus-navy-light: #1a3870;
+  --zeus-navy-dark:  #050f25;
+  --zeus-navy-50:    #eef1f8;
+  --zeus-navy-100:   #d0d8eb;
+
+  --zeus-red:        #e63946;       /* Signature #TheZeusWay underline */
+  --zeus-red-light:  #ee5d68;
+  --zeus-red-dark:   #b8222e;
+  --zeus-red-50:     #fdeaec;
+
+  /* Sub-brand accent palette (used in subsidiary chrome / chips) */
+  --zeus-the-agency: #f5d900;        /* yellow */
+  --zeus-digital:    #00c5e5;        /* cyan */
+  --labyrinth:       #c8f0d6;        /* mint */
+  --odd-gorilla:     #ffb0b8;        /* pink */
+  --house-of-zeus:   #c8ff3c;        /* lime */
+
+  /* ============================================
+     Legacy DawinOS brand tokens (Phase 1.A retain)
+     Re-mapped onto the Zeus palette so any legacy
+     consumers render in Zeus colours until Phase 1.B
+     migrates them to the explicit --zeus-* names.
+     ============================================ */
+  --boysenberry:        var(--zeus-navy);
+  --boysenberry-light:  var(--zeus-navy-light);
+  --boysenberry-dark:   var(--zeus-navy-dark);
+  --boysenberry-50:     var(--zeus-navy-50);
+  --boysenberry-100:    var(--zeus-navy-100);
+  --golden-bell:        var(--zeus-red);
+  --golden-bell-50:     var(--zeus-red-50);
+  --cashmere:           #e2caa9;
+  --pesto:              #8a7d4b;
+  --seafoam:            #7abdcd;
+  --teal:               var(--zeus-navy);
+  --teal-light:         var(--zeus-navy-light);
+  --teal-dark:          var(--zeus-navy-dark);
 
   /* ---- Accent (tweakable via [data-accent]) ---- */
-  --accent: var(--boysenberry);
-  --accent-soft: var(--boysenberry-50);
+  --accent: var(--zeus-navy);
+  --accent-soft: var(--zeus-navy-50);
   --accent-fg: #ffffff;
 
   /* ---- RAG (refined for AA contrast) ---- */
@@ -189,11 +220,25 @@
 [data-density="airy"]     { --row-h: 52px; --pad-card: 28px; --pad-tight: 16px; }
 
 /* ============================================
-   Accent variants — boysenberry is default
+   Accent variants — Zeus navy is default.
+   Legacy DawinOS accent names retained, remapped onto the
+   Zeus palette so existing user preferences keep working.
+   New canonical names are --accent="zeus-navy"|"zeus-red"
+   and the five sub-brand keys.
    ============================================ */
-[data-accent="boysenberry"] { --accent: #872e5c; --accent-soft: #fbeef4; }
-[data-accent="goldenbell"]  { --accent: #e18425; --accent-soft: #fdf2e3; }
-[data-accent="seafoam"]     { --accent: #2f7b8c; --accent-soft: #e8f3f6; }
+/* Canonical Zeus accents */
+[data-accent="zeus-navy"]      { --accent: #0a1f4a; --accent-soft: #eef1f8; --accent-fg: #ffffff; }
+[data-accent="zeus-red"]       { --accent: #e63946; --accent-soft: #fdeaec; --accent-fg: #ffffff; }
+[data-accent="zeus-the-agency"]{ --accent: #f5d900; --accent-soft: #fef9d6; --accent-fg: #0a1f4a; }
+[data-accent="zeus-digital"]   { --accent: #00c5e5; --accent-soft: #d6f6fb; --accent-fg: #0a1f4a; }
+[data-accent="labyrinth"]      { --accent: #2f9d5c; --accent-soft: #e0f4e8; --accent-fg: #ffffff; }
+[data-accent="odd-gorilla"]    { --accent: #e65b66; --accent-soft: #fde0e3; --accent-fg: #ffffff; }
+[data-accent="house-of-zeus"]  { --accent: #6fa823; --accent-soft: #ecf6d6; --accent-fg: #ffffff; }
+
+/* Legacy DawinOS accent aliases — re-pointed at the Zeus palette */
+[data-accent="boysenberry"] { --accent: #0a1f4a; --accent-soft: #eef1f8; }
+[data-accent="goldenbell"]  { --accent: #e63946; --accent-soft: #fdeaec; }
+[data-accent="seafoam"]     { --accent: #00c5e5; --accent-soft: #d6f6fb; }
 [data-accent="pesto"]       { --accent: #6a6037; --accent-soft: #f2efe6; }
 
 /* ============================================
