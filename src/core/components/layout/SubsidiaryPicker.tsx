@@ -12,17 +12,17 @@ import {
 import { cn } from '@/shared/lib/utils';
 
 const TYPE_LABEL: Record<string, string> = {
-  'dawin-finishes': 'Manufacturing',
-  'dawin-advisory': 'Services',
-  'dawin-capital': 'Investment',
-  'dawin-technology': 'Technology',
+  'zeus-the-agency': 'Manufacturing',
+  'zeus-digital': 'Services',
+  'labyrinth': 'Investment',
+  'odd-gorilla': 'Technology',
 };
 
 const CODE: Record<string, string> = {
-  'dawin-finishes': 'DF',
-  'dawin-advisory': 'DA',
-  'dawin-capital': 'DC',
-  'dawin-technology': 'DT',
+  'zeus-the-agency': 'DF',
+  'zeus-digital': 'DA',
+  'labyrinth': 'DC',
+  'odd-gorilla': 'DT',
 };
 
 /**

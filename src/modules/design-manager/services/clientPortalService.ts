@@ -302,7 +302,7 @@ export async function getClientPortalData(
   const { accessToken: _, internalNotes: __, ...publicQuote } = quote;
   
   // Get Dawin Finishes subsidiary branding
-  const dawinFinishesBranding = orgSettings?.branding?.subsidiaries?.['dawin-finishes'];
+  const dawinFinishesBranding = orgSettings?.branding?.subsidiaries?.['zeus-the-agency'];
   
   return {
     quote: publicQuote,

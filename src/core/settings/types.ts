@@ -81,15 +81,34 @@ export interface OrganizationBranding {
   /** Platform-wide UI defaults applied to new users (theme, accent, density). */
   platformDefaults?: PlatformDefaults;
 
-  // Subsidiary-specific branding
-  subsidiaries: {
-    'dawin-group': SubsidiaryBranding;
-    'dawin-finishes': SubsidiaryBranding;
-    'dawin-advisory': SubsidiaryBranding;
-    'dawin-capital': SubsidiaryBranding;
-    'dawin-technology': SubsidiaryBranding;
-  };
+  // Subsidiary-specific branding (Zeus Group: org parent + 5 sub-brand agencies)
+  subsidiaries: Record<SubsidiaryId, SubsidiaryBranding>;
 }
+
+/**
+ * Canonical Zeus Group subsidiary identifiers.
+ * Single source of truth — every consumer that hard-codes a subsidiary
+ * key should import this union rather than typing a string literal.
+ *
+ * - `zeus-group` is the parent organisation (used for group-wide chrome).
+ * - The five entries after are the operating agencies.
+ */
+export type SubsidiaryId =
+  | 'zeus-group'
+  | 'zeus-the-agency'
+  | 'zeus-digital'
+  | 'labyrinth'
+  | 'odd-gorilla'
+  | 'house-of-zeus';
+
+export const SUBSIDIARY_IDS: SubsidiaryId[] = [
+  'zeus-group',
+  'zeus-the-agency',
+  'zeus-digital',
+  'labyrinth',
+  'odd-gorilla',
+  'house-of-zeus',
+];
 
 export interface OrganizationInfo {
   name: string;

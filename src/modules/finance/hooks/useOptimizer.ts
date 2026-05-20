@@ -141,7 +141,7 @@ export function useOptimizer({
     try {
       const plan = await optimizerService.generateAndSaveSpendPlan(
         companyId,
-        subsidiaryId || 'dawin-finishes',
+        subsidiaryId || 'zeus-the-agency',
         bankBalance,
         savingsBalance,
         [] // Receipts would come from QBO data

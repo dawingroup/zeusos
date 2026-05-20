@@ -174,11 +174,11 @@ export const StrategyReviewPage: React.FC = () => {
   }, [runCycle]);
 
   // Subsidiary selector & branding
-  const [selectedSubsidiaryId, setSelectedSubsidiaryId] = useState<string>('dawin-group');
+  const [selectedSubsidiaryId, setSelectedSubsidiaryId] = useState<string>('zeus-group');
   const { settings: orgSettings } = useOrganizationSettings();
 
   const subsidiaryOptions = useMemo(() => [
-    { id: 'dawin-group', name: 'Dawin Group (All)' },
+    { id: 'zeus-group', name: 'Dawin Group (All)' },
     ...DEFAULT_SUBSIDIARIES.filter(s => s.status === 'active').map(s => ({ id: s.id, name: s.name })),
   ], []);
 
@@ -187,7 +187,7 @@ export const StrategyReviewPage: React.FC = () => {
     const branding = orgSettings?.branding?.subsidiaries?.[
       selectedSubsidiaryId as keyof typeof orgSettings.branding.subsidiaries
     ];
-    if (!branding && selectedSubsidiaryId === 'dawin-group') {
+    if (!branding && selectedSubsidiaryId === 'zeus-group') {
       // Fallback to group-level colors
       return {
         subsidiaryName: 'Dawin Group',
@@ -853,7 +853,7 @@ export const StrategyReviewPage: React.FC = () => {
 
             {/* Cross-Module Context Panel */}
             <div className="mt-6">
-              <CrossModuleContext companyId={companyId} subsidiaryId={selectedSubsidiaryId !== 'dawin-group' ? selectedSubsidiaryId : undefined} />
+              <CrossModuleContext companyId={companyId} subsidiaryId={selectedSubsidiaryId !== 'zeus-group' ? selectedSubsidiaryId : undefined} />
             </div>
 
             {/* Business Pivots Section */}

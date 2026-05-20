@@ -398,7 +398,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'sku',
     icon: 'Package',
     urlTemplate: '/inventory',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
   {
     module: 'inventory' as ModuleId,
@@ -411,7 +411,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     icon: 'Palette',
     urlTemplate: '/inventory/finishes',
     scopeField: 'organizationId',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
 
   // ----- Sales Orders (finishes) -----
@@ -426,7 +426,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     icon: 'ShoppingCart',
     urlTemplate: '/sales-orders/{id}',
     scopeField: 'subsidiaryId',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
 
   // ----- CRM (finishes) -----
@@ -441,7 +441,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     icon: 'Briefcase',
     urlTemplate: '/crm/deals/{id}',
     scopeField: 'subsidiaryId',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
   {
     module: 'crm' as ModuleId,
@@ -453,7 +453,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'code',
     icon: 'Users',
     urlTemplate: '/customers/{id}',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
     fullScan: true,
   },
   {
@@ -466,7 +466,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'email',
     icon: 'User',
     urlTemplate: '/customers',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
     fullScan: true,
   },
 
@@ -495,7 +495,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     icon: 'Factory',
     urlTemplate: '/manufacturing/orders/{id}',
     scopeField: 'subsidiaryId',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
 
   // ----- Design Manager (finishes) -----
@@ -509,7 +509,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'clientName',
     icon: 'FolderKanban',
     urlTemplate: '/design/project/{id}',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
 
   // ----- Construction (finishes) -----
@@ -523,7 +523,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'projectName',
     icon: 'HardHat',
     urlTemplate: '/construction/{id}',
-    subsidiaryIds: ['dawin-finishes'],
+    subsidiaryIds: ['zeus-the-agency'],
   },
 ];
 

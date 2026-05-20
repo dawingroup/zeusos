@@ -514,7 +514,7 @@ export default function WorkshopViewerPage() {
       if (snap.exists()) {
         const data = snap.data();
         const subs = data?.branding?.subsidiaries;
-        const url = subs?.['dawin-finishes']?.logoUrl;
+        const url = subs?.['zeus-the-agency']?.logoUrl;
         setFinishesLogoUrl(url || undefined);
       }
     });

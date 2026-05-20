@@ -4,7 +4,7 @@
  * Placeholder module for the Dawin Technology subsidiary
  */
 
-export const TECHNOLOGY_MODULE = 'dawin-technology';
+export const TECHNOLOGY_MODULE = 'odd-gorilla';
 
 // Future modules:
 // - products

@@ -181,30 +181,36 @@ export async function uploadSubsidiaryLogo(
     const settings = await getOrganizationSettings(orgId);
     console.log('📋 Current Settings:', settings);
     
-    // Handle migration from old branding structure to new one
+    // Handle migration from old branding structure to new one.
+    // Defaults below mirror the Zeus brand palette in src/index.css
+    // (--zeus-navy, --zeus-the-agency, --zeus-digital, --labyrinth,
+    //  --odd-gorilla, --house-of-zeus).
     let currentBranding = settings?.branding;
     if (!currentBranding || !currentBranding.subsidiaries) {
       console.log('🔄 Migrating branding structure');
       currentBranding = {
-        groupPrimaryColor: '#872E5C',
-        groupSecondaryColor: '#E18425',
+        groupPrimaryColor: '#0A1F4A',
+        groupSecondaryColor: '#E63946',
         subsidiaries: {
-          'dawin-group': { primaryColor: '#872E5C', secondaryColor: '#E18425' },
-          'dawin-finishes': { primaryColor: '#872E5C', secondaryColor: '#E18425' },
-          'dawin-advisory': { primaryColor: '#1a365d', secondaryColor: '#3182ce' },
-          'dawin-capital': { primaryColor: '#1a202c', secondaryColor: '#2d3748' },
-          'dawin-technology': { primaryColor: '#553c9a', secondaryColor: '#805ad5' },
+          'zeus-group':       { primaryColor: '#0A1F4A', secondaryColor: '#E63946' },
+          'zeus-the-agency':  { primaryColor: '#F5D900', secondaryColor: '#0A1F4A' },
+          'zeus-digital':     { primaryColor: '#00C5E5', secondaryColor: '#0A1F4A' },
+          'labyrinth':        { primaryColor: '#C8F0D6', secondaryColor: '#0A1F4A' },
+          'odd-gorilla':      { primaryColor: '#FFB0B8', secondaryColor: '#0A1F4A' },
+          'house-of-zeus':    { primaryColor: '#C8FF3C', secondaryColor: '#0A1F4A' },
         }
       };
     }
     
-    // Update subsidiary branding
+    // Update subsidiary branding (currentBranding guaranteed non-null by
+    // the migration branch above; assert so TS narrows after reassignment).
+    const branding = currentBranding!;
     const updatedBranding = {
-      ...currentBranding,
+      ...branding,
       subsidiaries: {
-        ...currentBranding.subsidiaries,
+        ...branding.subsidiaries,
         [subsidiaryId]: {
-          ...currentBranding.subsidiaries[subsidiaryId as keyof typeof currentBranding.subsidiaries],
+          ...branding.subsidiaries[subsidiaryId as keyof typeof branding.subsidiaries],
           [fieldMap[type]]: downloadUrl,
         },
       },
@@ -308,8 +314,8 @@ export async function uploadOrganizationLogo(
   orgId: string = DEFAULT_ORG_ID,
   type: 'primary' | 'light' | 'favicon' = 'primary'
 ): Promise<string> {
-  // Delegate to subsidiary upload for dawin-group
-  return uploadSubsidiaryLogo(file, 'dawin-group', type, orgId);
+  // Delegate to subsidiary upload for zeus-group
+  return uploadSubsidiaryLogo(file, 'zeus-group', type, orgId);
 }
 
 /**

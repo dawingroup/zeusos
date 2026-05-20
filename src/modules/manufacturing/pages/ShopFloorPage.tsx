@@ -9,7 +9,7 @@ import { useGlobalState } from '@/integration/store/GlobalContext';
 
 const ShopFloorPage: React.FC = () => {
   const { state } = useGlobalState();
-  const subsidiaryId = state.currentSubsidiaryId ?? 'dawin-finishes';
+  const subsidiaryId = state.currentSubsidiaryId ?? 'zeus-the-agency';
   const organizationId = state.currentOrganizationId ?? '';
 
   return (

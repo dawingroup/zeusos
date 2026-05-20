@@ -474,9 +474,9 @@ export async function getSalesOrders(
   subsidiaryId: string,
   filters?: SalesOrderFilters,
 ): Promise<SalesOrder[]> {
-  // Match both 'dawin-finishes' and legacy 'finishes' subsidiary IDs
-  const subsidiaryIds = subsidiaryId === 'dawin-finishes'
-    ? ['dawin-finishes', 'finishes']
+  // Match both 'zeus-the-agency' and legacy 'finishes' subsidiary IDs
+  const subsidiaryIds = subsidiaryId === 'zeus-the-agency'
+    ? ['zeus-the-agency', 'finishes']
     : [subsidiaryId];
 
   const constraints: QueryConstraint[] = [
@@ -1491,9 +1491,9 @@ export function subscribeToSalesOrders(
   filters: SalesOrderFilters,
   callback: (orders: SalesOrder[]) => void,
 ): Unsubscribe {
-  // Match both 'dawin-finishes' and legacy 'finishes' subsidiary IDs
-  const subsidiaryIds = subsidiaryId === 'dawin-finishes'
-    ? ['dawin-finishes', 'finishes']
+  // Match both 'zeus-the-agency' and legacy 'finishes' subsidiary IDs
+  const subsidiaryIds = subsidiaryId === 'zeus-the-agency'
+    ? ['zeus-the-agency', 'finishes']
     : [subsidiaryId];
 
   const constraints: QueryConstraint[] = [

@@ -91,7 +91,7 @@ export function AppShell({ children }: AppShellProps) {
   } = useNavigationStore();
 
   // Branding (logo + favicon)
-  const { branding } = useBranding(currentSubsidiary?.id || 'dawin-group');
+  const { branding } = useBranding(currentSubsidiary?.id || 'zeus-group');
 
   // Update browser favicon whenever branding changes
   useEffect(() => {
@@ -158,7 +158,7 @@ export function AppShell({ children }: AppShellProps) {
   }, []);
 
   // Get navigation items based on current subsidiary, filtered by module access
-  const isAdvisory = currentSubsidiary?.id === 'dawin-advisory';
+  const isAdvisory = currentSubsidiary?.id === 'zeus-digital';
   const isPrivileged = isModuleAdmin || isSuperUser;
 
   const mainNavItems = useMemo(() => {
@@ -250,7 +250,7 @@ export function AppShell({ children }: AppShellProps) {
   const handleSubsidiarySwitch = (sub: typeof subsidiaries[0]) => {
     setCurrentSubsidiary(sub);
     // Use React Router navigation instead of full page reload
-    const targetPath = sub.id === 'dawin-advisory' ? '/advisory' : '/';
+    const targetPath = sub.id === 'zeus-digital' ? '/advisory' : '/';
     navigate(targetPath);
   };
 

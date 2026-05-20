@@ -41,7 +41,7 @@ export async function fixCompetenciesWithEmptyCompanyId(correctCompanyId: string
 
 /**
  * Get organization ID from user's email domain
- * e.g., onzimai@dawin.group -> dawin-group
+ * e.g., onzimai@dawin.group -> zeus-group
  */
 export function getOrganizationIdFromEmail(email: string): string {
   const domain = email.split('@')[1];

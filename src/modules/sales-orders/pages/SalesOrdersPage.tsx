@@ -15,7 +15,7 @@ import {
   type DataTableColumn,
 } from '@/shared/components/data-display';
 
-const SUBSIDIARY_ID = 'dawin-finishes';
+const SUBSIDIARY_ID = 'zeus-the-agency';
 
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-UG', {

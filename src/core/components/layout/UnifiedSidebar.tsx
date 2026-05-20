@@ -42,7 +42,7 @@ export function UnifiedSidebar({
 
   const sections = useMemo<NavSection[]>(() => {
     const subsidiaryNav =
-      currentSubsidiary?.id === 'dawin-advisory'
+      currentSubsidiary?.id === 'zeus-digital'
         ? ADVISORY_NAVIGATION
         : FINISHES_NAVIGATION;
 

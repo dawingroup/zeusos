@@ -42,7 +42,7 @@ function makeExpenditure(overrides: Partial<ExpenditureItem> = {}): ExpenditureI
     companyId: 'company-1',
     createdAt: ts('2026-03-01'),
     updatedAt: ts('2026-03-01'),
-    subsidiaryId: 'dawin-finishes',
+    subsidiaryId: 'zeus-the-agency',
     description: 'Test expenditure',
     category: 'materials',
     amount: 5_000_000,
@@ -94,7 +94,7 @@ function makeScoringContext(overrides: Partial<ScoringContext> = {}): ScoringCon
     settings: {
       id: 'config-1',
       companyId: 'company-1',
-      subsidiaryId: 'dawin-finishes',
+      subsidiaryId: 'zeus-the-agency',
       scoringWeights: DEFAULT_SCORING_WEIGHTS,
       priorityThresholds: { critical: 80, high: 65, medium: 45, low: 25 },
       cashBufferSettings: {

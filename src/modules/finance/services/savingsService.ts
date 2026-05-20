@@ -53,7 +53,7 @@ class SavingsService {
   // BALANCE
   // ══════════════════════════════════════════════════════════════════════════
 
-  async getSavingsBalance(companyId: string, subsidiaryId: string = 'dawin-group'): Promise<SavingsPosition> {
+  async getSavingsBalance(companyId: string, subsidiaryId: string = 'zeus-group'): Promise<SavingsPosition> {
     const q = query(
       companyCol(companyId, SAVINGS_LEDGER_COLLECTION),
       orderBy('date', 'desc'),

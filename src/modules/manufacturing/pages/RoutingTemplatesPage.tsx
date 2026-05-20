@@ -53,7 +53,7 @@ const TEMPLATES_COLLECTION = 'routing_templates';
 const RoutingTemplatesPage: React.FC = () => {
   const { state } = useGlobalState();
   const orgId = state.currentOrganizationId ?? '';
-  const subId = state.currentSubsidiaryId ?? 'dawin-finishes';
+  const subId = state.currentSubsidiaryId ?? 'zeus-the-agency';
   const userId = state.auth?.user?.id ?? '';
 
   const [templates, setTemplates] = useState<RoutingTemplate[]>([]);

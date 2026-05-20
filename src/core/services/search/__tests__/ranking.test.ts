@@ -8,7 +8,7 @@ function rec(overrides: Partial<IndexedRecord> = {}): IndexedRecord {
     id: 'id1',
     type: 'customer',
     module: 'crm',
-    subsidiaryId: 'dawin-finishes',
+    subsidiaryId: 'zeus-the-agency',
     path: '/customers/id1',
     icon: 'Users',
     cardKind: 'customer',

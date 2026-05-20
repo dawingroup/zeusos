@@ -492,7 +492,7 @@ class CashFlowOptimizerService {
     return {
       id: `default-${companyId}`,
       companyId,
-      subsidiaryId: 'dawin-group',
+      subsidiaryId: 'zeus-group',
       scoringWeights: DEFAULT_SCORING_WEIGHTS,
       priorityThresholds: DEFAULT_PRIORITY_THRESHOLDS,
       cashBufferSettings: DEFAULT_CASH_BUFFER,

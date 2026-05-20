@@ -233,7 +233,7 @@ export function ShareMinutesDialog({
       .then((settings) => {
         if (cancelled || !settings) return;
         const subs = (settings as any)?.branding?.subsidiaries || {};
-        const logoUrl = subs['dawin-finishes']?.logoUrl;
+        const logoUrl = subs['zeus-the-agency']?.logoUrl;
         if (logoUrl) {
           setCompanyInfo((prev) => ({ ...prev, logoUrl }));
         }

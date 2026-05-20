@@ -132,7 +132,7 @@ export default function QuotePreviewDialog({
   // Build company info with logo from Dawin Finishes subsidiary branding
   const getCompanyInfo = (): CompanyInfo => {
     if (propCompanyInfo) return propCompanyInfo;
-    const dawinFinishesBranding = orgSettings?.branding?.subsidiaries?.['dawin-finishes'];
+    const dawinFinishesBranding = orgSettings?.branding?.subsidiaries?.['zeus-the-agency'];
     return {
       ...DEFAULT_COMPANY_INFO,
       name: orgSettings?.info?.name || DEFAULT_COMPANY_INFO.name,

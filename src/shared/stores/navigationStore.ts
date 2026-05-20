@@ -89,7 +89,7 @@ export const useNavigationStore = create<NavigationState>()(
       },
 
       // Active subsidiary
-      activeSubsidiary: 'dawin-finishes',
+      activeSubsidiary: 'zeus-the-agency',
       setActiveSubsidiary: (subsidiaryId) => {
         set({ activeSubsidiary: subsidiaryId });
       },

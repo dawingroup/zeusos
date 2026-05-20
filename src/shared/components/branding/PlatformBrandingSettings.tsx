@@ -100,7 +100,7 @@ export function PlatformBrandingSettings() {
               id="group-logo"
               value={branding?.groupLogo ?? ''}
               onChange={(e) => updateBranding({ groupLogo: e.target.value }, 'groupLogo')}
-              placeholder="https://…/dawin-group-logo.svg"
+              placeholder="https://…/zeus-group-logo.svg"
             />
             <p className="text-xs text-gray-500 mt-1">Used on light backgrounds (default theme).</p>
           </div>
@@ -112,7 +112,7 @@ export function PlatformBrandingSettings() {
               onChange={(e) =>
                 updateBranding({ groupLogoLightUrl: e.target.value }, 'groupLogoLightUrl')
               }
-              placeholder="https://…/dawin-group-logo-light.svg"
+              placeholder="https://…/zeus-group-logo-light.svg"
             />
             <p className="text-xs text-gray-500 mt-1">Used on dark backgrounds.</p>
           </div>

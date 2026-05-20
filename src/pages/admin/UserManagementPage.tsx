@@ -76,10 +76,10 @@ function formatDate(dateStr?: string | null): string {
 function getSubsidiaryNames(user: DawinUser): string {
   const active = user.subsidiaryAccess?.filter(s => s.hasAccess).map(s => {
     const names: Record<string, string> = {
-      'dawin-finishes': 'Finishes',
-      'dawin-advisory': 'Advisory',
-      'dawin-capital': 'Capital',
-      'dawin-technology': 'Technology',
+      'zeus-the-agency': 'Finishes',
+      'zeus-digital': 'Advisory',
+      'labyrinth': 'Capital',
+      'odd-gorilla': 'Technology',
     };
     return names[s.subsidiaryId] || s.subsidiaryId;
   });

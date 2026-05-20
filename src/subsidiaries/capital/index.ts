@@ -4,7 +4,7 @@
  * Placeholder module for the Dawin Capital subsidiary
  */
 
-export const CAPITAL_MODULE = 'dawin-capital';
+export const CAPITAL_MODULE = 'labyrinth';
 
 // Future modules:
 // - portfolio

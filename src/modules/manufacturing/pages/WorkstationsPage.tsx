@@ -48,7 +48,7 @@ const WorkstationsPage: React.FC = () => {
   const { state } = useGlobalState();
   const userId = state.auth?.user?.id ?? '';
   const orgId = state.currentOrganizationId ?? '';
-  const subId = state.currentSubsidiaryId ?? 'dawin-finishes';
+  const subId = state.currentSubsidiaryId ?? 'zeus-the-agency';
 
   const {
     workstations,

@@ -20,7 +20,7 @@ import {
   type BrandingAssets,
 } from '@/shared/services/branding.service';
 
-const DEFAULT_SUBSIDIARY = 'dawin-group';
+const DEFAULT_SUBSIDIARY = 'zeus-group';
 
 export function useBranding(subsidiaryId: string = DEFAULT_SUBSIDIARY) {
   const [branding, setBranding] = useState<BrandingAssets>({});

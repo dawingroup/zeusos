@@ -10,7 +10,7 @@ import { SO_STATUS_LABELS } from '../constants';
 import { KPICard, KPIGrid, RagBadge } from '@/shared/components/data-display';
 import { Button } from '@/core/components/ui/button';
 
-const SUBSIDIARY_ID = 'dawin-finishes';
+const SUBSIDIARY_ID = 'zeus-the-agency';
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('en-UG', {

@@ -43,7 +43,7 @@ export const TEST_USERS = {
     email: 'admin@dawinos.test',
     displayName: 'Test Admin',
     role: 'admin',
-    subsidiaryId: 'dawin-group',
+    subsidiaryId: 'zeus-group',
     permissions: ['*'],
   },
   HR_MANAGER: {
@@ -51,7 +51,7 @@ export const TEST_USERS = {
     email: 'hr@dawinos.test',
     displayName: 'Test HR Manager',
     role: 'hr_manager',
-    subsidiaryId: 'dawin-group',
+    subsidiaryId: 'zeus-group',
     permissions: ['hr:read', 'hr:write', 'hr:approve'],
   },
   CEO: {
@@ -59,7 +59,7 @@ export const TEST_USERS = {
     email: 'ceo@dawinos.test',
     displayName: 'Test CEO',
     role: 'ceo',
-    subsidiaryId: 'dawin-group',
+    subsidiaryId: 'zeus-group',
     permissions: ['strategy:*', 'reports:*', 'approvals:*'],
   },
   FINANCE_MANAGER: {
@@ -67,7 +67,7 @@ export const TEST_USERS = {
     email: 'finance@dawinos.test',
     displayName: 'Test Finance Manager',
     role: 'finance_manager',
-    subsidiaryId: 'dawin-group',
+    subsidiaryId: 'zeus-group',
     permissions: ['finance:read', 'finance:write', 'budgets:approve'],
   },
   EMPLOYEE: {
@@ -75,7 +75,7 @@ export const TEST_USERS = {
     email: 'employee@dawinos.test',
     displayName: 'Test Employee',
     role: 'employee',
-    subsidiaryId: 'dawin-finishes',
+    subsidiaryId: 'zeus-the-agency',
     permissions: ['self:read', 'self:write'],
   },
   INVESTMENT_ANALYST: {
@@ -83,7 +83,7 @@ export const TEST_USERS = {
     email: 'analyst@dawinos.test',
     displayName: 'Test Analyst',
     role: 'investment_analyst',
-    subsidiaryId: 'dawin-capital',
+    subsidiaryId: 'labyrinth',
     permissions: ['deals:read', 'deals:write', 'portfolio:read'],
   },
 } as const;
@@ -94,7 +94,7 @@ export const TEST_USERS = {
 
 export const TEST_SUBSIDIARIES = {
   DAWIN_GROUP: {
-    id: 'dawin-group',
+    id: 'zeus-group',
     name: 'Dawin Group',
     code: 'DG',
     type: 'holding',
@@ -103,7 +103,7 @@ export const TEST_SUBSIDIARIES = {
     status: 'active',
   },
   DAWIN_FINISHES: {
-    id: 'dawin-finishes',
+    id: 'zeus-the-agency',
     name: 'Dawin Finishes',
     code: 'DF',
     type: 'manufacturing',
@@ -112,7 +112,7 @@ export const TEST_SUBSIDIARIES = {
     status: 'active',
   },
   DAWIN_ADVISORY: {
-    id: 'dawin-advisory',
+    id: 'zeus-digital',
     name: 'Dawin Advisory',
     code: 'DA',
     type: 'services',
@@ -121,7 +121,7 @@ export const TEST_SUBSIDIARIES = {
     status: 'active',
   },
   DAWIN_CAPITAL: {
-    id: 'dawin-capital',
+    id: 'labyrinth',
     name: 'Dawin Capital',
     code: 'DC',
     type: 'investment',
@@ -130,7 +130,7 @@ export const TEST_SUBSIDIARIES = {
     status: 'active',
   },
   DAWIN_TECHNOLOGY: {
-    id: 'dawin-technology',
+    id: 'odd-gorilla',
     name: 'Dawin Technology',
     code: 'DT',
     type: 'technology',

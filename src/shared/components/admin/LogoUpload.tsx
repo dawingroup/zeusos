@@ -23,7 +23,7 @@ export default function LogoUpload({
   currentLogoUrl, 
   onLogoChange,
   className,
-  subsidiaryId = 'dawin-group',
+  subsidiaryId = 'zeus-group',
   subsidiaryName = 'Dawin Group',
 }: LogoUploadProps) {
   const [uploading, setUploading] = useState(false);

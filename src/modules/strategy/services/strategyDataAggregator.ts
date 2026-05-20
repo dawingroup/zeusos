@@ -77,13 +77,13 @@ async function fetchHRData(_companyId: string, subsidiaryId?: string): Promise<H
 
   try {
     const stats = await getEmployeeStats();
-    // Map external subsidiary IDs (dawin-finishes) to HR SubsidiaryId format (finishes)
+    // Map external subsidiary IDs (zeus-the-agency) to HR SubsidiaryId format (finishes)
     const SUBSIDIARY_ID_MAP: Record<string, string> = {
-      'dawin-finishes': 'finishes',
-      'dawin-advisory': 'advisory',
-      'dawin-capital': 'capital',
-      'dawin-technology': 'technology',
-      'dawin-group': 'group',
+      'zeus-the-agency': 'finishes',
+      'zeus-digital': 'advisory',
+      'labyrinth': 'capital',
+      'odd-gorilla': 'technology',
+      'zeus-group': 'group',
     };
     const filters: Parameters<typeof listEmployees>[0] = {
       employmentStatuses: ['active', 'probation'],

@@ -171,7 +171,7 @@ export function QuoteShareDialog({
         const settingsSnap = await getDoc(doc(db, 'organizations/default/settings', 'general'));
         if (settingsSnap.exists()) {
           const subs = settingsSnap.data()?.branding?.subsidiaries;
-          const url = subs?.['dawin-finishes']?.logoUrl;
+          const url = subs?.['zeus-the-agency']?.logoUrl;
           if (url) { setHeaderImageUrl(url); return; }
         }
       } catch (err) {
@@ -248,7 +248,7 @@ export function QuoteShareDialog({
         const settingsSnap = await getDoc(doc(db, 'organizations/default/settings', 'general'));
         if (settingsSnap.exists()) {
           const subs = settingsSnap.data()?.branding?.subsidiaries;
-          logoUrl = subs?.['dawin-finishes']?.logoUrl;
+          logoUrl = subs?.['zeus-the-agency']?.logoUrl;
         }
       } catch { /* proceed without logo */ }
 

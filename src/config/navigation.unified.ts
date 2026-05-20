@@ -1,10 +1,20 @@
 /**
  * Unified Navigation Configuration
- * Single source of truth for all navigation items across DawinOS
+ * Single source of truth for all navigation items across ZeusOS.
  * Consolidates: config/navigation.ts + integration/constants/navigation.constants.ts
+ *
+ * NOTE(ZeusOS Phase 1.B): the per-subsidiary navigation arrays
+ * (AGENCY_LEGACY_NAVIGATION, ADVISORY_LEGACY_NAVIGATION) still
+ * reference construction-domain modules (Design Manager, Inventory,
+ * Manufacturing, MatFlow, etc.). These will be replaced in Phase
+ * 1.C with the Campaign & Job Manager + Media + Production +
+ * Talent + Asset Library nav. For now they're retained so the
+ * router doesn't break — Phase 1.C deletes the modules and
+ * rewrites these arrays in one sweep.
  */
 
 import type { CommandItem } from '@/core/components/navigation/CommandPalette';
+import type { SubsidiaryId } from '@/core/settings/types';
 
 // ============================================================================
 // TYPES
@@ -458,26 +468,73 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
 // SUBSIDIARY CONFIGURATIONS
 // ============================================================================
 
+/**
+ * Zeus Group's five operating agencies.
+ *
+ * Phase 1.B keeps every agency pointed at the legacy FINISHES_NAVIGATION
+ * (renamed AGENCY_LEGACY_NAVIGATION via alias below) so the router still
+ * resolves while we strip construction modules. Phase 1.C will introduce
+ * a single shared AGENCY_NAVIGATION populated with the Campaigns / Media
+ * / Production / Talent / Asset-Library entries, plus per-agency overrides
+ * where each sub-brand's services differ (e.g. Labyrinth surfaces Production
+ * first; Zeus Digital surfaces Influencer / Paid Media first).
+ */
 export const SUBSIDIARIES: SubsidiaryConfig[] = [
   {
-    id: 'dawin-finishes',
-    name: 'Dawin Finishes',
-    shortName: 'Finishes',
-    color: '#872E5C',
-    icon: 'Palette',
+    id: 'zeus-the-agency',
+    name: 'Zeus The Agency',
+    shortName: 'Zeus',
+    color: '#F5D900',
+    icon: 'Sparkles',
     defaultPath: '/',
     navigation: FINISHES_NAVIGATION,
   },
   {
-    id: 'dawin-advisory',
-    name: 'Dawin Advisory',
-    shortName: 'Advisory',
-    color: '#D97706',
-    icon: 'HardHat',
-    defaultPath: '/advisory',
-    navigation: ADVISORY_NAVIGATION,
+    id: 'zeus-digital',
+    name: 'Zeus Digital',
+    shortName: 'ZD',
+    color: '#00C5E5',
+    icon: 'Zap',
+    defaultPath: '/',
+    navigation: FINISHES_NAVIGATION,
+  },
+  {
+    id: 'labyrinth',
+    name: 'Labyrinth Audio & Visual',
+    shortName: 'Labyrinth',
+    color: '#C8F0D6',
+    icon: 'Music',
+    defaultPath: '/',
+    navigation: FINISHES_NAVIGATION,
+  },
+  {
+    id: 'odd-gorilla',
+    name: 'Odd Gorilla',
+    shortName: 'Odd Gorilla',
+    color: '#FFB0B8',
+    icon: 'PawPrint',
+    defaultPath: '/',
+    navigation: FINISHES_NAVIGATION,
+  },
+  {
+    id: 'house-of-zeus',
+    name: 'House of Zeus',
+    shortName: 'HoZ',
+    color: '#C8FF3C',
+    icon: 'Home',
+    defaultPath: '/',
+    navigation: FINISHES_NAVIGATION,
   },
 ];
+
+/**
+ * Type-safe getter — `SubsidiaryConfig.id` is currently typed as `string`
+ * for back-compat, but every entry is one of the canonical Zeus IDs.
+ * This helper narrows the type for downstream consumers.
+ */
+export function getSubsidiaryConfig(id: SubsidiaryId): SubsidiaryConfig | undefined {
+  return SUBSIDIARIES.find((s) => s.id === id);
+}
 
 // ============================================================================
 // HELPER FUNCTIONS

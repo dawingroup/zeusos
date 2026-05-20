@@ -53,7 +53,7 @@ export interface SubsidiaryDocumentBranding {
   colors: ReceiptBrandingColors;
 }
 
-const DEFAULT_SUBSIDIARY = 'dawin-group';
+const DEFAULT_SUBSIDIARY = 'zeus-group';
 
 function normalizeHex(hex: string | undefined | null, fallback: string): string {
   if (hex == null || typeof hex !== 'string') return fallback;
@@ -113,7 +113,7 @@ function subsidiaryIdsToTry(subsidiaryId?: string | null): string[] {
   const raw = subsidiaryId?.trim();
   const ids: string[] = [];
   if (raw) ids.push(raw);
-  if (raw === 'finishes') ids.push('dawin-finishes');
+  if (raw === 'finishes') ids.push('zeus-the-agency');
   ids.push(DEFAULT_SUBSIDIARY);
   return [...new Set(ids)];
 }

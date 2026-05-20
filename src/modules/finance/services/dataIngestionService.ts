@@ -117,7 +117,7 @@ class DataIngestionService {
 
             await optimizerService.addExpenditure(companyId, {
               companyId,
-              subsidiaryId: 'dawin-finishes',
+              subsidiaryId: 'zeus-the-agency',
               description: `${bill.VendorRef?.name || 'Vendor'}: ${bill.Line?.[0]?.Description || 'Bill payment'}`,
               category,
               vendor: bill.VendorRef?.name,
@@ -222,7 +222,7 @@ class DataIngestionService {
         status: 'current',
         paymentHistory: [],
         detectedFromBillCount: data.amounts.length,
-        subsidiaryId: 'dawin-finishes',
+        subsidiaryId: 'zeus-the-agency',
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       });
@@ -370,7 +370,7 @@ class DataIngestionService {
 
             await optimizerService.addExpenditure(companyId, {
               companyId,
-              subsidiaryId: project.subsidiaryId || 'dawin-finishes',
+              subsidiaryId: project.subsidiaryId || 'zeus-the-agency',
               projectId: projectDoc.id,
               projectName: project.name || project.code,
               description: `${project.name}: ${item.name || item.description || 'Design item'}`,
@@ -508,7 +508,7 @@ class DataIngestionService {
 
           const receiptData = {
             companyId,
-            subsidiaryId: project.subsidiaryId || 'dawin-finishes',
+            subsidiaryId: project.subsidiaryId || 'zeus-the-agency',
             sourceType: 'project_milestone' as const,
             sourceId,
             sourceName: projectName,
@@ -596,7 +596,7 @@ class DataIngestionService {
             collection(db, 'companies', companyId, PROJECTED_RECEIPTS_COLLECTION),
             {
               companyId,
-              subsidiaryId: (deal.subsidiaryId as string) || 'dawin-finishes',
+              subsidiaryId: (deal.subsidiaryId as string) || 'zeus-the-agency',
               sourceType: 'project_final',
               sourceId: dealSourceId,
               sourceName: (deal.name as string) || (deal.title as string) || 'Deal',
@@ -716,7 +716,7 @@ class DataIngestionService {
 
         await optimizerService.addExpenditure(companyId, {
           companyId,
-          subsidiaryId: po.subsidiaryId || 'dawin-finishes',
+          subsidiaryId: po.subsidiaryId || 'zeus-the-agency',
           projectId: po.linkedProjectId,
           description: `PO ${po.poNumber}: ${po.supplierName || 'Supplier'}`,
           category: this.classifyPOCategory(po),
@@ -800,7 +800,7 @@ class DataIngestionService {
 
         await optimizerService.addExpenditure(companyId, {
           companyId,
-          subsidiaryId: req.subsidiaryId || 'dawin-finishes',
+          subsidiaryId: req.subsidiaryId || 'zeus-the-agency',
           projectId: req.projectCode,
           description: `Procurement: ${req.itemDescription || 'Material requirement'}`,
           category: 'materials',
@@ -907,7 +907,7 @@ class DataIngestionService {
 
           await optimizerService.addExpenditure(companyId, {
             companyId,
-            subsidiaryId: mo.subsidiaryId || 'dawin-finishes',
+            subsidiaryId: mo.subsidiaryId || 'zeus-the-agency',
             projectId: mo.projectId,
             projectName: mo.projectCode,
             description: `MO ${mo.moNumber}: ${mo.designItemName || 'Manufacturing'}`,
@@ -1047,7 +1047,7 @@ class DataIngestionService {
 
           await optimizerService.addExpenditure(companyId, {
             companyId,
-            subsidiaryId: (liability.subsidiaryId as string) || 'dawin-finishes',
+            subsidiaryId: (liability.subsidiaryId as string) || 'zeus-the-agency',
             description: `${description}${vendorName ? ` — ${vendorName}` : ''}`,
             category,
             vendor: vendorName,

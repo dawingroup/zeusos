@@ -1,10 +1,14 @@
 /**
  * Subsidiary Types
- * Data model for multi-subsidiary support in DawinOS
+ * Data model for multi-subsidiary support in ZeusOS.
+ * Zeus Group operates five peer agencies under one organisation.
  */
 
+import type { SubsidiaryId } from '@/core/settings/types';
+export type { SubsidiaryId } from '@/core/settings/types';
+
 export interface Subsidiary {
-  id: string;
+  id: SubsidiaryId;
   name: string;
   shortName: string;
   logo?: string;
@@ -16,28 +20,43 @@ export interface Subsidiary {
   updatedAt: Date;
 }
 
+/**
+ * SubsidiaryModule union — every module that can be granted to a subsidiary.
+ *
+ * NOTE(ZeusOS Phase 1.C): the construction/manufacturing-domain modules at
+ * the top of this union (design-manager, inventory, design-studio, etc.)
+ * will be deleted as part of Phase 1.C and removed from this union. They
+ * are kept here for the duration of Phase 1.B so the typecheck doesn't
+ * cascade-break consumers we haven't migrated yet.
+ *
+ * The agency-friendly modules (crm, marketing, customer-hub, suppliers,
+ * sales-orders, whatsapp, launch-pipeline, asset-registry, plus the
+ * corporate cross-subsidiary set) are the canonical Zeus set.
+ *
+ * Phase 3 will add: 'campaigns' | 'media' | 'production' | 'talent' | 'asset-library'.
+ */
 export type SubsidiaryModule =
-  // Finishes subsidiary modules
+  // Legacy construction modules (queued for deletion in Phase 1.C)
   | 'design-manager'
   | 'clipper'
-  | 'asset-registry'
   | 'feature-library'
+  | 'construction'
+  | 'inventory'
+  | 'workshop-viewer'
+  | 'design-studio'
+  | 'matflow'
+  | 'investment_advisory'
+  | 'infrastructure_delivery'
+  // Agency-friendly modules (retained for Zeus)
+  | 'asset-registry'
   | 'launch-pipeline'
   | 'procurement'
   | 'production'
-  | 'construction'
   | 'marketing'
-  | 'inventory'
   | 'crm'
   | 'customer-hub'
   | 'whatsapp'
   | 'sales-orders'
-  | 'workshop-viewer'
-  | 'design-studio'
-  // Advisory subsidiary modules
-  | 'matflow'
-  | 'investment_advisory'
-  | 'infrastructure_delivery'
   // Shared modules (cross-subsidiary)
   | 'suppliers'
   // Corporate modules (cross-subsidiary)
@@ -57,50 +76,87 @@ export interface SubsidiaryStats {
 }
 
 /**
- * Default subsidiaries for Dawin Group
+ * Modules that every Zeus agency gets by default. Phase 3 will introduce the
+ * canonical Campaign & Job Manager, Media Plan, Talent Roster, and Asset
+ * Library — they'll join this list as they ship.
+ */
+const ZEUS_DEFAULT_AGENCY_MODULES: SubsidiaryModule[] = [
+  'crm',
+  'customer-hub',
+  'marketing',
+  'sales-orders',
+  'procurement',
+  'suppliers',
+  'asset-registry',
+  'launch-pipeline',
+  'whatsapp',
+];
+
+/**
+ * Default subsidiaries for Zeus Group — the five operating agencies.
+ *
+ * Brand colours mirror the sub-brand colour tokens in src/index.css
+ * (--zeus-the-agency, --zeus-digital, etc.) for visual consistency
+ * between admin chrome and per-agency UI.
  */
 export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
   {
-    id: 'dawin-finishes',
-    name: 'Dawin Finishes',
-    shortName: 'Finishes',
-    color: '#872E5C',
-    description: 'Custom millwork and furniture manufacturing',
-    modules: ['design-manager', 'clipper', 'asset-registry', 'feature-library', 'production', 'construction', 'procurement', 'launch-pipeline', 'marketing', 'inventory', 'crm', 'customer-hub', 'whatsapp', 'sales-orders', 'workshop-viewer', 'design-studio'],
+    id: 'zeus-the-agency',
+    name: 'Zeus The Agency',
+    shortName: 'Zeus',
+    color: '#F5D900',
+    description:
+      'Flagship 360-degree Ugandan advertising agency. Creative, BTL, Digital, PR, Media Buying, and Production strategies.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
     status: 'active',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    id: 'dawin-advisory',
-    name: 'Dawin Advisory',
-    shortName: 'Advisory',
-    color: '#D97706',
-    description: 'Construction consulting and project management',
-    modules: ['matflow', 'investment_advisory', 'infrastructure_delivery'],
+    id: 'zeus-digital',
+    name: 'Zeus Digital',
+    shortName: 'ZD',
+    color: '#00C5E5',
+    description:
+      'Digital-focused offshoot delivering content, SEM/SEO, influencer, media buy, channel, and digital innovation strategy.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
     status: 'active',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    id: 'dawin-capital',
-    name: 'Dawin Capital',
-    shortName: 'Capital',
-    color: '#059669',
-    description: 'Investment and financial services',
-    modules: ['clipper'],
-    status: 'coming-soon',
+    id: 'labyrinth',
+    name: 'Labyrinth Audio & Visual Content Studio',
+    shortName: 'Labyrinth',
+    color: '#C8F0D6',
+    description:
+      'Audio and visual content creation: sound production, photography, podcast, product photography, film, and documentary production.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
+    status: 'active',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
-    id: 'dawin-technology',
-    name: 'Dawin Technology',
-    shortName: 'Technology',
-    color: '#E18425',
-    description: 'Software development and technology solutions',
-    modules: ['clipper', 'launch-pipeline'],
-    status: 'coming-soon',
+    id: 'odd-gorilla',
+    name: 'Odd Gorilla',
+    shortName: 'Odd Gorilla',
+    color: '#FFB0B8',
+    description:
+      'Fully integrated conflict agency — serves clients in categories already handled by Zeus The Agency. 360-degree marketing and communications services.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
+    status: 'active',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: 'house-of-zeus',
+    name: 'House of Zeus',
+    shortName: 'HoZ',
+    color: '#C8FF3C',
+    description:
+      'Kenya market expansion. 360-degree marketing and communications services for the Kenyan market.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
+    status: 'active',
     createdAt: new Date(),
     updatedAt: new Date(),
   },

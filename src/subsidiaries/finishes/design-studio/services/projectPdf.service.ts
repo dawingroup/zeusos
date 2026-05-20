@@ -209,7 +209,7 @@ async function fetchFinishesLogoUrl(): Promise<string | undefined> {
     if (!snap.exists()) return undefined;
     const data = snap.data() as { branding?: { subsidiaries?: Record<string, { logoUrl?: string }> } };
     const subs = data?.branding?.subsidiaries;
-    return subs?.['dawin-finishes']?.logoUrl;
+    return subs?.['zeus-the-agency']?.logoUrl;
   } catch (err) {
     console.warn('[projectPdf] logo lookup failed:', err);
     return undefined;

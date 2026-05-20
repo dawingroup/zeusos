@@ -17,11 +17,11 @@ import { useOrganizationSettings } from '@/core/settings';
 import type { DocumentBrandingPalette } from '@/core/settings/types';
 
 const SUBSIDIARIES = [
-  { id: 'dawin-group', name: 'Dawin Group', description: 'Parent company' },
-  { id: 'dawin-finishes', name: 'Dawin Finishes', description: 'Interior design & finishes' },
-  { id: 'dawin-advisory', name: 'Dawin Advisory', description: 'Consulting & strategy' },
-  { id: 'dawin-capital', name: 'Dawin Capital', description: 'Investment & finance' },
-  { id: 'dawin-technology', name: 'Dawin Technology', description: 'Software & innovation' },
+  { id: 'zeus-group', name: 'Dawin Group', description: 'Parent company' },
+  { id: 'zeus-the-agency', name: 'Dawin Finishes', description: 'Interior design & finishes' },
+  { id: 'zeus-digital', name: 'Dawin Advisory', description: 'Consulting & strategy' },
+  { id: 'labyrinth', name: 'Dawin Capital', description: 'Investment & finance' },
+  { id: 'odd-gorilla', name: 'Dawin Technology', description: 'Software & innovation' },
 ] as const;
 
 type SubsidiaryId = typeof SUBSIDIARIES[number]['id'];
@@ -428,7 +428,7 @@ function SubsidiaryBrandingTab({
 
 export default function SubsidiaryBranding() {
   const { settings, isLoading, updateSettings } = useOrganizationSettings();
-  const [activeTab, setActiveTab] = useState<string>('dawin-group');
+  const [activeTab, setActiveTab] = useState<string>('zeus-group');
 
   if (isLoading) {
     return (
@@ -439,14 +439,15 @@ export default function SubsidiaryBranding() {
   }
 
   const branding = settings?.branding || {
-    groupPrimaryColor: '#872E5C',
-    groupSecondaryColor: '#E18425',
+    groupPrimaryColor: '#0A1F4A',
+    groupSecondaryColor: '#E63946',
     subsidiaries: {
-      'dawin-group': { primaryColor: '#872E5C', secondaryColor: '#E18425' },
-      'dawin-finishes': { primaryColor: '#872E5C', secondaryColor: '#E18425' },
-      'dawin-advisory': { primaryColor: '#1a365d', secondaryColor: '#3182ce' },
-      'dawin-capital': { primaryColor: '#1a202c', secondaryColor: '#2d3748' },
-      'dawin-technology': { primaryColor: '#553c9a', secondaryColor: '#805ad5' },
+      'zeus-group':       { primaryColor: '#0A1F4A', secondaryColor: '#E63946' },
+      'zeus-the-agency':  { primaryColor: '#F5D900', secondaryColor: '#0A1F4A' },
+      'zeus-digital':     { primaryColor: '#00C5E5', secondaryColor: '#0A1F4A' },
+      'labyrinth':        { primaryColor: '#C8F0D6', secondaryColor: '#0A1F4A' },
+      'odd-gorilla':      { primaryColor: '#FFB0B8', secondaryColor: '#0A1F4A' },
+      'house-of-zeus':    { primaryColor: '#C8FF3C', secondaryColor: '#0A1F4A' },
     }
   };
 
@@ -472,7 +473,7 @@ export default function SubsidiaryBranding() {
       <div>
         <h2 className="text-2xl font-bold">Subsidiary Branding</h2>
         <p className="text-muted-foreground">
-          Manage logos, colors, and branding for each Dawin subsidiary
+          Manage logos, colors, and branding for each Zeus Group agency
         </p>
       </div>
 

@@ -223,7 +223,7 @@ export default function VoicesPage() {
                   {v.shopifyMetaobjectGid && (
                     <a
                       className="ml-2 inline-flex items-center text-gray-400 hover:text-gray-700"
-                      href={`https://admin.shopify.com/store/dawin-finishes/content/entries/voice/${encodeURIComponent(v.shopifyMetaobjectGid.split('/').pop() || '')}`}
+                      href={`https://admin.shopify.com/store/zeus-the-agency/content/entries/voice/${encodeURIComponent(v.shopifyMetaobjectGid.split('/').pop() || '')}`}
                       target="_blank"
                       rel="noreferrer"
                     >

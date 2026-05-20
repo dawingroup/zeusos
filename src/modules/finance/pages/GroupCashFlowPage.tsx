@@ -37,8 +37,8 @@ interface SubsidiarySummary {
 }
 
 const SUBSIDIARY_NAMES: Record<string, string> = {
-  'dawin-finishes': 'Dawin Finishes',
-  'dawin-advisory': 'Dawin Advisory',
+  'zeus-the-agency': 'Dawin Finishes',
+  'zeus-digital': 'Dawin Advisory',
   'dawin-interiors': 'Dawin Interiors',
 };
 
@@ -73,7 +73,7 @@ export default function GroupCashFlowPage() {
     const map = new Map<string, SubsidiarySummary>();
 
     for (const item of allItems) {
-      const sid = item.subsidiaryId || 'dawin-finishes';
+      const sid = item.subsidiaryId || 'zeus-the-agency';
       if (!map.has(sid)) {
         map.set(sid, {
           id: sid,

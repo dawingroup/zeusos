@@ -141,7 +141,7 @@ export function InventoryStorefrontDrawer({ item, onClose }: InventoryStorefront
     // Shopify storefront product URL — uses the product handle, not the GID.
     // We don't have the handle on the inventory item, so just deep-link to the admin product page.
     const numericId = String(item.shopifyProductId).replace(/^.*\//, '');
-    return `https://admin.shopify.com/store/dawin-finishes/products/${numericId}`;
+    return `https://admin.shopify.com/store/zeus-the-agency/products/${numericId}`;
   }, [item.shopifyProductId, block.shouldPublishAsProduct]);
 
   function commitCsv() {

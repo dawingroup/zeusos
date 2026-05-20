@@ -160,7 +160,7 @@ export function SelectItemsForSODialog({
       const result = await createSalesOrderFromDealWithItems(
         dealId,
         user.uid,
-        currentSubsidiary?.id || 'dawin-finishes',
+        currentSubsidiary?.id || 'zeus-the-agency',
         selectedItems,
         quote,
       );

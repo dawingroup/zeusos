@@ -42,7 +42,7 @@ export interface DealSyncResult {
 export async function syncDealsForProjects(
   userId: string,
   userName: string,
-  subsidiaryId: string = 'dawin-finishes'
+  subsidiaryId: string = 'zeus-the-agency'
 ): Promise<DealSyncResult> {
   const result: DealSyncResult = { created: 0, skipped: 0, total: 0, errors: [], debug: [] };
 

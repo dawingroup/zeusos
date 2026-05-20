@@ -138,7 +138,7 @@ export async function generateShopTravelerPDF(
   }
 
   // Get Dawin Finishes logo URL from subsidiary branding
-  const dawinFinishesLogo = orgSettings?.branding?.subsidiaries?.['dawin-finishes']?.logoUrl;
+  const dawinFinishesLogo = orgSettings?.branding?.subsidiaries?.['zeus-the-agency']?.logoUrl;
 
   // Create the PDF document element using JSX with options
   const doc = <ShopTraveler
