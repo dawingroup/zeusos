@@ -1,0 +1,32 @@
+{
+  "_meta": "Shopify metaobject for 'featured_update'. Drives the Today section. Not URL-addressable.",
+  "type": "featured_update",
+  "name": "Featured update",
+  "description": "Weekly rotating update from the workshop — feeds the Today section on home.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable":  { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": { "enabled": false }
+  },
+  "field_definitions": [
+    { "key": "handle",      "name": "Handle",          "type": "single_line_text_field", "required": true },
+    { "key": "headline",    "name": "Headline",        "type": "single_line_text_field", "required": true },
+    { "key": "subhead",     "name": "Sub-head",        "type": "single_line_text_field", "required": true },
+    { "key": "eyebrow",     "name": "Eyebrow",         "type": "single_line_text_field" },
+    { "key": "image",       "name": "Image",           "type": "file_reference",         "required": true },
+    { "key": "link_url",    "name": "Link URL",        "type": "url" },
+    { "key": "link_label",  "name": "Link label",      "type": "single_line_text_field" },
+    { "key": "bench_id",    "name": "Bench id",        "type": "single_line_text_field" },
+    { "key": "project_ref", "name": "Linked project",  "type": "metaobject_reference",   "validations": [{ "name": "metaobject_definition", "value": "project" }] },
+    { "key": "live_from",   "name": "Live from",       "type": "date_time",              "required": true },
+    { "key": "live_until",  "name": "Live until",      "type": "date_time" },
+    { "key": "priority",    "name": "Priority",        "type": "number_integer",         "required": true },
+    { "key": "category",    "name": "Category",        "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"bench\",\"shipment\",\"delivery\",\"press\",\"launch\"]" }] },
+    { "key": "tone",        "name": "Tone",            "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"warm\",\"cool\",\"bold\",\"raw\"]" }] },
+    { "key": "published",   "name": "Published",       "type": "boolean",                "required": true }
+  ]
+}

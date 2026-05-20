@@ -1,0 +1,71 @@
+# Cloud Scheduler Configuration for Deadline Monitoring
+# Deploy with: gcloud scheduler jobs create pubsub <job-name> --schedule="..." --topic=<topic> --message-body="{}"
+
+# Hourly deadline check
+# Schedule: Every hour at minute 0
+hourly-deadline-check:
+  schedule: "0 * * * *"
+  timezone: "Africa/Nairobi"
+  description: "Hourly check for overdue accountabilities, investigations, and reconciliations"
+  topic: "deadline-monitoring-hourly"
+  retry:
+    attempts: 3
+    maxBackoffDuration: "3600s"
+    minBackoffDuration: "5s"
+
+# Daily summary
+# Schedule: 8:00 AM EAT every day
+daily-deadline-summary:
+  schedule: "0 8 * * *"
+  timezone: "Africa/Nairobi"
+  description: "Daily summary of deadline status"
+  topic: "deadline-monitoring-daily"
+  retry:
+    attempts: 2
+    maxBackoffDuration: "1800s"
+    minBackoffDuration: "5s"
+
+# Deployment Instructions:
+#
+# 1. Enable Cloud Scheduler API:
+#    gcloud services enable cloudscheduler.googleapis.com
+#
+# 2. Create hourly deadline check job:
+#    gcloud scheduler jobs create pubsub hourly-deadline-check \
+#      --schedule="0 * * * *" \
+#      --time-zone="Africa/Nairobi" \
+#      --topic="deadline-monitoring-hourly" \
+#      --message-body="{}" \
+#      --description="Hourly check for overdue accountabilities, investigations, and reconciliations"
+#
+# 3. Create daily summary job:
+#    gcloud scheduler jobs create pubsub daily-deadline-summary \
+#      --schedule="0 8 * * *" \
+#      --time-zone="Africa/Nairobi" \
+#      --topic="deadline-monitoring-daily" \
+#      --message-body="{}" \
+#      --description="Daily summary of deadline status"
+#
+# 4. Verify jobs:
+#    gcloud scheduler jobs list
+#
+# 5. Test job manually:
+#    gcloud scheduler jobs run hourly-deadline-check
+#
+# 6. View logs:
+#    gcloud logging read "resource.type=cloud_scheduler_job" --limit=50
+
+# ============================================================================
+# Social Intelligence - 6-hourly social metrics sync
+# ============================================================================
+# Note: syncSocialMetrics uses firebase-functions/v2 onSchedule with
+# schedule: 'every 6 hours' built-in. This entry is for reference/manual setup.
+social-metrics-sync:
+  schedule: "0 */6 * * *"
+  timezone: "Africa/Nairobi"
+  description: "Sync social media metrics for all tracked competitor profiles"
+  topic: "social-metrics-sync"
+  retry:
+    attempts: 2
+    maxBackoffDuration: "1800s"
+    minBackoffDuration: "10s"

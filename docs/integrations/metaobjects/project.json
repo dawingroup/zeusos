@@ -1,0 +1,55 @@
+{
+  "_meta": "Shopify metaobject definition for 'project'. Create via Admin → Settings → Custom data → Metaobjects, or via the Admin GraphQL mutation `metaobjectDefinitionCreate`. URL-addressable via the online_store capability; remapped to /projects/{handle}.",
+  "type": "project",
+  "name": "Project",
+  "description": "A completed Dawin Finishes design / fit-out / furniture project. URL-addressable case study.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable": { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": {
+      "enabled": true,
+      "url_handle": "projects",
+      "can_create_redirects": true
+    }
+  },
+  "field_definitions": [
+    { "key": "title",             "name": "Title",             "type": "single_line_text_field", "required": true },
+    { "key": "handle",            "name": "Handle",            "type": "single_line_text_field", "required": true },
+    { "key": "sector",            "name": "Sector",            "type": "single_line_text_field", "required": true, "validations": [{ "name": "choices", "value": "[\"Residential\",\"Hospitality\",\"Commercial\",\"Exhibition\",\"Cultural\"]" }] },
+    { "key": "sub_sector",        "name": "Sub-sector",        "type": "single_line_text_field" },
+    { "key": "client",            "name": "Client",            "type": "single_line_text_field", "required": true },
+    { "key": "client_logo",       "name": "Client logo",       "type": "file_reference",         "validations": [{ "name": "file_type_options", "value": "[\"Image\"]" }] },
+    { "key": "location_city",     "name": "Location city",     "type": "single_line_text_field", "required": true },
+    { "key": "location_country",  "name": "Location country",  "type": "single_line_text_field", "required": true },
+    { "key": "year_completed",    "name": "Year completed",    "type": "number_integer",          "required": true },
+    { "key": "month_completed",   "name": "Month completed",   "type": "number_integer",          "validations": [{ "name": "min", "value": "1" }, { "name": "max", "value": "12" }] },
+    { "key": "area_sqm",          "name": "Area (m²)",         "type": "number_integer",          "required": true },
+    { "key": "scope",             "name": "Scope",             "type": "list.single_line_text_field" },
+    { "key": "team_lead",         "name": "Team lead",         "type": "single_line_text_field" },
+    { "key": "team_size",         "name": "Team size",         "type": "number_integer" },
+    { "key": "duration_weeks",    "name": "Duration (weeks)",  "type": "number_integer" },
+    { "key": "budget_band",       "name": "Budget band",       "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"S\",\"M\",\"L\",\"XL\"]" }] },
+    { "key": "quote_text",        "name": "Quote",             "type": "rich_text_field" },
+    { "key": "quote_attribution", "name": "Quote attribution", "type": "single_line_text_field" },
+    { "key": "hero_image",        "name": "Hero image",        "type": "file_reference",         "required": true, "validations": [{ "name": "file_type_options", "value": "[\"Image\"]" }] },
+    { "key": "gallery",           "name": "Gallery",           "type": "list.file_reference",    "validations": [{ "name": "file_type_options", "value": "[\"Image\"]" }] },
+    { "key": "before_image",      "name": "Before image",      "type": "file_reference" },
+    { "key": "after_image",       "name": "After image",       "type": "file_reference" },
+    { "key": "floor_plan_image",  "name": "Floor plan",        "type": "file_reference" },
+    { "key": "body_long",         "name": "Body (case study)", "type": "rich_text_field",        "required": true },
+    { "key": "finishes_used",     "name": "Finishes used",     "type": "list.metaobject_reference", "validations": [{ "name": "metaobject_definition", "value": "finish" }] },
+    { "key": "materials_used",    "name": "Materials used",    "type": "list.metaobject_reference", "validations": [{ "name": "metaobject_definition", "value": "material" }] },
+    { "key": "products_used",     "name": "Products used",     "type": "list.product_reference" },
+    { "key": "press_mentions",    "name": "Press mentions",    "type": "list.metaobject_reference", "validations": [{ "name": "metaobject_definition", "value": "press_mention" }] },
+    { "key": "commissioned_by",   "name": "Commissioned by",   "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"client\",\"architect\",\"studio\"]" }] },
+    { "key": "partner_architect", "name": "Partner architect", "type": "single_line_text_field" },
+    { "key": "published",         "name": "Published",         "type": "boolean",                "required": true },
+    { "key": "sort_index",        "name": "Sort index",        "type": "number_integer" },
+    { "key": "bench_log",         "name": "Bench log",         "type": "json" },
+    { "key": "dawin_source_id",   "name": "DawinOS source id", "type": "single_line_text_field" }
+  ]
+}

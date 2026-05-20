@@ -1,0 +1,166 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Weekly on Monday at 6 AM UTC
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ===========================================================================
+  # DEPENDENCY AUDIT
+  # ===========================================================================
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Generate audit report
+        run: npm audit --json > audit-report.json || true
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: audit-report.json
+          retention-days: 30
+
+  # ===========================================================================
+  # CODE SCANNING
+  # ===========================================================================
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, typescript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+  # ===========================================================================
+  # SECRET SCANNING
+  # ===========================================================================
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event_name == 'push' && github.event.before || github.event.repository.default_branch }}
+          head: ${{ github.event_name == 'push' && github.event.after || 'HEAD' }}
+          extra_args: --only-verified
+        continue-on-error: true  # Don't fail the entire workflow on TruffleHog issues
+
+  # ===========================================================================
+  # FIREBASE RULES VALIDATION
+  # ===========================================================================
+  firebase-rules-check:
+    name: Firebase Rules Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Validate Firestore rules
+        run: |
+          # The deployed rules file per firebase.json is at repo root —
+          # the stale `firebase/` copies were deleted (see Phase 4b cleanup).
+          if [ -f "firestore.rules" ]; then
+            echo "Checking Firestore rules syntax..."
+            firebase firestore:rules validate firestore.rules --project demo-project || echo "Rules validation completed with warnings"
+          fi
+
+      - name: Check for insecure patterns
+        run: |
+          echo "Checking for potentially insecure patterns..."
+
+          # Check for 'allow read, write: if true'
+          if grep -E "allow.*:.*if true" firestore.rules storage.rules 2>/dev/null; then
+            echo "WARNING: Found 'if true' patterns - review for security"
+          fi
+          
+          # Check for missing auth checks
+          if grep -r "allow.*:.*if request" firebase/*.rules 2>/dev/null | grep -v "auth"; then
+            echo "INFO: Some rules may not check authentication"
+          fi
+          
+          echo "Security pattern check completed"
+
+  # ===========================================================================
+  # SUMMARY REPORT
+  # ===========================================================================
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, codeql-analysis, secret-scan, firebase-rules-check]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Audit | ${{ needs.dependency-audit.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CodeQL Analysis | ${{ needs.codeql-analysis.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Scanning | ${{ needs.secret-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Firebase Rules | ${{ needs.firebase-rules-check.result }} |" >> $GITHUB_STEP_SUMMARY

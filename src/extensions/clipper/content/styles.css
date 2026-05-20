@@ -1,0 +1,43 @@
+/**
+ * Content script styles
+ */
+
+/* Clipping mode active - subtle overlay */
+body.dawin-clipping-active {
+  cursor: crosshair !important;
+}
+
+/* Highlight effect for hoverable images */
+.dawin-highlight {
+  outline: 3px dashed #2563EB !important;
+  outline-offset: 2px !important;
+  cursor: pointer !important;
+  transition: outline-color 0.2s !important;
+}
+
+.dawin-highlight:hover {
+  outline-color: #16A34A !important;
+  outline-style: solid !important;
+}
+
+/* Selected image style */
+.dawin-selected {
+  outline: 3px solid #16A34A !important;
+  outline-offset: 2px !important;
+}
+
+/* Toast notification */
+#dawin-toast {
+  animation: dawin-slide-in 0.3s ease-out;
+}
+
+@keyframes dawin-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

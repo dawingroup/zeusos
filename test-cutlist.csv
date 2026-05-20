@@ -1,0 +1,4 @@
+cabinet,label,material,thickness,quantity,length,width,grain,topEdge,rightEdge,bottomEdge,leftEdge
+Test Cabinet,Top Panel,Generic 0180,18,1,800,400,0,Edge-020,Edge-020,Edge-020,Edge-020
+Test Cabinet,Side Panel,Generic 0180,18,2,600,300,0,,,Edge-020,
+Test Cabinet,Bottom,OSB3,18,1,780,380,1,Edge-020,Edge-020,Edge-020,Edge-020

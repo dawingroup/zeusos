@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd template for the DawinOS MCP token-refresh proxy.
+
+  REPLACE the three placeholders before installing (launchd does NOT expand ~):
+    <NODE_PATH>   — absolute path to node, e.g. /opt/homebrew/bin/node
+    <PROXY_PATH>  — absolute path to proxy.js, e.g.
+                    /Users/yourname/CascadeProjects/dawinos/tools/dawinos-mcp-proxy/proxy.js
+    <LOG_PATH>    — absolute path for the log, e.g.
+                    /Users/yourname/.dawinos-mcp/logs/proxy.log
+
+  Then:
+    cp com.dawingroup.mcp-proxy.plist ~/Library/LaunchAgents/
+    launchctl load   ~/Library/LaunchAgents/com.dawingroup.mcp-proxy.plist
+    launchctl start  com.dawingroup.mcp-proxy
+
+  Logs: ~/.dawinos-mcp/logs/proxy.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dawingroup.mcp-proxy</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string><NODE_PATH></string>
+        <string><PROXY_PATH></string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Don't thrash if the config is missing or invalid -->
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+    <key>StandardOutPath</key>
+    <string><LOG_PATH></string>
+
+    <key>StandardErrorPath</key>
+    <string><LOG_PATH></string>
+
+    <!-- Inherit the user's PATH so /usr/local/bin etc. are reachable -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

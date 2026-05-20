@@ -1,0 +1,203 @@
+# Machine-readable mirror of Dawin-Shared-Drive-Architecture v3.1 §4.
+#
+# Every source path that writes to Google Drive MUST have an entry
+# below. `scripts/check-drive-writers.cjs` greps the repo for
+# `googleapis`, `drive.files.`, and the multipart-upload pattern, and
+# fails CI when it finds a callsite missing from this registry.
+#
+# To add a new Drive-writing module:
+#   1. Open a PR amending v3.1 §4 with the new (capability → path) row.
+#   2. Add the same (module → path) entry here with `allowed: true`.
+#   3. The governance lint will start passing.
+#
+# Per v3.1 §7: "Any new DawinOS module that creates Drive-backed
+# artefacts must be added to §4 of this document before it is permitted
+# to write to Drive."
+
+version: 3.1
+
+writers:
+  # ── Currently-existing Drive writers (grandfathered, pre-v3.1) ─────
+  - id: advisory-report-docs
+    path: src/subsidiaries/advisory/delivery/reports/services/google-docs.service.ts
+    target: "03_Group-Operations/02_Dawin-Advisory/"
+    notes: "Copies Google Docs templates, fills placeholders, moves output."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+
+  - id: advisory-drive-import
+    path: src/subsidiaries/advisory/delivery/services/drive-import-service.ts
+    target: "Read-only import from user-selected Drive folder"
+    notes: "Imports scanned receipts from Drive into Firebase Storage."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+    read_only: true
+
+  - id: strategy-google-docs
+    path: src/modules/strategy/services/strategyGoogleDocs.service.ts
+    target: "03_Group-Operations/[Subsidiary]/Strategy/"
+    notes: "Strategy document copy/edit flow."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+
+  - id: finishes-cutlist-export
+    path: src/services/driveService.js
+    target: "Customer-selected Drive folder URL"
+    notes: "Client-side OAuth CSV cutlist writer from Finishes CAD. Flagged F-B4 for consolidation."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+
+  - id: documents-scheduled-export
+    path: functions/src/scheduled/document-export.js
+    target: "Configurable per `export_configurations` doc"
+    notes: "Daily Drive/SharePoint export of the `documents` collection."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+
+  - id: advisory-document-export-client
+    path: src/subsidiaries/advisory/delivery/core/services/document-export.service.ts
+    target: "Configurable per `export_configurations` doc (mirrors `document-export.js` serverside)"
+    notes: "Client-side partner of the scheduled export — lets advisory users push manually."
+    allowed: true
+    policy_section: "v3 §2.3 (pre-v3.1 grandfather)"
+
+  # ── Phase 2 infrastructure (not standalone writers, but touch Drive API) ──
+  - id: drive-infra-config
+    path: functions/src/drive/config.js
+    target: "(infrastructure — env/feature-flag reader, no Drive calls)"
+    notes: "Declares secrets + feature flag; imported by every Phase 2 writer."
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure"
+    infrastructure: true
+
+  - id: drive-infra-auth
+    path: functions/src/drive/driveAuth.js
+    target: "(infrastructure — JWT token acquisition for Drive API)"
+    notes: "Service-account token helper. All Phase 2 Drive calls go through it."
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure"
+    infrastructure: true
+
+  - id: drive-infra-client
+    path: functions/src/drive/driveClient.js
+    target: "(infrastructure — REST wrapper for ensureFolder/uploadFile/moveItem)"
+    notes: "Primitive Drive operations. Does not choose targets; caller supplies parent IDs."
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure"
+    infrastructure: true
+
+  - id: drive-triggers
+    path: functions/src/triggers/driveTriggers.js
+    target: "Firestore triggers that dispatch to createProjectFolders + mirrorProjectFile"
+    notes: "No direct Drive calls; delegates to the two writer modules below."
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure"
+    infrastructure: true
+
+  # ── Phase 4b — onUpdate re-mirror + onDelete cascade ───────────────
+  - id: drive-update-remirror
+    path: functions/src/drive/updateProjectFileMirror.js
+    target: "01_Active-Projects/{ProjectCode}_{Client}_{Type}/{01..07}/ (same as mirror)"
+    notes: >
+      When `overwriteFile` swaps `storagePath` on a `projectFiles` doc,
+      this module deletes the stale Drive copy and re-mirrors the new
+      bytes. Also renames Drive copies in place when a policy `name`
+      changes. Closes the Phase 2 staleness gap.
+    allowed: true
+    policy_section: "v3.1 §4 — PENDING amendment (onUpdate mirror)"
+    phase: 2
+
+  - id: drive-delete-cascade
+    path: functions/src/drive/deleteProjectFileMirror.js
+    target: "N/A (deletes the Drive mirror when its projectFiles doc is deleted)"
+    notes: >
+      Cascades Firestore `projectFiles` deletions to Drive so orphan
+      files don't accumulate under `01_Active-Projects/.../0N/`. Silent
+      on failure to avoid blowing up a trigger on an already-deleted doc.
+    allowed: true
+    policy_section: "v3.1 §4 — PENDING amendment (onDelete cascade)"
+    phase: 2
+
+  # ── Admin callables ────────────────────────────────────────────────
+  - id: admin-verify-drive-folder
+    path: functions/src/admin/verifyDriveFolder.js
+    target: "(read-only — metadata lookup on any folder the admin pastes)"
+    notes: >
+      Back-end for the "Verify" button on the Drive Folder Settings
+      page. Confirms a pasted folder ID resolves AND the service
+      account can read it. Does NOT write to Drive.
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure (admin-only, read-only)"
+    infrastructure: true
+
+  # ── Phase 2 additions (pending v3.1 §4 policy amendment) ───────────
+  - id: projectfiles-mirror
+    path: functions/src/drive/mirrorProjectFile.js
+    target: "01_Active-Projects/{ProjectCode}_{Client}_{Type}/{01..07}/"
+    notes: >
+      Phase 2 of the Unified File Manager Drive bridge. Mirrors every
+      `projectFiles` doc into the matching 01..07 subfolder.
+    allowed: true
+    policy_section: "v3.1 §4 (amendment PENDING — register before production deploy)"
+    phase: 2
+
+  - id: projectfiles-bootstrap
+    path: functions/src/drive/createProjectFolders.js
+    target: "01_Active-Projects/{ProjectCode}_{Client}_{Type}/"
+    notes: >
+      Creates the project folder + 01..07 subfolder tree on new
+      `designProjects` doc creation.
+    allowed: true
+    policy_section: "v3.1 §4 (amendment PENDING — register before production deploy)"
+    phase: 2
+
+  # ── Phase 4 — archive lifecycle ────────────────────────────────────
+  - id: archive-lifecycle-move
+    path: functions/src/drive/archiveProject.js
+    target: "02_Archive/{YYYY}/"
+    notes: >
+      On `designProjects.status → 'completed'`, moves the project's
+      Drive folder from `01_Active-Projects/` into `02_Archive/{YYYY}/`
+      and batch-flags every `projectFiles` doc as archived.
+    allowed: true
+    policy_section: "v3.1 §4 — PENDING amendment (archiveProject)"
+    phase: 4
+
+  - id: archive-year-folder-scaffold
+    path: functions/src/drive/archiveYearFolder.js
+    target: "(infrastructure — ensures `02_Archive/{YYYY}/` folder exists)"
+    notes: "Thin helper used by archiveProject + archiveSweep. No decision logic."
+    allowed: true
+    policy_section: "v3.1 §4 — infrastructure"
+    infrastructure: true
+
+  - id: archive-sweep-scheduled
+    path: functions/src/scheduled/archiveSweep.js
+    target: "02_Archive/{YYYY}/ (delegates to archiveProject)"
+    notes: >
+      Monthly cron that picks up completed-but-unarchived projects —
+      covers the rollout window, previous archive failures, and
+      projects completed before Phase 4 shipped. Delegates writes to
+      archiveProject.js, so this file is infrastructure from a
+      Drive-touchpoint perspective.
+    allowed: true
+    policy_section: "v3.1 §4 — PENDING amendment (archiveSweep)"
+    phase: 4
+    infrastructure: true
+
+  # ── Anticipated Phase 5+ additions (NOT YET IMPLEMENTED) ───────────
+  # Left here as placeholders so the registry + policy section-4 stay
+  # in lockstep as each one ships. Uncomment + set `allowed: true`
+  # only after the policy amendment lands.
+  #
+  # - id: dawinos-exports
+  #   path: functions/src/drive/writeDawinosExport.js
+  #   target: "04_Templates-Resources/06_DawinOS-Assets/Exports/[YYYY-MM]/"
+  #   allowed: false
+  #   phase: 5
+  #
+  # - id: finish-library-mirror
+  #   path: functions/src/drive/mirrorFinishLibrary.js
+  #   target: "04_Templates-Resources/04_Design-Library/Finishes-Library/"
+  #   allowed: false
+  #   phase: 5

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/main.jsx",
+    "index.html",
+    "src/extensions/clipper/popup/main.tsx",
+    "src/extensions/clipper/background/service-worker.ts",
+    "src/extensions/clipper/background/service-worker-simple.ts",
+    "src/extensions/clipper/content/index.ts",
+    "scripts/**/*.{ts,cts,mts,cjs,mjs,js}",
+    "src/**/*.test.{ts,tsx}",
+    "src/**/__tests__/**/*.{ts,tsx}",
+    "src/testing/**/*.{ts,tsx}",
+    "e2e/**/*.{ts,tsx}",
+    "src/subsidiaries/advisory/matflow/migrations/**/*.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx,js,jsx}"],
+  "ignore": [
+    "src/extensions/clipper/vite.config.ts",
+    "src/extensions/clipper/postcss.config.js",
+    "src/extensions/clipper/tailwind.config.js"
+  ],
+  "ignoreDependencies": [
+    "@types/*"
+  ]
+}

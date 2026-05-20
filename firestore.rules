@@ -1,0 +1,4037 @@
+rules_version = '2';
+
+// ============================================
+// DawinOS - Dawin Finishes
+// Firestore Security Rules
+// ============================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // Helper Functions
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        // Super user bypass
+        request.auth.token.email == 'onzimai@dawin.group'
+        // Check root users collection
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
+        // Check organization users collection (doc ID = auth UID)
+        || (exists(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
+      );
+    }
+    
+    // Anonymous Firebase Auth is used by the client portal pages
+    // (ClientPortalPage, ClientChangeOrderReviewPage, etc.) via
+    // `signInAnonymouslyForPortal()`. Anonymous users ARE authenticated
+    // from Firestore's perspective, but we don't want them writing
+    // arbitrary fields to commercial documents — so internal code
+    // paths guard on `isStaffAuth()` and client-portal paths narrow
+    // the write to a field whitelist.
+    function isAnonymousAuth() {
+      return isAuthenticated()
+        && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    function isStaffAuth() {
+      return isAuthenticated() && !isAnonymousAuth();
+    }
+
+    // Whitelist of fields an anonymous (portal) client may touch on a
+    // ChangeOrder when responding to an approval request. Everything
+    // else — line items, price impact, internal approval fields — is
+    // reserved for staff auth. The service layer additionally validates
+    // the portal token before writing (clientPortalCOService.ts) so
+    // this acts as defence-in-depth.
+    function isPortalCOResponse() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let hasToken = resource.data.portalTokenId != null;
+      return isAuthenticated()
+        && hasToken
+        && changed.hasOnly([
+          'status',
+          'clientApprovedAt',
+          'clientApprovalEvidence',
+          'rejectionReason',
+          'rejectedBy',
+          'rejectedAt',
+          'withdrawnAt',
+          'withdrawnBy',
+          'withdrawnReason',
+          'updatedAt',
+          'updatedBy',
+          'sentToClientVia',
+          'appliedAt',
+          'appliedBy',
+          'deliveryTracking'
+        ]);
+    }
+
+    // ────────────────────────────────────────────────────────────
+    // Client Portal v2 (warm-paper editorial portal) access helpers.
+    //
+    // The new portal authenticates external clients with their real
+    // Google / magic-link identity. Internal staff don't appear in any
+    // project's `clientPortalUserIds`; portal clients are NOT staff in
+    // any other sense, so reads must be scoped per-project.
+    //
+    // `hasPortalAccess(doc)` consumes a Firestore document that
+    // already has the array embedded — no extra get() — to keep rule
+    // evaluation cheap on the hot dashboard / financials reads. We
+    // mirror the array onto sales orders (and any other portal-visible
+    // collections we add later) so we never have to traverse to the
+    // parent project from a rule.
+    function hasPortalAccess(doc) {
+      return isAuthenticated()
+        && 'clientPortalUserIds' in doc
+        && doc.clientPortalUserIds is list
+        && request.auth.uid in doc.clientPortalUserIds;
+    }
+
+    function isPortalEnabled(doc) {
+      return 'clientPortalUserIds' in doc
+        && doc.clientPortalUserIds is list
+        && doc.clientPortalUserIds.size() > 0;
+    }
+
+    // ────────────────────────────────────────────────────────────
+    // Staff vs portal-client identity.
+    //
+    // A "portal client" signs in with their real Firebase identity
+    // (Google / magic-link), so they pass `isStaffAuth()` (non-anonymous).
+    // The only difference from real Dawin staff is that they have no
+    // `/users/{uid}` document — that collection is the canonical staff
+    // registry. Distinguishing the two lets us let staff write freely
+    // while restricting portal clients to a narrow per-collection
+    // field whitelist on writes.
+    function isInternalStaff() {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    // Portal-authenticated client: signed in with a real identity but
+    // not on the internal staff registry. Used to gate per-field write
+    // rules on designSignOffs / changeOrders / salesOrders so portal
+    // approvals only mutate the fields they legitimately need to.
+    function isPortalAuthenticatedClient() {
+      return isStaffAuth() && !isInternalStaff();
+    }
+
+    // Allowed field whitelist for a portal client responding to a
+    // designSignOff (approve or reject). Mirrors the field set written
+    // by `recordDesignApproval` / `recordDesignRejection` in
+    // designSignOffService.ts.
+    function isPortalSignOffResponse() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return isPortalAuthenticatedClient()
+        && changed.hasOnly([
+          'status',
+          'clientApprovedAt',
+          'clientApprovalMethod',
+          'clientSignatureRef',
+          'clientApprovalNotes',
+          'approvedByName',
+          'approvedByEmail',
+          'termsAccepted',
+          'clientRejectedAt',
+          'rejectionReasons',
+          'rejectionNotes',
+          'isValid',
+          'updatedAt'
+        ]);
+    }
+
+    // Allowed field whitelist for a portal client responding to a
+    // changeOrder. Superset of `isPortalCOResponse` (the anonymous
+    // token-portal variant) — covers approve + reject paths from
+    // changeOrderService.approveChangeOrder / rejectChangeOrder.
+    function isPortalAuthenticatedCOResponse() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return isPortalAuthenticatedClient()
+        && changed.hasOnly([
+          'status',
+          'clientApprovedAt',
+          'clientApprovalEvidence',
+          'rejectionReason',
+          'rejectedBy',
+          'rejectedAt',
+          'updatedAt',
+          'appliedAt',
+          'appliedBy'
+        ]);
+    }
+
+    // Allowed field whitelist for a portal client triggering the SO
+    // updates that flow from a designSignOff or changeOrder action —
+    // the gate flip, change-order summary recount, and the applied
+    // line-item snapshot. We deliberately *do not* let portal clients
+    // touch pricing primary fields (`originalQuoteAmount`,
+    // `currentAmount`, `payments[]`, `clientPortalUserIds`).
+    function isPortalAuthenticatedSOSideEffect() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return isPortalAuthenticatedClient()
+        && hasPortalAccess(resource.data)
+        && changed.hasOnly([
+          'gates',
+          'pendingChangeOrders',
+          'totalChangeOrderValue',
+          'changeOrders',
+          'scopeVersion',
+          'updatedAt',
+          'updatedBy',
+          'statusHistory'
+        ]);
+    }
+
+    function isProjectMember(projectId) {
+      // Admin check FIRST — short-circuits before we read the project
+      // doc. Previously a missing / unreadable project caused the whole
+      // function to throw (Firestore evaluates the `let` eagerly) even
+      // for admins, surfacing as "Missing or insufficient permissions"
+      // on flows like Design Studio → DesignItem parts sync.
+      return isAuthenticated() && (
+        isAdmin()
+        || (
+          exists(/databases/$(database)/documents/designProjects/$(projectId))
+          && (
+            get(/databases/$(database)/documents/designProjects/$(projectId)).data.createdBy == request.auth.uid
+            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.createdBy == request.auth.token.email
+            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.assignedDesigner == request.auth.token.email
+            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.assignedEngineer == request.auth.token.email
+          )
+        )
+      );
+    }
+    
+    // ============================================
+    // Cutlist Processor Collections
+    // ============================================
+    
+    // Work Instances collection
+    match /workInstances/{instanceId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Material Mappings
+    match /materialMappings/{mappingId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Stock Materials
+    match /stockMaterials/{materialId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // ============================================
+    // Material Library Collections
+    // ============================================
+    
+    // Global materials (admin managed)
+    match /materials/{materialId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Unified Inventory (single source of truth for materials)
+    match /inventoryItems/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Inventory Categories (dynamic category registry)
+    match /inventoryCategories/{slug} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin()
+        && resource.data.isSystem == false
+        && resource.data.itemCount == 0;
+    }
+
+    // Inventory Issues (spareparts/consumables expense flow)
+    match /inventoryIssues/{issueId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAdmin(); // only admin can retry QBO sync
+      allow delete: if false;
+    }
+
+    // Stock Adjustments
+    match /stock_adjustments/{adjustmentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if false; // Never delete — use cancel status
+    }
+
+    // Inventory AI Agent Instructions (admin-configurable audit profiles)
+    match /inventoryAgentInstructions/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Inventory AI Audit Results (persisted last audit)
+    match /inventoryAuditResults/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+    }
+
+    // Workshop Viewer Sessions
+    match /workshop_viewer_sessions/{sessionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Credit Usage (AI generation tracking)
+    match /creditUsage/{subsidiaryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Finish Library (shared finish catalog)
+    match /finishLibrary/{finishId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Finish Attribute Definitions (dynamic attribute schemas per category)
+    match /finishAttributeDefinitions/{attrId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Product Variants (finish + attribute combinations with stock)
+    match /productVariants/{variantId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+
+      // Stock transaction ledger (subcollection)
+      match /stockTransactions/{txnId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false; // Ledger entries are immutable
+      }
+
+      // Stock reservations (subcollection)
+      match /reservations/{resId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // Offcut Library
+    match /offcuts/{offcutId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // ============================================
+    // Manufacturing & Inventory Operations
+    // ============================================
+
+    // Manufacturing Orders
+    match /manufacturingOrders/{moId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // Design Studio
+    // ============================================
+
+    // Product Definition Documents
+    match /productDefinitions/{pddId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Design Knowledge Base
+    match /designKnowledgeBase/{entryId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Manufacturing Data Packages
+    match /manufacturingDataPackages/{mdpId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Design Scenes (multi-cabinet scene composition)
+    match /designScenes/{sceneId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      match /cabinets/{cabinetId} {
+        allow read: if isAuthenticated();
+        // P2 Slice 6: every cabinet in a project-backed scene MUST carry a
+        // non-empty `designItemId`. Standalone scenes (no real projectId)
+        // are exempt — they're the legacy / quick-review escape hatch. The
+        // rule reads the parent scene once to decide which regime applies.
+        // Update enforcement uses `affectedKeys()` so legacy docs without
+        // the field survive unrelated updates until the backfill runs.
+        allow create: if isAuthenticated()
+          && (
+            // Standalone scenes: no enforcement.
+            !exists(/databases/$(database)/documents/designScenes/$(sceneId))
+            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == null
+            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == ''
+            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == 'standalone'
+            // Project-backed: require non-empty designItemId.
+            || (request.resource.data.designItemId is string
+                && request.resource.data.designItemId.size() > 0)
+          );
+
+        allow update: if isAuthenticated()
+          && (
+            // Standalone scenes: no enforcement.
+            get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == null
+            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == ''
+            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == 'standalone'
+            // The payload doesn't touch designItemId — defer to existing value.
+            || !('designItemId' in request.resource.data.diff(resource.data).affectedKeys())
+            // The payload sets designItemId to a valid non-empty string.
+            || (request.resource.data.designItemId is string
+                && request.resource.data.designItemId.size() > 0)
+          );
+
+        allow delete: if isAuthenticated();
+
+        match /modelPackage/{packageId} {
+          allow read: if isAuthenticated();
+          allow create, update: if isAuthenticated();
+          allow delete: if isAdmin();
+
+          match /versions/{versionId} {
+            allow read: if isAuthenticated();
+            allow create, update: if isAuthenticated();
+            allow delete: if isAdmin();
+          }
+        }
+
+        match /assemblies/{assemblyId} {
+          allow read: if isAuthenticated();
+          allow create, update: if isAuthenticated();
+          allow delete: if isAuthenticated();
+
+          match /parts/{partId} {
+            allow read: if isAuthenticated();
+            allow create, update: if isAuthenticated();
+            allow delete: if isAuthenticated();
+          }
+        }
+      }
+
+      // Cabinet Alignment System — groups subcollection (Phase 1).
+      // Groups bind multiple cabinets into a single logical unit for
+      // drag/rotate/numeric edits. Any authenticated user with access
+      // to the parent scene can read + write groups.
+      match /groups/{groupId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+    }
+
+    // Project PDFs
+    match /projectPDFs/{pdfId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    // Configurator Analytics
+    match /configuratorAnalytics/{eventId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    // ============================================
+    // CRM & Sales Pipeline
+    // ============================================
+
+    // CRM Deals / Opportunities
+    match /crmDeals/{dealId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // CRM Activities (manual + auto-generated)
+    match /crmActivities/{activityId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // CRM Sales Tasks
+    match /crmTasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // Integrations (QuickBooks OAuth tokens + config)
+    match /integrations/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+
+      // QBO item resolution cache (written by Cloud Functions, readable by frontend)
+      match /items/{cacheKey} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated();
+      }
+
+      // QBO item resolution audit log (written by Cloud Functions, reviewed in settings UI)
+      match /resolution_log/{logId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated();
+      }
+    }
+
+    // Purchase Orders
+    match /purchaseOrders/{poId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      // Prevent self-approval: approver must not be the PO creator
+      allow update: if isAuthenticated() && (
+        // Admin can always update
+        isAdmin()
+        // Non-approval updates (status not changing to approved)
+        || !(request.resource.data.status == 'approved' && resource.data.status == 'pending-approval')
+        // Approval updates: approver must differ from creator
+        || (request.resource.data.status == 'approved'
+            && resource.data.status == 'pending-approval'
+            && request.auth.uid != resource.data.createdBy)
+      );
+      allow delete: if isAdmin();
+    }
+
+    // PO Counters (for collision-safe auto-numbering)
+    match /counters/{counterId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Warehouses & Storage Locations
+    match /warehouses/{warehouseId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Stock Levels (per-item per-location)
+    match /stockLevels/{stockLevelId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Stock Movement audit trail
+      match /movements/{movementId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false; // Immutable audit trail
+      }
+    }
+
+    // Cost History (unit cost changes over time)
+    match /costHistory/{entryId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Immutable cost audit
+    }
+
+    // ============================================
+    // Customer Hub Collections
+    // ============================================
+    
+    // Customers collection
+    match /customers/{customerId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      // Only allow update/delete for authenticated users
+      // Cloud Functions use Firebase Admin SDK which bypasses rules
+      allow update, delete: if isAuthenticated();
+
+      // Customer-specific materials
+      match /materials/{materialId} {
+        allow read: if isAuthenticated();
+        allow create, update, delete: if isAuthenticated();
+      }
+
+      // Customer Projects subcollection (future)
+      match /projects/{projectId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+
+    // Customer Contacts — normalized top-level collection (P11-3 / F8).
+    // Source of truth remains the embedded Customer.contacts[] array;
+    // this mirror is what CRM pickers and merge rewrites read.
+    match /customerContacts/{contactId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // Party merge audit trail (P8/F1 follow-up — dedupe).
+    // Write-mostly: any authenticated user can append a merge audit;
+    // rewrites and deletes are forbidden at the rule level so the trail
+    // is tamper-evident (Cloud Functions / admin SDK still bypass).
+    match /partyMerges/{auditId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // Design Manager Collections
+    // ============================================
+    
+    // Unified File Manager — top-level projectFiles collection.
+    // Read is open to any authenticated user (MVP — tighten per-project later).
+    // Write requires ownership OR admin; approval lock (F-E2) blocks non-admin
+    // writes to files with status=='approved' so a signed-off drawing cannot
+    // be silently overwritten by Design Studio or the File Manager.
+    match /projectFiles/{fileId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() &&
+        (resource.data.uploadedBy == request.auth.uid || isAdmin()) &&
+        (resource.data.status != 'approved' || isAdmin());
+      allow delete: if isAuthenticated() &&
+        (resource.data.uploadedBy == request.auth.uid || isAdmin()) &&
+        (resource.data.status != 'approved' || isAdmin());
+    }
+
+    // ==========================================================================
+    // SYSTEM SETTINGS (admin-configured runtime knobs)
+    // ==========================================================================
+    //
+    // Live-editable configuration for the Drive bridge and related
+    // infra. Reads are authenticated-only so Cloud Functions can read
+    // (they auth as admin); writes are strictly admin-gated because a
+    // wrong folder ID here silently re-routes every new project write
+    // into the wrong Drive tree.
+    match /systemSettings/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Design Projects
+    match /designProjects/{projectId} {
+      // Read access:
+      //  - Projects WITHOUT a `clientPortalUserIds` whitelist keep the
+      //    existing behaviour (any authenticated user, including the
+      //    legacy anonymous-token portal sessions). This preserves
+      //    every internal staff flow and the old client portal.
+      //  - Projects WITH a non-empty whitelist are scoped: admins,
+      //    project members (createdBy / assignedDesigner / engineer)
+      //    or UIDs explicitly whitelisted on the doc can read.
+      //    Anonymous users are blocked — they cannot be in the
+      //    whitelist by construction, so the new portal stays gated.
+      allow read: if isAuthenticated() && (
+        !isPortalEnabled(resource.data)
+        || isAdmin()
+        || isProjectMember(projectId)
+        || hasPortalAccess(resource.data)
+      );
+
+      // P5: A DesignProject MUST be linked to a customer. New writes must set
+      // `customerId` as a non-empty string. Update enforcement only kicks in
+      // when the request explicitly touches `customerId`, so legacy docs that
+      // already have a value don't break on unrelated updates — but no write
+      // is allowed to clear or null it out.
+      allow create: if isAuthenticated()
+        && request.resource.data.customerId is string
+        && request.resource.data.customerId.size() > 0;
+
+      // Updates: existing customerId guard PLUS two anti-privilege
+      // protections for the new portal —
+      //   1. The whitelist itself (`clientPortalUserIds`) is admin-
+      //      managed only, so a portal client cannot escalate by
+      //      adding their own UID or removing the project director's.
+      //   2. Anonymous (token-portal) sessions cannot mutate a portal-
+      //      enabled project at all — the new portal does writes via
+      //      staff-side services, never directly from the client app.
+      allow update: if isAuthenticated()
+        && (
+          !('customerId' in request.resource.data.diff(resource.data).affectedKeys())
+          || (request.resource.data.customerId is string
+              && request.resource.data.customerId.size() > 0)
+        )
+        && (
+          !('clientPortalUserIds' in request.resource.data.diff(resource.data).affectedKeys())
+          || isAdmin()
+        )
+        && (
+          !isPortalEnabled(resource.data)
+          || !isAnonymousAuth()
+        );
+
+      allow delete: if isProjectMember(projectId) || isAdmin();
+      
+      // Project-specific materials
+      match /materials/{materialId} {
+        allow read: if isAuthenticated();
+        allow create, update, delete: if isProjectMember(projectId);
+      }
+      
+      // Project Parts Library (shared special parts across design items)
+      match /projectParts/{partId} {
+        allow read: if isAuthenticated();
+        allow create, update, delete: if isProjectMember(projectId);
+      }
+      
+      // Design Items (subcollection)
+      match /designItems/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update, delete: if isProjectMember(projectId);
+        
+        // Stage History (append-only audit trail)
+        match /stageHistory/{historyId} {
+          allow read: if isAuthenticated();
+          allow create: if isProjectMember(projectId);
+          allow update, delete: if false; // Immutable audit trail
+        }
+        
+        // Approvals
+        match /approvals/{approvalId} {
+          allow read: if isAuthenticated();
+          allow create, delete: if isProjectMember(projectId);
+          allow update: if isAuthenticated() && 
+            resource.data.assignedTo == request.auth.token.email;
+        }
+        
+        // Deliverables
+        match /deliverables/{deliverableId} {
+          allow read: if isAuthenticated();
+          allow create, update, delete: if isProjectMember(projectId);
+        }
+
+        // Parts history (append-only audit trail of every parts sync —
+        // Workshop Viewer AI import, CSV import, Design Studio scene sync).
+        // Written by writePartsWithVersion alongside the designItem update.
+        // Without this rule the whole syncPartsToDesignItem flow fails with
+        // "Missing or insufficient permissions" because the history write
+        // lands in a subcollection with no matching rule.
+        match /parts_history/{historyId} {
+          allow read: if isAuthenticated();
+          allow create: if isProjectMember(projectId);
+          allow update, delete: if false; // Immutable audit trail
+        }
+      }
+      
+      // Client Documents (uploaded files with AI analysis)
+      match /clientDocuments/{documentId} {
+        allow read: if isAuthenticated();
+        allow create: if isProjectMember(projectId);
+        allow update: if isProjectMember(projectId);
+        allow delete: if isProjectMember(projectId);
+      }
+
+      // Client Interactions (meetings, calls, site visits, etc.)
+      match /clientInteractions/{interactionId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isProjectMember(projectId);
+        allow delete: if isProjectMember(projectId);
+      }
+
+      // AI Analyses (project-level)
+      match /aiAnalyses/{analysisId} {
+        allow read: if isAuthenticated();
+        allow create: if isProjectMember(projectId);
+        allow update: if isAuthenticated() && 
+          resource.data.requestedBy == request.auth.token.email;
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // ============================================
+    // User Management
+    // ============================================
+    
+    // Users collection (for role-based access)
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // Allow authenticated users to create their profile
+      allow update, delete: if request.auth.uid == userId || isAdmin();
+    }
+    
+    // ============================================
+    // Error Logging (Design Manager)
+    // ============================================
+    
+    match /designManagerErrors/{errorId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    
+    // ============================================
+    // Asset Registry Collections
+    // ============================================
+    
+    // Assets collection
+    match /assets/{assetId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Maintenance logs
+    match /maintenanceLogs/{logId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Asset status changes (audit log)
+    match /assetStatusChanges/{changeId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Asset checkouts
+    match /assetCheckouts/{checkoutId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Asset consumables & repair parts
+    match /assetConsumables/{consumableId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Features collection
+    match /features/{featureId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================
+    // AI Features Collections
+    // ============================================
+    
+    // Project Strategy (Strategy Canvas)
+    match /projectStrategy/{projectId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // CEO Strategy Reviews
+    // ============================================
+
+    match /companies/{companyId}/strategy_reviews/{reviewId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Document sections (parsed from uploaded strategy documents)
+      match /document_sections/{sectionId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Section audit log (append-only change history)
+      match /section_audit_log/{auditId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        // Audit entries are immutable — no update or delete
+      }
+    }
+
+    // Business Pivots (company-level, shared across reviews)
+    match /companies/{companyId}/business_pivots/{pivotId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Financial Reports (aggregator reads for strategy context)
+    match /companies/{companyId}/financial_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Sync Jobs
+    match /companies/{companyId}/sync_jobs/{jobId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/qbo_sync_jobs/{jobId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Synced Financial Data (P&L, Balance Sheet)
+    match /companies/{companyId}/qbo_synced_data/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Chart of Accounts
+    match /companies/{companyId}/qbo_accounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Items (Products & Services)
+    match /companies/{companyId}/qbo_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Invoices
+    match /companies/{companyId}/qbo_invoices/{invoiceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Bills
+    match /companies/{companyId}/qbo_bills/{billId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // QBO Bank Transactions
+    match /companies/{companyId}/qbo_bank_transactions/{txnId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Fathom Reports (synced from Fathom Reporting)
+    match /companies/{companyId}/fathom_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Fathom Alerts
+    match /companies/{companyId}/fathom_alerts/{alertId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Reconciliation Schedules
+    match /companies/{companyId}/reconciliation_schedules/{scheduleId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Reconciliation Tasks
+    match /companies/{companyId}/reconciliation_tasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Finance Documents
+    match /companies/{companyId}/finance_documents/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Tax Portal Links
+    match /companies/{companyId}/tax_portal_links/{linkId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Three-Way Forecast Engine
+    match /companies/{companyId}/forecasts/{forecastId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      match /value_rules/{ruleId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      match /periods/{period} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Micro Forecast sub-collections (Phase 2)
+      match /micro_capex/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      match /micro_loans/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      match /micro_capital_events/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      match /micro_dividends/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+    }
+
+    // Budget Spreadsheet (companies subcollection)
+    match /companies/{companyId}/budgets/{budgetId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/budgetLines/{lineId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // ============================================
+    // Cash Flow Optimizer Collections
+    // ============================================
+
+    match /companies/{companyId}/cashflow_projections/{projectionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/expenditure_queue/{expenditureId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/spend_plans/{planId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/savings_ledger/{entryId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/liability_register/{liabilityId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/optimizer_config/{configId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/optimizer_runs/{runId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/projected_receipts/{receiptId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/client_payment_profiles/{profileId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/optimizer_semaphores/{semaphoreId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/cfo_briefings/{briefingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/scenario_results/{scenarioId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/notifications/{notificationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // Capital Hub Collections
+    // ============================================
+
+    match /companies/{companyId}/capital_needs/{needId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/capital_products/{productId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/capital_applications/{applicationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/capital_facilities/{facilityId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /companies/{companyId}/capital_readiness/{assessmentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // Market Intelligence / Environment Scanning
+    // ============================================
+
+    match /environment_signals/{signalId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /pestel_analyses/{analysisId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /scenarios/{scenarioId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /regulatory_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /tracked_indicators/{indicatorId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /early_warning_alerts/{alertId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /alert_triggers/{triggerId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Feature Library
+    match /featureLibrary/{featureId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Design Item AI Conversations
+    match /designItemConversations/{conversationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // AI Chat History (Strategy Research, Design Item Enhancement, etc.)
+    match /aiChats/{chatId} {
+      // Allow read if user owns the chat OR if chat is linked to a project they can access
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.projectId != null
+      );
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // AI Context (change detection for AI tools)
+    match /aiContext/{contextId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // AI Memory (persistent business knowledge)
+    match /ai_memory/{memoryId} {
+      allow read: if isAuthenticated() && (
+        resource.data.companyId == 'default' || resource.data.companyId == getUserOrg() || isAdmin()
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.companyId == 'default' || request.resource.data.companyId == getUserOrg() || isAdmin()
+      );
+      allow update: if isAuthenticated() && (
+        resource.data.companyId == 'default' || resource.data.companyId == getUserOrg() || isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        (resource.data.createdBy == request.auth.uid && (resource.data.companyId == 'default' || resource.data.companyId == getUserOrg()))
+        || isAdmin()
+      );
+    }
+    
+    // AI Conversations (persistent chat history)
+    match /ai_conversations/{conversationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.userId == request.auth.uid
+      );
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && (
+          get(/databases/$(database)/documents/ai_conversations/$(conversationId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+        allow create: if isAuthenticated() && (
+          get(/databases/$(database)/documents/ai_conversations/$(conversationId)).data.userId == request.auth.uid
+        );
+        allow update: if isAuthenticated() && (
+          get(/databases/$(database)/documents/ai_conversations/$(conversationId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+        allow delete: if isAuthenticated() && (
+          get(/databases/$(database)/documents/ai_conversations/$(conversationId)).data.userId == request.auth.uid
+          || isAdmin()
+        );
+      }
+    }
+    
+    // Product Roadmap
+    match /roadmapProducts/{productId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Launch Pipeline Products
+    match /launchProducts/{productId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Product Audits (catalog health / AI audit results)
+    // Cloud Functions write via Admin SDK; clients read only
+    match /productAudits/{auditId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only Cloud Functions (Admin SDK) can write
+    }
+
+    // Product Sync Mappings (Shopify)
+    match /productSyncMappings/{mappingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Rate Limiting (managed by Cloud Functions)
+    // Only allow authenticated reads for rate limit checks
+    // Cloud Functions use Admin SDK which bypasses rules
+    match /rateLimits/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only Cloud Functions (Admin SDK) can write
+    }
+
+    // System Config (Feature Library cache, etc.)
+    // Only admins can write system config from client
+    // Cloud Functions use Admin SDK which bypasses rules
+    match /systemConfig/{configId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ============================================
+    // Design Clipper Collections
+    // ============================================
+    
+    // Design Clips (inspiration capture from Chrome extension)
+    // Uses user UID for createdBy field
+    // Allow reading all clips for inspiration search/recommendations
+    match /designClips/{clipId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && 
+        request.resource.data.createdBy == request.auth.uid;
+      allow update: if isAuthenticated() && 
+        resource.data.createdBy == request.auth.uid;
+      allow delete: if isAuthenticated() && 
+        resource.data.createdBy == request.auth.uid;
+    }
+    
+    // ============================================
+    // Client Portal Collections
+    // ============================================
+    
+    // Client Quotes - Quotes sent to clients for approval
+    match /clientQuotes/{quoteId} {
+      // Internal users can read/create/update quotes
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      // Allow delete only for draft quotes by authenticated users
+      allow delete: if isAuthenticated() && resource.data.status == 'draft';
+      
+      // Activity log subcollection
+      match /activity/{activityId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false; // Immutable audit trail
+      }
+    }
+    
+    // Public access for client portal (via access token)
+    // Note: list access is denied - only get with valid document ID allowed
+    // Security requires the client to know both the quoteId AND the accessToken
+    match /clientQuotes/{quoteId} {
+      // Deny list operation - user must know specific quoteId
+      // Allow get only - requires knowing the exact document ID
+      allow get: if resource.data.accessToken != null;
+      // Allow update for anonymous/unauthenticated portal viewers (mark as viewed)
+      allow update: if resource.data.accessToken != null;
+      // list is not allowed for unauthenticated users
+    }
+
+    // Token lookup for client portal — maps accessToken → quoteId / CO / design-signoff.
+    // Public get + narrow list access so portal pages (ClientPortalPage,
+    // ClientChangeOrderReviewPage, ClientQuoteAcceptancePage) can resolve
+    // a token without being staff-authenticated. Tokens are 128-bit
+    // random so enumeration is infeasible, and the list limit caps
+    // collateral if rules are ever misconfigured.
+    match /clientPortalTokens/{tokenDocId} {
+      allow get: if true;
+      allow list: if request.query.limit <= 5;
+      allow create, update: if isStaffAuth();
+      allow delete: if isAdmin();
+    }
+    
+    // Client Portal Messages
+    match /clientPortalMessages/{messageId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated(); // For marking as read
+      allow delete: if isAdmin();
+    }
+
+    // Revision Requests (Phase 3b — F-D3 feedback loop).
+    // Clients (anonymous portal auth) create requests; designers (staff
+    // auth) read the inbox and transition status (acknowledge / resolve /
+    // decline). Immutability of identity fields is enforced by
+    // requiring `projectId`, `itemId`, `requestedBy`, `createdAt` to
+    // match the existing document on update.
+    match /revisionRequests/{requestId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() &&
+        request.resource.data.projectId == resource.data.projectId &&
+        request.resource.data.itemId == resource.data.itemId &&
+        request.resource.data.requestedBy == resource.data.requestedBy &&
+        request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+
+      // Immutable activity log (state transitions, designer replies).
+      match /activity/{activityId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+    }
+    
+    // Project Deliverables (drawings, models, specs)
+    match /projectDeliverables/{deliverableId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Client Approval Items (materials, parts)
+    match /clientApprovalItems/{itemId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Client Payments
+    match /clientPayments/{paymentId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // SketchUp Models
+    match /sketchupModels/{modelId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================
+    // SALES ORDERS - Commercial Protection Module
+    // ============================================
+
+    // Sales Orders
+    //
+    // The new client portal exposes contract value, payment schedule
+    // and invoice register from the SO. We mirror the project's
+    // `clientPortalUserIds` whitelist onto the SO doc (written by the
+    // seed + the staff-side service when access changes) so this rule
+    // never needs a get() to the parent project on hot paths.
+    //
+    // Same shape as designProjects: SOs without a whitelist keep the
+    // existing broad access; SOs with a non-empty whitelist are scoped.
+    match /salesOrders/{orderId} {
+      allow read: if isAuthenticated() && (
+        !isPortalEnabled(resource.data)
+        || isAdmin()
+        || hasPortalAccess(resource.data)
+        || isStaffAuth()
+      );
+      allow create: if isStaffAuth() || isAdmin();
+      // Writes:
+      //   - Internal staff / admins → full access (existing behaviour).
+      //   - Portal-authenticated clients (signed in via Google /
+      //     magic-link, no /users/{uid} doc) → narrow side-effect
+      //     whitelist only. Triggered by `recordDesignApproval` and
+      //     `approveChangeOrder` flipping gates / recounting CO
+      //     summaries; everything else (pricing, payments, the portal
+      //     whitelist itself) is reserved for staff.
+      allow update: if isAdmin()
+        || (isStaffAuth() && isInternalStaff())
+        || isPortalAuthenticatedSOSideEffect();
+      allow delete: if isAdmin();
+    }
+
+    // Change Orders
+    //
+    // Reads: any authenticated user (staff or anonymous portal client).
+    // Create: staff only — COs originate from the SO detail wizard.
+    // Update: staff (full edit) or anonymous portal users restricted
+    //   to the approval-response field whitelist in `isPortalCOResponse`.
+    //   The client-portal service (`clientPortalCOService`) validates
+    //   the portal token server-side before writing.
+    // Delete: admin only.
+    //
+    // The `approvalEvents` subcollection is the immutable audit trail
+    // for every state transition — writes are allowed (both staff and
+    // portal) but nothing may be updated or deleted once written.
+    match /changeOrders/{coId} {
+      allow read, list: if isAuthenticated();
+      allow create: if isStaffAuth();
+      // Three accepted write paths:
+      //   1. Internal staff / admin — full field access.
+      //   2. Legacy anonymous-token portal — narrow whitelist via
+      //      `isPortalCOResponse` (`hasToken` gate, fewer fields).
+      //   3. New portal-authenticated client — narrow whitelist via
+      //      `isPortalAuthenticatedCOResponse`. Doesn't need a token
+      //      because the staff service has already verified the
+      //      user's project membership client-side; this rule is
+      //      defence-in-depth, restricting the blast radius to the
+      //      approve/reject field set even if a malicious actor with
+      //      portal session tries to write something else.
+      allow update: if isAdmin()
+        || (isStaffAuth() && isInternalStaff())
+        || isPortalCOResponse()
+        || isPortalAuthenticatedCOResponse();
+      allow delete: if isAdmin();
+
+      match /approvalEvents/{eventId} {
+        allow read, list: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+    }
+
+    // Design Sign-Offs
+    //
+    // `get` stays public to keep the legacy token-portal links working
+    // (the token holder needs to read the doc to render the approval
+    // page). `list` requires auth.
+    //
+    // Writes — three accepted paths:
+    //   1. Internal staff / admin — full field access.
+    //   2. Legacy anonymous-token portal — historic behaviour of
+    //      `allow update: if true` is preserved when the doc carries a
+    //      `clientPortalToken`. This keeps the old portal working but
+    //      narrows writes to docs that actually originated a token.
+    //   3. New portal-authenticated client — narrow whitelist via
+    //      `isPortalSignOffResponse`, mirroring the fields written by
+    //      `recordDesignApproval` / `recordDesignRejection`.
+    match /designSignOffs/{signOffId} {
+      allow get: if true;
+      allow list: if isAuthenticated();
+      allow create: if isStaffAuth() || isAdmin();
+      allow update: if isAdmin()
+        || (isStaffAuth() && isInternalStaff())
+        || (isAuthenticated() && resource.data.clientPortalToken != null)
+        || isPortalSignOffResponse();
+      allow delete: if isAdmin();
+    }
+
+    // Drawing pin comments — one doc per pin on a design signoff.
+    // Reads / writes mirror the access on the parent designSignOff:
+    // anyone authenticated can read (signoff list is auth-gated
+    // upstream); creates / status updates are open to staff or any
+    // portal-authenticated user. Append-only comments use arrayUnion
+    // so they're race-safe. Deletes are admin-only — we don't want
+    // clients deleting pins that have history.
+    match /drawingPins/{pinId} {
+      allow read, list: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.signOffId is string
+        && request.resource.data.x is number
+        && request.resource.data.y is number;
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin()
+        || (isStaffAuth() && isInternalStaff());
+    }
+
+    // Discount Policies
+    match /discountPolicies/{policyId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Contracts (created by SO release trigger)
+    match /contracts/{contractId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // MATFLOW - Dawin Advisory
+    // Construction Material Management
+    // ============================================
+    
+    // Helper: Get user's organization ID
+    function getUserOrg() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.organizationId;
+    }
+    
+    // Helper: Check if user is org member
+    function isOrgMember(orgId) {
+      return isAuthenticated() && getUserOrg() == orgId;
+    }
+    
+    // Helper: Check if user is MatFlow project member
+    function isMatFlowProjectMember(orgId, projectId) {
+      let project = get(/databases/$(database)/documents/organizations/$(orgId)/matflow_projects/$(projectId)).data;
+      let userId = request.auth.uid;
+      let userEmail = request.auth.token.email;
+      
+      return isOrgMember(orgId) && (
+        project.createdBy == userId ||
+        userId in project.memberIds
+      );
+    }
+    
+    // Helper: Check MatFlow capability
+    function hasMatFlowCapability(orgId, projectId, capability) {
+      let project = get(/databases/$(database)/documents/organizations/$(orgId)/matflow_projects/$(projectId)).data;
+      let userId = request.auth.uid;
+      
+      // Check if user has capability in their member entry
+      return userId in project.memberCapabilities && 
+        capability in project.memberCapabilities[userId];
+    }
+    
+    // ----------------------------------------
+    // Global MatFlow Collections
+    // ----------------------------------------
+
+    // Legacy MatFlow Projects (root-level collection for migration)
+    match /matflow_projects/{projectId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Subcollections
+      match /{subcollection}/{docId} {
+        allow read: if isAuthenticated();
+        allow write: if isAuthenticated();
+      }
+    }
+
+    // Standard Formulas - Read by all authenticated, write by authenticated (for seeding)
+    match /matflow/data/formulas/{formulaId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // Material Rates - Read by all authenticated, write by authenticated (for seeding)
+    match /matflow/data/material_rates/{rateId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // Role Definitions - Read by all authenticated, write by authenticated (for seeding)
+    match /matflow/data/roles/{roleId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // ----------------------------------------
+    // Organization MatFlow Projects
+    // ----------------------------------------
+    
+    match /organizations/{orgId}/matflow_projects/{projectId} {
+      // Simplified rules for development - allow authenticated users
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() &&
+        request.resource.data.createdBy == request.auth.uid;
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin() ||
+        resource.data.createdBy == request.auth.uid;
+
+      // ----------------------------------------
+      // BOQ Items Subcollection
+      // ----------------------------------------
+
+      match /boq_items/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // ----------------------------------------
+      // Procurement Entries Subcollection
+      // ----------------------------------------
+
+      match /procurement_entries/{entryId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // ----------------------------------------
+      // Parsing Jobs Subcollection
+      // ----------------------------------------
+
+      match /parsing_jobs/{jobId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+    }
+
+    // ----------------------------------------
+    // Organization Advisory Programs (Unified)
+    // ----------------------------------------
+
+    // Note: Read access is public to support CD Portal (unauthenticated token-based access)
+    match /organizations/{orgId}/advisory_programs/{programId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin() ||
+        resource.data.createdBy == request.auth.uid;
+
+      // Activity log for advisory programs
+      match /activityLog/{logId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+
+      // Budget Periods (calendar-year budget management)
+      match /budget_periods/{periodId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Carry-Forward Requests (year-end unspent fund workflow)
+      match /carry_forward_requests/{requestId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Fund Locations (HQ, regional, field offices)
+      match /fund_locations/{locationId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Fund Transfers (inter-location disbursements)
+      match /fund_transfers/{transferId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Exchange Rates (reference rate table)
+      match /exchange_rates/{rateId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // Co-Investments (donor & client contribution tracking)
+      match /co_investments/{entryId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // ----------------------------------------
+    // Organization Advisory Projects (Unified)
+    // Replaces matflow_projects for the unified collection
+    // ----------------------------------------
+
+    // Note: Read access is public to support CD Portal (unauthenticated token-based access)
+    match /organizations/{orgId}/advisory_projects/{projectId} {
+      allow read: if true;
+      allow create: if isAuthenticated() &&
+        request.resource.data.createdBy == request.auth.uid;
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin() ||
+        resource.data.createdBy == request.auth.uid;
+
+      // ----------------------------------------
+      // BOQ Items Subcollection
+      // ----------------------------------------
+
+      match /boq_items/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // ----------------------------------------
+      // Procurement Entries Subcollection
+      // ----------------------------------------
+
+      match /procurement_entries/{entryId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // ----------------------------------------
+      // Parsing Jobs Subcollection
+      // ----------------------------------------
+
+      match /parsing_jobs/{jobId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // ----------------------------------------
+      // Activity Log Subcollection
+      // ----------------------------------------
+
+      match /activityLog/{logId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+    }
+    
+    // ============================================
+    // DAWIN ADVISORY PLATFORM
+    // Engagement-centric architecture
+    // ============================================
+    
+    // ----------------------------------------
+    // Advisory Helper Functions
+    // ----------------------------------------
+    
+    // Get user document for advisory
+    function getAdvisoryUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    // Check platform role
+    function hasPlatformRole(role) {
+      return isAuthenticated() && getAdvisoryUserDoc().platformRole == role;
+    }
+    
+    // Check if user is platform admin
+    function isPlatformAdmin() {
+      return hasPlatformRole('super_admin') || hasPlatformRole('admin');
+    }
+    
+    // Check if user is platform staff (any staff role)
+    function isPlatformStaff() {
+      let user = getAdvisoryUserDoc();
+      return user.platformRole in ['super_admin', 'admin', 'manager', 'staff'];
+    }
+    
+    // Get user's role in an engagement
+    function getEngagementRole(engagementId) {
+      let user = getAdvisoryUserDoc();
+      return user.engagementRoles[engagementId];
+    }
+    
+    // Check if user has role in engagement
+    function hasEngagementRole(engagementId, allowedRoles) {
+      let role = getEngagementRole(engagementId);
+      return role != null && role in allowedRoles;
+    }
+    
+    // Check if user is engagement owner or lead
+    function isEngagementLeadership(engagementId) {
+      return hasEngagementRole(engagementId, ['engagement_owner', 'engagement_lead']);
+    }
+    
+    // Check if user can read engagement
+    function canReadEngagement(engagementId) {
+      return isPlatformAdmin() || getEngagementRole(engagementId) != null;
+    }
+    
+    // Check if user can write to engagement
+    function canWriteEngagement(engagementId) {
+      return isPlatformAdmin() || hasEngagementRole(engagementId, [
+        'engagement_owner', 
+        'engagement_lead',
+        'program_manager',
+        'deal_lead',
+        'portfolio_manager',
+        'project_manager',
+        'finance_officer',
+        'compliance_officer'
+      ]);
+    }
+    
+    // Check if user can manage engagement (update settings, team)
+    function canManageEngagement(engagementId) {
+      return isPlatformAdmin() || isEngagementLeadership(engagementId);
+    }
+    
+    // Check if user can approve in engagement
+    function canApproveInEngagement(engagementId) {
+      return hasEngagementRole(engagementId, [
+        'engagement_owner',
+        'engagement_lead',
+        'program_manager',
+        'project_manager',
+        'deal_lead',
+        'portfolio_manager',
+        'finance_officer'
+      ]);
+    }
+    
+    // Check if user is associated with a client
+    function isClientAssociated(clientId) {
+      let user = getAdvisoryUserDoc();
+      return user.clientAssociations != null && 
+             clientId in user.clientAssociations;
+    }
+    
+    // Check if user is associated with a funder
+    function isFunderAssociated(funderId) {
+      let user = getAdvisoryUserDoc();
+      return user.funderAssociations != null && 
+             funderId in user.funderAssociations;
+    }
+    
+    // Validate required fields exist
+    function hasRequiredFields(data, fields) {
+      return data.keys().hasAll(fields);
+    }
+    
+    // ----------------------------------------
+    // Engagements Collection
+    // ----------------------------------------
+    
+    match /engagements/{engagementId} {
+      // Read: Team members and admins
+      allow read: if canReadEngagement(engagementId);
+      
+      // Create: Admins and managers
+      allow create: if isPlatformAdmin() || hasPlatformRole('manager');
+      
+      // Update: Engagement leadership and admins
+      allow update: if canManageEngagement(engagementId);
+      
+      // Delete: Only super admins
+      allow delete: if hasPlatformRole('super_admin');
+      
+      // ----------------------------------------
+      // Funding Sources Subcollection
+      // ----------------------------------------
+      
+      match /fundingSources/{fundingSourceId} {
+        allow read: if canReadEngagement(engagementId);
+        
+        allow create: if canWriteEngagement(engagementId) &&
+                         hasRequiredFields(request.resource.data, 
+                           ['category', 'instrumentType', 'funderId', 'committedAmount']);
+        
+        allow update: if canWriteEngagement(engagementId);
+        
+        allow delete: if canManageEngagement(engagementId);
+        
+        // Disbursements subcollection
+        match /disbursements/{disbursementId} {
+          allow read: if canReadEngagement(engagementId);
+          
+          allow create: if canWriteEngagement(engagementId) &&
+                           hasRequiredFields(request.resource.data,
+                             ['requestedAmount', 'description']);
+          
+          allow update: if canWriteEngagement(engagementId) ||
+                           // Funder can update status
+                           isFunderAssociated(get(/databases/$(database)/documents/engagements/$(engagementId)/fundingSources/$(fundingSourceId)).data.funderId);
+          
+          allow delete: if canManageEngagement(engagementId);
+        }
+      }
+      
+      // ----------------------------------------
+      // Reporting Requirements Subcollection
+      // ----------------------------------------
+      
+      match /reportingRequirements/{requirementId} {
+        allow read: if canReadEngagement(engagementId);
+        allow write: if canManageEngagement(engagementId);
+      }
+      
+      // ----------------------------------------
+      // Report Submissions Subcollection
+      // ----------------------------------------
+      
+      match /reportSubmissions/{submissionId} {
+        allow read: if canReadEngagement(engagementId);
+        
+        allow create: if canWriteEngagement(engagementId);
+        
+        // Can update own submissions or if approver
+        allow update: if canWriteEngagement(engagementId) ||
+                         (resource.data.submittedBy == request.auth.uid);
+        
+        allow delete: if canManageEngagement(engagementId);
+      }
+      
+      // ----------------------------------------
+      // Covenants Subcollection
+      // ----------------------------------------
+      
+      match /covenants/{covenantId} {
+        allow read: if canReadEngagement(engagementId);
+        
+        allow create, update: if canManageEngagement(engagementId) ||
+                                 hasEngagementRole(engagementId, ['compliance_officer', 'finance_officer']);
+        
+        allow delete: if canManageEngagement(engagementId);
+        
+        // Measurements subcollection
+        match /measurements/{measurementId} {
+          allow read: if canReadEngagement(engagementId);
+          
+          allow create: if hasEngagementRole(engagementId, [
+            'engagement_owner', 'engagement_lead', 'compliance_officer', 'finance_officer'
+          ]);
+          
+          allow update: if canManageEngagement(engagementId);
+          
+          allow delete: if canManageEngagement(engagementId);
+        }
+      }
+      
+      // ----------------------------------------
+      // Approval Requests Subcollection
+      // ----------------------------------------
+      
+      match /approvalRequests/{requestId} {
+        allow read: if canReadEngagement(engagementId);
+        
+        // Anyone on the team can create approval requests
+        allow create: if canWriteEngagement(engagementId) ||
+                         hasEngagementRole(engagementId, ['team_member', 'quantity_surveyor', 'site_manager']);
+        
+        // Can update if you're an approver or the requester (for cancellation)
+        allow update: if canApproveInEngagement(engagementId) ||
+                         resource.data.requestedBy == request.auth.uid;
+        
+        allow delete: if canManageEngagement(engagementId);
+      }
+      
+      // ----------------------------------------
+      // Documents Subcollection
+      // ----------------------------------------
+      
+      match /documents/{documentId} {
+        allow read: if canReadEngagement(engagementId);
+        
+        // Most team members can upload documents
+        allow create: if canReadEngagement(engagementId);
+        
+        // Only uploader or managers can update
+        allow update: if canManageEngagement(engagementId) ||
+                         resource.data.uploadedBy == request.auth.uid;
+        
+        // Only managers can delete
+        allow delete: if canManageEngagement(engagementId);
+      }
+      
+      // ----------------------------------------
+      // Activity Log Subcollection (Audit trail)
+      // ----------------------------------------
+      
+      match /activityLog/{logId} {
+        // Everyone on team can read
+        allow read: if canReadEngagement(engagementId);
+        
+        // Only system/cloud functions create logs
+        allow create: if false; // Use cloud functions
+        
+        // No updates or deletes
+        allow update, delete: if false;
+      }
+    }
+    
+    // ----------------------------------------
+    // Clients Collection
+    // ----------------------------------------
+    
+    match /clients/{clientId} {
+      // For testing/development: allow all authenticated users
+      // TODO: Tighten rules after role system is fully operational
+      allow read, write: if isAuthenticated();
+      
+      // Contacts subcollection
+      match /contacts/{contactId} {
+        allow read, write: if isAuthenticated();
+      }
+      
+      // KYC Documents subcollection
+      match /kycDocuments/{kycDocId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+    
+    // ----------------------------------------
+    // Funders Collection
+    // ----------------------------------------
+    
+    match /funders/{funderId} {
+      // Platform staff can read all funders
+      // Funder users can read their own funder
+      allow read: if isPlatformStaff() || isFunderAssociated(funderId);
+      
+      // Only admins can manage funders
+      allow create, update: if isPlatformAdmin();
+      
+      allow delete: if hasPlatformRole('super_admin');
+    }
+    
+    // ============================================
+    // ADVISORY PLATFORM COLLECTIONS
+    // Nested collection structure for advisory modules
+    // ============================================
+    
+    // Advisory module collections
+    match /advisoryPlatform/{module}/{collection}/{docId} {
+      allow read, write: if isAuthenticated();
+      
+      // Subcollections
+      match /{subcollection}/{subDocId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+    
+    // Mandates collection (root level)
+    match /mandates/{mandateId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Risk Assessments collection (root level)
+    match /riskAssessments/{assessmentId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Portfolios collection (root level)
+    match /portfolios/{portfolioId} {
+      allow read, write: if isAuthenticated();
+      
+      // NAV History subcollection
+      match /navHistory/{navId} {
+        allow read, write: if isAuthenticated();
+      }
+      
+      // Capital Transactions subcollection
+      match /capitalTransactions/{transactionId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+    
+    // Holdings collection (root level)
+    match /holdings/{holdingId} {
+      allow read, write: if isAuthenticated();
+      
+      // Valuations subcollection
+      match /valuations/{valuationId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+    
+    // ============================================
+    // DAWINOS v2.0 - ENTERPRISE OPERATIONS PLATFORM
+    // ============================================
+    
+    // v2.0 Helper Functions
+    function getClaims() {
+      return request.auth.token;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && getClaims().role == role;
+    }
+
+    function hasAnyRole(roles) {
+      return isAuthenticated() && (
+        getClaims().role in roles
+        || getClaims().globalRole in ['admin', 'owner']
+      );
+    }
+
+    function isExecutive() {
+      return hasAnyRole(['platform_admin', 'ceo', 'executive', 'director']);
+    }
+
+    function isHR() {
+      return hasAnyRole(['platform_admin', 'hr_admin', 'hr_manager']);
+    }
+
+    function isFinance() {
+      return hasAnyRole(['platform_admin', 'finance_admin', 'finance_manager', 'accountant']);
+    }
+
+    // Supports both old claims (subsidiaryId: string) and new claims (subsidiaries: array)
+    function belongsToSubsidiary(sid) {
+      return isAuthenticated() && (
+        getClaims().subsidiaryId == sid
+        || (sid in getClaims().subsidiaries)
+      );
+    }
+    
+    function hasSubsidiaryAccess(subsidiaryId) {
+      return isAdmin() || isExecutive() || belongsToSubsidiary(subsidiaryId);
+    }
+    
+    function hasSubsidiaryWriteAccess(subsidiaryId) {
+      return isAdmin() || (belongsToSubsidiary(subsidiaryId) && 
+        hasAnyRole(['subsidiary_admin', 'manager', 'team_lead']));
+    }
+    
+    function isOwner(ownerId) {
+      return isAuthenticated() && request.auth.uid == ownerId;
+    }
+    
+    function isCreator() {
+      return isAuthenticated() && resource.data.createdBy == request.auth.uid;
+    }
+    
+    function hasValidTimestamps() {
+      return request.resource.data.createdAt == resource.data.createdAt &&
+             request.resource.data.updatedAt == request.time;
+    }
+    
+    // Note: hasRequiredFields is already defined above at line ~520
+    // Use hasRequiredFields(request.resource.data, fields) for v2.0 rules
+    
+    // ----------------------------------------
+    // Platform Configuration
+    // ----------------------------------------
+    
+    match /platform/{document=**} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Suppliers — any authenticated user can read; only admins can write
+    match /platform/suppliers/records/{supplierId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /platform/config/{configId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Executive Layer
+    // ----------------------------------------
+    
+    // Strategy Documents
+    match /executive/strategy/documents/{docId} {
+      allow read: if isExecutive();
+      allow create: if isExecutive() && 
+        hasRequiredFields(request.resource.data, ['title', 'content', 'createdBy', 'createdAt']);
+      allow update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    // OKRs
+    match /executive/strategy/okrs/{okrId} {
+      allow read: if isAuthenticated();
+      allow create: if isExecutive() && 
+        hasRequiredFields(request.resource.data, ['title', 'level', 'ownerId', 'period']);
+      allow update: if isExecutive() || 
+        (isAuthenticated() && resource.data.ownerId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    
+    // KPIs
+    match /executive/strategy/kpis/{kpiId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    // Market Intelligence
+    match /executive/market_intelligence/{collection}/{docId} {
+      allow read: if isExecutive();
+      allow create, update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    // Capital Hub
+    match /executive/capital/raises/{raiseId} {
+      allow read: if isExecutive();
+      allow create: if isExecutive() && 
+        hasRequiredFields(request.resource.data, ['name', 'type', 'targetAmount', 'status']);
+      allow update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    match /executive/capital/investors/{investorId} {
+      allow read: if isExecutive();
+      allow create, update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    match /executive/capital/allocations/{allocId} {
+      allow read: if isExecutive() || isFinance();
+      allow create, update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    // Strategic Opportunities & Needs
+    match /executive/opportunities/{collection}/{docId} {
+      allow read: if isExecutive();
+      allow create, update: if isExecutive();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Shared Operations
+    // ----------------------------------------
+    
+    // Smart Tasks
+    match /shared_ops/smart_tasks/{taskId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        resource.data.assignedTo == request.auth.uid ||
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.delegatedBy == request.auth.uid
+      );
+      
+      allow create: if isAuthenticated() && 
+        hasRequiredFields(request.resource.data, ['title', 'status', 'createdBy', 'createdAt']);
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        resource.data.assignedTo == request.auth.uid ||
+        isCreator()
+      );
+      
+      allow delete: if isAdmin() || isCreator();
+    }
+    
+    // Business Events
+    match /shared_ops/business_events/{eventId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || hasAnyRole(['manager', 'team_lead', 'executive'])
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Finance Batches
+    match /shared_ops/finance_batches/{batchId} {
+      allow read: if isFinance();
+      allow create: if isFinance() && 
+        hasRequiredFields(request.resource.data, ['uploadedBy', 'uploadedAt', 'status']);
+      allow update: if isFinance();
+      allow delete: if isAdmin();
+      
+      match /transactions/{transactionId} {
+        allow read: if isFinance();
+        allow create, update: if isFinance();
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // Knowledge Base
+    match /shared_ops/knowledge_base/{docId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isHR() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Grey Areas
+    match /shared_ops/grey_areas/{areaId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isExecutive() || isHR() ||
+        resource.data.assignedTo == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAdmin() || isHR() || 
+        resource.data.assignedTo == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // HR Module
+    // ----------------------------------------
+    
+    // Counters for employee number generation
+    match /counters/{counterId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // Employees (root-level collection for HR Central module)
+    match /employees/{employeeId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // TODO: Restrict to isHR() after roles are configured
+      allow update: if isAuthenticated(); // Allow updates for now
+      allow delete: if isAdmin();
+      
+      // Audit subcollection
+      match /audit/{auditId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+    }
+    
+    // Employees (legacy nested path)
+    match /hr/employees/{employeeId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() || resource.data.userId == request.auth.uid
+      );
+      allow create: if isHR() && 
+        hasRequiredFields(request.resource.data, ['personalInfo', 'employment', 'status']);
+      allow update: if isHR() || (
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['contact', 'emergencyContact', 'updatedAt'])
+      );
+      allow delete: if isAdmin();
+    }
+    
+    // Employment Contracts
+    match /hr/contracts/{contractId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() || resource.data.employeeId == request.auth.uid
+      );
+      allow create, update: if isHR();
+      allow delete: if isAdmin();
+    }
+    
+    // Payroll Batches - Highly restricted, never delete
+    match /hr/payroll_batches/{batchId} {
+      allow read: if isHR() || isFinance() || isAdmin();
+      allow create, update: if isHR();
+      allow delete: if false;
+      
+      match /items/{itemId} {
+        allow read: if isHR() || isFinance() || 
+          resource.data.employeeId == request.auth.uid;
+        allow create, update: if isHR();
+        allow delete: if false;
+      }
+    }
+    
+    // Leave Requests
+    match /hr/leave_requests/{requestId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() || resource.data.employeeId == request.auth.uid
+      );
+      allow create: if isAuthenticated() && 
+        request.resource.data.employeeId == request.auth.uid &&
+        hasRequiredFields(request.resource.data, ['employeeId', 'leaveType', 'startDate', 'endDate']);
+      allow update: if isHR();
+      allow delete: if isAdmin();
+    }
+    
+    // Performance Reviews
+    match /hr/performance/{reviewId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.reviewerId == request.auth.uid
+      );
+      allow create: if isHR();
+      allow update: if isHR() || resource.data.reviewerId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+    
+    // Departments & Role Profiles
+    match /hr/departments/{deptId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isHR() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    match /hr/role_profiles/{profileId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isHR() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Payroll Records (Attendance, Advances, Overtime)
+    // ----------------------------------------
+    
+    // Attendance Records
+    match /attendance/{recordId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isHR() || isAdmin();
+    }
+    
+    // Salary Advances
+    match /salaryAdvances/{advanceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Overtime Entries
+    match /overtime/{entryId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isHR() || isAdmin();
+    }
+
+    // Other employee-level deductions (food contributions, recurring
+    // SACCO/union dues, disciplinary recoveries for damaged or lost
+    // company property, one-time fines, etc.).
+    match /employeeDeductions/{deductionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      // Hard delete is admin-only — HR can cancel via status field
+      // but only Admin can fully remove a deduction record.
+      allow delete: if isAdmin();
+    }
+
+    // Payroll Batches (top-level collection used by payroll-batch.service.ts).
+    // The dead `hr/payroll_batches/{batchId}` block above was aspirational
+    // and never matched the actual schema — keep it for back-compat but
+    // these are the rules the live code path hits.
+    match /payrollBatches/{batchId} {
+      allow read: if isHR() || isFinance() || isAdmin();
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if false;
+    }
+
+    // Monthly Payroll Runs — parent doc that fans out a single
+    // month's payroll to one PayrollBatch per active subsidiary.
+    match /monthlyPayrollRuns/{runId} {
+      allow read: if isHR() || isFinance() || isAdmin();
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if false;
+    }
+
+    // Calculated Payslips (one per employee per period).
+    match /payroll/{payrollId} {
+      allow read: if isHR() || isFinance() || isAdmin()
+        || (isAuthenticated() && resource.data.employeeId == request.auth.uid);
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if false;
+    }
+
+    // Year-to-date totals — read/write by payroll calculator.
+    match /payroll_ytd/{ytdId} {
+      allow read: if isHR() || isFinance() || isAdmin()
+        || (isAuthenticated() && resource.data.employeeId == request.auth.uid);
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Loan recovery schedules referenced during payroll calculation.
+    match /loan_recoveries/{loanId} {
+      allow read: if isHR() || isFinance() || isAdmin();
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Overtime records pulled into the calculator (separate from the
+    // user-facing `overtime` collection above).
+    match /overtime_records/{recordId} {
+      allow read: if isHR() || isFinance() || isAdmin();
+      allow create, update: if isHR() || isFinance() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Subsidiaries — read by createPayrollBatch to denormalize the
+    // subsidiary name onto the batch. Any authenticated user can read;
+    // writes are admin-only since today the list is hardcoded in
+    // SubsidiaryContext and rarely changes.
+    match /subsidiaries/{subsidiaryId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ----------------------------------------
+    // Finance Module
+    // ----------------------------------------
+    
+    // Budgets
+    match /budgets/{budgetId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Budget Lines
+    match /budgetLines/{lineId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin() || isFinance();
+    }
+    
+    // Expenses
+    match /expenses/{expenseId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isFinance() || resource.data.submittedBy == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isFinance() || resource.data.submittedBy == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+    
+    // Financial Reports
+    match /financial_reports/{reportId} {
+      allow read: if isAuthenticated() && (isFinance() || isExecutive() || isAdmin());
+      allow create, update: if isFinance();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Performance Module
+    // ----------------------------------------
+    
+    // Goals
+    match /goals/{goalId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.managerId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isHR() || 
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.managerId == request.auth.uid;
+      allow delete: if isAdmin() || isHR();
+    }
+    
+    // Reviews
+    match /reviews/{reviewId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.reviewerId == request.auth.uid
+      );
+      allow create: if isHR() || isAuthenticated();
+      allow update: if isHR() || resource.data.reviewerId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+    
+    // Competencies
+    match /competencies/{competencyId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated(); // Allow all authenticated users (for seeding and development)
+      allow delete: if isAdmin();
+    }
+
+    // Employee Competencies (assessments/skill levels)
+    match /employee_competencies/{recordId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid
+      );
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin() || isHR();
+    }
+
+    // Competency Assessments
+    match /competency_assessments/{assessmentId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.assessorId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isHR() || resource.data.assessorId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // Training Courses
+    match /training_courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated(); // Allow all authenticated users (for catalog management)
+      allow delete: if isAdmin() || isHR();
+    }
+
+    // Employee Training (enrollments and progress)
+    match /employee_training/{enrollmentId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        isHR() ||
+        resource.data.employeeId == request.auth.uid
+      );
+      allow delete: if isAdmin() || isHR();
+    }
+
+    // Development Plans
+    match /development_plans/{planId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.managerId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.managerId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // Development Activities
+    match /development_activities/{activityId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin() || isHR();
+    }
+
+    // Performance Metrics
+    match /performance_metrics/{metricId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || isHR() ||
+        resource.data.employeeId == request.auth.uid ||
+        resource.data.managerId == request.auth.uid
+      );
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin() || isHR();
+    }
+    
+    // ----------------------------------------
+    // Advisory Module Collections
+    // ----------------------------------------
+    
+    // Deals
+    match /deals/{dealId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Deal activity timeline (WhatsApp, CRM logs, etc.)
+      match /activities/{activityId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+    }
+    
+    // Programs
+    // Note: Read access is public to support CD Portal (unauthenticated token-based access)
+    match /programs/{programId} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated();
+      
+      // Activity log for programs
+      match /activityLog/{logId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if isAdmin();
+      }
+    }
+    
+    // Projects (Delivery Projects)
+    match /projects/{projectId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+      
+      // Activity log for projects
+      match /activityLog/{logId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if isAdmin();
+      }
+      
+      // Control BOQ Items (subcollection)
+      match /boq_items/{itemId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+      
+      // Control BOQ Document (subcollection)
+      match /control_boq/{docId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // BOQ Items (root-level collection for cross-project queries)
+    match /boq_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // Control BOQ Items (root-level collection with projectId field)
+    match /control_boq/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // IPCs (Interim Payment Certificates)
+    match /ipcs/{ipcId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Payments Collection (unified for IPCs, Requisitions, Accountabilities)
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        // Creator can update drafts
+        (resource.data.createdBy == request.auth.uid && resource.data.status == 'draft') ||
+        // Approvers can update status
+        isFinance() ||
+        hasAnyRole(['project_manager', 'program_manager', 'quantity_surveyor', 'site_engineer', 'finance_director', 'country_coordinator'])
+      );
+      allow delete: if isAdmin();
+    }
+    
+    // Requisitions
+    match /requisitions/{requisitionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Manual Requisitions (for manual entry without BOQ)
+    // Note: Public get (not list) for CD Portal token-based access
+    // Security requires knowing exact document ID
+    match /manual_requisitions/{requisitionId} {
+      allow get: if true;  // Get only - no list for unauthenticated
+      allow list: if isAuthenticated();  // List requires auth
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ----------------------------------------
+    // CD Portal Access Tokens
+    // Token-based access for Country Director Portal
+    // ----------------------------------------
+
+    // Portal Access Tokens
+    // Security: get only (no list) - requires knowing exact token ID
+    // Token ID itself is the cryptographic secret (32 chars)
+    match /portal_access_tokens/{tokenId} {
+      // Allow get only - user must know exact token ID
+      // list is not allowed for unauthenticated users
+      allow get: if true;
+      // Authenticated users can list/read all tokens for management
+      allow list: if isAuthenticated();
+      // Only authenticated users can create tokens
+      allow create: if isAuthenticated();
+      // Only authenticated users can update tokens (activate/deactivate)
+      allow update: if isAuthenticated();
+      // Only admin or authenticated users can delete tokens
+      allow delete: if isAdmin() || isAuthenticated();
+    }
+
+    // ----------------------------------------
+    // Funds Acknowledgement Collections
+    // ----------------------------------------
+
+    // Receipt Sequences (atomic counters for receipt numbers)
+    match /receipt_sequences/{sequenceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Funds Acknowledgement Documents
+    // Note: Public get (not list) for CD Portal token-based access
+    // Security requires knowing exact document ID
+    match /funds_acknowledgements/{docId} {
+      allow get: if true;  // Get only - no list for unauthenticated
+      allow list: if isAuthenticated();  // List requires auth
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Facility Configurations (shared branding across projects)
+    match /facility_configurations/{configId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Accountability Reports
+    match /accountability_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Investment Committee Meetings
+    match /investment_committee_meetings/{meetingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isExecutive() || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Market Insights
+    match /market_insights/{insightId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Admin Module Collections
+    // ----------------------------------------
+    
+    // Roles
+    match /roles/{roleId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Platform Settings (including branding)
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated(); // Allow authenticated users to update branding
+      allow delete: if isAdmin();
+    }
+
+    // System Settings
+    match /system_settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Organization Settings (pricing assumptions, workshop rates, etc.)
+    match /organizationSettings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Organizations & Branding
+    // ----------------------------------------
+    
+    match /organizations/{orgId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+
+      // Organization settings (branding, etc.)
+      // Only admins or org members can write settings
+      match /settings/{settingId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin() || isOrgMember(orgId);
+      }
+      
+      // Organization users
+      match /users/{userId} {
+        allow read: if isAuthenticated();
+        // Admins can perform all write operations
+        allow create, delete: if isAdmin();
+        // Admins can update any field; non-admins can only update their own profile fields
+        allow update: if isAdmin()
+          || (isAuthenticated()
+              && resource.data.uid == request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['displayName', 'phone', 'jobTitle', 'department', 'photoUrl', 'lastLoginAt', 'updatedAt']))
+          // Allow uid self-heal: user whose email matches can fix a stale uid field
+          || (isAuthenticated()
+              && resource.data.email == request.auth.token.email
+              && request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['uid', 'updatedAt']));
+      }
+      
+      // Organization invites
+      match /invites/{inviteId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin();
+      }
+      
+      // Organization audit log
+      match /auditLog/{logId} {
+        allow read: if isAdmin();
+        allow create: if isAuthenticated();
+        allow update, delete: if false;
+      }
+
+      // Advisory Projects (Core Project Service)
+      // Note: Read access is public to support CD Portal (unauthenticated token-based access)
+      match /advisory_projects/{projectId} {
+        allow read: if true;
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow delete: if isAdmin();
+
+        // Activity log for advisory projects
+        match /activityLog/{logId} {
+          allow read: if isAuthenticated();
+          allow create: if isAuthenticated();
+          allow update, delete: if false;
+        }
+      }
+
+      // Advisory Programs
+      // Note: Read access is public to support CD Portal (unauthenticated token-based access)
+      match /advisory_programs/{programId} {
+        allow read: if true;
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Report Templates (Google Docs report generation)
+      match /report_templates/{templateId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Generated Reports (report history and metadata)
+      match /generated_reports/{reportId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Accountabilities (expense accountability records)
+      match /accountabilities/{accountabilityId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Allocation Groups (multi-project expense splits)
+      match /allocation_groups/{groupId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // AMH Reports (Accountability, Monitoring & Harmonization)
+      match /amh_reports/{reportId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // OCR Results (receipt extraction results from Cloud Vision)
+      match /ocr_results/{resultId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Quick Capture Index (field expenditure records)
+      match /quick_capture_index/{captureId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // ----------------------------------------
+    // Audit Logs - Write-only, never delete
+    // ----------------------------------------
+    
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+    
+    // ----------------------------------------
+    // User Preferences & Settings
+    // ----------------------------------------
+
+    match /user_settings/{userId} {
+      allow read, write: if isOwner(userId) || isAdmin();
+    }
+
+    // Root-level notifications collection (used by GlobalContext)
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+    }
+
+    match /user_notifications/{userId}/{notificationId} {
+      allow read: if isOwner(userId);
+      allow create: if isAuthenticated();
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // ============================================
+    // INTELLIGENCE LAYER COLLECTIONS
+    // AI-powered cross-module intelligence
+    // ============================================
+    
+    // ----------------------------------------
+    // Smart Suggestions
+    // ----------------------------------------
+    
+    match /smartSuggestions/{suggestionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Anomaly Detection
+    // ----------------------------------------
+    
+    match /anomalies/{anomalyId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Predictions
+    // ----------------------------------------
+    
+    match /predictions/{predictionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Cross-Module Insights
+    // ----------------------------------------
+    
+    match /crossModuleInsights/{insightId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Intelligence Activity Log
+    // ----------------------------------------
+    
+    match /intelligenceActivity/{activityId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // AI Assistant Conversations
+    // ----------------------------------------
+    
+    match /assistantConversations/{conversationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
+    }
+    
+    // ----------------------------------------
+    // Natural Language Queries
+    // ----------------------------------------
+    
+    match /nlQueries/{queryId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if false;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // ----------------------------------------
+    // Document Analyses
+    // ----------------------------------------
+    
+    match /documentAnalyses/{analysisId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Category Suggestions (Auto-categorization)
+    // ----------------------------------------
+    
+    match /categorySuggestions/{suggestionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Intelligence Configuration
+    // ----------------------------------------
+    
+    match /intelligenceConfig/{configId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // AI Model Usage Tracking
+    // ----------------------------------------
+    
+    match /aiModelUsage/{usageId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update: if false;
+      allow delete: if false;
+    }
+    
+    // ----------------------------------------
+    // Business Events (Cross-Module)
+    // ----------------------------------------
+    
+    match /businessEvents/{eventId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Task Templates (Admin-managed)
+    // ----------------------------------------
+    
+    match /taskTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Generated Tasks (AI-created tasks)
+    // ----------------------------------------
+    
+    match /generatedTasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // ----------------------------------------
+    // Task Dependencies
+    // ----------------------------------------
+
+    match /taskDependencies/{dependencyId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // ============================================
+    // WHATSAPP COMMUNICATION COLLECTIONS
+    // ============================================
+
+    // WhatsApp Conversations
+    match /whatsappConversations/{conversationId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow delete: if false;
+      }
+    }
+
+    // WhatsApp Templates (synced from Meta Cloud API or added manually)
+    match /whatsappTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // WhatsApp Broadcasts (bulk template sends)
+    match /whatsappBroadcasts/{broadcastId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Broadcast recipients (per-phone status tracking)
+      match /recipients/{phone} {
+        allow read: if isAuthenticated();
+        allow create, update: if false; // Only Cloud Functions write
+        allow delete: if false;
+      }
+    }
+
+    // ============================================
+    // GOOGLE CHAT COMMUNICATION COLLECTIONS
+    // ============================================
+
+    // Google Chat Spaces
+    match /gchatSpaces/{spaceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update: if false;
+        allow delete: if false;
+      }
+    }
+
+    // ============================================
+    // STRATEGY MODULE COLLECTIONS
+    // CEO Strategy & Performance Management
+    // ============================================
+
+    // ----------------------------------------
+    // Strategy Documents
+    // ----------------------------------------
+
+    match /strategy_documents/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isExecutive() || hasAnyRole(['strategy_manager']);
+      allow update: if isExecutive() || hasAnyRole(['strategy_manager']) ||
+                       resource.data.createdBy == request.auth.uid;
+      allow delete: if hasPlatformRole('super_admin');
+    }
+
+    // ----------------------------------------
+    // OKR Objectives
+    // ----------------------------------------
+
+    match /okr_objectives/{objId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // Users can create their own OKRs
+      allow update: if isExecutive() || hasAnyRole(['manager', 'strategy_manager']) ||
+                       resource.data.ownerId == request.auth.uid;
+      allow delete: if isExecutive() || resource.data.ownerId == request.auth.uid;
+
+      // Key Results subcollection
+      match /key_results/{krId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isExecutive() || hasAnyRole(['manager']) ||
+                                 get(/databases/$(database)/documents/okr_objectives/$(objId)).data.ownerId == request.auth.uid;
+        allow delete: if isExecutive() ||
+                         get(/databases/$(database)/documents/okr_objectives/$(objId)).data.ownerId == request.auth.uid;
+      }
+    }
+
+    // ----------------------------------------
+    // KPI Definitions
+    // ----------------------------------------
+
+    match /kpi_definitions/{kpiId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isExecutive() || hasAnyRole(['strategy_manager']);
+      allow delete: if isAdmin() || hasPlatformRole('super_admin');
+    }
+
+    // ----------------------------------------
+    // KPI Data Points
+    // ----------------------------------------
+
+    match /kpi_data_points/{dataId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // Data entry by authorized users
+      allow update: if isExecutive() || hasAnyRole(['strategy_manager']) ||
+                       resource.data.recordedBy == request.auth.uid;
+      allow delete: if isAdmin() || hasPlatformRole('super_admin');
+    }
+
+    // ----------------------------------------
+    // Performance Snapshots
+    // ----------------------------------------
+
+    match /performance_snapshots/{snapId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isExecutive() || hasAnyRole(['strategy_manager', 'system']); // System-generated
+      allow delete: if isAdmin() || hasPlatformRole('super_admin');
+    }
+
+    // ============================================
+    // Manufacturing Module
+    // ============================================
+
+    match /manufacturingOrders/{moId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // BOM entries subcollection
+      match /bomEntries/{entryId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // Material consumptions subcollection
+      match /materialConsumptions/{consumptionId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if isAdmin();
+      }
+
+      // Stage transitions subcollection (immutable audit trail)
+      match /stageTransitions/{transitionId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if false; // Immutable
+      }
+    }
+
+    match /purchaseOrders/{poId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        isAdmin()
+        || !(request.resource.data.status == 'approved' && resource.data.status == 'pending-approval')
+        || (request.resource.data.status == 'approved'
+            && resource.data.status == 'pending-approval'
+            && request.auth.uid != resource.data.createdBy)
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /warehouses/{warehouseId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /stockLevels/{stockLevelId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      match /movements/{movementId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+      }
+    }
+
+    match /costHistory/{entryId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    match /procurementRequirements/{reqId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Procurement Requests (material-driven, from Materials Library / Clipper)
+    match /procurementRequests/{requestId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // MARKETING MODULE COLLECTIONS
+    // Campaign Management & Social Media
+    // ============================================
+
+    // Marketing Campaigns
+    match /marketingCampaigns/{campaignId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Campaign Sends (messages) subcollection
+      match /sends/{sendId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // Social Media Posts
+    match /socialMediaPosts/{postId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Social Media Accounts (per-subsidiary registry of our own pages)
+    match /socialMediaAccounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // Latest-snapshot KPIs written by the sync Cloud Function
+    match /socialAccountInsights/{accountId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Functions only
+    }
+
+    // BigQuery benchmark cache written by getSocialBenchmark callable
+    match /socialBenchmarkCache/{key} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Functions only
+    }
+
+    // OAuth tokens for social publishing — server only (Phase 2)
+    match /integrations/social/{accountId} {
+      allow read, write: if false; // Cloud Functions only
+    }
+
+    // Meta user-data deletion audit log — Cloud Functions only
+    match /dataDeletionRequests/{ticketId} {
+      allow read, write: if false;
+    }
+
+    // Public, redacted deletion confirmation tickets — readable without auth
+    // so Meta-reviewer-issued links (/privacy/data-deletion?ticket=...) resolve
+    // for the redirected end-user. Written only by Cloud Functions.
+    match /publicDataDeletionTickets/{ticketId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Content Templates
+    match /contentTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Campaign Analytics (aggregated data)
+    match /campaignAnalytics/{analyticsId} {
+      allow read: if isAuthenticated();
+      // Only Cloud Functions can write analytics
+      allow write: if false;
+    }
+
+    // Marketing AI Agent - Key Dates
+    match /marketingKeyDates/{dateId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // Marketing Tasks (campaign-scoped work items)
+    match /marketingTasks/{taskId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // ============================================
+    // MARKET INTELLIGENCE MODULE
+    // Competitors, Signals, SWOT, Moves, Win/Loss
+    // ============================================
+    
+    // Competitors (shared by intelligence + market modules)
+    match /competitors/{competitorId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Competitor SWOT Analyses
+    match /competitor_swot/{swotId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Competitive Moves
+    match /competitive_moves/{moveId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Win/Loss Records
+    match /win_loss_records/{recordId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Market Share Data
+    match /market_share_data/{dataId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Pricing Intelligence
+    match /pricing_intelligence/{pricingId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Market Signals
+    match /market_signals/{signalId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Market Reports
+    match /market_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Intelligence Items
+    match /intelligence_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // SWOT Analyses (market module)
+    match /swot_analyses/{swotId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // AI Market Intelligence Reports (generated by cloud function)
+    match /market_intelligence_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    
+    // Digital Profiles (competitor online presence tracking)
+    match /digital_profiles/{profileId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Profile Snapshots (point-in-time metrics)
+    match /profile_snapshots/{snapshotId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+    
+    // Tracked Topics (discussion monitoring)
+    match /tracked_topics/{topicId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+    
+    // Topic Mentions (discovered discussions)
+    match /topic_mentions/{mentionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // News Articles (AI-scanned market news)
+    match /news_articles/{articleId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Market Analyses (AI-generated market research)
+    match /market_analyses/{analysisId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // AI Insights (AI-generated market insights)
+    match /ai_insights/{insightId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Social Posts (competitor social media posts)
+    match /social_posts/{postId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Social Metrics (account-level social media metrics)
+    match /social_metrics/{metricId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Marketing AI Agent - Configuration
+    match /marketingAgentConfig/{configId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Marketing AI Agent - Conversations
+    match /marketingAgentConversations/{conversationId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated();
+    }
+
+    // ============================================
+    // COLLECTION GROUP RULES
+    // Required for cross-project collectionGroup queries
+    // ============================================
+
+    // Allow collectionGroup queries on designItems (used by CRM + Manufacturing)
+    match /{path=**}/designItems/{itemId} {
+      allow read: if isAuthenticated();
+    }
+
+    // ============================================
+    // SHOPIFY INTEGRATION
+    // ============================================
+
+    match /shopifyProducts/{productId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /shopifyOrders/{orderId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ============================================
+    // AI EXTENSIONS
+    // ============================================
+
+    match /aiPredictions/{predictionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /aiSuggestions/{suggestionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // Advisory AI Conversations
+    match /aiConversations/{conversationId} {
+      allow read, write: if isAuthenticated();
+
+      match /messages/{messageId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+
+    // ============================================
+    // FINANCE - CASH FLOW MANAGEMENT
+    // ============================================
+
+    match /accounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /cash_transactions/{transactionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /cash_forecasts/{forecastId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /bank_reconciliations/{reconciliationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /cashForecasts/{forecastId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // DESIGN MANAGER - CLIENT PORTAL SHARES
+    // ============================================
+
+    match /clientPortalShares/{shareId} {
+      // Public read for shared portal links (accessed by unauthenticated clients)
+      allow read: if true;
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /quoteComparisonGroups/{groupId} {
+      allow read: if true;
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // ADVISORY DELIVERY - MONITORING & REPORTING
+    // ============================================
+
+    match /variance_investigations/{investigationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /reconciliation_reports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /document_export_status/{statusId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /export_configurations/{configId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /export_jobs/{jobId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /deadline_monitoring_logs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    match /document_export_logs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    // ============================================
+    // SYNC & INTEGRATION LOGS
+    // ============================================
+
+    match /syncLogs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+    }
+
+    match /embeddings/{embeddingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /commitmentSnapshots/{snapshotId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ============================================
+    // Compliance Module
+    // ============================================
+
+    match /complianceDocuments/{documentId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    match /complianceObligations/{obligationId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    // ============================================
+    // Manufacturing MES Collections
+    // ============================================
+
+    match /manufacturingOrders/{orderId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      // Steps subcollection
+      match /steps/{stepId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin();
+      }
+
+      // BOM subcollection
+      match /bom/{lineId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isAuthenticated();
+      }
+
+      // Quality events subcollection
+      match /quality_events/{eventId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update: if isAdmin();
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /workstations/{workstationId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /routing_templates/{templateId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
+    match /productionReports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if false; // Cloud Functions only
+    }
+
+    // Workshop Viewer — AI part identification learning store
+    match /part_identifications/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Furniture Type Knowledge Base — continuously editable by admins
+    match /furniture_types/{typeId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Design Revisions — Workshop Viewer revision timeline
+    match /designRevisions/{revisionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Design Item Issues — internal team threads raised against a
+    // DesignItem (and optionally a specific cabinet / part). Not
+    // client-facing; any authenticated staff user can read + raise +
+    // comment. Delete reserved to admins so the audit trail survives.
+    match /designItemIssues/{issueId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAdmin();
+
+      match /comments/{commentId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        // Comments are append-only — edits / deletes would rewrite the
+        // audit trail. Admins may still clean up spam / PII.
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // Furniture Templates — ParametricConfigurator template library
+    match /furnitureTemplates/{templateId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

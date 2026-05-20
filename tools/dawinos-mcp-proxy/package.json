@@ -1,0 +1,20 @@
+{
+  "name": "dawinos-mcp-proxy",
+  "version": "1.0.0",
+  "description": "Local token-refresh proxy in front of the DawinOS MCP Cloud Function. Holds a Firebase refresh token + bearer, mints fresh ID tokens on demand, forwards requests with both required auth headers.",
+  "private": true,
+  "type": "commonjs",
+  "main": "proxy.js",
+  "bin": {
+    "dawinos-mcp-proxy": "./proxy.js",
+    "dawinos-mcp-proxy-setup": "./setup.js"
+  },
+  "scripts": {
+    "start": "node proxy.js",
+    "setup": "node setup.js",
+    "health": "curl -s http://127.0.0.1:8765/health"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

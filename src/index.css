@@ -1,0 +1,451 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   DawinOS Portal — Design Tokens
+   Reference: design_handoff_portal_redesign/styles.css
+   ============================================ */
+
+:root {
+  --font-size: 14px;
+
+  /* ---- Backgrounds (warm neutral) ---- */
+  --bg-app: #f6f5f2;
+  --bg-surface: #ffffff;
+  --bg-sunken: #efede8;
+  --bg-sidebar: #1a1a1c;
+  --bg-sidebar-hover: #26262a;
+  --bg-sidebar-active: #2f2f33;
+
+  /* ---- Foreground ---- */
+  --fg-primary: #1a1a1c;
+  --fg-secondary: #555358;
+  --fg-tertiary: #8a8790;
+  --fg-quaternary: #b8b5bd;
+  --fg-on-dark: #f3f1ec;
+  --fg-on-dark-muted: #8c8a85;
+
+  /* ---- Borders ---- */
+  --border-subtle: rgba(20, 20, 22, 0.06);
+  --border-default: rgba(20, 20, 22, 0.1);
+  --border-strong: rgba(20, 20, 22, 0.18);
+  --border-on-dark: rgba(255, 255, 255, 0.08);
+
+  /* ---- Brand ---- */
+  --boysenberry: #872e5c;
+  --boysenberry-light: #a34573;
+  --boysenberry-dark: #6a2449;
+  --boysenberry-50: #fbeef4;
+  --boysenberry-100: #f4d5e3;
+  --golden-bell: #e18425;
+  --golden-bell-50: #fdf2e3;
+  --cashmere: #e2caa9;
+  --pesto: #8a7d4b;
+  --seafoam: #7abdcd;
+  --teal: #1a1a1c;
+  --teal-light: #424245;
+  --teal-dark: #000000;
+
+  /* ---- Accent (tweakable via [data-accent]) ---- */
+  --accent: var(--boysenberry);
+  --accent-soft: var(--boysenberry-50);
+  --accent-fg: #ffffff;
+
+  /* ---- RAG (refined for AA contrast) ---- */
+  --rag-red:    #d4413a;
+  --rag-amber:  #e18425;
+  --rag-green:  #4e8a4a;
+  --rag-blue:   #4172a8;
+  --rag-na:     #9c9aa1;
+  --rag-red-soft:   #fbeae9;
+  --rag-amber-soft: #fdf2e3;
+  --rag-green-soft: #ecf3eb;
+  --rag-blue-soft:  #ebf1f8;
+
+  /* ---- Density (tweakable via [data-density]) ---- */
+  --row-h: 40px;
+  --pad-card: 20px;
+  --pad-tight: 12px;
+
+  /* ---- Type ---- */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  /* ---- Shadows (softer, warmer) ---- */
+  --shadow-sm: 0 1px 0 rgba(20, 20, 22, 0.04), 0 1px 2px rgba(20, 20, 22, 0.04);
+  --shadow-md: 0 1px 2px rgba(20, 20, 22, 0.04), 0 4px 12px rgba(20, 20, 22, 0.06);
+  --shadow-lg: 0 8px 32px rgba(20, 20, 22, 0.12);
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+
+  /* ============================================
+     Compatibility tokens (consumed by Tailwind
+     config + existing shadcn primitives).
+     Keep names; map to the new palette.
+     ============================================ */
+  --background: var(--bg-app);
+  --foreground: var(--fg-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--fg-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--fg-primary);
+  --primary: var(--fg-primary);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-sunken);
+  --secondary-foreground: var(--fg-primary);
+  --muted: var(--bg-sunken);
+  --muted-foreground: var(--fg-secondary);
+  --accent-foreground: var(--accent-fg);
+  --destructive: var(--rag-red);
+  --destructive-foreground: #ffffff;
+  --border: var(--border-default);
+  --input: transparent;
+  --input-background: #ffffff;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: var(--accent);
+
+  /* ---- Sidebar (mapped to dark sidebar tokens) ---- */
+  --sidebar: var(--bg-sidebar);
+  --sidebar-foreground: var(--fg-on-dark);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-fg);
+  --sidebar-accent: var(--bg-sidebar-active);
+  --sidebar-accent-foreground: var(--fg-on-dark);
+  --sidebar-border: var(--border-on-dark);
+  --sidebar-ring: var(--accent);
+
+  /* ---- Typography scale (legacy names + new sizes) ---- */
+  --text-h1: 26px;
+  --text-h2: 19px;
+  --text-h3: 13px;
+  --text-body: 14px;
+  --text-small: 12.5px;
+  --text-tiny: 11px;
+
+  /* ---- Spacing (8px grid) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* ---- Legacy shadow aliases ---- */
+  --shadow-card: var(--shadow-sm);
+  --shadow-hover: var(--shadow-md);
+  --shadow-modal: var(--shadow-lg);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* ============================================
+   Dark mode — supports both .dark class
+   (existing uiStore) and [data-theme="dark"]
+   (new handoff API).
+   ============================================ */
+.dark,
+[data-theme="dark"] {
+  --bg-app: #131315;
+  --bg-surface: #1c1c1f;
+  --bg-sunken: #0e0e10;
+  --bg-sidebar: #0a0a0c;
+  --bg-sidebar-hover: #18181b;
+  --bg-sidebar-active: #232327;
+
+  --fg-primary: #f3f1ec;
+  --fg-secondary: #b8b5bd;
+  --fg-tertiary: #8a8790;
+  --fg-quaternary: #555358;
+
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --rag-red-soft:   rgba(212, 65, 58, 0.14);
+  --rag-amber-soft: rgba(225, 132, 37, 0.14);
+  --rag-green-soft: rgba(78, 138, 74, 0.14);
+  --rag-blue-soft:  rgba(65, 114, 168, 0.14);
+
+  --primary-foreground: var(--fg-primary);
+  --switch-background: #3a3a3f;
+  --input-background: var(--bg-surface);
+}
+
+/* ============================================
+   Density variants
+   ============================================ */
+[data-density="dense"]    { --row-h: 32px; --pad-card: 14px; --pad-tight: 8px; }
+[data-density="balanced"] { --row-h: 40px; --pad-card: 20px; --pad-tight: 12px; }
+[data-density="airy"]     { --row-h: 52px; --pad-card: 28px; --pad-tight: 16px; }
+
+/* ============================================
+   Accent variants — boysenberry is default
+   ============================================ */
+[data-accent="boysenberry"] { --accent: #872e5c; --accent-soft: #fbeef4; }
+[data-accent="goldenbell"]  { --accent: #e18425; --accent-soft: #fdf2e3; }
+[data-accent="seafoam"]     { --accent: #2f7b8c; --accent-soft: #e8f3f6; }
+[data-accent="pesto"]       { --accent: #6a6037; --accent-soft: #f2efe6; }
+
+/* ============================================
+   Base typography
+   ============================================ */
+@layer base {
+  * { border-color: var(--border); }
+
+  html {
+    font-size: var(--font-size);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--fg-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  h2 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-tertiary);
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  label {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--fg-secondary);
+    line-height: 1.45;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  p { font-weight: 400; }
+
+  code, .font-mono, .tabular {
+    font-family: var(--font-mono);
+  }
+
+  .caption {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fg-tertiary);
+  }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+/* ============================================
+   Brand color utilities (kept for back-compat)
+   ============================================ */
+.text-brand-primary { color: var(--boysenberry); }
+.bg-brand-primary { background-color: var(--boysenberry); }
+.border-brand-primary { border-color: var(--boysenberry); }
+.text-brand-secondary { color: var(--golden-bell); }
+.bg-brand-secondary { background-color: var(--golden-bell); }
+.border-brand-secondary { border-color: var(--golden-bell); }
+
+/* Primary button — near-black */
+.btn-primary {
+  background-color: var(--fg-primary);
+  color: #ffffff;
+  border-radius: 7px;
+  transition: background-color var(--transition-normal);
+}
+.btn-primary:hover { background-color: var(--teal-light); }
+
+/* Secondary button */
+.btn-secondary {
+  background-color: var(--bg-sunken);
+  color: var(--fg-primary);
+  border-radius: 7px;
+  transition: background-color var(--transition-normal);
+}
+.btn-secondary:hover { background-color: var(--border-default); }
+
+/* Ghost button */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--fg-primary);
+  border-radius: 7px;
+  transition: background-color var(--transition-normal);
+}
+.btn-ghost:hover { background-color: var(--bg-sunken); }
+
+/* Destructive button */
+.btn-destructive {
+  background-color: var(--rag-red);
+  color: #ffffff;
+  border-radius: 7px;
+  transition: background-color var(--transition-normal);
+}
+
+/* RAG status fill utilities (legacy, used by status dots) */
+.rag-red   { background-color: var(--rag-red); }
+.rag-amber { background-color: var(--rag-amber); }
+.rag-green { background-color: var(--rag-green); }
+.rag-blue  { background-color: var(--rag-blue); }
+.rag-na    { background-color: var(--rag-na); }
+
+/* Card */
+.card {
+  background-color: var(--bg-surface);
+  color: var(--fg-primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-subtle);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+/* Input (legacy) */
+.input {
+  background-color: var(--input-background);
+  border-radius: 7px;
+  border: 1px solid var(--border-default);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Mobile touch targets */
+@media (max-width: 640px) {
+  .touch-target { min-height: 44px; min-width: 44px; }
+}
+
+/* Print */
+@media print {
+  .no-print { display: none !important; }
+  .print-break { page-break-after: always; }
+}
+
+/* Scrollbars */
+.overflow-x-auto::-webkit-scrollbar { height: 8px; }
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+  border-radius: 4px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-tertiary);
+}
+
+/* ============================================
+   Sticky first column on horizontally scrollable
+   tables (used by several modules — keep as-is).
+   ============================================ */
+.table-sticky-first-col th:first-child,
+.table-sticky-first-col td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+.table-sticky-first-col thead th:first-child {
+  background-color: var(--table-header-bg, var(--bg-sunken));
+}
+.table-sticky-first-col tbody td:first-child {
+  background-color: var(--table-row-bg, var(--bg-surface));
+}
+.table-sticky-first-col tfoot td:first-child {
+  background-color: var(--table-header-bg, var(--bg-sunken));
+}
+.table-sticky-first-col th:first-child::after,
+.table-sticky-first-col td:first-child::after {
+  content: '';
+  position: absolute;
+  top: 0; right: -4px; bottom: 0;
+  width: 4px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.06), transparent);
+  pointer-events: none;
+}
+
+.table-sticky-first-two-col th:nth-child(-n+2),
+.table-sticky-first-two-col td:nth-child(-n+2) {
+  position: sticky;
+  z-index: 10;
+}
+.table-sticky-first-two-col th:first-child,
+.table-sticky-first-two-col td:first-child { left: 0; }
+.table-sticky-first-two-col thead th:first-child,
+.table-sticky-first-two-col thead th:nth-child(2) {
+  background-color: var(--table-header-bg, var(--bg-sunken));
+}
+.table-sticky-first-two-col tbody td:first-child,
+.table-sticky-first-two-col tbody td:nth-child(2) {
+  background-color: var(--table-row-bg, var(--bg-surface));
+}
+.table-sticky-first-two-col th:nth-child(2),
+.table-sticky-first-two-col td:nth-child(2) { left: 40px; }
+.table-sticky-first-two-col th:nth-child(2)::after,
+.table-sticky-first-two-col td:nth-child(2)::after {
+  content: '';
+  position: absolute;
+  top: 0; right: -4px; bottom: 0;
+  width: 4px;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.06), transparent);
+  pointer-events: none;
+}
+
+/* Drawer slide-in */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.animate-slide-in-right { animation: slide-in-right 0.3s ease-out; }
+
+/* Last layer — pick up Tailwind base from variables */
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}

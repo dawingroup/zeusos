@@ -1,0 +1,240 @@
+/**
+ * BrandingSettings Component
+ * UI for uploading and managing logo and favicon
+ */
+
+import React, { useRef, useState } from 'react';
+import { Upload, Image as ImageIcon, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
+import { useBranding } from '@/shared/hooks/useBranding';
+import { useAuth } from '@/shared/hooks';
+import { useSubsidiary } from '@/contexts/SubsidiaryContext';
+
+export function BrandingSettings() {
+  const { currentSubsidiary } = useSubsidiary();
+  const activeSubsidiaryId = currentSubsidiary?.id || 'dawin-group';
+  const activeSubsidiaryName = currentSubsidiary?.name || 'Dawin Group';
+  const { branding, uploading, error, uploadLogo, uploadFavicon, resetBranding } =
+    useBranding(activeSubsidiaryId);
+  const { user } = useAuth();
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const faviconInputRef = useRef<HTMLInputElement>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    try {
+      await uploadLogo(file);
+      setSuccessMessage('Logo uploaded successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error('Error uploading logo:', err);
+    }
+
+    // Reset input
+    if (logoInputRef.current) {
+      logoInputRef.current.value = '';
+    }
+  };
+
+  const handleFaviconUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    try {
+      await uploadFavicon(file);
+      setSuccessMessage('Favicon uploaded successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error('Error uploading favicon:', err);
+    }
+
+    // Reset input
+    if (faviconInputRef.current) {
+      faviconInputRef.current.value = '';
+    }
+  };
+
+  const handleReset = async () => {
+    if (!confirm('Are you sure you want to reset branding to defaults? This will delete uploaded files.')) {
+      return;
+    }
+
+    try {
+      await resetBranding();
+      setSuccessMessage('Branding reset to defaults!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error('Error resetting branding:', err);
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-sm text-yellow-800">Please sign in to manage branding settings.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Branding Settings</h2>
+        <p className="text-sm text-gray-600 mt-1">
+          Upload logo and favicon for {activeSubsidiaryName}
+        </p>
+      </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <CheckCircle className="h-5 w-5 text-green-600" />
+          <p className="text-sm text-green-800">{successMessage}</p>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <AlertCircle className="h-5 w-5 text-red-600" />
+          <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Logo Upload */}
+        <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Logo</h3>
+            {branding.logoUrl && (
+              <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                Custom
+              </span>
+            )}
+          </div>
+
+          {/* Logo Preview */}
+          <div className="aspect-square bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+            {branding.logoUrl ? (
+              <img
+                src={branding.logoUrl}
+                alt="Logo"
+                className="max-h-full max-w-full object-contain p-4"
+              />
+            ) : (
+              <div className="text-center">
+                <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">Default Logo</p>
+              </div>
+            )}
+          </div>
+
+          {/* Upload Button */}
+          <div className="space-y-2">
+            <input
+              ref={logoInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleLogoUpload}
+              className="hidden"
+              disabled={uploading}
+            />
+            <button
+              onClick={() => logoInputRef.current?.click()}
+              disabled={uploading}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#872E5C] text-white rounded-md hover:bg-[#6a2449] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Upload className="h-4 w-4" />
+              {uploading ? 'Uploading...' : 'Upload Logo'}
+            </button>
+            <p className="text-xs text-gray-500 text-center">
+              PNG, JPG, SVG • Max 5MB
+            </p>
+          </div>
+        </div>
+
+        {/* Favicon Upload */}
+        <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Favicon</h3>
+            {branding.faviconUrl && (
+              <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                Custom
+              </span>
+            )}
+          </div>
+
+          {/* Favicon Preview */}
+          <div className="aspect-square bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+            {branding.faviconUrl ? (
+              <img
+                src={branding.faviconUrl}
+                alt="Favicon"
+                className="max-h-full max-w-full object-contain p-4"
+              />
+            ) : (
+              <div className="text-center">
+                <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">Default Favicon</p>
+              </div>
+            )}
+          </div>
+
+          {/* Upload Button */}
+          <div className="space-y-2">
+            <input
+              ref={faviconInputRef}
+              type="file"
+              accept="image/png,image/x-icon,image/svg+xml,image/jpeg"
+              onChange={handleFaviconUpload}
+              className="hidden"
+              disabled={uploading}
+            />
+            <button
+              onClick={() => faviconInputRef.current?.click()}
+              disabled={uploading}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#872E5C] text-white rounded-md hover:bg-[#6a2449] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Upload className="h-4 w-4" />
+              {uploading ? 'Uploading...' : 'Upload Favicon'}
+            </button>
+            <p className="text-xs text-gray-500 text-center">
+              PNG, ICO, SVG • Max 1MB
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Reset Button */}
+      {(branding.logoUrl || branding.faviconUrl) && (
+        <div className="flex justify-center pt-4">
+          <button
+            onClick={handleReset}
+            disabled={uploading}
+            className="flex items-center gap-2 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Reset to Default Branding
+          </button>
+        </div>
+      )}
+
+      {/* Guidelines */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+        <h4 className="text-sm font-semibold text-blue-900 mb-2">Guidelines</h4>
+        <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+          <li>Logo: Recommended size 200x200px or larger, square aspect ratio works best</li>
+          <li>Favicon: Recommended size 32x32px or 64x64px for best compatibility</li>
+          <li>Use PNG or SVG format for transparency support</li>
+          <li>Changes take effect immediately across the platform</li>
+          <li>Uploaded files are stored securely in Firebase Storage</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+export default BrandingSettings;

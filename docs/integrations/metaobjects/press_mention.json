@@ -1,0 +1,25 @@
+{
+  "_meta": "Shopify metaobject for 'press_mention'. Not URL-addressable.",
+  "type": "press_mention",
+  "name": "Press mention",
+  "description": "An external publication that has covered Dawin Finishes.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable":  { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": { "enabled": false }
+  },
+  "field_definitions": [
+    { "key": "publication",      "name": "Publication",      "type": "single_line_text_field", "required": true },
+    { "key": "publication_logo", "name": "Publication logo", "type": "file_reference",         "required": true },
+    { "key": "title",            "name": "Article title",    "type": "single_line_text_field", "required": true },
+    { "key": "url",              "name": "URL",              "type": "url" },
+    { "key": "date_published",   "name": "Date published",   "type": "date",                   "required": true },
+    { "key": "pull_quote",       "name": "Pull quote",       "type": "single_line_text_field" },
+    { "key": "featured",         "name": "Featured",         "type": "boolean",                "required": true },
+    { "key": "dawin_source_id",  "name": "DawinOS source id","type": "single_line_text_field" }
+  ]
+}

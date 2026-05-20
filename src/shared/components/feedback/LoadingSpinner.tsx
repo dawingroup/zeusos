@@ -1,0 +1,34 @@
+/**
+ * LoadingSpinner Component
+ * Animated loading spinner with optional text
+ */
+
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/shared/lib/utils';
+
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  text?: string;
+}
+
+const sizeClasses = {
+  sm: 'h-4 w-4',
+  md: 'h-6 w-6',
+  lg: 'h-8 w-8',
+  xl: 'h-12 w-12',
+};
+
+export function LoadingSpinner({ 
+  size = 'md', 
+  className,
+  text 
+}: LoadingSpinnerProps) {
+  return (
+    <div className={cn('flex items-center gap-2', className)} role="status">
+      <Loader2 className={cn('animate-spin text-primary', sizeClasses[size])} />
+      {text && <span className="text-muted-foreground">{text}</span>}
+      <span className="sr-only">Loading...</span>
+    </div>
+  );
+}

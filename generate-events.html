@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Design Manager Events</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+        button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357ae8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .user-info {
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Generate Design Manager Events</h1>
+
+        <div class="info">
+            <strong>📋 What this does:</strong><br>
+            This tool generates business events for all existing projects in Design Manager.
+            These events will trigger the Intelligence Layer to create appropriate tasks for team members.
+        </div>
+
+        <div id="auth-section">
+            <h3>Step 1: Sign In</h3>
+            <button id="signInBtn" onclick="signIn()">Sign in with Google</button>
+            <div id="userInfo" class="user-info" style="display: none;"></div>
+        </div>
+
+        <div id="action-section" style="display: none;">
+            <h3>Step 2: Generate Events</h3>
+            <div class="warning">
+                <strong>⚠️ Dry Run Mode:</strong> Run this first to preview what events will be created without actually creating them.
+            </div>
+            <button id="dryRunBtn" onclick="generateEvents(true)">
+                🔍 Dry Run (Preview Only)
+            </button>
+            <button id="generateBtn" onclick="generateEvents(false)">
+                ✅ Generate Events (Live)
+            </button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfSYtxRoHxp9bEUkVbCFTnMmq58QzUsg8",
+            authDomain: "dawinos.firebaseapp.com",
+            projectId: "dawinos",
+            storageBucket: "dawinos.firebasestorage.app",
+            messagingSenderId: "820903406446",
+            appId: "1:820903406446:web:94a874a2b7625932f5ef7f"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const functions = getFunctions(app, 'us-central1');
+
+        // Make functions available globally
+        window.auth = auth;
+        window.functions = functions;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.signInWithPopup = signInWithPopup;
+        window.httpsCallable = httpsCallable;
+
+        console.log('Firebase initialized:', {
+            projectId: firebaseConfig.projectId,
+            region: 'us-central1'
+        });
+
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('userInfo').innerHTML = `
+                    ✅ Signed in as: <strong>${user.displayName || user.email}</strong><br>
+                    <button onclick="signOut()">Sign Out</button>
+                `;
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('signInBtn').style.display = 'none';
+                document.getElementById('action-section').style.display = 'block';
+            } else {
+                document.getElementById('userInfo').style.display = 'none';
+                document.getElementById('signInBtn').style.display = 'inline-block';
+                document.getElementById('action-section').style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        async function signIn() {
+            try {
+                const provider = new window.GoogleAuthProvider();
+                await window.signInWithPopup(window.auth, provider);
+            } catch (error) {
+                showError('Sign in failed: ' + error.message);
+            }
+        }
+
+        async function signOut() {
+            await window.auth.signOut();
+        }
+
+        async function generateEvents(dryRun) {
+            const resultsDiv = document.getElementById('results');
+            const dryRunBtn = document.getElementById('dryRunBtn');
+            const generateBtn = document.getElementById('generateBtn');
+
+            // Disable buttons
+            dryRunBtn.disabled = true;
+            generateBtn.disabled = true;
+
+            resultsDiv.innerHTML = `
+                <div class="loading"></div>
+                ${dryRun ? 'Running dry run...' : 'Generating events...'}
+                <br><br>This may take a minute...
+            `;
+
+            try {
+                console.log('Calling generateDesignManagerEventsHTTP with dryRun:', dryRun);
+
+                // Ensure user is authenticated
+                const user = window.auth.currentUser;
+                if (!user) {
+                    throw new Error('You must be signed in to generate events');
+                }
+                console.log('Authenticated as:', user.email);
+
+                // Get user's ID token for authentication
+                const idToken = await user.getIdToken();
+
+                // Use fetch to call the HTTP endpoint
+                const response = await fetch('https://generatedesignmanagereventshttp-ukbyoc6i5q-uc.a.run.app', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`,
+                    },
+                    body: JSON.stringify({ dryRun })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Function result:', result);
+
+                displayResults(result, dryRun);
+            } catch (error) {
+                console.error('Error calling function:', error);
+                showError('Error: ' + error.message);
+            } finally {
+                // Re-enable buttons
+                dryRunBtn.disabled = false;
+                generateBtn.disabled = false;
+            }
+        }
+
+        function displayResults(data, dryRun) {
+            let output = '='.repeat(60) + '\n';
+            output += '📈 RESULTS\n';
+            output += '='.repeat(60) + '\n\n';
+            output += `Message: ${data.message}\n\n`;
+            output += 'Statistics:\n';
+            output += `  Total Projects:     ${data.stats.total}\n`;
+            output += `  Events Created:     ${data.stats.processed}\n`;
+            output += `  Skipped (existing): ${data.stats.skipped}\n`;
+            output += `  Errors:             ${data.stats.errors}\n\n`;
+
+            if (data.stats.byEventType && Object.keys(data.stats.byEventType).length > 0) {
+                output += 'Events by Type:\n';
+                Object.entries(data.stats.byEventType)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([type, count]) => {
+                        output += `  ${type.padEnd(30)} ${count}\n`;
+                    });
+                output += '\n';
+            }
+
+            if (data.stats.byStage && Object.keys(data.stats.byStage).length > 0) {
+                output += 'Projects by Stage:\n';
+                Object.entries(data.stats.byStage)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([stage, count]) => {
+                        output += `  ${stage.padEnd(30)} ${count}\n`;
+                    });
+                output += '\n';
+            }
+
+            if (data.events && data.events.length > 0) {
+                output += `\nSample Events (showing ${Math.min(data.events.length, 10)} of ${data.totalEvents}):\n`;
+                data.events.slice(0, 10).forEach((event, index) => {
+                    output += `  ${index + 1}. ${event.projectName || event.projectId}\n`;
+                    output += `     Event: ${event.eventType} | Stage: ${event.stage}\n`;
+                    if (!event.dryRun) {
+                        output += `     Event ID: ${event.eventId}\n`;
+                    }
+                });
+                output += '\n';
+            }
+
+            if (dryRun) {
+                output += '\n💡 This was a dry run. Click "Generate Events (Live)" to actually create the events.';
+            } else {
+                output += '\n✅ Business events created successfully!';
+                output += '\n💡 The Intelligence Layer will now process these events and generate tasks.';
+            }
+
+            document.getElementById('results').innerHTML = `<div class="success">${output}</div>`;
+        }
+
+        function showError(message) {
+            document.getElementById('results').innerHTML = `<div class="error">${message}</div>`;
+        }
+    </script>
+</body>
+</html>

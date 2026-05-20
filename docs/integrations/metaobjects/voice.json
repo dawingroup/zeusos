@@ -1,0 +1,29 @@
+{
+  "_meta": "Shopify metaobject for 'voice' (testimonial). Not URL-addressable.",
+  "type": "voice",
+  "name": "Voice",
+  "description": "A client testimonial. Surfaced on home Voices section and project pages.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable":  { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": { "enabled": false }
+  },
+  "field_definitions": [
+    { "key": "quote",         "name": "Quote",          "type": "rich_text_field",        "required": true },
+    { "key": "attribution",   "name": "Attribution",    "type": "single_line_text_field", "required": true },
+    { "key": "role",          "name": "Role / title",   "type": "single_line_text_field" },
+    { "key": "company",       "name": "Company",        "type": "single_line_text_field" },
+    { "key": "company_logo",  "name": "Company logo",   "type": "file_reference" },
+    { "key": "project_ref",   "name": "Linked project", "type": "metaobject_reference",   "validations": [{ "name": "metaobject_definition", "value": "project" }] },
+    { "key": "quote_date",    "name": "Quote date",     "type": "date",                   "required": true },
+    { "key": "tone",          "name": "Tone",           "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"warm\",\"trade\",\"press\"]" }] },
+    { "key": "lead",          "name": "Lead voice",     "type": "boolean" },
+    { "key": "featured",      "name": "Featured",       "type": "boolean",                "required": true },
+    { "key": "consent_given", "name": "Consent given",  "type": "boolean",                "required": true },
+    { "key": "dawin_source_id","name": "DawinOS source id", "type": "single_line_text_field" }
+  ]
+}

@@ -1,0 +1,1080 @@
+{
+  "_metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2026-03-31T00:00:00Z",
+    "updatedBy": "Dawin Advisory",
+    "standard": "AAQS Standard Method of Measuring Building Work for Africa 2015",
+    "totalFormulas": 63,
+    "categories": [
+      "concrete",
+      "masonry",
+      "finishes",
+      "roofing",
+      "timber",
+      "earthworks",
+      "steel",
+      "plumbing",
+      "doors_windows"
+    ],
+    "rebarConversionFactors": {
+      "8mm": 0.400,
+      "10mm": 0.620,
+      "12mm": 0.888,
+      "16mm": 1.579,
+      "20mm": 2.470
+    }
+  },
+  "formulas": [
+    {
+      "code": "CONC_C10",
+      "name": "Plain Concrete Class 10 (1:4:8)",
+      "description": "Plain concrete class 10, 20mm aggregate, mix 1:4:8 — used for mass fill, oversite. Quantities include 50% compaction allowance per Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "plain",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 3.32, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.46, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "20mm Crushed Aggregate", "quantity": 0.92, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 170, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["concrete", "c10", "plain", "1:4:8", "class 10", "mass fill", "oversite"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "CONC_C15",
+      "name": "Plain Concrete Class 15 (1:3:6)",
+      "description": "Plain concrete class 15, 20mm aggregate, mix 1:3:6 — used for blinding, strip foundations. Quantities include 50% compaction allowance per Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "plain",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 4.32, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.45, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "20mm Crushed Aggregate", "quantity": 0.90, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 180, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["concrete", "c15", "plain", "blinding", "1:3:6", "class 15", "strip foundation"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "CONC_C20",
+      "name": "Reinforced Concrete Grade 20 (1:2:4)",
+      "description": "Vibrated reinforced concrete grade 20, 20mm aggregate, mix 1:2:4. Quantities include 50% compaction allowance per Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "reinforced",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 6.17, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.43, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "20mm Crushed Aggregate", "quantity": 0.86, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 190, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["concrete", "c20", "grade 20", "reinforced", "1:2:4", "vibrated"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "CONC_C25",
+      "name": "Reinforced Concrete Grade 25 (1:1.5:3)",
+      "description": "Vibrated reinforced concrete grade 25, 19mm aggregate, mix 1:1.5:3 — columns, beams, slabs. Quantities include 50% compaction allowance per Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "reinforced",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 7.85, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.41, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "19mm Crushed Aggregate", "quantity": 0.82, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 185, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["concrete", "c25", "grade 25", "reinforced", "1:1.5:3", "vibrated", "column", "beam", "slab"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "CONC_C30",
+      "name": "Reinforced Concrete Grade 30 (1:1:2)",
+      "description": "Vibrated reinforced concrete grade 30, 19mm aggregate, mix 1:1:2 — high strength elements. Quantities include 50% compaction allowance per Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "reinforced",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 10.8, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.375, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "19mm Crushed Aggregate", "quantity": 0.75, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 175, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["concrete", "c30", "grade 30", "reinforced", "1:1:2", "high strength"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "SLAB_150",
+      "name": "150mm Thick Floor Slab (C25)",
+      "description": "150mm thick reinforced concrete floor slab, grade 25, with BRC mesh reinforcement",
+      "category": "concrete",
+      "subcategory": "slab",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 1.125, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.06, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "19mm Crushed Aggregate", "quantity": 0.12, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "A142 BRC Mesh (4.8m x 2.4m)", "quantity": 0.095, "unit": "sheets", "wastagePercent": 10 },
+        { "materialName": "Binding Wire", "quantity": 0.05, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Water", "quantity": 28, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["floor slab", "150mm", "slab", "concrete", "mesh", "brc", "a142", "ground floor"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "BRC_MESH",
+      "name": "BRC Welded Mesh Reinforcement (4.8×2.4m rolls)",
+      "description": "BRC welded mesh reinforcement calculated per m² of slab area. Roll size 4.8m × 2.4m = 11.52m² per roll. From Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "reinforcement",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "A142 BRC Mesh Roll (4.8m x 2.4m)", "quantity": 0.0868, "unit": "rolls", "wastagePercent": 5 }
+      ],
+      "keywords": ["brc", "mesh", "welded mesh", "a142", "reinforcement", "slab mesh", "roll"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "FWORK_SLAB",
+      "name": "Formwork to Suspended Slab Soffit",
+      "description": "Formwork to soffits of suspended slabs, measured in m² per AAQS. Includes props, boards, release agent.",
+      "category": "concrete",
+      "subcategory": "formwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Plywood Formwork Board (18mm)", "quantity": 1.1, "unit": "m²", "wastagePercent": 15 },
+        { "materialName": "Timber Props (100x50mm)", "quantity": 4, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Timber Bearer (50x75mm)", "quantity": 2.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Wire Nails (75mm)", "quantity": 0.3, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Formwork Release Agent", "quantity": 0.15, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["formwork", "slab", "soffit", "suspended", "shuttering", "props"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "FWORK_BEAM",
+      "name": "Formwork to Beams (Sides & Soffit)",
+      "description": "Formwork to sides and soffits of beams, measured in m² per AAQS",
+      "category": "concrete",
+      "subcategory": "formwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Plywood Formwork Board (18mm)", "quantity": 1.15, "unit": "m²", "wastagePercent": 15 },
+        { "materialName": "Timber Props (100x50mm)", "quantity": 5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Timber Bearer (50x75mm)", "quantity": 3.0, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Wire Nails (75mm)", "quantity": 0.35, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Formwork Release Agent", "quantity": 0.15, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["formwork", "beam", "sides", "soffit", "shuttering"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "FWORK_COL",
+      "name": "Formwork to Columns",
+      "description": "Formwork to sides of columns, measured in m² per AAQS",
+      "category": "concrete",
+      "subcategory": "formwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Plywood Formwork Board (18mm)", "quantity": 1.2, "unit": "m²", "wastagePercent": 15 },
+        { "materialName": "Timber Clamp/Yoke (50x100mm)", "quantity": 3.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Wire Nails (75mm)", "quantity": 0.4, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Bolt & Nut (12mm x 300mm)", "quantity": 2, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Formwork Release Agent", "quantity": 0.15, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["formwork", "column", "sides", "shuttering"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "FWORK_RINGBEAM",
+      "name": "Formwork to Ring Beam (200mm high)",
+      "description": "Formwork to sides of ring beam 200mm high, using Kirundu hardwood timber and plywood boards. From Analysis schedule.",
+      "category": "concrete",
+      "subcategory": "formwork",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "Kirundu Hardwood (3x2 pcs)", "quantity": 0.645, "unit": "pcs", "wastagePercent": 5 },
+        { "materialName": "Plywood Formwork Board (18mm)", "quantity": 0.35, "unit": "m²", "wastagePercent": 5 },
+        { "materialName": "Wire Nails (75mm)", "quantity": 0.2, "unit": "kg", "wastagePercent": 15 }
+      ],
+      "keywords": ["formwork", "ring beam", "200mm", "kirundu", "shuttering"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "REBAR_8",
+      "name": "Steel Reinforcement 8mm Bars",
+      "description": "8mm diameter mild steel reinforcement bars, cut, bent and fixed — measured in kg per AAQS. Weight factor: 0.400 kg/m (verified from BBS).",
+      "category": "steel",
+      "subcategory": "reinforcement",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "8mm Mild Steel Bars (12m length, 0.400 kg/m)", "quantity": 1.0, "unit": "kg", "wastagePercent": 7 },
+        { "materialName": "Binding Wire", "quantity": 0.02, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Spacer Blocks (25mm cover)", "quantity": 0.1, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["reinforcement", "rebar", "8mm", "mild steel", "bars", "stirrups", "links", "0.400 kg/m"],
+      "source": "bbs_verified",
+      "isActive": true
+    },
+    {
+      "code": "REBAR_10",
+      "name": "Steel Reinforcement 10mm Bars",
+      "description": "10mm diameter high yield steel reinforcement bars, cut, bent and fixed. Weight factor: 0.620 kg/m (verified from BBS).",
+      "category": "steel",
+      "subcategory": "reinforcement",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "10mm High Yield Steel Bars Y10 (12m length, 0.620 kg/m)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 },
+        { "materialName": "Binding Wire", "quantity": 0.018, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Spacer Blocks (25mm cover)", "quantity": 0.09, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["reinforcement", "rebar", "10mm", "high yield", "y10", "bars", "0.620 kg/m"],
+      "source": "bbs_verified",
+      "isActive": true
+    },
+    {
+      "code": "REBAR_12",
+      "name": "Steel Reinforcement 12mm Bars",
+      "description": "12mm diameter high yield steel reinforcement bars (Grade 460B), cut, bent and fixed. Weight factor: 0.888 kg/m (verified from BBS).",
+      "category": "steel",
+      "subcategory": "reinforcement",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "12mm High Yield Steel Bars Y12 (12m length, 0.888 kg/m)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 },
+        { "materialName": "Binding Wire", "quantity": 0.015, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Spacer Blocks (25mm cover)", "quantity": 0.08, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["reinforcement", "rebar", "12mm", "high yield", "y12", "460b", "bars", "0.888 kg/m"],
+      "source": "bbs_verified",
+      "isActive": true
+    },
+    {
+      "code": "REBAR_16",
+      "name": "Steel Reinforcement 16mm Bars",
+      "description": "16mm diameter high yield steel reinforcement bars (Grade 460B), cut, bent and fixed. Weight factor: 1.579 kg/m (verified from BBS).",
+      "category": "steel",
+      "subcategory": "reinforcement",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "16mm High Yield Steel Bars Y16 (12m length, 1.579 kg/m)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 },
+        { "materialName": "Binding Wire", "quantity": 0.012, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Spacer Blocks (25mm cover)", "quantity": 0.06, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["reinforcement", "rebar", "16mm", "high yield", "y16", "460b", "bars", "1.579 kg/m"],
+      "source": "bbs_verified",
+      "isActive": true
+    },
+    {
+      "code": "REBAR_20",
+      "name": "Steel Reinforcement 20mm Bars",
+      "description": "20mm diameter high yield steel reinforcement bars (Grade 460B), cut, bent and fixed. Weight factor: 2.470 kg/m (verified from BBS).",
+      "category": "steel",
+      "subcategory": "reinforcement",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "20mm High Yield Steel Bars Y20 (12m length, 2.470 kg/m)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 },
+        { "materialName": "Binding Wire", "quantity": 0.01, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Spacer Blocks (25mm cover)", "quantity": 0.05, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["reinforcement", "rebar", "20mm", "high yield", "y20", "460b", "bars", "2.470 kg/m"],
+      "source": "bbs_verified",
+      "isActive": true
+    },
+    {
+      "code": "BRICK_100",
+      "name": "100mm Thick Brick Wall",
+      "description": "100mm thick burnt clay brick wall, 24 bricks per m², mortar 1:4. From Analysis schedule.",
+      "category": "masonry",
+      "subcategory": "brickwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Burnt Clay Bricks (230x110x75mm)", "quantity": 24, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.15, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.021, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["brick", "brickwork", "100mm", "wall", "burnt clay", "half brick"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "BRICK_150",
+      "name": "150mm Thick Brick Wall",
+      "description": "150mm thick burnt clay brick wall, 34 bricks per m², mortar 1:4. From Analysis schedule.",
+      "category": "masonry",
+      "subcategory": "brickwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Burnt Clay Bricks (230x110x75mm)", "quantity": 34, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.30, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.042, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 12, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["brick", "brickwork", "150mm", "wall", "burnt clay"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "BRICK_230",
+      "name": "230mm Thick Brick Wall",
+      "description": "230mm thick burnt clay brick wall (one brick), 58 bricks per m², mortar 1:4. From Analysis schedule.",
+      "category": "masonry",
+      "subcategory": "brickwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Burnt Clay Bricks (230x110x75mm)", "quantity": 58, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.52, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.073, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 18, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["brick", "brickwork", "230mm", "wall", "burnt clay", "one brick", "full brick"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "BLOCK_100",
+      "name": "100mm Thick Concrete Block Wall",
+      "description": "100mm thick solid concrete block wall, non-load-bearing partition, mortar 1:4",
+      "category": "masonry",
+      "subcategory": "blockwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Solid Concrete Blocks 400x200x100mm", "quantity": 12.5, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.4, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.018, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 10, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["block", "blockwork", "100mm", "partition", "non-load bearing"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "BLOCK_150",
+      "name": "150mm Thick Concrete Block Wall",
+      "description": "150mm thick solid concrete block wall, 11 blocks per m² (from Analysis schedule), mortar 1:4",
+      "category": "masonry",
+      "subcategory": "blockwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Solid Concrete Blocks 400x200x150mm (3.5N)", "quantity": 11, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.22, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.031, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 12, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["block", "blockwork", "150mm", "wall", "concrete block", "3.5n", "load bearing"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "BLOCK_200",
+      "name": "200mm Thick Concrete Block Wall",
+      "description": "200mm thick solid concrete block wall, load-bearing 3.5N/mm², mortar 1:4",
+      "category": "masonry",
+      "subcategory": "blockwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Solid Concrete Blocks 400x200x200mm (3.5N)", "quantity": 12.5, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.55, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.025, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 14, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["block", "blockwork", "200mm", "wall", "concrete block", "3.5n", "load bearing"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "BLOCK_230",
+      "name": "230mm Thick Concrete Block Wall",
+      "description": "230mm thick solid concrete block wall, 16 blocks per m² (from Analysis schedule), mortar 1:4",
+      "category": "masonry",
+      "subcategory": "blockwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Solid Concrete Blocks 400x200x230mm (3.5N)", "quantity": 16, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.37, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.052, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 16, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["block", "blockwork", "230mm", "wall", "concrete block", "3.5n", "load bearing"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "FACE_BRICK",
+      "name": "Face Brick Cladding",
+      "description": "Face brick cladding with cement backing and joints. Mortar thickness 34mm, 30% consolidation. From Analysis schedule.",
+      "category": "masonry",
+      "subcategory": "brickwork",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Face Bricks", "quantity": 1.05, "unit": "nr/m²", "wastagePercent": 5 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.25, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.035, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["face brick", "cladding", "facing", "decorative brick", "feature wall"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "DPC_200",
+      "name": "DPC Bitumen Felt (200mm wide)",
+      "description": "200mm wide damp proof course of bitumen felt to BS 743 Type A",
+      "category": "masonry",
+      "subcategory": "dpc",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "DPC Bitumen Felt 200mm wide (20m roll)", "quantity": 0.055, "unit": "rolls", "wastagePercent": 10 }
+      ],
+      "keywords": ["dpc", "damp proof course", "bitumen", "felt", "200mm", "bs743"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PLASTER_INT",
+      "name": "Internal Cement Plaster (12mm, 1:4)",
+      "description": "12mm thick two coat internal cement plaster (1:4) steel trowelled to walls. 30% consolidation/wastage on volume.",
+      "category": "finishes",
+      "subcategory": "plastering",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.22, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.015, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 5, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["plaster", "internal", "12mm", "1:4", "cement plaster", "two coat", "walls", "render"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PLASTER_INT_25",
+      "name": "Internal Cement Plaster (25mm, 1:4)",
+      "description": "25mm thick two coat internal cement plaster (1:4). From Analysis schedule: 30% consolidation on volume.",
+      "category": "finishes",
+      "subcategory": "plastering",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.40, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.026, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["plaster", "internal", "25mm", "1:4", "cement plaster", "thick plaster"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "PLASTER_INT_30",
+      "name": "Internal Cement Plaster (30mm, 1:4)",
+      "description": "30mm thick two coat internal cement plaster (1:4). From Analysis schedule: 30% consolidation on volume.",
+      "category": "finishes",
+      "subcategory": "plastering",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.47, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.031, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 10, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["plaster", "internal", "30mm", "1:4", "cement plaster", "thick plaster"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "PLASTER_EXT",
+      "name": "External Cement Render (25mm, 1:4)",
+      "description": "25mm thick two coat external cement render (1:4) with rough cast finish",
+      "category": "finishes",
+      "subcategory": "plastering",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.4, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.028, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["render", "external", "25mm", "1:4", "cement render", "two coat", "rough cast"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "SCREED_20",
+      "name": "Floor Screed (20mm, 1:3)",
+      "description": "20mm thick cement sand screed (1:3) finished to receive floor finishes",
+      "category": "finishes",
+      "subcategory": "screeds",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.18, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.022, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 5, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["screed", "floor screed", "20mm", "1:3", "cement sand", "floor finish"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "SCREED_25",
+      "name": "Floor Screed (25mm, 1:3)",
+      "description": "25mm thick cement sand screed (1:3). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "screeds",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.24, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.024, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 6, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["screed", "floor screed", "25mm", "1:3", "cement sand"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "SCREED_35",
+      "name": "Floor Screed (35mm, 1:3)",
+      "description": "35mm thick cement sand screed (1:3). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "screeds",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.33, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.034, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["screed", "floor screed", "35mm", "1:3", "cement sand"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "SCREED_40",
+      "name": "Floor Screed (40mm, 1:3)",
+      "description": "40mm thick cement sand screed (1:3). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "screeds",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.37, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Sharp Sand", "quantity": 0.039, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 10, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["screed", "floor screed", "40mm", "1:3", "cement sand"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "MORTAR_25",
+      "name": "Bedding Mortar (25mm, 1:4)",
+      "description": "25mm thick bedding mortar (1:4). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "mortar",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.16, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.024, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 5, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["mortar", "25mm", "1:4", "bedding", "bed"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "MORTAR_40",
+      "name": "Bedding Mortar (40mm, 1:4)",
+      "description": "40mm thick bedding mortar (1:4). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "mortar",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.25, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.039, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 8, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["mortar", "40mm", "1:4", "bedding", "bed"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "MORTAR_50",
+      "name": "Bedding Mortar (50mm, 1:4)",
+      "description": "50mm thick bedding mortar (1:4). From Analysis schedule: 30% consolidation.",
+      "category": "finishes",
+      "subcategory": "mortar",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.31, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.049, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Water", "quantity": 10, "unit": "litres", "wastagePercent": 5 }
+      ],
+      "keywords": ["mortar", "50mm", "1:4", "bedding", "bed"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "TILE_150",
+      "name": "Ceramic Tiles (150x150mm)",
+      "description": "150x150mm ceramic tiles fixed with tile adhesive. 44.4 tiles per m². From Analysis schedule.",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Ceramic Tiles 150x150mm", "quantity": 44.4, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.2, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.15, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Spacers (2mm)", "quantity": 50, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["tile", "150x150", "150mm", "ceramic", "small tile"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "TILE_WALL_300",
+      "name": "Ceramic Wall Tiles (300x200mm)",
+      "description": "300x200x6mm ceramic wall tiles fixed with tile adhesive on plastered walls. ~16.67 tiles per m².",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Ceramic Wall Tiles 300x200x6mm", "quantity": 16.67, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.2, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.12, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Spacers (2mm)", "quantity": 50, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["tile", "wall tile", "ceramic", "300x200", "200mm", "bathroom", "kitchen"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "TILE_300",
+      "name": "Ceramic Tiles (300x300mm)",
+      "description": "300x300mm ceramic tiles. 11.1 tiles per m². From Analysis schedule.",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Ceramic Tiles 300x300mm", "quantity": 11.1, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.2, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.12, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Spacers (3mm)", "quantity": 30, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["tile", "300x300", "300mm", "ceramic", "floor tile"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "TILE_FLOOR_400",
+      "name": "Ceramic Floor Tiles (400x400mm)",
+      "description": "400x400x10mm ceramic floor tiles fixed with tile adhesive on screeded floor. 6.25 tiles per m².",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Ceramic Floor Tiles 400x400x10mm", "quantity": 6.25, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.2, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.1, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Spacers (3mm)", "quantity": 25, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["tile", "floor tile", "ceramic", "400x400", "400mm", "tiling"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "TILE_500",
+      "name": "Ceramic Floor Tiles (500x500mm)",
+      "description": "500x500mm ceramic floor tiles. 4 tiles per m². From Analysis schedule.",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Ceramic Floor Tiles 500x500mm", "quantity": 4, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.18, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.08, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Spacers (3mm)", "quantity": 20, "unit": "nr", "wastagePercent": 5 }
+      ],
+      "keywords": ["tile", "floor tile", "500x500", "500mm", "large format"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "SKIRTING_100",
+      "name": "Ceramic Skirting (100mm)",
+      "description": "100x10mm ceramic skirting tiles fixed with tile adhesive",
+      "category": "finishes",
+      "subcategory": "tiling",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "Ceramic Skirting Tiles 100x10mm", "quantity": 2.6, "unit": "nr", "wastagePercent": 10 },
+        { "materialName": "Tile Adhesive (25kg bags)", "quantity": 0.04, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Tile Grout (5kg bags)", "quantity": 0.02, "unit": "bags", "wastagePercent": 5 }
+      ],
+      "keywords": ["skirting", "tile skirting", "100mm", "ceramic"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PAVER_CONCRETE",
+      "name": "Concrete Pavers (Interlocking)",
+      "description": "Interlocking concrete pavers, approximately 35.7 pavers per m². From Analysis schedule (2% wastage).",
+      "category": "finishes",
+      "subcategory": "paving",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Interlocking Concrete Pavers", "quantity": 35.7, "unit": "nr", "wastagePercent": 2 },
+        { "materialName": "Sharp Sand (bedding)", "quantity": 0.05, "unit": "m³", "wastagePercent": 10 }
+      ],
+      "keywords": ["paver", "concrete paver", "interlocking", "paving", "driveway", "pathway"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "PAINT_EMULSION",
+      "name": "Emulsion Paint (3 coats)",
+      "description": "Prepare, apply one mist coat and three coats emulsion paint to plastered surfaces. Coverage ~6 m²/litre per coat, +5% wastage. From Analysis schedule.",
+      "category": "finishes",
+      "subcategory": "painting",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Emulsion Paint (20L)", "quantity": 0.02, "unit": "tins", "wastagePercent": 5 },
+        { "materialName": "Primer/Undercoat (20L)", "quantity": 0.005, "unit": "tins", "wastagePercent": 5 },
+        { "materialName": "Sandpaper (Grade 120)", "quantity": 0.05, "unit": "sheets", "wastagePercent": 10 }
+      ],
+      "keywords": ["paint", "emulsion", "3 coats", "mist coat", "wall paint", "ceiling paint", "plastered"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "PAINT_GLOSS",
+      "name": "Gloss Oil Paint (3 coats)",
+      "description": "Prepare surface and apply three coats gloss oil paint to timber/metal surfaces",
+      "category": "finishes",
+      "subcategory": "painting",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Gloss Oil Paint (4L)", "quantity": 0.04, "unit": "tins", "wastagePercent": 10 },
+        { "materialName": "Primer/Undercoat (4L)", "quantity": 0.01, "unit": "tins", "wastagePercent": 10 },
+        { "materialName": "White Spirit/Thinner (1L)", "quantity": 0.02, "unit": "litres", "wastagePercent": 10 },
+        { "materialName": "Sandpaper (Grade 120)", "quantity": 0.05, "unit": "sheets", "wastagePercent": 10 }
+      ],
+      "keywords": ["paint", "gloss", "oil paint", "timber", "metal", "door", "window", "frame"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PAINT_TEXTURE",
+      "name": "Textured Paint (External)",
+      "description": "Prepare and apply textured paint to external rendered surfaces",
+      "category": "finishes",
+      "subcategory": "painting",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Textured Paint (20L)", "quantity": 0.03, "unit": "tins", "wastagePercent": 10 },
+        { "materialName": "External Primer/Sealer (20L)", "quantity": 0.006, "unit": "tins", "wastagePercent": 10 }
+      ],
+      "keywords": ["paint", "textured", "external", "rendered", "wall", "facade"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "CEIL_EML",
+      "name": "Expanded Metal Lath Plastered Ceiling",
+      "description": "Expanded metal lath plastered ceiling comprising EML, brandering, 12mm plaster",
+      "category": "finishes",
+      "subcategory": "ceiling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Expanded Metal Lath (EML)", "quantity": 1.1, "unit": "m²", "wastagePercent": 10 },
+        { "materialName": "Timber Brandering (50x25mm)", "quantity": 3.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Cement OPC 42.5N (50kg bags)", "quantity": 0.22, "unit": "bags", "wastagePercent": 5 },
+        { "materialName": "Plastering Sand", "quantity": 0.015, "unit": "m³", "wastagePercent": 10 },
+        { "materialName": "Binding Wire", "quantity": 0.05, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Wire Nails (50mm)", "quantity": 0.1, "unit": "kg", "wastagePercent": 10 }
+      ],
+      "keywords": ["ceiling", "eml", "expanded metal lath", "plaster ceiling", "brandering"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "ROOF_IRON",
+      "name": "Iron Sheet Roof Covering (G28)",
+      "description": "G28 gauge versatile/corrugated iron sheets (0.9×3m, effective area 2.28m²), laid sloping, including fixings. From Analysis schedule.",
+      "category": "roofing",
+      "subcategory": "sheeting",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "G28 Iron Sheets 0.9x3m (effective 2.28m²)", "quantity": 0.439, "unit": "sheets", "wastagePercent": 5 },
+        { "materialName": "Roofing Nails (75mm)", "quantity": 12, "unit": "nr", "wastagePercent": 10 },
+        { "materialName": "Roofing Washers (Rubber)", "quantity": 12, "unit": "nr", "wastagePercent": 10 }
+      ],
+      "keywords": ["roof", "iron sheet", "g28", "versatile", "corrugated", "roofing", "0.9x3m"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "ROOF_TIMBER",
+      "name": "Timber Roof Structure (Softwood)",
+      "description": "Structural timber roof: wall plates, rafters, purlins, tie beams — sawn softwood",
+      "category": "timber",
+      "subcategory": "roof structure",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Sawn Softwood Rafters (100x50mm)", "quantity": 2.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Sawn Softwood Purlins (50x100mm)", "quantity": 1.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Sawn Softwood Wall Plate (100x50mm)", "quantity": 0.6, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Sawn Softwood Tie Beam (50x100mm)", "quantity": 0.5, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Wire Nails (100mm)", "quantity": 0.25, "unit": "kg", "wastagePercent": 15 },
+        { "materialName": "Hoop Iron Straps", "quantity": 0.3, "unit": "m", "wastagePercent": 10 }
+      ],
+      "keywords": ["roof", "timber", "structure", "rafter", "purlin", "wall plate", "tie beam", "truss"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "FASCIA_PVC",
+      "name": "PVC Fascia Board",
+      "description": "235x25mm PVC fascia board fixed to rafters",
+      "category": "roofing",
+      "subcategory": "fascia",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "PVC Fascia Board 235x25mm", "quantity": 1.0, "unit": "m", "wastagePercent": 5 },
+        { "materialName": "Stainless Steel Screws (50mm)", "quantity": 4, "unit": "nr", "wastagePercent": 10 }
+      ],
+      "keywords": ["fascia", "pvc", "235mm", "board", "eaves"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "GUTTER_110",
+      "name": "uPVC Gutter (110mm)",
+      "description": "110mm diameter uPVC rainwater gutter, including brackets",
+      "category": "roofing",
+      "subcategory": "rainwater",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "110mm uPVC Gutter (4m length)", "quantity": 0.27, "unit": "lengths", "wastagePercent": 5 },
+        { "materialName": "Gutter Bracket (110mm)", "quantity": 1.5, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Gutter Joint Connector", "quantity": 0.27, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "PVC Solvent Cement", "quantity": 0.01, "unit": "litres", "wastagePercent": 10 }
+      ],
+      "keywords": ["gutter", "upvc", "110mm", "rainwater", "disposal"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "DOWNPIPE_110",
+      "name": "uPVC Downpipe (110mm)",
+      "description": "110mm diameter uPVC rainwater downpipe, clipped to walls",
+      "category": "roofing",
+      "subcategory": "rainwater",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "110mm uPVC Downpipe (3m length)", "quantity": 0.35, "unit": "lengths", "wastagePercent": 5 },
+        { "materialName": "Pipe Clip (110mm)", "quantity": 1.0, "unit": "nr", "wastagePercent": 5 },
+        { "materialName": "Wall Plugs & Screws", "quantity": 1.0, "unit": "nr", "wastagePercent": 10 }
+      ],
+      "keywords": ["downpipe", "upvc", "110mm", "rainwater", "down pipe"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "HARDCORE_150",
+      "name": "150mm Thick Hardcore Base",
+      "description": "150mm thick bed of hand packed stone hardcore base, compacted. Density 1.5 tons/m³, 25% consolidation allowance. From Analysis schedule.",
+      "category": "earthworks",
+      "subcategory": "filling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Hardcore Stone (loose, 1.5 tons/m³)", "quantity": 0.1875, "unit": "m³", "wastagePercent": 25 }
+      ],
+      "keywords": ["hardcore", "150mm", "stone", "base", "hand packed", "filling"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "HARDCORE_200",
+      "name": "200mm Thick Hardcore Base",
+      "description": "200mm thick bed of hand packed stone hardcore base, compacted. Density 1.5 tons/m³, 25% consolidation allowance. From Analysis schedule.",
+      "category": "earthworks",
+      "subcategory": "filling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Hardcore Stone (loose, 1.5 tons/m³)", "quantity": 0.25, "unit": "m³", "wastagePercent": 25 }
+      ],
+      "keywords": ["hardcore", "200mm", "stone", "base", "hand packed", "filling"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "HARDCORE_300",
+      "name": "300mm Thick Hardcore Base",
+      "description": "300mm thick bed of hand packed stone hardcore base, compacted. Density 1.5 tons/m³, 25% consolidation. From Analysis schedule.",
+      "category": "earthworks",
+      "subcategory": "filling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Hardcore Stone (loose, 1.5 tons/m³)", "quantity": 0.375, "unit": "m³", "wastagePercent": 25 }
+      ],
+      "keywords": ["hardcore", "300mm", "stone", "base", "hand packed", "filling", "thick"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "BLINDING_50",
+      "name": "50mm Stone Dust Blinding",
+      "description": "50mm thick stone dust blinding over surfaces of hardcore",
+      "category": "earthworks",
+      "subcategory": "filling",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Stone Dust", "quantity": 0.065, "unit": "m³", "wastagePercent": 15 }
+      ],
+      "keywords": ["blinding", "stone dust", "50mm", "hardcore", "surface"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "MURRAM_150",
+      "name": "Murram Fill (150mm layers)",
+      "description": "Imported approved murram fill and compact in 150mm layers",
+      "category": "earthworks",
+      "subcategory": "filling",
+      "outputUnit": "m³",
+      "components": [
+        { "materialName": "Approved Murram (loose)", "quantity": 1.3, "unit": "m³", "wastagePercent": 15 }
+      ],
+      "keywords": ["murram", "fill", "compact", "150mm", "layer", "gravel", "imported"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "DPM_1000",
+      "name": "1000 Gauge DPM Polythene Sheet",
+      "description": "1000 gauge polythene sheeting damp proof membrane laid on blinded hardcore",
+      "category": "earthworks",
+      "subcategory": "waterproofing",
+      "outputUnit": "m²",
+      "components": [
+        { "materialName": "Polythene Sheet 1000 Gauge (4m wide)", "quantity": 1.15, "unit": "m²", "wastagePercent": 10 }
+      ],
+      "keywords": ["dpm", "polythene", "1000 gauge", "damp proof membrane", "sheeting", "waterproof"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "STEEL_RHS_100x50",
+      "name": "Steel RHS 100×50×3mm",
+      "description": "Rectangular hollow section 100×50×3mm mild steel. Weight ~6.14 kg/m. From Analysis schedule.",
+      "category": "steel",
+      "subcategory": "structural",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "Steel RHS 100x50x3mm (6m length)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 }
+      ],
+      "keywords": ["steel", "rhs", "100x50", "rectangular hollow section", "structural steel"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "STEEL_RHS_50x50",
+      "name": "Steel SHS 50×50×3mm",
+      "description": "Square hollow section 50×50×3mm mild steel. Weight ~4.27 kg/m. From Analysis schedule.",
+      "category": "steel",
+      "subcategory": "structural",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "Steel SHS 50x50x3mm (6m length)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 }
+      ],
+      "keywords": ["steel", "shs", "50x50", "square hollow section", "structural steel"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "STEEL_ANGLE_50x50",
+      "name": "Steel Angle 50×50×3mm",
+      "description": "Equal angle 50×50×3mm mild steel. Weight ~2.1 kg/m. From Analysis schedule.",
+      "category": "steel",
+      "subcategory": "structural",
+      "outputUnit": "kg",
+      "components": [
+        { "materialName": "Steel Angle 50x50x3mm (6m length)", "quantity": 1.0, "unit": "kg", "wastagePercent": 5 }
+      ],
+      "keywords": ["steel", "angle", "50x50", "equal angle", "structural steel", "bracket"],
+      "source": "analysis_schedule",
+      "isActive": true
+    },
+    {
+      "code": "PIPE_PPR_20",
+      "name": "PPR Pipe 20mm (Cold Water)",
+      "description": "20mm PPR pipe for internal cold water distribution",
+      "category": "plumbing",
+      "subcategory": "pipes",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "20mm PPR Pipe (4m length)", "quantity": 0.27, "unit": "lengths", "wastagePercent": 5 },
+        { "materialName": "Pipe Clips (20mm)", "quantity": 1.0, "unit": "nr", "wastagePercent": 10 }
+      ],
+      "keywords": ["ppr", "pipe", "20mm", "cold water", "supply", "distribution"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PIPE_PVC_110",
+      "name": "uPVC Drainage Pipe 110mm",
+      "description": "110mm uPVC drainage pipe for foul water/soil drainage",
+      "category": "plumbing",
+      "subcategory": "drainage",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "110mm uPVC Pipe PN6 (6m length)", "quantity": 0.18, "unit": "lengths", "wastagePercent": 5 },
+        { "materialName": "Pipe Clips (110mm)", "quantity": 0.5, "unit": "nr", "wastagePercent": 10 },
+        { "materialName": "PVC Solvent Cement", "quantity": 0.02, "unit": "litres", "wastagePercent": 10 }
+      ],
+      "keywords": ["upvc", "pipe", "110mm", "drainage", "foul", "soil", "pn6"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "PIPE_HDPE_32",
+      "name": "HDPE Pipe 32mm PN10",
+      "description": "32mm HDPE pipe PN10 for external water distribution mains",
+      "category": "plumbing",
+      "subcategory": "pipes",
+      "outputUnit": "m",
+      "components": [
+        { "materialName": "32mm HDPE Pipe PN10 (100m coil)", "quantity": 0.011, "unit": "coils", "wastagePercent": 5 }
+      ],
+      "keywords": ["hdpe", "pipe", "32mm", "pn10", "water", "distribution", "mains", "external"],
+      "source": "aaqs_standard",
+      "isActive": true
+    },
+    {
+      "code": "DOOR_TIMBER",
+      "name": "Timber Door (45mm solid core)",
+      "description": "45mm thick solid core flush door with frame, architrave and ironmongery",
+      "category": "doors_windows",
+      "subcategory": "timber doors",
+      "outputUnit": "nr",
+      "components": [
+        { "materialName": "45mm Solid Core Flush Door (900x2100mm)", "quantity": 1, "unit": "nr", "wastagePercent": 2 },
+        { "materialName": "Mahogany Door Frame 200x50mm", "quantity": 5.1, "unit": "m", "wastagePercent": 5 },
+        { "materialName": "Mahogany Architrave 50x25mm", "quantity": 10.2, "unit": "m", "wastagePercent": 10 },
+        { "materialName": "Butt Hinges (100mm, pair)", "quantity": 1.5, "unit": "pairs", "wastagePercent": 0 },
+        { "materialName": "Three Lever Mortice Lock with Handles", "quantity": 1, "unit": "nr", "wastagePercent": 0 },
+        { "materialName": "Door Stop (rubber)", "quantity": 1, "unit": "nr", "wastagePercent": 0 },
+        { "materialName": "Wire Nails (50mm)", "quantity": 0.1, "unit": "kg", "wastagePercent": 10 }
+      ],
+      "keywords": ["door", "timber", "solid core", "flush", "45mm", "frame", "ironmongery", "lock"],
+      "source": "aaqs_standard",
+      "isActive": true
+    }
+  ]
+}

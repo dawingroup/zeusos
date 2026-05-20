@@ -1,0 +1,48 @@
+{
+  "_meta": "Shopify metaobject for 'finish'. URL-addressable at /finishes/{handle}.",
+  "type": "finish",
+  "name": "Finish",
+  "description": "An entry in the Dawin Finish Library — the 64 hand-mixed finishes.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable":  { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": {
+      "enabled": true,
+      "url_handle": "finishes",
+      "can_create_redirects": true
+    }
+  },
+  "field_definitions": [
+    { "key": "handle",              "name": "Handle",              "type": "single_line_text_field", "required": true },
+    { "key": "name",                "name": "Name",                "type": "single_line_text_field", "required": true },
+    { "key": "code",                "name": "Code",                "type": "single_line_text_field", "required": true },
+    { "key": "family",              "name": "Family",              "type": "single_line_text_field", "required": true, "validations": [{ "name": "choices", "value": "[\"Lime wash\",\"Tadelakt\",\"Plaster\",\"Wood oil\",\"Wax\",\"Mineral paint\",\"Concrete\",\"Earth\"]" }] },
+    { "key": "color_hex",           "name": "Colour (hex)",        "type": "color",                  "required": true },
+    { "key": "texture_image",       "name": "Texture image",       "type": "file_reference",         "required": true },
+    { "key": "wall_preview_image",  "name": "Wall preview image",  "type": "file_reference",         "required": true },
+    { "key": "recipe_id",           "name": "Recipe id",           "type": "single_line_text_field" },
+    { "key": "sheen",               "name": "Sheen label",         "type": "single_line_text_field", "required": true },
+    { "key": "sheen_value",         "name": "Sheen value (GU)",    "type": "number_integer" },
+    { "key": "hand_count",          "name": "Hand count",          "type": "number_integer",         "required": true },
+    { "key": "cure_hours",          "name": "Cure hours",          "type": "number_integer",         "required": true },
+    { "key": "cure_temp_c_min",     "name": "Cure temp °C min",    "type": "number_integer" },
+    { "key": "cure_temp_c_max",     "name": "Cure temp °C max",    "type": "number_integer" },
+    { "key": "coverage_m2_per_kg",  "name": "Coverage m²/kg",      "type": "number_decimal" },
+    { "key": "washability",         "name": "Washability",         "type": "single_line_text_field", "validations": [{ "name": "choices", "value": "[\"wet-cleanable\",\"damp-cleanable\",\"dry only\"]" }] },
+    { "key": "outdoor_use",         "name": "Outdoor use",         "type": "boolean" },
+    { "key": "sample_product",      "name": "Sample product",      "type": "product_reference" },
+    { "key": "sample_price_ugx",    "name": "Sample price (UGX)",  "type": "number_integer" },
+    { "key": "sample_lead_days",    "name": "Sample lead days",    "type": "number_integer" },
+    { "key": "projects_used_in",    "name": "Projects used in",    "type": "list.metaobject_reference", "validations": [{ "name": "metaobject_definition", "value": "project" }] },
+    { "key": "compatible_materials","name": "Compatible materials","type": "list.metaobject_reference", "validations": [{ "name": "metaobject_definition", "value": "material" }] },
+    { "key": "description",         "name": "Description",         "type": "rich_text_field",        "required": true },
+    { "key": "updated_at",          "name": "Last updated",        "type": "date" },
+    { "key": "published",           "name": "Published",           "type": "boolean",                "required": true },
+    { "key": "sort_index",          "name": "Sort index",          "type": "number_integer" },
+    { "key": "dawin_source_id",     "name": "DawinOS source id",   "type": "single_line_text_field" }
+  ]
+}

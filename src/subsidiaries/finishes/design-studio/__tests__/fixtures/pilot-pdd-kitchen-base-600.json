@@ -1,0 +1,175 @@
+{
+  "id": "pdd-kitchen-base-600",
+  "name": "Kitchen Base Unit 600mm",
+  "description": "Standard 600mm kitchen base unit with single door and adjustable shelf",
+  "productType": "cabinetry",
+  "designOrigin": "polyboard",
+  "status": "active",
+  "parameters": [
+    {
+      "key": "width",
+      "label": "Width",
+      "type": "number",
+      "default": 600,
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "mm"
+    },
+    {
+      "key": "depth",
+      "label": "Depth",
+      "type": "number",
+      "default": 560,
+      "min": 500,
+      "max": 620,
+      "step": 10,
+      "unit": "mm"
+    },
+    {
+      "key": "height",
+      "label": "Height",
+      "type": "number",
+      "default": 720,
+      "min": 680,
+      "max": 780,
+      "step": 10,
+      "unit": "mm"
+    },
+    {
+      "key": "doorStyle",
+      "label": "Door Style",
+      "type": "select",
+      "default": "slab",
+      "options": ["slab", "shaker", "raised_panel"]
+    },
+    {
+      "key": "hasShelf",
+      "label": "Include Shelf",
+      "type": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "base-width-min",
+      "condition": "width < 300",
+      "action": "reject",
+      "reason": "Base units narrower than 300mm are not practical for single-door configuration",
+      "affectedParameters": ["width"],
+      "isActive": true
+    },
+    {
+      "id": "base-depth-worktop",
+      "condition": "depth > 600",
+      "action": "warn",
+      "reason": "Depth exceeds standard 560mm — ensure worktop overhang is acceptable",
+      "affectedParameters": ["depth"],
+      "isActive": true
+    },
+    {
+      "id": "hairpin-width-limit",
+      "condition": "width > 1000 and doorStyle == \"hairpin\"",
+      "action": "reject",
+      "reason": "Hairpin legs not supported for units wider than 1000mm",
+      "affectedParameters": ["width", "doorStyle"],
+      "isActive": true
+    }
+  ],
+  "validFinishes": ["white-melamine", "grey-matt", "oak-natural", "walnut-veneer"],
+  "inventoryBindings": {
+    "board_18mm": {
+      "bomTemplateLineKey": "board_18mm",
+      "inventoryFamilyId": "FAM-BOARD-18",
+      "category": "sheet-goods",
+      "quantityMultiplier": 1,
+      "wastagePercent": 8
+    },
+    "board_8mm": {
+      "bomTemplateLineKey": "board_8mm",
+      "inventoryItemId": "INV-MDF-8MM",
+      "category": "sheet-goods",
+      "quantityMultiplier": 1,
+      "wastagePercent": 5
+    },
+    "edge_banding_04mm": {
+      "bomTemplateLineKey": "edge_banding_04mm",
+      "inventoryFamilyId": "FAM-EDGE-04",
+      "category": "edge-banding",
+      "quantityMultiplier": 1,
+      "wastagePercent": 10
+    },
+    "hinge": {
+      "bomTemplateLineKey": "hinge",
+      "inventoryItemId": "INV-HINGE-BLUM-CLIP",
+      "category": "hardware",
+      "quantityMultiplier": 1,
+      "wastagePercent": 0
+    }
+  },
+  "bomTemplate": [
+    {
+      "materialCategory": "board_18mm",
+      "quantityExpression": "(2 * height * depth + width * depth + width * 80) / 1000000",
+      "unit": "m2"
+    },
+    {
+      "materialCategory": "board_8mm",
+      "quantityExpression": "(width - 4) * (height - 4) / 1000000",
+      "unit": "m2"
+    },
+    {
+      "materialCategory": "edge_banding_04mm",
+      "quantityExpression": "(2 * height + 2 * width + depth) / 1000",
+      "unit": "lm"
+    },
+    {
+      "materialCategory": "hinge",
+      "quantityExpression": "2",
+      "unit": "pcs"
+    }
+  ],
+  "pricingConfig": {
+    "estimationEngineRef": "est-kitchen-base",
+    "laborComplexityFormula": "1 + (width > 600 ? 0.2 : 0)",
+    "overheadPercent": 15,
+    "marginPercent": 25,
+    "taxConfig": { "vatApplicable": true, "whtApplicable": false },
+    "currencyOverride": "UGX"
+  },
+  "clientFacingConfig": {
+    "exposedParameters": ["width", "depth", "height", "doorStyle"],
+    "parameterLabels": {
+      "width": "Cabinet Width",
+      "depth": "Cabinet Depth",
+      "height": "Cabinet Height",
+      "doorStyle": "Door Style"
+    },
+    "parameterHelpText": {
+      "width": "Standard kitchen module widths: 300, 450, 600, 800, 900mm",
+      "depth": "Standard depth 560mm fits under 600mm worktop with overhang"
+    },
+    "finishGroupLabels": {
+      "carcass": "Body Finish",
+      "door": "Door Finish"
+    },
+    "showPriceEstimate": true,
+    "showStockAvailability": true,
+    "allowARPreview": false,
+    "shareableUrl": true
+  },
+  "manufacturingOutputConfig": {
+    "generateCutList": true,
+    "cutListFormat": "csv",
+    "generateEdgeBandingSchedule": true,
+    "generateHardwareSchedule": true,
+    "generateCNCProgram": false,
+    "generateAssemblyInstructions": false,
+    "generateDrawingPackage": true
+  },
+  "dkbArchetypeId": "kitchen-base-600",
+  "defaultFinishMappings": {
+    "carcass": "white-melamine",
+    "door": "white-melamine"
+  }
+}

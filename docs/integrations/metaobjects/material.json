@@ -1,0 +1,28 @@
+{
+  "_meta": "Shopify metaobject for 'material'. Not URL-addressable — referenced from products/finishes/projects.",
+  "type": "material",
+  "name": "Material",
+  "description": "A raw material (timber, brass, lime, linen) used in Dawin products and finishes.",
+  "access": {
+    "storefront": "PUBLIC_READ",
+    "admin": "MERCHANT_READ_WRITE"
+  },
+  "capabilities": {
+    "publishable":  { "enabled": true },
+    "translatable": { "enabled": true },
+    "online_store": { "enabled": false }
+  },
+  "field_definitions": [
+    { "key": "handle",         "name": "Handle",         "type": "single_line_text_field", "required": true },
+    { "key": "name",           "name": "Name",           "type": "single_line_text_field", "required": true },
+    { "key": "category",       "name": "Category",       "type": "single_line_text_field", "required": true, "validations": [{ "name": "choices", "value": "[\"plaster\",\"timber\",\"metal\",\"fibre\",\"clay\",\"stone\",\"glass\"]" }] },
+    { "key": "origin_country", "name": "Origin country", "type": "single_line_text_field", "required": true },
+    { "key": "origin_region",  "name": "Origin region",  "type": "single_line_text_field" },
+    { "key": "supplier",       "name": "Supplier",       "type": "single_line_text_field" },
+    { "key": "is_local",       "name": "Locally sourced","type": "boolean",                "required": true },
+    { "key": "is_sustainable", "name": "Sustainable",    "type": "boolean",                "required": true },
+    { "key": "cert_image",     "name": "Certification image", "type": "file_reference" },
+    { "key": "description",    "name": "Description",    "type": "rich_text_field",        "required": true },
+    { "key": "dawin_source_id","name": "DawinOS source id","type": "single_line_text_field" }
+  ]
+}

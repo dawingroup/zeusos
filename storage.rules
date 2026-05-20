@@ -1,0 +1,435 @@
+rules_version = '2';
+
+// ============================================
+// DawinOS v2.0 - Firebase Storage Rules
+// ============================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ============================================
+    // Helper Functions
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function userId() {
+      return request.auth.uid;
+    }
+    
+    function isAdmin() {
+      return request.auth.token.role == 'platform_admin'
+        || request.auth.token.globalRole in ['admin', 'owner'];
+    }
+
+    function isHR() {
+      return request.auth.token.role in ['platform_admin', 'hr_admin', 'hr_manager']
+        || request.auth.token.globalRole in ['admin', 'owner'];
+    }
+
+    function isFinance() {
+      return request.auth.token.role in ['platform_admin', 'finance_admin', 'finance_manager']
+        || request.auth.token.globalRole in ['admin', 'owner'];
+    }
+
+    function isExecutive() {
+      return request.auth.token.role in ['platform_admin', 'ceo', 'executive', 'director']
+        || request.auth.token.globalRole in ['admin', 'owner'];
+    }
+
+    // Supports both old claims (subsidiaryId: string) and new claims (subsidiaries: array)
+    function belongsToSubsidiary(sid) {
+      return request.auth.token.subsidiaryId == sid
+        || (sid in request.auth.token.subsidiaries);
+    }
+    
+    // Validate file size (max 50MB)
+    function isValidSize() {
+      return request.resource.size < 50 * 1024 * 1024;
+    }
+    
+    // Validate image type
+    function isValidImageType() {
+      return request.resource.contentType.matches('image/(png|jpeg|jpg|gif|webp|svg\\+xml)|image/x-icon');
+    }
+    
+    // Validate document type
+    function isValidDocType() {
+      return request.resource.contentType.matches('application/pdf');
+    }
+    
+    // Validate spreadsheet/CSV type
+    function isValidSpreadsheetType() {
+      return request.resource.contentType.matches('(application/pdf|text/csv|application/vnd.ms-excel|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)');
+    }
+
+    // Validate CAD file types
+    function isValidCADType() {
+      return request.resource.contentType.matches('(application/acad|application/x-acad|application/autocad_dwg|image/vnd.dwg|application/dwg|application/dxf)');
+    }
+
+    // Validate file size with higher limit for CAD (max 100MB)
+    function isValidLargeFileSize() {
+      return request.resource.size < 100 * 1024 * 1024;
+    }
+    
+    // ============================================
+    // USER PROFILE IMAGES
+    // ============================================
+    
+    match /users/{userId}/profile/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if (request.auth.uid == userId || isAdmin()) &&
+        isValidSize() &&
+        isValidImageType();
+    }
+    
+    // ============================================
+    // HR DOCUMENTS
+    // ============================================
+    
+    match /hr/employees/{employeeId}/{document=**} {
+      allow read: if isHR() || request.auth.uid == employeeId;
+      allow write: if isHR() && isValidSize();
+    }
+    
+    match /hr/contracts/{contractId}/{fileName} {
+      allow read: if isHR();
+      allow write: if isHR() && 
+        isValidSize() &&
+        isValidDocType();
+    }
+    
+    match /hr/payroll/{batchId}/{fileName} {
+      // Highly restricted - HR only
+      allow read: if isHR() || isFinance();
+      allow write: if isHR() && 
+        isValidSize() &&
+        isValidSpreadsheetType();
+    }
+    
+    // ============================================
+    // FINANCE DOCUMENTS
+    // ============================================
+    
+    match /finance/statements/{batchId}/{fileName} {
+      allow read: if isFinance();
+      allow write: if isFinance() && 
+        isValidSize() &&
+        isValidSpreadsheetType();
+    }
+    
+    match /finance/reports/{year}/{fileName} {
+      allow read: if isFinance() || isAdmin();
+      allow write: if isFinance() && isValidSize();
+    }
+    
+    // ============================================
+    // EXECUTIVE DOCUMENTS
+    // ============================================
+    
+    match /executive/strategy/{docId}/{fileName} {
+      allow read: if isExecutive();
+      allow write: if isExecutive() && isValidSize();
+    }
+
+    // ============================================
+    // STRATEGY REVIEW DOCUMENTS
+    // ============================================
+
+    match /companies/{companyId}/strategy_documents/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    match /executive/capital/{raiseId}/{fileName} {
+      // Investor materials
+      allow read: if isExecutive() || isFinance();
+      allow write: if isExecutive() && isValidSize();
+    }
+    
+    // ============================================
+    // SUBSIDIARY DOCUMENTS
+    // ============================================
+    
+    match /subsidiaries/{subsidiaryId}/{path=**} {
+      allow read: if isAdmin() || belongsToSubsidiary(subsidiaryId);
+      allow write: if (isAdmin() || belongsToSubsidiary(subsidiaryId)) && isValidSize();
+    }
+    
+    // ============================================
+    // KNOWLEDGE BASE
+    // ============================================
+    
+    match /knowledge/{category}/{fileName} {
+      // All authenticated users can read
+      allow read: if isAuthenticated();
+      // HR and admin can write
+      allow write: if isHR() && isValidSize();
+    }
+    
+    // ============================================
+    // TEMPORARY UPLOADS
+    // ============================================
+    
+    match /temp/{userId}/{fileName} {
+      // Users can upload to their temp folder
+      allow read: if request.auth.uid == userId;
+      allow write: if request.auth.uid == userId && isValidSize();
+      // Auto-deleted after 24 hours via Cloud Function
+    }
+    
+    // ============================================
+    // PLATFORM BRANDING (Logo & Favicon)
+    // ============================================
+
+    match /branding/{fileName} {
+      // Public read access for branding assets (logo and favicon need to be publicly visible)
+      allow read: if true;
+      // Authenticated users can upload branding (images only, with size limits per service)
+      allow write: if isAuthenticated() && isValidImageType();
+    }
+
+    // ============================================
+    // ORGANIZATION BRANDING & ASSETS
+    // ============================================
+
+    // Organization assets are only accessible to org members or admins
+    match /organizations/{orgId}/{path=**} {
+      allow read: if isAuthenticated() && (isAdmin() || belongsToSubsidiary(orgId) || orgId == 'default');
+      allow write: if isAuthenticated() && isValidSize() && (isAdmin() || belongsToSubsidiary(orgId) || orgId == 'default');
+    }
+
+    // ============================================
+    // PROJECT/FACILITY BRANDING ASSETS (Logos)
+    // ============================================
+
+    match /assets/logos/{projectCode}/{fileName} {
+      // All authenticated users can read logos (needed for document generation)
+      allow read: if isAuthenticated();
+      // Authenticated users can upload logos (images only, max 5MB)
+      allow write: if isAuthenticated() &&
+        request.resource.size < 5 * 1024 * 1024 &&
+        isValidImageType();
+    }
+    
+    // ============================================
+    // ACCOUNTABILITY DOCUMENTS
+    // ============================================
+
+    match /accountability-documents/{requisitionId}/{fileName} {
+      // All authenticated users can read and write accountability documents
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() &&
+        request.resource.size < 10 * 1024 * 1024; // Max 10MB as per form validation
+    }
+
+    // ============================================
+    // ACTIVITY REPORTS
+    // ============================================
+
+    match /activity-reports/{requisitionId}/{level}/{fileName} {
+      // All authenticated users can read and write activity reports
+      // level can be 'requisition' or 'accountability'
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() &&
+        request.resource.size < 50 * 1024 * 1024; // Max 50MB for reports with photos
+    }
+
+    // ============================================
+    // FUNDS ACKNOWLEDGEMENT DOCUMENTS
+    // ============================================
+
+    match /funds-acknowledgements/{requisitionId}/{fileName} {
+      // All authenticated users can read and write funds acknowledgement PDFs
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() &&
+        request.resource.size < 10 * 1024 * 1024; // Max 10MB for PDFs
+    }
+
+    // ============================================
+    // QUOTES (PDF documents for WhatsApp sharing)
+    // ============================================
+
+    match /change-orders/{changeOrderId}/{fileName} {
+      // Public read — change-order PDFs are shared externally via WhatsApp.
+      allow read: if true;
+      allow create, update: if isAuthenticated() && isValidSize() && isValidDocType();
+      allow delete: if isAuthenticated();
+    }
+
+    match /quotes/{quoteId}/{fileName} {
+      // Public read — these PDFs are shared externally via WhatsApp / client portal
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize();
+    }
+
+    // ============================================
+    // PAYMENT RECEIPTS (PDF documents for WhatsApp sharing)
+    // ============================================
+
+    match /receipts/{orderId}/{fileName} {
+      // Public read — receipt PDFs are shared externally via WhatsApp
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isValidDocType();
+    }
+
+    // ============================================
+    // MEETING MINUTES (PDF documents for WhatsApp sharing)
+    // ============================================
+
+    match /minutes/{projectId}/{fileName} {
+      // Public read — minutes PDFs are shared externally via WhatsApp
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isValidDocType();
+    }
+
+    // ============================================
+    // PO PDF IMPORTS (Supplier invoices/quotations)
+    // ============================================
+
+    match /po-imports/{subsidiaryId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize() && isValidDocType();
+    }
+
+    // ============================================
+    // COMPLIANCE DOCUMENTS
+    // ============================================
+
+    match /compliance/{companyId}/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+
+    // ============================================
+    // FINISH LIBRARY SWATCHES
+    // ============================================
+
+    match /finishes/{finishId}/{fileName} {
+      // All authenticated users can read finish swatches
+      allow read: if isAuthenticated();
+      // Authenticated users can upload finish images (max 5MB, images only)
+      allow write: if isAuthenticated() &&
+        request.resource.size < 5 * 1024 * 1024 &&
+        isValidImageType();
+    }
+
+    // ============================================
+    // WORKSHOP VIEWER (3D models, generated meshes, print packages)
+    // ============================================
+
+    match /workshop-viewer/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // ============================================
+    // PROJECT & DESIGN ASSETS (Existing)
+    // ============================================
+
+    match /projects/{projectId}/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    match /designs/{designId}/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+    
+    match /clips/{clipId}/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+
+    // ============================================
+    // DARWIN FINISHES - CLIENT DOCUMENTS
+    // ============================================
+
+    match /design-projects/{projectId}/client-documents/{category}/{fileName} {
+      allow read: if isAuthenticated();
+      allow delete: if isAuthenticated();
+      allow create, update: if isAuthenticated() && (
+        // Reference images: 20MB limit, image types only
+        (category == 'reference-images' && request.resource.size < 20 * 1024 * 1024 && isValidImageType()) ||
+        // CAD drawings: 100MB limit, CAD types only
+        (category == 'cad-drawings' && isValidLargeFileSize() && isValidCADType()) ||
+        // PDF plans: 50MB limit, PDF only
+        (category == 'pdf-plans' && isValidSize() && isValidDocType()) ||
+        // Design briefs: 10MB limit, PDF only
+        (category == 'design-briefs' && request.resource.size < 10 * 1024 * 1024 && isValidDocType()) ||
+        // Other: 50MB limit, any type
+        (category == 'other' && isValidSize())
+      );
+    }
+
+    // ============================================
+    // UNIFIED FILE MANAGER (projectFiles collection)
+    // ============================================
+
+    match /project-files/{projectId}/{category}/{fileName} {
+      allow read: if isAuthenticated();
+      allow delete: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // ============================================
+    // DARWIN FINISHES - SHARED DELIVERABLES (Bulk uploads assigned to multiple items)
+    // ============================================
+
+    match /design-projects/{projectId}/shared-deliverables/{type}/{fileName} {
+      allow read: if isAuthenticated();
+      allow delete: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // ============================================
+    // DARWIN FINISHES - DESIGN DELIVERABLES (Existing)
+    // ============================================
+
+    match /design-projects/{projectId}/items/{itemId}/deliverables/{stage}/{type}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // Auto-generated deliverables (Shop Traveler, BOM, Cut List etc. produced by the system).
+    // Path shape is `…/items/{itemId}/auto-gen/{type}/{fileName}` — see storage.ts:183.
+    match /design-projects/{projectId}/items/{itemId}/auto-gen/{type}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // ============================================
+    // DARWIN FINISHES - DESIGN PROJECT CLIPS
+    // ============================================
+
+    match /design-projects/{projectId}/clips/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
+
+    // ============================================
+    // WORKSHOP VIEWER - AI GENERATION & REVISIONS
+    // ============================================
+
+    match /workshop-viewer/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+
+    // ============================================
+    // DESIGN SCENES - Source GLBs + per-cabinet assets
+    // ============================================
+    // When a Scene is born from AI cabinet detection on an uploaded
+    // multi-cabinet model, the source GLB is uploaded here and referenced
+    // by every SceneCabinet via `sourceModelUrl`. The viewport loads it
+    // once and filters to `sourceMeshNames` per cabinet.
+    match /scenes/{sceneId}/{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+  "name": "Dawin Design Clipper",
+  "version": "1.0.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAshpaUDjVL6ff6Q6Od7tvDoZonadgZQ+ua25hncm/DaOhurP72gTkuHXMWkQUGZbZ4kRDvaUNb0NkEoeS7TFLPABOLTDn27MFkpkN2e16kK6gyBbIdh3tpJxjW4pTvPbuwpESS8XQG08l3lG0Lkzso6UDoei0DQcVWiQO718iB6YvwkMUYN4IlwNX3dl2QBknLmHEDJVvAWu6ye9XWJybU8n4EYIi7C9dy7RzLqObmBkea98lkWu13wVHExMed4cPemBTaVGtHY71UMkcZNnpcHijw+LMnOcJRzVNRosFZi4k1Ba0gE1rlgDOOxkQseFUqG9a+sBALQl/TsEOxaKInwIDAQAB",
+  "description": "Clip furniture, millwork, and design inspiration images directly to your projects. Features one-click capture, automatic price detection, and cloud sync.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    },
+    "default_title": "Dawin Clipper"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "unlimitedStorage",
+    "contextMenus",
+    "offscreen",
+    "identity",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "oauth2": {
+    "client_id": "820903406446-3fmu4epsl9j17pcpbpsqge9rb4gmpu7u.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "commands": {
+    "quick-clip": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Quick clip focused image"
+    },
+    "toggle-clipping-mode": {
+      "suggested_key": {
+        "default": "Alt+Shift+C",
+        "mac": "Alt+Shift+C"
+      },
+      "description": "Toggle clipping mode"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

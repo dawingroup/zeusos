@@ -1,0 +1,242 @@
+/**
+ * Mobile CSS Utilities
+ * Styles for touch-friendly mobile interfaces
+ */
+
+/* Safe area padding for devices with notches/home indicators */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+.safe-area-inset {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+}
+
+/* Touch-friendly hit targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Prevent text selection on interactive elements */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling container */
+.smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Pull to refresh indicator area */
+.ptr-area {
+  overscroll-behavior-y: contain;
+}
+
+/* Hide scrollbars on mobile */
+@media (max-width: 768px) {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Active state for touch */
+.touch-active:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media (max-width: 768px) {
+  input[type='text'],
+  input[type='number'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='date'],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Fixed bottom button area */
+.fixed-bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+  background: linear-gradient(to top, hsl(var(--background)) 80%, transparent);
+}
+
+/* Card with touch feedback */
+.card-touchable {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.card-touchable:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+/* Swipeable list item */
+.swipe-item {
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+/* Loading skeleton pulse */
+@keyframes mobile-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.mobile-pulse {
+  animation: mobile-pulse 1.5s ease-in-out infinite;
+}
+
+/* Bottom sheet backdrop */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+}
+
+/* Bottom sheet container */
+.sheet-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: hsl(var(--background));
+  border-radius: 16px 16px 0 0;
+  z-index: 50;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Sheet handle */
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: hsl(var(--muted));
+  border-radius: 2px;
+  margin: 8px auto;
+}
+
+/* Floating action button */
+.fab {
+  position: fixed;
+  right: 16px;
+  bottom: 80px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 40;
+}
+
+/* Mobile navigation bottom bar */
+.mobile-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: hsl(var(--background));
+  border-top: 1px solid hsl(var(--border));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 50;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.2s;
+}
+
+.mobile-nav-item.active {
+  color: hsl(var(--primary));
+}
+
+.mobile-nav-item-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-nav-item-label {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* Status bar safe area */
+.status-bar-safe {
+  padding-top: env(safe-area-inset-top, 20px);
+}
+
+/* Pull to refresh styles */
+.ptr-element {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  transform: translateY(-100%);
+  transition: transform 0.2s;
+}
+
+.ptr-element.active {
+  transform: translateY(0);
+}
+
+/* Gesture hints */
+.swipe-hint {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.swipe-hint-left {
+  left: 8px;
+}
+
+.swipe-hint-right {
+  right: 8px;
+}

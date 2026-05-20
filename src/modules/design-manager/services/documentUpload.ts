@@ -1,0 +1,479 @@
+/**
+ * Document Upload Service
+ * Handles client document uploads with AI integration for design projects
+ */
+
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+  type UploadTask,
+} from 'firebase/storage';
+import {
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  updateDoc,
+  serverTimestamp,
+  type Timestamp,
+} from 'firebase/firestore';
+import { storage, db } from '@/shared/services/firebase';
+import type {
+  ClientDocument,
+  ClientDocumentCategory,
+  DocumentUploadRequest,
+  UploadProgress,
+  UploadResult,
+  BatchUploadRequest,
+  BatchUploadResult,
+  AIAnalysisStatus,
+  AIAnalysisType,
+} from '../types/document.types';
+import {
+  validateFile,
+  generateStoragePath,
+  getFileExtension,
+  shouldTriggerAI,
+} from '../types/document.types';
+
+/**
+ * Upload a client document with progress tracking and optional AI analysis
+ */
+export async function uploadDocument(
+  request: DocumentUploadRequest,
+  userId: string,
+  userName: string,
+  onProgress?: (progress: UploadProgress) => void
+): Promise<{ uploadTask: UploadTask; promise: Promise<UploadResult> }> {
+  const { file, category, name, description, projectId, projectCode, triggerAI = true } = request;
+
+  // Validate file
+  const validation = validateFile(file, category);
+  if (!validation.valid) {
+    return {
+      uploadTask: null as any,
+      promise: Promise.resolve({
+        success: false,
+        error: validation.error,
+      }),
+    };
+  }
+
+  // Generate storage path
+  const storagePath = generateStoragePath(projectId, category, file.name);
+  const storageRef = ref(storage, storagePath);
+
+  // Create upload task
+  const uploadTask = uploadBytesResumable(storageRef, file, {
+    contentType: file.type,
+    customMetadata: {
+      projectId,
+      projectCode,
+      category,
+      originalName: file.name,
+      uploadedBy: userId,
+      uploadedByName: userName,
+    },
+  });
+
+  // Promise to handle upload completion and metadata creation
+  const promise = new Promise<UploadResult>(async (resolve, reject) => {
+    const startTime = Date.now();
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress: UploadProgress = {
+          bytesTransferred: snapshot.bytesTransferred,
+          totalBytes: snapshot.totalBytes,
+          percentage: (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+          state: snapshot.state as UploadProgress['state'],
+        };
+        onProgress?.(progress);
+      },
+      (error) => {
+        console.error('Upload error:', error);
+        reject(error);
+      },
+      async () => {
+        try {
+          // Get download URL
+          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // Determine if AI should be triggered
+          const aiDecision = shouldTriggerAI(category, file.type);
+          const shouldRunAI = triggerAI && aiDecision.trigger;
+
+          // Create document ID
+          const documentId = doc(collection(db, 'temp')).id;
+
+          // Create document metadata
+          const document: ClientDocument = {
+            id: documentId,
+            name: name || file.name,
+            description: description || '',
+            category,
+            fileName: file.name,
+            fileExtension: getFileExtension(file.name),
+            mimeType: file.type,
+            fileSize: file.size,
+            storagePath,
+            downloadUrl,
+            aiAnalysisStatus: shouldRunAI ? 'pending' : 'none',
+            ...(shouldRunAI && aiDecision.analysisType ? { aiAnalysisType: aiDecision.analysisType } : {}),
+            projectId,
+            projectCode,
+            uploadedAt: serverTimestamp() as Timestamp,
+            uploadedBy: userId,
+            uploadedByName: userName,
+          };
+
+          // Save to Firestore
+          const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+          await setDoc(docRef, document);
+
+          // Mirror to projectFiles for UnifiedFileManager live sync
+          try {
+            const { addDoc: pfAddDoc, collection: pfCollection, serverTimestamp: pfST } = await import('firebase/firestore');
+            await pfAddDoc(pfCollection(db, 'projectFiles'), {
+              name: document.name,
+              fileName: document.fileName,
+              fileSize: document.fileSize,
+              mimeType: document.mimeType,
+              storagePath: document.storagePath,
+              storageUrl: document.downloadUrl,
+              projectId,
+              itemId: null,
+              itemName: null,
+              manufacturingOrderId: null,
+              module: 'design-manager',
+              category: 'client-document',
+              deliverableType: null,
+              version: 1,
+              previousVersionId: null,
+              isLatest: true,
+              isAutoGenerated: false,
+              autoGenSource: null,
+              autoGenHash: null,
+              uploadedAt: pfST(),
+              uploadedBy: userId,
+              uploadedByName: userName,
+              updatedAt: pfST(),
+              tags: [category],
+              _sourceId: documentId,
+              _sourceCollection: 'clientDocuments',
+            });
+          } catch (err) {
+            console.warn('[documentUpload] projectFiles mirror failed:', err);
+          }
+
+          // Trigger AI analysis if needed
+          if (shouldRunAI && aiDecision.analysisType) {
+            triggerAIAnalysis(projectId, documentId, aiDecision.analysisType, downloadUrl, file.type)
+              .catch(error => {
+                console.error('Failed to trigger AI analysis:', error);
+                // Update document status to failed
+                updateDoc(docRef, {
+                  aiAnalysisStatus: 'failed',
+                  aiAnalysisError: error.message,
+                } as any);
+              });
+          }
+
+          const uploadDuration = Date.now() - startTime;
+
+          resolve({
+            success: true,
+            document,
+            uploadDuration,
+          });
+        } catch (error) {
+          console.error('Post-upload error:', error);
+          reject(error);
+        }
+      }
+    );
+  });
+
+  return { uploadTask, promise };
+}
+
+/**
+ * Upload multiple documents
+ */
+export async function uploadDocumentBatch(
+  request: BatchUploadRequest,
+  userId: string,
+  userName: string,
+  onProgress?: (fileName: string, progress: UploadProgress) => void
+): Promise<BatchUploadResult> {
+  const { files, category, projectId, projectCode, triggerAI } = request;
+
+  const results = await Promise.allSettled(
+    files.map(async (file) => {
+      const { promise } = await uploadDocument(
+        {
+          file,
+          category,
+          projectId,
+          projectCode,
+          triggerAI,
+        },
+        userId,
+        userName,
+        (progress) => onProgress?.(file.name, progress)
+      );
+      return promise;
+    })
+  );
+
+  const successful = results.filter((r) => r.status === 'fulfilled' && r.value.success).length;
+  const failed = results.length - successful;
+
+  return {
+    total: files.length,
+    successful,
+    failed,
+    results: results.map((result, index) => ({
+      fileName: files[index].name,
+      success: result.status === 'fulfilled' && result.value.success,
+      document: result.status === 'fulfilled' ? result.value.document : undefined,
+      error: result.status === 'rejected' ? result.reason.message : result.status === 'fulfilled' ? result.value.error : undefined,
+    })),
+  };
+}
+
+/**
+ * Get all documents for a project
+ */
+export async function getProjectDocuments(
+  projectId: string,
+  categoryFilter?: ClientDocumentCategory
+): Promise<ClientDocument[]> {
+  const docsRef = collection(db, `designProjects/${projectId}/clientDocuments`);
+
+  let q = query(docsRef, orderBy('uploadedAt', 'desc'));
+
+  if (categoryFilter) {
+    q = query(docsRef, where('category', '==', categoryFilter), orderBy('uploadedAt', 'desc'));
+  }
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => doc.data() as ClientDocument);
+}
+
+/**
+ * Get a single document by ID
+ */
+export async function getDocument(
+  projectId: string,
+  documentId: string
+): Promise<ClientDocument | null> {
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  const snapshot = await getDoc(docRef);
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  return snapshot.data() as ClientDocument;
+}
+
+/**
+ * Delete a document (both metadata and file)
+ */
+export async function deleteDocument(
+  projectId: string,
+  documentId: string
+): Promise<void> {
+  // Get document metadata
+  const document = await getDocument(projectId, documentId);
+  if (!document) {
+    throw new Error('Document not found');
+  }
+
+  // Delete file from storage
+  const storageRef = ref(storage, document.storagePath);
+  await deleteObject(storageRef);
+
+  // Delete metadata from Firestore
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  await deleteDoc(docRef);
+}
+
+/**
+ * Update document metadata
+ */
+export async function updateDocument(
+  projectId: string,
+  documentId: string,
+  updates: Partial<ClientDocument>
+): Promise<void> {
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  await updateDoc(docRef, {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  } as any);
+}
+
+/**
+ * Update AI analysis status
+ */
+export async function updateAIAnalysisStatus(
+  projectId: string,
+  documentId: string,
+  status: AIAnalysisStatus,
+  error?: string
+): Promise<void> {
+  const updates: Partial<ClientDocument> = {
+    aiAnalysisStatus: status,
+    updatedAt: serverTimestamp() as Timestamp,
+  };
+
+  if (error) {
+    updates.aiAnalysisError = error;
+  }
+
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  await updateDoc(docRef, updates);
+}
+
+/**
+ * Update AI analysis result
+ */
+export async function updateAIAnalysisResult(
+  projectId: string,
+  documentId: string,
+  result: any,
+  confidence: number
+): Promise<void> {
+  const updates: Partial<ClientDocument> = {
+    aiAnalysisStatus: 'completed',
+    aiAnalysisResult: {
+      ...result,
+      confidence,
+    },
+    aiAnalyzedAt: serverTimestamp() as Timestamp,
+    updatedAt: serverTimestamp() as Timestamp,
+  };
+
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  await updateDoc(docRef, updates);
+}
+
+/**
+ * Retry AI analysis for a document
+ */
+export async function retryAIAnalysis(
+  projectId: string,
+  documentId: string
+): Promise<void> {
+  const document = await getDocument(projectId, documentId);
+  if (!document) {
+    throw new Error('Document not found');
+  }
+
+  if (!document.aiAnalysisType) {
+    throw new Error('No AI analysis type configured for this document');
+  }
+
+  // Reset status to pending
+  await updateAIAnalysisStatus(projectId, documentId, 'pending');
+
+  // Trigger analysis
+  await triggerAIAnalysis(
+    projectId,
+    documentId,
+    document.aiAnalysisType,
+    document.downloadUrl,
+    document.mimeType
+  );
+}
+
+/**
+ * Trigger AI analysis for a document
+ */
+async function triggerAIAnalysis(
+  projectId: string,
+  documentId: string,
+  analysisType: AIAnalysisType,
+  fileUrl: string,
+  mimeType: string
+): Promise<void> {
+  // Update status to running
+  await updateAIAnalysisStatus(projectId, documentId, 'running');
+
+  // Import the AI service wrapper
+  const { analyzeDocument } = await import('./aiService');
+
+  try {
+    // Call AI service
+    const result = await analyzeDocument(analysisType, fileUrl, mimeType);
+
+    // Update document with result
+    await updateAIAnalysisResult(projectId, documentId, result.data, result.confidence);
+  } catch (error) {
+    console.error('AI analysis failed:', error);
+    await updateAIAnalysisStatus(
+      projectId,
+      documentId,
+      'failed',
+      error instanceof Error ? error.message : 'Unknown error'
+    );
+    throw error;
+  }
+}
+
+/**
+ * Mark AI analysis as applied to project
+ */
+export async function markAIAsApplied(
+  projectId: string,
+  documentId: string
+): Promise<void> {
+  const document = await getDocument(projectId, documentId);
+  if (!document || !document.aiAnalysisResult) {
+    throw new Error('Document or AI analysis result not found');
+  }
+
+  const updates: Partial<ClientDocument> = {
+    aiAnalysisResult: {
+      ...document.aiAnalysisResult,
+      appliedToProject: true,
+    },
+    updatedAt: serverTimestamp() as Timestamp,
+  };
+
+  const docRef = doc(db, `designProjects/${projectId}/clientDocuments`, documentId);
+  await updateDoc(docRef, updates);
+}
+
+/**
+ * Get document count by category
+ */
+export async function getDocumentCountByCategory(
+  projectId: string
+): Promise<Record<ClientDocumentCategory, number>> {
+  const documents = await getProjectDocuments(projectId);
+
+  const counts: Record<ClientDocumentCategory, number> = {
+    'reference-images': 0,
+    'cad-drawings': 0,
+    'pdf-plans': 0,
+    'design-briefs': 0,
+    'other': 0,
+  };
+
+  documents.forEach((doc) => {
+    counts[doc.category]++;
+  });
+
+  return counts;
+}

@@ -1,0 +1,247 @@
+#!/usr/bin/env node
+/**
+ * migrate-deliverables-to-projectFiles.cjs
+ *
+ * Migrates existing design-manager files into the top-level `projectFiles` Firestore
+ * collection so the UnifiedFileManager can read them in real-time.
+ *
+ * Sources:
+ *   - designProjects/{projectId}/designItems/{itemId}/deliverables/{deliverableId}
+ *   - designProjects/{projectId}/clientDocuments/{documentId}
+ *
+ * Target:
+ *   - projectFiles/{autoId}   (with _sourceId + _sourceCollection fields for idempotency)
+ *
+ * Usage:
+ *   node scripts/migrate-deliverables-to-projectFiles.cjs
+ *
+ * Requirements:
+ *   - GOOGLE_APPLICATION_CREDENTIALS env var pointing to a service account JSON, OR
+ *   - Run `firebase login` and use `firebase-admin` with applicationDefault credentials
+ *
+ * Re-run safe: existing records (matched by _sourceId) are skipped.
+ */
+
+'use strict';
+
+const admin = require('firebase-admin');
+
+// ── Initialise ───────────────────────────────────────────────────────────────
+// Accepts an optional path to a service account JSON as the first argument:
+//   node scripts/migrate-... /path/to/serviceAccount.json
+// Otherwise falls back to GOOGLE_APPLICATION_CREDENTIALS env var or gcloud ADC.
+if (!admin.apps.length) {
+  const serviceAccountPath = process.argv[2];
+  const credential = serviceAccountPath
+    ? admin.credential.cert(require(require('path').resolve(serviceAccountPath)))
+    : admin.credential.applicationDefault();
+  admin.initializeApp({ credential, projectId: process.env.GCLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID || 'dawinos' });
+}
+
+const db = admin.firestore();
+const BATCH_LIMIT = 400; // Firestore batch max is 500; leave headroom
+
+// ── Category mapping (DeliverableType → FileCategory) ────────────────────────
+const DELIVERABLE_CATEGORY_MAP = {
+  'cut-list': 'production-doc',
+  'bom': 'production-doc',
+  'shop-drawing': 'production-doc',
+  'assembly-instructions': 'production-doc',
+  'specification-sheet': 'production-doc',
+  'concept-sketch': 'deliverable',
+  'rendering': 'deliverable',
+  'mood-board': 'deliverable',
+  'client-presentation': 'deliverable',
+  '3d-model': 'deliverable',
+  'other': 'deliverable',
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/** Fetch all source IDs already in projectFiles to skip duplicates */
+async function fetchExistingSourceIds() {
+  const snap = await db.collection('projectFiles').select('_sourceId').get();
+  const ids = new Set();
+  snap.forEach((d) => {
+    if (d.data()._sourceId) ids.add(d.data()._sourceId);
+  });
+  console.log(`  Already migrated: ${ids.size} records`);
+  return ids;
+}
+
+/** Write an array of plain objects to projectFiles in batches */
+async function writeBatch(records) {
+  let written = 0;
+  for (let i = 0; i < records.length; i += BATCH_LIMIT) {
+    const chunk = records.slice(i, i + BATCH_LIMIT);
+    const batch = db.batch();
+    chunk.forEach((rec) => {
+      const ref = db.collection('projectFiles').doc();
+      batch.set(ref, rec);
+    });
+    await batch.commit();
+    written += chunk.length;
+    process.stdout.write(`  Written ${written}/${records.length}\r`);
+  }
+  return written;
+}
+
+// ── Deliverables migration ────────────────────────────────────────────────────
+
+async function migrateDeliverables(existingIds) {
+  console.log('\n=== Migrating deliverables subcollections ===');
+  const projectsSnap = await db.collection('designProjects').get();
+  const records = [];
+  let skipped = 0;
+
+  for (const projectDoc of projectsSnap.docs) {
+    const projectId = projectDoc.id;
+    const itemsSnap = await db
+      .collection('designProjects')
+      .doc(projectId)
+      .collection('designItems')
+      .get();
+
+    for (const itemDoc of itemsSnap.docs) {
+      const itemId = itemDoc.id;
+      const itemData = itemDoc.data();
+      const delivSnap = await db
+        .collection('designProjects')
+        .doc(projectId)
+        .collection('designItems')
+        .doc(itemId)
+        .collection('deliverables')
+        .get();
+
+      for (const delivDoc of delivSnap.docs) {
+        if (existingIds.has(delivDoc.id)) {
+          skipped++;
+          continue;
+        }
+        const d = delivDoc.data();
+        records.push({
+          name: d.name || d.fileName || 'Unnamed',
+          fileName: d.fileName || '',
+          fileSize: d.fileSize || 0,
+          mimeType: d.mimeType || null,
+          storagePath: d.storagePath || '',
+          storageUrl: d.storageUrl || '',
+          projectId,
+          itemId,
+          itemName: itemData.name || null,
+          manufacturingOrderId: null,
+          module: 'design-manager',
+          category: DELIVERABLE_CATEGORY_MAP[d.type] || 'deliverable',
+          deliverableType: d.type || null,
+          version: d.version || 1,
+          previousVersionId: null,
+          isLatest: d.status !== 'superseded',
+          isAutoGenerated: d.isAutoGenerated || false,
+          autoGenSource: d.autoGenSource || null,
+          autoGenHash: null,
+          uploadedAt: d.uploadedAt || admin.firestore.FieldValue.serverTimestamp(),
+          uploadedBy: d.uploadedBy || '',
+          uploadedByName: null,
+          updatedAt: d.uploadedAt || admin.firestore.FieldValue.serverTimestamp(),
+          tags: d.coversTypes || [],
+          _sourceId: delivDoc.id,
+          _sourceCollection: 'deliverables',
+        });
+      }
+    }
+  }
+
+  console.log(`  Found ${records.length} deliverables to migrate (${skipped} skipped)`);
+  if (records.length > 0) {
+    const written = await writeBatch(records);
+    console.log(`\n  ✓ Wrote ${written} deliverable records`);
+  }
+  return records.length;
+}
+
+// ── Client Documents migration ────────────────────────────────────────────────
+
+async function migrateClientDocuments(existingIds) {
+  console.log('\n=== Migrating clientDocuments ===');
+  const projectsSnap = await db.collection('designProjects').get();
+  const records = [];
+  let skipped = 0;
+
+  for (const projectDoc of projectsSnap.docs) {
+    const projectId = projectDoc.id;
+    const docsSnap = await db
+      .collection('designProjects')
+      .doc(projectId)
+      .collection('clientDocuments')
+      .get();
+
+    for (const docDoc of docsSnap.docs) {
+      if (existingIds.has(docDoc.id)) {
+        skipped++;
+        continue;
+      }
+      const d = docDoc.data();
+      records.push({
+        name: d.name || d.fileName || 'Unnamed',
+        fileName: d.fileName || '',
+        fileSize: d.fileSize || 0,
+        mimeType: d.mimeType || null,
+        storagePath: d.storagePath || '',
+        storageUrl: d.downloadUrl || '',
+        projectId,
+        itemId: null,
+        itemName: null,
+        manufacturingOrderId: null,
+        module: 'design-manager',
+        category: 'client-document',
+        deliverableType: null,
+        version: 1,
+        previousVersionId: null,
+        isLatest: true,
+        isAutoGenerated: false,
+        autoGenSource: null,
+        autoGenHash: null,
+        uploadedAt: d.uploadedAt || admin.firestore.FieldValue.serverTimestamp(),
+        uploadedBy: d.uploadedBy || '',
+        uploadedByName: d.uploadedByName || null,
+        updatedAt: d.uploadedAt || admin.firestore.FieldValue.serverTimestamp(),
+        tags: d.category ? [d.category] : [],
+        _sourceId: docDoc.id,
+        _sourceCollection: 'clientDocuments',
+      });
+    }
+  }
+
+  console.log(`  Found ${records.length} client documents to migrate (${skipped} skipped)`);
+  if (records.length > 0) {
+    const written = await writeBatch(records);
+    console.log(`\n  ✓ Wrote ${written} client document records`);
+  }
+  return records.length;
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
+async function main() {
+  console.log('DawinOS — Migrate files to projectFiles collection');
+  console.log('===================================================');
+  console.log('Project:', process.env.GCLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID || '(default from credentials)');
+
+  try {
+    const existingIds = await fetchExistingSourceIds();
+
+    const deliverableCount = await migrateDeliverables(existingIds);
+    const documentCount = await migrateClientDocuments(existingIds);
+
+    const total = deliverableCount + documentCount;
+    console.log('\n===================================================');
+    console.log(`✓ Migration complete — ${total} records written`);
+    console.log('  Run again at any time; existing records are skipped.');
+  } catch (err) {
+    console.error('\n✗ Migration failed:', err.message);
+    console.error(err.stack);
+    process.exit(1);
+  }
+}
+
+main().then(() => process.exit(0));

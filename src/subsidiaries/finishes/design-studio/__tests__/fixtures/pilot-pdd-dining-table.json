@@ -1,0 +1,147 @@
+{
+  "id": "pdd-dining-table-rect",
+  "name": "Rectangular Dining Table",
+  "description": "CadQuery parametric dining table with configurable dimensions and leg style",
+  "productType": "loose_furniture",
+  "designOrigin": "cadquery",
+  "status": "active",
+  "parameters": [
+    {
+      "key": "width",
+      "label": "Table Width",
+      "type": "number",
+      "default": 1800,
+      "min": 1200,
+      "max": 2400,
+      "step": 100,
+      "unit": "mm"
+    },
+    {
+      "key": "depth",
+      "label": "Table Depth",
+      "type": "number",
+      "default": 900,
+      "min": 700,
+      "max": 1100,
+      "step": 50,
+      "unit": "mm"
+    },
+    {
+      "key": "height",
+      "label": "Table Height",
+      "type": "number",
+      "default": 750,
+      "min": 700,
+      "max": 800,
+      "step": 10,
+      "unit": "mm"
+    },
+    {
+      "key": "legStyle",
+      "label": "Leg Style",
+      "type": "select",
+      "default": "tapered",
+      "options": ["tapered", "hairpin", "trestle", "pedestal"]
+    },
+    {
+      "key": "topThickness",
+      "label": "Top Thickness",
+      "type": "number",
+      "default": 30,
+      "min": 25,
+      "max": 50,
+      "step": 5,
+      "unit": "mm"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "hairpin-width-limit",
+      "condition": "width > 1000 and legStyle == \"hairpin\"",
+      "action": "reject",
+      "reason": "Hairpin legs are not stable for tables wider than 1000mm",
+      "affectedParameters": ["width", "legStyle"],
+      "isActive": true
+    },
+    {
+      "id": "pedestal-depth-ratio",
+      "condition": "depth / width > 0.8 and legStyle == \"pedestal\"",
+      "action": "warn",
+      "reason": "Pedestal base may be unstable with near-square proportions — consider trestle",
+      "affectedParameters": ["width", "depth", "legStyle"],
+      "isActive": true
+    }
+  ],
+  "validFinishes": ["oak-natural", "walnut-veneer", "ash-lacquer", "white-lacquer"],
+  "inventoryBindings": {
+    "solid_timber": {
+      "bomTemplateLineKey": "solid_timber",
+      "inventoryFamilyId": "FAM-TIMBER",
+      "category": "solid-wood",
+      "quantityMultiplier": 1,
+      "wastagePercent": 12
+    },
+    "legs": {
+      "bomTemplateLineKey": "legs",
+      "inventoryFamilyId": "FAM-TABLE-LEG",
+      "category": "hardware",
+      "quantityMultiplier": 1,
+      "wastagePercent": 0
+    }
+  },
+  "bomTemplate": [
+    {
+      "materialCategory": "solid_timber",
+      "quantityExpression": "(width * depth * topThickness) / 1000000000",
+      "unit": "m3"
+    },
+    {
+      "materialCategory": "legs",
+      "quantityExpression": "legStyle == \"pedestal\" ? 1 : 4",
+      "unit": "pcs"
+    }
+  ],
+  "pricingConfig": {
+    "estimationEngineRef": "est-dining-table",
+    "laborComplexityFormula": "1.5 + (legStyle == \"trestle\" ? 0.5 : 0)",
+    "overheadPercent": 15,
+    "marginPercent": 30,
+    "taxConfig": { "vatApplicable": true, "whtApplicable": false },
+    "currencyOverride": "UGX"
+  },
+  "clientFacingConfig": {
+    "exposedParameters": ["width", "depth", "height", "legStyle", "topThickness"],
+    "parameterLabels": {
+      "width": "Length",
+      "depth": "Width",
+      "height": "Height",
+      "legStyle": "Leg Style",
+      "topThickness": "Top Thickness"
+    },
+    "parameterHelpText": {
+      "width": "Standard lengths: 1200mm (4-seat), 1800mm (6-seat), 2400mm (8-seat)"
+    },
+    "finishGroupLabels": {
+      "top": "Table Top Finish",
+      "legs": "Leg Finish"
+    },
+    "showPriceEstimate": true,
+    "showStockAvailability": true,
+    "allowARPreview": true,
+    "shareableUrl": true
+  },
+  "manufacturingOutputConfig": {
+    "generateCutList": true,
+    "cutListFormat": "pdf",
+    "generateEdgeBandingSchedule": false,
+    "generateHardwareSchedule": true,
+    "generateCNCProgram": true,
+    "generateAssemblyInstructions": true,
+    "generateDrawingPackage": true
+  },
+  "dkbArchetypeId": "dining-table-rect",
+  "defaultFinishMappings": {
+    "top": "oak-natural",
+    "legs": "oak-natural"
+  }
+}

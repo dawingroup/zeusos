@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="dawinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#872E5C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E18425;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background with gradient -->
+  <rect x="2" y="2" width="96" height="96" rx="20" fill="url(#dawinGradient)" />
+
+  <!-- Letter D -->
+  <path d="M 20 25 L 20 75 L 42 75 C 55 75 62 68 62 50 C 62 32 55 25 42 25 Z M 30 35 L 40 35 C 48 35 52 40 52 50 C 52 60 48 65 40 65 L 30 65 Z" fill="white" />
+
+  <!-- Letter G -->
+  <path d="M 68 40 C 72 36 76 34 80 34 C 84 34 88 36 90 40 L 85 44 C 84 42 82 40 80 40 C 76 40 73 43 73 50 C 73 57 76 60 80 60 C 82 60 84 59 85 57 L 85 52 L 80 52 L 80 47 L 90 47 L 90 60 C 88 63 84 66 80 66 C 72 66 67 61 67 50 C 67 39 72 34 80 34 Z" fill="white" />
+</svg>
