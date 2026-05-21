@@ -191,7 +191,7 @@ export function SpendPlanPage() {
                   Deferred ({plan.deferredExpenditures.length})
                 </h4>
                 <div className="space-y-2">
-                  {plan.deferredExpenditures.map(exp => (
+                  {plan.deferredExpenditures.map((exp: any) => (
                     <div
                       key={exp.expenditureId}
                       className="flex items-center gap-3 py-1.5 border-b border-gray-50 last:border-0"
@@ -253,7 +253,7 @@ export function SpendPlanPage() {
               <Card className="p-4">
                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Action Items</h4>
                 <div className="space-y-2">
-                  {plan.actionItems.map((action, idx) => (
+                  {plan.actionItems.map((action: any, idx: number) => (
                     <div key={idx} className="flex items-start gap-2 text-xs">
                       <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-blue-500 shrink-0" />
                       <span className="text-gray-600">{action.action}</span>

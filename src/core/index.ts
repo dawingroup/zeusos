@@ -5,7 +5,7 @@
 
 export * from './components';
 export * from './hooks';
-export * from './services';
+// `./services` removed in Phase 1.C — moved to per-domain barrels.
 export * from './types';
 export * from './utils';
 export * from './constants';

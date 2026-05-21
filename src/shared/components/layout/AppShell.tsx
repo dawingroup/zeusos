@@ -60,8 +60,10 @@ import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIn
 import { cn } from '@/shared/lib/utils';
 import { useFeatureFlag } from '@/shared/hooks/useFeatureFlag';
 import { useBranding } from '@/shared/hooks/useBranding';
-import { subscribeToUnreadCount } from '@/modules/whatsapp/services/whatsappService';
-import { subscribeToGChatUnreadCount } from '@/modules/gchat/services/gchatService';
+// WhatsApp + GChat modules removed in Phase 1.C — stub subscriptions.
+// TODO Phase 4: rebuild client comms (WhatsApp/Slack) for marketing-agency context.
+const subscribeToUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
+const subscribeToGChatUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 import { GroupNavPills } from '@/core/components/layout/GroupNavPills';
 import { SubsidiaryPicker } from '@/core/components/layout/SubsidiaryPicker';
 import { PreferencesMenu } from '@/core/components/layout/PreferencesMenu';

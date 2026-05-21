@@ -18,7 +18,9 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/shared/services/firebase';
 import { useFeatureFlag } from '@/shared/hooks/useFeatureFlag';
-import { subscribeToUnreadCount } from '@/modules/whatsapp/services/whatsappService';
+// WhatsApp module removed in Phase 1.C — stub subscription returns unsubscribe noop.
+// TODO Phase 4: rebuild client comms (WhatsApp/Slack) against marketing-agency message shapes.
+const subscribeToUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 import { cn } from '@/shared/lib/utils';
 
 export interface TopNavBarProps {

@@ -149,7 +149,7 @@ export function CashForecastLandingPage() {
               {criticalCount} critical expenditure{criticalCount > 1 ? 's' : ''} require immediate attention
             </p>
             <p className="text-xs text-red-600 mt-0.5">
-              Total: {formatUGX(queueByTier['CRITICAL']?.reduce((s, i) => s + i.amountUGX, 0) || 0)}
+              Total: {formatUGX(queueByTier['CRITICAL']?.reduce((s: number, i: any) => s + i.amountUGX, 0) || 0)}
             </p>
           </div>
           <Button
@@ -284,11 +284,11 @@ export function CashForecastLandingPage() {
             </Button>
           </div>
           <div className="space-y-2">
-            {expenditureQueue.slice(0, 5).map(item => (
+            {expenditureQueue.slice(0, 5).map((item: any) => (
               <div key={item.id} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
                 <span
                   className="text-sm font-bold w-8 text-center"
-                  style={{ color: PRIORITY_TIER_COLORS[item.priorityTier] }}
+                  style={{ color: PRIORITY_TIER_COLORS[item.priorityTier as keyof typeof PRIORITY_TIER_COLORS] }}
                 >
                   {item.compositeScore.toFixed(0)}
                 </span>

@@ -1,8 +1,15 @@
 /**
- * Zeus Group Module
- * Main entry point for Advisory subsidiary
- * Enhanced with Capital Hub-style UI patterns
- * MatFlow features consolidated into Infrastructure Delivery
+ * Advisory Module — Zeus Group consulting & strategy backbone
+ *
+ * Phase 1.C trimmed this module down: removed the MatFlow construction-formula
+ * library, the Infrastructure Delivery / BOQ sub-feature, the CD Portal (token-
+ * based access for site-visit Country Directors), and the MatFlow migration
+ * tool. What remains is the financial project skeleton (used as the basis for
+ * Zeus Campaigns) plus the Investment pipeline (deal flow management — still
+ * relevant for advisory-style client engagements).
+ *
+ * TODO Phase 3: rename `advisory` → `agency-core`, repoint Investment as
+ * `pitch-pipeline` (new-business / RFP / proposal tracking).
  */
 
 import React, { Suspense } from 'react';
@@ -10,19 +17,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { lazyWithRetry } from '@/shared/utils/lazyWithRetry';
 
-// Layout Components
 import { AdvisoryLayout } from './components/AdvisoryLayout';
 
-// Delivery Routes (includes consolidated MatFlow features)
-import { DeliveryRoutes } from './delivery/routes';
-
-// Migration Tool (for data migration from legacy MatFlow)
-const MigrationTool = lazyWithRetry(() => import('./matflow/pages/MigrationTool'));
-
-// Advisory Pages (lazy loaded)
 const AdvisoryDashboardPage = lazyWithRetry(() => import('./pages/AdvisoryDashboardPage'));
 
-// Investment Pages (lazy loaded)
+// Investment Pages (lazy loaded — retained as new-business / deal flow primitive)
 const InvestmentDashboard = lazyWithRetry(() => import('./investment/pages/InvestmentDashboard'));
 const PipelineKanban = lazyWithRetry(() => import('./investment/pages/PipelineKanban'));
 const DealDetail = lazyWithRetry(() => import('./investment/pages/DealDetail'));
@@ -31,34 +30,23 @@ const NewDeal = lazyWithRetry(() => import('./investment/pages/NewDeal'));
 const Reports = lazyWithRetry(() => import('./investment/pages/Reports'));
 const InvestmentLayout = lazyWithRetry(() => import('./investment/components/InvestmentLayout'));
 
-// Loading component
 const PageLoader = () => (
   <div className="flex items-center justify-center h-64">
-    <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+    <Loader2 className="w-8 h-8 animate-spin text-[var(--zeus-accent,#E63946)]" />
   </div>
 );
 
-// CD Portal Page (standalone, no layout)
-const CDPortalPage = lazyWithRetry(() => import('./delivery/pages/CDPortalPage').then(m => ({ default: m.CDPortalPage })));
-
-// Main Advisory Routes
 export const AdvisoryRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* CD Portal - Standalone public route (no navigation, token-based access) */}
-      <Route path="delivery/cd-portal" element={
-        <Suspense fallback={<PageLoader />}>
-          <CDPortalPage />
-        </Suspense>
-      } />
-
       <Route element={<AdvisoryLayout />}>
         <Route index element={
           <Suspense fallback={<PageLoader />}>
             <AdvisoryDashboardPage />
           </Suspense>
         } />
-        {/* Investment Module with nested layout */}
+
+        {/* Investment Module — deal/pipeline management */}
         <Route path="investment" element={
           <Suspense fallback={<PageLoader />}>
             <InvestmentLayout />
@@ -95,26 +83,10 @@ export const AdvisoryRoutes: React.FC = () => {
             </Suspense>
           } />
         </Route>
-        {/* Infrastructure Delivery (consolidated with MatFlow) */}
-        <Route path="delivery/*" element={<DeliveryRoutes />} />
 
-        {/* MatFlow Migration Tool (admin only) */}
-        <Route path="matflow/migrate" element={
-          <Suspense fallback={<PageLoader />}>
-            <MigrationTool />
-          </Suspense>
-        } />
-
-        {/* Legacy MatFlow URL redirects */}
-        <Route path="matflow" element={<Navigate to="/advisory/delivery" replace />} />
-        <Route path="matflow/boq" element={<Navigate to="/advisory/delivery/boq" replace />} />
-        <Route path="matflow/materials" element={<Navigate to="/advisory/delivery/materials" replace />} />
-        <Route path="matflow/formulas" element={<Navigate to="/advisory/delivery/materials/formulas" replace />} />
-        <Route path="matflow/procurement" element={<Navigate to="/advisory/delivery/procurement" replace />} />
-        <Route path="matflow/suppliers" element={<Navigate to="/advisory/delivery/procurement/suppliers" replace />} />
-        <Route path="matflow/reports" element={<Navigate to="/advisory/delivery/reports" replace />} />
-        <Route path="matflow/projects" element={<Navigate to="/advisory/delivery/projects" replace />} />
-        <Route path="matflow/*" element={<Navigate to="/advisory/delivery" replace />} />
+        {/* Legacy MatFlow URLs — single catchall redirect to dashboard. */}
+        <Route path="delivery/*" element={<Navigate to="/advisory" replace />} />
+        <Route path="matflow/*" element={<Navigate to="/advisory" replace />} />
 
         <Route path="*" element={<Navigate to="/advisory" replace />} />
       </Route>

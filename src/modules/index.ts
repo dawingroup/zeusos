@@ -3,9 +3,8 @@
  * Central registration point for all platform modules
  */
 
-// Existing Modules (legacy)
-export * as CutlistProcessor from './cutlist-processor';
-export * as DesignManager from './design-manager';
+// Legacy DawinOS modules (CutlistProcessor, DesignManager) removed in Phase 1.C.
+// New ZeusOS modules (Campaigns, Media, Production, Talent, Asset Library) will be added in Phase 3+.
 
 // Core Modules (v2.0)
 export * from './intelligence';

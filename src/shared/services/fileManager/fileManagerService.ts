@@ -138,22 +138,11 @@ export function uploadManagedFile(
           const docRef = await addDoc(collection(db, FILES_COLLECTION), fileDoc);
           const saved = await getDoc(docRef);
 
-          // Trigger RAG auto-update for deliverable-type files
-          if (normalizedDeliverableType && context.itemId && context.projectId) {
-            try {
-              const { autoUpdateRAGForDeliverable } = await import(
-                '@/modules/design-manager/services/ragAutoUpdateService'
-              );
-              await autoUpdateRAGForDeliverable(
-                context.projectId,
-                context.itemId,
-                normalizedDeliverableType,
-                context.uploadedBy || ''
-              );
-            } catch {
-              // RAG update is non-critical — don't fail the upload
-            }
-          }
+          // RAG auto-update hook removed in Phase 1.C (design-manager deleted).
+          // TODO Phase 3: re-wire to `@/modules/campaigns/services/ragAutoUpdateService`
+          // once Campaigns module is built — Campaign deliverable uploads should
+          // similarly nudge RAG state.
+          void normalizedDeliverableType;
 
           resolve({
             id: docRef.id,

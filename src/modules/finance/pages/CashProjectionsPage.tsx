@@ -65,11 +65,11 @@ export function CashProjectionsPage() {
     const snapshots = projection.dailySnapshots;
     const first = snapshots[0];
     const last = snapshots[snapshots.length - 1];
-    const minBalance = Math.min(...snapshots.map(s => s.closingBalance));
-    const maxBalance = Math.max(...snapshots.map(s => s.closingBalance));
-    const totalInflow = snapshots.reduce((s, d) => s + d.totalProjectedInflow, 0);
-    const totalOutflow = snapshots.reduce((s, d) => s + d.totalProjectedOutflow, 0);
-    const crisisDays = snapshots.filter(s => s.closingBalance < bufferAmount).length;
+    const minBalance = Math.min(...snapshots.map((s: any) => s.closingBalance));
+    const maxBalance = Math.max(...snapshots.map((s: any) => s.closingBalance));
+    const totalInflow = snapshots.reduce((s: number, d: any) => s + d.totalProjectedInflow, 0);
+    const totalOutflow = snapshots.reduce((s: number, d: any) => s + d.totalProjectedOutflow, 0);
+    const crisisDays = snapshots.filter((s: any) => s.closingBalance < bufferAmount).length;
 
     return {
       startBalance: first.openingBalance,

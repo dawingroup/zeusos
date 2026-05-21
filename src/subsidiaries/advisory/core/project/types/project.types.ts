@@ -7,7 +7,8 @@
  */
 
 import { Timestamp } from 'firebase/firestore';
-import { FacilityBranding } from '@/subsidiaries/advisory/delivery/types/funds-acknowledgement';
+// FacilityBranding inlined after Phase 1.C deletion of advisory/delivery (construction-project-delivery sub-module). TODO Phase 3: replace with Campaign-branding equivalent.
+type FacilityBranding = { name?: string; logoUrl?: string };
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS & SHARED TYPES (from MatFlow)
