@@ -36,7 +36,7 @@ export function registerAdvisoryTools(server: McpServer): void {
       description: `List advisory projects from the ZeusOS advisory module (financial backbone for Campaigns) with optional filters.
 Returns project summaries including budget totals, spend, and accountability status.
 
-Advisory projects live at: organizations/default/advisory_projects
+Advisory projects live at: organizations/default/campaigns  (Phase 2.D rename — see Campaign data model in Phase 3 for the campaign-specific fields layered on top of the AdvisoryProject backbone)
 Each project has: budget {totalBudget, spent, committed, remaining}, progress {physicalProgress, financialProgress},
 accountabilitySummary {totalDisbursed, totalAccounted, unaccountedAmount, accountabilityRate, overdueCount}.
 

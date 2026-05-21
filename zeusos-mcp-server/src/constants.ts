@@ -54,12 +54,14 @@ export const COMPANY_PATHS = {
     `companies/${companyId}/spend_plans`,
 } as const;
 
-// ─── Advisory paths (path-scoped, no field filter needed) ────────────────────
-// Source: src/subsidiaries/advisory/delivery/services/allocation-service.ts:44
-// Source: src/subsidiaries/advisory/core/project/services/project.service.ts:40
+// ─── Advisory + Campaign paths (path-scoped, no field filter needed) ─────────
+// Phase 2.D: advisory_projects collection renamed → campaigns. The exported
+// constant name stays ADVISORY_PATHS for tool-surface stability; only the
+// Firestore path strings are updated.
+// Source: src/subsidiaries/advisory/core/project/services/project.service.ts:41
 export const ADVISORY_PATHS = {
   projects: (orgId: string = DEFAULT_ORG_ID) =>
-    `organizations/${orgId}/advisory_projects`,
+    `organizations/${orgId}/campaigns`,
   allocationGroups: (orgId: string = DEFAULT_ORG_ID) =>
     `organizations/${orgId}/allocation_groups`,
   programs: (orgId: string = DEFAULT_ORG_ID) =>

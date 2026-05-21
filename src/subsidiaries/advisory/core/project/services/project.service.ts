@@ -38,7 +38,11 @@ type FacilityBranding = { name?: string; logoUrl?: string };
 // SERVICE CONFIGURATION
 // =================================================================
 
-const getProjectsCollection = (orgId: string) => `organizations/${orgId}/advisory_projects`;
+// Phase 2.D: collection renamed `advisory_projects` → `campaigns`. The
+// AdvisoryProject TypeScript type is retained for now and becomes Campaign's
+// financial backbone in Phase 3 when the campaign-specific fields (clientId,
+// brandId, imcTeam, bigIdea, tier, performanceReview) are layered on.
+const getProjectsCollection = (orgId: string) => `organizations/${orgId}/campaigns`;
 const getProjectDoc = (orgId: string, id: string) => `${getProjectsCollection(orgId)}/${id}`;
 const getProgramDoc = (orgId: string, id: string) => `organizations/${orgId}/advisory_programs/${id}`;
 

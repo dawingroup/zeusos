@@ -279,8 +279,11 @@ export interface Supplier {
   paymentTerms?: string;
 }
 
-// ─── Advisory Projects ────────────────────────────────────────────────────────
-// Path: organizations/default/advisory_projects/{projectId}
+// ─── Advisory Projects / Campaigns ────────────────────────────────────────────
+// Path: organizations/default/campaigns/{projectId}  (Phase 2.D rename — was
+// `advisory_projects`; the AdvisoryProject shape stays for now and is extended
+// in Phase 3 with campaign-specific fields: clientId, brandId, imcTeam,
+// bigIdea, tier, performanceReview).
 // Source: src/subsidiaries/advisory/core/project/types/project.types.ts
 
 export interface ProjectBudget {

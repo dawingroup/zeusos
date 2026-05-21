@@ -59,9 +59,9 @@ async function loadBusinessContext(companyId) {
   } catch { ctx.activeMOs = 0; }
 
   try {
-    // Advisory project counts by status
+    // Campaign counts by status (Phase 2.D: advisory_projects → campaigns)
     const projSnap = await db
-      .collection(`organizations/${companyId}/advisory_projects`)
+      .collection(`organizations/${companyId}/campaigns`)
       .limit(20).get();
     const statusCounts = {};
     projSnap.docs.forEach(d => {

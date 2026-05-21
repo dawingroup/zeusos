@@ -135,7 +135,7 @@ export async function aggregateCommittedBudget(
 
     // Sum approved requisitions
     const reqQuery = query(
-      collection(db, `advisory_projects/${projectId}/requisitions`),
+      collection(db, `campaigns/${projectId}/requisitions`),
       where('status', '==', 'approved')
     );
     const reqSnapshot = await getDocs(reqQuery);
@@ -146,7 +146,7 @@ export async function aggregateCommittedBudget(
 
     // Subtract returned amounts from accountability records
     const accQuery = query(
-      collection(db, `advisory_projects/${projectId}/accountability`),
+      collection(db, `campaigns/${projectId}/accountability`),
       where('status', '==', 'approved')
     );
     const accSnapshot = await getDocs(accQuery);
