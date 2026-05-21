@@ -12,9 +12,8 @@
       "runtime": "nodejs20",
       "codebase": "default",
       "predeploy": [
-        "cd dawinos-mcp-server && npm ci --prefer-offline && npm run build && mkdir -p ../functions/vendor/dawinos-mcp-server && cp -r dist/* ../functions/vendor/dawinos-mcp-server/ && cp package.json ../functions/vendor/dawinos-mcp-server/"
-      ],
-      "_comment_zeusos": "MCP server path stays as dawinos-mcp-server until Phase 1 rename to zeusos-mcp-server."
+        "cd zeusos-mcp-server && npm ci --prefer-offline && npm run build && mkdir -p ../functions/vendor/zeusos-mcp-server && cp -r dist/* ../functions/vendor/zeusos-mcp-server/ && cp package.json ../functions/vendor/zeusos-mcp-server/"
+      ]
     }
   ],
   "emulators": {

@@ -4987,9 +4987,9 @@ exports.adminListServiceCredentials = adminListServiceCredentials;
 exports.adminSetServiceCredential = adminSetServiceCredential;
 exports.adminTestServiceCredential = adminTestServiceCredential;
 
-// DawinOS MCP Server — AI tool access to Firestore operational data
-// Build first: cd dawinos-mcp-server && npm run build
-exports.dawinos_mcp = require('./src/mcp/dawinos-mcp.js').dawinos_mcp;
+// ZeusOS MCP Server — AI tool access to Firestore operational data
+// Build first: cd zeusos-mcp-server && npm run build
+exports.zeusos_mcp = require('./src/mcp/zeusos-mcp.js').zeusos_mcp;
 
 // ============================================================
 // Drive Bridge (Phase 2 — Shared Drive Architecture v3/v3.1)
