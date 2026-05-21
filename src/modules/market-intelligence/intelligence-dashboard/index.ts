@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE DASHBOARD MODULE INDEX
-// DawinOS v2.0 - Market Intelligence Phase 7.4
+// ZeusOS v2.0 - Market Intelligence Phase 7.4
 // Export all intelligence dashboard functionality
 // ============================================================================
 

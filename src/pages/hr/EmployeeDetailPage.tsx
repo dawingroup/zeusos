@@ -1,7 +1,7 @@
 /**
  * EmployeeDetailPage.tsx
  * Comprehensive employee detail view with tabs for different data sections
- * DawinOS v2.0 - HR Central
+ * ZeusOS v2.0 - HR Central
  */
 
 import { useState, useEffect } from 'react';
@@ -154,7 +154,7 @@ export function EmployeeDetailPage() {
   const isAdmin = currentDawinUser
     ? ['admin', 'owner'].includes(currentDawinUser.globalRole)
     : false;
-  const SUPER_USER_EMAILS = ['onzimai@dawin.group'];
+  const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
   const isSuperUser = authEmail ? SUPER_USER_EMAILS.includes(authEmail) : false;
   const canCreateUser = isAdmin || isSuperUser;
 

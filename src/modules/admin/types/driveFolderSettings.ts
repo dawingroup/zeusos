@@ -124,7 +124,7 @@ export const SLOT_GROUP_META: Record<
   templates: {
     label: 'Templates-Resources (v3.1 §3)',
     description:
-      'Future home for `04_Templates-Resources`. Bind now so Phase 5 Cloud Functions (finish library, DawinOS exports, template resolver) pick them up on ship.',
+      'Future home for `04_Templates-Resources`. Bind now so Phase 5 Cloud Functions (finish library, ZeusOS exports, template resolver) pick them up on ship.',
     defaultOpen: false,
   },
   subsidiaries: {
@@ -136,7 +136,7 @@ export const SLOT_GROUP_META: Record<
   hq: {
     label: 'Group HQ departments',
     description:
-      'Finance, HR, Legal, IT and strategic functions under `03_Group-Operations/05_Group-HQ/`. Mapped here so DawinOS modules (finance briefings, HR docs, compliance filings) have a stable target.',
+      'Finance, HR, Legal, IT and strategic functions under `03_Group-Operations/05_Group-HQ/`. Mapped here so ZeusOS modules (finance briefings, HR docs, compliance filings) have a stable target.',
     defaultOpen: false,
   },
   clients: {
@@ -148,7 +148,7 @@ export const SLOT_GROUP_META: Record<
   programs: {
     label: 'Programs & partnerships',
     description:
-      'External programs that DawinOS integrates with (AMH-Uganda today; add more as partnerships grow).',
+      'External programs that ZeusOS integrates with (AMH-Uganda today; add more as partnerships grow).',
     defaultOpen: false,
   },
 };
@@ -213,7 +213,7 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   {
     slot: 'documentTemplates',
     label: 'Document Templates',
-    hint: 'BOQ / PO / MO / Contract templates resolved by DawinOS tooling (F-B8).',
+    hint: 'BOQ / PO / MO / Contract templates resolved by ZeusOS tooling (F-B8).',
     policyPath: '04_Templates-Resources/02_Document-Templates/',
     group: 'templates',
     phase: 5,
@@ -239,9 +239,9 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   },
   {
     slot: 'dawinosExports',
-    label: 'DawinOS Exports',
+    label: 'ZeusOS Exports',
     hint: 'Monthly CFO briefing / production summary / spend plan dumps (F-B6).',
-    policyPath: '04_Templates-Resources/06_DawinOS-Assets/Exports/',
+    policyPath: '04_Templates-Resources/06_ZeusOS-Assets/Exports/',
     group: 'templates',
     phase: 5,
     parentSlot: 'templatesResources',
@@ -250,7 +250,7 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   // ═══ Subsidiary operations (v3 §03) ═══════════════════════════════
   {
     slot: 'opsFinishes',
-    label: 'Dawin Finishes — ops root',
+    label: 'Zeus Group — ops root',
     hint: 'Operational folder for the Finishes subsidiary (SOPs, internal docs, marketing). Consumer modules pick this up when writing Finishes-scoped artefacts.',
     policyPath: '03_Group-Operations/01_Dawin-Finishes/',
     group: 'subsidiaries',
@@ -258,7 +258,7 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   },
   {
     slot: 'opsAdvisory',
-    label: 'Dawin Advisory — ops root',
+    label: 'Zeus Group — ops root',
     hint: 'Operational folder for Advisory. Also the destination for non-project strategy + advisory reports (`google-docs.service.ts`).',
     policyPath: '03_Group-Operations/02_Dawin-Advisory/',
     group: 'subsidiaries',
@@ -266,7 +266,7 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   },
   {
     slot: 'opsCapital',
-    label: 'Dawin Capital — ops root',
+    label: 'Zeus Capital — ops root',
     hint: 'Operational folder for Capital. Investment memos, portfolio tracking, LP comms.',
     policyPath: '03_Group-Operations/03_Dawin-Capital/',
     group: 'subsidiaries',
@@ -274,8 +274,8 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   },
   {
     slot: 'opsTechnology',
-    label: 'Dawin Technology — ops root',
-    hint: 'Operational folder for Technology/DawinOS engineering artefacts outside product code (RFCs, architecture notes, internal demos).',
+    label: 'Zeus Technology — ops root',
+    hint: 'Operational folder for Technology/ZeusOS engineering artefacts outside product code (RFCs, architecture notes, internal demos).',
     policyPath: '03_Group-Operations/04_Dawin-Technology/',
     group: 'subsidiaries',
     phase: 6,
@@ -329,7 +329,7 @@ export const DRIVE_FOLDER_SLOT_CATALOG: readonly SlotDescriptor[] = [
   {
     slot: 'hqStrategy',
     label: 'Group HQ · CEO & Strategy',
-    hint: 'CEO-level strategic artefacts: OKR docs, quarterly reviews, board packs, strategy canvases exported from DawinOS.',
+    hint: 'CEO-level strategic artefacts: OKR docs, quarterly reviews, board packs, strategy canvases exported from ZeusOS.',
     policyPath: '03_Group-Operations/05_Group-HQ/CEO-&-Strategy/',
     group: 'hq',
     phase: 6,

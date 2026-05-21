@@ -1,5 +1,5 @@
 /**
- * Employee Assignment Service - DawinOS v2.0
+ * Employee Assignment Service - ZeusOS v2.0
  * Service for resolving task assignments to employees based on role profiles and skills
  */
 

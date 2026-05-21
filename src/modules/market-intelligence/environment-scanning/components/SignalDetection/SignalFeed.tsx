@@ -1,6 +1,6 @@
 // ============================================================================
 // SIGNAL FEED COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Real-time feed of detected environment signals
 // ============================================================================
 

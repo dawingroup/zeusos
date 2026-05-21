@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY DOCUMENT UPLOAD COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Upload and parse business strategy documents for review
 // ============================================================================
 

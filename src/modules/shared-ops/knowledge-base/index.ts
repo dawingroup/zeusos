@@ -1,5 +1,5 @@
 /**
- * Knowledge Base Module - DawinOS v2.0
+ * Knowledge Base Module - ZeusOS v2.0
  * SOPs and policies management
  */
 export * from './types';

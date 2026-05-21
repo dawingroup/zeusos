@@ -2,7 +2,7 @@
  * Responsive Tabs Component
  * - Desktop: Horizontal tab bar
  * - Mobile: Scrollable tabs with dropdown option
- * Standardized across DawinOS
+ * Standardized across ZeusOS
  */
 
 import React, { useState, useRef, useEffect } from 'react';

@@ -1,6 +1,6 @@
 // ============================================================================
 // DIGITAL PROFILES SECTION
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Discover and track competitor digital profiles
 // ============================================================================
 

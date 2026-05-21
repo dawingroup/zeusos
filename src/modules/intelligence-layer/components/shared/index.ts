@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE LAYER SHARED COMPONENTS BARREL EXPORT
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // ============================================================================
 
 export { AIStatusIndicator } from './AIStatusIndicator';

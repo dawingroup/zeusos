@@ -1,5 +1,5 @@
 // ============================================================================
-// BUSINESS PIVOTS SERVICE - DawinOS CEO Strategy Command
+// BUSINESS PIVOTS SERVICE - ZeusOS CEO Strategy Command
 // Firestore CRUD for company-level business pivots
 // Collection: companies/{companyId}/business_pivots/{pivotId}
 // ============================================================================

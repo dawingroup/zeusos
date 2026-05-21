@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH POSITION CARD
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Displays current cash position and key metrics
 // ============================================================================
 

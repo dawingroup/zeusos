@@ -59,7 +59,7 @@ export default function ClientListPage() {
   return (
     <>
       <Helmet>
-        <title>Clients | DawinOS</title>
+        <title>Clients | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

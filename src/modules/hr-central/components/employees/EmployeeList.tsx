@@ -1,5 +1,5 @@
 /**
- * Employee List Component - DawinOS v2.0
+ * Employee List Component - ZeusOS v2.0
  * Displays employees in table (desktop) or card (mobile) view
  */
 

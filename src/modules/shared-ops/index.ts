@@ -1,5 +1,5 @@
 /**
- * Shared Operations Module - DawinOS v2.0
+ * Shared Operations Module - ZeusOS v2.0
  * 
  * Cross-subsidiary operational tools:
  * - Smart Tasks (AI-prioritized task management)

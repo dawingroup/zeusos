@@ -1,6 +1,6 @@
 // ============================================================================
 // ENVIRONMENT SCANNING PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Main page wrapper for environment scanning module
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // ACCOUNT CONSTANTS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Chart of Accounts configuration for Uganda-compliant accounting
 // ============================================================================
 

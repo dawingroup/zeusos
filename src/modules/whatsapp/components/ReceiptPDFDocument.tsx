@@ -309,7 +309,7 @@ export function ReceiptPDFDocument({ data }: { data: ReceiptData }) {
   const isFullyPaid = data.balanceRemaining <= 0;
 
   return (
-    <Document title={`Receipt ${data.receiptNumber}`} author="Dawin Finishes">
+    <Document title={`Receipt ${data.receiptNumber}`} author="Zeus Group">
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
@@ -317,7 +317,7 @@ export function ReceiptPDFDocument({ data }: { data: ReceiptData }) {
             {data.companyLogoUrl ? (
               <Image src={data.companyLogoUrl} style={styles.logo} />
             ) : (
-              <Text style={styles.companyName}>Dawin Finishes</Text>
+              <Text style={styles.companyName}>Zeus Group</Text>
             )}
             <Text style={styles.companyAddress}>
               Kayondo Road, Kyambogo Upper Estate{'\n'}
@@ -433,7 +433,7 @@ export function ReceiptPDFDocument({ data }: { data: ReceiptData }) {
           <Text style={styles.footerText}>
             This is a system-generated receipt. No signature required.
           </Text>
-          <Text style={styles.footerBrand}>Dawin Finishes | dawinfinishes.com</Text>
+          <Text style={styles.footerBrand}>Zeus Group | dawinfinishes.com</Text>
         </View>
       </Page>
     </Document>

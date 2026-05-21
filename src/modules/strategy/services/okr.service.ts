@@ -1,5 +1,5 @@
 // ============================================================================
-// OKR SERVICE - DawinOS CEO Strategy Command
+// OKR SERVICE - ZeusOS CEO Strategy Command
 // Firebase service for OKR management
 // ============================================================================
 

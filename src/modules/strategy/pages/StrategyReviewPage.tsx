@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY REVIEW PAGE
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Main page for comprehensive business strategy review with AI assistant
 // ============================================================================
 
@@ -178,7 +178,7 @@ export const StrategyReviewPage: React.FC = () => {
   const { settings: orgSettings } = useOrganizationSettings();
 
   const subsidiaryOptions = useMemo(() => [
-    { id: 'zeus-group', name: 'Dawin Group (All)' },
+    { id: 'zeus-group', name: 'Zeus Group (All)' },
     ...DEFAULT_SUBSIDIARIES.filter(s => s.status === 'active').map(s => ({ id: s.id, name: s.name })),
   ], []);
 
@@ -190,7 +190,7 @@ export const StrategyReviewPage: React.FC = () => {
     if (!branding && selectedSubsidiaryId === 'zeus-group') {
       // Fallback to group-level colors
       return {
-        subsidiaryName: 'Dawin Group',
+        subsidiaryName: 'Zeus Group',
         branding: {
           primaryColor: orgSettings?.branding?.groupPrimaryColor || '#1a365d',
           secondaryColor: orgSettings?.branding?.groupSecondaryColor || '#2563eb',

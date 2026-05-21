@@ -1,6 +1,6 @@
 // ============================================================================
 // NEWS FEED PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // News aggregation with sentiment analysis
 // ============================================================================
 

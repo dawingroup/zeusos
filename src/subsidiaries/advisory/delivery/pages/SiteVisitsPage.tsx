@@ -180,7 +180,7 @@ export function SiteVisitsPage() {
           userId: user.uid,
           name: user.displayName || 'Unknown',
           role: 'project_manager',
-          organization: 'Dawin Advisory',
+          organization: 'Zeus Group',
         },
         visitors: [],
         weatherConditions: {

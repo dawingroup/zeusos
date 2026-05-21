@@ -1,6 +1,6 @@
 // ============================================================================
 // RECONCILIATION SCHEDULE LIST
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Table view of reconciliation schedules with status badges and actions
 // ============================================================================
 

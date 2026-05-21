@@ -1,5 +1,5 @@
 /**
- * Executive Module - DawinOS v2.0
+ * Executive Module - ZeusOS v2.0
  * 
  * Executive and strategic management tools:
  * - Strategy Command (OKRs, KPIs, Performance)

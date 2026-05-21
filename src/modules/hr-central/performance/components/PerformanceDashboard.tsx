@@ -1,6 +1,6 @@
 // ============================================================================
 // PERFORMANCE DASHBOARD
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Main performance management dashboard
 // ============================================================================
 

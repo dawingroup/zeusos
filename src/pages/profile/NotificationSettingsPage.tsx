@@ -10,7 +10,7 @@ export default function NotificationSettingsPage() {
   return (
     <>
       <Helmet>
-        <title>Notification Settings | Dawin Advisory Platform</title>
+        <title>Notification Settings | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

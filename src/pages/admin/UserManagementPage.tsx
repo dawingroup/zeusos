@@ -162,7 +162,7 @@ export default function UserManagementPage() {
   return (
     <>
       <Helmet>
-        <title>User Management | Dawin Advisory Platform</title>
+        <title>User Management | ZeusOS</title>
       </Helmet>
 
       <div className="p-6 space-y-6">

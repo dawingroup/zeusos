@@ -1,6 +1,6 @@
 // ============================================================================
 // AGGREGATION SCHEMAS
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Zod validation schemas for performance aggregation
 // ============================================================================
 

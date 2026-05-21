@@ -1,6 +1,6 @@
 // ============================================================================
 // PROFITABILITY ENGINE — Pure Calculation Functions
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Breakeven analysis + Goal Seek solver (all algebraic, closed-form)
 // ============================================================================
 

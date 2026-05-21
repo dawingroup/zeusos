@@ -1,6 +1,6 @@
 /**
  * Inter-company Recharge Service
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  *
  * Produces the period schedule used by Finance to post inter-company
  * salary recharges under the Model A host-employer arrangement.

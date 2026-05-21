@@ -1,6 +1,6 @@
 // ============================================================================
 // ExecutiveDashboard PAGE
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Main executive dashboard combining all performance views
 // ============================================================================
 
@@ -51,7 +51,7 @@ export const ExecutiveDashboard: React.FC = () => {
               Executive Dashboard
             </h1>
             <p className="mt-1 text-[12.5px]" style={{ color: 'var(--fg-secondary)' }}>
-              Strategic performance overview for Dawin Group
+              Strategic performance overview for Zeus Group
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={refresh}>

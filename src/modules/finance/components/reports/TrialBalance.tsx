@@ -1,6 +1,6 @@
 // ============================================================================
 // TRIAL BALANCE COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Displays Trial Balance report
 // ============================================================================
 

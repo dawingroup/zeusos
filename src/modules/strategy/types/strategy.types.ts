@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY TYPES - DawinOS CEO Strategy Command
+// STRATEGY TYPES - ZeusOS CEO Strategy Command
 // TypeScript interfaces for strategy document management
 // ============================================================================
 

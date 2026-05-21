@@ -1,5 +1,5 @@
 /**
- * Employee Card Component - DawinOS v2.0
+ * Employee Card Component - ZeusOS v2.0
  * Mobile-optimized card view for employee in list
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // AccountForm COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Form for creating/editing accounts
 // ============================================================================
 

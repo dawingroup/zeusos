@@ -1,6 +1,6 @@
 // ============================================================================
 // CUSTOM ASSERTIONS
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Custom test assertions and matchers
 // ============================================================================
 

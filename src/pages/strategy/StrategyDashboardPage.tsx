@@ -1,7 +1,7 @@
 /**
  * StrategyDashboardPage.tsx
  * CEO Strategy Command dashboard with strategic overview and key metrics
- * DawinOS v2.0 - Phase 8.7
+ * ZeusOS v2.0 - Phase 8.7
  */
 
 import { useState } from 'react';

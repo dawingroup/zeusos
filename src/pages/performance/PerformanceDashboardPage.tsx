@@ -1,7 +1,7 @@
 /**
  * PerformanceDashboardPage.tsx
  * Team performance overview with metrics, goals, reviews, and development tracking
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState } from 'react';

@@ -1,6 +1,6 @@
 // ============================================================================
 // PERFORMANCE REVIEW CONSTANTS
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Constants for Performance Management System
 // ============================================================================
 

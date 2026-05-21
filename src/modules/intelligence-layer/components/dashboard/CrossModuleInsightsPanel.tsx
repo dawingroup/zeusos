@@ -1,6 +1,6 @@
 // ============================================================================
 // CROSS MODULE INSIGHTS PANEL
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Panel showing insights that span multiple modules
 // ============================================================================
 
@@ -115,7 +115,7 @@ export const CrossModuleInsightsPanel: React.FC<CrossModuleInsightsPanelProps> =
         <div>
           <CardTitle className="text-lg">Cross-Module Insights</CardTitle>
           <p className="text-sm text-muted-foreground">
-            AI-detected patterns across DawinOS modules
+            AI-detected patterns across ZeusOS modules
           </p>
         </div>
       </CardHeader>

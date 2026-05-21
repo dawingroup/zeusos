@@ -35,7 +35,7 @@ export function AdvisoryLayout() {
   return (
     <div className="flex flex-col min-h-full">
       <ModuleTabNav
-        title="Dawin Advisory"
+        title="Zeus Group"
         subtitle="Construction Consulting & Project Management"
         tabs={ADVISORY_TABS}
         accentColor="amber"

@@ -1,6 +1,6 @@
 // ============================================================================
 // USE INTELLIGENCE DASHBOARD HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Dashboard data fetching from Firestore
 // ============================================================================
 

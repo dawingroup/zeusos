@@ -1,6 +1,6 @@
 // ============================================================================
 // SECTION REVIEW CARD COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Reusable card for each strategy review section with score, status, notes
 // ============================================================================
 

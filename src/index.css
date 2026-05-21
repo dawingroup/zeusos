@@ -4,8 +4,8 @@
 
 /* ============================================
    ZeusOS Portal — Design Tokens
-   Forked from DawinOS portal design system.
-   Legacy DawinOS color tokens (boysenberry, golden-bell, etc.)
+   Forked from ZeusOS portal design system.
+   Legacy ZeusOS color tokens (boysenberry, golden-bell, etc.)
    are retained for Phase 1.A back-compat and will be retired
    in Phase 1.B once consumers are migrated to the Zeus palette.
    ============================================ */
@@ -59,7 +59,7 @@
   --house-of-zeus:   #c8ff3c;        /* lime */
 
   /* ============================================
-     Legacy DawinOS brand tokens (Phase 1.A retain)
+     Legacy ZeusOS brand tokens (Phase 1.A retain)
      Re-mapped onto the Zeus palette so any legacy
      consumers render in Zeus colours until Phase 1.B
      migrates them to the explicit --zeus-* names.
@@ -221,7 +221,7 @@
 
 /* ============================================
    Accent variants — Zeus navy is default.
-   Legacy DawinOS accent names retained, remapped onto the
+   Legacy ZeusOS accent names retained, remapped onto the
    Zeus palette so existing user preferences keep working.
    New canonical names are --accent="zeus-navy"|"zeus-red"
    and the five sub-brand keys.
@@ -235,7 +235,7 @@
 [data-accent="odd-gorilla"]    { --accent: #e65b66; --accent-soft: #fde0e3; --accent-fg: #ffffff; }
 [data-accent="house-of-zeus"]  { --accent: #6fa823; --accent-soft: #ecf6d6; --accent-fg: #ffffff; }
 
-/* Legacy DawinOS accent aliases — re-pointed at the Zeus palette */
+/* Legacy ZeusOS accent aliases — re-pointed at the Zeus palette */
 [data-accent="boysenberry"] { --accent: #0a1f4a; --accent-soft: #eef1f8; }
 [data-accent="goldenbell"]  { --accent: #e63946; --accent-soft: #fdeaec; }
 [data-accent="seafoam"]     { --accent: #00c5e5; --accent-soft: #d6f6fb; }

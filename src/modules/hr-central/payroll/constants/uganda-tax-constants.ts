@@ -1,6 +1,6 @@
 /**
  * Uganda Tax Constants and Configuration
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Contains all Uganda-specific tax rates, bands, and payroll configurations
  * per Uganda Revenue Authority (URA) regulations.

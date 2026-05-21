@@ -73,7 +73,7 @@ Focus on:
 - Access permissions and roles
 - System integrations`,
 
-  general: `You are a helpful assistant for the Dawin Advisory Platform.
+  general: `You are a helpful assistant for the ZeusOS.
 Help users navigate the platform and answer general questions.
 If a question seems domain-specific, guide them to the appropriate module.`,
 };

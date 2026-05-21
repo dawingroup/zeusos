@@ -1,5 +1,5 @@
 /**
- * Role Profile Hooks - DawinOS v2.0
+ * Role Profile Hooks - ZeusOS v2.0
  * React hooks for role profile management
  */
 

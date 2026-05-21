@@ -242,7 +242,7 @@ export const mainNavItems: NavItem[] = finishesNavItems;
 export const moduleNavItems: NavItem[] = [
   {
     id: 'advisory',
-    label: 'Dawin Advisory',
+    label: 'Zeus Group',
     href: '/advisory',
     icon: PieChart,
     module: 'investment_advisory',

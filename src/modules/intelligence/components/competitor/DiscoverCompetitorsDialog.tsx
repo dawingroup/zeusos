@@ -1,6 +1,6 @@
 // ============================================================================
 // DISCOVER COMPETITORS DIALOG
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // AI-driven competitor discovery — scans for direct, indirect & emerging
 // competitors, presents candidates for user review before adding
 // ============================================================================
@@ -261,7 +261,7 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
                   id="disc-company"
                   value={companyName}
                   onChange={e => setCompanyName(e.target.value)}
-                  placeholder="e.g. Dawin Group"
+                  placeholder="e.g. Zeus Group"
                 />
               </div>
               <div>

@@ -1,6 +1,6 @@
 /**
  * Subsidiary Branding Component
- * Manages branding for all Dawin subsidiaries
+ * Manages branding for all Zeus Group sub-brands
  */
 
 import { useState, useRef } from 'react';
@@ -17,11 +17,12 @@ import { useOrganizationSettings } from '@/core/settings';
 import type { DocumentBrandingPalette } from '@/core/settings/types';
 
 const SUBSIDIARIES = [
-  { id: 'zeus-group', name: 'Dawin Group', description: 'Parent company' },
-  { id: 'zeus-the-agency', name: 'Dawin Finishes', description: 'Interior design & finishes' },
-  { id: 'zeus-digital', name: 'Dawin Advisory', description: 'Consulting & strategy' },
-  { id: 'labyrinth', name: 'Dawin Capital', description: 'Investment & finance' },
-  { id: 'odd-gorilla', name: 'Dawin Technology', description: 'Software & innovation' },
+  { id: 'zeus-group',      name: 'Zeus Group',      description: 'Parent consortium' },
+  { id: 'zeus-the-agency', name: 'Zeus The Agency', description: 'Flagship 360° advertising agency (Uganda)' },
+  { id: 'zeus-digital',    name: 'Zeus Digital',    description: 'Digital-focused content, SEM, influencer & media buy' },
+  { id: 'labyrinth',       name: 'Labyrinth',       description: 'Audio & visual content production studio' },
+  { id: 'odd-gorilla',     name: 'Odd Gorilla',     description: 'Conflict agency for same-category clients' },
+  { id: 'house-of-zeus',   name: 'House of Zeus',   description: 'Kenya market expansion' },
 ] as const;
 
 type SubsidiaryId = typeof SUBSIDIARIES[number]['id'];

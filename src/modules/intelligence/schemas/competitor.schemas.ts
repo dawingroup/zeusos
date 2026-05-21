@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR SCHEMAS
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Zod validation schemas for Competitor Analysis
 // ============================================================================
 

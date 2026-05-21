@@ -1,6 +1,6 @@
 // ============================================================================
 // BALANCE SHEET COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Displays Balance Sheet (Statement of Financial Position)
 // ============================================================================
 

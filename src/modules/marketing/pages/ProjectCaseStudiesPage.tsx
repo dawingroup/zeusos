@@ -77,7 +77,7 @@ export default function ProjectCaseStudiesPage() {
   return (
     <div className="p-6 space-y-6">
       <Helmet>
-        <title>Project Case Studies · Marketing · DawinOS</title>
+        <title>Project Case Studies · Marketing · ZeusOS</title>
       </Helmet>
 
       <header className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">

@@ -1,6 +1,6 @@
 // ============================================================================
 // PerformanceComparison COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Side-by-side comparison of entity performance
 // ============================================================================
 

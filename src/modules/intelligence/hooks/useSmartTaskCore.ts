@@ -1,5 +1,5 @@
 /**
- * Smart Task Core Hooks - DawinOS v2.0
+ * Smart Task Core Hooks - ZeusOS v2.0
  * Unified hooks for the Intelligence Layer
  */
 

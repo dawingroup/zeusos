@@ -248,7 +248,7 @@ export async function generateContent(
       ? `\nStrategy context:\n- Brand voice: ${request.strategyContext.brandVoice || 'not set'}\n- Target market: ${request.strategyContext.targetMarket || 'not set'}\n- Business goals: ${(request.strategyContext.businessGoals || []).join(', ') || 'not set'}\n- Content pillars: ${(request.strategyContext.contentPillars || []).join(', ') || 'not set'}\n- Product focus: ${(request.strategyContext.productFocus || []).join(', ') || 'not set'}\n- USPs: ${(request.strategyContext.uniqueSellingPoints || []).join(', ') || 'not set'}`
       : '';
 
-    const prompt = `You are a marketing content creator for Dawin Group, an interior design and building finishes company in East Africa.
+    const prompt = `You are a marketing content creator for Zeus Group, an interior design and building finishes company in East Africa.
 
 Generate a social media post with the following requirements:
 - Topic: ${request.topic}
@@ -918,7 +918,7 @@ export async function chatWithAgent(
       ? `\nBusiness context:\n- Brand voice: ${strategyContext.brandVoice || 'professional'}\n- Target market: ${strategyContext.targetMarket || 'homeowners and designers in East Africa'}\n- Goals: ${(strategyContext.businessGoals || []).join(', ') || 'grow brand awareness'}\n- Content pillars: ${(strategyContext.contentPillars || []).join(', ') || 'design inspiration, product quality'}\n- Products: ${(strategyContext.productFocus || []).join(', ') || 'tiles, marble, finishes'}`
       : '';
 
-    const prompt = `You are a marketing AI assistant for Dawin Group, an interior design and building finishes company in East Africa (Uganda).
+    const prompt = `You are a marketing AI assistant for Zeus Group, an interior design and building finishes company in East Africa (Uganda).
 You help with: content creation, campaign planning, key marketing dates, hashtag strategy, and marketing analytics.
 ${strategyInfo}
 
@@ -1084,7 +1084,7 @@ function getNextKeyDatesForMonth(month: number): Array<{ name: string; tip: stri
  */
 function getQuickDraft(topic: string): string {
   const templates = [
-    `Elevate your space with ${topic}. At Dawin Finishes, we believe every surface tells a story — let us help you write yours.`,
+    `Elevate your space with ${topic}. At Zeus Group, we believe every surface tells a story — let us help you write yours.`,
     `Looking for ${topic}? Our curated collection brings world-class quality to East Africa. Visit our showroom to see and feel the difference.`,
     `Transform your project with premium ${topic}. From selection to installation, our team ensures perfection at every step.`,
   ];
@@ -1406,7 +1406,7 @@ Product focus: ${(strategyContext.productFocus || []).join(', ') || 'not set'}`
       ? `\n\nExisting tasks (DO NOT duplicate these):\n${existingTaskTitles.map((t) => `- ${t}`).join('\n')}`
       : '';
 
-    const prompt = `You are a marketing operations AI for Dawin Group, an interior design and building finishes company in East Africa.
+    const prompt = `You are a marketing operations AI for Zeus Group, an interior design and building finishes company in East Africa.
 
 Based on the strategy context, upcoming key dates, and campaign plans below, suggest actionable marketing tasks that need to be completed. Focus on tasks that are timely, specific, and directly support the marketing goals.
 

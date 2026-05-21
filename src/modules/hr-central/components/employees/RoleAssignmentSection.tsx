@@ -110,10 +110,10 @@ export function RoleAssignmentSection({ employee, onUpdate, isEditable = true }:
 
   const subsidiaries = [
     { value: 'all', label: 'All Subsidiaries' },
-    { value: 'finishes', label: 'Dawin Finishes' },
-    { value: 'advisory', label: 'Dawin Advisory' },
-    { value: 'technology', label: 'Dawin Technology' },
-    { value: 'capital', label: 'Dawin Capital' },
+    { value: 'finishes', label: 'Zeus Group' },
+    { value: 'advisory', label: 'Zeus Group' },
+    { value: 'technology', label: 'Zeus Technology' },
+    { value: 'capital', label: 'Zeus Capital' },
   ];
 
   const jobLevels = [

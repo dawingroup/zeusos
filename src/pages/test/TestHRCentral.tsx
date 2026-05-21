@@ -1,6 +1,6 @@
 /**
  * Test HR Central
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Test page for Phase 2: HR Central module components
  */
 

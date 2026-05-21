@@ -1,6 +1,6 @@
 // ============================================================================
 // USE PERFORMANCE AGGREGATION HOOK
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // React hook for performance aggregation management
 // ============================================================================
 
@@ -378,7 +378,7 @@ export function useGroupPerformance(options: {
     ...options,
     level: AGGREGATION_LEVELS.GROUP,
     entityId: options.companyId,
-    entityName: 'Dawin Group',
+    entityName: 'Zeus Group',
     includeChildren: true,
   });
 }

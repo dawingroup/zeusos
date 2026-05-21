@@ -1,6 +1,6 @@
 // ============================================================================
 // NEWS FEED HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Hook for news articles and sentiment analysis (Firestore-backed)
 // ============================================================================
 

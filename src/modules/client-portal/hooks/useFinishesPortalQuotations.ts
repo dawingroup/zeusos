@@ -1,7 +1,7 @@
 /**
  * useFinishesPortalQuotations — feeds the portal Quotations screen.
  *
- * In the Dawin Finishes model, a "Quotation" in the client's eyes
+ * In the Zeus Group model, a "Quotation" in the client's eyes
  * unifies three things:
  *   - **The base contract** — the SalesOrder itself, surfaced as a
  *     synthetic "sealed" quote so the client sees the original

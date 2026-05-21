@@ -1,6 +1,6 @@
 /**
  * Branding Components
- * Exports for Dawin Group branding elements
+ * Exports for Zeus Group branding elements
  */
 
 export { DawinGroupLogo } from './DawinGroupLogo';

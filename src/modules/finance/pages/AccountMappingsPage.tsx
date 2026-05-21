@@ -1,6 +1,6 @@
 // ============================================================================
 // ACCOUNT MAPPINGS PAGE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Wrapper for QBO Account Mapping settings
 // ============================================================================
 
@@ -20,7 +20,7 @@ export default function AccountMappingsPage() {
       <div>
         <h2 className="text-xl font-bold text-gray-900">QBO Account Mappings</h2>
         <p className="text-sm text-gray-500 mt-1">
-          Configure how DawinOS accounts map to QuickBooks Online
+          Configure how ZeusOS accounts map to QuickBooks Online
         </p>
       </div>
       <QBOAccountMappingSettings companyId={COMPANY_ID} />

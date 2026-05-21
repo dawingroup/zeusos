@@ -1,7 +1,7 @@
 /**
  * Press mention types.
  *
- * External publications that have covered Dawin Finishes. Surfaced on
+ * External publications that have covered Zeus Group. Surfaced on
  * the home Press section. Mirror of docs/integrations/metaobjects/press_mention.json.
  */
 

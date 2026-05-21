@@ -1,5 +1,5 @@
 // ============================================================================
-// OKR CONSTANTS - DawinOS CEO Strategy Command
+// OKR CONSTANTS - ZeusOS CEO Strategy Command
 // Constants for OKR (Objectives and Key Results) management
 // ============================================================================
 

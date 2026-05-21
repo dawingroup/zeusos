@@ -1,6 +1,6 @@
 // ============================================================================
 // INTEGRATION TYPES
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Types for QuickBooks Online and Admin Tools
 // ============================================================================
 

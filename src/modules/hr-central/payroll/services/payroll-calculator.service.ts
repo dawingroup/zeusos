@@ -1,6 +1,6 @@
 /**
  * Payroll Calculator Service
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Comprehensive payroll calculation engine with Uganda-specific
  * tax computations, proration, overtime, and deduction handling.

@@ -1,6 +1,6 @@
 // ============================================================================
 // BUDGET LINE EDITOR COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Component for managing budget line items with period breakdown
 // ============================================================================
 

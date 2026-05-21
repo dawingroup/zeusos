@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION TYPES - DawinOS HR Central
+// ORGANIZATION TYPES - ZeusOS HR Central
 // ============================================================================
 
 import { Timestamp } from 'firebase/firestore';

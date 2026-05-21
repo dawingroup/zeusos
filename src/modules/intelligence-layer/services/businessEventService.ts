@@ -1,6 +1,6 @@
 // ============================================================================
 // BUSINESS EVENT SERVICE
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Service for detecting and processing business events across modules
 // ============================================================================
 

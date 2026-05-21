@@ -1,6 +1,6 @@
 // ============================================================================
 // EDIT COMPETITOR DIALOG
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Dialog form to edit an existing competitor in Firestore
 // ============================================================================
 

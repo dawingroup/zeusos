@@ -1,5 +1,5 @@
 /**
- * Role Profile Types - DawinOS v2.0
+ * Role Profile Types - ZeusOS v2.0
  * Defines organizational roles and their capabilities for intelligent task routing
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // FACILITY SERVICE
-// DawinOS v2.0 — Active capital facility management & repayment tracking
+// ZeusOS v2.0 — Active capital facility management & repayment tracking
 // ============================================================================
 
 import {

@@ -1,6 +1,6 @@
 // ============================================================================
 // SIGNAL CARD COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Displays a single environment signal with assessment details
 // ============================================================================
 

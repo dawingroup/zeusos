@@ -1,7 +1,7 @@
 /**
  * InitiativeListPage.tsx
  * Strategic initiatives management with kanban and list views
- * DawinOS v2.0 - Phase 8.7
+ * ZeusOS v2.0 - Phase 8.7
  */
 
 import { useState, useMemo } from 'react';

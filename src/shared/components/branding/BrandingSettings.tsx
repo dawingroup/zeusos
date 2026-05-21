@@ -12,7 +12,7 @@ import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 export function BrandingSettings() {
   const { currentSubsidiary } = useSubsidiary();
   const activeSubsidiaryId = currentSubsidiary?.id || 'zeus-group';
-  const activeSubsidiaryName = currentSubsidiary?.name || 'Dawin Group';
+  const activeSubsidiaryName = currentSubsidiary?.name || 'Zeus Group';
   const { branding, uploading, error, uploadLogo, uploadFavicon, resetBranding } =
     useBranding(activeSubsidiaryId);
   const { user } = useAuth();

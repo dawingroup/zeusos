@@ -1,6 +1,6 @@
 // ============================================================================
 // FORMATTERS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Utility functions for formatting currency, dates, and numbers
 // ============================================================================
 

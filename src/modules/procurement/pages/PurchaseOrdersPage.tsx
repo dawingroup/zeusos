@@ -1,6 +1,6 @@
 /**
  * Purchase Orders List Page
- * Styled to match DawinOS Finishes design system
+ * Styled to match ZeusOS Finishes design system
  */
 
 import { useState, useEffect } from 'react';

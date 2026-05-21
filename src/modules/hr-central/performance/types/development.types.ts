@@ -1,6 +1,6 @@
 // ============================================================================
 // DEVELOPMENT & TRAINING TYPES
-// DawinOS v2.0 - HR Performance Module
+// ZeusOS v2.0 - HR Performance Module
 // Types for employee development plans, training, and competencies
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // CURRENCY CONSTANTS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Multi-currency support for Uganda operations
 // ============================================================================
 

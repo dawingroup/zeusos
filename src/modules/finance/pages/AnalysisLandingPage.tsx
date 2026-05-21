@@ -1,6 +1,6 @@
 // ============================================================================
 // ANALYSIS LANDING PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Section landing page with card grid linking to 8 analysis sub-pages
 // ============================================================================
 

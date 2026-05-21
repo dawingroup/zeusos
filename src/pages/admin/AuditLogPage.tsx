@@ -11,7 +11,7 @@ export default function AuditLogPage() {
   return (
     <>
       <Helmet>
-        <title>Audit Log | Dawin Advisory Platform</title>
+        <title>Audit Log | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

@@ -1,6 +1,6 @@
 // ============================================================================
 // SOCIAL INTELLIGENCE SECTION
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Competitor social media tracking: metrics cards, post feed, AI analysis
 // ============================================================================
 

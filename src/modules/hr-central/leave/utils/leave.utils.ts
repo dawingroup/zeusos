@@ -1,6 +1,6 @@
 /**
  * Leave Management Utility Functions
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  */
 
 import {

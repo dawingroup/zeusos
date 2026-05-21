@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL HUB MODULE INDEX
-// DawinOS v2.0 — Capital seeking, readiness, application tracking & facilities
+// ZeusOS v2.0 — Capital seeking, readiness, application tracking & facilities
 // ============================================================================
 
 // ────────────────────────────────────────────────────────────────────────────

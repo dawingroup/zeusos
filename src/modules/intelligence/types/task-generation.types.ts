@@ -1,5 +1,5 @@
 /**
- * Task Generation Types - DawinOS v2.0
+ * Task Generation Types - ZeusOS v2.0
  * Types for the automated task generation and routing system
  */
 

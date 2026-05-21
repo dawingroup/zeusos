@@ -31,7 +31,7 @@ export default function PortalPreviewPage() {
     <div className="portal-root portal-canvas" style={{ padding: '60px 60px 80px' }}>
       <Cover />
 
-      <Section title="DawinOS · Client Portal" subtitle="Hi-fidelity design · editorial · warm paper" />
+      <Section title="ZeusOS · Client Portal" subtitle="Hi-fidelity design · editorial · warm paper" />
 
       <Section title="Mobile · Finishes flow" subtitle="iPhone · Vela Boutique — DIFC">
         <Row>
@@ -113,7 +113,7 @@ function Cover() {
     }}>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <div>
-          <Eyebrow style={{ letterSpacing: '0.18em' }}>DawinOS · Client Portal</Eyebrow>
+          <Eyebrow style={{ letterSpacing: '0.18em' }}>ZeusOS · Client Portal</Eyebrow>
           <div className="h-d1" style={{ marginTop: 14, maxWidth: 720 }}>
             Every approval, drawing<br />
             &amp; payment <span style={{ color: 'var(--ink-2)', fontStyle: 'italic' }}>— in one place.</span>

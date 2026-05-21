@@ -1,6 +1,6 @@
 // ============================================================================
 // QBO SYNC SERVICE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Frontend service for QuickBooks Online financial data sync
 // ============================================================================
 
@@ -718,7 +718,7 @@ export interface QBOContactSyncResult {
 }
 
 /**
- * Pull customers and/or vendors from QuickBooks into DawinOS
+ * Pull customers and/or vendors from QuickBooks into ZeusOS
  */
 export async function syncQBOContactsToFirestore(
   companyId: string,

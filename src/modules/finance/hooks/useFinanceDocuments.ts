@@ -1,6 +1,6 @@
 // ============================================================================
 // USE FINANCE DOCUMENTS HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // React hook for finance document library management
 // ============================================================================
 

@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
     return (
       <>
         <Helmet>
-          <title>Invalid Link | Dawin Advisory Platform</title>
+          <title>Invalid Link | ZeusOS</title>
         </Helmet>
 
         <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
@@ -85,7 +85,7 @@ export default function ResetPasswordPage() {
     return (
       <>
         <Helmet>
-          <title>Password Reset | Dawin Advisory Platform</title>
+          <title>Password Reset | ZeusOS</title>
         </Helmet>
 
         <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
@@ -118,7 +118,7 @@ export default function ResetPasswordPage() {
   return (
     <>
       <Helmet>
-        <title>Reset Password | Dawin Advisory Platform</title>
+        <title>Reset Password | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">

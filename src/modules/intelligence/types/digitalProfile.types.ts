@@ -1,6 +1,6 @@
 // ============================================================================
 // DIGITAL PROFILE TYPES
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Types for competitor digital profile discovery and tracking
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // USE MARKET INTELLIGENCE SCAN HOOK
-// DawinOS v2.0 - AI-Driven Competitive Intelligence
+// ZeusOS v2.0 - AI-Driven Competitive Intelligence
 // React hook for managing market intelligence scan state
 // ============================================================================
 

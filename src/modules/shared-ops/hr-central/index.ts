@@ -1,5 +1,5 @@
 /**
- * HR Central Module - DawinOS v2.0
+ * HR Central Module - ZeusOS v2.0
  * Staff lifecycle management
  */
 export * from './types';

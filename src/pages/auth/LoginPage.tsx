@@ -48,20 +48,24 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title>Sign In | Dawin Advisory Platform</title>
+        <title>Sign In | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#872E5C] to-[#E18425] flex items-center justify-center">
-                <span className="text-white font-bold text-xl">D</span>
+              {/* Zeus Group "Z" mark — gradient draws on the Zeus profile's
+                  vibrant palette (yellow Zeus The Agency → magenta Odd Gorilla
+                  → cyan Zeus Digital). Replace with the official polygonal SVG
+                  once the asset pack arrives. */}
+              <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#F5D900] via-[#FFB0B8] to-[#00C5E5] flex items-center justify-center">
+                <span className="text-white font-extrabold text-xl drop-shadow-sm">Z</span>
               </div>
             </div>
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl">Welcome to ZeusOS</CardTitle>
             <CardDescription>
-              Sign in to your Dawin Advisory Platform account
+              Sign in to your Zeus Group workspace
             </CardDescription>
           </CardHeader>
 

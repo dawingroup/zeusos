@@ -1,6 +1,6 @@
 // ============================================================================
 // SETTINGS LANDING PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Replaces card-grid with a vertical list for direct access to settings.
 // ============================================================================
 
@@ -49,7 +49,7 @@ const SECTIONS: SettingsSection[] = [
   {
     id: 'mappings',
     label: 'Account Mappings',
-    description: 'Map DawinOS accounts to QBO counterparts',
+    description: 'Map ZeusOS accounts to QBO counterparts',
     icon: GitBranch,
     path: '/finance/settings/mappings',
   },

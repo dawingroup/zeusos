@@ -1,6 +1,6 @@
 // ============================================================================
 // SHARED COMPONENTS BARREL EXPORT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // ============================================================================
 
 export { DataSourceBadge, MultiSourceBadge } from './DataSourceBadge';

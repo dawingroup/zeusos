@@ -298,7 +298,7 @@ export function AccountForecastDrawer({
                 { value: 'smart_prediction', label: 'Smart Prediction', desc: 'Linear regression or rolling average of QBO actuals' },
                 { value: 'constant_growing', label: 'Constant / Growing', desc: 'Fixed base with optional annual growth rate' },
                 { value: 'direct_entry',     label: 'Direct Entry',     desc: 'Manually enter amounts per month' },
-                { value: 'link_to_budget',   label: 'Link to Budget',   desc: 'Pull from an approved DawinOS budget' },
+                { value: 'link_to_budget',   label: 'Link to Budget',   desc: 'Pull from an approved ZeusOS budget' },
               ].map(opt => (
                 <button
                   key={opt.value}

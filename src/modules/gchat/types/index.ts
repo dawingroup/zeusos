@@ -20,7 +20,7 @@ export interface GChatSpace {
   spaceType: GChatSpaceType;
   description?: string;
 
-  // DawinOS context
+  // ZeusOS context
   incidentId?: string | null;
   projectId?: string | null;
   type: GChatSpaceCategory;

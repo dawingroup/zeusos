@@ -1,6 +1,6 @@
 /**
  * Tax Calculation Utilities
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Core calculation functions for Uganda tax computations:
  * PAYE, NSSF, LST, overtime, proration, and related utilities.

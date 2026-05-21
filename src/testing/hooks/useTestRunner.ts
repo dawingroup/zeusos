@@ -1,6 +1,6 @@
 /**
  * useTestRunner Hook
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Hook for running and tracking tests against actual services
  */
 

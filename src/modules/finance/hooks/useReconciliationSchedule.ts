@@ -1,6 +1,6 @@
 // ============================================================================
 // USE RECONCILIATION SCHEDULE HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // React hook for reconciliation schedule management
 // ============================================================================
 

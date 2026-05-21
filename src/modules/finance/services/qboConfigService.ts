@@ -112,7 +112,7 @@ export async function updateAccountMapping(
 
 /**
  * @deprecated Replaced by automatic item resolution with fuzzy matching.
- * Items are now resolved DawinOS → QBO automatically.
+ * Items are now resolved ZeusOS → QBO automatically.
  */
 export async function updateServiceItemMapping(
   serviceItemMapping: Record<string, string>,

@@ -1,6 +1,6 @@
 // ============================================================================
 // USE SOCIAL INTELLIGENCE HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // React hook for social media tracking data and actions
 // ============================================================================
 

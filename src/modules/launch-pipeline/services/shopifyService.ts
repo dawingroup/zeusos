@@ -96,7 +96,7 @@ export function buildPublishPayload(product: LaunchProduct): ShopifyPublishPaylo
     description: product.aiContent?.shortDescription || product.description,
     brand: {
       '@type': 'Brand',
-      name: 'Dawin Group',
+      name: 'Zeus Group',
     },
     category: product.category,
     material: product.specifications?.materials?.join(', '),
@@ -231,7 +231,7 @@ export function buildPublishPayload(product: LaunchProduct): ShopifyPublishPaylo
   return {
     title: product.name,
     bodyHtml: description,
-    vendor: 'Dawin Group',
+    vendor: 'Zeus Group',
     productType: product.category || 'Custom Furniture',
     tags,
     status: 'active',

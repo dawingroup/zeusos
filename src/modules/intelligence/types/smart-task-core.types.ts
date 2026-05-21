@@ -1,5 +1,5 @@
 /**
- * Smart Task Core Types - DawinOS v2.0
+ * Smart Task Core Types - ZeusOS v2.0
  * Unified types for the Intelligence Layer integration
  */
 

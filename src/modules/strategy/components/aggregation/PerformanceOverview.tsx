@@ -1,6 +1,6 @@
 // ============================================================================
 // PerformanceOverview COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Overview card showing aggregated performance across domains
 // ============================================================================
 

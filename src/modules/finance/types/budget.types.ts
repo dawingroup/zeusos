@@ -1,6 +1,6 @@
 // ============================================================================
 // BUDGET TYPES
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Type definitions for Budget Management
 // ============================================================================
 

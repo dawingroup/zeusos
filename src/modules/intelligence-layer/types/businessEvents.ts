@@ -1,6 +1,6 @@
 // ============================================================================
 // BUSINESS EVENT TYPES
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Types for cross-module business event detection and task generation
 // ============================================================================
 

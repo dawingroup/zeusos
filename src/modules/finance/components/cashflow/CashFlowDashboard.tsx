@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW DASHBOARD
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Main dashboard for cash flow management
 // ============================================================================
 

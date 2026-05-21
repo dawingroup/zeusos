@@ -1,6 +1,6 @@
 // ============================================================================
 // USE COMPETITOR DETAIL HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Fetches competitor profile, SWOT, and competitive moves for detail page
 // ============================================================================
 

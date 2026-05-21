@@ -1,7 +1,7 @@
 /**
  * TrainingCourseDetailPage.tsx
  * Detailed view of a training course with enrollment management
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState } from 'react';

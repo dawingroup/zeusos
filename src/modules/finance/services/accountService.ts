@@ -1,6 +1,6 @@
 // ============================================================================
 // ACCOUNT SERVICE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Service for Chart of Accounts management
 // ============================================================================
 

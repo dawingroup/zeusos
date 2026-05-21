@@ -3,7 +3,7 @@
  *
  * Table-based view of delivery projects with sortable columns,
  * color-coded status/stage indicators, progress bars, and budget info.
- * Inspired by the DesignItemsTable in Dawin Finishes.
+ * Inspired by the DesignItemsTable in Zeus Group.
  */
 
 import { useState, useMemo } from 'react';

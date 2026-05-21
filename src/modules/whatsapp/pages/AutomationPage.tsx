@@ -12,7 +12,7 @@ import type { WhatsAppAutomation, KeywordTrigger, BusinessHours } from '../types
 
 const DEFAULT_AUTOMATION: WhatsAppAutomation = {
   aiAgentEnabled: false,
-  aiSystemPrompt: 'You are a helpful sales assistant for DawinOS. Help customers find products, answer questions, and process orders. Be friendly and professional.',
+  aiSystemPrompt: 'You are a helpful sales assistant for ZeusOS. Help customers find products, answer questions, and process orders. Be friendly and professional.',
   welcomeMessageEnabled: false,
   welcomeTemplateId: '',
   awayMessageEnabled: false,

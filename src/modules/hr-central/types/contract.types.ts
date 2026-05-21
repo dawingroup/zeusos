@@ -1,5 +1,5 @@
 /**
- * Contract Types & Schemas - DawinOS v2.0
+ * Contract Types & Schemas - ZeusOS v2.0
  * 
  * Comprehensive types for employment contracts including:
  * - Contract types (permanent, fixed-term, casual, etc.)

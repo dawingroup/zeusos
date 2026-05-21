@@ -1,6 +1,6 @@
 // ============================================================================
 // GOAL SEEK PAGE — Interactive Sensitivity Analysis
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Select a target metric → see what levers need to change to hit the goal
 // Interactive sliders for Price, Volume, Fixed Expenses, Variable COS

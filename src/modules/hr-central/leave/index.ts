@@ -1,6 +1,6 @@
 /**
  * Leave Management Module Index
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  * 
  * Exports all leave types, constants, services, utilities, and hooks.
  */

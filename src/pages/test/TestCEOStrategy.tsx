@@ -1,6 +1,6 @@
 /**
  * Test CEO Strategy
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Test page for Phase 3: CEO Strategy Command module
  */
 

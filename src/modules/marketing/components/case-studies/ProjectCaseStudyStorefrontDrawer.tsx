@@ -527,7 +527,7 @@ export function ProjectCaseStudyStorefrontDrawer({
           {/* Linked refs */}
           <div className="border-t pt-4">
             <div className="text-xs uppercase tracking-wider text-gray-500 mb-2">Linked references</div>
-            <p className="text-xs text-gray-500 mb-3">Comma-separated DawinOS doc ids. Publisher resolves to Shopify GIDs.</p>
+            <p className="text-xs text-gray-500 mb-3">Comma-separated ZeusOS doc ids. Publisher resolves to Shopify GIDs.</p>
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Finishes used (finishLibrary ids)</label>

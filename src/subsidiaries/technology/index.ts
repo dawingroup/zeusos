@@ -1,7 +1,7 @@
 /**
- * Dawin Technology - Software & Innovation
+ * Zeus Technology - Software & Innovation
  * 
- * Placeholder module for the Dawin Technology subsidiary
+ * Placeholder module for the Zeus Technology subsidiary
  */
 
 export const TECHNOLOGY_MODULE = 'odd-gorilla';

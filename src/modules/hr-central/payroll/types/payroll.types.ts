@@ -1,6 +1,6 @@
 /**
  * Payroll Types and Interfaces
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Comprehensive type definitions for payroll calculations,
  * tax breakdowns, earnings, deductions, and related entities.

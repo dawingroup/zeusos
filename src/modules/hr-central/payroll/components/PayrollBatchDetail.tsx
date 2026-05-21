@@ -1,6 +1,6 @@
 /**
  * Payroll Batch Detail Component
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Displays detailed view of a payroll batch with summary, employee list,
  * approval history, and action buttons.

@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI SERVICE - DawinOS CEO Strategy Command
+// KPI SERVICE - ZeusOS CEO Strategy Command
 // Firebase service for KPI definition management
 // ============================================================================
 

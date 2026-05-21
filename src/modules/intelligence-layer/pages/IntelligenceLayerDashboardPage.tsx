@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE LAYER DASHBOARD PAGE
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Main dashboard for AI intelligence features
 // ============================================================================
 
@@ -302,7 +302,7 @@ const IntelligenceLayerDashboardPage: React.FC = () => {
               Intelligence Layer
             </h1>
             <p className="text-muted-foreground">
-              AI-powered insights and automation across DawinOS
+              AI-powered insights and automation across ZeusOS
             </p>
           </div>
         </div>

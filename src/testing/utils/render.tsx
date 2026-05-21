@@ -1,6 +1,6 @@
 // ============================================================================
 // CUSTOM RENDER
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Custom render function with providers
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // TAX PORTAL LINKS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Grid of tax portal quick-link cards organized by category
 // ============================================================================
 

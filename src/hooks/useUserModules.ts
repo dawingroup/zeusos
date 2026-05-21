@@ -10,7 +10,7 @@ import { useCurrentDawinUser } from '@/core/settings';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import type { SubsidiaryModule } from '@/types/subsidiary';
 
-const SUPER_USER_EMAILS = ['onzimai@dawin.group'];
+const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
 
 export interface ModuleInfo {
   moduleId: SubsidiaryModule;

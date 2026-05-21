@@ -1,6 +1,6 @@
 /**
  * Leave Management Validation Schemas
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  */
 
 import { z } from 'zod';

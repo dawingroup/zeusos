@@ -1,6 +1,6 @@
 // ============================================================================
 // PAYROLL INTEGRATION TESTS
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Integration tests for payroll processing
 // ============================================================================
 

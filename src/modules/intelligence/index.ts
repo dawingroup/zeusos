@@ -1,5 +1,5 @@
 /**
- * Intelligence Module - DawinOS v2.0
+ * Intelligence Module - ZeusOS v2.0
  * 
  * Provides cross-cutting intelligence capabilities:
  * - Business event processing

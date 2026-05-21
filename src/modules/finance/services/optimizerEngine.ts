@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW OPTIMIZER ENGINE
-// DawinOS v2.0 - Pure calculation functions, zero I/O
+// ZeusOS v2.0 - Pure calculation functions, zero I/O
 // Deterministic, fully testable scoring and constraint satisfaction
 // ============================================================================
 

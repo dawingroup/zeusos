@@ -1,6 +1,6 @@
 // ============================================================================
 // CFO BRIEFING SERVICE
-// DawinOS v2.0 — AI-powered daily briefings and scenario analysis
+// ZeusOS v2.0 — AI-powered daily briefings and scenario analysis
 // ============================================================================
 
 import {

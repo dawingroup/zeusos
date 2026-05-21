@@ -1,7 +1,7 @@
 /**
  * FinanceDashboardPage.tsx
  * Financial Management dashboard with comprehensive overview
- * DawinOS v2.0 - Phase 8.8
+ * ZeusOS v2.0 - Phase 8.8
  */
 
 import { useNavigate } from 'react-router-dom';

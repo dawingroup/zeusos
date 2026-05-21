@@ -1,6 +1,6 @@
 // ============================================================================
 // REPORT EXPORT COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Export controls for financial reports
 // ============================================================================
 

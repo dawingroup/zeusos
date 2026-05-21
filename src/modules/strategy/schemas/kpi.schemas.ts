@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI SCHEMAS - DawinOS CEO Strategy Command
+// KPI SCHEMAS - ZeusOS CEO Strategy Command
 // Zod validation schemas for KPI management
 // ============================================================================
 

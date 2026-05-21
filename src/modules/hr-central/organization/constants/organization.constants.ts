@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION CONSTANTS - DawinOS HR Central
+// ORGANIZATION CONSTANTS - ZeusOS HR Central
 // Uganda-specific organizational structure constants
 // ============================================================================
 

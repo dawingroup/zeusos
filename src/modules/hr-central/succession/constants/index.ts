@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION CONSTANTS INDEX
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // ============================================================================
 
 export * from './succession.constants';

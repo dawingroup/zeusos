@@ -1,6 +1,6 @@
 // ============================================================================
 // DIGITAL PROFILE SERVICE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Firestore service for digital profile discovery and tracking
 // ============================================================================
 

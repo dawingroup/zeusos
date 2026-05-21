@@ -1,6 +1,6 @@
 // ============================================================================
 // SAVINGS SERVICE
-// DawinOS v2.0 — Automated savings allocations, withdrawals, balance tracking
+// ZeusOS v2.0 — Automated savings allocations, withdrawals, balance tracking
 // ============================================================================
 
 import {

@@ -1,7 +1,7 @@
 /**
- * Dawin Advisory - Consulting & Strategy
+ * Zeus Group - Consulting & Strategy
  * 
- * Placeholder module for the Dawin Advisory subsidiary
+ * Placeholder module for the Zeus Group subsidiary
  */
 
 export const ADVISORY_MODULE = 'zeus-digital';

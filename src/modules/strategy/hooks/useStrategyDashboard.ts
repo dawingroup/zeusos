@@ -1,6 +1,6 @@
 // ============================================================================
 // USE STRATEGY DASHBOARD HOOK
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Composite hook aggregating OKRs, KPIs, and strategy reviews
 // for the Executive Dashboard page
 // ============================================================================

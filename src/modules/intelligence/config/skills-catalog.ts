@@ -1,5 +1,5 @@
 /**
- * Skills Catalog - DawinOS v2.0
+ * Skills Catalog - ZeusOS v2.0
  * Defines skills and competencies for role matching and task assignment
  */
 
@@ -22,7 +22,7 @@ export interface SkillDefinition {
 }
 
 // ============================================
-// Dawin Finishes Skills
+// Zeus Group Skills
 // ============================================
 
 export const FINISHES_SKILLS: SkillDefinition[] = [

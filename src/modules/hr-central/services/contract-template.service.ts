@@ -1,5 +1,5 @@
 /**
- * Contract Template Service - DawinOS v2.0
+ * Contract Template Service - ZeusOS v2.0
  * 
  * Service for managing contract templates and generating
  * contract documents with variable substitution.
@@ -362,7 +362,7 @@ export async function previewTemplate(
   } as unknown as Contract;
 
   const companyData = {
-    company_name: 'Dawin Group Ltd',
+    company_name: 'Zeus Group Ltd',
     company_address: 'Plot 123, Kampala Road, Kampala, Uganda',
     company_registration: 'UG-2020-12345',
     company_tin: '1001234567',

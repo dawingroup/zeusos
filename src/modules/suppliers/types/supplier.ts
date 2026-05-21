@@ -39,8 +39,8 @@ export interface AuditFields {
 export type SubsidiaryId = 'finishes' | 'advisory' | 'matflow' | 'all';
 
 export const SUBSIDIARY_CONFIG: Record<SubsidiaryId, { label: string; description: string }> = {
-  finishes: { label: 'DawinOS Finishes', description: 'Interior finishes and materials' },
-  advisory: { label: 'DawinOS Advisory', description: 'Project advisory services' },
+  finishes: { label: 'ZeusOS Finishes', description: 'Interior finishes and materials' },
+  advisory: { label: 'ZeusOS Advisory', description: 'Project advisory services' },
   matflow: { label: 'Matflow', description: 'Material flow management' },
   all: { label: 'All Subsidiaries', description: 'Available to all subsidiaries' },
 };

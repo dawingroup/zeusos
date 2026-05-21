@@ -1,5 +1,5 @@
 /**
- * Contract Service - DawinOS v2.0
+ * Contract Service - ZeusOS v2.0
  * 
  * Service layer for contract management operations:
  * - CRUD operations

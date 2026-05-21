@@ -1,6 +1,6 @@
 /**
  * AI Agent Extensions
- * Domain-specific AI capabilities for Dawin Advisory Platform
+ * Domain-specific AI capabilities for ZeusOS
  * 
  * Features:
  * - Intelligent Suggestions: Context-aware recommendations

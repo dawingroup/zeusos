@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW ANALYSIS PAGE — Waterfall Chart
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Horizontal waterfall (bridge) chart: each bar starts where the previous
 // ended, flowing from Revenue through costs to Net Cash Flow.

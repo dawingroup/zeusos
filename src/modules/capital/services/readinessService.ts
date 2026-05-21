@@ -1,6 +1,6 @@
 // ============================================================================
 // READINESS SERVICE
-// DawinOS v2.0 — Business readiness assessment for capital applications
+// ZeusOS v2.0 — Business readiness assessment for capital applications
 // ============================================================================
 
 import {

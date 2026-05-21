@@ -1,7 +1,7 @@
 /**
  * LeaveManagementPage.tsx
  * Leave request management with calendar view and approval workflow
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 import { useState, useMemo } from 'react';

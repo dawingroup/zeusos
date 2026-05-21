@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY DOCUMENT SERVICE - DawinOS CEO Strategy Command
+// STRATEGY DOCUMENT SERVICE - ZeusOS CEO Strategy Command
 // Firebase service for strategy document management
 // ============================================================================
 

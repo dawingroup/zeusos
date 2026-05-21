@@ -1,6 +1,6 @@
 // ============================================================================
 // USE COMPETITOR HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // React hook for Competitor Analysis operations
 // ============================================================================
 

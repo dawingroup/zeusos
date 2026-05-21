@@ -36,7 +36,7 @@ const PREDEFINED_TEMPLATES: PredefinedTemplate[] = [
     category: 'UTILITY',
     language: 'en',
     description: 'Send a quote to clients with Approve/Reject quick-reply buttons. Works outside the 24h window.',
-    bodyPreview: 'Hello {{1}},\n\nHere is your quote from *Dawin Finishes*.\n\n*{{2}}*\nQuote #: {{3}}\nProject: {{4}}\nAmount: *{{5}}*...',
+    bodyPreview: 'Hello {{1}},\n\nHere is your quote from *Zeus Group*.\n\n*{{2}}*\nQuote #: {{3}}\nProject: {{4}}\nAmount: *{{5}}*...',
     hasButtons: true,
     parameterCount: 7,
   },
@@ -146,7 +146,7 @@ const PREDEFINED_TEMPLATES: PredefinedTemplate[] = [
     category: 'MARKETING',
     language: 'en',
     description: 'Welcome new contacts with a branded greeting message.',
-    bodyPreview: 'Hello {{1}}! Welcome to *Dawin Finishes*. We specialize in premium interior and exterior finishes...',
+    bodyPreview: 'Hello {{1}}! Welcome to *Zeus Group*. We specialize in premium interior and exterior finishes...',
     hasButtons: false,
     parameterCount: 1,
   },
@@ -705,7 +705,7 @@ export default function TemplatesPage() {
                       value={customFooterText}
                       onChange={(e) => setCustomFooterText(e.target.value)}
                       className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="e.g. Dawin Finishes"
+                      placeholder="e.g. Zeus Group"
                     />
                   </div>
 

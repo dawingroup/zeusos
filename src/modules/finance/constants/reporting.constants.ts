@@ -1,6 +1,6 @@
 // ============================================================================
 // REPORTING CONSTANTS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Constants for Financial Reporting
 // ============================================================================
 

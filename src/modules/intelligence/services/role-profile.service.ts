@@ -1,5 +1,5 @@
 /**
- * Role Profile Service - DawinOS v2.0
+ * Role Profile Service - ZeusOS v2.0
  * Manages role profiles and employee-role matching
  */
 

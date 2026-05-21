@@ -12,7 +12,7 @@ import type { SubsidiaryModule } from '@/types/subsidiary';
 import type { GlobalRole, ModuleFeature } from '@/core/settings/types';
 import { MODULE_FEATURES } from '@/core/settings/types';
 
-const SUPER_USER_EMAILS = ['onzimai@dawin.group'];
+const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
 
 const ROLE_HIERARCHY: GlobalRole[] = ['viewer', 'member', 'manager', 'admin', 'owner'];
 

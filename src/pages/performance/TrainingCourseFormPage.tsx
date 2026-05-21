@@ -5,7 +5,7 @@
  * - Google Drive videos
  * - CEO 1-on-1 mentorship
  * - External workshops
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState, useEffect } from 'react';

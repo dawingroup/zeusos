@@ -1,7 +1,7 @@
 /**
  * ExpenseListPage.tsx
  * Expense management with table view, filters, and approval workflow
- * DawinOS v2.0 - Phase 8.8
+ * ZeusOS v2.0 - Phase 8.8
  */
 
 import { useState, useMemo } from 'react';

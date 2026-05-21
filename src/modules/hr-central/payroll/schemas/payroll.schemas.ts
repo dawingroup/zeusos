@@ -1,6 +1,6 @@
 /**
  * Payroll Validation Schemas
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Zod validation schemas for payroll inputs and data.
  */

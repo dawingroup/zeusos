@@ -1,6 +1,6 @@
 /**
  * Payroll Batch List Component
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Displays list of payroll batches with status, actions, and filtering.
  */

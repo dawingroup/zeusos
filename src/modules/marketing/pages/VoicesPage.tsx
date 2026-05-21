@@ -147,7 +147,7 @@ export default function VoicesPage() {
   return (
     <div className="p-6 space-y-6">
       <Helmet>
-        <title>Voices · Marketing · DawinOS</title>
+        <title>Voices · Marketing · ZeusOS</title>
       </Helmet>
 
       <header className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">

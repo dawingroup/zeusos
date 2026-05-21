@@ -1,6 +1,6 @@
 // ============================================================================
 // KPI EXPLORER PAGE — Radial KPI Overview + Deep-Dive
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Radial SVG visualization of all KPIs with on-track/off-track status.
 // Click a tile to drill into time-series chart + account breakdown.

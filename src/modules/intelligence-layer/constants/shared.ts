@@ -8,9 +8,9 @@
 // ============================================
 
 export const SUBSIDIARIES = [
-  { id: 'finishes', label: 'Dawin Finishes' },
-  { id: 'advisory', label: 'Dawin Advisory' },
-  { id: 'capital', label: 'Dawin Capital' },
+  { id: 'finishes', label: 'Zeus Group' },
+  { id: 'advisory', label: 'Zeus Group' },
+  { id: 'capital', label: 'Zeus Capital' },
 ] as const;
 
 export type SubsidiaryId = (typeof SUBSIDIARIES)[number]['id'];

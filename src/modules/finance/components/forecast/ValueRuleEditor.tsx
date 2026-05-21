@@ -46,7 +46,7 @@ const RULE_OPTIONS: Array<{ value: ValueRuleType; label: string; description: st
   {
     value: 'link_to_budget',
     label: 'Link to Budget',
-    description: 'Pull amounts from an approved DawinOS budget.',
+    description: 'Pull amounts from an approved ZeusOS budget.',
   },
 ];
 

@@ -1,6 +1,6 @@
 /**
  * AI Memory System Types
- * DawinOS v2.0 - Persistent AI Memory Layer
+ * ZeusOS v2.0 - Persistent AI Memory Layer
  * 
  * Three-tier memory architecture:
  * 1. Conversation Memory — Full chat history persisted in Firestore

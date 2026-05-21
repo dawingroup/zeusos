@@ -1,6 +1,6 @@
 // ============================================================================
 // INCOME STATEMENT COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Displays Income Statement (Profit & Loss)
 // ============================================================================
 

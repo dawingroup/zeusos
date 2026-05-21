@@ -1,6 +1,6 @@
 // ============================================================================
 // APPLICATION SERVICE
-// DawinOS v2.0 — Capital application pipeline management
+// ZeusOS v2.0 — Capital application pipeline management
 // ============================================================================
 
 import {

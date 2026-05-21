@@ -1,6 +1,6 @@
 // ============================================================================
 // RECENT ACTIVITY FEED
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Feed showing recent AI intelligence activity
 // ============================================================================
 

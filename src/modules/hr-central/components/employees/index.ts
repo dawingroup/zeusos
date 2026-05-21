@@ -1,5 +1,5 @@
 /**
- * Employee Components Index - DawinOS v2.0
+ * Employee Components Index - ZeusOS v2.0
  */
 
 export { EmployeeCard } from './EmployeeCard';

@@ -100,7 +100,7 @@ export function InviteUserDialog({ open, onOpenChange }: InviteUserDialogProps) 
             <Input
               id="invite-email"
               type="email"
-              placeholder="name@dawin.group"
+              placeholder="name@zeusgroup.co.ug"
               value={email}
               onChange={e => setEmail(e.target.value)}
               disabled={isSubmitting}

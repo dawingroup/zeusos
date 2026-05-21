@@ -1,6 +1,6 @@
 // ============================================================================
 // SKILLS HOOK
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // ============================================================================
 
 import { useState, useEffect, useCallback } from 'react';

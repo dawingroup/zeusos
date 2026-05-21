@@ -1,6 +1,6 @@
 // ============================================================================
 // PERFORMANCE SNAPSHOT SERVICE
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Service for managing performance snapshots and trend analysis
 // ============================================================================
 
@@ -419,7 +419,7 @@ class PerformanceSnapshotService {
       companyId,
       AGGREGATION_LEVELS.GROUP,
       companyId,
-      'Dawin Group',
+      'Zeus Group',
       frequency,
       userId
     );

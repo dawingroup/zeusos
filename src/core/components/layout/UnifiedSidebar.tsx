@@ -98,7 +98,7 @@ export function UnifiedSidebar({
           {!isCollapsed && (
             <div className="leading-tight">
               <div className="text-[13px] font-semibold text-[var(--fg-on-dark)]">
-                Dawin Group
+                Zeus Group
               </div>
               <div className="text-[10.5px] text-[var(--fg-on-dark-muted)]">
                 Portal

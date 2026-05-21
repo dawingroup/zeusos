@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY DATA AGGREGATOR SERVICE
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Pulls cross-module data (HR, Assets, Finance, Market Intelligence) for
 // strategy review context and AI prompt enrichment
 // ============================================================================

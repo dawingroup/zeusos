@@ -1,7 +1,7 @@
 /**
  * Finance Module
  * Main router component for the Finance module (legacy pattern)
- * DawinOS v2.0 - Financial Management
+ * ZeusOS v2.0 - Financial Management
  *
  * Note: The active router is src/router/index.tsx.
  * This file is used by the legacy src/app/routes/index.tsx.

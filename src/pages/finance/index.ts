@@ -1,6 +1,6 @@
 /**
  * Finance Pages Index
- * DawinOS v2.0 - Phase 8.8
+ * ZeusOS v2.0 - Phase 8.8
  */
 
 export { FinanceDashboardPage, default as FinanceDashboard } from './FinanceDashboardPage';

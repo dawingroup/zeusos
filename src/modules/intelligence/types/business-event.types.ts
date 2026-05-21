@@ -1,5 +1,5 @@
 /**
- * Business Event Types - DawinOS v2.0
+ * Business Event Types - ZeusOS v2.0
  * Types for the event-driven intelligence system
  */
 
@@ -342,7 +342,7 @@ export interface OpportunityIdentifiedPayload {
 }
 
 // ============================================
-// Dawin Finishes Event Payloads
+// Zeus Group Event Payloads
 // ============================================
 
 // Design Manager Events
@@ -475,21 +475,21 @@ export type EventPayloadMap = {
   'production.milestone_reached': MilestoneReachedPayload;
   'production.quality_issue': QualityIssuePayload;
 
-  // Dawin Finishes - Design Manager
+  // Zeus Group - Design Manager
   'finishes.design_item_created': DesignItemCreatedPayload;
   'finishes.design_stage_changed': DesignStageChangedPayload;
   'finishes.design_approval_requested': DesignApprovalRequestedPayload;
   'finishes.rag_status_critical': RAGStatusCriticalPayload;
   'finishes.design_production_ready': DesignProductionReadyPayload;
 
-  // Dawin Finishes - Launch Pipeline
+  // Zeus Group - Launch Pipeline
   'finishes.product_added_to_pipeline': ProductAddedToPipelinePayload;
   'finishes.product_ready_for_shopify': ProductReadyForShopifyPayload;
 
-  // Dawin Finishes - Cutlist
+  // Zeus Group - Cutlist
   'finishes.cutlist_optimization_complete': CutlistOptimizationCompletePayload;
 
-  // Dawin Finishes - Assets
+  // Zeus Group - Assets
   'finishes.asset_maintenance_required': AssetMaintenanceRequiredPayload;
 
   // Strategic

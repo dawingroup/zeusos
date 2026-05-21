@@ -1,6 +1,6 @@
 /**
  * Payroll Batch Types and Workflow States
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Comprehensive type definitions for payroll batch processing,
  * approval workflows, payment tracking, and payslip generation.

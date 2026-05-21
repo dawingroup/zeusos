@@ -1,7 +1,7 @@
 /**
  * CORE PROJECT TYPES
  * =================================================================
- * This is the canonical definition for a "Project" within Dawin Advisory.
+ * This is the canonical definition for a "Project" within Zeus Group.
  * It consolidates types from the original Delivery and MatFlow modules
  * into a single source of truth.
  */

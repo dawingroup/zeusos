@@ -13,7 +13,7 @@ export interface HeaderProps {
   title?: string;
 }
 
-export function Header({ title = 'Dawin Finishes' }: HeaderProps) {
+export function Header({ title = 'Zeus Group' }: HeaderProps) {
   const { user, isAuthenticated, signInWithGoogle, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();

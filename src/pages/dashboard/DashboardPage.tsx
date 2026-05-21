@@ -65,7 +65,7 @@ export default function DashboardPage() {
   return (
     <>
       <Helmet>
-        <title>Dashboard | Dawin Advisory Platform</title>
+        <title>Dashboard | ZeusOS</title>
       </Helmet>
 
       <div className="p-6 space-y-6">

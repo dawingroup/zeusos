@@ -1,5 +1,5 @@
 /**
- * Detection Rules Catalog - DawinOS v2.0
+ * Detection Rules Catalog - ZeusOS v2.0
  * Pre-defined rules for grey area detection
  */
 

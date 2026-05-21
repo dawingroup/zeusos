@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR SERVICE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Firebase service for Competitor Analysis operations
 // ============================================================================
 

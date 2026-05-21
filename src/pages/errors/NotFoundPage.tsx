@@ -12,7 +12,7 @@ export default function NotFoundPage() {
   return (
     <>
       <Helmet>
-        <title>Page Not Found | Dawin Advisory Platform</title>
+        <title>Page Not Found | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background p-4">

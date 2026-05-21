@@ -22,7 +22,7 @@ export default function OfflinePage() {
   return (
     <>
       <Helmet>
-        <title>Offline | Dawin Advisory Platform</title>
+        <title>Offline | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background p-4">

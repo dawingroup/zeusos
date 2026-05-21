@@ -1,6 +1,6 @@
 // ============================================================================
 // VITEST CONFIGURATION
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Comprehensive test runner configuration
 // ============================================================================
 

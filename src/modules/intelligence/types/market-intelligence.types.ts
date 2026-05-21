@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE SCAN TYPES
-// DawinOS v2.0 - AI-Driven Competitive Intelligence
+// ZeusOS v2.0 - AI-Driven Competitive Intelligence
 // Types for market intelligence scan reports and analysis
 // ============================================================================
 
@@ -231,10 +231,10 @@ export interface StoredMarketIntelligenceReport extends MarketIntelligenceReport
 // ----------------------------------------------------------------------------
 
 export const SUBSIDIARY_OPTIONS: Array<{ id: MarketIntelSubsidiaryId; name: string; description: string }> = [
-  { id: 'finishes', name: 'Dawin Finishes', description: 'Custom millwork, furniture & interior fit-out' },
-  { id: 'advisory', name: 'Dawin Advisory', description: 'Strategic advisory & project management' },
-  { id: 'technology', name: 'Dawin Technology', description: 'Technology solutions & digital transformation' },
-  { id: 'capital', name: 'Dawin Capital', description: 'Investment management & financial services' },
+  { id: 'finishes', name: 'Zeus Group', description: 'Custom millwork, furniture & interior fit-out' },
+  { id: 'advisory', name: 'Zeus Group', description: 'Strategic advisory & project management' },
+  { id: 'technology', name: 'Zeus Technology', description: 'Technology solutions & digital transformation' },
+  { id: 'capital', name: 'Zeus Capital', description: 'Investment management & financial services' },
 ];
 
 export const FOCUS_AREA_OPTIONS: Array<{ id: FocusArea; label: string }> = [

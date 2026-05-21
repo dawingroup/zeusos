@@ -1,6 +1,6 @@
 // ============================================================================
 // CRITICAL ROLE CARD
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Displays a critical role with succession status
 // ============================================================================
 

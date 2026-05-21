@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI LIBRARY CONSTANTS - DawinOS CEO Strategy Command
+// KPI LIBRARY CONSTANTS - ZeusOS CEO Strategy Command
 // Comprehensive KPI catalog with 50+ industry-standard KPIs
 // organized by category with formulas and module linkages
 // ============================================================================

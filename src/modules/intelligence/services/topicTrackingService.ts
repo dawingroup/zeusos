@@ -1,6 +1,6 @@
 // ============================================================================
 // TOPIC TRACKING SERVICE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Firestore service for topic tracking and discussion monitoring
 // ============================================================================
 

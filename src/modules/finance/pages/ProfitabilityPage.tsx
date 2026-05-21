@@ -1,6 +1,6 @@
 // ============================================================================
 // PROFITABILITY PAGE — Breakeven Analysis
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Shows: KPI cards (GP, Op Profit, EBIT) + Breakeven chart + Summary sidebar
 // Data: QBO historical P&L via getDetailedPLHistory()

@@ -1,6 +1,6 @@
 // ============================================================================
 // USE CROSS MODULE INSIGHTS HOOK
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Generate insights by correlating data across modules
 // ============================================================================
 

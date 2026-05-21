@@ -1,6 +1,6 @@
 /**
  * Test Pages Index
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Export all test page components
  */
 

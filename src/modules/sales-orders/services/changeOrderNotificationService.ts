@@ -304,7 +304,7 @@ export async function sendChangeOrderViaWhatsApp(
     approvalEvents: events,
     generatedBy: userName || userId || undefined,
     company: {
-      name: 'Dawin Finishes',
+      name: 'Zeus Group',
       ...(logoUrl ? { logoUrl } : {}),
       addressLine1: 'Kayondo Road, Kyambogo Upper Estate Ground Floor, Jordan House',
       addressLine2: 'Kampala, Uganda',

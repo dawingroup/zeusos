@@ -1,6 +1,6 @@
 // ============================================================================
 // TrendSparkline COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Compact sparkline chart for showing trends
 // ============================================================================
 

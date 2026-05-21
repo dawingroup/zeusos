@@ -1,6 +1,6 @@
 // ============================================================================
 // AccountSelector COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Account selection dropdown/autocomplete
 // ============================================================================
 

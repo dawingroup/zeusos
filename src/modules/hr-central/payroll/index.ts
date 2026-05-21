@@ -1,6 +1,6 @@
 /**
  * Payroll Module Index
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Exports all payroll types, constants, services, utilities, and hooks.
  */

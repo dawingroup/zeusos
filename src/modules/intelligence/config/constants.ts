@@ -1,5 +1,5 @@
 /**
- * DawinOS v2.0 - Intelligence Module Constants
+ * ZeusOS v2.0 - Intelligence Module Constants
  * Core configuration for the Enterprise Operations Platform
  */
 
@@ -12,7 +12,7 @@ export const SHARED_OPS_MODULE = 'shared-ops';
 export const EXECUTIVE_MODULE = 'executive';
 
 export const SUBSIDIARY_IDS = {
-  GROUP: 'group',           // Dawin Group - Parent company for shared roles
+  GROUP: 'group',           // Zeus Group - Parent company for shared roles
   FINISHES: 'finishes',
   ADVISORY: 'advisory',
   TECHNOLOGY: 'technology',

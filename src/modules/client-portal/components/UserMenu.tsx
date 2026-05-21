@@ -48,7 +48,7 @@ export function UserMenu() {
         <div>
           <div className="h-top-avatar-l">{display.split('@')[0]}</div>
           <div className="h-top-avatar-s">
-            {user?.email?.includes('@dawin.group') ? 'Dawin staff' : 'Client'}
+            {user?.email?.includes('@zeusgroup.co.ug') ? 'Dawin staff' : 'Client'}
           </div>
         </div>
         <div className="h-top-avatar-img" />

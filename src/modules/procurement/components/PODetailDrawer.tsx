@@ -102,7 +102,7 @@ interface PODetailDrawerProps {
 }
 
 const ADMIN_ROLES = ['manager', 'admin', 'owner'];
-const SUPER_USER_EMAIL = 'onzimai@dawin.group';
+const SUPER_USER_EMAIL = 'onzimai@zeusgroup.co.ug';
 
 export function PODetailDrawer({ poId, open, onClose, autoAction }: PODetailDrawerProps) {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
 /**
  * EmployeeCreatePage.tsx
  * Page for creating new employees using the EmployeeForm component
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 import { useNavigate } from 'react-router-dom';

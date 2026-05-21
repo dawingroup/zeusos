@@ -1,6 +1,6 @@
 /**
  * Advisory Components Index
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  */
 
 export { AdvisoryLayout } from './AdvisoryLayout';

@@ -1,5 +1,5 @@
 /**
- * Grey Area Detection Service - DawinOS v2.0
+ * Grey Area Detection Service - ZeusOS v2.0
  * Service for detecting and managing ambiguous situations
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // INSIGHTS PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // AI-generated insights management and generation
 // ============================================================================
 

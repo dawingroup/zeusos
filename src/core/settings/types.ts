@@ -1,5 +1,5 @@
 /**
- * DawinOS Global Settings Types
+ * ZeusOS Global Settings Types
  * Types for organization settings, user management, and access control
  */
 

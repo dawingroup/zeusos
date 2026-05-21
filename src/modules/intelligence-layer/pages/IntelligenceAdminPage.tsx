@@ -1,6 +1,6 @@
 /**
  * Intelligence Admin Dashboard
- * DawinOS v2.0 - Management interface for monitoring and refining the Intelligence Layer
+ * ZeusOS v2.0 - Management interface for monitoring and refining the Intelligence Layer
  *
  * This dashboard allows senior managers to:
  * - Monitor business events in real-time

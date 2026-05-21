@@ -190,7 +190,7 @@ export default function DesignSystemPage() {
     <div>
       <ModuleTabNav
         title="Design System"
-        subtitle="Living reference for every primitive, token and pattern in the DawinOS portal."
+        subtitle="Living reference for every primitive, token and pattern in the ZeusOS portal."
         tabs={[
           { id: 'components', label: 'Components',  path: '#components' },
           { id: 'colors',     label: 'Color tokens',path: '#colors' },
@@ -544,7 +544,7 @@ export default function DesignSystemPage() {
                 <SampleType label="h2 · 19/600 · -0.015em" element="h2">Inventory snapshot</SampleType>
                 <SampleType label="h3 · 13/500 · 0.08em · uppercase" element="h3">Awaiting approval</SampleType>
                 <SampleType label="body · 14/400" element="p">
-                  The DawinOS portal balances dense data with calm chrome — we keep the
+                  The ZeusOS portal balances dense data with calm chrome — we keep the
                   text comfortable to read across long sessions on procurement and
                   finance modules.
                 </SampleType>

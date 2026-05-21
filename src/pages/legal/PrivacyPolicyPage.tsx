@@ -2,7 +2,7 @@
  * PrivacyPolicyPage
  *
  * Public (unauth) page mounted at /privacy. Pasted into Meta's app config
- * as the "Privacy Policy URL" for the DawinOS Marketing → Social Publishing
+ * as the "Privacy Policy URL" for the ZeusOS Marketing → Social Publishing
  * feature. Section numbering and the exact phrases ("pages_manage_posts",
  * "instagram_content_publish", "AES-256-GCM", "24 hours", "user data
  * deletion") are load-bearing — Meta reviewers ctrl-F for them.
@@ -92,8 +92,8 @@ function DataDeletionStatus({ ticketId }: { ticketId: string }) {
           <p style={{ color: 'var(--fg-secondary)' }}>
             We could not locate a deletion ticket with the ID <code>{ticketId}</code>.
             If you believe this is an error, email{' '}
-            <a href="mailto:privacy@dawin.group" className="underline">privacy@dawin.group</a>
-            {' '}with the subject line "DawinOS Marketing data deletion request".
+            <a href="mailto:privacy@zeusgroup.co.ug" className="underline">privacy@zeusgroup.co.ug</a>
+            {' '}with the subject line "ZeusOS Marketing data deletion request".
           </p>
         </CardContent>
       </Card>
@@ -103,7 +103,7 @@ function DataDeletionStatus({ ticketId }: { ticketId: string }) {
   return (
     <Card>
       <CardContent className="py-8 space-y-4">
-        <h2 className="text-xl font-semibold">Your DawinOS Marketing data has been deleted.</h2>
+        <h2 className="text-xl font-semibold">Your ZeusOS Marketing data has been deleted.</h2>
         <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
           <div>
             <dt style={{ color: 'var(--fg-tertiary)' }} className="uppercase text-xs tracking-wide">
@@ -172,10 +172,10 @@ export default function PrivacyPolicyPage() {
       }}
     >
       <Helmet>
-        <title>Privacy Policy — DawinOS Marketing</title>
+        <title>Privacy Policy — ZeusOS Marketing</title>
         <meta
           name="description"
-          content="DawinOS Marketing privacy notice for Meta (Facebook, Instagram) integration: data collected, retention, and deletion."
+          content="ZeusOS Marketing privacy notice for Meta (Facebook, Instagram) integration: data collected, retention, and deletion."
         />
       </Helmet>
 
@@ -210,7 +210,7 @@ export default function PrivacyPolicyPage() {
               className="uppercase text-xs tracking-wide"
               style={{ color: 'var(--fg-tertiary)' }}
             >
-              DawinOS Marketing
+              ZeusOS Marketing
             </p>
             <h1 className="text-3xl font-semibold tracking-tight">
               Meta Integration Privacy Notice
@@ -223,11 +223,11 @@ export default function PrivacyPolicyPage() {
                 rel="noopener noreferrer"
                 className="underline"
               >
-                Dawin Finishes Privacy Policy
+                Zeus Group Privacy Policy
               </a>
               . This addendum governs the additional data collected when an authorized
               administrator connects a Facebook Page or Instagram Business account to
-              DawinOS Marketing.
+              ZeusOS Marketing.
             </p>
           </header>
 
@@ -247,12 +247,12 @@ export default function PrivacyPolicyPage() {
           <section id="scope" className="space-y-2">
             <h2 className="text-lg font-semibold">1. Who this applies to</h2>
             <p style={{ color: 'var(--fg-secondary)' }}>
-              The DawinOS Marketing module is an internal tool used by employees of
-              Dawin Finishes Ltd to schedule, publish, and track social media content
-              on Dawin Finishes' own Facebook Page and Instagram Business account.
+              The ZeusOS Marketing module is an internal tool used by employees of
+              Zeus Group Ltd to schedule, publish, and track social media content
+              on Zeus Group' own Facebook Page and Instagram Business account.
               This addendum describes the additional data we collect and process when
               an authorized administrator connects a Page or Instagram Business
-              account owned by Dawin Finishes Ltd.
+              account owned by Zeus Group Ltd.
             </p>
           </section>
 
@@ -279,7 +279,7 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>
                 Post engagement metrics (impressions, reach, likes, comments, shares,
-                saves, clicks) for posts published or tracked through DawinOS
+                saves, clicks) for posts published or tracked through ZeusOS
               </li>
             </ul>
           </section>
@@ -292,9 +292,9 @@ export default function PrivacyPolicyPage() {
             >
               <li>
                 To create scheduled posts on your behalf when you author and schedule
-                them inside DawinOS Marketing
+                them inside ZeusOS Marketing
               </li>
-              <li>To display performance dashboards in DawinOS Marketing → Analytics</li>
+              <li>To display performance dashboards in ZeusOS Marketing → Analytics</li>
               <li>
                 To benchmark your owned pages against publicly available competitor
                 pages (no competitor user data is retrieved beyond what is already
@@ -321,7 +321,7 @@ export default function PrivacyPolicyPage() {
               <li>
                 Post metadata and engagement metrics are stored in Firestore and
                 mirrored to Google BigQuery for analytics. Both are restricted to
-                authorized Dawin Finishes Ltd employees by Firebase Authentication
+                authorized Zeus Group Ltd employees by Firebase Authentication
                 and Firestore security rules.
               </li>
             </ul>
@@ -335,7 +335,7 @@ export default function PrivacyPolicyPage() {
             >
               <li>
                 Access tokens: retained for the duration of the connection. On
-                disconnect (either from DawinOS or by removing the app from your
+                disconnect (either from ZeusOS or by removing the app from your
                 Facebook account at{' '}
                 <a
                   href="https://www.facebook.com/settings/apps"
@@ -366,14 +366,14 @@ export default function PrivacyPolicyPage() {
               6. How to delete your data (user data deletion)
             </h2>
             <p style={{ color: 'var(--fg-secondary)' }}>
-              You can revoke DawinOS Marketing's access at any time by:
+              You can revoke ZeusOS Marketing's access at any time by:
             </p>
             <ol
               className="list-decimal pl-6 space-y-1"
               style={{ color: 'var(--fg-secondary)' }}
             >
               <li>
-                Disconnecting from DawinOS Marketing → Social Accounts → "Connected"
+                Disconnecting from ZeusOS Marketing → Social Accounts → "Connected"
                 button on the Page row, OR
               </li>
               <li>
@@ -396,14 +396,14 @@ export default function PrivacyPolicyPage() {
             </p>
             <p style={{ color: 'var(--fg-secondary)' }}>
               To request full deletion of any data we hold about you, email{' '}
-              <a href="mailto:privacy@dawin.group" className="underline">
-                privacy@dawin.group
+              <a href="mailto:privacy@zeusgroup.co.ug" className="underline">
+                privacy@zeusgroup.co.ug
               </a>{' '}
               or{' '}
               <a href="mailto:info@dawinfinishes.com" className="underline">
                 info@dawinfinishes.com
               </a>{' '}
-              with the subject line "DawinOS Marketing data deletion request" and your
+              with the subject line "ZeusOS Marketing data deletion request" and your
               Facebook user ID or Page ID. We respond within 30 days.
             </p>
             {!isDataDeletionRoute && (
@@ -441,8 +441,8 @@ export default function PrivacyPolicyPage() {
             <ul className="space-y-1" style={{ color: 'var(--fg-secondary)' }}>
               <li>
                 Data Protection Contact:{' '}
-                <a href="mailto:privacy@dawin.group" className="underline">
-                  privacy@dawin.group
+                <a href="mailto:privacy@zeusgroup.co.ug" className="underline">
+                  privacy@zeusgroup.co.ug
                 </a>
               </li>
               <li>

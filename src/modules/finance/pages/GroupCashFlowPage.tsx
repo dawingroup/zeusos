@@ -37,8 +37,8 @@ interface SubsidiarySummary {
 }
 
 const SUBSIDIARY_NAMES: Record<string, string> = {
-  'zeus-the-agency': 'Dawin Finishes',
-  'zeus-digital': 'Dawin Advisory',
+  'zeus-the-agency': 'Zeus Group',
+  'zeus-digital': 'Zeus Group',
   'dawin-interiors': 'Dawin Interiors',
 };
 

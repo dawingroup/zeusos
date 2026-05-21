@@ -1,6 +1,6 @@
 // ============================================================================
 // DEVELOPMENT HOOK
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // React hook for Development Plans, Competencies, and Training
 // ============================================================================
 

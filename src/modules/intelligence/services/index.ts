@@ -1,5 +1,5 @@
 /**
- * Intelligence Module Services - DawinOS v2.0
+ * Intelligence Module Services - ZeusOS v2.0
  * Central export for all services
  */
 

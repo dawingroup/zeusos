@@ -1,6 +1,6 @@
 /**
  * Test Financial Management
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Test page for Phase 4: Financial Management (Prompts 4.1-4.2)
  */
 

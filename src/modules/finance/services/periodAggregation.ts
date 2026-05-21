@@ -1,6 +1,6 @@
 // ============================================================================
 // PERIOD AGGREGATION UTILITY
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Aggregates monthly financial data into quarterly and yearly views.
 // P&L and CF: sum values across months in the period.
 // BS: use end-of-period snapshot (last month's values).

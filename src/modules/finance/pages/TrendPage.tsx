@@ -1,6 +1,6 @@
 // ============================================================================
 // TREND PAGE — Time-Series Trend Analysis
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Shows: Multi-line chart (revenue, cogs, opex, net profit) + sparkline table
 //        for every PLAccountDetail with non-zero values.

@@ -1,5 +1,5 @@
 /**
- * Utility Functions - DawinOS v2.0
+ * Utility Functions - ZeusOS v2.0
  * Shared helper functions used across modules
  */
 

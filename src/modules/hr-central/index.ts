@@ -1,5 +1,5 @@
 /**
- * HR Central Module Index - DawinOS v2.0
+ * HR Central Module Index - ZeusOS v2.0
  * Export all HR Central types, constants, services, and hooks
  */
 

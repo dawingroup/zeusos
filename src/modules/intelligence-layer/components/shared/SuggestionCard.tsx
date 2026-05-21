@@ -1,6 +1,6 @@
 // ============================================================================
 // SUGGESTION CARD
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Card for displaying smart suggestions
 // ============================================================================
 

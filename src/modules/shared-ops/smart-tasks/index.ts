@@ -1,5 +1,5 @@
 /**
- * Smart Tasks Module - DawinOS v2.0
+ * Smart Tasks Module - ZeusOS v2.0
  * AI-prioritized task management
  */
 export * from './types';

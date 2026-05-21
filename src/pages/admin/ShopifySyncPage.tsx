@@ -1,7 +1,7 @@
 /**
  * ShopifySyncPage
  *
- * Ops dashboard for the DawinOS → dawinfinishes.com integration.
+ * Ops dashboard for the ZeusOS → dawinfinishes.com integration.
  * Surfaces sync status per entity type, recent failures, last-reconciliation
  * run, and a re-publish-now action.
  */
@@ -101,14 +101,14 @@ export default function ShopifySyncPage() {
   return (
     <>
       <Helmet>
-        <title>Shopify Sync | DawinOS</title>
+        <title>Shopify Sync | ZeusOS</title>
       </Helmet>
       <div className="p-6 space-y-6">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Shopify Sync</h1>
             <p className="text-muted-foreground">
-              DawinOS → dawinfinishes.com integration status. Each entity row shows how many records are
+              ZeusOS → dawinfinishes.com integration status. Each entity row shows how many records are
               gated for publishing and their current sync state.
             </p>
           </div>

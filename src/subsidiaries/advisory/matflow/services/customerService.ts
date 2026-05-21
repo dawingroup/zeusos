@@ -194,7 +194,7 @@ export async function updateAdvisoryEngagement(
     // Create new Advisory engagement
     const newEngagement: SubsidiaryEngagement = {
       subsidiaryId: 'advisory',
-      subsidiaryName: 'Dawin Advisory',
+      subsidiaryName: 'Zeus Group',
       engagementType: 'advisory',
       firstProjectDate: now,
       lastProjectDate: now,

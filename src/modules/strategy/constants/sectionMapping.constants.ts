@@ -49,7 +49,7 @@ export const SECTION_TYPE_KEYWORDS: Record<SectionType, string[]> = {
 
 // ----------------------------------------------------------------------------
 // Default Data Source Mapping per Section Type
-// Maps section types to DawinOS MCP tools for data retrieval
+// Maps section types to ZeusOS MCP tools for data retrieval
 // ----------------------------------------------------------------------------
 
 export const DEFAULT_DATA_SOURCE_MAPPING: Record<SectionType, string[]> = {

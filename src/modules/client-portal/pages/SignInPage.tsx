@@ -463,7 +463,7 @@ function BrandPanel() {
           color: 'rgba(255,255,255,0.75)',
           maxWidth: 460,
         }}>
-          The DawinOS Client Portal gives you a live view of your Finishes and Advisory projects.
+          The ZeusOS Client Portal gives you a live view of your Finishes and Advisory projects.
           Sign off on the right things, at the right time.
         </div>
       </div>

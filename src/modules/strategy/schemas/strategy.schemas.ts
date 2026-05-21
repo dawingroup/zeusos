@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY SCHEMAS - DawinOS CEO Strategy Command
+// STRATEGY SCHEMAS - ZeusOS CEO Strategy Command
 // Zod validation schemas for strategy documents
 // ============================================================================
 

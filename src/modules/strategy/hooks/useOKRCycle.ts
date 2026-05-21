@@ -1,5 +1,5 @@
 // ============================================================================
-// USE OKR CYCLE HOOK - DawinOS CEO Strategy Command
+// USE OKR CYCLE HOOK - ZeusOS CEO Strategy Command
 // React hook for managing OKR cycles
 // ============================================================================
 

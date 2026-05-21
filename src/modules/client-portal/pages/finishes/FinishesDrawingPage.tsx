@@ -73,7 +73,7 @@ function DrawingDetailView({ mode, project, drawing, projectCode }: ViewProps) {
   // Pins are only live-meaningful for live drawings. In mock mode the
   // hook is given `undefined` and returns an empty state so the
   // showcase route renders the wireframe fixture instead.
-  const isClient = !user?.email?.endsWith('@dawin.group');
+  const isClient = !user?.email?.endsWith('@zeusgroup.co.ug');
   const drawingPins = useDrawingPins({
     signOffId: live ? drawing.id : undefined,
     isClient,

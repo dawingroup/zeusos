@@ -53,7 +53,7 @@ export * from './performance';
 // UAT Testing
 export * from './uat';
 
-// DawinOS v2.0 Testing Framework
+// ZeusOS v2.0 Testing Framework
 export * from './seeders/testDataSeeder';
 export * from './hooks/useTestRunner';
 export * from './hooks/usePerformanceMetrics';

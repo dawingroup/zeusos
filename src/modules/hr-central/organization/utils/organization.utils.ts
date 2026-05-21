@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION UTILITIES - DawinOS HR Central
+// ORGANIZATION UTILITIES - ZeusOS HR Central
 // ============================================================================
 
 import {

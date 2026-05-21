@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE INTEGRATION SERVICE
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Service for integrating AI intelligence across all modules
 // ============================================================================
 
@@ -25,7 +25,7 @@ import type {
 // ============================================================================
 
 const MODULE_COLLECTIONS: Record<SourceModuleId, string[]> = {
-  // Dawin Finishes
+  // Zeus Group
   design_manager: [
     'designProjects',
     'designProjects/{projectId}/designItems',
@@ -36,7 +36,7 @@ const MODULE_COLLECTIONS: Record<SourceModuleId, string[]> = {
   feature_library: ['featureLibrary'],
   cutlist: ['workInstances'],
   
-  // Dawin Advisory
+  // Zeus Group
   engagements: ['engagements'],
   funding: [
     'engagements/{engagementId}/fundingSources',

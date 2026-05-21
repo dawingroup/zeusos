@@ -1,6 +1,6 @@
 // ============================================================================
 // GROWTH PAGE — Revenue & Expense Growth Analysis
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Shows: MoM revenue vs cost growth bar chart + top accounts by absolute growth
 // Data: QBO historical P&L via usePLHistory hook

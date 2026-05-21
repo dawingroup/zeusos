@@ -271,7 +271,7 @@ export function QBOAccountMappingSettings({
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">QuickBooks Account Mapping</h2>
         <p className="text-gray-600">
-          Map DawinOS transaction types to your QuickBooks chart of accounts for proper
+          Map ZeusOS transaction types to your QuickBooks chart of accounts for proper
           accounting integration.
         </p>
       </div>
@@ -445,11 +445,11 @@ export function QBOAccountMappingSettings({
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Item Auto-Resolution
           <span className="text-sm font-normal text-gray-500 ml-2">
-            (DawinOS items are automatically matched to QBO items)
+            (ZeusOS items are automatically matched to QBO items)
           </span>
         </h3>
         <p className="text-xs text-gray-500 mb-4">
-          When syncing Sales Orders, Invoices, or Bills, DawinOS automatically searches QuickBooks
+          When syncing Sales Orders, Invoices, or Bills, ZeusOS automatically searches QuickBooks
           for matching items by name. If no match is found, a new QBO item is created. Fuzzy matches
           with low confidence are flagged for your review below.
         </p>
@@ -488,7 +488,7 @@ export function QBOAccountMappingSettings({
         {resolutionLog.length === 0 ? (
           <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
             <p className="text-sm text-gray-600">
-              No item resolutions yet. Items will appear here as DawinOS syncs data to QuickBooks.
+              No item resolutions yet. Items will appear here as ZeusOS syncs data to QuickBooks.
             </p>
           </div>
         ) : (
@@ -496,7 +496,7 @@ export function QBOAccountMappingSettings({
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">DawinOS Item</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">ZeusOS Item</th>
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">QBO Item</th>
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Match</th>
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -639,7 +639,7 @@ export function QBOAccountMappingSettings({
             </span>
             <p className="text-xs text-gray-500 mt-0.5">
               Landed costs are posted to separate expense accounts on the bill.
-              Warning: since DawinOS already includes landed costs in inventory valuation,
+              Warning: since ZeusOS already includes landed costs in inventory valuation,
               this may cause double-counting on your P&amp;L.
             </p>
           </div>
@@ -683,7 +683,7 @@ export function QBOAccountMappingSettings({
               <span className="mt-0.5 text-blue-500 font-bold">&#10003;</span>
               <div>
                 <span className="font-medium">Private Note / Memo</span> &mdash; Each bill includes
-                &quot;DawinOS Purchase Order: PO-XXXX-XXX&quot;.
+                &quot;ZeusOS Purchase Order: PO-XXXX-XXX&quot;.
                 Searchable in QBO transaction reports and the bill detail view.
               </div>
             </div>
@@ -699,7 +699,7 @@ export function QBOAccountMappingSettings({
               <span className="mt-0.5 text-blue-500 font-bold">&#10003;</span>
               <div>
                 <span className="font-medium">Doc Number</span> &mdash; The bill&apos;s DocNumber uses the
-                DawinOS PO number for easy cross-referencing between systems.
+                ZeusOS PO number for easy cross-referencing between systems.
               </div>
             </div>
           </div>

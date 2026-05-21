@@ -1,7 +1,7 @@
 /**
  * PayrollPage.tsx
  * Payroll management with Uganda-specific tax calculations (PAYE, NSSF, LST)
- * DawinOS v2.0 - Professional Layout
+ * ZeusOS v2.0 - Professional Layout
  */
 
 import { useState, useMemo, useEffect } from 'react';

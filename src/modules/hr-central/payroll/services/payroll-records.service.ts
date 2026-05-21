@@ -1,6 +1,6 @@
 /**
  * Payroll Records Service
- * DawinOS HR Central - Advances, Overtime, Attendance Management
+ * ZeusOS HR Central - Advances, Overtime, Attendance Management
  */
 
 import {

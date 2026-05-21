@@ -1,5 +1,5 @@
 /**
- * Intelligence Module Types - DawinOS v2.0
+ * Intelligence Module Types - ZeusOS v2.0
  * Central export for all shared types
  */
 

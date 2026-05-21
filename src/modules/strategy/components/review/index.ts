@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY REVIEW COMPONENTS INDEX
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // ============================================================================
 
 export { StrategyDocumentUpload } from './StrategyDocumentUpload';

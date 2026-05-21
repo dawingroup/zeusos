@@ -1,5 +1,5 @@
 // ============================================================================
-// USE OKRS HOOK - DawinOS CEO Strategy Command
+// USE OKRS HOOK - ZeusOS CEO Strategy Command
 // React hook for managing OKR objectives
 // ============================================================================
 

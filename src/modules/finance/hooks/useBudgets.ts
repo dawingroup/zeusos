@@ -1,6 +1,6 @@
 // ============================================================================
 // USE BUDGETS HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Hook for managing budget list and filtering
 // ============================================================================
 

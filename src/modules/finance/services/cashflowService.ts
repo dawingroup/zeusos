@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW SERVICE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Firebase service for Cash Flow Analysis
 // ============================================================================
 

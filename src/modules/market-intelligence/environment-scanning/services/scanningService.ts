@@ -1,6 +1,6 @@
 // ============================================================================
 // ENVIRONMENT SCANNING SERVICE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Firebase Firestore CRUD operations for environment scanning
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION MODULE - DawinOS HR Central
+// ORGANIZATION MODULE - ZeusOS HR Central
 // Main export file for organization structure management
 // ============================================================================
 

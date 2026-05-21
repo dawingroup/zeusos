@@ -1,5 +1,5 @@
 /**
- * Base Types - DawinOS v2.0
+ * Base Types - ZeusOS v2.0
  * Foundational types used across all modules
  */
 

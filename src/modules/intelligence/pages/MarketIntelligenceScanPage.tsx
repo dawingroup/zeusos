@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE SCAN PAGE
-// DawinOS v2.0 - AI-Driven Competitive Intelligence
+// ZeusOS v2.0 - AI-Driven Competitive Intelligence
 // Configure, run, and view AI-powered market intelligence scans
 // ============================================================================
 

@@ -1,6 +1,6 @@
 /**
  * Test Layout Component
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Main layout for testing pages with navigation and status indicators
  */
 
@@ -157,7 +157,7 @@ export const TestLayout: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center gap-2 h-16 px-4 border-b border-gray-200">
           <Bug className="w-6 h-6 text-[#872E5C]" />
-          <span className="text-lg font-semibold text-gray-900">DawinOS Tests</span>
+          <span className="text-lg font-semibold text-gray-900">ZeusOS Tests</span>
           <button
             onClick={() => setDrawerOpen(false)}
             className="lg:hidden ml-auto p-1 rounded hover:bg-gray-100"
@@ -233,7 +233,7 @@ export const TestLayout: React.FC = () => {
             <Menu className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold text-gray-900 flex-1">
-            DawinOS v2.0 Testing Suite
+            ZeusOS v2.0 Testing Suite
           </h1>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">

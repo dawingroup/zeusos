@@ -1,5 +1,5 @@
 // ============================================================================
-// USE STRATEGY DOCUMENTS HOOK - DawinOS CEO Strategy Command
+// USE STRATEGY DOCUMENTS HOOK - ZeusOS CEO Strategy Command
 // React hook for managing strategy documents list
 // ============================================================================
 

@@ -1,5 +1,5 @@
 /**
- * Task Generation Engine Service - DawinOS v2.0
+ * Task Generation Engine Service - ZeusOS v2.0
  * Core engine for automated task generation from business events
  */
 

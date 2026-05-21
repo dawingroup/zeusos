@@ -1,6 +1,6 @@
 /**
  * Module Card Component
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  * Card for navigating to sub-modules
  */
 

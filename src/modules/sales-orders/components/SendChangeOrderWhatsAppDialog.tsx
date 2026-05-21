@@ -103,7 +103,7 @@ export default function SendChangeOrderWhatsAppDialog({
         approvalEvents: events,
         generatedBy: userName || userId || undefined,
         company: {
-          name: 'Dawin Finishes',
+          name: 'Zeus Group',
           ...(logoUrl ? { logoUrl } : {}),
           addressLine1: 'Kayondo Road, Kyambogo Upper Estate Ground Floor, Jordan House',
           addressLine2: 'Kampala, Uganda',
@@ -219,7 +219,7 @@ export default function SendChangeOrderWhatsAppDialog({
                       </div>
                     ) : preview.templateHeaderType === 'image' ? (
                       <div className="-mx-3 -mt-3 mb-2 bg-gradient-to-r from-[#872E5C] to-[#E18425] h-28 rounded-t-lg flex items-center justify-center">
-                        <p className="text-white font-bold text-lg tracking-wide">Dawin Finishes</p>
+                        <p className="text-white font-bold text-lg tracking-wide">Zeus Group</p>
                       </div>
                     ) : preview.templateHeaderType === 'text' ? (
                       <p className="text-xs text-gray-500 font-medium">
@@ -263,7 +263,7 @@ export default function SendChangeOrderWhatsAppDialog({
                         If anything needs clarification, reply to this message.
                       </p>
                     </div>
-                    <p className="text-[10px] text-gray-400">Dawin Finishes</p>
+                    <p className="text-[10px] text-gray-400">Zeus Group</p>
                   </div>
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1">

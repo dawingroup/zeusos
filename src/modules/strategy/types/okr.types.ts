@@ -1,5 +1,5 @@
 // ============================================================================
-// OKR TYPES - DawinOS CEO Strategy Command
+// OKR TYPES - ZeusOS CEO Strategy Command
 // TypeScript interfaces for OKR management
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // SOCIAL INTELLIGENCE SERVICE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Firestore CRUD + Cloud Function wrappers for social tracking
 // ============================================================================
 

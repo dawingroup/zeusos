@@ -1,6 +1,6 @@
 /**
  * Payroll Records Types
- * DawinOS HR Central - Advances, Overtime, Attendance
+ * ZeusOS HR Central - Advances, Overtime, Attendance
  */
 
 import { Timestamp } from 'firebase/firestore';

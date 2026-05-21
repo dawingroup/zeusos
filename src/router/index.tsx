@@ -1378,7 +1378,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Test routes (DawinOS v2.0 Testing Suite)
+  // Test routes (ZeusOS v2.0 Testing Suite)
   ...testRoutes,
 
   // Error routes

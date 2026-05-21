@@ -1,6 +1,6 @@
 /**
  * Payroll Batch Service
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Manages payroll batch lifecycle, approval workflows, and payment processing.
  * Workflow: Create → Calculate → HR Review → Finance Review → [CEO Review] → Payment → Complete

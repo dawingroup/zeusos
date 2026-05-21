@@ -1,6 +1,6 @@
 // ============================================================================
 // OPERATIONS TYPES
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Types for accountability reports and refund requests
 // ============================================================================
 

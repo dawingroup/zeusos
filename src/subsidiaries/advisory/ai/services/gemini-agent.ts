@@ -20,7 +20,7 @@ import { DomainDetector } from './domain-detector';
 import { getDomainHandler, getDomainTools } from './domain-handlers';
 import { executeToolCall } from './tool-executor';
 
-const BASE_SYSTEM_PROMPT = `You are Dawin AI, an intelligent assistant for the Dawin Advisory Platform.
+const BASE_SYSTEM_PROMPT = `You are Dawin AI, an intelligent assistant for the ZeusOS.
 You help users manage infrastructure projects, investments, advisory services, and material procurement.
 
 Your capabilities include:
@@ -105,7 +105,7 @@ export class GeminiAgent {
     if (history.length === 0) {
       history = [
         { role: 'user', parts: [{ text: systemPrompt }] },
-        { role: 'model', parts: [{ text: 'I understand. I\'m ready to help with the Dawin Advisory Platform.' }] },
+        { role: 'model', parts: [{ text: 'I understand. I\'m ready to help with the ZeusOS.' }] },
       ];
     }
 

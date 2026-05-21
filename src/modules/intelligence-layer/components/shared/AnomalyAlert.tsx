@@ -1,6 +1,6 @@
 // ============================================================================
 // ANOMALY ALERT
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Alert component for detected anomalies
 // ============================================================================
 

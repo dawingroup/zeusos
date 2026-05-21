@@ -1,6 +1,6 @@
 // ============================================================================
 // LIABILITY SERVICE
-// DawinOS v2.0 — Statutory obligations, recurring liabilities, deadline tracking
+// ZeusOS v2.0 — Statutory obligations, recurring liabilities, deadline tracking
 // ============================================================================
 
 import {

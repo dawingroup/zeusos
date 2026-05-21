@@ -10,7 +10,7 @@
  *      upstream (sign-in page redirect), so we treat anonymous as
  *      "no access" here.
  *
- *   2. **Dawin staff** — heuristically detected by `@dawin.group`
+ *   2. **Dawin staff** — heuristically detected by `@zeusgroup.co.ug`
  *      email. Staff bypass the per-project whitelist so they can
  *      preview what each client sees (and to see existing projects
  *      that were never explicitly opened to the portal). Firestore
@@ -29,7 +29,7 @@ export function isPortalStaff(user: User | null | undefined): boolean {
   if (!user) return false;
   if (user.isAnonymous) return false;
   const email = user.email?.toLowerCase() ?? '';
-  return email.endsWith('@dawin.group');
+  return email.endsWith('@zeusgroup.co.ug');
 }
 
 /**

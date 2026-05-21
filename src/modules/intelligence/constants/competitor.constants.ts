@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR CONSTANTS
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Constants for Competitor Analysis
 // ============================================================================
 

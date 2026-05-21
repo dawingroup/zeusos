@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY DOCUMENT EDITOR
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Inline document editor with AI annotations in the margin
 // ============================================================================
 

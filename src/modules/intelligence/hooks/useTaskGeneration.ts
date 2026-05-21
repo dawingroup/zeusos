@@ -1,5 +1,5 @@
 /**
- * Task Generation Hooks - DawinOS v2.0
+ * Task Generation Hooks - ZeusOS v2.0
  * React hooks for task generation and management
  */
 

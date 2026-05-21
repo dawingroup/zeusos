@@ -1,5 +1,5 @@
 /**
- * Employee Detail Component - DawinOS v2.0
+ * Employee Detail Component - ZeusOS v2.0
  * Full employee profile view with header and tabbed interface
  */
 

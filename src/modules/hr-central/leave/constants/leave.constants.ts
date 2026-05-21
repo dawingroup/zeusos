@@ -1,6 +1,6 @@
 /**
  * Leave Management Constants
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  * 
  * Based on Uganda Employment Act 2006 and company policies
  */

@@ -1,6 +1,6 @@
 // ============================================================================
 // BUSINESS EVENT CONSTANTS
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Constants for cross-module business event detection
 // ============================================================================
 
@@ -11,7 +11,7 @@ import type { ModuleConfig, TaskTemplate, TaskChecklistItem } from '../types/bus
 // ============================================================================
 
 export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
-  // Dawin Finishes Modules
+  // Zeus Group Modules
   design_manager: {
     id: 'design_manager',
     subsidiary: 'finishes',
@@ -89,7 +89,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
     enabled: true,
   },
   
-  // Dawin Advisory Modules
+  // Zeus Group Modules
   engagements: {
     id: 'engagements',
     subsidiary: 'advisory',
@@ -1127,7 +1127,7 @@ export const ALL_TASK_TEMPLATES: TaskTemplate[] = [
 // ============================================================================
 
 export const COLLECTION_EVENT_MAPPINGS: Record<string, { collection: string; events: string[] }> = {
-  // Dawin Finishes
+  // Zeus Group
   designItems: {
     collection: 'designProjects/{projectId}/designItems',
     events: [
@@ -1153,7 +1153,7 @@ export const COLLECTION_EVENT_MAPPINGS: Record<string, { collection: string; eve
     ],
   },
   
-  // Dawin Advisory
+  // Zeus Group
   engagements: {
     collection: 'engagements',
     events: [

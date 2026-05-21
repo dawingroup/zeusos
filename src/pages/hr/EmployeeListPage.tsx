@@ -1,7 +1,7 @@
 /**
  * EmployeeListPage.tsx
  * Employee directory with search, filters, and bulk actions
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 import React, { useState, useEffect, useMemo } from 'react';

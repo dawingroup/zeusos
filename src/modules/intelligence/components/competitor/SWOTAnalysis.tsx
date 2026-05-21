@@ -1,6 +1,6 @@
 // ============================================================================
 // SWOT ANALYSIS
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Displays SWOT analysis in 2x2 grid format
 // ============================================================================
 

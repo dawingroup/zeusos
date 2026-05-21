@@ -1,6 +1,6 @@
 // ============================================================================
 // AccountCard COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Card display for account summary
 // ============================================================================
 

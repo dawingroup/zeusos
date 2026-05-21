@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE LAYER CONSTANTS
-// DawinOS v2.0 - Cross-Module AI Intelligence
+// ZeusOS v2.0 - Cross-Module AI Intelligence
 // Configuration and theme constants
 // ============================================================================
 
@@ -102,7 +102,7 @@ export type AnomalySeverityId = typeof ANOMALY_SEVERITY[number]['id'];
 
 // Source modules for cross-module intelligence
 export const SOURCE_MODULES = [
-  // Dawin Finishes
+  // Zeus Group
   { id: 'design_manager', label: 'Design Manager', color: '#3F51B5', icon: 'design_services', subsidiary: 'finishes' },
   { id: 'launch_pipeline', label: 'Launch Pipeline', color: '#9C27B0', icon: 'rocket_launch', subsidiary: 'finishes' },
   { id: 'inventory', label: 'Inventory', color: '#795548', icon: 'inventory_2', subsidiary: 'finishes' },
@@ -110,7 +110,7 @@ export const SOURCE_MODULES = [
   { id: 'feature_library', label: 'Feature Library', color: '#FF9800', icon: 'library_books', subsidiary: 'finishes' },
   { id: 'cutlist', label: 'Cutlist Processor', color: '#607D8B', icon: 'content_cut', subsidiary: 'finishes' },
   
-  // Dawin Advisory
+  // Zeus Group
   { id: 'engagements', label: 'Engagements', color: '#009688', icon: 'handshake', subsidiary: 'advisory' },
   { id: 'funding', label: 'Funding Management', color: '#4CAF50', icon: 'payments', subsidiary: 'advisory' },
   { id: 'reporting', label: 'Reporting', color: '#2196F3', icon: 'assessment', subsidiary: 'advisory' },
@@ -148,7 +148,7 @@ export const ASSISTANT_MODES = [
     id: 'general',
     label: 'General Assistant',
     description: 'Help with any question',
-    systemPrompt: 'You are a helpful assistant for DawinOS enterprise platform.',
+    systemPrompt: 'You are a helpful assistant for ZeusOS enterprise platform.',
   },
   {
     id: 'data_analyst',

@@ -1,6 +1,6 @@
 /**
  * Test Routes Configuration
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Route configuration for testing pages
  */
 

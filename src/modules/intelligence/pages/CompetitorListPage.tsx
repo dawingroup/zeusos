@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR LIST PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // List and manage tracked competitors (Firestore-backed)
 // ============================================================================
 

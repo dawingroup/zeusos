@@ -1,6 +1,6 @@
 // ============================================================================
 // USE QBO SYNC HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // React hook for QuickBooks Online sync operations and data
 // ============================================================================
 

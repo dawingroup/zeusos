@@ -1,6 +1,6 @@
 /**
  * Manager Dashboard Page
- * DawinOS v2.0 - Intelligence Layer
+ * ZeusOS v2.0 - Intelligence Layer
  *
  * Manager view for monitoring team workload and task assignments
  */

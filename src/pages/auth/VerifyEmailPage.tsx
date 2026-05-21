@@ -30,7 +30,7 @@ export default function VerifyEmailPage() {
   return (
     <>
       <Helmet>
-        <title>Verify Email | Dawin Advisory Platform</title>
+        <title>Verify Email | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">

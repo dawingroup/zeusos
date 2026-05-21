@@ -157,7 +157,7 @@ export function RoleProfilePanel() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Subsidiaries</SelectItem>
-                <SelectItem value="finishes">Dawin Finishes</SelectItem>
+                <SelectItem value="finishes">Zeus Group</SelectItem>
                 <SelectItem value="shared">Shared Roles</SelectItem>
               </SelectContent>
             </Select>

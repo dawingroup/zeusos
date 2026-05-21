@@ -1,5 +1,5 @@
 /**
- * Grey Area Detection Types - DawinOS v2.0
+ * Grey Area Detection Types - ZeusOS v2.0
  * Types for ambiguous situation detection and escalation
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE MODULE INDEX
-// DawinOS v2.0 - Market Intelligence
+// ZeusOS v2.0 - Market Intelligence
 // Export all market intelligence submodules
 // ============================================================================
 

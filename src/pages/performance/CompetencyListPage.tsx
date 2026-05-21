@@ -1,7 +1,7 @@
 /**
  * CompetencyListPage.tsx
  * Competency framework management with category organization
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  * Updated to use Firebase via useDevelopment hook
  */
 

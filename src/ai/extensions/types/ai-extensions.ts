@@ -1,6 +1,6 @@
 /**
  * AI Agent Extensions Types
- * Domain-specific AI capabilities for Dawin Advisory Platform
+ * Domain-specific AI capabilities for ZeusOS
  */
 
 import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';

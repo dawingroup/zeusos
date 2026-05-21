@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE OVERVIEW CARD
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Summary card showing AI intelligence metrics
 // ============================================================================
 

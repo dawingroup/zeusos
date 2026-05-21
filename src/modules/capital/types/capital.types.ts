@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL HUB TYPES
-// DawinOS v2.0 — Capital seeking, readiness, application tracking & facilities
+// ZeusOS v2.0 — Capital seeking, readiness, application tracking & facilities
 // ============================================================================
 
 import { Timestamp } from 'firebase/firestore';

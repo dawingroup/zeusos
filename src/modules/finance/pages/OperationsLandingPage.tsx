@@ -1,6 +1,6 @@
 // ============================================================================
 // OPERATIONS LANDING PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Replaces card-grid navigation with summary data + pill sub-navigation.
 // Shows: 4 summary stat cards, top items tables, pill navigation bar.
 // ============================================================================

@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE SERVICE
-// DawinOS v2.0 - AI-Driven Competitive Intelligence
+// ZeusOS v2.0 - AI-Driven Competitive Intelligence
 // Frontend service for calling market intelligence cloud functions
 // ============================================================================
 

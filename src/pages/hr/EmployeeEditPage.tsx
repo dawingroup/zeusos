@@ -1,7 +1,7 @@
 /**
  * EmployeeEditPage.tsx
  * Page for editing existing employees using the EmployeeForm component
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 import { useNavigate, useParams } from 'react-router-dom';

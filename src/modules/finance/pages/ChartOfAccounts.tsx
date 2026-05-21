@@ -1,6 +1,6 @@
 // ============================================================================
 // ChartOfAccounts PAGE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Main page for managing Chart of Accounts
 // ============================================================================
 

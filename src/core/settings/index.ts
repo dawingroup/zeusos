@@ -1,5 +1,5 @@
 /**
- * DawinOS Global Settings
+ * ZeusOS Global Settings
  * Central module for organization settings and user management
  */
 

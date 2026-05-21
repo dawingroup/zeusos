@@ -96,7 +96,7 @@ Thank you for your order! We're pleased to confirm the following:
 
 We will keep you updated on the progress of your order. If you have any questions, please don't hesitate to reach out.
 
-Thank you for choosing Dawin Finishes! 🙏`;
+Thank you for choosing Zeus Group! 🙏`;
 
   const handleSend = async () => {
     if (!resolvedPhone) return;

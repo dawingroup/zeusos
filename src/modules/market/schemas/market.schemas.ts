@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE SCHEMAS
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // ============================================================================
 
 import { z } from 'zod';

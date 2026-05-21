@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR COMPARISON PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Side-by-side competitor comparison
 // ============================================================================
 

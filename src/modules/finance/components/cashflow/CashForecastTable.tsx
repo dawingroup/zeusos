@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FORECAST TABLE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Displays and edits cash flow forecast periods
 // ============================================================================
 

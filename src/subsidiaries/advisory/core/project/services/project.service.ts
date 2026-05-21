@@ -1,7 +1,7 @@
 /**
  * CORE PROJECT SERVICE
  * =================================================================
- * This is the canonical service for managing "Project" entities within Dawin Advisory.
+ * This is the canonical service for managing "Project" entities within Zeus Group.
  * It consolidates logic from the original Delivery and MatFlow services.
  */
 

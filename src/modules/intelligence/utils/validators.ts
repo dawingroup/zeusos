@@ -1,5 +1,5 @@
 /**
- * Validation Schemas - DawinOS v2.0
+ * Validation Schemas - ZeusOS v2.0
  * Reusable validation functions
  */
 

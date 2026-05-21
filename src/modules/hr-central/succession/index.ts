@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION MODULE INDEX
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Succession Planning & Talent Pipeline
 // ============================================================================
 

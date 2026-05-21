@@ -1,6 +1,6 @@
 /**
  * useAdvisoryDashboard - Composite Hook
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  * Aggregates data from investment deals, clients, and portfolios
  * for the Advisory Dashboard page
  */

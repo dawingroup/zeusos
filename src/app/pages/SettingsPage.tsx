@@ -1,5 +1,5 @@
 /**
- * DawinOS Global Settings Page
+ * ZeusOS Global Settings Page
  * Tab-based settings for organization, users, and access control
  */
 
@@ -432,7 +432,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
           <div className="flex-1">
             <h4 className="font-medium text-amber-900">User Access Control</h4>
             <p className="text-sm text-amber-700 mt-1">
-              New users must be pre-approved in Firebase Authentication before they can sign in to DawinOS.
+              New users must be pre-approved in Firebase Authentication before they can sign in to ZeusOS.
               Once approved, they will appear here after their first sign-in.
             </p>
             <a
@@ -455,7 +455,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Team Members</h3>
-          <p className="text-sm text-gray-500">Users who have signed in to DawinOS</p>
+          <p className="text-sm text-gray-500">Users who have signed in to ZeusOS</p>
         </div>
       </div>
 
@@ -860,7 +860,7 @@ function UnprovisionedEmployeesSection({ canManage }: { canManage: boolean }) {
           </h4>
         </div>
         <p className="text-xs text-amber-800 mt-1">
-          These active HR employees don&apos;t have a DawinOS login yet. Click to provision an
+          These active HR employees don&apos;t have a ZeusOS login yet. Click to provision an
           account — you can configure module access for them right below once created.
         </p>
       </div>

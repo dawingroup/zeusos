@@ -1,6 +1,6 @@
 /**
  * Strategy Pages Index
- * DawinOS v2.0 - Phase 8.7
+ * ZeusOS v2.0 - Phase 8.7
  */
 
 export { StrategyDashboardPage, default as StrategyDashboard } from './StrategyDashboardPage';

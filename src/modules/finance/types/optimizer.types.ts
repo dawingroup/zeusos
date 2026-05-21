@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW OPTIMIZER TYPES
-// DawinOS v2.0 - Cash Flow Optimization & Expenditure Prioritization Engine
+// ZeusOS v2.0 - Cash Flow Optimization & Expenditure Prioritization Engine
 // TypeScript interfaces for the algorithmic CFO system
 // ============================================================================
 

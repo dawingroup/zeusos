@@ -1,6 +1,6 @@
 // ============================================================================
 // USE FINANCIAL REPORT HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Hook for generating and managing financial reports
 // ============================================================================
 

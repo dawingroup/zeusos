@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY CONSTANTS - DawinOS CEO Strategy Command
+// STRATEGY CONSTANTS - ZeusOS CEO Strategy Command
 // Constants for strategy document management
 // ============================================================================
 
@@ -401,22 +401,22 @@ export const STRATEGY_DEFAULTS = {
 };
 
 // ----------------------------------------------------------------------------
-// Dawin Group Subsidiaries
+// Zeus Group Subsidiaries
 // ----------------------------------------------------------------------------
-export const DAWIN_SUBSIDIARIES = {
+export const ZEUS_SUBSIDIARIES = {
   DAWIN_GROUP: 'dawin_group',
   DAWIN_FINISHES: 'dawin_finishes',
-  DAWIN_ADVISORY: 'dawin_advisory',
-  DAWIN_TECHNOLOGY: 'dawin_technology',
-  DAWIN_CAPITAL: 'dawin_capital',
+  DAWIN_ADVISORY: 'zeus_group',
+  ZEUS_TECHNOLOGY: 'dawin_technology',
+  ZEUS_CAPITAL: 'dawin_capital',
 } as const;
 
-export type DawinSubsidiary = typeof DAWIN_SUBSIDIARIES[keyof typeof DAWIN_SUBSIDIARIES];
+export type DawinSubsidiary = typeof ZEUS_SUBSIDIARIES[keyof typeof ZEUS_SUBSIDIARIES];
 
 export const DAWIN_SUBSIDIARY_LABELS: Record<DawinSubsidiary, string> = {
-  [DAWIN_SUBSIDIARIES.DAWIN_GROUP]: 'Dawin Group',
-  [DAWIN_SUBSIDIARIES.DAWIN_FINISHES]: 'Dawin Finishes',
-  [DAWIN_SUBSIDIARIES.DAWIN_ADVISORY]: 'Dawin Advisory',
-  [DAWIN_SUBSIDIARIES.DAWIN_TECHNOLOGY]: 'Dawin Technology',
-  [DAWIN_SUBSIDIARIES.DAWIN_CAPITAL]: 'Dawin Capital',
+  [ZEUS_SUBSIDIARIES.DAWIN_GROUP]: 'Zeus Group',
+  [ZEUS_SUBSIDIARIES.DAWIN_FINISHES]: 'Zeus Group',
+  [ZEUS_SUBSIDIARIES.DAWIN_ADVISORY]: 'Zeus Group',
+  [ZEUS_SUBSIDIARIES.ZEUS_TECHNOLOGY]: 'Zeus Technology',
+  [ZEUS_SUBSIDIARIES.ZEUS_CAPITAL]: 'Zeus Capital',
 };

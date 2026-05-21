@@ -1,6 +1,6 @@
 // ============================================================================
 // TEST TYPES
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // TypeScript interfaces for testing
 // ============================================================================
 

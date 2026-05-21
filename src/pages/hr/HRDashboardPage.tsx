@@ -1,7 +1,7 @@
 /**
  * HRDashboardPage.tsx
  * HR Central module dashboard with key metrics and quick actions
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 import React from 'react';

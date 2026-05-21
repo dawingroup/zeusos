@@ -1,7 +1,7 @@
 /**
  * MCPPairingPage
  *
- * Browser-side half of the DawinOS MCP token-refresh proxy pairing flow.
+ * Browser-side half of the ZeusOS MCP token-refresh proxy pairing flow.
  *
  * Triggered by `node tools/dawinos-mcp-proxy/setup.js login`, which spins up a
  * one-shot loopback HTTP server on an ephemeral port and opens this page in the
@@ -118,7 +118,7 @@ export default function MCPPairingPage() {
   return (
     <>
       <Helmet>
-        <title>Pair MCP Proxy · DawinOS</title>
+        <title>Pair MCP Proxy · ZeusOS</title>
       </Helmet>
       <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
         <Card className="w-full max-w-lg">
@@ -131,10 +131,10 @@ export default function MCPPairingPage() {
               ) : (
                 <ShieldAlert className="h-7 w-7 text-amber-500" />
               )}
-              <CardTitle>Pair DawinOS MCP Proxy</CardTitle>
+              <CardTitle>Pair ZeusOS MCP Proxy</CardTitle>
             </div>
             <CardDescription>
-              Authorize a local terminal to mint Firebase ID tokens on your behalf for the DawinOS MCP connector.
+              Authorize a local terminal to mint Firebase ID tokens on your behalf for the ZeusOS MCP connector.
             </CardDescription>
           </CardHeader>
 

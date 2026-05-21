@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE LAYER TYPES
-// DawinOS v2.0 - Cross-Module AI Intelligence
+// ZeusOS v2.0 - Cross-Module AI Intelligence
 // TypeScript interfaces and types
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH TRANSACTION LIST
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // List and filter cash transactions
 // ============================================================================
 

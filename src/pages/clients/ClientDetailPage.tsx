@@ -13,7 +13,7 @@ export default function ClientDetailPage() {
   return (
     <>
       <Helmet>
-        <title>Client Details | Dawin Advisory Platform</title>
+        <title>Client Details | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

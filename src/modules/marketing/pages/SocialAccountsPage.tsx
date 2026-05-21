@@ -276,7 +276,7 @@ export default function SocialAccountsPage() {
                   required
                   value={draft.displayName}
                   onChange={(e) => setDraft({ ...draft, displayName: e.target.value })}
-                  placeholder="e.g. Dawin Finishes Instagram"
+                  placeholder="e.g. Zeus Group Instagram"
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
                 />
               </Field>

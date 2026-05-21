@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCIAL REPORTS PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Displays QBO-synced P&L, Balance Sheet, and Chart of Accounts analytics
 // ============================================================================
 

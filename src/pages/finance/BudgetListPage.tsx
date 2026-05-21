@@ -1,7 +1,7 @@
 /**
  * BudgetListPage.tsx
  * Budget management with filters, utilization tracking, and over-budget warnings
- * DawinOS v2.0 - Phase 8.8
+ * ZeusOS v2.0 - Phase 8.8
  */
 
 import { useState, useMemo } from 'react';

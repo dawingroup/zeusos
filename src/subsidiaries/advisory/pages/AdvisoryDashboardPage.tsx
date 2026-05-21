@@ -1,6 +1,6 @@
 /**
  * Advisory Dashboard Page
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  * Main dashboard with Capital Hub-style UI patterns
  */
 

@@ -1,5 +1,5 @@
 /**
- * Role Profile Constants - DawinOS v2.0
+ * Role Profile Constants - ZeusOS v2.0
  * Pre-defined role profiles and templates
  */
 
@@ -387,7 +387,7 @@ export const PRODUCTION_SUPERVISOR_PROFILE: Partial<RoleProfile> = {
 };
 
 // ============================================
-// Dawin Finishes Role Profiles
+// Zeus Group Role Profiles
 // ============================================
 
 /**
@@ -1790,7 +1790,7 @@ export const STANDARD_ROLE_PROFILES: Record<string, Partial<RoleProfile>> = {
   // Marketing & Content
   'content-creator': CONTENT_CREATOR_PROFILE,
 
-  // Dawin Finishes Roles
+  // Zeus Group Roles
   'designer': DESIGNER_PROFILE,
   'design-manager': DESIGN_MANAGER_PROFILE,
   'production-planner': PRODUCTION_PLANNER_PROFILE,

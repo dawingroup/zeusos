@@ -1,7 +1,7 @@
 /**
  * UnifiedDashboard
  * Role-aware main dashboard that shows only modules the user can access
- * with live Firestore stats. Replaces DawinOSDashboard.
+ * with live Firestore stats. Replaces ZeusOSDashboard.
  */
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -502,7 +502,7 @@ export default function UnifiedDashboard() {
             style={{ color: 'var(--fg-tertiary)' }}
           >
             <Building2 className="w-3.5 h-3.5" />
-            <span>DawinOS</span>
+            <span>ZeusOS</span>
           </div>
           <h1>Welcome back, {firstName}</h1>
           <p className="mt-1 text-[13px]" style={{ color: 'var(--fg-secondary)' }}>
@@ -575,7 +575,7 @@ export default function UnifiedDashboard() {
       {/* Footer */}
       <div className="text-center py-4 border-t border-gray-200">
         <p className="text-sm text-gray-500">
-          DawinOS v2.0 — Design-to-Production Platform
+          ZeusOS v2.0 — Design-to-Production Platform
         </p>
       </div>
     </div>

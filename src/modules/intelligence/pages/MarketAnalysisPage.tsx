@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET ANALYSIS PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Comprehensive market and industry analysis
 // ============================================================================
 

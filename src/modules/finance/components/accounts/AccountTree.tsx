@@ -1,6 +1,6 @@
 // ============================================================================
 // AccountTree COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Hierarchical tree view of Chart of Accounts
 // ============================================================================
 

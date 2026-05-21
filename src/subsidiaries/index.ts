@@ -1,5 +1,5 @@
 /**
- * DawinOS Subsidiaries
+ * ZeusOS Subsidiaries
  * 
  * Export all subsidiary modules
  */

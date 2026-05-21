@@ -1,6 +1,6 @@
 // ============================================================================
 // SOCIAL INTELLIGENCE TYPES
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Types for social media competitor tracking and AI analysis
 // ============================================================================
 

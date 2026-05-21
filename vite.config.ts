@@ -1,6 +1,6 @@
 // ============================================================================
 // VITE CONFIGURATION
-// DawinOS v2.0 - Production Build Configuration
+// ZeusOS - Production Build Configuration
 // ============================================================================
 
 import { defineConfig, loadEnv } from 'vite'
@@ -104,8 +104,12 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      port: 3000,
-      open: true,
+      // Honour PORT from the environment (set by the Claude Code preview
+      // runtime when autoPort is true) so the dev server can be assigned
+      // any free port. Falls back to 3000 for direct `npm run dev` use.
+      port: process.env.PORT ? Number(process.env.PORT) : 3000,
+      strictPort: false,
+      open: false,
       cors: true,
     },
 
@@ -116,7 +120,7 @@ export default defineConfig(({ mode }) => {
 
     define: {
       'import.meta.env.VITE_APP_VERSION': JSON.stringify(
-        process.env.npm_package_version || '2.0.0'
+        process.env.npm_package_version || '0.1.0'
       ),
       'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().toISOString()),
       // Polyfill for libraries that use Node.js Buffer (e.g., @react-pdf/renderer)

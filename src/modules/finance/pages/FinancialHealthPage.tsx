@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCIAL HEALTH PAGE — Composite Health Score
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Shows: Large circular score (0-100), 6 ratio cards with traffic lights.
 // P&L-derived ratios only (no BS data dependency).

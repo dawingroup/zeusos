@@ -181,7 +181,7 @@ export function AppShell({ children }: AppShellProps) {
   // Filter admin navigation based on user roles
   const adminNavItems = useMemo(() => {
     // Fallback admin emails for immediate access
-    const adminEmails = ['onzimai@dawin.group'];
+    const adminEmails = ['onzimai@zeusgroup.co.ug'];
     const isAdminEmail = user?.email && adminEmails.includes(user.email);
     
     // Check if user has admin or super_admin global role from DawinUser profile
@@ -207,7 +207,7 @@ export function AppShell({ children }: AppShellProps) {
   useGlobalShortcuts();
 
   // Get subsidiary display name and color
-  const subsidiaryName = currentSubsidiary?.name || 'Dawin Finishes';
+  const subsidiaryName = currentSubsidiary?.name || 'Zeus Group';
   const subsidiaryColor = currentSubsidiary?.color || '#872E5C';
 
   // Auto-expand navigation groups based on active route
@@ -587,7 +587,7 @@ export function AppShell({ children }: AppShellProps) {
             )}
           </Button>
         )}
-        {/* Dawin Group dropdown for mobile */}
+        {/* Zeus Group dropdown for mobile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -600,7 +600,7 @@ export function AppShell({ children }: AppShellProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
-              Dawin Group Services
+              Zeus Group Services
             </div>
             {corporateNavItems.map(renderCorporateMenuItem)}
           </DropdownMenuContent>

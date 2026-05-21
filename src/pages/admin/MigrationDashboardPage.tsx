@@ -11,7 +11,7 @@ export default function MigrationDashboardPage() {
   return (
     <>
       <Helmet>
-        <title>Data Migration | Dawin Advisory Platform</title>
+        <title>Data Migration | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

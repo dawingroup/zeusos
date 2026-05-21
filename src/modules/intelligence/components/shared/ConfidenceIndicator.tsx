@@ -1,6 +1,6 @@
 // ============================================================================
 // CONFIDENCE INDICATOR COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Visual indicator for data confidence level
 // ============================================================================
 

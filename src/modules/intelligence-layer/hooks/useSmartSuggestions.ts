@@ -1,6 +1,6 @@
 // ============================================================================
 // USE SMART SUGGESTIONS HOOK
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Manage AI-generated suggestions with Firestore backing + real-time fallback
 // ============================================================================
 

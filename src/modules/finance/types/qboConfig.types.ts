@@ -22,7 +22,7 @@ export type LandedCostMethod = 'capitalize' | 'expense';
 
 /**
  * QuickBooks GL Account Mapping Configuration
- * Maps DawinOS transaction types to QuickBooks Chart of Accounts
+ * Maps ZeusOS transaction types to QuickBooks Chart of Accounts
  */
 export interface QBOAccountMapping {
   // --- Core Accounts (Required) ---
@@ -77,7 +77,7 @@ export interface QBOConfig {
 
   /**
    * @deprecated Replaced by automatic item resolution with fuzzy matching.
-   * Items are now resolved DawinOS → QBO automatically via resolveOrCreateQBOItem().
+   * Items are now resolved ZeusOS → QBO automatically via resolveOrCreateQBOItem().
    * Kept for backward compatibility with existing config documents.
    */
   serviceItemMapping?: {
@@ -181,7 +181,7 @@ export interface QBOItemInfo {
 // ============================================================================
 
 /**
- * Record of how a DawinOS item was resolved to a QBO item.
+ * Record of how a ZeusOS item was resolved to a QBO item.
  * Stored in integrations/qbo_item_cache/resolution_log/{id}
  */
 export interface QBOItemResolutionEntry {

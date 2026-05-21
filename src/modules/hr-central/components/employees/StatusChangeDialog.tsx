@@ -1,5 +1,5 @@
 /**
- * Status Change Dialog Component - DawinOS v2.0
+ * Status Change Dialog Component - ZeusOS v2.0
  * Dialog for changing employee status
  */
 

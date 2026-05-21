@@ -16,7 +16,7 @@ export default function ServerErrorPage() {
   return (
     <>
       <Helmet>
-        <title>Server Error | Dawin Advisory Platform</title>
+        <title>Server Error | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background p-4">

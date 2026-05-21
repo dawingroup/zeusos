@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE LAYER MODULE INDEX
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Barrel exports for all module components
 // ============================================================================
 

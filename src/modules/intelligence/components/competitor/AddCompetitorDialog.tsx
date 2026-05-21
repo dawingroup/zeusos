@@ -1,6 +1,6 @@
 // ============================================================================
 // ADD COMPETITOR DIALOG
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Dialog form to add a new competitor to Firestore
 // ============================================================================
 

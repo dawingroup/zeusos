@@ -1,6 +1,6 @@
 // ============================================================================
 // AI ASSISTANT PANEL
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Floating AI assistant chat panel with persistent memory
 // ============================================================================
 

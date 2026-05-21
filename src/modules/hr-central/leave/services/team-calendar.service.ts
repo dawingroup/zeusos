@@ -1,6 +1,6 @@
 /**
  * Team Calendar Service
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  * 
  * Manages team leave calendar entries and availability views
  */

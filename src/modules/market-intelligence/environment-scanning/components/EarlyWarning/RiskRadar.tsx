@@ -1,6 +1,6 @@
 // ============================================================================
 // RISK RADAR COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Visual radar showing risk distribution by priority
 // ============================================================================
 

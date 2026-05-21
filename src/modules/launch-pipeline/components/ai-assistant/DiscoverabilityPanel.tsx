@@ -128,7 +128,7 @@ export function DiscoverabilityPanel({ product, onApply, onClose }: Discoverabil
       category: product.category,
       brand: {
         '@type': 'Brand',
-        name: 'Dawin Finishes',
+        name: 'Zeus Group',
       },
       additionalProperty: [
         { '@type': 'PropertyValue', name: 'Best For', value: data.bestFor },

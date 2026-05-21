@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCE REPORT AI SERVICE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // AI-powered report generation using Gemini for different stakeholder audiences
 // ============================================================================
 

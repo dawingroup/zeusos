@@ -1,6 +1,6 @@
 // ============================================================================
 // READINESS ASSESSMENT
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Displays readiness assessment details for a successor
 // ============================================================================
 

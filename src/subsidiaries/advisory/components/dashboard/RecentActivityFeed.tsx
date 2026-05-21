@@ -1,6 +1,6 @@
 /**
  * Recent Activity Feed Component
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  * Shows recent activities across Advisory modules
  */
 

@@ -1,6 +1,6 @@
 /**
  * Advisory Dashboard Components
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  */
 
 export { AdvisoryOverviewCard } from './AdvisoryOverviewCard';

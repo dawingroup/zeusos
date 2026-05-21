@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITOR CARD
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Displays competitor summary in card format
 // ============================================================================
 

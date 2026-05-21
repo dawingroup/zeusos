@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION SCHEMAS - DawinOS HR Central
+// ORGANIZATION SCHEMAS - ZeusOS HR Central
 // Zod validation schemas for organization structure
 // ============================================================================
 

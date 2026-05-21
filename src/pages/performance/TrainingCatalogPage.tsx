@@ -1,7 +1,7 @@
 /**
  * TrainingCatalogPage.tsx
  * Training catalog with external platforms, videos, and in-person sessions
- * DawinOS v2.0 - Performance Module
+ * ZeusOS v2.0 - Performance Module
  */
 
 import { useState, useMemo } from 'react';

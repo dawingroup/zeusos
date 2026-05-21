@@ -1,6 +1,6 @@
 // ============================================================================
 // BUDGET VARIANCE TABLE COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Component for displaying budget variance analysis
 // ============================================================================
 

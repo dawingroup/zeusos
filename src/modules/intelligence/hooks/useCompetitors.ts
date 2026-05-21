@@ -1,6 +1,6 @@
 // ============================================================================
 // USE COMPETITORS HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Competitor data fetching and management (Firestore-backed)
 // ============================================================================
 

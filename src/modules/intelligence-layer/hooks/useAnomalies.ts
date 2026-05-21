@@ -1,6 +1,6 @@
 // ============================================================================
 // USE ANOMALIES HOOK
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Detect anomalies from real business events and task data
 // ============================================================================
 

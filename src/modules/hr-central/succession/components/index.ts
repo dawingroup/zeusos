@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION COMPONENTS INDEX
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // ============================================================================
 
 export { CriticalRoleCard } from './CriticalRoleCard';

@@ -24,7 +24,7 @@ export default function LogoUpload({
   onLogoChange,
   className,
   subsidiaryId = 'zeus-group',
-  subsidiaryName = 'Dawin Group',
+  subsidiaryName = 'Zeus Group',
 }: LogoUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);

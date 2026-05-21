@@ -1,6 +1,6 @@
 // ============================================================================
 // FORECAST ENGINE — Pure Calculation Functions
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // No Firestore I/O. All functions are deterministic and testable.
 // Spec reference: §5–8 of Forecasting & Variance Analysis Module spec
 // ============================================================================

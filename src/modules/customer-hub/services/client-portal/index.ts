@@ -1,6 +1,6 @@
 /**
  * Client-portal services — anchored under customer-hub because the
- * portal is the customer-facing surface of DawinOS and these services
+ * portal is the customer-facing surface of ZeusOS and these services
  * own the customer↔project↔portal-account data path.
  *
  * Three responsibilities:

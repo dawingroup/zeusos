@@ -31,9 +31,9 @@ export interface FeaturedUpdate {
   linkUrl?: string;                 // optional link target on the storefront
   linkLabel?: string;               // "See on the bench ↗"
 
-  /** Cross-references manufacturing order id (DawinOS-side). */
+  /** Cross-references manufacturing order id (ZeusOS-side). */
   benchId?: string;
-  /** Linked project case study id (DawinOS-side). */
+  /** Linked project case study id (ZeusOS-side). */
   projectCaseStudyId?: string;
 
   liveFrom: Timestamp;

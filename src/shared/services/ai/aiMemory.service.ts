@@ -1,6 +1,6 @@
 /**
  * AI Memory Service
- * DawinOS v2.0 - Persistent AI Memory Layer
+ * ZeusOS v2.0 - Persistent AI Memory Layer
  * 
  * Handles CRUD operations for:
  * - Business memories (ai_memory collection)

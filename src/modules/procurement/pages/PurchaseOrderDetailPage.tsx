@@ -1,7 +1,7 @@
 /**
  * Purchase Order Detail Page
  * Full PO view with line items, landed costs, approvals, and goods receipt
- * Styled to match DawinOS Finishes design system
+ * Styled to match ZeusOS Finishes design system
  */
 
 import { useState, useEffect } from 'react';
@@ -113,7 +113,7 @@ export default function PurchaseOrderDetailPage() {
 
   // Admin edit support
   const ADMIN_ROLES = ['manager', 'admin', 'owner'];
-  const SUPER_USER_EMAIL = 'onzimai@dawin.group';
+  const SUPER_USER_EMAIL = 'onzimai@zeusgroup.co.ug';
   const isAdminUser =
     (dawinUser?.globalRole && ADMIN_ROLES.includes(dawinUser.globalRole)) ||
     user?.email === SUPER_USER_EMAIL;

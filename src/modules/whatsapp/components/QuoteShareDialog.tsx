@@ -645,7 +645,7 @@ export function QuoteShareDialog({
                         </div>
                       ) : registeredHeaderType === 'image' ? (
                         <div className="-mx-3 -mt-3 mb-2 bg-gradient-to-r from-[#872E5C] to-[#E18425] h-28 rounded-t-lg flex items-center justify-center">
-                          <p className="text-white font-bold text-lg tracking-wide">Dawin Finishes</p>
+                          <p className="text-white font-bold text-lg tracking-wide">Zeus Group</p>
                         </div>
                       ) : (
                         <p className="text-xs text-gray-500 font-medium">
@@ -654,7 +654,7 @@ export function QuoteShareDialog({
                       )}
                       <div>
                         <p>Hello {customerName},</p>
-                        <p className="mt-1">Here is your quote from <strong>Dawin Finishes</strong>.</p>
+                        <p className="mt-1">Here is your quote from <strong>Zeus Group</strong>.</p>
                         <p className="mt-1"><strong>{selectedQuote.title}</strong></p>
                         <p>Quote #: {selectedQuote.quoteNumber}</p>
                         <p>Project: {selectedQuote.projectName}</p>
@@ -670,7 +670,7 @@ export function QuoteShareDialog({
                         )}
                         <p className="mt-1 text-gray-600">Please review and tap a button below to respond.</p>
                       </div>
-                      <p className="text-[10px] text-gray-400">Dawin Finishes</p>
+                      <p className="text-[10px] text-gray-400">Zeus Group</p>
                       <div className="flex gap-2 pt-1 border-t border-green-200">
                         <span className="flex-1 text-center py-1.5 rounded border border-green-300 bg-white text-xs font-medium text-green-700 flex items-center justify-center gap-1">
                           <ThumbsUp className="w-3 h-3" /> Approve

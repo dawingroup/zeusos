@@ -1,6 +1,6 @@
 // ============================================================================
 // QuickActionsWidget COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Widget with quick action buttons for common tasks
 // ============================================================================
 

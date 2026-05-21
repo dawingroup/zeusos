@@ -1,5 +1,5 @@
 /**
- * Employee Constants - DawinOS v2.0
+ * Employee Constants - ZeusOS v2.0
  * HR Central configuration constants
  */
 

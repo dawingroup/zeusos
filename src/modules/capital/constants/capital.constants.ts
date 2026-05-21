@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL HUB CONSTANTS
-// DawinOS v2.0 — Capital seeking, readiness & application tracking
+// ZeusOS v2.0 — Capital seeking, readiness & application tracking
 // ============================================================================
 
 import type {

@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCE ADMIN PAGE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Admin dashboard: Reconciliation Tracker, Tax Portals, Document Library
 // ============================================================================
 

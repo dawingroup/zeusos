@@ -13,7 +13,7 @@ export default function AIAssistantPage() {
   return (
     <>
       <Helmet>
-        <title>AI Assistant | Dawin Advisory Platform</title>
+        <title>AI Assistant | ZeusOS</title>
       </Helmet>
 
       <div className="p-6 h-[calc(100vh-4rem)] flex flex-col">

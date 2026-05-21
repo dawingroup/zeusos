@@ -1,6 +1,6 @@
 /**
  * Test Dashboard
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Main testing hub with overview of all test modules and quick actions
  */
 
@@ -275,7 +275,7 @@ export const TestDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">DawinOS v2.0 Testing Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">ZeusOS v2.0 Testing Dashboard</h1>
         <p className="text-gray-600 mt-1">Comprehensive testing coverage for Phases 0-4 (4.1-4.2)</p>
       </div>
 

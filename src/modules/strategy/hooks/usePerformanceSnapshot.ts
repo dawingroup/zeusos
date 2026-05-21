@@ -1,6 +1,6 @@
 // ============================================================================
 // USE PERFORMANCE SNAPSHOT HOOK
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // React hook for performance snapshot management
 // ============================================================================
 

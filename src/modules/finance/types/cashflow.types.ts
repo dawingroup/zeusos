@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW TYPES
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // TypeScript interfaces for Cash Flow Analysis
 // ============================================================================
 

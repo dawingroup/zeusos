@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET DATA HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Hook for market analysis and industry data (Firestore-backed)
 // ============================================================================
 

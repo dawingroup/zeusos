@@ -1,6 +1,6 @@
 /**
  * Advisory Overview Card Component
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  * Metric card following Capital Hub UI patterns
  */
 

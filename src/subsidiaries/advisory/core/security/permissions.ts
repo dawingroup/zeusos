@@ -1,6 +1,6 @@
 /**
  * PERMISSIONS.TS
- * Permission definitions and matrices for the Dawin Advisory Platform
+ * Permission definitions and matrices for the ZeusOS
  */
 
 import { EngagementRole, ClientRole, FunderRole } from './roles';

@@ -1,6 +1,6 @@
 // ============================================================================
 // TAX COMPLIANCE PAGE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Tax compliance dashboard: portal links, filing calendar, required documents
 // ============================================================================
 

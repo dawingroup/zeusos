@@ -1,6 +1,6 @@
 // ============================================================================
 // KPIHealthWidget COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Widget showing KPI health summary
 // ============================================================================
 

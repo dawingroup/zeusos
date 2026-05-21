@@ -1,5 +1,5 @@
 /**
- * Smart Task Core Service - DawinOS v2.0
+ * Smart Task Core Service - ZeusOS v2.0
  * Unified orchestration layer for the Intelligence Layer
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // ACCOUNTABILITY PAGE
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Full accountability reports page with CRUD, filtering, and detail panel
 // ============================================================================
 

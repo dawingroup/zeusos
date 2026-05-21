@@ -1,5 +1,5 @@
 /**
- * Employee Form Component - DawinOS v2.0
+ * Employee Form Component - ZeusOS v2.0
  * Multi-step form for creating or editing employees
  * Enhanced UI with contracts/documents section
  */
@@ -641,31 +641,31 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     <SelectItem value="group">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-gray-800" />
-                        Dawin Group (Shared Roles)
+                        Zeus Group (Shared Roles)
                       </div>
                     </SelectItem>
                     <SelectItem value="finishes">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-orange-500" />
-                        Dawin Finishes
+                        Zeus Group
                       </div>
                     </SelectItem>
                     <SelectItem value="advisory">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        Dawin Advisory
+                        Zeus Group
                       </div>
                     </SelectItem>
                     <SelectItem value="technology">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-purple-500" />
-                        Dawin Technology
+                        Zeus Technology
                       </div>
                     </SelectItem>
                     <SelectItem value="capital">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-green-500" />
-                        Dawin Capital
+                        Zeus Capital
                       </div>
                     </SelectItem>
                   </SelectContent>

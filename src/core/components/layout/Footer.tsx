@@ -11,12 +11,12 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-white/80 font-medium">Dawin Finishes</span>
+            <span className="text-white/80 font-medium">Zeus Group</span>
             <span className="text-white/40">|</span>
             <span>Cutlist Processor</span>
           </div>
           <div className="text-white/50">
-            © {currentYear} Dawin Finishes. All rights reserved.
+            © {currentYear} Zeus Group. All rights reserved.
           </div>
         </div>
       </div>

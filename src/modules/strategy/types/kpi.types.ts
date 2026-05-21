@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI TYPES - DawinOS CEO Strategy Command
+// KPI TYPES - ZeusOS CEO Strategy Command
 // TypeScript interfaces for KPI management
 // ============================================================================
 

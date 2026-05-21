@@ -1,5 +1,5 @@
 /**
- * Intelligence Module Hooks - DawinOS v2.0
+ * Intelligence Module Hooks - ZeusOS v2.0
  * Central export for all React hooks
  */
 

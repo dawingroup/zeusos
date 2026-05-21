@@ -149,7 +149,7 @@ export default function ClientCreatePage() {
   return (
     <>
       <Helmet>
-        <title>New Client | DawinOS</title>
+        <title>New Client | ZeusOS</title>
       </Helmet>
 
       <div className="p-6 max-w-2xl mx-auto">

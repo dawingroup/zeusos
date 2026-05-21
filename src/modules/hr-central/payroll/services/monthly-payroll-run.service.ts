@@ -1,6 +1,6 @@
 /**
  * Monthly Payroll Run Service
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  *
  * Generates and orchestrates a monthly payroll run that fans out to
  * one PayrollBatch per active subsidiary. Owns aggregate recomputation

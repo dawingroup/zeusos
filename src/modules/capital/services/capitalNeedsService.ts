@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL NEEDS SERVICE
-// DawinOS v2.0 — Identify, track, and auto-detect capital requirements
+// ZeusOS v2.0 — Identify, track, and auto-detect capital requirements
 // ============================================================================
 
 import {

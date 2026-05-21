@@ -1,5 +1,5 @@
 /**
- * Event Catalog - DawinOS v2.0
+ * Event Catalog - ZeusOS v2.0
  * Defines all business events, their schemas, and associated actions
  */
 
@@ -671,7 +671,7 @@ const productionEvents: EventDefinition[] = [
 ];
 
 // ============================================
-// Dawin Finishes Events
+// Zeus Group Events
 // ============================================
 
 const finishesEvents: EventDefinition[] = [

@@ -1,6 +1,6 @@
 // ============================================================================
 // CROSS-MODULE REFERENCE INTEGRATION TESTS
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Integration tests for cross-module reference tracking
 // ============================================================================
 

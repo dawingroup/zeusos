@@ -1,6 +1,6 @@
 /**
  * Payslip Generator Service
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * Generates payslips in HTML format for PDF conversion and printing.
  * Supports individual and batch payslip generation.
@@ -24,10 +24,10 @@ export interface CompanyInfo {
   contactEmail?: string;
 }
 
-/** Default Dawin Group identity for HTML payslips. Mirrors the
+/** Default Zeus Group identity for HTML payslips. Mirrors the
  *  react-pdf DEFAULT_COMPANY_INFO so the two pipelines stay aligned. */
 export const DEFAULT_HTML_COMPANY_INFO: CompanyInfo = {
-  name: 'Dawin Group',
+  name: 'Zeus Group',
   address: 'Kayondo Road, Kyambogo Upper Estate, Kampala, Uganda',
   tin: '1000000000',
   nssfNumber: 'NSSF/000000',

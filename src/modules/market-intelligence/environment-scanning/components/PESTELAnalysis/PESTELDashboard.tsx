@@ -1,6 +1,6 @@
 // ============================================================================
 // PESTEL DASHBOARD COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Overview of all PESTEL analyses with key metrics
 // ============================================================================
 

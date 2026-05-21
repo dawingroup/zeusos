@@ -1,6 +1,6 @@
 // ============================================================================
 // ASSET GAP ANALYSIS
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // AI-powered asset inventory analysis and gap identification for growth
 // ============================================================================
 

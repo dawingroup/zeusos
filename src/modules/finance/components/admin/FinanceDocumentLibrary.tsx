@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCE DOCUMENT LIBRARY
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Searchable/filterable document table with Google Drive links
 // ============================================================================
 

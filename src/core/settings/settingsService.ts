@@ -1,5 +1,5 @@
 /**
- * DawinOS Settings Service
+ * ZeusOS Settings Service
  * Firestore operations for organization settings and user management
  */
 

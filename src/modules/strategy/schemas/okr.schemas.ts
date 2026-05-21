@@ -1,5 +1,5 @@
 // ============================================================================
-// OKR SCHEMAS - DawinOS CEO Strategy Command
+// OKR SCHEMAS - ZeusOS CEO Strategy Command
 // Zod validation schemas for OKR management
 // ============================================================================
 

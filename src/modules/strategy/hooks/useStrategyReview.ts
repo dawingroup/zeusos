@@ -1,6 +1,6 @@
 // ============================================================================
 // useStrategyReview HOOK
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Manages strategy review state with Firestore auto-save
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// USE KPI SCORECARD HOOK - DawinOS CEO Strategy Command
+// USE KPI SCORECARD HOOK - ZeusOS CEO Strategy Command
 // React hook for KPI scorecard management
 // ============================================================================
 

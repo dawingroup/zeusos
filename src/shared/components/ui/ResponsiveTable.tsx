@@ -1,7 +1,7 @@
 /**
  * ResponsiveTable Component
  * Switches between table view on desktop and card view on mobile
- * Standardized across DawinOS for consistent mobile experience
+ * Standardized across ZeusOS for consistent mobile experience
  */
 
 import React from 'react';

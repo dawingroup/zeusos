@@ -13,7 +13,7 @@ export default function ProfilePage() {
   return (
     <>
       <Helmet>
-        <title>Profile | Dawin Advisory Platform</title>
+        <title>Profile | ZeusOS</title>
       </Helmet>
 
       <div className="p-6 space-y-6">

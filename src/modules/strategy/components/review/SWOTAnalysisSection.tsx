@@ -1,6 +1,6 @@
 // ============================================================================
 // SWOT ANALYSIS SECTION COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Interactive 4-quadrant SWOT analysis with AI suggestions
 // ============================================================================
 

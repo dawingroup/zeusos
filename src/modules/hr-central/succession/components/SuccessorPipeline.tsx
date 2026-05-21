@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSOR PIPELINE
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Displays successors for a critical role in a pipeline view
 // ============================================================================
 

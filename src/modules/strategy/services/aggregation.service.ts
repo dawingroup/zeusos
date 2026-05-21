@@ -1,6 +1,6 @@
 // ============================================================================
 // AGGREGATION SERVICE
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Service for aggregating performance data across strategy, OKRs, and KPIs
 // ============================================================================
 
@@ -786,7 +786,7 @@ class AggregationService {
     const rootAgg = await this.calculateAggregation(companyId, {
       level: AGGREGATION_LEVELS.GROUP,
       entityId: companyId,
-      entityName: 'Dawin Group',
+      entityName: 'Zeus Group',
       fiscalYear,
       quarter,
       includeChildren: true,

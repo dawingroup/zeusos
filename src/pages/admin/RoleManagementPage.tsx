@@ -12,7 +12,7 @@ export default function RoleManagementPage() {
   return (
     <>
       <Helmet>
-        <title>Role Management | Dawin Advisory Platform</title>
+        <title>Role Management | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

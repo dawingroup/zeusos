@@ -1,6 +1,6 @@
 // ============================================================================
 // BUDGET SCHEMAS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Zod validation schemas for Budget Management
 // ============================================================================
 

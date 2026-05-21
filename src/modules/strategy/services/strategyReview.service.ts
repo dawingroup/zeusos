@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY REVIEW SERVICE - DawinOS CEO Strategy Command
+// STRATEGY REVIEW SERVICE - ZeusOS CEO Strategy Command
 // Firestore persistence for strategy review data
 // ============================================================================
 

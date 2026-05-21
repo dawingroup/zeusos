@@ -1,6 +1,6 @@
 /**
  * Leave Balance Service
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  * 
  * Manages leave balance calculations, accruals, and adjustments
  */

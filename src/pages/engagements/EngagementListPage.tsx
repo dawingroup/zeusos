@@ -68,7 +68,7 @@ export default function EngagementListPage() {
   return (
     <>
       <Helmet>
-        <title>Engagements | Dawin Advisory Platform</title>
+        <title>Engagements | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

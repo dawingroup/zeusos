@@ -1,5 +1,5 @@
 /**
- * Market Intelligence Module - DawinOS v2.0
+ * Market Intelligence Module - ZeusOS v2.0
  * Competitors, Markets, and Environment Analysis
  */
 export * from './types';

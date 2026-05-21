@@ -1,6 +1,6 @@
 // ============================================================================
 // AlertsWidget COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Widget showing performance alerts and notifications
 // ============================================================================
 

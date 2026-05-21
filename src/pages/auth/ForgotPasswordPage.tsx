@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
     return (
       <>
         <Helmet>
-          <title>Check Your Email | Dawin Advisory Platform</title>
+          <title>Check Your Email | ZeusOS</title>
         </Helmet>
 
         <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
   return (
     <>
       <Helmet>
-        <title>Reset Password | Dawin Advisory Platform</title>
+        <title>Reset Password | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">

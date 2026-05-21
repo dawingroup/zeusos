@@ -1,5 +1,5 @@
 /**
- * DawinOS Settings Hooks
+ * ZeusOS Settings Hooks
  * React hooks for settings and user management
  */
 

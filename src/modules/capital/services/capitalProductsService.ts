@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL PRODUCTS SERVICE
-// DawinOS v2.0 — Catalog of available capital products
+// ZeusOS v2.0 — Catalog of available capital products
 // ============================================================================
 
 import {

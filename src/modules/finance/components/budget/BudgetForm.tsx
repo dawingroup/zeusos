@@ -1,6 +1,6 @@
 // ============================================================================
 // BUDGET FORM COMPONENT
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Component for creating and editing budgets
 // ============================================================================
 

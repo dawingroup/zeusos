@@ -1,7 +1,7 @@
 /**
  * ReviewListPage.tsx
  * Performance reviews management with table view and approval workflow
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState, useMemo } from 'react';

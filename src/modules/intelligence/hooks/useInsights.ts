@@ -1,6 +1,6 @@
 // ============================================================================
 // INSIGHTS HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Hook for AI-generated insights management (Firestore-backed)
 // ============================================================================
 

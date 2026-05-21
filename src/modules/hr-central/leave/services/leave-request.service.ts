@@ -1,6 +1,6 @@
 /**
  * Leave Request Service
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  * 
  * Handles leave request creation, approval workflow, and status management
  */

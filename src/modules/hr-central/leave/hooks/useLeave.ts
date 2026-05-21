@@ -1,6 +1,6 @@
 /**
  * Leave Management React Hooks
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  */
 
 import { useState, useEffect, useCallback } from 'react';

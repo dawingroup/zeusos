@@ -1,6 +1,6 @@
 // ============================================================================
 // useAccounts HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // React hooks for account management
 // ============================================================================
 

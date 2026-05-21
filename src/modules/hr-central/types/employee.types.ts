@@ -1,5 +1,5 @@
 /**
- * Employee Types - DawinOS v2.0 HR Central
+ * Employee Types - ZeusOS v2.0 HR Central
  * Comprehensive employee data structures
  */
 

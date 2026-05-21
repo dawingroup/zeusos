@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW CONSTANTS
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Constants for Cash Flow Analysis
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// USE KPI LIBRARY HOOK - DawinOS CEO Strategy Command
+// USE KPI LIBRARY HOOK - ZeusOS CEO Strategy Command
 // Browses KPI Library with search/filter and tracking status enrichment
 // ============================================================================
 

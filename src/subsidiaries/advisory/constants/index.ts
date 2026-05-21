@@ -1,6 +1,6 @@
 /**
  * Advisory Module Constants
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  */
 
 export const MODULE_COLOR = '#f59e0b'; // amber-500

@@ -1,6 +1,6 @@
 // ============================================================================
 // PREDICTION CARD
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Card displaying AI predictions with confidence intervals
 // ============================================================================
 

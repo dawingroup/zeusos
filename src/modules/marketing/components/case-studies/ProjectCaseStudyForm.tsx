@@ -67,7 +67,7 @@ const EMPTY_FORM: ProjectCaseStudyFormData = {
     eyebrow: 'Ready to start yours?',
     headline: 'Bring this finish to your space',
     body: '',
-    primaryText: 'Start a project with Dawin Finishes',
+    primaryText: 'Start a project with Zeus Group',
     primaryUrl: '/pages/start-project',
     secondaryText: 'Book a showroom visit',
     secondaryUrl: '/pages/contact',
@@ -152,7 +152,7 @@ export function ProjectCaseStudyForm({
   }, [data.linkedProjectId, pickedProject?.id]);
 
   /**
-   * Pull data from the linked DesignProject in DawinOS — auto-fills the
+   * Pull data from the linked DesignProject in ZeusOS — auto-fills the
    * first section (hero: client / location / year / scope) from records the
    * team already maintains, so the editor only writes the prose.
    */

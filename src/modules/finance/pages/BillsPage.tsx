@@ -1,6 +1,6 @@
 // ============================================================================
 // BILLS & PAYABLES PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Accounts Payable management: QBO-synced bills + PO → Bill conversion
 // ============================================================================
 

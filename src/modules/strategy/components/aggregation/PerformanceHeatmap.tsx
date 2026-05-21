@@ -1,6 +1,6 @@
 // ============================================================================
 // PerformanceHeatmap COMPONENT
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Heatmap visualization of performance across entities and domains
 // ============================================================================
 

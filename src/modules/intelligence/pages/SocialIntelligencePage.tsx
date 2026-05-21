@@ -1,6 +1,6 @@
 // ============================================================================
 // SOCIAL INTELLIGENCE PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Cross-competitor social media dashboard
 // ============================================================================
 

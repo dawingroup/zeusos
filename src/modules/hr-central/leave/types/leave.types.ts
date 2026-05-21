@@ -1,6 +1,6 @@
 /**
  * Leave Management Types
- * DawinOS HR Central - Leave Module
+ * ZeusOS HR Central - Leave Module
  */
 
 import { Timestamp } from 'firebase/firestore';

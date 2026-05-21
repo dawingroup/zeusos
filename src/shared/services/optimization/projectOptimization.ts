@@ -488,7 +488,7 @@ function inferMaterialTypeFromHeuristics(part: CutlistPart): MaterialType | null
       || /\b(brd|sht)-/i.test(name)) {
     return 'PANEL';
   }
-  // Explicit timber markers — wood-class names + species commonly used at DawinOS.
+  // Explicit timber markers — wood-class names + species commonly used at ZeusOS.
   if (/\b(timber|hardwood|softwood|lumber|hardboard|solid\s*wood)\b/i.test(name)
       || /\b(mahogany|pine|mvule|muvule|mukwa|oak|teak|cedar|maple|walnut|cypress|eucalyptus|munyenye|nkalati)\b/i.test(name)
       || /\btim-/i.test(name)) {

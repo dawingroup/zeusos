@@ -23,7 +23,7 @@ const HASHTAG_LIMITS: Record<SocialPlatform, number> = {
   twitter: 2,
 };
 
-const TRUSTED_DOMAINS = ['dawin.group', 'dawinfinishes.com', 'dawinos.web.app'];
+const TRUSTED_DOMAINS = ['zeusgroup.co.ug', 'dawinfinishes.com', 'dawinos.web.app'];
 
 export interface PostValidationInput {
   content: string;

@@ -1,6 +1,6 @@
 // ============================================================================
 // USE PREDICTIONS HOOK
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Manage AI predictions with Firestore backing + generated fallback
 // ============================================================================
 

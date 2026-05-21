@@ -397,7 +397,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         }
 
         // Auto-provision DawinUser for super users who don't have one yet
-        const SUPER_USER_EMAILS = ['onzimai@dawin.group'];
+        const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
         if (!userDoc && firebaseUser.email && SUPER_USER_EMAILS.includes(firebaseUser.email)) {
           try {
             // Check if DawinUser doc exists in organizations/default/users

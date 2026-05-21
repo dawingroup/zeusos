@@ -1,7 +1,7 @@
 /**
  * Admin → Drive Folder Settings
  *
- * Binds every Unified File Manager + DawinOS-module slot to a Google
+ * Binds every Unified File Manager + ZeusOS-module slot to a Google
  * Drive folder. Changes take effect within 60 s (CF cache TTL) on the
  * next trigger fire — no redeploy needed. Env-var values remain
  * fallbacks for backwards compat.
@@ -124,7 +124,7 @@ export default function DriveFolderSettingsPage() {
           Drive Folder Mapping
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Bind every DawinOS module slot to a Google Drive folder. Changes take
+          Bind every ZeusOS module slot to a Google Drive folder. Changes take
           effect within 60 seconds on the next trigger fire — no redeploy
           needed.
         </p>

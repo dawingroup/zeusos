@@ -21,7 +21,7 @@ export default function UnauthorizedPage() {
   return (
     <>
       <Helmet>
-        <title>Unauthorized | Dawin Advisory Platform</title>
+        <title>Unauthorized | ZeusOS</title>
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background p-4">

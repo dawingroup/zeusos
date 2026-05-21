@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE CONTEXT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Displays market intelligence data relevant to strategy review
 // ============================================================================
 

@@ -2,7 +2,7 @@
  * useFinishesPortalDrawings — feeds the portal Plans & drawings index.
  *
  * Drawings are surfaced via `designSignOffs` — every issued drawing
- * pack in DawinOS goes through a signoff record, which is the only
+ * pack in ZeusOS goes through a signoff record, which is the only
  * collection where the portal has a clear access path (one entry per
  * issued revision, with documents attached).
  *

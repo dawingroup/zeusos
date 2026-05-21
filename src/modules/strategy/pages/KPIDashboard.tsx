@@ -1,6 +1,6 @@
 // ============================================================================
 // KPIDashboard PAGE
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // KPI management and scorecard dashboard
 // ============================================================================
 

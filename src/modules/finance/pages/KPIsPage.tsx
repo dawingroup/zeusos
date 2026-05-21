@@ -1,6 +1,6 @@
 // ============================================================================
 // KPIs PAGE — Financial KPI Dashboard
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Shows 6 core financial KPIs with sparklines and MoM change indicators.
 // Data: QBO historical P&L via usePLHistory hook.

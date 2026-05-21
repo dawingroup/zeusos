@@ -32,7 +32,7 @@ export interface Voice {
   /** Firebase Storage URL for the company logo (square or mono SVG). */
   companyLogoUrl?: string;
 
-  /** Optional link back to a project case study (DawinOS id). */
+  /** Optional link back to a project case study (ZeusOS id). */
   projectCaseStudyId?: string;
 
   /** When the quote was given. */

@@ -1,6 +1,6 @@
 // ============================================================================
 // STRATEGY GOOGLE DOCS SERVICE
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Creates a Google Doc from strategy review data: original document as body
 // content, AI analysis and recommendations as Google Doc comments.
 // ============================================================================
@@ -96,7 +96,7 @@ function buildStrategyHTML(
   // Branding defaults
   const b = docBranding?.branding;
   const primaryColor = b?.primaryColor || '#1a365d';
-  const orgName = docBranding?.subsidiaryName || 'DawinOS';
+  const orgName = docBranding?.subsidiaryName || 'ZeusOS';
   const logoUrl = b?.logoUrl || '';
   const tagline = b?.tagline || '';
   const fontFamily = 'Calibri, Helvetica Neue, Arial, sans-serif';

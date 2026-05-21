@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION DASHBOARD
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Main dashboard for succession planning
 // ============================================================================
 

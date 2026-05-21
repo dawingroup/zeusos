@@ -1,6 +1,6 @@
 // ============================================================================
 // NATURAL LANGUAGE QUERY SERVICE
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Interprets natural language queries and fetches data from modules
 // ============================================================================
 

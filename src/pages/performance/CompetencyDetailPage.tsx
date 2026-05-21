@@ -1,7 +1,7 @@
 /**
  * CompetencyDetailPage.tsx
  * Detailed view of a competency with level definitions and assessment capability
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState } from 'react';

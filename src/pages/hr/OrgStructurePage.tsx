@@ -1,5 +1,5 @@
 // ============================================================================
-// ORG STRUCTURE PAGE - DawinOS HR Central
+// ORG STRUCTURE PAGE - ZeusOS HR Central
 // Organization chart / Organogram visualization
 // ============================================================================
 

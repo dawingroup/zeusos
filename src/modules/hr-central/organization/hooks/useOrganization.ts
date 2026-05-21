@@ -1,5 +1,5 @@
 // ============================================================================
-// ORGANIZATION HOOKS - DawinOS HR Central
+// ORGANIZATION HOOKS - ZeusOS HR Central
 // ============================================================================
 
 import { useState, useEffect, useCallback, useMemo } from 'react';

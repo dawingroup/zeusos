@@ -1,5 +1,5 @@
 /**
- * Grey Area Hooks - DawinOS v2.0
+ * Grey Area Hooks - ZeusOS v2.0
  * React hooks for grey area detection and management
  */
 

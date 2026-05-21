@@ -1,13 +1,13 @@
 // ============================================================================
 // DAWIN GROUP STANDARD COMPETENCY FRAMEWORK
-// DawinOS v2.0 - HR Performance Module
+// ZeusOS v2.0 - HR Performance Module
 // Standard competencies for consulting/advisory/investment firm
 // ============================================================================
 
 import type { Competency, CompetencyCategory } from '../types/development.types';
 
 /**
- * Standard Competency Framework for Dawin Group
+ * Standard Competency Framework for Zeus Group
  * Covers: Advisory, Capital, Finishes, and Technology subsidiaries
  */
 

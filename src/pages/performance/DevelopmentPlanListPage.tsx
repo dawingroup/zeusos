@@ -1,7 +1,7 @@
 /**
  * DevelopmentPlanListPage.tsx
  * Employee development plans with activity tracking and progress monitoring
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  * Updated to use Firebase via useDevelopment hook
  */
 

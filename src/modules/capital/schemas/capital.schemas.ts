@@ -1,6 +1,6 @@
 // ============================================================================
 // CAPITAL HUB SCHEMAS
-// DawinOS v2.0 — Zod validation for capital seeking & readiness
+// ZeusOS v2.0 — Zod validation for capital seeking & readiness
 // ============================================================================
 
 import { z } from 'zod';

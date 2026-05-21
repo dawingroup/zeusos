@@ -1,5 +1,5 @@
 /**
- * Employee Hooks - DawinOS v2.0
+ * Employee Hooks - ZeusOS v2.0
  * React hooks for employee data management
  */
 

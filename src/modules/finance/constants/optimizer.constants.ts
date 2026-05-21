@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW OPTIMIZER CONSTANTS
-// DawinOS v2.0 - Cash Flow Optimization & Expenditure Prioritization Engine
+// ZeusOS v2.0 - Cash Flow Optimization & Expenditure Prioritization Engine
 // ============================================================================
 
 import type {

@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE CONSTANTS INDEX
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // ============================================================================
 
 export * from './market.constants';

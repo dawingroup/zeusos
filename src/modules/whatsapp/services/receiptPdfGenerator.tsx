@@ -653,7 +653,7 @@ const ReceiptPDFDocument: React.FC<{ data: ReceiptData }> = ({ data }) => {
           <View style={styles.footerRight}>
             <Text style={styles.footerText}>1/1</Text>
             <Text style={styles.footerText}>Printed on {formatPrintDate(new Date())}</Text>
-            <Text style={styles.footerPowered}>Powered by DawinOS</Text>
+            <Text style={styles.footerPowered}>Powered by ZeusOS</Text>
           </View>
         </View>
       </Page>

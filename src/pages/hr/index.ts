@@ -1,6 +1,6 @@
 /**
  * HR Pages Index
- * DawinOS v2.0 - Phase 8.6
+ * ZeusOS v2.0 - Phase 8.6
  */
 
 export { HRDashboardPage, default as HRDashboard } from './HRDashboardPage';

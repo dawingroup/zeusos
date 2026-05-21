@@ -1,6 +1,6 @@
 // ============================================================================
 // QBO CONNECTION CARD
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // QuickBooks Online connection status, sync controls, and data summary
 // ============================================================================
 

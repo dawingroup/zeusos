@@ -1,6 +1,6 @@
 /**
  * Advisory Pages Index
- * DawinOS v2.0 - Dawin Advisory
+ * ZeusOS v2.0 - Zeus Group
  */
 
 export { default as AdvisoryDashboardPage } from './AdvisoryDashboardPage';

@@ -1,5 +1,5 @@
 /**
- * Dawin Advisory Module
+ * Zeus Group Module
  * Main entry point for Advisory subsidiary
  * Enhanced with Capital Hub-style UI patterns
  * MatFlow features consolidated into Infrastructure Delivery

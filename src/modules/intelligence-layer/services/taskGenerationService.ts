@@ -1,6 +1,6 @@
 // ============================================================================
 // TASK GENERATION SERVICE
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Service for generating tasks from business events using templates
 // ============================================================================
 

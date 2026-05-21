@@ -1,5 +1,5 @@
 /**
- * Finance Wrapper Module - DawinOS v2.0
+ * Finance Wrapper Module - ZeusOS v2.0
  * Statement processing and financial operations
  */
 export * from './types';

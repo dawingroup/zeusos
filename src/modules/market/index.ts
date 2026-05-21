@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET INTELLIGENCE MODULE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Competitor tracking, market analysis, and business environment monitoring
 // ============================================================================
 

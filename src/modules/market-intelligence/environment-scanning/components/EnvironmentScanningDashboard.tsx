@@ -1,6 +1,6 @@
 // ============================================================================
 // ENVIRONMENT SCANNING DASHBOARD
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Main dashboard for environment scanning functionality
 // ============================================================================
 

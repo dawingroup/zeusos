@@ -167,7 +167,7 @@ export default function FeaturedUpdatesPage() {
   return (
     <div className="p-6 space-y-6">
       <Helmet>
-        <title>Today · Marketing · DawinOS</title>
+        <title>Today · Marketing · ZeusOS</title>
       </Helmet>
 
       <header className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">

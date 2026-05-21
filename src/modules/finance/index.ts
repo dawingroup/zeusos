@@ -1,6 +1,6 @@
 // ============================================================================
 // FINANCE MODULE INDEX
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Comprehensive Chart of Accounts & General Ledger System
 // ============================================================================
 

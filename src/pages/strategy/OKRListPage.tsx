@@ -1,7 +1,7 @@
 /**
  * OKRListPage.tsx
  * OKR management page with list view, filters, and CRUD operations
- * DawinOS v2.0 - Phase 8.7
+ * ZeusOS v2.0 - Phase 8.7
  */
 
 import { useState, useMemo } from 'react';

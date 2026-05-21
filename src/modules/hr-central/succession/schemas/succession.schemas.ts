@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION SCHEMAS
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Zod validation schemas for Succession Planning
 // ============================================================================
 

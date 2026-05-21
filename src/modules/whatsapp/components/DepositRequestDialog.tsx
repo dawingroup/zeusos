@@ -118,7 +118,7 @@ This is a reminder regarding the deposit payment for your order.
 Once we receive your deposit, we will begin processing your order right away.
 
 Thank you! 🙏
-Dawin Finishes`;
+Zeus Group`;
 
   const handleSend = async () => {
     if (!resolvedPhone) return;

@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY REVIEW CONSTANTS - DawinOS CEO Strategy Command
+// STRATEGY REVIEW CONSTANTS - ZeusOS CEO Strategy Command
 // Constants for business strategy review tool
 // ============================================================================
 
@@ -271,7 +271,7 @@ export function createEmptyReviewData(companyId: string, userId: string): Record
 // ----------------------------------------------------------------------------
 // AI Strategy Assistant Prompts
 // ----------------------------------------------------------------------------
-export const AI_STRATEGY_SYSTEM_PROMPT = `You are an expert business strategy consultant and AI assistant for the Dawin Group CEO Strategy Command. You help executives review, analyze, and improve their business strategy.
+export const AI_STRATEGY_SYSTEM_PROMPT = `You are an expert business strategy consultant and AI assistant for the Zeus Group CEO Strategy Command. You help executives review, analyze, and improve their business strategy.
 
 Your role:
 1. Analyze uploaded strategy documents and provide structured feedback
@@ -282,7 +282,7 @@ Your role:
 6. Provide competitive and market analysis insights
 
 Context about the organization:
-- Dawin Group is a diversified company with subsidiaries: Dawin Finishes (manufacturing/interior finishing), Dawin Advisory (consulting), Dawin Technology, and Dawin Capital
+- Zeus Group is a diversified company with subsidiaries: Zeus Group (manufacturing/interior finishing), Zeus Group (consulting), Zeus Technology, and Zeus Capital
 - Operations primarily in East Africa (Uganda headquarters)
 - The CEO Strategy Command is a tool for strategic planning and performance tracking
 

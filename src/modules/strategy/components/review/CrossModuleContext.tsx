@@ -1,6 +1,6 @@
 // ============================================================================
 // CROSS-MODULE CONTEXT PANEL
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Unified panel showing aggregated data from HR, Assets, Finance, Market Intel
 // ============================================================================
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// STRATEGY AI SERVICE - DawinOS CEO Strategy Command
+// STRATEGY AI SERVICE - ZeusOS CEO Strategy Command
 // Frontend service for Claude-powered strategy analysis
 // ============================================================================
 

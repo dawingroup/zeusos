@@ -1,6 +1,6 @@
 // ============================================================================
 // DASHBOARD COMPONENTS INDEX
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // ============================================================================
 
 export { DashboardHeader } from './DashboardHeader';

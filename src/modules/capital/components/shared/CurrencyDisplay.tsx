@@ -1,6 +1,6 @@
 // ============================================================================
 // CURRENCY DISPLAY COMPONENT
-// DawinOS v2.0 - Capital Hub Module
+// ZeusOS v2.0 - Capital Hub Module
 // Displays currency values with formatting and dual currency support
 // ============================================================================
 

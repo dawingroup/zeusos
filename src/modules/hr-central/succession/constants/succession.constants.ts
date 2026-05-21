@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION CONSTANTS
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Constants for Succession Planning & Talent Pipeline
 // ============================================================================
 

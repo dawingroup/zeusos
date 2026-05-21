@@ -1,7 +1,7 @@
 /**
  * FinancialReportsPage.tsx
  * Comprehensive financial reporting with Uganda tax compliance
- * DawinOS v2.0 - Phase 8.8
+ * ZeusOS v2.0 - Phase 8.8
  */
 
 import { useState } from 'react';

@@ -1,7 +1,7 @@
 /**
  * KPIListPage.tsx
  * KPI management page with cards, filters, and trend visualization
- * DawinOS v2.0 - Phase 8.7
+ * ZeusOS v2.0 - Phase 8.7
  */
 
 import { useState, useMemo } from 'react';

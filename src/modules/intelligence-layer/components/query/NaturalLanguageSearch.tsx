@@ -1,6 +1,6 @@
 // ============================================================================
 // NATURAL LANGUAGE SEARCH
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Search bar for natural language queries across all modules
 // ============================================================================
 

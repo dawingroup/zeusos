@@ -133,7 +133,7 @@ export interface CompanyInfo {
 // ============================================================================
 
 export const DEFAULT_COMPANY_INFO: CompanyInfo = {
-  name: 'Dawin Group',
+  name: 'Zeus Group',
   address: 'Kayondo Road, Kyambogo Upper Estate',
   city: 'Kampala, Uganda',
   tinNumber: '1000000000',
@@ -736,7 +736,7 @@ export function PayrollReportPDFDocument({ data }: { data: PayrollReportData }) 
         {/* Footer */}
         <View style={styles.footer} fixed>
           <Text style={styles.footerText}>Generated on {format(generatedAt, 'dd MMM yyyy, HH:mm')}</Text>
-          <Text style={styles.footerText}>Dawin Group - Confidential Payroll Document</Text>
+          <Text style={styles.footerText}>Zeus Group - Confidential Payroll Document</Text>
         </View>
       </Page>
     </Document>

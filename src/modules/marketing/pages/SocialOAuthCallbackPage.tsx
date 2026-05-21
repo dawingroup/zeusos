@@ -42,7 +42,7 @@ export default function SocialOAuthCallbackPage() {
     }
 
     setState('success');
-    setMessage('Connection finalized — you can close this tab and return to DawinOS.');
+    setMessage('Connection finalized — you can close this tab and return to ZeusOS.');
   }, [params]);
 
   return (

@@ -1,6 +1,6 @@
 /**
  * Performance Pages Index
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 export { PerformanceDashboardPage, default as PerformanceDashboard } from './PerformanceDashboardPage';

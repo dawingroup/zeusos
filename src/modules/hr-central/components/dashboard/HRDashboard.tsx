@@ -1,5 +1,5 @@
 /**
- * HR Dashboard Component - DawinOS v2.0
+ * HR Dashboard Component - ZeusOS v2.0
  * Main HR dashboard showing key metrics and quick access
  */
 

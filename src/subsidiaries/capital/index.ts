@@ -1,7 +1,7 @@
 /**
- * Dawin Capital - Investment & Finance
+ * Zeus Capital - Investment & Finance
  * 
- * Placeholder module for the Dawin Capital subsidiary
+ * Placeholder module for the Zeus Capital subsidiary
  */
 
 export const CAPITAL_MODULE = 'labyrinth';

@@ -1,6 +1,6 @@
 // ============================================================================
 // BUSINESS PIVOTS SECTION
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Timeline/card UI for company-level business pivots
 // ============================================================================
 

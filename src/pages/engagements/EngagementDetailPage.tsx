@@ -13,7 +13,7 @@ export default function EngagementDetailPage() {
   return (
     <>
       <Helmet>
-        <title>Engagement Details | Dawin Advisory Platform</title>
+        <title>Engagement Details | ZeusOS</title>
       </Helmet>
 
       <div className="p-6">

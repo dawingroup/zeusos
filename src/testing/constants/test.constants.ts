@@ -1,6 +1,6 @@
 // ============================================================================
 // TEST CONSTANTS
-// DawinOS v2.0 - Testing Strategy
+// ZeusOS v2.0 - Testing Strategy
 // Shared test constants and configuration
 // ============================================================================
 
@@ -95,7 +95,7 @@ export const TEST_USERS = {
 export const TEST_SUBSIDIARIES = {
   DAWIN_GROUP: {
     id: 'zeus-group',
-    name: 'Dawin Group',
+    name: 'Zeus Group',
     code: 'DG',
     type: 'holding',
     currency: 'UGX',
@@ -104,7 +104,7 @@ export const TEST_SUBSIDIARIES = {
   },
   DAWIN_FINISHES: {
     id: 'zeus-the-agency',
-    name: 'Dawin Finishes',
+    name: 'Zeus Group',
     code: 'DF',
     type: 'manufacturing',
     currency: 'UGX',
@@ -113,25 +113,25 @@ export const TEST_SUBSIDIARIES = {
   },
   DAWIN_ADVISORY: {
     id: 'zeus-digital',
-    name: 'Dawin Advisory',
+    name: 'Zeus Group',
     code: 'DA',
     type: 'services',
     currency: 'UGX',
     timezone: 'Africa/Kampala',
     status: 'active',
   },
-  DAWIN_CAPITAL: {
+  ZEUS_CAPITAL: {
     id: 'labyrinth',
-    name: 'Dawin Capital',
+    name: 'Zeus Capital',
     code: 'DC',
     type: 'investment',
     currency: 'USD',
     timezone: 'Africa/Kampala',
     status: 'active',
   },
-  DAWIN_TECHNOLOGY: {
+  ZEUS_TECHNOLOGY: {
     id: 'odd-gorilla',
-    name: 'Dawin Technology',
+    name: 'Zeus Technology',
     code: 'DT',
     type: 'technology',
     currency: 'UGX',

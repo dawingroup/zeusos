@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI CONSTANTS - DawinOS CEO Strategy Command
+// KPI CONSTANTS - ZeusOS CEO Strategy Command
 // Constants for KPI (Key Performance Indicator) management
 // ============================================================================
 

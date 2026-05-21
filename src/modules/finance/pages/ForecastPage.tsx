@@ -1,6 +1,6 @@
 // ============================================================================
 // FORECAST PAGE — Three-statement sub-tabs, collapsible account groups
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Sub-tabs: P&L | Balance Sheet | Cash Flow
 // All tabs: individual QBO accounts, collapsible parent groups

@@ -5,7 +5,7 @@
  * information. Accessed via token-based URL without authentication.
  *
  * Designed as a standalone full-page experience without backend navigation,
- * similar to the client portal used in Dawin Finishes.
+ * similar to the client portal used in Zeus Group.
  *
  * URL format: /advisory/delivery/cd-portal?token=<access_token>
  */

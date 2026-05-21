@@ -1,6 +1,6 @@
 // ============================================================================
 // DEVELOPMENT PLAN SERVICE
-// DawinOS v2.0 - HR Performance Module
+// ZeusOS v2.0 - HR Performance Module
 // Firebase service for employee development plan management
 // ============================================================================
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // ENVIRONMENT SCANNING TYPES
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // ============================================================================
 
 import { Timestamp } from 'firebase/firestore';

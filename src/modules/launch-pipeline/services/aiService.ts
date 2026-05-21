@@ -50,14 +50,14 @@ export async function generateProductNames(
 }
 
 /**
- * Get default naming strategy for Dawin Finishes
+ * Get default naming strategy for Zeus Group
  */
 function getDefaultNamingStrategy(): string {
   return `Create names that:
 1. Evoke quality craftsmanship and premium materials
 2. Are memorable and easy to pronounce
 3. Work well for SEO (include relevant keywords naturally)
-4. Fit the Dawin Finishes brand identity
+4. Fit the Zeus Group brand identity
 5. Could work as part of a collection
 6. Are 2-4 words, avoiding generic terms`;
 }

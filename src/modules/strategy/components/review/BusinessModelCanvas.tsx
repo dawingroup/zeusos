@@ -1,6 +1,6 @@
 // ============================================================================
 // BUSINESS MODEL CANVAS COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Interactive 9-block Business Model Canvas with AI suggestions
 // ============================================================================
 

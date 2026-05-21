@@ -1,6 +1,6 @@
 /**
  * ROLES.TS
- * Role definitions for the Dawin Advisory Platform
+ * Role definitions for the ZeusOS
  */
 
 /**

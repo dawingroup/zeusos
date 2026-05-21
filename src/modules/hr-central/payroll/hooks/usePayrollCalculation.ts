@@ -1,6 +1,6 @@
 /**
  * Payroll Calculation Hooks
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * React hooks for payroll calculations, history, and tax previews.
  */

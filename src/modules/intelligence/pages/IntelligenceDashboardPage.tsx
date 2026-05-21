@@ -1,6 +1,6 @@
 // ============================================================================
 // INTELLIGENCE DASHBOARD PAGE
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Main dashboard for market intelligence
 // ============================================================================
 

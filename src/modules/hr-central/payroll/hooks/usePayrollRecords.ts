@@ -1,6 +1,6 @@
 /**
  * Payroll Records Hooks
- * DawinOS HR Central - React hooks for advances, overtime, attendance
+ * ZeusOS HR Central - React hooks for advances, overtime, attendance
  */
 
 import { useState, useEffect, useCallback } from 'react';

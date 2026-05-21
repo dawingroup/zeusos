@@ -1,7 +1,7 @@
 /**
  * Project Case Study Types
  *
- * Curated long-form write-ups of completed projects. Authored in DawinOS
+ * Curated long-form write-ups of completed projects. Authored in ZeusOS
  * Marketing → published to Shopify (dawinfinishes.com) via the publish
  * pipeline. The shape mirrors the Shopify `project-detail` section blocks
  * so a case study maps 1:1 to a Shopify page on publish.
@@ -119,7 +119,7 @@ export interface ProjectStorefrontBlock {
   partnerArchitect?: string;
 
   /**
-   * Linked metaobject refs (DawinOS-side ids; publisher resolves to GIDs).
+   * Linked metaobject refs (ZeusOS-side ids; publisher resolves to GIDs).
    */
   finishesUsedIds?: string[];    // finishLibrary doc ids with dawinFinishes set
   materialsUsedIds?: string[];   // inventoryItems doc ids with shopifyMetaobjectGid set
@@ -179,7 +179,7 @@ export interface ProjectCaseStudy {
 
   /** Linked CRM deal that originated this work (for attribution). */
   linkedDealId?: string;
-  /** Linked design/manufacturing project (DawinOS internal). */
+  /** Linked design/manufacturing project (ZeusOS internal). */
   linkedProjectId?: string;
 
   /**

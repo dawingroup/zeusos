@@ -1,6 +1,6 @@
 // ============================================================================
 // ENVIRONMENT SCANNING HOOK
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // ============================================================================
 
 import { useState, useEffect, useCallback } from 'react';

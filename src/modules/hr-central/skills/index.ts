@@ -1,6 +1,6 @@
 // ============================================================================
 // SKILLS MODULE INDEX
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Export all skills & training management functionality
 // ============================================================================
 

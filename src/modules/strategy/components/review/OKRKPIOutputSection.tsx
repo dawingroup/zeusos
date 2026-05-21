@@ -1,6 +1,6 @@
 // ============================================================================
 // OKR & KPI OUTPUT SECTION COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Generate and manage OKRs and KPIs from strategy review with AI
 // ============================================================================
 

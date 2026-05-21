@@ -1,6 +1,6 @@
 /**
  * useAIMemory Hook
- * DawinOS v2.0 - React hook for AI Memory System
+ * ZeusOS v2.0 - React hook for AI Memory System
  * 
  * Provides:
  * - Conversation persistence (load/save/subscribe)

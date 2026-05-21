@@ -47,7 +47,7 @@ export function PageTemplate({
   return (
     <>
       <Helmet>
-        <title>{metaTitle || title} | Dawin Advisory Platform</title>
+        <title>{metaTitle || title} | ZeusOS</title>
         {metaDescription && <meta name="description" content={metaDescription} />}
       </Helmet>
 

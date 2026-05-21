@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW CHART
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Visualizes cash flow trends and breakdown
 // ============================================================================
 

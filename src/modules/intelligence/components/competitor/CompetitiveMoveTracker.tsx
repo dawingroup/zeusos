@@ -1,6 +1,6 @@
 // ============================================================================
 // COMPETITIVE MOVE TRACKER
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Timeline view of competitive moves
 // ============================================================================
 

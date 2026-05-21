@@ -1,6 +1,6 @@
 /**
  * Test Intelligence Layer
- * DawinOS v2.0 - Testing Framework
+ * ZeusOS v2.0 - Testing Framework
  * Test page for Phase 1: Intelligence Layer components
  */
 
@@ -225,10 +225,10 @@ export const TestIntelligenceLayer: React.FC = () => {
                 </select>
                 <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-[#872E5C]">
                   <option value="">Select Subsidiary</option>
-                  <option value="advisory">Dawin Advisory</option>
-                  <option value="finishes">Dawin Finishes</option>
-                  <option value="technology">Dawin Technology</option>
-                  <option value="capital">Dawin Capital</option>
+                  <option value="advisory">Zeus Group</option>
+                  <option value="finishes">Zeus Group</option>
+                  <option value="technology">Zeus Technology</option>
+                  <option value="capital">Zeus Capital</option>
                 </select>
                 <button className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#872E5C] text-white font-medium rounded-lg hover:bg-[#6a2449] transition-colors">
                   <Plus className="w-4 h-4" /> Create Test Event

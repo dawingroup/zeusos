@@ -314,7 +314,7 @@ export function ClientPortalAccessPanel({ customerId, customerName, projects, pr
                   {r.project.code ? (
                     // Staff "view as client" — opens the portal for this
                     // project in a new tab. The portal recognises Dawin
-                    // staff (`@dawin.group`) and lets them in without
+                    // staff (`@zeusgroup.co.ug`) and lets them in without
                     // needing to be in `clientPortalUserIds`. Useful for
                     // previewing what the client sees before invite.
                     <a

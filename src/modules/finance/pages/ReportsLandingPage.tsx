@@ -1,6 +1,6 @@
 // ============================================================================
 // AI FINANCE REPORTS PAGE
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 //
 // Generate intelligent financial reports for different stakeholder audiences.
 // Uses Gemini AI to produce board reports, investor updates, management
@@ -18,7 +18,7 @@ import { periodLabel } from '../types/forecast.types';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const COMPANY_NAME = 'DawinOS';
+const COMPANY_NAME = 'ZeusOS';
 const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 
 interface TemplateCard {

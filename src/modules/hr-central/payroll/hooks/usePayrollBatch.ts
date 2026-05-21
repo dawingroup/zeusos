@@ -1,6 +1,6 @@
 /**
  * Payroll Batch Hooks
- * DawinOS HR Central - Payroll Module
+ * ZeusOS HR Central - Payroll Module
  * 
  * React hooks for managing payroll batches, including creation,
  * calculation, approval workflow, and list management.

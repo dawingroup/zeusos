@@ -80,7 +80,7 @@ export {
   STRATEGY_COLLECTIONS,
   STRATEGY_DEFAULTS,
   // Dawin Subsidiaries
-  DAWIN_SUBSIDIARIES,
+  ZEUS_SUBSIDIARIES,
   DAWIN_SUBSIDIARY_LABELS,
 } from './constants/strategy.constants';
 

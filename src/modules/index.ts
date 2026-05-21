@@ -1,5 +1,5 @@
 /**
- * DawinOS v2.0 Module Registry
+ * ZeusOS v2.0 Module Registry
  * Central registration point for all platform modules
  */
 

@@ -1,6 +1,6 @@
 // ============================================================================
 // DEVELOPMENT PLAN CARD
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Displays a development plan with progress
 // ============================================================================
 

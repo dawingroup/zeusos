@@ -1,6 +1,6 @@
 // ============================================================================
 // AI STRATEGY ASSISTANT COMPONENT
-// DawinOS v2.0 - CEO Strategy Command
+// ZeusOS v2.0 - CEO Strategy Command
 // Claude-powered chat panel for strategy analysis and recommendations
 // ============================================================================
 

@@ -1,5 +1,5 @@
 /**
- * Employee Filter Drawer Component - DawinOS v2.0
+ * Employee Filter Drawer Component - ZeusOS v2.0
  * Right-side drawer with filter options for employee list
  */
 

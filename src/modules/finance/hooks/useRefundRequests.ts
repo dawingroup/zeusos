@@ -1,6 +1,6 @@
 // ============================================================================
 // USE REFUND REQUESTS HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // React hook for refund request management
 // ============================================================================
 

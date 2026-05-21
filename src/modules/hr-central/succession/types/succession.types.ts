@@ -1,6 +1,6 @@
 // ============================================================================
 // SUCCESSION TYPES
-// DawinOS v2.0 - HR Module
+// ZeusOS v2.0 - HR Module
 // Type definitions for Succession Planning
 // ============================================================================
 

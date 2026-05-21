@@ -1,6 +1,6 @@
 // ============================================================================
 // AGGREGATION CONSTANTS
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Constants for performance aggregation across strategy, OKRs, and KPIs
 // ============================================================================
 
@@ -19,7 +19,7 @@ export const AGGREGATION_LEVELS = {
 export type AggregationLevel = typeof AGGREGATION_LEVELS[keyof typeof AGGREGATION_LEVELS];
 
 export const AGGREGATION_LEVEL_LABELS: Record<AggregationLevel, string> = {
-  [AGGREGATION_LEVELS.GROUP]: 'Dawin Group',
+  [AGGREGATION_LEVELS.GROUP]: 'Zeus Group',
   [AGGREGATION_LEVELS.SUBSIDIARY]: 'Subsidiary',
   [AGGREGATION_LEVELS.DEPARTMENT]: 'Department',
   [AGGREGATION_LEVELS.TEAM]: 'Team',

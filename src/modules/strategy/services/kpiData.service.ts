@@ -1,5 +1,5 @@
 // ============================================================================
-// KPI DATA SERVICE - DawinOS CEO Strategy Command
+// KPI DATA SERVICE - ZeusOS CEO Strategy Command
 // Firebase service for KPI data point, trend, and alert management
 // ============================================================================
 

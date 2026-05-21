@@ -1,6 +1,6 @@
 // ============================================================================
 // FORECAST TYPES
-// DawinOS v2.0 - Finance Module
+// ZeusOS v2.0 - Finance Module
 // Three-Way Forecast Engine: P&L → Balance Sheet → Cash Flow Statement
 // Spec reference: §5–8 of Forecasting & Variance Analysis Module spec
 // ============================================================================
@@ -43,7 +43,7 @@ export interface DirectEntryParams {
   values: Record<string, number>;  // { 'YYYY-MM': amount }
 }
 
-/** Pull amounts from an existing DawinOS budget */
+/** Pull amounts from an existing ZeusOS budget */
 export interface LinkToBudgetParams {
   budgetId: string;
   adjustmentPct: number;   // 0 for no adjustment; 0.05 = +5% over budget

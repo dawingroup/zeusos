@@ -1,6 +1,6 @@
 // ============================================================================
 // StrategyOverview PAGE
-// DawinOS v2.0 - CEO Strategy Command Module
+// ZeusOS v2.0 - CEO Strategy Command Module
 // Strategic plans overview and entry point for strategy review
 // ============================================================================
 

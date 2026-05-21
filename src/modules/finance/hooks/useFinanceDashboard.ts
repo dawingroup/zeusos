@@ -1,6 +1,6 @@
 // ============================================================================
 // USE FINANCE DASHBOARD HOOK
-// DawinOS v2.0 - Financial Management Module
+// ZeusOS v2.0 - Financial Management Module
 // Composite hook that aggregates data from accounts, budgets, and cash flow
 // for the Finance Dashboard page
 // ============================================================================

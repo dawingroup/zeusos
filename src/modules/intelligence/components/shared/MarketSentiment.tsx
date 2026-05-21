@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET SENTIMENT COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // Sentiment gauge and display
 // ============================================================================
 

@@ -1,7 +1,7 @@
 /**
  * GoalListPage.tsx
  * Goal management with filtering, views, and progress tracking
- * DawinOS v2.0 - Phase 8.9
+ * ZeusOS v2.0 - Phase 8.9
  */
 
 import { useState, useMemo } from 'react';

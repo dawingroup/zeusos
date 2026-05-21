@@ -1,6 +1,6 @@
 // ============================================================================
 // CASH FLOW OPTIMIZER SERVICE
-// DawinOS v2.0 - Firestore CRUD + orchestration for the optimizer engine
+// ZeusOS v2.0 - Firestore CRUD + orchestration for the optimizer engine
 // ============================================================================
 
 import {

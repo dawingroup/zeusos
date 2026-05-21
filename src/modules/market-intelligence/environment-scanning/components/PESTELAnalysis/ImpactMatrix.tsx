@@ -1,6 +1,6 @@
 // ============================================================================
 // IMPACT MATRIX COMPONENT
-// DawinOS v2.0 - Market Intelligence Module
+// ZeusOS v2.0 - Market Intelligence Module
 // 5x5 Impact vs Probability matrix for PESTEL factors
 // ============================================================================
 

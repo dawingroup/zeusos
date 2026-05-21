@@ -1,6 +1,6 @@
 // ============================================================================
 // USE INTELLIGENCE OVERVIEW HOOK
-// DawinOS v2.0 - Intelligence Layer
+// ZeusOS v2.0 - Intelligence Layer
 // Fetch overall intelligence metrics and activity
 // ============================================================================
 

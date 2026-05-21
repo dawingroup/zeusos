@@ -2,7 +2,7 @@
  * ShopTraveler PDF Document
  * Complete production documentation with cutting maps, edge banding, remnants, and labels
  * 
- * Enhanced with Dawin Finishes branding and Outfit font
+ * Enhanced with Zeus Group branding and Outfit font
  */
 
 import React from 'react';
@@ -57,7 +57,7 @@ Font.register({
 });
 
 // ============================================
-// Dawin Finishes Brand Colors
+// Zeus Group Brand Colors
 // ============================================
 
 const BRAND = {
@@ -113,7 +113,7 @@ interface ShopTravelerProps {
   standardParts?: StandardPartEntry[];
   specialParts?: SpecialPartEntry[];
   deliverablesByItem?: Map<string, { deliverables: Deliverable[]; itemName: string }>;
-  logoUrl?: string;  // Dawin Finishes logo URL from subsidiary branding
+  logoUrl?: string;  // Zeus Group logo URL from subsidiary branding
   debugEdgeMapping?: boolean;
 }
 
