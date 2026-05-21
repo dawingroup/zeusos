@@ -23,50 +23,34 @@ export interface Subsidiary {
 /**
  * SubsidiaryModule union — every module that can be granted to a subsidiary.
  *
- * NOTE(ZeusOS Phase 1.C): the construction/manufacturing-domain modules at
- * the top of this union (design-manager, inventory, design-studio, etc.)
- * will be deleted as part of Phase 1.C and removed from this union. They
- * are kept here for the duration of Phase 1.B so the typecheck doesn't
- * cascade-break consumers we haven't migrated yet.
+ * After Phase 1.C: construction/manufacturing modules removed (design-manager,
+ * inventory, design-studio, matflow, construction, workshop-viewer, clipper,
+ * feature-library, infrastructure_delivery, investment_advisory). Heavily
+ * coupled modules also removed pending Phase 3 rebuild (crm, customer-hub,
+ * marketing, sales-orders, procurement, suppliers, whatsapp, launch-pipeline).
  *
- * The agency-friendly modules (crm, marketing, customer-hub, suppliers,
- * sales-orders, whatsapp, launch-pipeline, asset-registry, plus the
- * corporate cross-subsidiary set) are the canonical Zeus set.
- *
- * Phase 3 will add: 'campaigns' | 'media' | 'production' | 'talent' | 'asset-library'.
+ * Phase 3 will add the canonical Zeus modules: 'campaigns' | 'media' |
+ * 'production' | 'talent' | 'asset-library' and the corresponding role registry
+ * in src/core/settings/moduleRoles.ts.
  */
 export type SubsidiaryModule =
-  // Legacy construction modules (queued for deletion in Phase 1.C)
-  | 'design-manager'
-  | 'clipper'
-  | 'feature-library'
-  | 'construction'
-  | 'inventory'
-  | 'workshop-viewer'
-  | 'design-studio'
-  | 'matflow'
-  | 'investment_advisory'
-  | 'infrastructure_delivery'
-  // Agency-friendly modules (retained for Zeus)
-  | 'asset-registry'
-  | 'launch-pipeline'
-  | 'procurement'
+  // Agency-domain modules — placeholders for Phase 3+ (kept in the union now
+  // so the role-registry compiles ahead of the module folders existing)
+  | 'campaigns'
+  | 'media'
   | 'production'
-  | 'marketing'
-  | 'crm'
-  | 'customer-hub'
-  | 'whatsapp'
-  | 'sales-orders'
-  // Shared modules (cross-subsidiary)
-  | 'suppliers'
-  // Corporate modules (cross-subsidiary)
+  | 'talent'
+  | 'asset-library'
+  // Cross-subsidiary corporate modules (retained from DawinOS, light edits)
+  | 'asset-registry'
   | 'market_intelligence'
   | 'strategy'
   | 'hr'
   | 'finance'
   | 'capital'
   | 'compliance'
-  | 'intelligence-layer';
+  | 'intelligence-layer'
+  | 'advisory'; // Advisory module — renamed to agency-core in Phase 3
 
 export interface SubsidiaryStats {
   activeProjects: number;
@@ -76,20 +60,19 @@ export interface SubsidiaryStats {
 }
 
 /**
- * Modules that every Zeus agency gets by default. Phase 3 will introduce the
- * canonical Campaign & Job Manager, Media Plan, Talent Roster, and Asset
- * Library — they'll join this list as they ship.
+ * Modules that every Zeus agency gets by default. As Phase 3 ships the
+ * Campaign & Job Manager, Media Plan, Production, Talent, and Asset Library
+ * modules, the IDs are listed here so newly-created subsidiaries see the
+ * full surface from day one.
  */
 const ZEUS_DEFAULT_AGENCY_MODULES: SubsidiaryModule[] = [
-  'crm',
-  'customer-hub',
-  'marketing',
-  'sales-orders',
-  'procurement',
-  'suppliers',
+  'campaigns',
+  'media',
+  'production',
+  'talent',
+  'asset-library',
   'asset-registry',
-  'launch-pipeline',
-  'whatsapp',
+  'advisory',
 ];
 
 /**

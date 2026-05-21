@@ -63,7 +63,7 @@ const MODULE_SENSITIVITY: Partial<Record<string, { minRole: GlobalRole; label: s
 
 /** Corporate modules shown in their own section */
 const CORPORATE_MODULE_IDS: SubsidiaryModule[] = [
-  'strategy', 'hr', 'finance', 'capital', 'market_intelligence', 'intelligence-layer', 'suppliers',
+  'strategy', 'hr', 'finance', 'capital', 'market_intelligence', 'intelligence-layer', 'compliance', 'asset-registry',
 ];
 
 export function SubsidiaryAccessEditor({ access, onChange, disabled }: SubsidiaryAccessEditorProps) {

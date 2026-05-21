@@ -14,7 +14,7 @@ import * as settingsService from './settingsService';
 
 /** Corporate modules stored under the virtual 'corporate' subsidiary */
 const CORPORATE_MODULE_IDS: SubsidiaryModule[] = [
-  'strategy', 'hr', 'finance', 'capital', 'market_intelligence', 'intelligence-layer', 'suppliers',
+  'strategy', 'hr', 'finance', 'capital', 'market_intelligence', 'intelligence-layer', 'compliance',
 ];
 
 /**

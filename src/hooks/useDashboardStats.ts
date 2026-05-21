@@ -79,10 +79,11 @@ export function useDashboardStats(accessibleModuleIds: SubsidiaryModule[]) {
       try {
         const promises: Promise<void>[] = [];
 
-        // Active projects — designProjects collection
-        if (hasModule('design-manager')) {
+        // Active campaigns (Phase 1.C: design-manager removed; Phase 3 wires
+        // these to the new `campaigns` collection)
+        if (hasModule('campaigns')) {
           promises.push(
-            safeCount('designProjects').then((n) => {
+            safeCount('campaigns').then((n) => {
               results.activeProjects += n;
             })
           );
@@ -99,10 +100,10 @@ export function useDashboardStats(accessibleModuleIds: SubsidiaryModule[]) {
           );
         }
 
-        // Manufacturing orders (open)
-        if (hasModule('production') || hasModule('procurement')) {
+        // Production jobs (open) — Phase 3 will define the exact collection
+        if (hasModule('production')) {
           promises.push(
-            safeDocs('manufacturingOrders', [
+            safeDocs('productionJobs', [
               ['status', 'in', ['draft', 'approved', 'in-progress']],
             ]).then((n) => {
               results.openOrders += n;
@@ -110,10 +111,10 @@ export function useDashboardStats(accessibleModuleIds: SubsidiaryModule[]) {
           );
         }
 
-        // Purchase orders (pending)
-        if (hasModule('procurement') || hasModule('production')) {
+        // Media buys (pending) — Phase 4 (Media Plan & Buying)
+        if (hasModule('media')) {
           promises.push(
-            safeDocs('purchaseOrders', [
+            safeDocs('mediaBuys', [
               ['status', 'in', ['draft', 'pending', 'ordered']],
             ]).then((n) => {
               results.openOrders += n;
