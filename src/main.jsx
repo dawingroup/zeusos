@@ -34,9 +34,9 @@ const queryClient = new QueryClient({
   },
 })
 
-// PWA initialization
-import { initPWA } from './pwa/initPWA'
-initPWA()
+// PWA initialization removed in Phase 1.C — the original initPWA wired up the
+// matflow construction-domain service worker. Phase 4 will re-add a generic
+// service-worker registration once the marketing-agency PWA scope is defined.
 
 /**
  * Error Boundary to catch and display runtime errors
