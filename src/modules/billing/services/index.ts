@@ -36,6 +36,11 @@ export {
 } from './client-invoice.service';
 
 export {
+  generateClientInvoiceFromQuote,
+  type GenerateClientInvoiceFromQuoteInput,
+} from './client-invoice-from-quote.service';
+
+export {
   toClientFacingInvoice,
   toClientFacingLine,
   clientFriendlyDescription,

@@ -55,47 +55,6 @@ const { generateMesh } = require('./src/workshop/generateMesh');
 const { generateParametric } = require('./src/workshop/generateParametric');
 const { uploadToTrimbleConnect, checkTrimbleUpdates, importFromTrimbleConnect, syncTrimbleConnect } = require('./src/workshop/trimbleConnect');
 
-// Design Studio — MDP Generator + Shortage Trigger
-const { generateMDP: generateMDPFn } = require('./src/design-studio/generateMDP');
-const { onMDPShortageDetected } = require('./src/design-studio/onMDPShortageDetected');
-exports.generateMDP = generateMDPFn;
-exports.onMDPShortageDetected = onMDPShortageDetected;
-
-// Design Studio — Validation, Enrichment, DKB
-const { validateConfiguration: validateConfigurationFn } = require('./src/design-studio/validateConfiguration');
-const { enrichTripoPrompt: enrichTripoPromptFn } = require('./src/design-studio/enrichTripoPrompt');
-const { compileDKB: compileDKBFn } = require('./src/design-studio/compileDKB');
-const { syncDKBToMemory: syncDKBToMemoryFn, syncDKBToMemoryScheduled } = require('./src/design-studio/syncDKBToMemory');
-const { onPDDStatusChange } = require('./src/design-studio/onPDDStatusChange');
-exports.validateConfiguration = validateConfigurationFn;
-exports.enrichTripoPrompt = enrichTripoPromptFn;
-exports.compileDKB = compileDKBFn;
-exports.syncDKBToMemory = syncDKBToMemoryFn;
-exports.syncDKBToMemoryScheduled = syncDKBToMemoryScheduled;
-exports.onPDDStatusChange = onPDDStatusChange;
-
-// Design Studio — Phase 2: Scene Composition & AI Grouping
-const { composeSceneGLB } = require('./src/design-studio/composeSceneGLB');
-const { extractAssembliesFromGLB } = require('./src/design-studio/extractAssembliesFromGLB');
-const { generateCabinetRender } = require('./src/design-studio/generateCabinetRender');
-const { generateProjectPDF } = require('./src/design-studio/generateProjectPDF');
-const { recomputeSceneRollup } = require('./src/design-studio/recomputeSceneRollup');
-const { validateSceneForProduction } = require('./src/design-studio/validateSceneForProduction');
-const { createMOsForScene } = require('./src/design-studio/createMOsForScene');
-const { aiGroupModel } = require('./src/design-studio/aiGroupModel');
-const { aiDetectCabinets } = require('./src/design-studio/aiDetectCabinets');
-const { aiReconcileParts } = require('./src/design-studio/aiReconcileParts');
-exports.composeSceneGLB = composeSceneGLB;
-exports.extractAssembliesFromGLB = extractAssembliesFromGLB;
-exports.generateCabinetRender = generateCabinetRender;
-exports.generateProjectPDF = generateProjectPDF;
-exports.recomputeSceneRollup = recomputeSceneRollup;
-exports.validateSceneForProduction = validateSceneForProduction;
-exports.createMOsForScene = createMOsForScene;
-exports.aiGroupModel = aiGroupModel;
-exports.aiDetectCabinets = aiDetectCabinets;
-exports.aiReconcileParts = aiReconcileParts;
-
 // Material Pricing AI
 exports.priceMaterialAI = priceMaterialAI;
 
@@ -5098,3 +5057,24 @@ exports.approveChangeOrder = approveChangeOrder;
 exports.rejectChangeOrder = rejectChangeOrder;
 exports.openMasterJobOnQuoteAccepted = assignment.openMasterJobOnQuoteAccepted;
 exports.signAcceptanceCriterion = assignment.signAcceptanceCriterion;
+
+// ============================================================
+// Billing — Phase 3.F (client invoices + GL adapter)
+// ============================================================
+// AM-driven client-invoice lifecycle (generate → issue → record
+// payment) plus the GL-posting consumer for the IC invoices that
+// 3.B raises on IWO close. The IC invoice itself is raised inside
+// 3.B's closeWorkOrder transaction; this module owns the cross-
+// entity GL posting that 3.B explicitly defers to "the Phase 3.F
+// billing-run consumer". QBO/Xero connectors still deferred to
+// Phase 5 — today the GL audit-trail adapter writes to gl_postings/.
+const { issueClientInvoice } = require('./src/billing/issueClientInvoice');
+const { recordClientPayment } = require('./src/billing/recordClientPayment');
+const { generateClientInvoice } = require('./src/billing/generateClientInvoice');
+const {
+  onIntercompanyInvoiceCreated,
+} = require('./src/billing/onIntercompanyInvoiceCreated');
+exports.issueClientInvoice = issueClientInvoice;
+exports.recordClientPayment = recordClientPayment;
+exports.generateClientInvoice = generateClientInvoice;
+exports.onIntercompanyInvoiceCreated = onIntercompanyInvoiceCreated;
