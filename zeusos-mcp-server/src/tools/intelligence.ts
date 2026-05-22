@@ -10,7 +10,7 @@ export function registerIntelligenceTools(server: McpServer): void {
   // ─── zeusos_cross_module_query ───────────────────────────────────────────────
   server.registerTool('zeusos_cross_module_query', {
     title: 'Cross-Module Intelligence Query',
-    description: `Ask a natural language question that spans multiple ZeusOS modules (campaigns, jobs, media, finance, talent, advisory projects). The AI agent interprets your question, runs the appropriate Firestore queries, and synthesises a response with context from memory.
+    description: `Ask a natural language question that spans multiple ZeusOS modules (campaigns, jobs, media, finance, talent). The AI agent interprets your question, runs the appropriate Firestore queries, and synthesises a response with context from memory.
 
 Use for questions like:
 - "What manufacturing orders are overdue?"
