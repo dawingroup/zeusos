@@ -56,6 +56,8 @@ const CLIENT_INVOICE_ID = 'ci_master_job_001';
 const CLIENT_INVOICE_LINE_ID = 'cil_line_001';
 const IC_FROM_SAME_SUB = 'ic_from_zeus_the_agency_001';
 const IC_FROM_OTHER_SUB = 'ic_from_labyrinth_001';
+const COST_ALLOC_OWN_SUB = 'ca_iwo_zeus_the_agency_001';
+const COST_ALLOC_OTHER_SUB = 'ca_iwo_labyrinth_001';
 
 beforeAll(async () => {
   env = await bootstrap();
@@ -122,6 +124,25 @@ beforeEach(async () => {
       toOrgId: 'zeus-group',
       amount: { amountMinor: 2_100_000, currency: 'UGX' },
       status: 'RAISED',
+    });
+
+    // cost_allocations — §11.9 sibling of IC invoices for sub orgs whose
+    // is_legal_entity flag is false. Strictly internal — even the
+    // "owning" sub must NOT see them (allocation belongs to the parent's
+    // books, by definition).
+    await db.doc(`cost_allocations/${COST_ALLOC_OWN_SUB}`).set({
+      iwoId: IWO_SAME_SUB_ID,
+      masterJobId: MASTER_JOB_ID,
+      subsidiaryOrgId: SUBSIDIARY_ORG_ID,
+      amount: { amountMinor: 4_800_000, currency: 'UGX' },
+      status: 'RECORDED',
+    });
+    await db.doc(`cost_allocations/${COST_ALLOC_OTHER_SUB}`).set({
+      iwoId: IWO_OTHER_SUB_ID,
+      masterJobId: 'master_job_002',
+      subsidiaryOrgId: OTHER_SUBSIDIARY_ORG_ID,
+      amount: { amountMinor: 2_100_000, currency: 'UGX' },
+      status: 'RECORDED',
     });
   });
 });
@@ -234,6 +255,38 @@ describe('Phase 3.G field-guards — intercompany_invoices cross-tenant', () => 
   it('anonymous CANNOT read any intercompany_invoice', async () => {
     await assertFails(
       getDoc(doc(anonDb(), 'intercompany_invoices', IC_FROM_SAME_SUB)),
+    );
+  });
+});
+
+describe('Phase 3.H field-guards — cost_allocations (AM only, §11.9)', () => {
+  it('subsidiary CANNOT read cost_allocations for its OWN IWO', async () => {
+    // §11.9 — the allocation belongs to the parent's books even when
+    // the work was done by a "subsidiary" division. The sub has no
+    // business reading internal management-reporting records.
+    await assertFails(
+      getDoc(doc(subDb(), 'cost_allocations', COST_ALLOC_OWN_SUB)),
+    );
+  });
+
+  it('subsidiary CANNOT read another sub\'s cost_allocation (cross-tenant)', async () => {
+    await assertFails(
+      getDoc(doc(subDb(), 'cost_allocations', COST_ALLOC_OTHER_SUB)),
+    );
+  });
+
+  it('parent-org AM CAN read every cost_allocation', async () => {
+    await assertSucceeds(
+      getDoc(doc(parentDb(), 'cost_allocations', COST_ALLOC_OWN_SUB)),
+    );
+    await assertSucceeds(
+      getDoc(doc(parentDb(), 'cost_allocations', COST_ALLOC_OTHER_SUB)),
+    );
+  });
+
+  it('anonymous CANNOT read any cost_allocation', async () => {
+    await assertFails(
+      getDoc(doc(anonDb(), 'cost_allocations', COST_ALLOC_OWN_SUB)),
     );
   });
 });

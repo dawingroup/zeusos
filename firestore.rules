@@ -4273,6 +4273,19 @@ service cloud.firestore {
     }
 
     // ────────────────────────────────────────────────────────────────
+    // Intra-entity cost allocations — cost_allocations (spec §11.9).
+    // Written by closeWorkOrder / cancelWorkOrder when the receiving
+    // sub's `is_legal_entity` is false. Strictly an internal management-
+    // reporting record (no client-facing surface, no inter-entity
+    // settlement). AM/parent only — subsidiaries don't see allocations
+    // for any sub (their own or others), because the allocation belongs
+    // to ONE set of books (the parent's) by definition.
+    match /cost_allocations/{caId} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
     // Billing context — client_invoices + client_invoice_lines + the
     // single-invoice UNIQUE guard doc (spec §11.7).
     // The application-level lock lives at
