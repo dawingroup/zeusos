@@ -5064,3 +5064,37 @@ exports.cancelWorkOrder = assignment.cancelWorkOrder;
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');
 exports.onDomainEventCreated = onDomainEventCreated;
+
+// ============================================================
+// Account Management — Phase 3.D (Commercial-core UI backing)
+// ============================================================
+// Contracts mutations (MSA / SOW / ChangeOrder / Client) plus the
+// `openMasterJobOnQuoteAccepted` outbox listener that lights up a
+// master_job the moment 3.C emits a `QuoteAccepted` event. All
+// callables reject SUBSIDIARY principals via `assertParentOrgPrincipal`
+// (spec §7.4 layer 2).
+const { upsertClient } = require('./src/contracts/clientAdmin');
+const { upsertMsa, activateMsa } = require('./src/contracts/msaAdmin');
+const {
+  upsertSow,
+  submitSowForApproval,
+  approveSow,
+  cancelSow,
+} = require('./src/contracts/sowAdmin');
+const {
+  upsertChangeOrder,
+  approveChangeOrder,
+  rejectChangeOrder,
+} = require('./src/contracts/changeOrderAdmin');
+exports.upsertClient = upsertClient;
+exports.upsertMsa = upsertMsa;
+exports.activateMsa = activateMsa;
+exports.upsertSow = upsertSow;
+exports.submitSowForApproval = submitSowForApproval;
+exports.approveSow = approveSow;
+exports.cancelSow = cancelSow;
+exports.upsertChangeOrder = upsertChangeOrder;
+exports.approveChangeOrder = approveChangeOrder;
+exports.rejectChangeOrder = rejectChangeOrder;
+exports.openMasterJobOnQuoteAccepted = assignment.openMasterJobOnQuoteAccepted;
+exports.signAcceptanceCriterion = assignment.signAcceptanceCriterion;

@@ -36,14 +36,30 @@ const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPassword
 const VerifyEmailPage = lazyWithRetry(() => import('@/pages/auth/VerifyEmailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
-// Engagements / Clients (advisory project model — repurposed for Campaigns in Phase 3)
+// Engagements (legacy advisory project model — retained until Phase 4)
 // ──────────────────────────────────────────────────────────────────────────
 const EngagementListPage = lazyWithRetry(() => import('@/pages/engagements/EngagementListPage'));
 const EngagementDetailPage = lazyWithRetry(() => import('@/pages/engagements/EngagementDetailPage'));
 const EngagementCreatePage = lazyWithRetry(() => import('@/pages/engagements/EngagementCreatePage'));
-const ClientListPage = lazyWithRetry(() => import('@/pages/clients/ClientListPage'));
-const ClientCreatePage = lazyWithRetry(() => import('@/pages/clients/ClientCreatePage'));
-const ClientDetailPage = lazyWithRetry(() => import('@/pages/clients/ClientDetailPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Account Management — Phase 3.D commercial core (Clients, MSAs, SOWs,
+// Change Orders, MasterJobs, IWO issuance, deliverable review, intake).
+// Every route is wrapped in AMAccessGuard (RoleGuard requireGlobalRole
+// admin/owner + requireOrgKind PARENT) — subsidiary principals see 403.
+// ──────────────────────────────────────────────────────────────────────────
+const AMAccessGuard = lazyWithRetry(() => import('@/modules/account-management/components/AMAccessGuard'));
+const AMLayout = lazyWithRetry(() => import('@/modules/account-management/components/AMLayout'));
+const AMClientsPage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientsPage'));
+const AMClientCreatePage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientCreatePage'));
+const AMClientDetailPage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientDetailPage'));
+const AMMSAEditorPage = lazyWithRetry(() => import('@/modules/account-management/pages/MSAEditorPage'));
+const AMSOWEditorPage = lazyWithRetry(() => import('@/modules/account-management/pages/SOWEditorPage'));
+const AMChangeOrderPage = lazyWithRetry(() => import('@/modules/account-management/pages/ChangeOrderPage'));
+const AMMasterJobsPage = lazyWithRetry(() => import('@/modules/account-management/pages/MasterJobsPage'));
+const AMMasterJobDetailPage = lazyWithRetry(() => import('@/modules/account-management/pages/MasterJobDetailPage'));
+const AMReviewQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/DeliverableReviewQueuePage'));
+const AMIntakeQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/IntakeQueuePage'));
 
 // Advisory subsidiary module (will be renamed agency-core in Phase 3)
 const AdvisoryRoutes = lazyWithRetry(() => import('@/subsidiaries/advisory/AdvisoryModule'));
@@ -224,13 +240,38 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/strategy" replace /> },
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
-      // Engagements / Clients (pre-Campaign primitives)
+      // Engagements (legacy)
       { path: 'engagements',                  element: <PageWrapper><ModuleContentWrapper><EngagementListPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'engagements/new',              element: <PageWrapper><ModuleContentWrapper><EngagementCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'engagements/:engagementId',    element: <PageWrapper><ModuleContentWrapper><EngagementDetailPage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients',                      element: <PageWrapper><ModuleContentWrapper><ClientListPage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients/new',                  element: <PageWrapper><ModuleContentWrapper><ClientCreatePage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients/:clientId',            element: <PageWrapper><ModuleContentWrapper><ClientDetailPage /></ModuleContentWrapper></PageWrapper> },
+
+      // Account Management — Phase 3.D commercial core.
+      { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId',                                              element: <PageWrapper><AMAccessGuard><AMClientDetailPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs',                                                    element: <PageWrapper><AMAccessGuard><AMMasterJobsPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><AMAccessGuard><AMMasterJobDetailPage /></AMAccessGuard></PageWrapper> },
+      {
+        path: 'account-mgmt',
+        element: (
+          <PageWrapper>
+            <AMAccessGuard>
+              <AMLayout />
+            </AMAccessGuard>
+          </PageWrapper>
+        ),
+        children: [
+          { index: true,     element: <Navigate to="reviews" replace /> },
+          { path: 'reviews', element: <AMReviewQueuePage /> },
+          { path: 'intake',  element: <AMIntakeQueuePage /> },
+        ],
+      },
 
       // Advisory module (becomes agency-core in Phase 3)
       { path: 'advisory/*', element: <PageWrapper><AdvisoryRoutes /></PageWrapper> },
