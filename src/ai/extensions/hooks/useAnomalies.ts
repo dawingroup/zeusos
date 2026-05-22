@@ -5,8 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { anomalyDetectionService } from '../services/anomaly-detection';
-import { Anomaly } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
+import { Anomaly, ModuleType } from '../types/ai-extensions';
 
 interface UseAnomaliesReturn {
   anomalies: Anomaly[];

@@ -5,8 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { nlQueryService } from '../services/nl-query-service';
-import { NLQueryResponse, ParsedNLQuery } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
+import { NLQueryResponse, ParsedNLQuery, ModuleType } from '../types/ai-extensions';
 
 interface UseNLQueryReturn {
   query: string;

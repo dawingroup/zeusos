@@ -27,8 +27,8 @@ import {
   BOQExtraction,
   BOQSection,
   LinkableEntityType,
+  ModuleType,
 } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
 
 // Document type detection patterns
 const DOCUMENT_PATTERNS: Array<{

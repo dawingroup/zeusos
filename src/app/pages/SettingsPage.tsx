@@ -38,7 +38,6 @@ import {
   Box,
   DollarSign,
   MessagesSquare,
-  HardHat,
 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { useAuth } from '@/core/hooks/useAuth';
@@ -1089,14 +1088,6 @@ function ModulesTab() {
       badgeText: 'Wa',
       badgeBg: 'bg-emerald-500',
       icon: MessagesSquare,
-    },
-    {
-      label: 'MatFlow Settings',
-      description: 'Advisory MatFlow general settings and database admin shortcuts.',
-      href: '/advisory/matflow/settings',
-      badgeText: 'Mf',
-      badgeBg: 'bg-amber-600',
-      icon: HardHat,
     },
   ];
 

@@ -5,8 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { suggestionService } from '../services/suggestion-service';
-import { AISuggestion, SuggestionContext, LinkableEntityType } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
+import { AISuggestion, SuggestionContext, LinkableEntityType, ModuleType } from '../types/ai-extensions';
 
 interface UseSuggestionsOptions {
   module: ModuleType;

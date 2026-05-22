@@ -40,7 +40,6 @@ const MODULE_LABELS: Record<string, string> = {
   'customer-hub': 'Customer Hub',
   'whatsapp': 'WhatsApp',
   'matflow': 'MatFlow',
-  'investment_advisory': 'Investment Advisory',
   'infrastructure_delivery': 'Infrastructure Delivery',
   'market_intelligence': 'Market Intelligence',
   'strategy': 'CEO Strategy',

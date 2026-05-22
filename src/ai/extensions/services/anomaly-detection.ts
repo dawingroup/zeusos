@@ -19,8 +19,8 @@ import {
 import { db } from '../../../firebase/config';
 import {
   Anomaly,
+  ModuleType,
 } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
 
 // Anomaly detection thresholds
 const THRESHOLDS = {

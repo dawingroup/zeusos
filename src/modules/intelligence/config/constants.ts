@@ -14,7 +14,6 @@ export const EXECUTIVE_MODULE = 'executive';
 export const SUBSIDIARY_IDS = {
   GROUP: 'group',           // Zeus Group - Parent company for shared roles
   FINISHES: 'finishes',
-  ADVISORY: 'advisory',
   TECHNOLOGY: 'technology',
   CAPITAL: 'capital',
 } as const;
@@ -444,7 +443,6 @@ export const COLLECTIONS = {
   
   // Subsidiaries (existing)
   FINISHES: 'subsidiaries/finishes',
-  ADVISORY: 'subsidiaries/advisory',
   TECHNOLOGY: 'subsidiaries/technology',
   CAPITAL: 'subsidiaries/capital',
 } as const;

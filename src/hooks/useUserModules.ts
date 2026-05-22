@@ -135,14 +135,6 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     color: 'bg-purple-700',
     hasRealData: true,
   },
-  'advisory': {
-    label: 'Advisory',
-    description: 'Strategic advisory + investment / new-business pipeline',
-    icon: 'Briefcase',
-    href: '/advisory',
-    color: 'bg-green-600',
-    hasRealData: true,
-  },
 };
 
 // Corporate modules available across all subsidiaries — shown in the "Group"

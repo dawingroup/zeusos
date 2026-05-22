@@ -1,16 +1,18 @@
 /**
  * ZeusOS Router Configuration
  *
- * Lean router for Phase 1.C. The construction/manufacturing route surface
+ * Lean router for Phase 1.C-D. The construction/manufacturing route surface
  * (design-manager, inventory, manufacturing, cutlist-processor, fulfillment,
  * sales-orders, client-portal, crm, procurement, marketing, launch-pipeline,
- * customer-hub, whatsapp, gchat, messaging) has been removed.
+ * customer-hub, whatsapp, gchat, messaging) was removed in Phase 1.C; the
+ * advisory/investment subsidiary was removed in Phase 1.D (this is a
+ * marketing consortium, not an advisory firm).
  *
  * Routes for the kept core modules (HR, Finance, Capital, Compliance, Strategy,
- * Market Intelligence, Intelligence Layer, Performance, Admin, Profile,
- * Advisory) are wired here at the layout / landing-page level. Sub-page
- * detail routes will be re-added incrementally as Phase 3 (Campaign & Job
- * Manager) and Phase 4 (Media / Production / Talent / Asset Library) land.
+ * Market Intelligence, Intelligence Layer, Performance, Admin, Profile) are
+ * wired here at the layout / landing-page level. Sub-page detail routes will
+ * be re-added incrementally as Phase 3 (Campaign & Job Manager) and Phase 4
+ * (Media / Production / Talent / Asset Library) land.
  */
 
 import { Suspense } from 'react';
@@ -36,13 +38,6 @@ const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPassword
 const VerifyEmailPage = lazyWithRetry(() => import('@/pages/auth/VerifyEmailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
-// Engagements (legacy advisory project model — retained until Phase 4)
-// ──────────────────────────────────────────────────────────────────────────
-const EngagementListPage = lazyWithRetry(() => import('@/pages/engagements/EngagementListPage'));
-const EngagementDetailPage = lazyWithRetry(() => import('@/pages/engagements/EngagementDetailPage'));
-const EngagementCreatePage = lazyWithRetry(() => import('@/pages/engagements/EngagementCreatePage'));
-
-// ──────────────────────────────────────────────────────────────────────────
 // Account Management — Phase 3.D commercial core (Clients, MSAs, SOWs,
 // Change Orders, MasterJobs, IWO issuance, deliverable review, intake).
 // Every route is wrapped in AMAccessGuard (RoleGuard requireGlobalRole
@@ -60,9 +55,6 @@ const AMMasterJobsPage = lazyWithRetry(() => import('@/modules/account-managemen
 const AMMasterJobDetailPage = lazyWithRetry(() => import('@/modules/account-management/pages/MasterJobDetailPage'));
 const AMReviewQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/DeliverableReviewQueuePage'));
 const AMIntakeQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/IntakeQueuePage'));
-
-// Advisory subsidiary module (will be renamed agency-core in Phase 3)
-const AdvisoryRoutes = lazyWithRetry(() => import('@/subsidiaries/advisory/AdvisoryModule'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Billing — Phase 3.F (standalone slice)
@@ -280,11 +272,6 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/strategy" replace /> },
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
-      // Engagements (legacy)
-      { path: 'engagements',                  element: <PageWrapper><ModuleContentWrapper><EngagementListPage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'engagements/new',              element: <PageWrapper><ModuleContentWrapper><EngagementCreatePage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'engagements/:engagementId',    element: <PageWrapper><ModuleContentWrapper><EngagementDetailPage /></ModuleContentWrapper></PageWrapper> },
-
       // Account Management — Phase 3.D commercial core.
       { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
       { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
@@ -312,9 +299,6 @@ export const router = createBrowserRouter([
           { path: 'intake',  element: <AMIntakeQueuePage /> },
         ],
       },
-
-      // Advisory module (becomes agency-core in Phase 3)
-      { path: 'advisory/*', element: <PageWrapper><AdvisoryRoutes /></PageWrapper> },
 
       // AI Assistant
       { path: 'ai-assistant', element: <PageWrapper><ModuleContentWrapper><AIAssistantPage /></ModuleContentWrapper></PageWrapper> },

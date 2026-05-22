@@ -20,6 +20,7 @@ import {
   where,
   orderBy,
   limit,
+  Timestamp,
   type Firestore,
   type DocumentData,
   type QueryConstraint,
@@ -28,7 +29,32 @@ import {
   type Unsubscribe
 } from 'firebase/firestore';
 import { app } from './config';
-import { deepStripUndefined } from '@/subsidiaries/advisory/core/firebase/converters';
+
+function deepStripUndefined<T extends object>(obj: T): Partial<T> {
+  const result: Partial<T> = {};
+
+  for (const key in obj) {
+    const value = obj[key];
+
+    if (value === undefined) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      result[key] = value.map((item) =>
+        item !== null && typeof item === 'object' && !(item instanceof Date) && !(item instanceof Timestamp)
+          ? deepStripUndefined(item)
+          : item,
+      ) as T[Extract<keyof T, string>];
+    } else if (value !== null && typeof value === 'object' && !(value instanceof Date) && !(value instanceof Timestamp)) {
+      result[key] = deepStripUndefined(value as object) as T[Extract<keyof T, string>];
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
 
 // Initialize Firestore with persistent IndexedDB cache for faster module loads.
 // Data is served from local cache while revalidating in the background.

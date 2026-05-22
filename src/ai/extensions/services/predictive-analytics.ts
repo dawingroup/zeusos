@@ -24,8 +24,8 @@ import {
   DimensionHealth,
   RiskFactor,
   LinkableEntityType,
+  ModuleType,
 } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
 
 export class PredictiveAnalyticsService {
   private predictionsRef = collection(db, 'aiPredictions');

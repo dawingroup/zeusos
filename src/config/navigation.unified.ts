@@ -5,12 +5,9 @@
  *
  * Phase 3.H follow-up — navigation cleanup:
  *   - FINISHES_NAVIGATION (DawinOS construction modules) deleted.
- *   - ADVISORY_NAVIGATION reduced to the still-wired /advisory/investment
- *     subtree; MatFlow and Infrastructure Delivery routes were removed in
- *     Phase 1.C.
- *   - AGENCY_NAVIGATION is the base sidebar; per-subsidiary variants
- *     (ZEUS_DIGITAL_NAVIGATION, LABYRINTH_NAVIGATION, etc.) reorder the
- *     same items so each sub-brand's primary specialty comes first.
+ *   - ADVISORY_NAVIGATION and the /advisory/investment subtree removed in
+ *     Phase 1.D (a marketing consortium does not run a deal pipeline).
+ *   - AGENCY_NAVIGATION is the shared sidebar for all Zeus sub-brands.
  *   - COMMERCIAL_NAVIGATION exposes Account Management, Pricing, and
  *     Billing — gated to parent-org admins/owners in the AppShell to
  *     mirror the ParentOrgGuard / Cloud Function / Firestore rules
@@ -69,14 +66,6 @@ export interface SubsidiaryConfig {
 
 export const AGENCY_NAVIGATION: NavItem[] = [
   {
-    id: 'engagements',
-    label: 'Engagements',
-    href: '/engagements',
-    icon: 'Briefcase',
-    description: 'Legacy advisory engagements — migrating to Campaigns / Master Jobs',
-    keywords: ['engagement', 'project', 'job'],
-  },
-  {
     id: 'campaigns',
     label: 'Media Plans',
     href: '/media',
@@ -116,6 +105,7 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
   {
+<<<<<<< HEAD
     id: 'media',
     label: 'Media Plans',
     href: '/media',
@@ -148,6 +138,8 @@ export const AGENCY_NAVIGATION: NavItem[] = [
   // firm. The underlying src/subsidiaries/advisory/ module is slated for
   // full removal in a Phase 1.D-style cleanup PR.
   {
+=======
+>>>>>>> dd91698 (chore(advisory): remove advisory subsidiary module)
     id: 'ai-assistant',
     label: 'AI Assistant',
     href: '/ai-assistant',
@@ -646,8 +638,3 @@ export function getActiveSection(pathname: string): string | null {
  */
 export const FINISHES_NAVIGATION = AGENCY_NAVIGATION;
 
-/**
- * @deprecated Use AGENCY_NAVIGATION. The advisory-only sidebar layout
- * has been folded into the shared agency nav.
- */
-export const ADVISORY_NAVIGATION = AGENCY_NAVIGATION;

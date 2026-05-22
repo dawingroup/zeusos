@@ -353,13 +353,6 @@ function QuickActions({ accessibleModuleIds }: { accessibleModuleIds: string[] }
   if (has('strategy')) {
     actions.push({ label: 'Strategy Review', href: '/strategy/plans', icon: 'Target', moduleId: 'strategy' });
   }
-  if (has('investment_advisory')) {
-    actions.push({ label: 'Deals Pipeline', href: '/advisory/investment', icon: 'Briefcase', moduleId: 'investment_advisory' });
-  }
-  if (has('matflow')) {
-    actions.push({ label: 'MatFlow', href: '/advisory/matflow', icon: 'HardHat', moduleId: 'matflow' });
-  }
-
   if (actions.length === 0) return null;
 
   return (

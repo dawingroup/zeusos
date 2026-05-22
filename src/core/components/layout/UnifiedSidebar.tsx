@@ -8,8 +8,7 @@ import { cn } from '@/shared/lib/utils';
 import { getIconByName } from '@/shared/utils/iconMap';
 import {
   ADMIN_NAVIGATION,
-  ADVISORY_NAVIGATION,
-  FINISHES_NAVIGATION,
+  AGENCY_NAVIGATION,
   GLOBAL_NAVIGATION,
   UTILITY_NAVIGATION,
   type NavItem,
@@ -41,15 +40,10 @@ export function UnifiedSidebar({
   const isCollapsed = collapsed;
 
   const sections = useMemo<NavSection[]>(() => {
-    const subsidiaryNav =
-      currentSubsidiary?.id === 'zeus-digital'
-        ? ADVISORY_NAVIGATION
-        : FINISHES_NAVIGATION;
-
-    const subsidiaryLabel = currentSubsidiary?.shortName ?? 'Finishes';
+    const subsidiaryLabel = currentSubsidiary?.shortName ?? 'Agency';
 
     return [
-      { id: 'subsidiary', label: subsidiaryLabel, items: subsidiaryNav },
+      { id: 'subsidiary', label: subsidiaryLabel, items: AGENCY_NAVIGATION },
       { id: 'workspace', label: 'Workspace', items: GLOBAL_NAVIGATION },
       { id: 'intelligence', label: 'Intelligence', items: UTILITY_NAVIGATION },
       { id: 'admin', label: 'Admin', items: ADMIN_NAVIGATION },
