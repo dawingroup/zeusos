@@ -110,6 +110,66 @@ export const SUBSIDIARY_IDS: SubsidiaryId[] = [
   'house-of-zeus',
 ];
 
+// ============================================================================
+// LEGAL-ENTITY ORGANIZATION RECORD (Tech Spec §4.1, plan §14.4)
+// ============================================================================
+//
+// `Organization` carries the per-legal-entity metadata the Tech Spec v1.0
+// requires (kind, legal-entity flag, base currency, GL connection). Each of
+// the six SubsidiaryIds (parent + 5 sub-brands) gets a doc at
+// `organizations/{orgId}`. This sits alongside the legacy single-tenant
+// container `organizations/default/...` which holds users, settings, and
+// pre-Phase-3 collections.
+//
+// Why this is separate from `OrganizationSettings`:
+//   - `OrganizationSettings` describes the tenant container (one doc per
+//     ZeusOS installation, hard-coded to id `default`).
+//   - `Organization` describes a legal entity in the commercial-gravity
+//     model — many docs (one per sub-brand + the parent), all of which
+//     issue or receive IWOs, raise inter-company invoices, and own their
+//     own books.
+//
+// The `kind` field is the load-bearing one: spec §7.4 ("subsidiary never
+// quotes") is enforced at three layers — Firestore-rules (rejects writes
+// from SUBSIDIARY principals on commercial collections), Cloud Functions
+// (rejects callable mutations), and the UI (no quote/MSA/SOW affordance
+// for subsidiary users). Every layer keys off `Organization.kind`.
+
+export type OrganizationKind = 'PARENT' | 'SUBSIDIARY';
+
+/**
+ * ISO 4217. The currencies the platform handles today; extend as new
+ * markets onboard. Stored on every legal-entity org so subsidiary IWOs
+ * and IC invoices can be raised in the right currency without lookup.
+ */
+export type OrganizationCurrency = 'UGX' | 'KES' | 'USD' | 'EUR' | 'GBP';
+
+export interface Organization {
+  /** Same as `SubsidiaryId` — slugged human-readable id, e.g. `zeus-group`,
+   *  `zeus-the-agency`. Used as the Firestore doc id at
+   *  `organizations/{orgId}`. */
+  id: SubsidiaryId;
+  /** Display name (`Zeus Group`, `Zeus The Agency`, `House of Zeus`). */
+  name: string;
+  /** PARENT — holds the client relationship; commercial roles allowed.
+   *  SUBSIDIARY — delivery only; commercial roles structurally rejected. */
+  kind: OrganizationKind;
+  /** True if the org has its own books and (eventually) a GL connection.
+   *  Per spec §11.9 flipping this only changes downstream accounting (cost
+   *  allocation vs IC invoicing); the handoff flow is unchanged. */
+  is_legal_entity: boolean;
+  base_currency: OrganizationCurrency;
+  /** Identifier of the GL adapter connection (QBO realm id, Xero tenant
+   *  id, etc.). Null until Phase 3.F wires the adapter. */
+  gl_connection_id: string | null;
+  /** Optional legal registration metadata for invoicing / compliance. */
+  legalName?: string;
+  taxId?: string;
+  registrationNumber?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface OrganizationInfo {
   name: string;
   shortName: string;

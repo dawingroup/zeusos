@@ -38,11 +38,16 @@ type FacilityBranding = { name?: string; logoUrl?: string };
 // SERVICE CONFIGURATION
 // =================================================================
 
-// Phase 2.D: collection renamed `advisory_projects` → `campaigns`. The
-// AdvisoryProject TypeScript type is retained for now and becomes Campaign's
-// financial backbone in Phase 3 when the campaign-specific fields (clientId,
-// brandId, imcTeam, bigIdea, tier, performanceReview) are layered on.
-const getProjectsCollection = (orgId: string) => `organizations/${orgId}/campaigns`;
+// Phase 3.A.5: collection renamed `campaigns` → `master_jobs` per Tech Spec
+// v1.0 §4.4 (one MasterJob per engagement increment; the roll-up anchor).
+// The marketing-facing `Campaign` TypeScript type continues to describe the
+// 14-stage workflow / ARAAM / IMCTeam / Tier / PerformanceReview view that
+// hangs off a MasterJob. See plan §14.4 / §14.14.
+//
+// Phase 2.D had previously renamed `advisory_projects` → `campaigns`.
+// Today's campaign collection has 0 docs (verified pre-3.A.5), so this is
+// a code-only rename.
+const getProjectsCollection = (orgId: string) => `organizations/${orgId}/master_jobs`;
 const getProjectDoc = (orgId: string, id: string) => `${getProjectsCollection(orgId)}/${id}`;
 const getProgramDoc = (orgId: string, id: string) => `organizations/${orgId}/advisory_programs/${id}`;
 

@@ -1,11 +1,18 @@
 /**
- * Campaign data model — ZeusOS Phase 3 core module.
+ * Campaign data model — the marketing-facing view that wraps a `MasterJob`.
  *
- * A `Campaign` is the top-level entity an agency delivers for a client. It
- * lives at `organizations/{orgId}/campaigns/{campaignId}` (the collection
- * renamed from `advisory_projects` in Phase 2.D) and extends the financial
- * skeleton of `AdvisoryProject` with the marketing-agency primitives drawn
- * from the Zeus profile:
+ * Phase 3.A.5 renamed the Firestore collection `campaigns` → `master_jobs`
+ * (spec §4.4) so the canonical legal-entity / commercial-gravity name lives
+ * at the data layer. The `Campaign` TypeScript type continues to describe
+ * the marketing-domain view drawn from the Zeus profile (14-stage workflow,
+ * ARAAM, IMC Team, Tier, BIG IDEA, PerformanceReview) — these fields hang
+ * off a MasterJob via `MasterJob.campaign` (see plan §14.4 / §14.14).
+ *
+ * In other words:
+ *   - Wire-format / persistence:   `MasterJob` at `organizations/{orgId}/master_jobs/{id}`
+ *   - Marketing-UI label / detail: `Campaign` (composed onto `MasterJob.campaign`)
+ *
+ * The structure layered on top:
  *
  *   Client → Brand → Campaign → Job → Deliverable
  *                       ├ Brief
@@ -229,10 +236,10 @@ export interface StageTransition {
 // ─────────────────────────────────────────────────────────────────
 
 /**
- * A document in `organizations/default/campaigns` may be a brand-new
- * Campaign (all the agency fields populated) OR a legacy AdvisoryProject
- * that hasn't been migrated yet. This union lets readers handle both
- * during the transition.
+ * A document in `organizations/{orgId}/master_jobs` may be a brand-new
+ * Campaign-view (all the agency fields populated) OR a legacy
+ * AdvisoryProject that hasn't been migrated yet. This union lets readers
+ * handle both during the transition.
  */
 export type CampaignOrLegacyProject = Campaign & {
   /** Legacy fields that may exist on AdvisoryProject-shape docs. */

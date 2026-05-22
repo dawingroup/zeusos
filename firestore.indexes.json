@@ -3073,7 +3073,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -3091,7 +3091,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -3109,7 +3109,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -3123,7 +3123,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -3137,7 +3137,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -3155,7 +3155,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -4373,7 +4373,7 @@
       ]
     },
     {
-      "collectionGroup": "advisory_projects",
+      "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -5568,6 +5568,90 @@
           "fieldPath": "period",
           "order": "DESCENDING"
         }
+      ]
+    },
+    {
+      "collectionGroup": "internal_work_orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "subsidiaryOrgId", "order": "ASCENDING" },
+        { "fieldPath": "state", "order": "ASCENDING" },
+        { "fieldPath": "issuedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "internal_work_orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "masterJobId", "order": "ASCENDING" },
+        { "fieldPath": "state", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "domain_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "aggregateType", "order": "ASCENDING" },
+        { "fieldPath": "aggregateId", "order": "ASCENDING" },
+        { "fieldPath": "emittedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "time_entries",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "entryDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "master_jobs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sowId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "quotes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sowId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rate_cards",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "orgId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "effectiveFrom", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "intercompany_invoices",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "fromOrgId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "raisedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "client_invoices",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "masterJobId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "budget_holds",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "masterJobId", "order": "ASCENDING" },
+        { "fieldPath": "state", "order": "ASCENDING" }
       ]
     }
   ],

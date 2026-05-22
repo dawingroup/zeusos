@@ -6,6 +6,8 @@ ZeusOS is a hard fork of DawinOS, repurposed as the internal operations platform
 
 Source of truth for the work plan: `/Users/danielonzimai/.claude/plans/we-have-onboarded-a-lovely-planet.md`.
 
+Domain model overview (Tech Spec v1.0 + plan §14): [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
+
 ## Build & Deploy
 
 - **Stack:** Vite + React + TypeScript + Firebase (Firestore, Auth, Functions, Hosting, Storage)
@@ -46,7 +48,7 @@ cp /Users/danielonzimai/Developer/zeusos/.env "$PWD/.env"
 
 - Feature modules live in `src/modules/<module-name>/`
 - Subsidiary scoping via `SubsidiaryAccess` on each user — ZeusOS uses keys `zeus-the-agency`, `zeus-digital`, `labyrinth`, `odd-gorilla`, `house-of-zeus`
-- Firestore collections to be aware of: `users`, `organizations/{orgId}/users`, `advisory_projects` (will rename → `campaigns` in Phase 2)
+- Firestore collections to be aware of: `users`, `organizations/{orgId}/users`, and the legal-entity Organization records at `organizations/{orgId}` (Phase 3.A.5 seed — see `scripts/seed-zeus-legal-entities.cjs`). Phase 3.A.5 also renamed the engagement-level collection `campaigns` → `master_jobs` (Phase 2.D's earlier rename of `advisory_projects` → `campaigns` is now superseded).
 - MCP server lives in `dawinos-mcp-server/` until Phase 1 rename to `zeusos-mcp-server`
 
 ## Modules being removed in Phase 1
