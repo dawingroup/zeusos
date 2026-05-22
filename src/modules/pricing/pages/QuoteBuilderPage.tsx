@@ -1,20 +1,16 @@
 /**
  * QuoteBuilderPage — the AM workhorse.
  *
- *   1. Type a SOW id (3.A.5 placeholder — no SOW picker yet).
+ *   1. Pick a Client → pick one of its open SOWs (DRAFT, PENDING_APPROVAL,
+ *      or ACTIVE). clientId is resolved from the picked SOW.
  *   2. Add lines: pick subsidiary + roleCode + unit + qty.
  *   3. Hit "Compute" → calls `priceQuote` CFn; preview pane shows the
  *      derived client_minor, totals, and margin band.
  *   4. If a quoteId is in the URL, the page acts as the quote detail view
  *      and exposes Issue / Accept / Void actions per spec §6.2.
- *
- * PHASE 3.A.5 PLACEHOLDER: the UI lets the AM type a clientId fallback
- * because `sows/{sowId}` may not exist yet. When 3.A.5 lands, replace
- * the SOW input with a picker hitting the `sows` collection and drop
- * the manual clientId field.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   acceptQuoteFn,
@@ -23,10 +19,18 @@ import {
   voidQuoteFn,
 } from '../services/firebase';
 import { getQuote, listQuoteLines } from '../services/firestore';
+import {
+  listClients,
+  listSowsForClient,
+} from '@/modules/contracts/services/firestore';
+import type { Client } from '@/modules/contracts/types/client.types';
+import type { SOW } from '@/modules/contracts/types/sow.types';
 import type { PricedQuote, Quote, QuoteLine, QuoteLineInput } from '../types';
 import { MARGIN_FLOOR_DEFAULT_PCT } from '../constants/floors';
 import { MarginBadge } from '../components/MarginBadge';
 import type { SubsidiaryId } from '@/core/settings/types';
+
+const QUOTABLE_SOW_STATUSES: SOW['status'][] = ['DRAFT', 'PENDING_APPROVAL', 'ACTIVE'];
 
 const SUBSIDIARIES: { id: SubsidiaryId; label: string }[] = [
   { id: 'zeus-the-agency', label: 'Zeus The Agency' },
@@ -48,14 +52,45 @@ export default function QuoteBuilderPage() {
   const { id: quoteIdParam } = useParams<{ id: string }>();
   const isExisting = !!quoteIdParam && quoteIdParam !== 'new';
 
-  const [sowId, setSowId] = useState('');
   const [clientId, setClientId] = useState('');
+  const [sowId, setSowId] = useState('');
+  const [clients, setClients] = useState<Client[]>([]);
+  const [sows, setSows] = useState<SOW[]>([]);
+  const [sowsLoading, setSowsLoading] = useState(false);
+
   const [lines, setLines] = useState<QuoteLineInput[]>([{ ...EMPTY_LINE }]);
   const [priced, setPriced] = useState<PricedQuote | null>(null);
   const [busy, setBusy] = useState(false);
 
   const [existingQuote, setExistingQuote] = useState<Quote | null>(null);
   const [existingLines, setExistingLines] = useState<QuoteLine[]>([]);
+
+  // Load client list once (only the picker needs it — existing-quote view
+  // skips it).
+  useEffect(() => {
+    if (isExisting) return;
+    listClients().then(setClients).catch(() => setClients([]));
+  }, [isExisting]);
+
+  // When the client changes, refresh the list of quotable SOWs and clear
+  // any stale SOW selection.
+  useEffect(() => {
+    if (isExisting || !clientId) {
+      setSows([]);
+      setSowId('');
+      return;
+    }
+    setSowsLoading(true);
+    listSowsForClient(clientId)
+      .then(rows => {
+        const quotable = rows.filter(s => QUOTABLE_SOW_STATUSES.includes(s.status));
+        setSows(quotable);
+        // If the previously-picked SOW is no longer in the list, reset.
+        setSowId(prev => (quotable.some(s => s.id === prev) ? prev : ''));
+      })
+      .catch(() => setSows([]))
+      .finally(() => setSowsLoading(false));
+  }, [clientId, isExisting]);
 
   useEffect(() => {
     if (!isExisting || !quoteIdParam) return;
@@ -68,11 +103,18 @@ export default function QuoteBuilderPage() {
     );
   }, [isExisting, quoteIdParam]);
 
+  const pickedSow = useMemo(
+    () => sows.find(s => s.id === sowId) ?? null,
+    [sows, sowId],
+  );
+
   const handleCompute = async () => {
-    if (!sowId) return alert('Enter a SOW id (3.A.5 placeholder — pickers come later).');
+    if (!sowId) return alert('Pick a client + SOW first.');
     setBusy(true);
     try {
-      const { data } = await priceQuoteFn({ sowId, clientId: clientId || undefined, lines });
+      // clientId is resolved from the picked SOW — never sent freehand.
+      const resolvedClientId = pickedSow?.clientId ?? clientId;
+      const { data } = await priceQuoteFn({ sowId, clientId: resolvedClientId, lines });
       setPriced(data);
     } catch (err) {
       alert(`Pricing failed: ${(err as Error).message}`);
@@ -200,26 +242,43 @@ export default function QuoteBuilderPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 16 }}>
         <label style={{ fontSize: 13 }}>
-          SOW id
-          <input
-            data-testid="quote-sow-picker"
-            type="text"
-            value={sowId}
-            onChange={e => setSowId(e.target.value)}
-            placeholder="sow_…"
-            style={{ width: '100%', marginTop: 4, padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4 }}
-          />
-        </label>
-        <label style={{ fontSize: 13 }}>
-          Client id <span style={{ color: '#94a3b8', fontSize: 11 }}>(3.A.5 placeholder — resolved from SOW once 3.A.5 ships)</span>
-          <input
-            data-testid="quote-client-id"
-            type="text"
+          Client
+          <select
+            data-testid="quote-client-picker"
             value={clientId}
             onChange={e => setClientId(e.target.value)}
-            placeholder="client_…"
-            style={{ width: '100%', marginTop: 4, padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4 }}
-          />
+            style={{ width: '100%', marginTop: 4, padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4, background: '#fff' }}
+          >
+            <option value="">Select a client…</option>
+            {clients.map(c => (
+              <option key={c.id} value={c.id}>{c.name || c.id}</option>
+            ))}
+          </select>
+        </label>
+        <label style={{ fontSize: 13 }}>
+          SOW
+          <select
+            data-testid="quote-sow-picker"
+            value={sowId}
+            onChange={e => setSowId(e.target.value)}
+            disabled={!clientId || sowsLoading}
+            style={{ width: '100%', marginTop: 4, padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4, background: clientId ? '#fff' : '#f1f5f9' }}
+          >
+            <option value="">
+              {!clientId
+                ? 'Pick a client first'
+                : sowsLoading
+                  ? 'Loading SOWs…'
+                  : sows.length === 0
+                    ? 'No open SOWs for this client'
+                    : 'Select a SOW…'}
+            </option>
+            {sows.map(s => (
+              <option key={s.id} value={s.id}>
+                {(s.code || s.id)} · {s.status}
+              </option>
+            ))}
+          </select>
         </label>
       </div>
 
