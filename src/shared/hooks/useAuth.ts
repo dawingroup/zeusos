@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, startTransition } from 'react';
 import {
   onAuthChange,
   signInWithGoogle as firebaseSignIn,
+  signInWithEmail as firebaseSignInWithEmail,
   signOut as firebaseSignOut,
   getGoogleAccessToken,
   type User
@@ -20,6 +21,7 @@ export interface AuthState {
 
 export interface UseAuthReturn extends AuthState {
   signInWithGoogle: () => Promise<User | null>;
+  signInWithEmail: (email: string, password: string) => Promise<User | null>;
   signOut: () => Promise<void>;
   getAccessToken: () => string | null;
 }
@@ -63,6 +65,23 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
+  const signInWithEmail = useCallback(async (email: string, password: string): Promise<User | null> => {
+    try {
+      setLoading(true);
+      const user = await firebaseSignInWithEmail(email, password);
+      return user;
+    } catch (error) {
+      console.error('Email sign in error:', error);
+      return null;
+    } finally {
+      setTimeout(() => {
+        startTransition(() => {
+          setLoading(false);
+        });
+      }, 0);
+    }
+  }, []);
+
   const signOut = useCallback(async (): Promise<void> => {
     try {
       await firebaseSignOut();
@@ -80,6 +99,7 @@ export function useAuth(): UseAuthReturn {
     loading,
     isAuthenticated: !!user,
     signInWithGoogle,
+    signInWithEmail,
     signOut,
     getAccessToken,
   };
