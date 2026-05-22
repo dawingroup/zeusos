@@ -20,6 +20,9 @@ Source of truth for the work plan: `/Users/danielonzimai/.claude/plans/we-have-o
 - **Project number:** `746031933844`
 - **Web App ID:** `1:746031933844:web:fa40998c6f63e0bed88781`
 - **Storage bucket:** `zeusos.firebasestorage.app`
+- **Firestore region:** `europe-west1` (Spark / free tier)
+- **Production URL:** `https://os.zeustheagency.com` (custom domain — see `docs/CUSTOM_DOMAIN_SETUP.md` for DNS + Auth steps)
+- **Default Firebase URL:** `https://zeusos.web.app` (still works — Firebase keeps both alive)
 - `.firebaserc` already points at `zeusos`.
 
 `.env` is gitignored and holds the Vite-side Firebase keys (see `.env.example`). The Firebase web API key is **safe to commit** in principle (security is enforced by Firestore Rules + Auth domain restrictions), but we keep it in `.env` per convention. Worktrees need their own `.env`:

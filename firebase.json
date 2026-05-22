@@ -77,7 +77,7 @@
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
-            "value": "https://zeusos.web.app"
+            "value": "https://os.zeustheagency.com"
           },
           {
             "key": "Access-Control-Allow-Methods",
@@ -98,7 +98,7 @@
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
-            "value": "https://zeusos.web.app"
+            "value": "https://os.zeustheagency.com"
           },
           {
             "key": "Access-Control-Allow-Methods",
