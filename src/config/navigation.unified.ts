@@ -86,6 +86,34 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
   {
+    id: 'media',
+    label: 'Media Plans',
+    href: '/media',
+    icon: 'Megaphone',
+    description: 'Media plans, buys, actuals, and post-campaign reports',
+    keywords: ['media', 'plans', 'buys', 'actuals', 'campaign', 'report', 'pcr'],
+  },
+  {
+    id: 'production',
+    label: 'Production',
+    href: '/production',
+    icon: 'Clapperboard',
+    description: 'Production board — shoots, post, and delivery (10-stage Kanban)',
+    keywords: ['production', 'shoot', 'post', 'edit', 'callsheet', 'kanban'],
+  },
+  {
+    id: 'talent',
+    label: 'Talent Roster',
+    href: '/talent',
+    icon: 'Star',
+    description: 'Freelancer profiles, contracts, and invoice approvals',
+    keywords: ['talent', 'freelancer', 'roster', 'contracts', 'invoices'],
+    children: [
+      { id: 'talent-roster',    label: 'Roster',    href: '/talent',          icon: 'Star' },
+      { id: 'talent-invoices',  label: 'Invoices',  href: '/talent/invoices', icon: 'FileText' },
+    ],
+  },
+  {
     id: 'investment',
     label: 'Investment Pipeline',
     href: '/advisory/investment',
@@ -387,16 +415,16 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
 // PER-SUBSIDIARY NAVIGATION VARIANTS
 // ============================================================================
 // Each Zeus sub-brand surfaces its primary specialty first. Variants are
-// reorderings of AGENCY_NAVIGATION — never subsets. Items absent from a
-// priority list (e.g. Phase 4 entries like `production` / `talent` that
-// aren't yet registered in AGENCY_NAVIGATION) are skipped silently by the
-// helper, so these constants stay forward-compatible.
+// reorderings of AGENCY_NAVIGATION — never subsets. Items not named in a
+// priority list keep their relative order at the tail. Unknown ids are
+// silently skipped by the helper, so variants stay forward-compatible
+// against future AGENCY_NAVIGATION additions.
 //
 // Mapping per the sub-brand mandate:
 //   • Zeus The Agency   — full-service. Default order (Engagements first).
-//   • Zeus Digital      — digital + advisory. Investment first.
-//   • Labyrinth A&V     — production house. Production first.
-//   • Odd Gorilla       — creative shop. Engagements, then Talent, then Production.
+//   • Zeus Digital      — digital + advisory. Investment › Engagements › Media.
+//   • Labyrinth A&V     — production house. Production › Media › Engagements.
+//   • Odd Gorilla       — creative shop. Engagements › Talent › Production.
 //   • House of Zeus     — strategy + house ops. Default order for now.
 
 /**
@@ -415,8 +443,8 @@ function reorderByIds(items: NavItem[], priorityIds: string[]): NavItem[] {
 }
 
 export const ZEUS_AGENCY_NAVIGATION: NavItem[]   = AGENCY_NAVIGATION;
-export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['investment', 'engagements', 'campaigns']);
-export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'campaigns', 'engagements']);
+export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['investment', 'engagements', 'media']);
+export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'media', 'engagements']);
 export const ODD_GORILLA_NAVIGATION: NavItem[]   = reorderByIds(AGENCY_NAVIGATION, ['engagements', 'talent', 'production']);
 export const HOUSE_OF_ZEUS_NAVIGATION: NavItem[] = AGENCY_NAVIGATION;
 
