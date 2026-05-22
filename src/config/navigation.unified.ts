@@ -18,10 +18,9 @@
  *   - GLOBAL_NAVIGATION trimmed: Customers, Suppliers, and Messaging
  *     pointed at routes that don't exist post-Phase-1.C; only Delivery
  *     Inbox (subsidiary workspace) remains.
- *
- * Phase 4 modules (Media, Production, Talent) are not registered here —
- * they land on the phase-4-media-production-talent branch and will be
- * folded into AGENCY_NAVIGATION when that PR merges.
+ *   - Phase 4 modules (Media Plans, Production, Talent Roster) are
+ *     folded into AGENCY_NAVIGATION; the Talent Invoice approval queue
+ *     also appears in COMMERCIAL_NAVIGATION (AM-only).
  */
 
 import type { CommandItem } from '@/core/components/navigation/CommandPalette';
@@ -71,6 +70,37 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     icon: 'Briefcase',
     description: 'Legacy advisory engagements — migrating to Campaigns / Master Jobs',
     keywords: ['engagement', 'project', 'job'],
+  },
+  {
+    id: 'campaigns',
+    label: 'Media Plans',
+    href: '/media',
+    icon: 'Megaphone',
+    description: 'Media buying plans, buys, actuals, and post-campaign reports',
+    keywords: ['media', 'plan', 'buy', 'tv', 'radio', 'ooh', 'digital', 'campaign'],
+    children: [
+      { id: 'media-plans-list', label: 'All Plans', href: '/media', icon: 'List' },
+    ],
+  },
+  {
+    id: 'production',
+    label: 'Production',
+    href: '/production',
+    icon: 'Film',
+    description: 'Kanban for TVC, radio, photography, print, and exhibition production jobs',
+    keywords: ['production', 'tvc', 'shoot', 'kanban', 'producer'],
+  },
+  {
+    id: 'talent',
+    label: 'Talent Roster',
+    href: '/talent',
+    icon: 'Users',
+    description: 'Staff and freelancer profiles, contracts, and invoice queue',
+    keywords: ['talent', 'freelancer', 'staff', 'roster', 'contract', 'invoice'],
+    children: [
+      { id: 'talent-roster',   label: 'Roster',   href: '/talent',          icon: 'Users' },
+      { id: 'talent-invoices', label: 'Invoices', href: '/talent/invoices', icon: 'Receipt' },
+    ],
   },
   {
     id: 'delivery-inbox',
@@ -142,6 +172,14 @@ export const COMMERCIAL_NAVIGATION: NavItem[] = [
     icon: 'Inbox',
     description: 'Direct-from-client requests to route',
     keywords: ['intake', 'request', 'route'],
+  },
+  {
+    id: 'talent-invoice-queue',
+    label: 'Talent Invoices',
+    href: '/talent/invoices',
+    icon: 'Receipt',
+    description: 'Freelancer invoice approval queue (AM only)',
+    keywords: ['invoice', 'talent', 'freelancer', 'approve'],
   },
   {
     id: 'pricing',
