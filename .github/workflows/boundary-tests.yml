@@ -132,6 +132,13 @@ jobs:
         env:
           CI: true
           BASE_URL: http://localhost:3000
+          # Tell the Vite dev server (spun up by Playwright's `webServer`
+          # config) to route Firebase SDK calls to the emulator instead
+          # of prod. Every client-side firebase.ts service gates the
+          # `connect{Auth,Firestore,Functions}Emulator()` calls on this
+          # flag — without it, the app talks to prod, hits no seeded
+          # data, and every Playwright step times out.
+          VITE_USE_EMULATORS: 'true'
 
       - name: Upload Playwright report
         if: always()
