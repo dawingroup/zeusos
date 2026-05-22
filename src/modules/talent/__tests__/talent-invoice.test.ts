@@ -21,6 +21,15 @@ const mockUpdateDoc = vi.fn().mockResolvedValue(undefined);
 const mockSetDoc = vi.fn().mockResolvedValue(undefined);
 const mockAddDoc = vi.fn();
 
+const mockBatchUpdate = vi.fn();
+const mockBatchSet    = vi.fn();
+const mockBatchCommit = vi.fn().mockResolvedValue(undefined);
+const mockWriteBatch  = vi.fn(() => ({
+  update: mockBatchUpdate,
+  set:    mockBatchSet,
+  commit: mockBatchCommit,
+}));
+
 vi.mock('firebase/firestore', () => ({
   collection:      vi.fn(() => ({ __kind: 'collection' })),
   doc:             vi.fn((_db, coll, id) => ({ __kind: 'doc', __id: id, id, __path: `${coll}/${id}` })),
@@ -33,6 +42,7 @@ vi.mock('firebase/firestore', () => ({
   orderBy:         vi.fn(),
   serverTimestamp: vi.fn(() => '__SERVER_TS__'),
   setDoc:          mockSetDoc,
+  writeBatch:      mockWriteBatch,
 }));
 
 // ─────────────────────────────────────────────────────────────────
@@ -43,6 +53,7 @@ function makeInvoice(status: TalentInvoice['status']): TalentInvoice {
   return {
     id: 'inv-001',
     talentProfileId: 'talent-001',
+    orgId: 'org-default',
     amountMinor: 2_000_000_00, // 2,000,000 UGX
     currency: 'UGX',
     invoiceStorageRef: 'invoices/2026/INV-001.pdf',
@@ -66,7 +77,15 @@ function mockGetInvoice(invoice: TalentInvoice) {
 // ─────────────────────────────────────────────────────────────────
 
 describe('approveTalentInvoice', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Re-wire writeBatch mock after clearAllMocks resets the return value.
+    mockWriteBatch.mockReturnValue({
+      update: mockBatchUpdate,
+      set:    mockBatchSet,
+      commit: mockBatchCommit,
+    });
+  });
 
   it('transitions SUBMITTED → APPROVED and emits domain event', async () => {
     mockGetInvoice(makeInvoice('SUBMITTED'));
@@ -74,15 +93,22 @@ describe('approveTalentInvoice', () => {
     const { approveTalentInvoice } = await import('../services/talent-invoice.service');
     await approveTalentInvoice('inv-001', 'am-user');
 
-    expect(mockUpdateDoc).toHaveBeenCalledOnce();
-    const [, payload] = mockUpdateDoc.mock.calls[0];
-    expect(payload.status).toBe('APPROVED');
-    expect(payload.approvedBy).toBe('am-user');
+    // approveTalentInvoice uses writeBatch for atomic status + event write.
+    expect(mockWriteBatch).toHaveBeenCalledOnce();
+    expect(mockBatchCommit).toHaveBeenCalledOnce();
 
-    // Domain event written.
-    expect(mockSetDoc).toHaveBeenCalledOnce();
-    const [, eventPayload] = mockSetDoc.mock.calls[0];
-    expect(eventPayload.type).toBe('TALENT_INVOICE_APPROVED');
+    // Invoice status update via batch.update.
+    expect(mockBatchUpdate).toHaveBeenCalledOnce();
+    const [, updatePayload] = mockBatchUpdate.mock.calls[0];
+    expect(updatePayload.status).toBe('APPROVED');
+    expect(updatePayload.approvedBy).toBe('am-user');
+
+    // Domain event written via batch.set.
+    expect(mockBatchSet).toHaveBeenCalledOnce();
+    const [, eventPayload] = mockBatchSet.mock.calls[0];
+    expect(eventPayload.eventType).toBe('TalentInvoiceApproved');
+    expect(eventPayload.aggregateType).toBe('TalentInvoice');
+    expect(eventPayload.aggregateId).toBe('inv-001');
   });
 
   it('throws when invoice is APPROVED (not SUBMITTED)', async () => {

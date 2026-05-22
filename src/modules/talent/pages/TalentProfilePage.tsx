@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '@/core/hooks/useAuth';
 import {
   getTalentProfile,
   listContractsForProfile,
@@ -24,6 +25,8 @@ type Tab = 'info' | 'contracts' | 'invoices';
 
 export default function TalentProfilePage() {
   const { profileId } = useParams<{ profileId: string }>();
+  const { user } = useAuth();
+  const orgId = (user as { organizationId?: string })?.organizationId || 'default';
   const [profile, setProfile] = useState<TalentProfile | null>(null);
   const [contracts, setContracts] = useState<FreelancerContract[]>([]);
   const [invoices, setInvoices] = useState<TalentInvoice[]>([]);
@@ -158,6 +161,7 @@ export default function TalentProfilePage() {
           {showInvoiceForm && (
             <TalentInvoiceForm
               talentProfileId={profile.id}
+              orgId={orgId}
               onSave={async (values) => {
                 await submitTalentInvoice(values);
                 setShowInvoiceForm(false);
