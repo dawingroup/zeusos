@@ -51,69 +51,11 @@
     ],
     "rewrites": [
       {
-        "source": "/api/**",
-        "function": "api"
-      },
-      {
-        "source": "/adobe/createPdf",
-        "function": "adobeCreatePdfGen1"
-      },
-      {
-        "source": "/adobe/extractPdf",
-        "function": "adobeExtractPdfGen1"
-      },
-      {
-        "source": "/adobe/compressPdf",
-        "function": "adobeCompressPdfGen1"
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }
     ],
     "headers": [
-      {
-        "source": "/api/**",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "https://os.zeustheagency.com"
-          },
-          {
-            "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, PUT, DELETE, OPTIONS"
-          },
-          {
-            "key": "Access-Control-Allow-Headers",
-            "value": "Content-Type, Authorization"
-          },
-          {
-            "key": "Access-Control-Max-Age",
-            "value": "3600"
-          }
-        ]
-      },
-      {
-        "source": "/adobe/**",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "https://os.zeustheagency.com"
-          },
-          {
-            "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, OPTIONS"
-          },
-          {
-            "key": "Access-Control-Allow-Headers",
-            "value": "Content-Type, Authorization"
-          },
-          {
-            "key": "Access-Control-Max-Age",
-            "value": "3600"
-          }
-        ]
-      },
       {
         "source": "/**",
         "headers": [
