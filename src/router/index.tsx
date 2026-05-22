@@ -122,6 +122,15 @@ const TalentProfilePage      = lazyWithRetry(() => import('@/modules/talent/page
 const FreelancerContractsPage = lazyWithRetry(() => import('@/modules/talent/pages/FreelancerContractsPage'));
 const TalentInvoicesPage     = lazyWithRetry(() => import('@/modules/talent/pages/TalentInvoicesPage'));
 
+// ──────────────────────────────────────────────────────────────────────────
+// Asset Library — Phase 4 P1
+// ──────────────────────────────────────────────────────────────────────────
+const AssetLibraryListPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetLibraryListPage'));
+const AssetDetailPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetDetailPage'));
+const AssetUploadPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetUploadPage'));
+const CollectionsPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionsPage'));
+const CollectionDetailPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionDetailPage'));
+
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
 
@@ -497,6 +506,15 @@ export const router = createBrowserRouter([
       { path: 'talent/invoices',             element: <PageWrapper><ModuleContentWrapper><TalentInvoicesPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId',           element: <PageWrapper><ModuleContentWrapper><TalentProfilePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId/contracts', element: <PageWrapper><ModuleContentWrapper><FreelancerContractsPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── Asset Library — Phase 4 P1 ────────────────────────────────────────
+      // Staff-wide access — any authenticated user can browse and upload.
+      // No commercial-actor gate; assets are shared across all sub-brands.
+      { path: 'assets',                    element: <PageWrapper><ModuleContentWrapper><AssetLibraryListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'assets/new',                element: <PageWrapper><ModuleContentWrapper><AssetUploadPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'assets/collections',        element: <PageWrapper><ModuleContentWrapper><CollectionsPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'assets/collections/:colId', element: <PageWrapper><ModuleContentWrapper><CollectionDetailPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'assets/:itemId',            element: <PageWrapper><ModuleContentWrapper><AssetDetailPage /></ModuleContentWrapper></PageWrapper> },
     ],
   },
 
