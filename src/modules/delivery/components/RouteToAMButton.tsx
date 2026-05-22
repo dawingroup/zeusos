@@ -8,15 +8,11 @@
  * account management,' which creates an intake item on the master job —
  * there is no UI affordance or API to answer the client with a price."
  *
- * The button calls the `routeDirectClientRequest` callable which writes
- * the intake item AND emits `DirectClientRequestRouted` to the
+ * The button calls the `routeDirectClientRequest` callable, which
+ * writes the intake item AND emits `DirectClientRequestRouted` to the
  * transactional outbox atomically (mirrors how every other state change
  * in the platform writes its event — see `appendDomainEvent` in
  * `functions/src/platform/outbox.js`).
- *
- * PRECONDITION: the callable does not yet ship. The button is wired to
- * its final shape so the day the Cloud Function deploys the only change
- * needed is removing this comment.
  */
 
 import { useState } from 'react';

@@ -137,11 +137,9 @@ export interface RouteDirectClientRequestResponse {
 }
 
 /**
- * PRECONDITION — not yet shipped. A follow-up Cloud Function will write
- * a master-job intake item and emit `DirectClientRequestRouted` to the
- * outbox in one transaction. Until then the button surfaces the call as
- * a 503 with a clear message to the user. Wire the function name now so
- * we can swap to live behavior with a single deploy.
+ * Writes a master-job intake item and emits `DirectClientRequestRouted`
+ * to the outbox in one transaction. When `masterJobId` is absent, the
+ * intake lands under `intake_unassigned/{intakeId}` and AM triages it.
  */
 export const routeDirectClientRequestFn: HttpsCallable<
   RouteDirectClientRequestRequest,

@@ -5060,6 +5060,9 @@ exports.requestRevision = assignment.requestRevision;
 exports.closeWorkOrder = assignment.closeWorkOrder;
 exports.cancelWorkOrder = assignment.cancelWorkOrder;
 
+// Phase 3.E — spec §7.4 Layer 3 routing.
+exports.routeDirectClientRequest = assignment.routeDirectClientRequest;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');

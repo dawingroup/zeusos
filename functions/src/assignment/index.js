@@ -1,8 +1,10 @@
 /**
- * Phase 3.B — Assignment & Handoff Cloud Functions barrel.
+ * Phase 3.B + 3.E — Assignment & Handoff Cloud Functions barrel.
  *
- * The 11 callables that drive the IWO state machine (spec §6.1).
  * Wired into `functions/index.js` so the Firebase CLI picks them up.
+ * Members:
+ *   - 11 IWO state-machine callables (Phase 3.B, spec §6.1).
+ *   - routeDirectClientRequest (Phase 3.E, spec §7.4 Layer 3).
  */
 
 const { issueWorkOrder } = require('./issueWorkOrder');
@@ -14,6 +16,7 @@ const { submitDeliverable } = require('./submitDeliverable');
 const { acceptInternal, requestRevision } = require('./acceptInternalRequestRevision');
 const { closeWorkOrder } = require('./closeWorkOrder');
 const { cancelWorkOrder } = require('./cancelWorkOrder');
+const { routeDirectClientRequest } = require('./routeDirectClientRequest');
 
 module.exports = {
   issueWorkOrder,
@@ -27,4 +30,5 @@ module.exports = {
   requestRevision,
   closeWorkOrder,
   cancelWorkOrder,
+  routeDirectClientRequest,
 };
