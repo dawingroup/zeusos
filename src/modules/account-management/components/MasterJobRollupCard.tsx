@@ -2,19 +2,16 @@
  * MasterJobRollupCard — KPI tiles for one master job. Renders the
  * allocation / ceiling, margin, and IWO state counts from a
  * `MasterJobRollup` (the §9.4 read shape).
+ *
+ * All math lives in `computeRollupTiles` (pure, vitest-covered).
  */
 
 import type { MasterJobRollup } from '@/modules/assignment/hooks/useMasterJobRollup';
 import { formatMinor } from '../utils/money';
+import { computeRollupTiles } from '../utils/rollupTiles';
 
 export function MasterJobRollupCard({ rollup }: { rollup: MasterJobRollup }) {
-  const allocPct = rollup.ceilingMinor > 0
-    ? Math.round((rollup.allocatedMinor / rollup.ceilingMinor) * 100)
-    : 0;
-  const stateCounts: Record<string, number> = {};
-  for (const wo of rollup.workOrders) {
-    stateCounts[wo.status] = (stateCounts[wo.status] || 0) + 1;
-  }
+  const { allocPct, allocTone, marginTone, stateBreakdown } = computeRollupTiles(rollup);
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -22,22 +19,18 @@ export function MasterJobRollupCard({ rollup }: { rollup: MasterJobRollup }) {
         label="Allocation"
         value={`${allocPct}%`}
         sub={`${formatMinor(rollup.allocatedMinor, rollup.currency)} / ${formatMinor(rollup.ceilingMinor, rollup.currency)}`}
-        tone={allocPct >= 100 ? 'red' : allocPct >= 80 ? 'amber' : 'green'}
+        tone={allocTone}
       />
       <Tile
         label="Margin"
         value={`${rollup.marginPct.toFixed(1)}%`}
         sub={`client total ${formatMinor(rollup.clientTotalMinor, rollup.currency)}`}
-        tone={rollup.marginPct >= 25 ? 'green' : 'amber'}
+        tone={marginTone}
       />
       <Tile
         label="IWOs"
         value={String(rollup.workOrders.length)}
-        sub={
-          Object.entries(stateCounts)
-            .map(([s, n]) => `${s.toLowerCase()}: ${n}`)
-            .join(' · ') || 'none yet'
-        }
+        sub={stateBreakdown || 'none yet'}
       />
       <Tile
         label="Client invoice"
