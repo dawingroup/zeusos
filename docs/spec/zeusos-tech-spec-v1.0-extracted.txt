@@ -1,0 +1,1166 @@
+ZeusOS                                                                                             Technical Specification v1.0
+
+
+
+
+ZeusOS
+Technical Specification
+An operating system for a multi-subsidiary marketing agency
+
+Centralized commercial control · distributed delivery
+
+
+
+ Field                                  Value
+
+ Document                               ZeusOS Platform — Build Specification
+
+ Version                                1.0 (full build spec)
+
+ Status                                 Draft for engineering review
+
+ Date                                   22 May 2026
+
+                                        Project/campaign lifecycle, cross-subsidiary handoff engine, central pricing,
+ Scope
+                                        contracts & billing
+
+ Entity model                           Legal subsidiaries — real inter-company invoicing & transfer pricing
+
+ Reference stack                        PostgreSQL · event-driven services · REST + GraphQL · per-entity GL sync
+
+
+
+
+Confidential — for engineering review                                                                           Page 1 of 27
+ZeusOS                                                                                           Technical Specification v1.0
+
+
+
+
+Contents
+If the entries below appear blank, right-click and choose “Update Field” (Word updates them automatically on open).
+
+
+
+
+Confidential — for engineering review                                                                         Page 2 of 27
+ZeusOS                                                                              Technical Specification v1.0
+
+
+
+
+1. Overview & Design Principles
+ZeusOS is the operating system for a marketing group structured as a set of legal subsidiaries (a
+creative studio, a media-buying house, a digital/development shop, a PR/production company, and
+others added over time) coordinated by a central account-management function. The defining
+commercial constraint is simple to state and hard to enforce: the client experiences one agency, one
+price, one contract and one invoice, while the work is actually executed across several independent
+legal entities that each keep their own books.
+This document specifies the platform that makes that constraint hold. It covers the end-to-end
+project lifecycle, the cross-subsidiary assignment/handoff engine, and the centralized pricing,
+contracts and billing controls — with equal weight across all three, as they are mutually dependent. It
+is written as a build spec: it includes the domain model, relational schemas, state machines, API
+contracts, event flows, sequence diagrams and the edge cases an implementer must handle.
+
+1.1 The core invariant
+   INVARIANT — COMMERCIAL GRAVITY
+   Pricing, contracts and external billing live exclusively at the account-management layer. Subsidiaries
+   deliver against internal work orders and never hold a contract with, quote a price to, or invoice
+   the end client. Every cross-entity movement of work is an internal work order; every cross-entity
+   movement of money is an inter-company invoice at a governed transfer price.
+
+
+1.2 Design principles
+   1. Single source of commercial truth. Contracts, prices and client invoices are owned by one
+      set of services. No other module may originate them.
+   2. Work flows down, money flows up, both are auditable. Budget is allocated downward via
+      internal work orders; time and cost flow upward via postings and inter-company invoices.
+      Every step emits an immutable domain event.
+   3. One master job ties everything together. Each client engagement has exactly one master
+      job; every subsidiary's work order is a sub-job referencing it, enabling clean roll-up of cost, time
+      and margin.
+   4. Subsidiary autonomy in delivery, zero autonomy in commerce. Subsidiaries control how
+      work is done, staffing and internal scheduling. They cannot alter client price, scope
+      commitments or invoicing.
+   5. Entity-aware accounting from day one. Because subsidiaries are real legal entities, the
+      platform models per-entity general ledgers, inter-company invoices and transfer pricing as first-
+      class concepts — not as an afterthought bolted onto a single-entity billing system.
+   6. Hard guards over good intentions. The rules that protect margin (no work order without
+      budget, subsidiaries never quote, single client invoice) are enforced as system invariants and
+      state-machine guards, not left to training and discipline.
+
+
+
+
+Confidential — for engineering review                                                            Page 3 of 27
+ZeusOS                                                                                       Technical Specification v1.0
+
+
+
+
+1.3 Bounded contexts
+ZeusOS is decomposed into the following bounded contexts, each owning its data and exposing
+APIs and events. They map directly to the architecture in §2.
+
+ Context                     Owns                                      Must never
+
+ Identity & Access           Users, roles, org-scoped permissions      Grant a subsidiary user commercial scopes
+
+ Contracts & SOW             MSAs, SOWs, scope, change orders          Let delivery teams edit terms
+
+ Pricing & Rate Card         Cost rate cards, markup, quotes           Expose cost rates to the client
+
+ Assignment &
+                             Master jobs, sub-jobs, IWOs, packets      Issue an IWO without locked budget
+ Handoff
+
+ Delivery (per
+                             Tasks, timesheets, deliverables           Contact client on price/scope
+ subsidiary)
+
+                                                                       Emit more than one client invoice per cycle
+ Billing & Revenue           Client invoices, AR, rev-rec
+                                                                       un-consolidated
+
+ Inter-company
+                             I/C invoices, transfer pricing, GL sync   Net across entities silently
+ Finance
+
+
+
+
+Confidential — for engineering review                                                                     Page 4 of 27
+ZeusOS                                                                                          Technical Specification v1.0
+
+
+
+
+2. System Architecture
+The platform is layered so that commercial authority sits in the middle, between the client and the
+delivering subsidiaries. Nothing crosses from the client to a subsidiary, or back, without passing
+through the account-management commercial core.
+
+
+
+
+       Figure 1 — ZeusOS layered architecture. The commercial core is the only path between client and subsidiaries.
+
+
+2.1 Layer responsibilities
+Client layer
+The client's only touchpoints are the account team and a thin client portal for briefs, approvals and
+invoice access. The portal never surfaces subsidiary identities, cost rates or internal work orders.
+
+Account-management commercial core
+Four services hold all commercial truth. The Contracts & SOW service is the authority on what has
+been agreed. The Pricing & Rate-Card engine is the only component permitted to compute a client-
+facing price. The Billing & Revenue service produces the single external invoice. The Assignment &
+Handoff engine is the spine that turns agreed, priced scope into internal work orders and tracks them
+to completion.
+
+
+
+
+Confidential — for engineering review                                                                        Page 5 of 27
+ZeusOS                                                                                          Technical Specification v1.0
+
+
+
+Internal work-order & inter-company event bus
+This is the controlled boundary between commerce and delivery. Budget descends as locked
+allocations on internal work orders; time and cost ascend as postings; and on completion, inter-
+company invoices ascend from each subsidiary to the parent. Everything on this bus is entity-aware
+and emits events to the platform audit log.
+
+Delivery layer — legal subsidiaries
+Each subsidiary runs its own delivery workspace (tasks, sprints, timesheets, vendor management)
+and keeps its own general ledger. It receives work only as an internal work order and returns
+deliverables plus actual time and cost. It has no API path to client pricing, contracts or external
+invoicing.
+
+Platform & shared services
+Identity/RBAC, the event bus and outbox, per-entity ledger sync, notifications, and reporting/audit
+are shared horizontally. RBAC is org-scoped so a subsidiary user is structurally incapable of holding
+a commercial permission.
+
+2.2 Reference technology stack
+ Concern                          Choice                                  Rationale
+
+                                                                          Strong transactional guarantees for money
+ Primary datastore                PostgreSQL (schema-per-context)
+                                                                          & state
+
+ Service style                    Modular services per bounded context    Clear ownership; independently deployable
+
+                                  REST for commands, GraphQL for
+ Sync APIs                                                                Simple writes; flexible roll-up reads
+                                  read/agg
+
+                                  Event bus (e.g. Kafka/NATS) +
+ Async                                                                    Reliable domain events, no dual-write loss
+                                  transactional outbox
+
+ Money                            Integer minor units + currency code     No floating-point cents; multi-currency ready
+
+ Accounting                       Per-entity GL with I/C sync adapter     Mirrors real subsidiary books
+
+ Idempotency                      Client-supplied keys on all mutations   Safe retries for financial operations
+
+
+
+
+Confidential — for engineering review                                                                        Page 6 of 27
+ZeusOS                                                                                        Technical Specification v1.0
+
+
+
+
+3. Domain Model
+The model centers on three spines that meet at the master job: the commercial spine (client → MSA
+→ SOW → quote), the assignment spine (master job → internal work order → posting), and the
+financial spine (inter-company invoice → consolidated client invoice → revenue). Identities below
+use ULIDs.
+
+3.1 Core entities
+ Entity                          Belongs to            Purpose
+
+                                                       A legal entity: the parent or a subsidiary. Carries
+ Organization                    Identity context
+                                                       is_legal_entity, base_currency, GL connection.
+
+ Client                          Contracts context     The end customer. Linked to the parent org only.
+
+                                                       Master agreement between parent and client; umbrella
+ MSA                             Contracts context
+                                                       terms.
+
+                                                       Scoped statement of work under an MSA; retainer or
+ SOW                             Contracts context
+                                                       project; holds approved scope & ceiling.
+
+                                                       Amends an SOW's scope/ceiling; the only way to raise a
+ ChangeOrder                     Contracts context
+                                                       budget cap.
+
+                                                       Per-subsidiary cost rates by role/unit; versioned & effective-
+ RateCard                        Pricing context
+                                                       dated.
+
+                                                       Client-facing priced scope = subsidiary cost + markup; the
+ Quote                           Pricing context
+                                                       only client price.
+
+ MasterJob                       Assignment context    One per engagement increment; the roll-up anchor.
+
+                                                       Work assigned to one subsidiary; a sub-job with locked
+ InternalWorkOrder               Assignment context
+                                                       budget.
+
+ HandoffPacket                   Assignment context    The brief + criteria + context attached to an IWO.
+
+ TimeEntry / CostEntry           Delivery context      Actuals posted by a subsidiary against an IWO.
+
+ Deliverable                     Delivery context      Output submitted against an IWO with acceptance state.
+
+ InterCompanyInvoice             I/C Finance context   Subsidiary → parent invoice at transfer price on IWO close.
+
+ ClientInvoice                   Billing context       Single consolidated invoice to the client.
+
+
+3.2 Entity-relationship summary
+  Client 1───* MSA 1───* SOW 1───* ChangeOrder
+                           │
+                           │ 1
+                           ▼ *
+                        Quote ───────────────┐ (priced from)
+                           │ 1               │
+                           ▼ 1               │
+
+
+
+
+Confidential — for engineering review                                                                        Page 7 of 27
+ZeusOS                                                                    Technical Specification v1.0
+
+
+
+
+                         MasterJob               ▼
+                              │ 1          RateCard (per Organization, versioned)
+                              ▼ *
+                  InternalWorkOrder *──1 Organization (subsidiary)
+                       │    │   │
+            1 ┌────────┘    │   └────────┐ 1
+              ▼ 1           ▼ *          ▼ *
+       HandoffPacket TimeEntry/      Deliverable
+                      CostEntry
+                              │
+       InternalWorkOrder 1───┘ (on CLOSE)
+              │ 1
+              ▼ 1
+       InterCompanyInvoice *───1 Organization(sub, from) ─→ Organization(parent, to)
+              │
+              ▼ (rolled up by MasterJob)
+       ClientInvoice 1───* InvoiceLine
+
+
+
+
+Confidential — for engineering review                                                  Page 8 of 27
+ZeusOS                                                                         Technical Specification v1.0
+
+
+
+
+4. Database Schemas
+PostgreSQL DDL for the load-bearing tables. Monetary amounts are stored as BIGINT minor units
+with an explicit currency; cross-entity amounts always carry the entity that owns them. Only columns
+essential to the spec are shown.
+
+4.1 Organizations & identity
+  CREATE TABLE organization (
+     id              CHAR(26) PRIMARY KEY,            -- ULID
+     name            TEXT NOT NULL,
+     kind            TEXT NOT NULL CHECK (kind IN ('PARENT','SUBSIDIARY')),
+     is_legal_entity BOOLEAN NOT NULL DEFAULT TRUE,   -- subsidiaries = TRUE here
+     base_currency   CHAR(3) NOT NULL,                -- ISO 4217
+     gl_connection_id TEXT,                           -- per-entity ledger link
+     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+  );
+
+  CREATE TABLE app_user (
+     id           CHAR(26) PRIMARY KEY,
+     email        CITEXT UNIQUE NOT NULL,
+     home_org_id  CHAR(26) NOT NULL REFERENCES organization(id),
+     status       TEXT NOT NULL DEFAULT 'ACTIVE'
+  );
+
+  -- Role grants are ALWAYS scoped to an org. A subsidiary user cannot be
+  -- granted a commercial role because the grant is rejected unless the
+  -- role's allowed_org_kind matches the user's home org kind.
+  CREATE TABLE role_grant (
+     id             CHAR(26) PRIMARY KEY,
+     user_id        CHAR(26) NOT NULL REFERENCES app_user(id),
+     org_id         CHAR(26) NOT NULL REFERENCES organization(id),
+     role           TEXT NOT NULL,   -- e.g. ACCOUNT_MANAGER, COMMERCIAL_ADMIN,
+                                     --      DELIVERY_LEAD, TIMEKEEPER
+     CONSTRAINT no_commercial_role_for_subsidiary CHECK (
+        role NOT IN ('ACCOUNT_MANAGER','COMMERCIAL_ADMIN','PRICING_ADMIN','BILLING_ADMIN')
+        OR org_id IN (SELECT id FROM organization WHERE kind = 'PARENT')
+     )
+  );
+
+
+
+
+4.2 Contracts & SOW
+  CREATE TABLE client (
+     id          CHAR(26) PRIMARY KEY,
+     parent_org_id CHAR(26) NOT NULL REFERENCES organization(id),
+     name        TEXT NOT NULL,
+     billing_currency CHAR(3) NOT NULL
+  );
+
+  CREATE TABLE msa (
+
+
+
+
+Confidential — for engineering review                                                       Page 9 of 27
+ZeusOS                                                                    Technical Specification v1.0
+
+
+
+
+     id           CHAR(26) PRIMARY KEY,
+     client_id    CHAR(26) NOT NULL REFERENCES client(id),
+     parent_org_id CHAR(26) NOT NULL REFERENCES organization(id),
+     effective_from DATE NOT NULL,
+     effective_to    DATE,
+     status       TEXT NOT NULL CHECK (status IN ('DRAFT','ACTIVE','EXPIRED','TERMINATED'))
+  );
+
+  CREATE TABLE sow (
+     id            CHAR(26) PRIMARY KEY,
+     msa_id        CHAR(26) NOT NULL REFERENCES msa(id),
+     type          TEXT NOT NULL CHECK (type IN ('RETAINER','PROJECT')),
+     scope_doc_ref TEXT NOT NULL,
+     ceiling_minor BIGINT NOT NULL,        -- approved budget ceiling
+     currency      CHAR(3) NOT NULL,
+     status        TEXT NOT NULL CHECK (status IN
+                     ('DRAFT','PENDING_APPROVAL','ACTIVE','CLOSED','CANCELLED')),
+     approved_by   CHAR(26) REFERENCES app_user(id),
+     approved_at   TIMESTAMPTZ
+  );
+
+  CREATE TABLE change_order (
+     id           CHAR(26) PRIMARY KEY,
+     sow_id       CHAR(26) NOT NULL REFERENCES sow(id),
+     delta_minor  BIGINT NOT NULL,        -- may be negative
+     reason       TEXT NOT NULL,
+     status       TEXT NOT NULL CHECK (status IN ('DRAFT','APPROVED','REJECTED')),
+     approved_by  CHAR(26) REFERENCES app_user(id)
+  );
+
+
+
+
+4.3 Pricing & rate cards
+  CREATE TABLE rate_card (
+     id            CHAR(26) PRIMARY KEY,
+     org_id        CHAR(26) NOT NULL REFERENCES organization(id), -- the subsidiary
+     version       INT NOT NULL,
+     effective_from DATE NOT NULL,
+     effective_to   DATE,
+     status        TEXT NOT NULL CHECK (status IN ('DRAFT','ACTIVE','RETIRED')),
+     UNIQUE (org_id, version)
+  );
+
+  CREATE TABLE rate_card_line (
+     id           CHAR(26) PRIMARY KEY,
+     rate_card_id CHAR(26) NOT NULL REFERENCES rate_card(id),
+     unit         TEXT NOT NULL,         -- 'HOUR','DAY','UNIT','PASS_THROUGH'
+     role_code    TEXT,                  -- e.g. 'SR_DESIGNER'
+     cost_minor   BIGINT NOT NULL,       -- INTERNAL cost; never shown to client
+     currency     CHAR(3) NOT NULL
+  );
+
+
+
+
+Confidential — for engineering review                                                Page 10 of 27
+ZeusOS                                                                    Technical Specification v1.0
+
+
+
+
+  CREATE TABLE quote (
+     id              CHAR(26) PRIMARY KEY,
+     sow_id          CHAR(26) NOT NULL REFERENCES sow(id),
+     status          TEXT NOT NULL CHECK (status IN ('DRAFT','ISSUED','ACCEPTED','VOID')),
+     client_total_minor BIGINT NOT NULL, -- the ONLY client-facing number
+     currency        CHAR(3) NOT NULL,
+     margin_floor_pct NUMERIC(5,2) NOT NULL DEFAULT 25.00,
+     created_by      CHAR(26) NOT NULL REFERENCES app_user(id)
+  );
+
+  CREATE TABLE quote_line (
+     id            CHAR(26) PRIMARY KEY,
+     quote_id      CHAR(26) NOT NULL REFERENCES quote(id),
+     subsidiary_org_id CHAR(26) NOT NULL REFERENCES organization(id),
+     rate_card_line_id CHAR(26) REFERENCES rate_card_line(id),
+     qty           NUMERIC(12,2) NOT NULL,
+     cost_minor    BIGINT NOT NULL,        -- subsidiary cost (internal)
+     markup_pct    NUMERIC(5,2) NOT NULL, -- applied by pricing engine
+     client_minor BIGINT NOT NULL          -- cost * (1+markup); client-facing
+  );
+
+
+
+
+4.4 Assignment, handoff & delivery
+  CREATE TABLE master_job (
+     id            CHAR(26) PRIMARY KEY,
+     sow_id        CHAR(26) NOT NULL REFERENCES sow(id),
+     quote_id      CHAR(26) NOT NULL REFERENCES quote(id),
+     code          TEXT UNIQUE NOT NULL,   -- human ref, e.g. ACME-2026-014
+     status        TEXT NOT NULL CHECK (status IN ('OPEN','DELIVERING','CLOSED')),
+     allocated_minor BIGINT NOT NULL DEFAULT 0, -- sum of issued IWO budgets
+     ceiling_minor BIGINT NOT NULL          -- copied from SOW/quote; hard cap
+  );
+
+  CREATE TABLE internal_work_order (
+     id               CHAR(26) PRIMARY KEY,
+     master_job_id    CHAR(26) NOT NULL REFERENCES master_job(id),
+     subsidiary_org_id CHAR(26) NOT NULL REFERENCES organization(id),
+     status           TEXT NOT NULL CHECK (status IN
+        ('DRAFT','ISSUED','ACCEPTED','REJECTED','IN_PROGRESS',
+         'DELIVERED','ACCEPTED_INTERNALLY','CLOSED','CANCELLED')),
+     budget_minor     BIGINT NOT NULL CHECK (budget_minor > 0),
+     transfer_price_minor BIGINT NOT NULL, -- agreed i/c price (governed)
+     currency         CHAR(3) NOT NULL,
+     budget_hold_id CHAR(26),                -- reference to the hold record
+     issued_by        CHAR(26) REFERENCES app_user(id),
+     accepted_by      CHAR(26) REFERENCES app_user(id),
+     idempotency_key TEXT UNIQUE
+  );
+
+  CREATE TABLE handoff_packet (
+    id            CHAR(26) PRIMARY KEY,
+
+
+
+
+Confidential — for engineering review                                                Page 11 of 27
+ZeusOS                                                                    Technical Specification v1.0
+
+
+
+
+     iwo_id        CHAR(26) NOT NULL UNIQUE REFERENCES internal_work_order(id),
+     brief_md      TEXT NOT NULL,
+     milestones    JSONB NOT NULL,        -- [{name, due_date}]
+     acceptance_criteria JSONB NOT NULL, -- [{id, description, required}]
+     client_context_md TEXT,              -- ONLY what the subsidiary needs
+     comms_owner_user_id CHAR(26) NOT NULL -- always an Account Mgmt user
+       REFERENCES app_user(id)
+  );
+
+  CREATE TABLE time_entry (
+     id           CHAR(26) PRIMARY KEY,
+     iwo_id       CHAR(26) NOT NULL REFERENCES internal_work_order(id),
+     user_id      CHAR(26) NOT NULL REFERENCES app_user(id),
+     minutes      INT NOT NULL CHECK (minutes > 0),
+     cost_minor   BIGINT NOT NULL,       -- minutes * rate_card cost
+     entry_date   DATE NOT NULL
+  );
+
+  CREATE TABLE cost_entry (
+     id            CHAR(26) PRIMARY KEY,
+     iwo_id        CHAR(26) NOT NULL REFERENCES internal_work_order(id),
+     kind          TEXT NOT NULL,         -- 'VENDOR','MEDIA_SPEND','EXPENSE'
+     amount_minor BIGINT NOT NULL,
+     is_pass_through BOOLEAN NOT NULL DEFAULT FALSE
+  );
+
+
+
+
+4.5 Financial — inter-company & client billing
+  CREATE TABLE budget_hold (
+     id            CHAR(26) PRIMARY KEY,
+     master_job_id CHAR(26) NOT NULL REFERENCES master_job(id),
+     iwo_id        CHAR(26) NOT NULL REFERENCES internal_work_order(id),
+     amount_minor BIGINT NOT NULL,
+     state         TEXT NOT NULL CHECK (state IN ('HELD','LOCKED','RELEASED','SETTLED'))
+  );
+
+  CREATE TABLE intercompany_invoice (
+     id             CHAR(26) PRIMARY KEY,
+     iwo_id         CHAR(26) NOT NULL UNIQUE REFERENCES internal_work_order(id),
+     from_org_id    CHAR(26) NOT NULL REFERENCES organization(id), -- subsidiary
+     to_org_id      CHAR(26) NOT NULL REFERENCES organization(id), -- parent
+     amount_minor   BIGINT NOT NULL,      -- = transfer price (governed)
+     currency       CHAR(3) NOT NULL,
+     tax_treatment  TEXT NOT NULL,        -- jurisdiction-driven
+     status         TEXT NOT NULL CHECK (status IN ('RAISED','POSTED','PAID')),
+     posted_to_gl   BOOLEAN NOT NULL DEFAULT FALSE
+  );
+
+  CREATE TABLE client_invoice (
+    id            CHAR(26) PRIMARY KEY,
+    client_id     CHAR(26) NOT NULL REFERENCES client(id),
+
+
+
+
+Confidential — for engineering review                                                Page 12 of 27
+ZeusOS                                                                              Technical Specification v1.0
+
+
+
+
+     master_job_id CHAR(26) NOT NULL REFERENCES master_job(id),
+     parent_org_id CHAR(26) NOT NULL REFERENCES organization(id), -- issuer
+     amount_minor BIGINT NOT NULL,        -- consolidated; client-facing
+     currency      CHAR(3) NOT NULL,
+     status        TEXT NOT NULL CHECK (status IN
+                     ('DRAFT','ISSUED','PAID','PART_PAID','VOID')),
+     UNIQUE (master_job_id, status) -- guards against duplicate active invoices
+  );
+
+  CREATE TABLE client_invoice_line (
+     id            CHAR(26) PRIMARY KEY,
+     client_invoice_id CHAR(26) NOT NULL REFERENCES client_invoice(id),
+     description   TEXT NOT NULL,         -- client-friendly; no subsidiary cost
+     amount_minor BIGINT NOT NULL         -- from quote_line.client_minor
+  );
+
+
+
+   SCHEMA INVARIANT
+   The rate_card_line.cost_minor and quote_line.cost_minor values are internal. No client-
+   facing view, API serializer or invoice line may project them. Only client_minor / consolidated totals
+   reach the client.
+
+
+
+
+Confidential — for engineering review                                                          Page 13 of 27
+ZeusOS                                                                                          Technical Specification v1.0
+
+
+
+
+5. End-to-End Project Lifecycle
+A client engagement moves through six phases. Account management owns phases 1–2 and 5–6
+outright; phases 3–4 are delivery, but always wrapped by internal work orders the core controls.
+
+ Phase                           Owner                  Key system actions
+
+                                                        Capture brief; check against active SOW; create or trigger
+ 1. Intake & qualification       Account Mgmt
+                                                        SOW/change order
+
+ 2. Scope, price &                                      Pricing engine builds quote from subsidiary rate cards +
+                                 Account Mgmt
+ assign                                                 markup; open master job; allocate budgets; issue IWOs
+
+ 3. Acceptance &                                        Subsidiary accepts IWO; logs time/cost; burn tracked vs
+                                 Subsidiary
+ execution                                              budget
+
+ 4. Internal delivery &          Subsidiary → Account   Deliverable submitted; account mgmt checks acceptance
+ QA                              Mgmt                   criteria; sub-job closed
+
+ 5. Client delivery &                                   Work presented to client through account team; revisions
+                                 Account Mgmt
+ approval                                               routed back as needed
+
+ 6. Billing &                    Account Mgmt + I/C     Subsidiaries raise i/c invoices; costs rolled up; single client
+ reconciliation                  Finance                invoice issued; rev-rec
+
+
+5.1 The handoff, in sequence
+Figure 2 traces a single assignment from client brief to payment, including the two most common
+deviations: a subsidiary rejecting an under-budgeted work order, and a client trying to commission a
+subsidiary directly.
+
+
+
+
+Confidential — for engineering review                                                                      Page 14 of 27
+ZeusOS                                                                                          Technical Specification v1.0
+
+
+
+
+  Figure 2 — Assignment handoff lifecycle. Green = internal work-order/inter-company bus; blue = client-facing; orange =
+                                                  guarded deviations.
+
+
+
+
+Confidential — for engineering review                                                                      Page 15 of 27
+ZeusOS                                                                                               Technical Specification v1.0
+
+
+
+
+6. State Machines
+
+6.1 Internal Work Order
+The internal work order is the heart of the handoff engine. Its state machine encodes the commercial
+guards: an order cannot be issued without a locked client price and a held budget, cannot accept
+cost beyond its budget without a change order, and cannot be accepted on the client's behalf by a
+subsidiary.
+
+
+
+
+                              Figure 3 — Internal Work Order state machine with transition guards.
+
+6.1.1 Transition table
+ From                             Event                To                           Guard
+
+                                                                                    SOW ACTIVE · quote ACCEPTED ·
+ DRAFT                            issue                ISSUED
+                                                                                    budget held
+
+                                                                                    Actor is delivery lead of receiving
+ ISSUED                           accept               ACCEPTED
+                                                                                    subsidiary
+
+                                                                                    Reason required; releases budget
+ ISSUED                           reject               REJECTED
+                                                                                    hold
+
+ ACCEPTED                         start                IN_PROGRESS                  —
+
+ IN_PROGRESS                      post cost            IN_PROGRESS                  cumulative ≤ budget (else blocked)
+
+ IN_PROGRESS                      deliver              DELIVERED                    ≥1 deliverable attached
+
+                                                       ACCEPTED_INTERNAL            All required criteria signed by Account
+ DELIVERED                        accept_internal
+                                                       LY                           Mgmt
+
+ DELIVERED                        request_revision     IN_PROGRESS                  Account Mgmt only
+
+ ACCEPTED_INTERNAL                close                CLOSED                       Raises i/c invoice; settles hold
+
+
+
+Confidential — for engineering review                                                                           Page 16 of 27
+ZeusOS                                                                        Technical Specification v1.0
+
+
+
+
+ From                             Event    To                   Guard
+
+ LY
+
+                                                                Account Mgmt authority; settle work
+ * (active)                       cancel   CANCELLED
+                                                                done
+
+
+6.2 SOW & Quote (abbreviated)
+  SOW:        DRAFT → PENDING_APPROVAL → ACTIVE → CLOSED
+                                    └→ CANCELLED
+              (ACTIVE only after named approver signs; ceiling becomes the hard cap)
+
+  Quote:      DRAFT → ISSUED → ACCEPTED → (feeds MasterJob)
+                          └→ VOID
+              (margin floor enforced on ISSUED; cannot issue below floor without override)
+
+  ClientInvoice: DRAFT → ISSUED → PAID
+                             └→ PART_PAID → PAID
+                      (only ONE non-VOID invoice per master job cycle)
+
+
+
+
+Confidential — for engineering review                                                    Page 17 of 27
+ZeusOS                                                                              Technical Specification v1.0
+
+
+
+
+7. The Assignment & Handoff Engine
+This section specifies the engine in build-level detail: how an assignment is constructed, what the
+handoff packet must contain, how budget is held and locked, and exactly how the boundary between
+commercial and delivery is enforced.
+
+7.1 Constructing an assignment
+When account management decides a piece of agreed, priced scope should go to a subsidiary, the
+engine performs an atomic sequence within one transaction:
+   7. Resolve or create the master job for the SOW increment; verify the accepted quote and copy
+      its ceiling onto the master job.
+   8. Compute the budget for this subsidiary's slice from the relevant quote lines (their cost, not the
+      client price).
+   9. Verify available headroom: master_job.allocated_minor + new budget ≤ ceiling_minor. If not,
+      the assignment is blocked pending a change order.
+   10. Create the internal work order in DRAFT with the budget and the governed transfer price.
+   11. Place a budget hold (state HELD) for the budget amount and increment allocated_minor.
+   12. Assemble the handoff packet (§7.3) and attach it to the work order.
+   13. Transition the work order to ISSUED and emit IWOIssued.
+
+   WHY BUDGET IS HELD AT ISSUED, NOT ACCEPTED
+   If budget were only committed on subsidiary acceptance, two account managers could each issue
+   work that individually fits the ceiling but together breaches it — a classic double-allocation race.
+   Holding at ISSUED and checking headroom inside the same transaction closes that race. The hold
+   converts to LOCKED on acceptance and to SETTLED on close.
+
+
+7.2 What account management never delegates
+   • Price. Only the pricing engine, invoked by an Account Mgmt actor, can compute or change a
+     client-facing number.
+   • Contract & scope commitments. Only Contracts service mutations by Account Mgmt change
+     an SOW or change order.
+   • External billing. Only Billing service produces a client invoice, and only one active per master
+     job.
+   • Client communication on commercial matters. The handoff packet names a single comms
+     owner, always an Account Mgmt user.
+
+7.3 The handoff packet
+A work order may not move to ISSUED unless a complete handoff packet is attached.
+Completeness is validated, not assumed:
+
+ Field                                  Required   Validation
+
+ brief_md                               Yes        Non-empty; the approved brief
+
+
+
+Confidential — for engineering review                                                          Page 18 of 27
+ZeusOS                                                                                     Technical Specification v1.0
+
+
+
+
+ Field                                  Required   Validation
+
+ budget                                 Yes        > 0; equals the IWO budget
+
+ milestones                             Yes        ≥1; each has a due date within SOW window
+
+ acceptance_criteria                    Yes        ≥1 required criterion
+
+ client_context_md                      Optional   Scrubbed of price/contract terms
+
+ comms_owner                            Yes        Must be an Account Mgmt user (parent org)
+
+
+7.4 Boundary enforcement — the “subsidiary never quotes” rule
+This rule is enforced at three layers so it cannot be defeated by discipline failures alone:
+   14. Authorization. Commercial scopes (PRICING_ADMIN, BILLING_ADMIN, etc.) are structurally
+       ungrantable to subsidiary-org users via the role_grant CHECK constraint (§4.1).
+   15. API. Pricing, Contracts and Billing endpoints reject any principal whose home org kind is
+       SUBSIDIARY with HTTP 403, regardless of token claims.
+   16. Workflow. When a subsidiary receives a direct client request (the §5.1 deviation), the only
+       available action is “route to account management,” which creates an intake item on the master
+       job — there is no UI affordance or API to answer the client with a price.
+
+
+
+
+Confidential — for engineering review                                                                 Page 19 of 27
+ZeusOS                                                                         Technical Specification v1.0
+
+
+
+
+8. Central Pricing, Contracts & Billing
+
+8.1 Pricing pipeline
+A client price is always derived, never entered. The pricing engine takes subsidiary cost from the
+relevant rate cards, applies governed markup, checks the margin floor, and produces a quote whose
+only client-visible figure is the marked-up total.
+
+  function priceQuote(sowId, lines):                # lines: per-subsidiary scope
+    for line in lines:
+      rc   = activeRateCard(line.subsidiaryOrgId, asOf=today)
+      cost = rc.lookup(line.roleCode, line.unit).cost_minor * line.qty
+      markup = markupPolicy(line.subsidiaryOrgId, sow.client)   # governed
+      line.cost_minor   = cost
+      line.markup_pct   = markup
+      line.client_minor = round(cost * (1 + markup/100))
+    total_cost   = sum(l.cost_minor)
+    total_client = sum(l.client_minor)
+    margin_pct   = (total_client - total_cost) / total_client * 100
+    assert margin_pct >= quote.margin_floor_pct      # else require override
+    return Quote(client_total_minor = total_client) # cost NOT exposed
+
+
+
+
+8.2 Contracts as the gate
+No master job opens without an ACTIVE SOW, and no internal work order issues without an
+ACCEPTED quote tied to that SOW. The SOW ceiling is the immovable cap on total allocation;
+raising it requires an approved change order. This is what stops scope creep from becoming silent
+over-servicing.
+
+8.3 Billing roll-up & inter-company settlement
+Because the subsidiaries are legal entities, money moves in two distinct planes. Internally, each
+subsidiary raises an inter-company invoice to the parent at the governed transfer price when its work
+order closes. Externally, the parent issues exactly one consolidated invoice to the client at the
+quoted client price. The difference between the two is the parent's gross margin, recognized in the
+parent entity.
+
+  On IWO → CLOSED:
+    ic = InterCompanyInvoice(
+           from = subsidiary, to = parent,
+           amount = iwo.transfer_price_minor,   # governed, = quote_line cost basis
+           currency = iwo.currency)
+    post(ic → subsidiary.GL as revenue, parent.GL as cost)   # per-entity books
+    budgetHold(iwo).state = SETTLED
+
+  On client billing run for master_job:
+    assert exactly_one_active(ClientInvoice where master_job = mj) # invariant
+    lines = quote.lines.map(l → ClientInvoiceLine(
+              description = clientFriendly(l),     # subsidiary identity hidden
+
+
+
+
+Confidential — for engineering review                                                     Page 20 of 27
+ZeusOS                                                                                  Technical Specification v1.0
+
+
+
+
+               amount = l.client_minor))
+     inv = ClientInvoice(amount = sum(lines.amount), issuer = parent)
+     emit ClientInvoiceIssued
+
+
+
+   TRANSFER PRICING
+   The transfer price on each work order is the inter-company price the subsidiary charges the parent. It
+   is governed centrally (typically cost or cost-plus-policy) so it is defensible for tax and audit, and it is
+   deliberately decoupled from the client-facing markup. Multi-currency engagements convert at the rate
+   effective on the i/c invoice date; the parent absorbs FX between i/c settlement and client payment.
+
+
+
+
+Confidential — for engineering review                                                              Page 21 of 27
+ZeusOS                                                                       Technical Specification v1.0
+
+
+
+
+9. API Contracts
+Commands are REST with mandatory Idempotency-Key headers on all mutations. Reads and roll-
+ups are GraphQL. All endpoints are org-scoped by the caller's token; commercial endpoints reject
+SUBSIDIARY principals.
+
+9.1 Issue an internal work order
+  POST /v1/master-jobs/{masterJobId}/work-orders
+  Authorization: Bearer <token>           # must resolve to a PARENT-org actor
+  Idempotency-Key: 01J9...                 # required
+
+  {
+      "subsidiaryOrgId": "01HSUBCREATIVE...",
+      "budgetMinor": 480000,                   // 4,800.00
+      "currency": "USD",
+      "transferPriceMinor": 480000,            // governed i/c price
+      "handoffPacket": {
+        "briefMd": "Produce 6 launch key visuals ...",
+        "milestones": [{ "name": "First round", "dueDate": "2026-06-10" }],
+        "acceptanceCriteria": [
+           { "id": "c1", "description": "6 KVs, print + digital", "required": true }
+        ],
+        "clientContextMd": "Brand refresh; tone is confident, warm.",
+        "commsOwnerUserId": "01HACCTMGR..."
+      }
+  }
+
+  201 Created
+  { "id": "01HIWO...", "status": "ISSUED", "masterJobId": "01HMJ...",
+    "budgetHoldId": "01HHOLD...", "allocatedAfterMinor": 1260000 }
+
+  409 Conflict  { "error": "CEILING_EXCEEDED",
+                  "ceilingMinor": 1500000, "wouldAllocateMinor": 1620000 }
+  403 Forbidden { "error": "COMMERCIAL_SCOPE_REQUIRED" }   // caller is a subsidiary
+
+
+
+
+9.2 Subsidiary accepts / rejects
+  POST /v1/work-orders/{iwoId}/accept          # caller = delivery lead, receiving sub
+  204 No Content                               # hold → LOCKED, status → ACCEPTED
+
+  POST /v1/work-orders/{iwoId}/reject
+  { "reason": "Budget insufficient for 6 KVs; need ~7,200." }
+  204 No Content                            # hold RELEASED, status → REJECTED
+                                            # routed back to Account Mgmt
+
+
+
+
+Confidential — for engineering review                                                   Page 22 of 27
+ZeusOS                                                                       Technical Specification v1.0
+
+
+
+
+9.3 Post time/cost (delivery)
+  POST /v1/work-orders/{iwoId}/time-entries
+  Idempotency-Key: 01J9...
+  { "userId":"01HDES...", "minutes":210, "entryDate":"2026-06-03" }
+
+  201 Created   { "id":"01HTE...", "costMinor": 26250,
+                  "cumulativeMinor": 312000, "budgetMinor": 480000 }
+  422 Unprocessable { "error":"BUDGET_EXCEEDED",
+                      "cumulativeMinor": 491000, "budgetMinor": 480000 }
+                      # blocked; needs change order to raise cap
+
+
+
+
+9.4 Consolidated read (GraphQL)
+  query MasterJobRollup($id: ID!) {
+    masterJob(id: $id) {
+      code status ceilingMinor allocatedMinor
+      marginPct                       # (clientTotal - cost) / clientTotal
+      clientTotalMinor                # client-facing
+      workOrders {
+        subsidiary { name }
+        status budgetMinor cumulativeCostMinor transferPriceMinor
+        burnPct
+      }
+      clientInvoice { amountMinor status }
+    }
+  }
+
+
+
+   FIELD-LEVEL GUARD
+   The cumulativeCostMinor and transferPriceMinor fields are visible to Account Mgmt and finance
+   roles only. The client portal schema is a separate, narrower GraphQL type exposing solely
+   clientTotalMinor and invoice status.
+
+
+
+
+Confidential — for engineering review                                                   Page 23 of 27
+ZeusOS                                                                                      Technical Specification v1.0
+
+
+
+
+10. Domain Events
+Every state change emits an event via the transactional outbox, giving a complete audit trail and
+decoupling billing, notifications and reporting from the command path.
+
+ Event                                  Emitted when                     Primary consumers
+
+ SowActivated                           SOW approver signs               Assignment (unlocks job creation)
+
+ QuoteAccepted                          Client accepts quote             Assignment, Reporting
+
+ MasterJobOpened                        First IWO for a SOW increment    Reporting
+
+ IWOIssued                              Work order → ISSUED              Subsidiary workspace, Notifications
+
+ IWOAccepted / IWORejected              Subsidiary responds              Assignment, Notifications
+
+ BudgetThresholdCrossed                 Burn ≥ 80% / 100%                Notifications, Account Mgmt
+
+ DeliverableSubmitted                   Subsidiary delivers              Account Mgmt QA
+
+ IWOClosed                              Internal acceptance              Inter-company Finance
+
+ InterCompanyInvoiceRaised              On IWO close                     GL sync (both entities)
+
+ ClientInvoiceIssued                    Billing run                      AR, Reporting, Client portal
+
+ DirectClientRequestRouted              Subsidiary routes a client ask   Account Mgmt intake
+
+
+
+
+Confidential — for engineering review                                                                   Page 24 of 27
+ZeusOS                                                                            Technical Specification v1.0
+
+
+
+
+11. Edge Cases & Failure Modes
+These are the situations that break naive implementations of this model. Each is paired with the
+required system behavior.
+
+11.1 Double allocation race
+Problem. Two account managers issue work orders concurrently that each fit the SOW ceiling but
+together exceed it.
+Required behavior. Headroom check and budget hold occur in the same serializable transaction as
+the allocated_minor increment; the second issue fails with CEILING_EXCEEDED. Holds at ISSUED
+(not ACCEPTED) make this deterministic.
+
+11.2 Subsidiary over-services beyond budget
+Problem. A delivery team keeps logging time past the work order budget to 'finish the job'.
+Required behavior. Cost postings are hard-blocked at 100% of budget (BUDGET_EXCEEDED)
+with a soft warning event at 80%. Continuing requires an approved change order that raises both the
+SOW ceiling and the IWO budget — a commercial decision, made centrally.
+
+11.3 Client commissions a subsidiary directly
+Problem. A client emails the creative studio asking for extra work and expecting a price.
+Required behavior. The subsidiary has no API or UI path to quote. The only action is route-to-
+account-management, which emits DirectClientRequestRouted and opens an intake item on the
+master job. Pricing then follows the normal pipeline.
+
+11.4 Mid-flight scope change
+Problem. Client expands scope after work orders are already in progress.
+Required behavior. A change order amends the SOW ceiling; the pricing engine produces a
+revised/added quote; new or enlarged work orders are issued. In-progress orders are never silently
+enlarged — the budget cap only moves through an approved change order.
+
+11.5 Work order rejected after partial mobilization
+Problem. A subsidiary rejects or a job is cancelled after some hours were already incurred.
+Required behavior. On CANCELLED, incurred cost to date is settled via a partial inter-company
+invoice for work done; the remaining budget hold is RELEASED and allocated_minor decremented.
+No client charge arises unless the SOW makes the increment billable.
+
+11.6 Currency mismatch across entities
+Problem. A subsidiary's base currency differs from the client billing currency.
+Required behavior. Internal work order and inter-company invoice are in the subsidiary's currency;
+conversion to the client billing currency happens once, at the consolidation step, using the rate
+effective on the client-invoice date. FX exposure sits with the parent and is reportable.
+
+
+
+
+Confidential — for engineering review                                                        Page 25 of 27
+ZeusOS                                                                           Technical Specification v1.0
+
+
+
+11.7 Duplicate client invoice
+Problem. A billing run is retried or fires twice for the same master job.
+Required behavior. The UNIQUE (master_job_id, status) constraint plus idempotency keys
+guarantee at most one active ClientInvoice per master job cycle; retries return the existing invoice
+rather than creating a second.
+
+11.8 Rate card changes mid-engagement
+Problem. A subsidiary publishes a new rate card while a job is underway.
+Required behavior. Quotes and work orders pin the rate-card version effective at quote time; in-
+flight cost is valued at the pinned version. New rates apply only to work orders issued after the new
+card's effective date.
+
+11.9 Subsidiary spins out or is acquired
+Problem. An internal division becomes a separate legal entity, or vice-versa.
+Required behavior. Because every org carries is_legal_entity and its own GL connection, flipping
+the flag changes only the downstream accounting treatment (internal cost allocation vs. inter-
+company invoicing). The handoff flow, work orders and roll-up are unchanged.
+
+11.10 Disputed deliverable
+Problem. Account management rejects a deliverable against acceptance criteria.
+Required behavior. DELIVERED → IN_PROGRESS via request_revision (Account Mgmt only).
+The work order cannot reach CLOSED — and therefore cannot raise its inter-company invoice —
+until required criteria are signed off, keeping internal settlement aligned with accepted work.
+
+
+
+
+Confidential — for engineering review                                                       Page 26 of 27
+ZeusOS                                                                                             Technical Specification v1.0
+
+
+
+
+12. Non-Functional Requirements
+
+ Area                             Requirement
+
+                                  Every commercial and financial state change is an immutable event; full reconstruction
+ Auditability
+                                  of any master job's history from the event log.
+
+                                  Money and budget operations are serializable; no dual-write between DB and bus
+ Consistency
+                                  (transactional outbox).
+
+ Idempotency                      All mutations accept and de-duplicate on Idempotency-Key for safe retries.
+
+ Access control                   Org-scoped RBAC; commercial scopes structurally ungrantable to subsidiaries.
+
+ Data segregation                 Client-facing schemas physically exclude cost/transfer-price fields.
+
+ Multi-currency                   Minor-unit integers + ISO currency throughout; single controlled conversion point.
+
+ Observability                    Burn, margin, utilization and allocation metrics emitted per master job and per entity.
+
+
+12.1 Glossary
+ Term                                   Meaning
+
+ Master job                             The single roll-up anchor for one client engagement increment.
+
+ Internal work order (IWO)              Budgeted assignment of a slice of a master job to one subsidiary; a sub-job.
+
+ Handoff packet                         Brief, milestones, acceptance criteria and comms owner attached to an IWO.
+
+                                        Reserved portion of a master job's ceiling: HELD → LOCKED → SETTLED (or
+ Budget hold
+                                        RELEASED).
+
+ Transfer price                         Governed inter-company price a subsidiary charges the parent for an IWO.
+
+ Client price                           The single marked-up figure the client sees; cost + governed markup.
+
+ Margin floor                           Minimum gross margin a quote may carry without an explicit override.
+
+
+
+
+                                              End of specification — ZeusOS v1.0
+
+
+
+
+Confidential — for engineering review                                                                         Page 27 of 27
+
