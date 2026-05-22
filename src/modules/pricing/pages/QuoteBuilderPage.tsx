@@ -186,21 +186,21 @@ export default function QuoteBuilderPage() {
           </p>
         </header>
 
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }} data-testid={`quote-status-${existingQuote.status.toLowerCase()}`}>
           {existingQuote.status === 'DRAFT' && (
-            <button type="button" onClick={handleIssue} disabled={busy}
+            <button type="button" onClick={handleIssue} disabled={busy} data-testid="issue-quote"
               style={{ padding: '6px 12px', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: 4, fontWeight: 600, cursor: 'pointer' }}>
               Issue to client
             </button>
           )}
           {existingQuote.status === 'ISSUED' && (
-            <button type="button" onClick={handleAccept} disabled={busy}
+            <button type="button" onClick={handleAccept} disabled={busy} data-testid="accept-quote"
               style={{ padding: '6px 12px', background: '#16a34a', color: '#fff', border: 'none', borderRadius: 4, fontWeight: 600, cursor: 'pointer' }}>
               Mark accepted by client
             </button>
           )}
           {(existingQuote.status === 'DRAFT' || existingQuote.status === 'ISSUED') && (
-            <button type="button" onClick={handleVoid} disabled={busy}
+            <button type="button" onClick={handleVoid} disabled={busy} data-testid="void-quote"
               style={{ padding: '6px 12px', background: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca', borderRadius: 4, fontWeight: 600, cursor: 'pointer' }}>
               Void
             </button>
@@ -232,7 +232,7 @@ export default function QuoteBuilderPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24 }} data-testid="quote-builder-page">
       <header style={{ marginBottom: 16 }}>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 600 }}>Quote Builder</h1>
         <p style={{ margin: '4px 0 0', color: '#475569', fontSize: 13 }}>
@@ -244,6 +244,7 @@ export default function QuoteBuilderPage() {
         <label style={{ fontSize: 13 }}>
           Client
           <select
+            data-testid="quote-client-picker"
             value={clientId}
             onChange={e => setClientId(e.target.value)}
             style={{ width: '100%', marginTop: 4, padding: '6px 8px', border: '1px solid #d1d5db', borderRadius: 4, background: '#fff' }}
@@ -257,6 +258,7 @@ export default function QuoteBuilderPage() {
         <label style={{ fontSize: 13 }}>
           SOW
           <select
+            data-testid="quote-sow-picker"
             value={sowId}
             onChange={e => setSowId(e.target.value)}
             disabled={!clientId || sowsLoading}
@@ -292,9 +294,10 @@ export default function QuoteBuilderPage() {
         </thead>
         <tbody>
           {lines.map((line, idx) => (
-            <tr key={idx}>
+            <tr key={idx} data-testid={`quote-line-row-${idx}`}>
               <td style={{ padding: 8, borderBottom: '1px solid #f1f5f9' }}>
                 <select
+                  data-testid={`quote-line-${idx}-subsidiary`}
                   value={line.subsidiaryOrgId}
                   onChange={e => updateLine(setLines, idx, { subsidiaryOrgId: e.target.value as SubsidiaryId })}
                   style={{ padding: '4px 6px', border: '1px solid #d1d5db', borderRadius: 4 }}
@@ -306,6 +309,7 @@ export default function QuoteBuilderPage() {
               </td>
               <td style={{ padding: 8, borderBottom: '1px solid #f1f5f9' }}>
                 <input
+                  data-testid={`quote-line-${idx}-role`}
                   type="text"
                   value={line.roleCode}
                   onChange={e => updateLine(setLines, idx, { roleCode: e.target.value })}
@@ -314,6 +318,7 @@ export default function QuoteBuilderPage() {
               </td>
               <td style={{ padding: 8, borderBottom: '1px solid #f1f5f9' }}>
                 <select
+                  data-testid={`quote-line-${idx}-unit`}
                   value={line.unit}
                   onChange={e => updateLine(setLines, idx, { unit: e.target.value as QuoteLineInput['unit'] })}
                   style={{ padding: '4px 6px', border: '1px solid #d1d5db', borderRadius: 4 }}
@@ -323,6 +328,7 @@ export default function QuoteBuilderPage() {
               </td>
               <td style={{ padding: 8, borderBottom: '1px solid #f1f5f9' }}>
                 <input
+                  data-testid={`quote-line-${idx}-qty`}
                   type="number"
                   value={line.qty}
                   min={0}
@@ -335,6 +341,7 @@ export default function QuoteBuilderPage() {
                 {lines.length > 1 && (
                   <button
                     type="button"
+                    data-testid={`quote-line-${idx}-remove`}
                     onClick={() => setLines(prev => prev.filter((_, i) => i !== idx))}
                     style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
                   >
@@ -350,6 +357,7 @@ export default function QuoteBuilderPage() {
       <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
         <button
           type="button"
+          data-testid="add-quote-line"
           onClick={() => setLines(prev => [...prev, { ...EMPTY_LINE }])}
           style={{ padding: '6px 12px', background: '#fff', border: '1px solid #d1d5db', borderRadius: 4, cursor: 'pointer' }}
         >
@@ -357,6 +365,7 @@ export default function QuoteBuilderPage() {
         </button>
         <button
           type="button"
+          data-testid="compute-price"
           onClick={handleCompute}
           disabled={busy || !sowId}
           style={{ padding: '6px 12px', background: '#1d4ed8', color: '#fff', border: 'none', borderRadius: 4, fontWeight: 600, cursor: 'pointer' }}

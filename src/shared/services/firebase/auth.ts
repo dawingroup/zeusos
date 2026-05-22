@@ -3,10 +3,11 @@
  * Authentication service utilities
  */
 
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword as firebaseSignInWithEmail,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   type Auth,
@@ -33,6 +34,16 @@ export async function signInWithGoogle(): Promise<User> {
     localStorage.setItem('googleAccessToken', credential.accessToken);
   }
   
+  return result.user;
+}
+
+/**
+ * Sign in with email and password.
+ * Used by the Playwright e2e suite against the Firebase Auth emulator;
+ * also available in development for quick login without a Google popup.
+ */
+export async function signInWithEmail(email: string, password: string): Promise<User> {
+  const result = await firebaseSignInWithEmail(auth, email, password);
   return result.user;
 }
 

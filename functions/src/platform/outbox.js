@@ -18,8 +18,16 @@ const { ulid } = require('./ulid');
 const DOMAIN_EVENTS_COLLECTION = 'domain_events';
 
 /**
- * The 12 canonical event types (spec §10). Validation happens here so a
- * typo can't slip through.
+ * The 13 canonical event types (spec §10 + §11.9).
+ *
+ * `IntraEntityCostAllocated` is the §11.9 sibling of
+ * `InterCompanyInvoiceRaised`: when the receiving subsidiary is NOT a
+ * legal entity (`organizations/{subId}.is_legal_entity === false`),
+ * closeWorkOrder records an intra-entity allocation instead of an IC
+ * invoice. Both events keep the audit log complete regardless of which
+ * settlement path the IWO took.
+ *
+ * Validation happens here so a typo can't slip through.
  */
 const DOMAIN_EVENT_TYPES = new Set([
   'SowActivated',
@@ -32,6 +40,7 @@ const DOMAIN_EVENT_TYPES = new Set([
   'DeliverableSubmitted',
   'IWOClosed',
   'InterCompanyInvoiceRaised',
+  'IntraEntityCostAllocated',
   'ClientInvoiceIssued',
   'DirectClientRequestRouted',
 ]);
@@ -41,7 +50,7 @@ const DOMAIN_EVENT_TYPES = new Set([
  *
  * @param {{ tx: FirebaseFirestore.Transaction, db: FirebaseFirestore.Firestore,
  *           eventType: string,
- *           aggregateType: 'MSA'|'SOW'|'Quote'|'MasterJob'|'IWO'|'ClientInvoice'|'InterCompanyInvoice',
+ *           aggregateType: 'MSA'|'SOW'|'Quote'|'MasterJob'|'IWO'|'ClientInvoice'|'InterCompanyInvoice'|'CostAllocation',
  *           aggregateId: string,
  *           payload: object,
  *           emittedByUserId?: string,

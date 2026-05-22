@@ -149,31 +149,38 @@ export default function SOWEditorPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) return <div className="p-6" data-testid="sow-loading">Loading…</div>;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4 p-6">
+    <div className="mx-auto max-w-3xl space-y-4 p-6" data-testid="sow-editor-page">
       <Link to={`/clients/${clientId}`} className="text-xs text-muted-foreground">← Client</Link>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold">{isExisting ? `SOW ${sow?.code || sow?.id}` : 'New SOW'}</h1>
-          {sow && <p className="text-sm text-muted-foreground">Status: {sow.status} · MSA: {msa?.code || msaId}</p>}
+          {sow && (
+            <p className="text-sm text-muted-foreground">
+              Status: <span data-testid="sow-status">{sow.status}</span> · MSA: {msa?.code || msaId}
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
           {sow?.status === 'DRAFT' && (
             <button onClick={handleSubmitForApproval} disabled={busy}
+              data-testid="sow-submit-for-approval"
               className="rounded border border-amber-500 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50">
               Submit for approval
             </button>
           )}
           {sow?.status === 'PENDING_APPROVAL' && (
             <button onClick={handleApprove} disabled={busy}
+              data-testid="sow-approve"
               className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50">
               Approve (→ ACTIVE)
             </button>
           )}
           {sow && sow.status !== 'CLOSED' && sow.status !== 'CANCELLED' && (
             <button onClick={handleCancel} disabled={busy}
+              data-testid="sow-cancel"
               className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50">
               Cancel SOW
             </button>
@@ -191,15 +198,15 @@ export default function SOWEditorPage() {
         <div className="grid grid-cols-2 gap-3 text-sm">
           <label className="col-span-2 block">
             <span className="block text-xs text-muted-foreground">Title *</span>
-            <input value={title} onChange={e => setTitle(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
+            <input data-testid="sow-title" value={title} onChange={e => setTitle(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
           </label>
           <label className="block">
             <span className="block text-xs text-muted-foreground">Code (auto if blank)</span>
-            <input value={code} onChange={e => setCode(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
+            <input data-testid="sow-code" value={code} onChange={e => setCode(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
           </label>
           <label className="block">
             <span className="block text-xs text-muted-foreground">Type *</span>
-            <select value={type} onChange={e => setType(e.target.value as SOW['type'])} className="mt-1 w-full rounded border px-2 py-1">
+            <select data-testid="sow-type" value={type} onChange={e => setType(e.target.value as SOW['type'])} className="mt-1 w-full rounded border px-2 py-1">
               <option value="PROJECT">PROJECT</option>
               <option value="RETAINER">RETAINER</option>
             </select>
@@ -207,6 +214,7 @@ export default function SOWEditorPage() {
           <label className="block">
             <span className="block text-xs text-muted-foreground">Ceiling (major units) *</span>
             <input
+              data-testid="sow-ceiling-major"
               value={ceilingMajor}
               onChange={e => setCeilingMajor(e.target.value)}
               placeholder="e.g. 15000.00"
@@ -215,27 +223,28 @@ export default function SOWEditorPage() {
           </label>
           <label className="block">
             <span className="block text-xs text-muted-foreground">Currency *</span>
-            <select value={currency} onChange={e => setCurrency(e.target.value as SOW['currency'])} className="mt-1 w-full rounded border px-2 py-1">
+            <select data-testid="sow-currency" value={currency} onChange={e => setCurrency(e.target.value as SOW['currency'])} className="mt-1 w-full rounded border px-2 py-1">
               {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </label>
           <label className="block">
             <span className="block text-xs text-muted-foreground">Start date</span>
-            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
+            <input data-testid="sow-start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
           </label>
           <label className="block">
             <span className="block text-xs text-muted-foreground">End date</span>
-            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
+            <input data-testid="sow-end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
           </label>
           <label className="col-span-2 block">
             <span className="block text-xs text-muted-foreground">Scope doc reference</span>
-            <input value={scopeDocRef} onChange={e => setScopeDocRef(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
+            <input data-testid="sow-scope-doc-ref" value={scopeDocRef} onChange={e => setScopeDocRef(e.target.value)} className="mt-1 w-full rounded border px-2 py-1" />
           </label>
         </div>
 
         {isDraft && (
           <div className="flex gap-2">
-            <button onClick={handleSave} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+            <button onClick={handleSave} disabled={busy} data-testid="sow-save"
+              className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
               {busy ? 'Saving…' : isExisting ? 'Save' : 'Create'}
             </button>
             <Link to={`/clients/${clientId}`} className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Cancel</Link>

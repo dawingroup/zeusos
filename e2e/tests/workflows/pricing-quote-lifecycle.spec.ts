@@ -20,15 +20,37 @@
 //             time entry + deliverable) + routeDirectClientRequest
 //   ✅ 3.F  — Billing (IC invoice + client invoice + payment) + Pass 2
 //
-// Why every step below is still `.skip`'d:
+// Why every step below is still `.skip`'d (status as of Phase 3.H Pass 2):
 //
-//   The 3.D / 3.E pages and components do not currently expose the
-//   `data-testid` selectors this spec relies on. Across all of
-//   src/modules/account-management, src/modules/delivery, and
-//   src/modules/pricing only ONE testid exists today (`margin-badge`
-//   on the PricingBuilderPage). Backfilling the ~50 testids needed to
-//   drive 19 lifecycle steps is UI work and belongs to a Phase 3.H
-//   "test-id backfill" PR, not the 3.G acceptance gate.
+//   The first wave of `data-testid` selectors has been backfilled across
+//   the 5 highest-traffic pages on the lifecycle path:
+//     - SOWEditorPage      → sow-title, sow-ceiling-major, sow-save,
+//                              sow-submit-for-approval, sow-approve,
+//                              sow-status, sow-scope-doc-ref, …
+//     - QuoteBuilderPage   → quote-sow-picker, add-quote-line,
+//                              compute-price, issue-quote, accept-quote,
+//                              quote-line-{idx}-{role,unit,qty,subsidiary}
+//     - IWOInboxPage       → iwo-row-{iwoId}-{accept,reject,code,budget},
+//                              iwo-inbox-{awaiting-count,empty,error}
+//     - IWOWorkspacePage   → iwo-state, iwo-budget, iwo-start, te-submit,
+//                              te-minutes, te-date, te-note,
+//                              iwo-deliver, del-asset-ids, del-desc
+//     - MasterJobDetail    → master-job-status, issue-work-order,
+//                              mj-iwo-row-{id}-{state,burn,code}
+//
+//   Still pending (Phase 3.I):
+//     - LoginPage email/password form OR Playwright auth-emulator helper
+//       (today's LoginPage is Google-OAuth-only, no email/password)
+//     - billing/inter-company table rows: `ic-invoice-row`
+//     - billing/clients table rows + actions: `issue-client-invoice-{mjId}`,
+//       `client-invoice-status`
+//     - Global toast container: `toast-error`
+//     - IssueIWODialog form: `issue-iwo-{subsidiary,budget,transfer-price,…}`
+//
+//   The remaining .skip's call out the specific page each block needs.
+//   Lighting up the full lifecycle is gated on those + a Playwright
+//   auth helper that signs in against the Auth emulator's REST API
+//   directly (bypassing the Google-OAuth UI flow).
 //
 //   The lifecycle is therefore proved at the API / CFn level by:
 //     - functions/__tests__/contracts/engagement-flow.test.js
