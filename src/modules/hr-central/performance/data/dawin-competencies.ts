@@ -1,14 +1,14 @@
 // ============================================================================
-// DAWIN GROUP STANDARD COMPETENCY FRAMEWORK
+// ZEUS GROUP STANDARD COMPETENCY FRAMEWORK
 // ZeusOS v2.0 - HR Performance Module
-// Standard competencies for consulting/advisory/investment firm
+// Standard competencies for a multi-agency marketing consortium
 // ============================================================================
 
 import type { Competency, CompetencyCategory } from '../types/development.types';
 
 /**
  * Standard Competency Framework for Zeus Group
- * Covers: Advisory, Capital, Finishes, and Technology subsidiaries
+ * Covers the five operating sub-brands.
  */
 
 export const DAWIN_COMPETENCIES: Omit<Competency, 'id' | 'companyId' | 'createdAt' | 'updatedAt'>[] = [

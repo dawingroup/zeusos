@@ -22,8 +22,8 @@ import {
   NLQueryType,
   QueryFilter,
   ChartConfig,
+  ModuleType,
 } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
 
 // Collection mappings
 const COLLECTION_MAP: Record<string, string> = {
@@ -33,14 +33,6 @@ const COLLECTION_MAP: Record<string, string> = {
   'ipcs': 'ipcs',
   'requisitions': 'requisitions',
   'milestones': 'milestones',
-  // Investment
-  'deals': 'deals',
-  'due_diligence': 'dueDiligence',
-  'financial_models': 'financialModels',
-  // Advisory
-  'clients': 'advisoryClients',
-  'portfolios': 'portfolios',
-  'holdings': 'holdings',
   // MatFlow
   'boqs': 'boqs',
   'materials': 'materials',
@@ -259,19 +251,6 @@ export class NLQueryService {
         'requisition': 'requisitions',
         'milestone': 'milestones',
       },
-      investment: {
-        'deal': 'deals',
-        'transaction': 'deals',
-        'due diligence': 'dueDiligence',
-        'financial': 'financialModels',
-        'model': 'financialModels',
-      },
-      advisory: {
-        'client': 'advisoryClients',
-        'portfolio': 'portfolios',
-        'holding': 'holdings',
-        'asset': 'holdings',
-      },
       matflow: {
         'boq': 'boqs',
         'material': 'materials',
@@ -291,8 +270,6 @@ export class NLQueryService {
     // Default by module
     const defaults: Record<ModuleType, string> = {
       infrastructure: 'projects',
-      investment: 'deals',
-      advisory: 'portfolios',
       matflow: 'materials',
     };
 
@@ -537,20 +514,6 @@ export class NLQueryService {
         'Find requisitions from this month',
         'Compare project progress by program',
         'How many active projects?',
-      ],
-      investment: [
-        'List deals closing this month',
-        'Show deals in due diligence',
-        'Find transactions above 1,000,000',
-        'Compare deal performance by sector',
-        'How many active deals?',
-      ],
-      advisory: [
-        'Show portfolio performance',
-        'List clients by AUM',
-        'Find holdings in infrastructure',
-        'Compare returns by asset class',
-        'Total portfolio value?',
       ],
       matflow: [
         'Show materials low in stock',

@@ -25,9 +25,11 @@ export interface Subsidiary {
  *
  * After Phase 1.C: construction/manufacturing modules removed (design-manager,
  * inventory, design-studio, matflow, construction, workshop-viewer, clipper,
- * feature-library, infrastructure_delivery, investment_advisory). Heavily
- * coupled modules also removed pending Phase 3 rebuild (crm, customer-hub,
- * marketing, sales-orders, procurement, suppliers, whatsapp, launch-pipeline).
+ * feature-library, infrastructure_delivery). After Phase 1.D: advisory and
+ * investment_advisory modules removed (Zeus is a marketing consortium, not an
+ * advisory firm). Heavily coupled modules also removed pending Phase 3 rebuild
+ * (crm, customer-hub, marketing, sales-orders, procurement, suppliers,
+ * whatsapp, launch-pipeline).
  *
  * Phase 3 will add the canonical Zeus modules: 'campaigns' | 'media' |
  * 'production' | 'talent' | 'asset-library' and the corresponding role registry
@@ -49,8 +51,7 @@ export type SubsidiaryModule =
   | 'finance'
   | 'capital'
   | 'compliance'
-  | 'intelligence-layer'
-  | 'advisory'; // Advisory module — renamed to agency-core in Phase 3
+  | 'intelligence-layer';
 
 export interface SubsidiaryStats {
   activeProjects: number;
@@ -72,7 +73,6 @@ const ZEUS_DEFAULT_AGENCY_MODULES: SubsidiaryModule[] = [
   'talent',
   'asset-library',
   'asset-registry',
-  'advisory',
 ];
 
 /**

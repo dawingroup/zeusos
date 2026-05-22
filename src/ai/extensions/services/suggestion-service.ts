@@ -23,8 +23,8 @@ import {
   SuggestionContext,
   SuggestionType,
   SuggestionPriority,
+  ModuleType,
 } from '../types/ai-extensions';
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
 
 // System prompts by module
 const MODULE_SUGGESTION_PROMPTS: Record<ModuleType, string> = {
@@ -37,26 +37,6 @@ Generate intelligent suggestions for:
 - Highlighting approval bottlenecks
 
 Focus on East African construction context with offline-first considerations.`,
-
-  investment: `You are an AI assistant for infrastructure investment deals.
-Generate intelligent suggestions for:
-- Linking deals to execution projects
-- Identifying due diligence gaps
-- Suggesting comparable transactions
-- Risk factors based on deal structure
-- Timeline optimization for deal closure
-
-Consider Uganda/Kenya market dynamics and regulatory requirements.`,
-
-  advisory: `You are an AI assistant for investment advisory services.
-Generate intelligent suggestions for:
-- Portfolio rebalancing opportunities
-- Holdings linked to infrastructure deals
-- Client reporting needs
-- Performance attribution insights
-- Risk concentration warnings
-
-Focus on institutional advisory context with infrastructure focus.`,
 
   matflow: `You are an AI assistant for construction material management.
 Generate intelligent suggestions for:

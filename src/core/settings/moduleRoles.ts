@@ -79,13 +79,6 @@ export const MODULE_ROLES: Record<SubsidiaryModule, ModuleRoleDef[]> = {
     { id: 'asset_custodian',      label: 'Asset Custodian',      description: 'Checks assets in/out, logs status changes, books maintenance.' },
   ],
 
-  // ─── Advisory (financial backbone — to be renamed agency-core in Phase 3) ─
-  advisory: [
-    { id: 'advisor',                label: 'Advisor',                description: 'Senior advisory consultant — leads engagements and writes strategy decks.' },
-    { id: 'analyst',                label: 'Analyst',                description: 'Supports engagements with research, financial modelling, deck production.' },
-    { id: 'pipeline_owner',         label: 'Pipeline Owner',         description: 'Manages new-business pipeline / pitch tracker — RFPs, proposals, win-loss.' },
-  ],
-
   // ─── Market Intelligence ─────────────────────────────────────────────────
   market_intelligence: [
     { id: 'mi_lead',         label: 'MI Lead',         description: 'Owns the intelligence dashboard; commissions deep-dive reports.' },

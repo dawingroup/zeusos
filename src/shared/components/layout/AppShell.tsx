@@ -286,8 +286,7 @@ export function AppShell({ children }: AppShellProps) {
   const handleSubsidiarySwitch = (sub: typeof subsidiaries[0]) => {
     setCurrentSubsidiary(sub);
     // Use React Router navigation instead of full page reload
-    const targetPath = sub.id === 'zeus-digital' ? '/advisory' : '/';
-    navigate(targetPath);
+    navigate('/');
   };
 
   // Popover flyout for collapsed sidebar icons

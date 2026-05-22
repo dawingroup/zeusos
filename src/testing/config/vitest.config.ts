@@ -30,11 +30,6 @@ export default defineConfig({
       'src/testing/performance/**',
       'src/testing/integration/**',
       'src/testing/rules/**',
-      // These tests call real Firestore-dependent services and need emulators
-      'src/subsidiaries/advisory/matflow/services/__tests__/auto-po-generation.test.ts',
-      'src/subsidiaries/advisory/matflow/services/__tests__/po-delivery-tracking.test.ts',
-      'src/subsidiaries/advisory/matflow/services/__tests__/po-integration.test.ts',
-      'src/subsidiaries/advisory/delivery/core/services/__tests__/accountability-po-validation.test.ts',
     ],
     coverage: {
       provider: 'v8',

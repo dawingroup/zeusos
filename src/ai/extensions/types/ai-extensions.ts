@@ -3,11 +3,11 @@
  * Domain-specific AI capabilities for ZeusOS
  */
 
-import { ModuleType } from '../../../subsidiaries/advisory/cross-module/types/cross-module';
+// ============================================================================
+// MODULE & LINKABLE ENTITY TYPES (local definitions)
+// ============================================================================
 
-// ============================================================================
-// LINKABLE ENTITY TYPES (local definition to avoid circular deps)
-// ============================================================================
+export type ModuleType = 'infrastructure' | 'matflow';
 
 export type LinkableEntityType =
   | 'program'

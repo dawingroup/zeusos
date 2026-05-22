@@ -53,14 +53,8 @@ export function Breadcrumbs({ projectName, className, showHome = true }: Breadcr
 
       // Map segments to readable labels
       switch (segment) {
-        case 'advisory':
-          label = 'Advisory';
-          break;
         case 'delivery':
-          label = 'Infrastructure Delivery';
-          break;
-        case 'investment':
-          label = 'Investment';
+          label = 'Delivery';
           break;
         case 'projects':
           label = 'Projects';
