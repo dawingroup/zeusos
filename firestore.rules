@@ -4035,5 +4035,72 @@ service cloud.firestore {
       allow create, update: if isAdmin();
       allow delete: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Pricing — Phase 3.C
+    // ════════════════════════════════════════════════════════════════
+    // Spec §7.4 "subsidiary never quotes" boundary, layer 3 (the other two
+    // are Cloud Function auth and UI guards). All writes here MUST go via
+    // a Cloud Function; client-side writes are denied. Reads of cost_minor
+    // are restricted to parent-org principals.
+    //
+    // PHASE 3.A.5 PLACEHOLDER: until 3.A.5 introduces
+    // `organizations.kind = PARENT|SUBSIDIARY` and `users.home_org_id`,
+    // we approximate "parent principal" by checking the user document for
+    // an admin/owner globalRole. A subsidiary-only user (no admin role on
+    // the parent) cannot pass `isPricingAdmin()`. When 3.A.5 lands,
+    // replace with the canonical home_org_kind check.
+
+    function isPricingAdmin() {
+      return isStaffAuth() && (
+        // Super-user bypass — mirrors src/router/guards/RoleGuard.tsx.
+        request.auth.token.email == 'onzimai@zeusgroup.co.ug'
+        || request.auth.token.email == 'onzimai@dawin.group'
+        || (exists(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
+      );
+    }
+
+    // Rate cards — reads of the header doc are open to authenticated staff
+    // (the editor surface lists ACTIVE/DRAFT cards), but the line
+    // subcollection — which carries cost_minor, the schema invariant per
+    // §4.3 — is parent-only.
+    match /rate_cards/{rateCardId} {
+      allow read: if isPricingAdmin();
+      allow write: if false;  // mutations go via CFns only
+      match /rate_card_lines/{lineId} {
+        allow read: if isPricingAdmin();
+        allow write: if false;
+      }
+    }
+
+    // Quotes — same shape: clients should never reach Firestore directly,
+    // and the line subcollection carries cost_minor + markup_pct which
+    // subsidiary principals must never see.
+    match /quotes/{quoteId} {
+      allow read: if isPricingAdmin();
+      allow write: if false;
+      match /quote_lines/{lineId} {
+        allow read: if isPricingAdmin();
+        allow write: if false;
+      }
+    }
+
+    // SOWs — stubbed for Phase 3.C; the canonical rules ship with 3.A.5.
+    match /sows/{sowId} {
+      allow read: if isPricingAdmin();
+      allow write: if false;
+    }
+
+    // Append-only domain event outbox. Written from the Cloud Functions
+    // via Admin SDK (which bypasses these rules); we deny client writes
+    // and allow parent-org reads so the audit trail is queryable from
+    // the AM UI.
+    match /domain_events/{eventId} {
+      allow read: if isPricingAdmin();
+      allow write: if false;
+    }
   }
 }

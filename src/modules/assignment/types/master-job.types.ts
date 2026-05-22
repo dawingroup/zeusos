@@ -1,0 +1,83 @@
+/**
+ * MasterJob — the single roll-up anchor for one client engagement
+ * increment. Plays the role our Phase-3.A `Campaign` financial skeleton
+ * was playing; the marketing-domain primitives (Brief, IMCTeam, 14-stage
+ * workflow, ARAAM, Tier, PerformanceReview) continue to live on the
+ * Campaign type and compose onto MasterJob via `MasterJob.campaign`.
+ *
+ * Spec §3.1 / §4.4 / §7.1.
+ *
+ * Lives at `organizations/{orgId}/master_jobs/{masterJobId}` — renamed
+ * from the Phase 2.D `campaigns` collection (currently empty, so the
+ * rename is a code-only change).
+ *
+ * Invariants enforced in Phase 3.B (Cloud Functions):
+ * - `ceilingMinor` is copied from the linked SOW + ACCEPTED Quote at open.
+ * - `allocatedMinor` is the sum of issued (non-rejected, non-cancelled)
+ *   IWO budgets. Updated atomically with each IWO state transition.
+ * - `allocatedMinor + new_iwo.budget ≤ ceilingMinor` is checked inside the
+ *   same serializable transaction as the IWO insert (spec §11.1 — double
+ *   allocation race).
+ */
+
+import type { Timestamp } from 'firebase/firestore';
+import type { Campaign } from '@/modules/campaigns/types/campaign.types';
+
+export type MasterJobStatus = 'OPEN' | 'DELIVERING' | 'CLOSED' | 'CANCELLED';
+
+export interface MasterJob {
+  id: string;
+  sowId: string;
+  quoteId: string;
+  clientId: string;
+  /** Short human-friendly reference: e.g. `ZTA-DIAGEO-2026-014`. */
+  code: string;
+  status: MasterJobStatus;
+  /** Sum of issued IWO budgets that are not REJECTED / CANCELLED. */
+  allocatedMinor: number;
+  /** Hard cap copied from `sow.ceilingMinor` at master-job open, adjusted
+   *  on approved ChangeOrders. No IWO can be issued that would push
+   *  `allocatedMinor` past this number. */
+  ceilingMinor: number;
+  /** Client-facing total copied from the linked ACCEPTED Quote. The
+   *  ClientInvoice references this number, not allocatedMinor. */
+  clientTotalMinor: number;
+  currency: 'UGX' | 'USD' | 'KES' | 'EUR' | 'GBP';
+
+  /** Embedded marketing-domain detail — Brief / IMCTeam / 14-stage
+   *  workflow / Tier System / ARAAM / PerformanceReview. The fields that
+   *  describe how Account-Management runs the engagement live here.
+   *  Optional so a finance-only MasterJob (e.g. retainer billing) can
+   *  exist without the full marketing wrapper. */
+  campaign?: Pick<
+    Campaign,
+    | 'name'
+    | 'subsidiaryId'
+    | 'brandId'
+    | 'brandName'
+    | 'clientName'
+    | 'serviceLines'
+    | 'bigIdea'
+    | 'stage'
+    | 'stageHistory'
+    | 'brief'
+    | 'imcTeam'
+    | 'progressPct'
+    | 'launchDate'
+    | 'endDate'
+    | 'performanceReview'
+    | 'araam'
+  >;
+
+  /** Account-Management user owning this master job day-to-day. */
+  accountManagerUserId?: string;
+
+  openedAt?: Timestamp | string;
+  closedAt?: Timestamp | string;
+  cancelledAt?: Timestamp | string;
+  cancelReason?: string;
+
+  createdBy: string;
+  createdAt: Timestamp | string;
+  updatedAt: Timestamp | string;
+}

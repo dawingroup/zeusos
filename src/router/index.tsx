@@ -64,6 +64,17 @@ const AIAssistantPage = lazyWithRetry(() => import('@/pages/ai/AIAssistantPage')
 // MCP token-refresh proxy pairing
 const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'));
 
+// ──────────────────────────────────────────────────────────────────────────
+// Pricing — Phase 3.C (Pricing engine + Quote builder).
+// PHASE 3.A.5 PLACEHOLDER — these pages read from stubbed `rate_cards` /
+// `quotes` root collections; re-point to `organizations/{id}/…` when
+// 3.A.5 lands.
+// ──────────────────────────────────────────────────────────────────────────
+import { PricingAdminGuard } from '@/modules/pricing/components/PricingAdminGuard';
+const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
+const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
+const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
+
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
 
@@ -336,6 +347,16 @@ export const router = createBrowserRouter([
           { path: 'social',         element: <MarketSocialIntelligencePage /> },
         ],
       },
+
+      // Pricing — Phase 3.C
+      // PHASE 3.A.5 PLACEHOLDER: PricingAdminGuard approximates "home org
+      // kind = PARENT" via `globalRole IN ('admin','owner') AND
+      // subsidiaryAccess includes 'zeus-group'`. Replace when 3.A.5 lands.
+      { path: 'pricing',                       element: <Navigate to="/pricing/rate-cards" replace /> },
+      { path: 'pricing/rate-cards',            element: <PageWrapper><PricingAdminGuard><RateCardsPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/rate-cards/:id',        element: <PageWrapper><PricingAdminGuard><RateCardEditorPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/quotes/:id',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/quotes/new',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
 
       // Intelligence Layer
       {

@@ -5028,3 +5028,20 @@ exports.verifyDriveFolder = verifyDriveFolder;
 // archive failures).
 const { archiveSweep } = require('./src/scheduled/archiveSweep');
 exports.archiveSweep = archiveSweep;
+
+// ============================================================
+// Pricing — Phase 3.C (engine + Quote builder)
+// ============================================================
+// PHASE 3.A.5 PLACEHOLDER: collections are stubbed at the root
+// (`rate_cards`, `quotes`, `sows`). 3.A.5 re-roots them under
+// `organizations/{id}/...` — re-point the lookups when it lands.
+const { priceQuote } = require('./src/pricing/priceQuote');
+const { issueQuote, acceptQuote, voidQuote } = require('./src/pricing/quoteLifecycle');
+const { createRateCardVersion, activateRateCard, retireRateCard } = require('./src/pricing/rateCardAdmin');
+exports.priceQuote = priceQuote;
+exports.issueQuote = issueQuote;
+exports.acceptQuote = acceptQuote;
+exports.voidQuote = voidQuote;
+exports.createRateCardVersion = createRateCardVersion;
+exports.activateRateCard = activateRateCard;
+exports.retireRateCard = retireRateCard;
