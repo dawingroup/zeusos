@@ -106,7 +106,7 @@ export default function IWOInboxPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24 }} data-testid="iwo-inbox-page">
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Delivery Inbox</h1>
         <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
@@ -115,7 +115,7 @@ export default function IWOInboxPage() {
       </header>
 
       {err && (
-        <div role="alert" style={{
+        <div role="alert" data-testid="iwo-inbox-error" style={{
           padding: 12, marginBottom: 16, borderRadius: 6,
           background: '#fef2f2', color: '#7f1d1d', border: '1px solid #fecaca',
         }}>
@@ -123,12 +123,12 @@ export default function IWOInboxPage() {
         </div>
       )}
 
-      <section style={{ marginBottom: 32 }}>
+      <section style={{ marginBottom: 32 }} data-testid="iwo-inbox-awaiting">
         <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
-          Awaiting acceptance ({inbox.length})
+          Awaiting acceptance (<span data-testid="iwo-inbox-awaiting-count">{inbox.length}</span>)
         </h2>
         {inbox.length === 0 ? (
-          <p style={{ color: '#64748b', fontSize: 13 }}>No new work orders issued to you.</p>
+          <p style={{ color: '#64748b', fontSize: 13 }} data-testid="iwo-inbox-empty">No new work orders issued to you.</p>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
@@ -143,13 +143,14 @@ export default function IWOInboxPage() {
               {inbox.map((iwo) => {
                 const busy = busyId === iwo.id;
                 return (
-                  <tr key={iwo.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '10px 12px', fontFamily: 'monospace' }}>{iwo.code}</td>
-                    <td style={{ padding: '10px 12px' }}>{formatMinor(iwo.budgetMinor, iwo.currency)}</td>
+                  <tr key={iwo.id} data-testid={`iwo-row-${iwo.id}`} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '10px 12px', fontFamily: 'monospace' }} data-testid={`iwo-row-${iwo.id}-code`}>{iwo.code}</td>
+                    <td style={{ padding: '10px 12px' }} data-testid={`iwo-row-${iwo.id}-budget`}>{formatMinor(iwo.budgetMinor, iwo.currency)}</td>
                     <td style={{ padding: '10px 12px' }}>{formatTimestamp(iwo.issuedAt)}</td>
                     <td style={{ padding: '10px 12px', display: 'flex', gap: 8 }}>
                       <button
                         type="button"
+                        data-testid={`iwo-row-${iwo.id}-accept`}
                         onClick={() => handleAccept(iwo)}
                         disabled={busy}
                         style={{
@@ -162,6 +163,7 @@ export default function IWOInboxPage() {
                       </button>
                       <button
                         type="button"
+                        data-testid={`iwo-row-${iwo.id}-reject`}
                         onClick={() => handleReject(iwo)}
                         disabled={busy}
                         style={{

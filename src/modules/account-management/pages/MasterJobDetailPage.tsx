@@ -40,16 +40,17 @@ export default function MasterJobDetailPage() {
   const changeOrderHref = `/clients/${masterJob.clientId}/master-jobs/${masterJob.id}/change-orders/new`;
 
   return (
-    <div className="space-y-6 p-6" key={refreshKey}>
+    <div className="space-y-6 p-6" key={refreshKey} data-testid="master-job-detail-page">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Link to="/master-jobs" className="text-xs text-muted-foreground">← Master jobs</Link>
-          <h1 className="mt-1 text-xl font-semibold">{rollup.code}</h1>
+          <h1 className="mt-1 text-xl font-semibold" data-testid="master-job-code">{rollup.code}</h1>
           <p className="text-sm text-muted-foreground">
-            Status {rollup.status} · SOW {masterJob.sowId} · Quote {masterJob.quoteId}
+            Status <span data-testid="master-job-status">{rollup.status}</span> · SOW {masterJob.sowId} · Quote {masterJob.quoteId}
           </p>
         </div>
         <button
+          data-testid="issue-work-order"
           onClick={() => setIssueOpen(true)}
           disabled={rollup.status === 'CLOSED' || rollup.status === 'CANCELLED'}
           className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
@@ -82,18 +83,22 @@ export default function MasterJobDetailPage() {
             </thead>
             <tbody>
               {rollup.workOrders.map(wo => (
-                <tr key={wo.id} className="border-t hover:bg-slate-50">
-                  <td className="px-3 py-2 font-mono text-xs">{wo.code}</td>
+                <tr key={wo.id} className="border-t hover:bg-slate-50" data-testid={`mj-iwo-row-${wo.id}`}>
+                  <td className="px-3 py-2 font-mono text-xs" data-testid={`mj-iwo-row-${wo.id}-code`}>{wo.code}</td>
                   <td className="px-3 py-2">{wo.subsidiary.name}</td>
                   <td className="px-3 py-2">
-                    <span className={`rounded px-2 py-0.5 text-xs font-medium ${STATE_TONE[wo.status]}`}>
+                    <span
+                      data-testid={`mj-iwo-row-${wo.id}-state`}
+                      className={`rounded px-2 py-0.5 text-xs font-medium ${STATE_TONE[wo.status]}`}>
                       {wo.status}
                     </span>
                   </td>
                   <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.budgetMinor, wo.currency)}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.cumulativeCostMinor, wo.currency)}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.transferPriceMinor, wo.currency)}</td>
-                  <td className={`px-3 py-2 text-right tabular-nums ${wo.burnPct >= 100 ? 'text-red-700' : wo.burnPct >= 80 ? 'text-amber-700' : ''}`}>
+                  <td
+                    data-testid={`mj-iwo-row-${wo.id}-burn`}
+                    className={`px-3 py-2 text-right tabular-nums ${wo.burnPct >= 100 ? 'text-red-700' : wo.burnPct >= 80 ? 'text-amber-700' : ''}`}>
                     {wo.burnPct.toFixed(0)}%
                   </td>
                 </tr>
