@@ -34,7 +34,7 @@ interface ModuleGuardProps {
 }
 
 // Super user email with unrestricted access to all modules
-const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
+const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
 
 export function ModuleGuard({ children, module, minimumRole, fallback }: ModuleGuardProps) {
   const { user, loading } = useAuth();

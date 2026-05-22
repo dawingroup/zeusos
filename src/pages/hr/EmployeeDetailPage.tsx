@@ -154,7 +154,7 @@ export function EmployeeDetailPage() {
   const isAdmin = currentDawinUser
     ? ['admin', 'owner'].includes(currentDawinUser.globalRole)
     : false;
-  const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
+  const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
   const isSuperUser = authEmail ? SUPER_USER_EMAILS.includes(authEmail) : false;
   const canCreateUser = isAdmin || isSuperUser;
 

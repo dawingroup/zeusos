@@ -17,7 +17,7 @@ interface RoleGuardProps {
 }
 
 // Super user email with unrestricted access to all functions
-const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
+const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
 
 export function RoleGuard({ children, roles, fallback }: RoleGuardProps) {
   const { user, loading } = useAuth();

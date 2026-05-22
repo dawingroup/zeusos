@@ -32,7 +32,7 @@ const GROUP_LABELS: Record<ServiceCredentialGroup, string> = {
   accounting: 'Accounting',
 };
 
-const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug'];
+const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
 
 export default function ServiceCredentialsPage() {
   const { user } = useAuth();
