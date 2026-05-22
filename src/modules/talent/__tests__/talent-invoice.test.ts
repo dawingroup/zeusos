@@ -53,6 +53,7 @@ function makeInvoice(status: TalentInvoice['status']): TalentInvoice {
   return {
     id: 'inv-001',
     talentProfileId: 'talent-001',
+    orgId: 'org-default',
     amountMinor: 2_000_000_00, // 2,000,000 UGX
     currency: 'UGX',
     invoiceStorageRef: 'invoices/2026/INV-001.pdf',

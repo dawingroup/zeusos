@@ -21,7 +21,6 @@ import {
   where,
   orderBy,
   serverTimestamp,
-  setDoc,
   writeBatch,
 } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase';

@@ -188,6 +188,18 @@ export const COMMERCIAL_NAVIGATION: NavItem[] = [
       { id: 'billing-gl',           label: 'GL Adapter Status',  href: '/billing/gl-status',       icon: 'Activity' },
     ],
   },
+  {
+    id: 'procurement',
+    label: 'Procurement',
+    href: '/procurement/purchase-orders',
+    icon: 'ShoppingCart',
+    description: 'Purchase orders + journal entries (Phase 4.1 handshake viewer)',
+    keywords: ['procurement', 'purchase order', 'po', 'journal entry', 'je', 'gl posting'],
+    children: [
+      { id: 'procurement-pos', label: 'Purchase Orders',  href: '/procurement/purchase-orders', icon: 'ShoppingCart' },
+      { id: 'procurement-jes', label: 'Journal Entries',  href: '/procurement/journal-entries', icon: 'BookOpen' },
+    ],
+  },
 ];
 
 // ============================================================================

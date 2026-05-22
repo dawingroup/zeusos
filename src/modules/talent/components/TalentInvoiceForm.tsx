@@ -7,13 +7,14 @@ import type { TalentInvoice } from '../types/talent-invoice.types';
 
 interface Props {
   talentProfileId: string;
+  orgId: string;
   contractId?: string;
   masterJobId?: string;
   onSave: (values: Omit<TalentInvoice, 'id' | 'status' | 'linkedPoId' | 'approvedBy' | 'approvedAt' | 'rejectedBy' | 'rejectedAt' | 'rejectionReason' | 'paidAt' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   onCancel: () => void;
 }
 
-export function TalentInvoiceForm({ talentProfileId, contractId, masterJobId, onSave, onCancel }: Props) {
+export function TalentInvoiceForm({ talentProfileId, orgId, contractId, masterJobId, onSave, onCancel }: Props) {
   const [amountMinor, setAmountMinor] = useState(0);
   const [currency, setCurrency] = useState('UGX');
   const [invoiceRef, setInvoiceRef] = useState('');
@@ -31,6 +32,7 @@ export function TalentInvoiceForm({ talentProfileId, contractId, masterJobId, on
     try {
       await onSave({
         talentProfileId,
+        orgId,
         contractId,
         masterJobId,
         amountMinor,

@@ -115,6 +115,14 @@ const FreelancerContractsPage = lazyWithRetry(() => import('@/modules/talent/pag
 const TalentInvoicesPage     = lazyWithRetry(() => import('@/modules/talent/pages/TalentInvoicesPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
+// Procurement — Phase 4.1 (parent-org-only viewer for POs + JEs)
+// ──────────────────────────────────────────────────────────────────────────
+const PurchaseOrdersListPage  = lazyWithRetry(() => import('@/modules/procurement/pages/PurchaseOrdersListPage'));
+const PurchaseOrderDetailPage = lazyWithRetry(() => import('@/modules/procurement/pages/PurchaseOrderDetailPage'));
+const JournalEntriesListPage  = lazyWithRetry(() => import('@/modules/procurement/pages/JournalEntriesListPage'));
+const JournalEntryDetailPage  = lazyWithRetry(() => import('@/modules/procurement/pages/JournalEntryDetailPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
 // Asset Library — Phase 4 P1
 // ──────────────────────────────────────────────────────────────────────────
 const AssetLibraryListPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetLibraryListPage'));
@@ -490,6 +498,13 @@ export const router = createBrowserRouter([
       { path: 'talent/invoices',             element: <PageWrapper><ModuleContentWrapper><TalentInvoicesPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId',           element: <PageWrapper><ModuleContentWrapper><TalentProfilePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId/contracts', element: <PageWrapper><ModuleContentWrapper><FreelancerContractsPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── Procurement — Phase 4.1 (parent-org viewer for POs + JEs) ─────────
+      // Firestore rules block subsidiary reads on purchase_orders + journal_entries.
+      { path: 'procurement/purchase-orders',         element: <PageWrapper><ModuleContentWrapper><PurchaseOrdersListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'procurement/purchase-orders/:poId',   element: <PageWrapper><ModuleContentWrapper><PurchaseOrderDetailPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'procurement/journal-entries',         element: <PageWrapper><ModuleContentWrapper><JournalEntriesListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'procurement/journal-entries/:jeId',   element: <PageWrapper><ModuleContentWrapper><JournalEntryDetailPage /></ModuleContentWrapper></PageWrapper> },
 
       // ── Asset Library — Phase 4 P1 ────────────────────────────────────────
       // Staff-wide access — any authenticated user can browse and upload.
