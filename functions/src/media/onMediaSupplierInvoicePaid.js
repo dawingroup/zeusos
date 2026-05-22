@@ -22,9 +22,7 @@
  * Idempotency: deterministic PO id `po_media_${mediaSupplierInvoiceId}`
  * + PROCESSOR_TAG on the event's `processedBy` array.
  *
- * Status: Phase 4.1 SCAFFOLD. See the TODO block below for the real
- * implementation steps; the trigger + processedBy hook are wired so
- * events aren't silently dropped.
+ * Status: Phase 4.1 SCAFFOLD → COMPLETE.
  */
 
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
@@ -49,41 +47,107 @@ exports.onMediaSupplierInvoicePaid = onDocumentCreated(
     const db = getFirestore();
     const eventRef = db.collection(DOMAIN_EVENTS_COLLECTION).doc(event.params.eventId);
 
-    // ── TODO Phase 4.1 implementation ────────────────────────────────
-    // 1. Read media_supplier_invoices/{mediaSupplierInvoiceId} from
-    //    data.payload.mediaSupplierInvoiceId. Bail if missing.
-    // 2. Build PO doc (deterministic id `po_media_${id}`):
-    //      {
-    //        id: `po_media_${mediaSupplierInvoiceId}`,
-    //        kind: 'MEDIA_SUPPLIER',
-    //        sourceInvoiceId: mediaSupplierInvoiceId,
-    //        supplierOrgId: data.payload.supplierOrgId,
-    //        amountMinor, currency,
-    //        mediaPlanId: data.payload.mediaPlanId,
-    //        mediaBuyId : data.payload.mediaBuyId,    // optional
-    //        masterJobId: data.payload.masterJobId,
-    //        vehicleType: data.payload.vehicleType,   // OOH/Digital/Radio/…
-    //        status: 'OPEN',
-    //        raisedAt: FieldValue.serverTimestamp(),
-    //        idempotencyKey: data.idempotencyKey || null,
-    //      }
-    // 3. tx.get(po) → if exists, processedBy-tag the event and return.
-    // 4. tx.set(po) + appendDomainEvent({ eventType:'PurchaseOrderRaised',
-    //    aggregateType:'PurchaseOrder', aggregateId: po.id, … }).
-    // 5. tx.update(eventRef, processedBy ← arrayUnion(PROCESSOR_TAG)).
-    // 6. firestore.rules: parent-org-only on purchase_orders/* (same as
-    //    talent path — POs leak supplier costs that subs must not see).
-    // ─────────────────────────────────────────────────────────────────
+    const {
+      mediaSupplierInvoiceId,
+      supplierOrgId,
+      mediaPlanId,
+      mediaBuyId,
+      masterJobId,
+      vehicleType,
+      amountMinor,
+      currency,
+      orgId,
+    } = data.payload || {};
 
-    // Phase 4.1 SCAFFOLD short-circuit.
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[media-supplier-invoice-po-raiser] SCAFFOLD — MediaSupplierInvoicePaid ` +
-      `${event.params.eventId} received but NOT processed (Phase 4.1 pending).`,
-    );
-    await eventRef.update({
-      processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:scaffold`),
+    if (!mediaSupplierInvoiceId || !supplierOrgId || !mediaPlanId || !masterJobId || !orgId) {
+      // Malformed event — mark processed and bail
+      await eventRef.update({
+        processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:malformed`),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    const mediaInvoiceRef = db.collection('media_supplier_invoices').doc(mediaSupplierInvoiceId);
+    const mediaInvoiceDoc = await mediaInvoiceRef.get();
+
+    if (!mediaInvoiceDoc.exists) {
+      // Source invoice deleted (upstream rollback) — idempotent, mark and return
+      await eventRef.update({
+        processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:source-deleted`),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    // Build PO doc
+    const poId = `po_media_${mediaSupplierInvoiceId}`;
+    const po = {
+      id: poId,
+      kind: 'MEDIA_SUPPLIER',
+      sourceInvoiceId: mediaSupplierInvoiceId,
+      supplierOrgId,
+      masterJobId,
+      amountMinor,
+      currency,
+      mediaPlanId,
+      mediaBuyId: mediaBuyId || null,
+      vehicleType,
+      status: 'OPEN',
+      postedToGL: false,
+      raisedAt: FieldValue.serverTimestamp(),
+      idempotencyKey: data.idempotencyKey || null,
+      orgId,
+      createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
+    };
+
+    // Transactional write: create PO + emit PurchaseOrderRaised + mark event processed
+    await db.runTransaction(async (tx) => {
+      // Check for idempotency: does this PO already exist?
+      const poRef = db.collection('purchase_orders').doc(poId);
+      const poDoc = await tx.get(poRef);
+
+      if (poDoc.exists) {
+        // Retry guard: PO already created, just mark event processed
+        tx.update(eventRef, {
+          processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:retry`),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      // Create the PO doc
+      tx.set(poRef, po);
+
+      // Emit PurchaseOrderRaised domain event for downstream finance consumer
+      await appendDomainEvent({
+        tx,
+        db,
+        eventType: 'PurchaseOrderRaised',
+        aggregateType: 'PurchaseOrder',
+        aggregateId: poId,
+        payload: {
+          poId,
+          kind: po.kind,
+          sourceInvoiceId: mediaSupplierInvoiceId,
+          supplierOrgId,
+          masterJobId,
+          amountMinor,
+          currency,
+          mediaPlanId,
+          mediaBuyId: mediaBuyId || null,
+          vehicleType,
+          orgId,
+        },
+        idempotencyKey: data.idempotencyKey || null,
+      });
+
+      // Mark original event as processed
+      tx.update(eventRef, {
+        processedBy: FieldValue.arrayUnion(PROCESSOR_TAG),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
     });
   },
 );

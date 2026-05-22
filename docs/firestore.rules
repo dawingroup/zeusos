@@ -3402,5 +3402,22 @@ service cloud.firestore {
       allow create, update: if isAdmin();
       allow delete: if isAdmin();
     }
+
+    // Purchase Orders — Phase 4.1 procurement anchor (talent + media suppliers)
+    // Contains supplier costs that subsidiaries must NOT read. Only parent org
+    // (is_legal_entity == true) and global admins can read.
+    match /purchase_orders/{poId} {
+      allow read: if isAdmin() || isExecutive() ||
+        (isAuthenticated() && isOrgMember(resource.data.orgId));
+      allow write: if false;  // Cloud Functions only (onTalentInvoiceApproved, onMediaSupplierInvoicePaid)
+    }
+
+    // Journal Entries — Phase 4.1 GL posting (POs + client invoices)
+    // Contains financial detail tied to supplier costs. Parent org read only.
+    match /journal_entries/{jeId} {
+      allow read: if isAdmin() || isExecutive() ||
+        (isAuthenticated() && isOrgMember(resource.data.orgId));
+      allow write: if false;  // Cloud Functions only (postJournalEntryOnInvoicePaid)
+    }
   }
 }

@@ -22,6 +22,7 @@ import {
   orderBy,
   serverTimestamp,
   setDoc,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase';
 import type { TalentInvoice, TalentInvoiceStatus } from '../types/talent-invoice.types';
@@ -78,23 +79,39 @@ export async function approveTalentInvoice(
     );
   }
 
-  await updateDoc(doc(db, INVOICES_COLL, invoiceId), {
+  const batch = writeBatch(db);
+
+  // Update invoice status
+  batch.update(doc(db, INVOICES_COLL, invoiceId), {
     status: 'APPROVED' satisfies TalentInvoiceStatus,
     approvedBy,
     approvedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
 
-  // Domain event stub — Phase 5 wires a Cloud Function to generate a PO.
-  await setDoc(doc(collection(db, DOMAIN_EVENTS)), {
-    type: 'TALENT_INVOICE_APPROVED',
-    subjectType: 'TALENT_INVOICE',
-    subjectId: invoiceId,
-    talentProfileId: invoice.talentProfileId,
-    amountMinor: invoice.amountMinor,
-    approvedBy,
-    occurredAt: serverTimestamp(),
+  // Emit domain event for Phase 4.1 procurement consumer (onTalentInvoiceApproved).
+  // The Cloud Function will read this event and create a linked PO in Procurement.
+  const eventRef = doc(collection(db, DOMAIN_EVENTS));
+  batch.set(eventRef, {
+    id: eventRef.id,
+    eventType: 'TalentInvoiceApproved',
+    aggregateType: 'TalentInvoice',
+    aggregateId: invoiceId,
+    payload: {
+      talentInvoiceId: invoiceId,
+      talentProfileId: invoice.talentProfileId,
+      masterJobId: invoice.masterJobId,
+      amountMinor: invoice.amountMinor,
+      currency: invoice.currency,
+      orgId: invoice.orgId,
+    },
+    emittedByUserId: approvedBy,
+    emittedAt: serverTimestamp(),
+    processed: false,
+    processedBy: [],
   });
+
+  await batch.commit();
 }
 
 export async function rejectTalentInvoice(

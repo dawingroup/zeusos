@@ -1,0 +1,45 @@
+{
+  "description": "ZeusOS Chart of Accounts — Phase 4.1 GL posting rules for Procurement / Finance handshake",
+  "effectiveDate": "2026-05-23",
+  "postingRules": {
+    "TALENT_FREELANCER": {
+      "description": "Freelancer / talent cost posting (Phase 4.1)",
+      "debit": {
+        "accountCode": "5010",
+        "accountName": "Contractor Fees - Talent & Freelancers",
+        "category": "EXPENSE"
+      },
+      "credit": {
+        "accountCode": "2050",
+        "accountName": "Accounts Payable - Contractors",
+        "category": "LIABILITY"
+      }
+    },
+    "MEDIA_SUPPLIER": {
+      "description": "Media supplier cost posting (Phase 4.1)",
+      "debit": {
+        "accountCode": "5020",
+        "accountName": "Media Spend - Agencies & Suppliers",
+        "category": "EXPENSE"
+      },
+      "credit": {
+        "accountCode": "2051",
+        "accountName": "Accounts Payable - Media",
+        "category": "LIABILITY"
+      }
+    },
+    "CLIENT_REVENUE_RECOGNISED": {
+      "description": "Client invoice revenue recognition (Phase 4.1)",
+      "debit": {
+        "accountCode": "1200",
+        "accountName": "Accounts Receivable - Clients",
+        "category": "ASSET"
+      },
+      "credit": {
+        "accountCode": "4000",
+        "accountName": "Service Revenue - Agencies",
+        "category": "REVENUE"
+      }
+    }
+  }
+}

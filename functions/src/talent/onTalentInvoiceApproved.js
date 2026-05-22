@@ -52,45 +52,91 @@ exports.onTalentInvoiceApproved = onDocumentCreated(
     const db = getFirestore();
     const eventRef = db.collection(DOMAIN_EVENTS_COLLECTION).doc(event.params.eventId);
 
-    // ── TODO Phase 4.1 implementation ────────────────────────────────
-    // 1. Read the source talent_invoices/{talentInvoiceId} doc from
-    //    data.payload.talentInvoiceId. Bail if not found (idempotent —
-    //    a deleted invoice means the upstream txn rolled back).
-    // 2. Build the PO doc shape (deterministic id `po_talent_${id}`):
-    //      {
-    //        id: `po_talent_${talentInvoiceId}`,
-    //        kind: 'TALENT_FREELANCER',
-    //        sourceInvoiceId: talentInvoiceId,
-    //        supplierProfileId: data.payload.talentProfileId,
-    //        amountMinor, currency,
-    //        masterJobId: data.payload.masterJobId,
-    //        status: 'OPEN',                 // ready for payment run
-    //        raisedAt: FieldValue.serverTimestamp(),
-    //        idempotencyKey: data.idempotencyKey || null,
-    //      }
-    // 3. Inside a transaction:
-    //      a. Read purchase_orders/po_talent_${id} — if it already
-    //         exists, set processedBy tag and return (retry guard).
-    //      b. tx.set the PO doc.
-    //      c. appendDomainEvent({ tx, db, eventType:'PurchaseOrderRaised',
-    //         aggregateType:'PurchaseOrder', aggregateId: po.id, payload: {...} })
-    //      d. tx.update(eventRef, { processedBy: arrayUnion(PROCESSOR_TAG) })
-    // 4. Spec §7.4 — subsidiary principals MUST NOT read this PO.
-    //    firestore.rules: parent-org-only on purchase_orders/*.
-    // ─────────────────────────────────────────────────────────────────
+    // 1. Read the source talent_invoices/{talentInvoiceId} doc
+    const { talentInvoiceId, talentProfileId, masterJobId, amountMinor, currency, orgId } = data.payload || {};
 
-    // Phase 4.1 SCAFFOLD short-circuit. Mark the event as seen so a
-    // production deploy with this stub deployed doesn't silently
-    // accumulate unprocessed events. The TODO body above replaces this
-    // when the real implementation lands.
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[talent-invoice-po-raiser] SCAFFOLD — TalentInvoiceApproved ${event.params.eventId} ` +
-      `received but NOT processed (Phase 4.1 implementation pending).`,
-    );
-    await eventRef.update({
-      processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:scaffold`),
+    if (!talentInvoiceId || !talentProfileId || !masterJobId || !orgId) {
+      // Malformed event — mark processed and bail
+      await eventRef.update({
+        processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:malformed`),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    const talentInvoiceRef = db.collection('talent_invoices').doc(talentInvoiceId);
+    const talentInvoiceDoc = await talentInvoiceRef.get();
+
+    if (!talentInvoiceDoc.exists) {
+      // Source invoice deleted (upstream rollback) — idempotent, mark and return
+      await eventRef.update({
+        processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:source-deleted`),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      return;
+    }
+
+    // 2. Build PO doc
+    const poId = `po_talent_${talentInvoiceId}`;
+    const po = {
+      id: poId,
+      kind: 'TALENT_FREELANCER',
+      sourceInvoiceId: talentInvoiceId,
+      supplierProfileId: talentProfileId,
+      masterJobId,
+      amountMinor,
+      currency,
+      status: 'OPEN',
+      raisedAt: FieldValue.serverTimestamp(),
+      idempotencyKey: data.idempotencyKey || null,
+      orgId,
+      createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
+    };
+
+    // 3. Transactional write: create PO + emit PurchaseOrderRaised + mark event processed
+    await db.runTransaction(async (tx) => {
+      // 3a. Check for idempotency: does this PO already exist?
+      const poRef = db.collection('purchase_orders').doc(poId);
+      const poDoc = await tx.get(poRef);
+
+      if (poDoc.exists) {
+        // Retry guard: PO already created, just mark event processed
+        tx.update(eventRef, {
+          processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:retry`),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      // 3b. Create the PO doc
+      tx.set(poRef, po);
+
+      // 3c. Emit PurchaseOrderRaised domain event for downstream finance consumer
+      await appendDomainEvent({
+        tx,
+        db,
+        eventType: 'PurchaseOrderRaised',
+        aggregateType: 'PurchaseOrder',
+        aggregateId: poId,
+        payload: {
+          poId,
+          kind: po.kind,
+          sourceInvoiceId: talentInvoiceId,
+          supplierProfileId: talentProfileId,
+          masterJobId,
+          amountMinor,
+          currency,
+          orgId,
+        },
+        idempotencyKey: data.idempotencyKey || null,
+      });
+
+      // 3d. Mark original event as processed
+      tx.update(eventRef, {
+        processedBy: FieldValue.arrayUnion(PROCESSOR_TAG),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
     });
   },
 );
