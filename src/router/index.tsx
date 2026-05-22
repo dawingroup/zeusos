@@ -48,6 +48,16 @@ const ClientDetailPage = lazyWithRetry(() => import('@/pages/clients/ClientDetai
 // Advisory subsidiary module (will be renamed agency-core in Phase 3)
 const AdvisoryRoutes = lazyWithRetry(() => import('@/subsidiaries/advisory/AdvisoryModule'));
 
+// ──────────────────────────────────────────────────────────────────────────
+// Billing — Phase 3.F (standalone slice)
+// ──────────────────────────────────────────────────────────────────────────
+const BillingLayout = lazyWithRetry(() => import('@/modules/billing/components/BillingLayout'));
+const ClientInvoicesPage = lazyWithRetry(() => import('@/modules/billing/pages/ClientInvoicesPage'));
+const ClientInvoiceDetailPage = lazyWithRetry(() => import('@/modules/billing/pages/ClientInvoiceDetailPage'));
+const InterCompanyInvoicesPage = lazyWithRetry(() => import('@/modules/billing/pages/InterCompanyInvoicesPage'));
+const GLAdapterStatusPage = lazyWithRetry(() => import('@/modules/billing/pages/GLAdapterStatusPage'));
+const BillingAccessGuard = lazyWithRetry(() => import('@/modules/billing/guards/BillingAccessGuard'));
+
 // AI Assistant
 const AIAssistantPage = lazyWithRetry(() => import('@/pages/ai/AIAssistantPage'));
 
@@ -276,6 +286,28 @@ export const router = createBrowserRouter([
           { path: 'readiness',       element: <ReadinessPage /> },
           { path: 'applications',    element: <CapitalApplicationsPage /> },
           { path: 'facilities',      element: <CapitalFacilitiesPage /> },
+        ],
+      },
+
+      // Billing — Phase 3.F standalone slice. The composite
+      // BillingAccessGuard enforces admin/owner + (today) BILLING_ADMIN
+      // scope approximation; Phase 3.A.5 turns the scope check into a
+      // real grant lookup and adds the org-kind === 'PARENT' assertion.
+      {
+        path: 'billing',
+        element: (
+          <PageWrapper>
+            <BillingAccessGuard>
+              <BillingLayout />
+            </BillingAccessGuard>
+          </PageWrapper>
+        ),
+        children: [
+          { index: true,                              element: <Navigate to="client-invoices" replace /> },
+          { path: 'client-invoices',                  element: <ClientInvoicesPage /> },
+          { path: 'client-invoices/:invoiceId',       element: <ClientInvoiceDetailPage /> },
+          { path: 'intercompany',                     element: <InterCompanyInvoicesPage /> },
+          { path: 'gl-status',                        element: <GLAdapterStatusPage /> },
         ],
       },
 
