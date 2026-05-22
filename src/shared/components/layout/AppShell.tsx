@@ -174,8 +174,22 @@ export function AppShell({ children }: AppShellProps) {
   }, [allAccessibleModuleIds, isPrivileged]);
 
   const globalNavItems = useMemo(() => {
-    return filterNavigationByAccess(GLOBAL_NAVIGATION, allAccessibleModuleIds, isPrivileged);
-  }, [allAccessibleModuleIds, isPrivileged]);
+    const filtered = filterNavigationByAccess(GLOBAL_NAVIGATION, allAccessibleModuleIds, isPrivileged);
+    // Phase 3.E — hide Delivery Inbox from parent-org users; the route
+    // would redirect them anyway, and the inbox is semantically
+    // subsidiary-side. Super-users (privileged) keep it for smoke
+    // testing. Mirrors the inverse-PricingAdminGuard pattern.
+    if (isPrivileged) return filtered;
+    const isParentOrg =
+      (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
+      Array.isArray(dawinUser?.subsidiaryAccess) &&
+      dawinUser.subsidiaryAccess.some(
+        (s) => s.subsidiaryId === 'zeus-group' && s.hasAccess,
+      );
+    return isParentOrg
+      ? filtered.filter((item) => item.id !== 'delivery-inbox')
+      : filtered;
+  }, [allAccessibleModuleIds, isPrivileged, dawinUser]);
 
   // Desktop: collapsed rail by default, toggle to expand. Mobile: always expanded (full drawer).
   const sidebarExpanded = isDesktop ? !sidebarCollapsed : true;
