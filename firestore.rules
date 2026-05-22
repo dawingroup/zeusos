@@ -193,6 +193,68 @@ service cloud.firestore {
         ]);
     }
 
+    // ────────────────────────────────────────────────────────────
+    // Phase 3.A.5 — Commercial-gravity helpers (Tech Spec v1.0 §7.4)
+    //
+    // The spec mandates that pricing, contracts and billing live
+    // exclusively at the Account-Management (parent) layer. Subsidiary
+    // principals — anyone whose `homeOrgId` points at an Organization
+    // doc with `kind == 'SUBSIDIARY'` — must be rejected from
+    // commercial collections at three layers (auth, API, workflow).
+    // These rules implement layer 1.
+    //
+    // Until Phase 3.E migrates every user doc to carry `homeOrgId`,
+    // the helpers fall back conservatively (treat missing data as
+    // SUBSIDIARY). Super-user emails + globalRole admin/owner continue
+    // to bypass so super-admin tooling keeps working.
+
+    function callerHomeOrgId() {
+      let rootUser = /databases/$(database)/documents/users/$(request.auth.uid);
+      let orgUser  = /databases/$(database)/documents/organizations/default/users/$(request.auth.uid);
+      return exists(rootUser) && 'homeOrgId' in get(rootUser).data
+        ? get(rootUser).data.homeOrgId
+        : (exists(orgUser) && 'homeOrgId' in get(orgUser).data
+            ? get(orgUser).data.homeOrgId
+            : null);
+    }
+
+    function isSuperUser() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'onzimai@zeusgroup.co.ug'
+        || request.auth.token.email == 'onzimai@dawin.group'
+        || request.auth.token.email == 'admin@zeusgroup.co.ug'
+        || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin','owner'])
+        || (exists(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid))
+            && get(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid)).data.globalRole in ['admin','owner'])
+      );
+    }
+
+    function isParentOrgPrincipal() {
+      // Super-users (Daniel + admin/owner globalRole) always pass — they are
+      // by definition AM staff. For everyone else we require the caller's
+      // home org doc to declare `kind == 'PARENT'`. Missing data = deny.
+      return isStaffAuth() && (
+        isSuperUser()
+        || (
+          callerHomeOrgId() != null
+          && exists(/databases/$(database)/documents/organizations/$(callerHomeOrgId()))
+          && get(/databases/$(database)/documents/organizations/$(callerHomeOrgId())).data.kind == 'PARENT'
+        )
+      );
+    }
+
+    function isSubsidiaryOrgPrincipal() {
+      // Strict — only returns true if the caller resolves to a SUBSIDIARY
+      // org doc. Unresolved / super-users / parent-org users are NOT
+      // subsidiary principals.
+      return isStaffAuth()
+        && !isSuperUser()
+        && callerHomeOrgId() != null
+        && exists(/databases/$(database)/documents/organizations/$(callerHomeOrgId()))
+        && get(/databases/$(database)/documents/organizations/$(callerHomeOrgId())).data.kind == 'SUBSIDIARY';
+    }
+
     function isProjectMember(projectId) {
       // Admin check FIRST — short-circuits before we read the project
       // doc. Previously a missing / unreadable project caused the whole
@@ -4034,6 +4096,260 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create, update: if isAdmin();
       allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 3.A.5 — Commercial-gravity domain (Tech Spec v1.0 §1.3 / §7.4)
+    // ════════════════════════════════════════════════════════════════
+    //
+    // Layer 1 of the three-layer enforcement of "subsidiary never quotes."
+    // Layers 2 (Cloud Function callable rejection) and 3 (UI guard) land
+    // with the runtime in Phases 3.B / 3.D / 3.E.
+    //
+    // All commercial collections (msas, sows, change_orders, quotes,
+    // client_invoices) deny writes from subsidiary principals AND keep
+    // every write off the client SDK entirely — mutations only run via
+    // Cloud Functions, which use the Admin SDK and bypass these rules.
+    // Reads of cost-bearing subcollections (rate_card_lines.cost_minor,
+    // quote_lines.cost_minor) are restricted to parent-org principals so
+    // the spec §4.5 schema invariant holds.
+
+    // ────────────────────────────────────────────────────────────────
+    // Legal-entity Organization records (plan §14.4, spec §4.1)
+    // organizations/{orgId} top-level doc — the kind / is_legal_entity /
+    // base_currency / gl_connection_id record. Distinct from the legacy
+    // `organizations/default/...` tenant container. Read-open to staff
+    // so the AM UI can render dropdowns; writes are admin-only.
+    match /organizations/{orgId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isSuperUser();
+      allow delete: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Contracts context — Client / MSA / SOW / ChangeOrder
+    // (spec §1.3, §4.2, §7.4 layer 1)
+    match /clients/{clientId} {
+      allow read: if isStaffAuth();
+      allow write: if false;  // mutations via Cloud Functions only
+    }
+
+    match /msas/{msaId} {
+      // Subsidiary principals must not even see the umbrella agreement
+      // (it carries client commercial terms). Parent-org only.
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    match /sows/{sowId} {
+      // SOW scope_doc_ref + ceiling are commercial; AM only.
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    match /change_orders/{coId} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Pricing & Rate-Card context — rate_cards, quotes
+    // (spec §1.3, §4.3, §4.5 schema invariant)
+    match /rate_cards/{rateCardId} {
+      // Header doc is admin/parent-only; subsidiaries cannot self-serve
+      // their own rate card from the client SDK (the editor goes via
+      // a CFn that uses the Admin SDK).
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+      match /rate_card_lines/{lineId} {
+        // cost_minor lives here — the spec §4.5 invariant ("No client-
+        // facing view, API serializer or invoice line may project
+        // cost_minor"). Subsidiary principals are denied.
+        allow read: if isParentOrgPrincipal();
+        allow write: if false;
+      }
+    }
+
+    match /quotes/{quoteId} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+      match /quote_lines/{lineId} {
+        // cost_minor + markup_pct — schema invariant per spec §4.5.
+        allow read: if isParentOrgPrincipal();
+        allow write: if false;
+      }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Assignment & Handoff context — master_jobs, internal_work_orders,
+    // budget_holds (spec §1.3, §4.4, §6.1, §7.1)
+
+    match /master_jobs/{masterJobId} {
+      // Subsidiary principals see their own IWOs via the internal_work_orders
+      // collection (filtered by subsidiaryOrgId); they should NOT see
+      // master-job-level rollups (which expose client_total_minor /
+      // ceiling_minor / margin). AM/parent only.
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    match /internal_work_orders/{iwoId} {
+      // Two-sided collection:
+      //   • Parent-org principals see every IWO (rollup / AM dashboard).
+      //   • Subsidiary principals see only their own subsidiary's IWOs.
+      //     `subsidiaryOrgId` on the doc is the FK; rules read it via
+      //     `resource.data` so this is a single-doc check, not a query.
+      allow read: if isParentOrgPrincipal()
+        || (
+          isSubsidiaryOrgPrincipal()
+          && resource.data.subsidiaryOrgId == callerHomeOrgId()
+        );
+      // All transitions go via Cloud Functions (issueWorkOrder,
+      // acceptWorkOrder, etc. — Phase 3.B). Client SDK writes denied.
+      allow write: if false;
+
+      // Handoff packet — one subdoc at /handoff_packet/packet. Same
+      // visibility as the parent IWO.
+      match /handoff_packet/{docId} {
+        allow read: if isParentOrgPrincipal()
+          || (
+            isSubsidiaryOrgPrincipal()
+            && get(/databases/$(database)/documents/internal_work_orders/$(iwoId)).data.subsidiaryOrgId == callerHomeOrgId()
+          );
+        allow write: if false;
+      }
+
+      // Time entries — receiving subsidiary's timekeepers post these via
+      // the postTimeEntry CFn (3.B). Reads: parent + the receiving sub
+      // (cost_minor on the entry is internal, but the receiving sub
+      // genuinely needs it to render their burn meter).
+      match /time_entries/{teId} {
+        allow read: if isParentOrgPrincipal()
+          || (
+            isSubsidiaryOrgPrincipal()
+            && get(/databases/$(database)/documents/internal_work_orders/$(iwoId)).data.subsidiaryOrgId == callerHomeOrgId()
+          );
+        allow write: if false;
+      }
+
+      // Cost entries — vendor/media/expense actuals.
+      match /cost_entries/{ceId} {
+        allow read: if isParentOrgPrincipal()
+          || (
+            isSubsidiaryOrgPrincipal()
+            && get(/databases/$(database)/documents/internal_work_orders/$(iwoId)).data.subsidiaryOrgId == callerHomeOrgId()
+          );
+        allow write: if false;
+      }
+
+      // Deliverables — same visibility (deliverer can see + post).
+      match /deliverables/{delId} {
+        allow read: if isParentOrgPrincipal()
+          || (
+            isSubsidiaryOrgPrincipal()
+            && get(/databases/$(database)/documents/internal_work_orders/$(iwoId)).data.subsidiaryOrgId == callerHomeOrgId()
+          );
+        allow write: if false;
+      }
+    }
+
+    match /budget_holds/{holdId} {
+      // Strictly an internal accounting record — AM/parent only.
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Inter-Company Finance — intercompany_invoices (spec §4.5, §8.3)
+    match /intercompany_invoices/{icId} {
+      // Each subsidiary sees its own outgoing IC invoices (fromOrgId);
+      // the parent sees everything (these are its inbound costs).
+      allow read: if isParentOrgPrincipal()
+        || (
+          isSubsidiaryOrgPrincipal()
+          && resource.data.fromOrgId == callerHomeOrgId()
+        );
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Billing context — client_invoices + client_invoice_lines + the
+    // single-invoice UNIQUE guard doc (spec §11.7).
+    // The application-level lock lives at
+    // `client_invoices/{masterJobId}:active` — the doc id encodes the
+    // master_job_id so concurrent creates collide on the same key.
+    // Full UNIQUE enforcement also runs in the 3.F createClientInvoice
+    // Cloud Function via a transactional pre-check.
+    match /client_invoices/{invoiceId} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+      match /client_invoice_lines/{lineId} {
+        // Client-facing lines never expose cost_minor — but cost_minor
+        // is also never written here (the line shape strips it). Parent-
+        // only read keeps it consistent with the parent invoice itself.
+        allow read: if isParentOrgPrincipal();
+        allow write: if false;
+      }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Platform — domain_events (append-only outbox, spec §10)
+    // Written transactionally by every Cloud Function via Admin SDK
+    // (which bypasses these rules). The client SDK can READ for audit
+    // and for the AM UI's event-log tab; it can never WRITE.
+    match /domain_events/{eventId} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Platform — idempotency_keys (spec §9 — required header on all
+    // mutations). Touched only by Cloud Functions. Never readable from
+    // the client SDK; never writable from the client SDK.
+    match /idempotency_keys/{key} {
+      allow read, write: if false;
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Billing — Phase 3.F GL adapter + FX rate collections
+    // ════════════════════════════════════════════════════════════════
+    // Complements the 3.A.5 rules above (intercompany_invoices,
+    // client_invoices, client_invoice_lines, domain_events). The GL
+    // posting + connection + FX-rate collections sit one level deeper
+    // — they're how billing actually moves money against entity books.
+
+    // gl_postings — audit-trail of every GL post regardless of adapter.
+    // Written only by Cloud Functions (Admin SDK). Subsidiaries see only
+    // postings on their own books; parent sees everything. The cost
+    // memo on each line is internal — Phase 5 may field-guard further
+    // once we know which CoA codes carry transfer-price detail.
+    match /gl_postings/{postingId} {
+      allow read: if isParentOrgPrincipal()
+        || (
+          isSubsidiaryOrgPrincipal()
+          && resource.data.entityOrgId == callerHomeOrgId()
+        );
+      allow write: if false;
+    }
+
+    // gl_connections — adapter config (QBO realmId, OAuth tokens,
+    // status). NEVER readable from the client SDK — the tokens are
+    // sensitive. Cloud Functions read via Admin SDK. The GL Adapter
+    // Status page reads health via the resolveAdapter().status() path
+    // which returns a sanitised summary, not the raw config doc.
+    match /gl_connections/{orgId} {
+      allow read, write: if false;
+    }
+
+    // fx_rates — daily snapshot collection keyed by ISO date. The
+    // billing FX service falls back to the seeded EXCHANGE_RATES_TO_UGX
+    // when a snapshot is missing, so this collection is optional today.
+    // Phase 5 wires a scheduled writer; until then only an admin may
+    // manually post a corrected day.
+    match /fx_rates/{date} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if false;
     }
   }
 }

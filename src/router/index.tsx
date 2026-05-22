@@ -36,23 +36,60 @@ const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPassword
 const VerifyEmailPage = lazyWithRetry(() => import('@/pages/auth/VerifyEmailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
-// Engagements / Clients (advisory project model — repurposed for Campaigns in Phase 3)
+// Engagements (legacy advisory project model — retained until Phase 4)
 // ──────────────────────────────────────────────────────────────────────────
 const EngagementListPage = lazyWithRetry(() => import('@/pages/engagements/EngagementListPage'));
 const EngagementDetailPage = lazyWithRetry(() => import('@/pages/engagements/EngagementDetailPage'));
 const EngagementCreatePage = lazyWithRetry(() => import('@/pages/engagements/EngagementCreatePage'));
-const ClientListPage = lazyWithRetry(() => import('@/pages/clients/ClientListPage'));
-const ClientCreatePage = lazyWithRetry(() => import('@/pages/clients/ClientCreatePage'));
-const ClientDetailPage = lazyWithRetry(() => import('@/pages/clients/ClientDetailPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Account Management — Phase 3.D commercial core (Clients, MSAs, SOWs,
+// Change Orders, MasterJobs, IWO issuance, deliverable review, intake).
+// Every route is wrapped in AMAccessGuard (RoleGuard requireGlobalRole
+// admin/owner + requireOrgKind PARENT) — subsidiary principals see 403.
+// ──────────────────────────────────────────────────────────────────────────
+const AMAccessGuard = lazyWithRetry(() => import('@/modules/account-management/components/AMAccessGuard'));
+const AMLayout = lazyWithRetry(() => import('@/modules/account-management/components/AMLayout'));
+const AMClientsPage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientsPage'));
+const AMClientCreatePage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientCreatePage'));
+const AMClientDetailPage = lazyWithRetry(() => import('@/modules/account-management/pages/ClientDetailPage'));
+const AMMSAEditorPage = lazyWithRetry(() => import('@/modules/account-management/pages/MSAEditorPage'));
+const AMSOWEditorPage = lazyWithRetry(() => import('@/modules/account-management/pages/SOWEditorPage'));
+const AMChangeOrderPage = lazyWithRetry(() => import('@/modules/account-management/pages/ChangeOrderPage'));
+const AMMasterJobsPage = lazyWithRetry(() => import('@/modules/account-management/pages/MasterJobsPage'));
+const AMMasterJobDetailPage = lazyWithRetry(() => import('@/modules/account-management/pages/MasterJobDetailPage'));
+const AMReviewQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/DeliverableReviewQueuePage'));
+const AMIntakeQueuePage = lazyWithRetry(() => import('@/modules/account-management/pages/IntakeQueuePage'));
 
 // Advisory subsidiary module (will be renamed agency-core in Phase 3)
 const AdvisoryRoutes = lazyWithRetry(() => import('@/subsidiaries/advisory/AdvisoryModule'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Billing — Phase 3.F (standalone slice)
+// ──────────────────────────────────────────────────────────────────────────
+const BillingLayout = lazyWithRetry(() => import('@/modules/billing/components/BillingLayout'));
+const ClientInvoicesPage = lazyWithRetry(() => import('@/modules/billing/pages/ClientInvoicesPage'));
+const ClientInvoiceDetailPage = lazyWithRetry(() => import('@/modules/billing/pages/ClientInvoiceDetailPage'));
+const InterCompanyInvoicesPage = lazyWithRetry(() => import('@/modules/billing/pages/InterCompanyInvoicesPage'));
+const GLAdapterStatusPage = lazyWithRetry(() => import('@/modules/billing/pages/GLAdapterStatusPage'));
+const BillingAccessGuard = lazyWithRetry(() => import('@/modules/billing/guards/BillingAccessGuard'));
 
 // AI Assistant
 const AIAssistantPage = lazyWithRetry(() => import('@/pages/ai/AIAssistantPage'));
 
 // MCP token-refresh proxy pairing
 const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Pricing — Phase 3.C (Pricing engine + Quote builder).
+// PHASE 3.A.5 PLACEHOLDER — these pages read from stubbed `rate_cards` /
+// `quotes` root collections; re-point to `organizations/{id}/…` when
+// 3.A.5 lands.
+// ──────────────────────────────────────────────────────────────────────────
+import { PricingAdminGuard } from '@/modules/pricing/components/PricingAdminGuard';
+const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
+const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
+const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
 
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
@@ -203,13 +240,38 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/strategy" replace /> },
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
-      // Engagements / Clients (pre-Campaign primitives)
+      // Engagements (legacy)
       { path: 'engagements',                  element: <PageWrapper><ModuleContentWrapper><EngagementListPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'engagements/new',              element: <PageWrapper><ModuleContentWrapper><EngagementCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'engagements/:engagementId',    element: <PageWrapper><ModuleContentWrapper><EngagementDetailPage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients',                      element: <PageWrapper><ModuleContentWrapper><ClientListPage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients/new',                  element: <PageWrapper><ModuleContentWrapper><ClientCreatePage /></ModuleContentWrapper></PageWrapper> },
-      { path: 'clients/:clientId',            element: <PageWrapper><ModuleContentWrapper><ClientDetailPage /></ModuleContentWrapper></PageWrapper> },
+
+      // Account Management — Phase 3.D commercial core.
+      { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId',                                              element: <PageWrapper><AMAccessGuard><AMClientDetailPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs',                                                    element: <PageWrapper><AMAccessGuard><AMMasterJobsPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><AMAccessGuard><AMMasterJobDetailPage /></AMAccessGuard></PageWrapper> },
+      {
+        path: 'account-mgmt',
+        element: (
+          <PageWrapper>
+            <AMAccessGuard>
+              <AMLayout />
+            </AMAccessGuard>
+          </PageWrapper>
+        ),
+        children: [
+          { index: true,     element: <Navigate to="reviews" replace /> },
+          { path: 'reviews', element: <AMReviewQueuePage /> },
+          { path: 'intake',  element: <AMIntakeQueuePage /> },
+        ],
+      },
 
       // Advisory module (becomes agency-core in Phase 3)
       { path: 'advisory/*', element: <PageWrapper><AdvisoryRoutes /></PageWrapper> },
@@ -279,6 +341,28 @@ export const router = createBrowserRouter([
         ],
       },
 
+      // Billing — Phase 3.F standalone slice. The composite
+      // BillingAccessGuard enforces admin/owner + (today) BILLING_ADMIN
+      // scope approximation; Phase 3.A.5 turns the scope check into a
+      // real grant lookup and adds the org-kind === 'PARENT' assertion.
+      {
+        path: 'billing',
+        element: (
+          <PageWrapper>
+            <BillingAccessGuard>
+              <BillingLayout />
+            </BillingAccessGuard>
+          </PageWrapper>
+        ),
+        children: [
+          { index: true,                              element: <Navigate to="client-invoices" replace /> },
+          { path: 'client-invoices',                  element: <ClientInvoicesPage /> },
+          { path: 'client-invoices/:invoiceId',       element: <ClientInvoiceDetailPage /> },
+          { path: 'intercompany',                     element: <InterCompanyInvoicesPage /> },
+          { path: 'gl-status',                        element: <GLAdapterStatusPage /> },
+        ],
+      },
+
       // Compliance
       {
         path: 'compliance',
@@ -304,6 +388,16 @@ export const router = createBrowserRouter([
           { path: 'social',         element: <MarketSocialIntelligencePage /> },
         ],
       },
+
+      // Pricing — Phase 3.C
+      // PHASE 3.A.5 PLACEHOLDER: PricingAdminGuard approximates "home org
+      // kind = PARENT" via `globalRole IN ('admin','owner') AND
+      // subsidiaryAccess includes 'zeus-group'`. Replace when 3.A.5 lands.
+      { path: 'pricing',                       element: <Navigate to="/pricing/rate-cards" replace /> },
+      { path: 'pricing/rate-cards',            element: <PageWrapper><PricingAdminGuard><RateCardsPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/rate-cards/:id',        element: <PageWrapper><PricingAdminGuard><RateCardEditorPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/quotes/:id',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/quotes/new',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
 
       // Intelligence Layer
       {
