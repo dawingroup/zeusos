@@ -12,7 +12,6 @@
     "test": "node --test __tests__/assignment/*.test.js __tests__/pricing/*.test.js __tests__/contracts/*.test.js"
   },
   "dependencies": {
-    "@adobe/pdfservices-node-sdk": "^4.1.0",
     "@anthropic-ai/sdk": "^0.71.2",
     "@google-cloud/bigquery": "^7.5.0",
     "@google-cloud/secret-manager": "^5.6.0",
