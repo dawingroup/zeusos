@@ -123,8 +123,12 @@ export default defineConfig(({ mode }) => {
         process.env.npm_package_version || '0.1.0'
       ),
       'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().toISOString()),
-      // Polyfill for libraries that use Node.js Buffer (e.g., @react-pdf/renderer)
-      global: 'globalThis',
+      // NOTE: removed `global: 'globalThis'` — it was a Buffer polyfill for
+      // @react-pdf/renderer but Vite applies it as a blanket text substitution
+      // that rewrites strings inside import paths (e.g. './global-config.mjs'
+      // → './globalThis-config.mjs' in motion-utils), breaking the build.
+      // The runtime equivalent lives in src/main.jsx (top of file) where
+      // `globalThis.global ??= globalThis` is scoped to actual references.
     },
   };
 })

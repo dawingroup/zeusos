@@ -1,6 +1,10 @@
-// Polyfill Node.js Buffer for browser libs (e.g., @react-pdf/renderer)
+// Polyfill Node.js Buffer + `global` for browser libs (e.g., @react-pdf/renderer).
+// `globalThis.global` is set at runtime here rather than via Vite `define` —
+// the define approach text-replaces inside import paths and breaks builds
+// (see motion-utils/./global-config.mjs incident).
 import { Buffer } from 'buffer'
 globalThis.Buffer = Buffer
+if (typeof globalThis.global === 'undefined') globalThis.global = globalThis
 
 // Suppress recharts ResponsiveContainer dimension warning (fires on first render
 // before ResizeObserver can measure; harmless, charts re-render correctly)
