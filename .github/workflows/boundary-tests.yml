@@ -1,0 +1,153 @@
+# ============================================================================
+# GITHUB ACTIONS — BOUNDARY ENFORCEMENT TESTS (Phase 3.G)
+# ============================================================================
+#
+# Runs the §7.4 boundary-enforcement test suite — Firestore rules unit
+# tests (must pass) and the pricing-quote-lifecycle Playwright spec
+# (continue-on-error because 3.D + 3.E aren't merged yet, so most of
+# the spec is .skip'd by design).
+#
+# The "rules-tests" job is the gate — failing it blocks the build.
+
+name: Boundary Tests
+
+on:
+  push:
+    branches: [main, develop, 'phase-3g-**']
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: boundary-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  JAVA_VERSION: '21'
+
+jobs:
+  # ───────────────────────────────────────────────────────────────────────────
+  # GATE — Firestore rules unit tests. Must pass.
+  # ───────────────────────────────────────────────────────────────────────────
+  rules-tests:
+    name: Firestore rules — boundary suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Java (required by Firestore emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Firebase emulator JAR
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{ runner.os }}-firebase-emulators-v1
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools@13
+
+      - name: Run rules tests against Firestore emulator
+        run: |
+          firebase emulators:exec \
+            --only firestore \
+            --project zeusos-boundary-tests \
+            'npm run test:rules'
+        env:
+          CI: true
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # ADVISORY — Playwright lifecycle. Currently mostly .skip'd because
+  # 3.D + 3.E haven't merged. continue-on-error so it doesn't gate the
+  # build until those phases land.
+  # ───────────────────────────────────────────────────────────────────────────
+  e2e-lifecycle:
+    name: Playwright — quote lifecycle (advisory)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: rules-tests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Java (required by Firebase emulators)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools@13
+
+      - name: Build app
+        run: npm run build
+        env:
+          VITE_APP_ENV: ci
+
+      - name: Run Playwright against the emulator + seeded users
+        run: |
+          firebase emulators:exec \
+            --only firestore,auth,functions \
+            --project zeusos-boundary-tests \
+            "FIRESTORE_EMULATOR_HOST=localhost:8080 \
+             FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 \
+             node scripts/seed-e2e-users.cjs && \
+             npm run test:e2e -- --project=chromium"
+        env:
+          CI: true
+          BASE_URL: http://localhost:3000
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/reports
+          retention-days: 7
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Summary
+  # ───────────────────────────────────────────────────────────────────────────
+  summary:
+    name: Boundary summary
+    runs-on: ubuntu-latest
+    needs: [rules-tests, e2e-lifecycle]
+    if: always()
+    steps:
+      - name: Report
+        run: |
+          {
+            echo "## Phase 3.G — Boundary Tests"
+            echo ""
+            echo "| Suite | Result | Gate? |"
+            echo "|-------|--------|-------|"
+            echo "| Firestore rules | ${{ needs.rules-tests.result }} | YES |"
+            echo "| Playwright lifecycle | ${{ needs.e2e-lifecycle.result }} | advisory |"
+          } >> "$GITHUB_STEP_SUMMARY"
