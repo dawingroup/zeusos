@@ -47,8 +47,8 @@ import { GlobalTaskButton } from '@/modules/intelligence-layer/components/Global
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
 import {
   getAllCommandItems,
-  FINISHES_NAVIGATION,
-  ADVISORY_NAVIGATION,
+  AGENCY_NAVIGATION,
+  COMMERCIAL_NAVIGATION,
   CORPORATE_NAVIGATION,
   GLOBAL_NAVIGATION,
   ADMIN_NAVIGATION,
@@ -159,16 +159,36 @@ export function AppShell({ children }: AppShellProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Get navigation items based on current subsidiary, filtered by module access
-  const isAdvisory = currentSubsidiary?.id === 'zeus-digital';
+  // All sub-brands share AGENCY_NAVIGATION; per-subsidiary reordering is
+  // a Phase 4.B follow-up.
   const isPrivileged = isModuleAdmin || isSuperUser;
 
-  const mainNavItems = useMemo(() => {
-    const items = isAdvisory ? ADVISORY_NAVIGATION : FINISHES_NAVIGATION;
-    return filterNavigationByAccess(items, allAccessibleModuleIds, isPrivileged);
-  }, [isAdvisory, allAccessibleModuleIds, isPrivileged]);
+  // Parent-org admin/owner principal — mirrors ParentOrgGuard. Used for
+  // both showing the Commercial nav (AM/Pricing/Billing) and for hiding
+  // the subsidiary-only Delivery Inbox.
+  const isParentOrgPrincipal = useMemo(() => {
+    return (
+      (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
+      Array.isArray(dawinUser?.subsidiaryAccess) &&
+      dawinUser.subsidiaryAccess.some(
+        (s) => s.subsidiaryId === 'zeus-group' && s.hasAccess,
+      )
+    );
+  }, [dawinUser]);
 
-  // Corporate modules filtered by access
+  const mainNavItems = useMemo(() => {
+    return filterNavigationByAccess(AGENCY_NAVIGATION, allAccessibleModuleIds, isPrivileged);
+  }, [allAccessibleModuleIds, isPrivileged]);
+
+  // Commercial — Account Management surface. Visible to parent-org
+  // admins/owners and super-users (smoke testing); subsidiary principals
+  // never see these since the routes would 403 via ParentOrgGuard.
+  const commercialNavItems = useMemo(() => {
+    if (!isPrivileged && !isParentOrgPrincipal) return [];
+    return filterNavigationByAccess(COMMERCIAL_NAVIGATION, allAccessibleModuleIds, isPrivileged);
+  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal]);
+
+  // Corporate modules filtered by access (header pills)
   const corporateNavItems = useMemo(() => {
     return filterNavigationByAccess(CORPORATE_NAVIGATION, allAccessibleModuleIds, isPrivileged);
   }, [allAccessibleModuleIds, isPrivileged]);
@@ -178,18 +198,12 @@ export function AppShell({ children }: AppShellProps) {
     // Phase 3.E — hide Delivery Inbox from parent-org users; the route
     // would redirect them anyway, and the inbox is semantically
     // subsidiary-side. Super-users (privileged) keep it for smoke
-    // testing. Mirrors the inverse-PricingAdminGuard pattern.
+    // testing.
     if (isPrivileged) return filtered;
-    const isParentOrg =
-      (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
-      Array.isArray(dawinUser?.subsidiaryAccess) &&
-      dawinUser.subsidiaryAccess.some(
-        (s) => s.subsidiaryId === 'zeus-group' && s.hasAccess,
-      );
-    return isParentOrg
+    return isParentOrgPrincipal
       ? filtered.filter((item) => item.id !== 'delivery-inbox')
       : filtered;
-  }, [allAccessibleModuleIds, isPrivileged, dawinUser]);
+  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal]);
 
   // Desktop: collapsed rail by default, toggle to expand. Mobile: always expanded (full drawer).
   const sidebarExpanded = isDesktop ? !sidebarCollapsed : true;
@@ -228,7 +242,13 @@ export function AppShell({ children }: AppShellProps) {
 
   // Auto-expand navigation groups based on active route
   useEffect(() => {
-    const allItems = [...mainNavItems, ...corporateNavItems, ...globalNavItems, ...adminNavItems];
+    const allItems = [
+      ...mainNavItems,
+      ...commercialNavItems,
+      ...corporateNavItems,
+      ...globalNavItems,
+      ...adminNavItems,
+    ];
     const activeParents = allItems.filter(item => 
       item.children?.some((child: NavItem) => 
         location.pathname === child.href || 
@@ -761,12 +781,24 @@ export function AppShell({ children }: AppShellProps) {
                 })}
               </div>
 
-              {/* Main Navigation - Subsidiary specific */}
+              {/* Main Navigation - Agency surface (shared across all sub-brands) */}
               <div className="space-y-1">
                 {mainNavItems.map(item => renderNavItem(item))}
               </div>
 
-              {/* Workspace (Customers, Suppliers, Messaging) */}
+              {/* Commercial — parent-org Account Management surface */}
+              {commercialNavItems.length > 0 && (
+                <div className="space-y-1">
+                  {sidebarExpanded && (
+                    <p className="px-2 text-[10px] font-medium text-[var(--fg-on-dark-muted)] uppercase tracking-[0.1em] mb-1.5">
+                      Commercial
+                    </p>
+                  )}
+                  {commercialNavItems.map((item: NavItem) => renderNavItem(item))}
+                </div>
+              )}
+
+              {/* Workspace — subsidiary shortcuts (Delivery Inbox) */}
               {globalNavItems.length > 0 && (
                 <div className="space-y-1">
                   {sidebarExpanded && (

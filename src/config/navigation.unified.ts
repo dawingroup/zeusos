@@ -3,14 +3,25 @@
  * Single source of truth for all navigation items across ZeusOS.
  * Consolidates: config/navigation.ts + integration/constants/navigation.constants.ts
  *
- * NOTE(ZeusOS Phase 1.B): the per-subsidiary navigation arrays
- * (AGENCY_LEGACY_NAVIGATION, ADVISORY_LEGACY_NAVIGATION) still
- * reference construction-domain modules (Design Manager, Inventory,
- * Manufacturing, MatFlow, etc.). These will be replaced in Phase
- * 1.C with the Campaign & Job Manager + Media + Production +
- * Talent + Asset Library nav. For now they're retained so the
- * router doesn't break — Phase 1.C deletes the modules and
- * rewrites these arrays in one sweep.
+ * Phase 3.H follow-up — navigation cleanup:
+ *   - FINISHES_NAVIGATION (DawinOS construction modules) deleted.
+ *   - ADVISORY_NAVIGATION reduced to the still-wired /advisory/investment
+ *     subtree; MatFlow and Infrastructure Delivery routes were removed in
+ *     Phase 1.C.
+ *   - AGENCY_NAVIGATION is the shared sidebar for all Zeus sub-brands.
+ *   - COMMERCIAL_NAVIGATION exposes Account Management, Pricing, and
+ *     Billing — gated to parent-org admins/owners in the AppShell to
+ *     mirror the ParentOrgGuard / Cloud Function / Firestore rules
+ *     boundary (§7.4 "commercial gravity").
+ *   - CORPORATE_NAVIGATION child hrefs aligned to the actual routes in
+ *     src/router/index.tsx; dead sub-links removed.
+ *   - GLOBAL_NAVIGATION trimmed: Customers, Suppliers, and Messaging
+ *     pointed at routes that don't exist post-Phase-1.C; only Delivery
+ *     Inbox (subsidiary workspace) remains.
+ *
+ * Phase 4 modules (Media, Production, Talent) are not registered here —
+ * they land on the phase-4-media-production-talent branch and will be
+ * folded into AGENCY_NAVIGATION when that PR merges.
  */
 
 import type { CommandItem } from '@/core/components/navigation/CommandPalette';
@@ -46,263 +57,22 @@ export interface SubsidiaryConfig {
 }
 
 // ============================================================================
-// DAWIN FINISHES NAVIGATION
+// AGENCY NAVIGATION — main sidebar for every sub-brand
 // ============================================================================
+// Items here are visible to every authenticated user that has the parent
+// subsidiary access. Per-subsidiary differentiation (e.g. Labyrinth's
+// Production-first layout) is a Phase 4.B follow-up.
 
-export const FINISHES_NAVIGATION: NavItem[] = [
+export const AGENCY_NAVIGATION: NavItem[] = [
   {
-    id: 'clipper',
-    label: 'Clip Library',
-    href: '/clipper',
-    icon: 'Sparkles',
-    module: 'clipper',
-    description: 'Design inspiration clips',
-    keywords: ['inspiration', 'clips', 'images'],
-  },
-  {
-    id: 'design',
-    label: 'Design Manager',
-    href: '/design',
-    icon: 'FolderOpen',
-    module: 'design-manager',
-    description: 'Manage design projects',
-    keywords: ['projects', 'design', 'items'],
-    children: [
-      { id: 'design-projects', label: 'Projects', href: '/design', icon: 'FolderOpen' },
-      { id: 'design-materials', label: 'Materials', href: '/design/materials', icon: 'Boxes' },
-      { id: 'design-features', label: 'Features', href: '/design/features', icon: 'Layers' },
-    ],
-  },
-  // Customers moved to GLOBAL_NAVIGATION (cross-subsidiary)
-  {
-    id: 'assets',
-    label: 'Assets',
-    href: '/assets',
-    icon: 'Wrench',
-    module: 'asset-registry',
-    description: 'Asset registry',
-    keywords: ['equipment', 'tools', 'machines'],
-  },
-  {
-    id: 'design-studio',
-    label: 'Design Studio',
-    href: '/workshop',
-    icon: 'Box',
-    module: 'design-studio',
-    description: '3D model viewer, configurator & print package generator',
-    keywords: ['3d', 'viewer', 'polyboard', 'workshop', 'drawings', 'print package', 'pdf', 'design', 'studio', 'configurator'],
-  },
-  {
-    id: 'inventory',
-    label: 'Inventory',
-    href: '/inventory',
-    icon: 'Package',
-    module: 'inventory',
-    description: 'Stock management',
-    keywords: ['stock', 'materials', 'finishes'],
-    children: [
-      { id: 'inventory-items', label: 'Items', href: '/inventory', icon: 'Package' },
-      { id: 'stock-adjustments', label: 'Stock Adjustments', href: '/inventory/adjustments', icon: 'SwapVert' },
-      { id: 'finish-library', label: 'Finish Library', href: '/inventory/finishes', icon: 'Palette' },
-    ],
-  },
-  {
-    id: 'procurement',
-    label: 'Procurement',
-    href: '/procurement',
-    icon: 'ShoppingCart',
-    module: 'procurement',
-    description: 'Purchase orders & procurement management',
-    keywords: ['purchase orders', 'procurement', 'buying', 'PO', 'vendors', 'RFQ'],
-    children: [
-      { id: 'procurement-dashboard', label: 'Dashboard', href: '/procurement', icon: 'LayoutDashboard' },
-      { id: 'procurement-orders', label: 'Purchase Orders', href: '/procurement/orders', icon: 'ShoppingCart' },
-      { id: 'procurement-queue', label: 'Queue', href: '/procurement/queue', icon: 'ListTodo' },
-      { id: 'procurement-advisor', label: 'Advisor', href: '/procurement/advisor', icon: 'Sparkles' },
-    ],
-  },
-  {
-    id: 'manufacturing',
-    label: 'Manufacturing',
-    href: '/manufacturing',
-    icon: 'Factory',
-    module: 'production',
-    description: 'Production orders & shop floor',
-    keywords: ['manufacturing', 'production', 'MRP', 'BOM'],
-    children: [
-      { id: 'mfg-dashboard', label: 'Dashboard', href: '/manufacturing', icon: 'LayoutDashboard' },
-      { id: 'mfg-orders', label: 'Production Orders', href: '/manufacturing/orders', icon: 'ClipboardList' },
-      { id: 'mfg-shop-floor', label: 'Shop Floor', href: '/manufacturing/shop-floor', icon: 'Factory' },
-      { id: 'mfg-workstations', label: 'Workstations', href: '/manufacturing/workstations', icon: 'Wrench' },
-      { id: 'mfg-routing', label: 'Routing Templates', href: '/manufacturing/routing-templates', icon: 'Route' },
-    ],
-  },
-  {
-    id: 'fulfillment',
-    label: 'Fulfillment',
-    href: '/fulfillment',
-    icon: 'Truck',
-    module: 'production',
-    description: 'Post-production delivery & installation',
-    keywords: ['fulfillment', 'delivery', 'dispatch', 'installation', 'packing'],
-  },
-  {
-    id: 'launch-pipeline',
-    label: 'Launch Pipeline',
-    href: '/launch-pipeline',
-    icon: 'Rocket',
-    module: 'launch-pipeline',
-    description: 'Product launches',
-    keywords: ['launch', 'products', 'pipeline'],
-  },
-  {
-    id: 'crm',
-    label: 'CRM',
-    href: '/crm',
-    icon: 'Users',
-    module: 'crm',
-    description: 'Sales pipeline & deal tracking',
-    keywords: ['crm', 'sales', 'deals', 'pipeline', 'leads', 'opportunities'],
-    children: [
-      { id: 'crm-pipeline', label: 'Pipeline', href: '/crm/pipeline', icon: 'Kanban' },
-      { id: 'crm-deals', label: 'Deals', href: '/crm/deals', icon: 'Handshake' },
-      { id: 'crm-projects', label: 'Project Tracker', href: '/crm/projects', icon: 'FolderKanban' },
-      { id: 'crm-activities', label: 'Activities', href: '/crm/activities', icon: 'Activity' },
-      { id: 'crm-tasks', label: 'Sales Tasks', href: '/crm/tasks', icon: 'CheckSquare' },
-      { id: 'crm-reports', label: 'Reports', href: '/crm/reports', icon: 'BarChart3' },
-    ],
-  },
-  {
-    id: 'sales-orders',
-    label: 'Sales Orders',
-    href: '/sales-orders',
-    icon: 'FileCheck',
-    module: 'sales-orders',
-    description: 'Commercial protection & approval gates',
-    keywords: ['sales orders', 'contracts', 'approvals', 'gates', 'discounts', 'change orders'],
-    children: [
-      { id: 'so-dashboard', label: 'Dashboard', href: '/sales-orders', icon: 'LayoutDashboard' },
-      { id: 'so-orders', label: 'All Orders', href: '/sales-orders/list', icon: 'FileCheck' },
-    ],
-  },
-  {
-    id: 'marketing',
-    label: 'Marketing Hub',
-    href: '/marketing',
-    icon: 'Megaphone',
-    module: 'marketing',
-    description: 'Campaigns, social media & analytics',
-    keywords: ['campaigns', 'marketing', 'whatsapp', 'social', 'analytics'],
-    children: [
-      { id: 'marketing-dashboard', label: 'Dashboard', href: '/marketing', icon: 'LayoutDashboard' },
-      { id: 'marketing-campaigns', label: 'Campaigns', href: '/marketing/campaigns', icon: 'Megaphone' },
-      { id: 'marketing-calendar', label: 'Content Calendar', href: '/marketing/calendar', icon: 'Calendar' },
-      { id: 'marketing-templates', label: 'Templates', href: '/marketing/templates', icon: 'MessageSquare' },
-      { id: 'marketing-analytics', label: 'Analytics', href: '/marketing/analytics', icon: 'BarChart3' },
-      { id: 'marketing-media', label: 'Media Library', href: '/marketing/media', icon: 'Image' },
-      { id: 'marketing-agent', label: 'AI Agent', href: '/marketing/agent', icon: 'Bot' },
-    ],
-  },
-];
-
-// ============================================================================
-// DAWIN ADVISORY NAVIGATION
-// ============================================================================
-
-export const ADVISORY_NAVIGATION: NavItem[] = [
-  {
-    id: 'investment',
-    label: 'Investment',
-    href: '/advisory/investment',
+    id: 'engagements',
+    label: 'Engagements',
+    href: '/engagements',
     icon: 'Briefcase',
-    module: 'investment_advisory',
-    description: 'Deal pipeline & portfolio',
-    keywords: ['deals', 'pipeline', 'portfolio'],
+    description: 'Legacy advisory engagements — migrating to Campaigns / Master Jobs',
+    keywords: ['engagement', 'project', 'job'],
   },
   {
-    id: 'matflow',
-    label: 'MatFlow',
-    href: '/advisory/matflow',
-    icon: 'HardHat',
-    module: 'matflow',
-    description: 'Material flow management',
-    keywords: ['boq', 'procurement', 'materials'],
-  },
-  {
-    id: 'delivery',
-    label: 'Delivery',
-    href: '/advisory/delivery',
-    icon: 'Building2',
-    module: 'infrastructure_delivery',
-    description: 'Infrastructure delivery',
-    keywords: ['projects', 'programs', 'infrastructure'],
-  },
-];
-
-// ============================================================================
-// SHARED/UTILITY NAVIGATION
-// ============================================================================
-
-// AI Intelligence & Assistant are now in the header (AIIntelligenceMenu + GlobalTaskButton).
-// UTILITY_NAVIGATION is kept for command palette indexing only.
-export const UTILITY_NAVIGATION: NavItem[] = [
-  {
-    id: 'intelligence',
-    label: 'AI Intelligence',
-    href: '/ai',
-    icon: 'Brain',
-    module: 'intelligence-layer',
-    description: 'Smart guidance for daily tasks & workflows',
-    keywords: ['ai', 'intelligence', 'guidance', 'tasks', 'workflows', 'smart'],
-    children: [
-      {
-        id: 'my-tasks',
-        label: 'My Tasks',
-        href: '/my-tasks',
-        icon: 'ClipboardList',
-        description: 'Your assigned tasks and to-dos',
-        keywords: ['tasks', 'my tasks', 'inbox', 'todo'],
-      },
-      {
-        id: 'team-dashboard',
-        label: 'Team Dashboard',
-        href: '/ai/team',
-        icon: 'Users',
-        description: 'Team workload and task overview',
-        keywords: ['team', 'dashboard', 'workload', 'manager'],
-        roles: ['manager', 'admin', 'owner', 'super_admin'],
-      },
-      {
-        id: 'intelligence-admin',
-        label: 'Admin Console',
-        href: '/ai/admin',
-        icon: 'Settings',
-        description: 'System configuration and monitoring',
-        keywords: ['admin', 'settings', 'configuration', 'monitoring'],
-        roles: ['admin', 'owner', 'super_admin'],
-      },
-    ],
-  },
-  {
-    id: 'assistant',
-    label: 'AI Assistant',
-    href: '/assistant',
-    icon: 'Bot',
-    description: 'AI-powered help',
-    keywords: ['ai', 'help', 'assistant', 'chat'],
-  },
-];
-
-// ============================================================================
-// GLOBAL NAVIGATION (Available across ALL subsidiaries in the sidebar)
-// ============================================================================
-
-export const GLOBAL_NAVIGATION: NavItem[] = [
-  {
-    // Phase 3.E — subsidiary delivery inbox. The route is guarded so
-    // parent-org users get redirected; everyone else sees their IWO
-    // queue here. No `module` field, so the access filter always shows
-    // it — the guard handles gating, not the menu.
     id: 'delivery-inbox',
     label: 'Delivery Inbox',
     href: '/delivery/inbox',
@@ -311,35 +81,157 @@ export const GLOBAL_NAVIGATION: NavItem[] = [
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
   {
-    id: 'customers',
-    label: 'Customers',
-    href: '/customers',
-    icon: 'Users',
-    module: 'customer-hub',
-    description: 'Customer management',
-    keywords: ['clients', 'contacts'],
-  },
-  {
-    id: 'suppliers',
-    label: 'Suppliers',
-    href: '/suppliers',
-    icon: 'Building2',
-    module: 'suppliers',
-    description: 'Vendor & supplier management',
-    keywords: ['vendors', 'suppliers', 'procurement'],
-  },
-  {
-    id: 'messaging',
-    label: 'Messaging',
-    href: '/whatsapp',
-    icon: 'MessagesSquare',
-    module: 'whatsapp',
-    description: 'WhatsApp & Team Chat',
-    keywords: ['messaging', 'whatsapp', 'chat', 'inbox', 'gchat', 'team'],
+    id: 'investment',
+    label: 'Investment Pipeline',
+    href: '/advisory/investment',
+    icon: 'Briefcase',
+    description: 'Deal pipeline & portfolio (Zeus Digital advisory subsidiary)',
+    keywords: ['deals', 'pipeline', 'portfolio', 'investment'],
     children: [
-      { id: 'messaging-whatsapp', label: 'WhatsApp', href: '/whatsapp', icon: 'MessageSquare' },
-      { id: 'messaging-gchat', label: 'Team Chat', href: '/messaging/gchat', icon: 'Hash' },
+      { id: 'investment-pipeline', label: 'Pipeline',  href: '/advisory/investment/pipeline', icon: 'Kanban' },
+      { id: 'investment-deals',    label: 'Deals',     href: '/advisory/investment/deals',    icon: 'Handshake' },
+      { id: 'investment-reports',  label: 'Reports',   href: '/advisory/investment/reports',  icon: 'BarChart3' },
     ],
+  },
+  {
+    id: 'ai-assistant',
+    label: 'AI Assistant',
+    href: '/ai-assistant',
+    icon: 'Bot',
+    description: 'Conversational AI for ZeusOS',
+    keywords: ['ai', 'assistant', 'chat'],
+  },
+];
+
+// ============================================================================
+// COMMERCIAL NAVIGATION — parent-org Account Management surface
+// ============================================================================
+// Visible only to parent-org admin/owner principals. AppShell applies the
+// gate; routes are also wrapped in ParentOrgGuard so the boundary is
+// enforced three layers deep (UI / API / Firestore rules).
+
+export const COMMERCIAL_NAVIGATION: NavItem[] = [
+  {
+    id: 'clients',
+    label: 'Clients',
+    href: '/clients',
+    icon: 'Users',
+    description: 'Client roster, MSAs, SOWs, change orders',
+    keywords: ['clients', 'msa', 'sow', 'change order', 'commercial'],
+  },
+  {
+    id: 'master-jobs',
+    label: 'Master Jobs',
+    href: '/master-jobs',
+    icon: 'FolderKanban',
+    description: 'Campaign-level engagements with IWO issuance',
+    keywords: ['master job', 'campaign', 'iwo', 'engagement'],
+  },
+  {
+    id: 'review-queue',
+    label: 'Review Queue',
+    href: '/account-mgmt/reviews',
+    icon: 'ClipboardCheck',
+    description: 'Deliverables awaiting AM sign-off',
+    keywords: ['review', 'queue', 'deliverable', 'approve'],
+  },
+  {
+    id: 'intake-queue',
+    label: 'Intake',
+    href: '/account-mgmt/intake',
+    icon: 'Inbox',
+    description: 'Direct-from-client requests to route',
+    keywords: ['intake', 'request', 'route'],
+  },
+  {
+    id: 'pricing',
+    label: 'Pricing',
+    href: '/pricing/rate-cards',
+    icon: 'Tag',
+    description: 'Rate cards and quote builder',
+    keywords: ['pricing', 'rate card', 'quote', 'price'],
+    children: [
+      { id: 'pricing-rate-cards', label: 'Rate Cards', href: '/pricing/rate-cards', icon: 'Tag' },
+      { id: 'pricing-quote-new',  label: 'New Quote',  href: '/pricing/quotes/new', icon: 'FilePlus' },
+    ],
+  },
+  {
+    id: 'billing',
+    label: 'Billing',
+    href: '/billing/client-invoices',
+    icon: 'Receipt',
+    description: 'Client invoices, intercompany billing, GL adapter status',
+    keywords: ['billing', 'invoice', 'gl', 'intercompany'],
+    children: [
+      { id: 'billing-client',       label: 'Client Invoices',   href: '/billing/client-invoices', icon: 'Receipt' },
+      { id: 'billing-intercompany', label: 'Intercompany',       href: '/billing/intercompany',    icon: 'ArrowLeftRight' },
+      { id: 'billing-gl',           label: 'GL Adapter Status',  href: '/billing/gl-status',       icon: 'Activity' },
+    ],
+  },
+];
+
+// ============================================================================
+// SHARED UTILITY NAVIGATION (command-palette indexing only)
+// ============================================================================
+// AI Intelligence + My Tasks live in the header (AIIntelligenceMenu +
+// GlobalTaskButton); they are not in the sidebar.
+
+export const UTILITY_NAVIGATION: NavItem[] = [
+  {
+    id: 'intelligence',
+    label: 'AI Intelligence',
+    href: '/intelligence',
+    icon: 'Brain',
+    module: 'intelligence-layer',
+    description: 'Smart guidance for daily tasks & workflows',
+    keywords: ['ai', 'intelligence', 'guidance', 'tasks', 'workflows', 'smart'],
+    children: [
+      {
+        id: 'my-tasks',
+        label: 'My Tasks',
+        href: '/intelligence/inbox',
+        icon: 'ClipboardList',
+        description: 'Your assigned tasks and to-dos',
+        keywords: ['tasks', 'my tasks', 'inbox', 'todo'],
+      },
+      {
+        id: 'team-dashboard',
+        label: 'Team Dashboard',
+        href: '/intelligence/manager',
+        icon: 'Users',
+        description: 'Team workload and task overview',
+        keywords: ['team', 'dashboard', 'workload', 'manager'],
+        roles: ['manager', 'admin', 'owner', 'super_admin'],
+      },
+      {
+        id: 'intelligence-admin',
+        label: 'Admin Console',
+        href: '/intelligence/admin',
+        icon: 'Settings',
+        description: 'System configuration and monitoring',
+        keywords: ['admin', 'settings', 'configuration', 'monitoring'],
+        roles: ['admin', 'owner', 'super_admin'],
+      },
+    ],
+  },
+];
+
+// ============================================================================
+// GLOBAL NAVIGATION (sidebar — workspace section)
+// ============================================================================
+// Items shared across every subsidiary. Delivery Inbox is also surfaced
+// here so subsidiary users keep it visible when they switch sub-brands;
+// AppShell hides it for parent-org users (the SubsidiaryDeliveryGuard
+// would 403 them).
+
+export const GLOBAL_NAVIGATION: NavItem[] = [
+  {
+    id: 'delivery-inbox',
+    label: 'Delivery Inbox',
+    href: '/delivery/inbox',
+    icon: 'Inbox',
+    description: 'Internal work orders awaiting acceptance and in-flight work',
+    keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
 ];
 
@@ -351,48 +243,31 @@ export const ADMIN_NAVIGATION: NavItem[] = [
   {
     id: 'admin',
     label: 'Administration',
-    href: '/admin',
+    href: '/admin/users',
     icon: 'Settings',
     roles: ['admin', 'super_admin'],
     children: [
-      { id: 'admin-settings', label: 'Settings', href: '/admin/settings', icon: 'Settings' },
       {
         id: 'admin-access',
         label: 'Access',
         href: '/admin/users',
         icon: 'Shield',
         children: [
-          { id: 'admin-users', label: 'Users', href: '/admin/users', icon: 'Users' },
-          { id: 'admin-roles', label: 'Roles', href: '/admin/roles', icon: 'KeyRound' },
+          { id: 'admin-users', label: 'Users',     href: '/admin/users', icon: 'Users' },
+          { id: 'admin-roles', label: 'Roles',     href: '/admin/roles', icon: 'KeyRound' },
         ],
       },
-      {
-        id: 'admin-integrations',
-        label: 'Integrations',
-        href: '/admin/drive-folders',
-        icon: 'Plug',
-        children: [
-          { id: 'admin-drive-folders', label: 'Drive Folders', href: '/admin/drive-folders', icon: 'FolderOpen' },
-          { id: 'admin-shopify', label: 'Shopify Sync', href: '/admin/shopify-sync', icon: 'ShoppingBag' },
-          { id: 'admin-api-keys', label: 'API Keys', href: '/admin/api-keys', icon: 'KeyRound' },
-        ],
-      },
-      {
-        id: 'admin-reference',
-        label: 'Reference',
-        href: '/admin/design-system',
-        icon: 'BookOpen',
-        children: [
-          { id: 'admin-ds', label: 'Design System', href: '/admin/design-system', icon: 'Palette' },
-        ],
-      },
+      { id: 'admin-audit',     label: 'Audit Log',     href: '/admin/audit-log',     icon: 'FileText' },
+      { id: 'admin-design',    label: 'Design System', href: '/admin/design-system', icon: 'Palette' },
     ],
   },
 ];
 
 // ============================================================================
-// CORPORATE MODULES (Available across subsidiaries)
+// CORPORATE MODULES (header pills + cross-subsidiary services)
 // ============================================================================
+// Child hrefs aligned to the actual route surface in src/router/index.tsx
+// (Phase 3.H cleanup — broken sub-links removed).
 
 export const CORPORATE_NAVIGATION: NavItem[] = [
   {
@@ -405,11 +280,11 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
     shortcut: 'G S',
     keywords: ['strategy', 'okrs', 'kpis', 'objectives', 'goals', 'performance'],
     children: [
-      { id: 'strategy-dashboard', label: 'Executive Dashboard', href: '/strategy/dashboard', icon: 'LayoutDashboard' },
-      { id: 'strategy-plans', label: 'Strategy Plans', href: '/strategy/plans', icon: 'FileText' },
-      { id: 'strategy-okrs', label: 'OKRs', href: '/strategy/okrs', icon: 'Target' },
-      { id: 'strategy-kpis', label: 'KPIs', href: '/strategy/kpis', icon: 'BarChart3' },
-      { id: 'strategy-analytics', label: 'Analytics', href: '/strategy/analytics', icon: 'Activity' },
+      { id: 'strategy-dashboard', label: 'Executive Dashboard', href: '/strategy',          icon: 'LayoutDashboard' },
+      { id: 'strategy-overview',  label: 'Overview',            href: '/strategy/overview', icon: 'FileText' },
+      { id: 'strategy-okrs',      label: 'OKRs',                href: '/strategy/okrs',     icon: 'Target' },
+      { id: 'strategy-kpi',       label: 'KPIs',                href: '/strategy/kpi',      icon: 'BarChart3' },
+      { id: 'strategy-kpi-lib',   label: 'KPI Library',         href: '/strategy/kpi/library', icon: 'Library' },
     ],
   },
   {
@@ -422,32 +297,51 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
     shortcut: 'G H',
     keywords: ['employees', 'staff', 'payroll', 'leave', 'performance', 'reviews', 'goals'],
     children: [
-      { id: 'hr-employees', label: 'Employees', href: '/hr/employees', icon: 'Users' },
-      { id: 'hr-performance', label: 'Performance', href: '/hr/performance', icon: 'TrendingUp' },
-      { id: 'hr-leave', label: 'Leave', href: '/hr/leave', icon: 'Calendar' },
-      { id: 'hr-payroll', label: 'Payroll', href: '/hr/payroll', icon: 'DollarSign' },
-      { id: 'hr-organization', label: 'Organization', href: '/hr/organization', icon: 'Sitemap' },
+      { id: 'hr-employees',    label: 'Employees',    href: '/hr/employees',     icon: 'Users' },
+      { id: 'hr-leave',        label: 'Leave',        href: '/hr/leave',         icon: 'Calendar' },
+      { id: 'hr-payroll',      label: 'Payroll',      href: '/hr/payroll',       icon: 'DollarSign' },
+      { id: 'hr-organization', label: 'Organization', href: '/hr/org-structure', icon: 'Sitemap' },
+      { id: 'hr-performance',  label: 'Performance',  href: '/performance/goals', icon: 'TrendingUp' },
     ],
   },
   {
     id: 'finance',
     label: 'Finance',
-    href: '/finance/budgets',
+    href: '/finance',
     icon: 'DollarSign',
     module: 'finance',
     description: 'Financial management',
     shortcut: 'G F',
-    keywords: ['budgets', 'expenses', 'reports'],
+    keywords: ['finance', 'cash', 'reports', 'expenditure', 'spend plan'],
+    children: [
+      { id: 'finance-overview',      label: 'Overview',          href: '/finance/overview',         icon: 'LayoutDashboard' },
+      { id: 'finance-cash',          label: 'Cash Flow',         href: '/finance/cash',             icon: 'TrendingUp' },
+      { id: 'finance-forecast',      label: 'Cash Forecast',     href: '/finance/cash-forecast',    icon: 'LineChart' },
+      { id: 'finance-spend-plan',    label: 'Spend Plan',        href: '/finance/spend-plan',       icon: 'PiggyBank' },
+      { id: 'finance-expenditure',   label: 'Expenditure Queue', href: '/finance/expenditure-queue', icon: 'ClipboardList' },
+      { id: 'finance-cfo',           label: 'CFO Briefing',      href: '/finance/cfo-briefing',     icon: 'FileText' },
+      { id: 'finance-operations',    label: 'Operations',        href: '/finance/operations',       icon: 'Activity' },
+      { id: 'finance-reports',       label: 'Reports',           href: '/finance/reports',          icon: 'BarChart3' },
+      { id: 'finance-settings',      label: 'Settings',          href: '/finance/settings',         icon: 'Settings' },
+    ],
   },
   {
     id: 'capital',
     label: 'Capital Hub',
-    href: '/capital/dashboard',
+    href: '/capital',
     icon: 'Building2',
     module: 'capital',
     description: 'Capital planning, readiness & application tracking',
     shortcut: 'G C',
     keywords: ['capital', 'loans', 'facilities', 'readiness', 'applications'],
+    children: [
+      { id: 'capital-dashboard',    label: 'Dashboard',    href: '/capital',              icon: 'LayoutDashboard' },
+      { id: 'capital-needs',        label: 'Needs',        href: '/capital/needs',        icon: 'Target' },
+      { id: 'capital-products',     label: 'Products',     href: '/capital/products',     icon: 'Package' },
+      { id: 'capital-readiness',    label: 'Readiness',    href: '/capital/readiness',    icon: 'ClipboardCheck' },
+      { id: 'capital-applications', label: 'Applications', href: '/capital/applications', icon: 'FileText' },
+      { id: 'capital-facilities',   label: 'Facilities',   href: '/capital/facilities',   icon: 'Building2' },
+    ],
   },
   {
     id: 'compliance',
@@ -459,8 +353,8 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
     shortcut: 'G O',
     keywords: ['compliance', 'documents', 'obligations', 'regulations', 'tax', 'license'],
     children: [
-      { id: 'compliance-dashboard', label: 'Dashboard', href: '/compliance', icon: 'LayoutDashboard' },
-      { id: 'compliance-documents', label: 'Documents', href: '/compliance/documents', icon: 'FileText' },
+      { id: 'compliance-dashboard',   label: 'Dashboard',   href: '/compliance',             icon: 'LayoutDashboard' },
+      { id: 'compliance-documents',   label: 'Documents',   href: '/compliance/documents',   icon: 'FileText' },
       { id: 'compliance-obligations', label: 'Obligations', href: '/compliance/obligations', icon: 'ClipboardCheck' },
     ],
   },
@@ -473,24 +367,24 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
     description: 'Market research',
     shortcut: 'G M',
     keywords: ['competitors', 'market', 'research', 'insights'],
+    children: [
+      { id: 'market-competitors', label: 'Competitors',  href: '/market-intel/competitors', icon: 'Users' },
+      { id: 'market-news',        label: 'News Feed',    href: '/market-intel/news',        icon: 'Newspaper' },
+      { id: 'market-analysis',    label: 'Analysis',     href: '/market-intel/market',      icon: 'BarChart3' },
+      { id: 'market-insights',    label: 'Insights',     href: '/market-intel/insights',    icon: 'Lightbulb' },
+      { id: 'market-topics',      label: 'Topics',       href: '/market-intel/topics',      icon: 'Hash' },
+      { id: 'market-social',      label: 'Social',       href: '/market-intel/social',      icon: 'MessageSquare' },
+    ],
   },
 ];
 
 // ============================================================================
 // SUBSIDIARY CONFIGURATIONS
 // ============================================================================
+// All five Zeus sub-brands share AGENCY_NAVIGATION. Per-brand reordering
+// (e.g. Labyrinth → Production first, Zeus Digital → Investment first) is
+// a Phase 4.B follow-up.
 
-/**
- * Zeus Group's five operating agencies.
- *
- * Phase 1.B keeps every agency pointed at the legacy FINISHES_NAVIGATION
- * (renamed AGENCY_LEGACY_NAVIGATION via alias below) so the router still
- * resolves while we strip construction modules. Phase 1.C will introduce
- * a single shared AGENCY_NAVIGATION populated with the Campaigns / Media
- * / Production / Talent / Asset-Library entries, plus per-agency overrides
- * where each sub-brand's services differ (e.g. Labyrinth surfaces Production
- * first; Zeus Digital surfaces Influencer / Paid Media first).
- */
 export const SUBSIDIARIES: SubsidiaryConfig[] = [
   {
     id: 'zeus-the-agency',
@@ -499,7 +393,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#F5D900',
     icon: 'Sparkles',
     defaultPath: '/',
-    navigation: FINISHES_NAVIGATION,
+    navigation: AGENCY_NAVIGATION,
   },
   {
     id: 'zeus-digital',
@@ -508,7 +402,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#00C5E5',
     icon: 'Zap',
     defaultPath: '/',
-    navigation: FINISHES_NAVIGATION,
+    navigation: AGENCY_NAVIGATION,
   },
   {
     id: 'labyrinth',
@@ -517,7 +411,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#C8F0D6',
     icon: 'Music',
     defaultPath: '/',
-    navigation: FINISHES_NAVIGATION,
+    navigation: AGENCY_NAVIGATION,
   },
   {
     id: 'odd-gorilla',
@@ -526,7 +420,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#FFB0B8',
     icon: 'PawPrint',
     defaultPath: '/',
-    navigation: FINISHES_NAVIGATION,
+    navigation: AGENCY_NAVIGATION,
   },
   {
     id: 'house-of-zeus',
@@ -535,14 +429,13 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#C8FF3C',
     icon: 'Home',
     defaultPath: '/',
-    navigation: FINISHES_NAVIGATION,
+    navigation: AGENCY_NAVIGATION,
   },
 ];
 
 /**
  * Type-safe getter — `SubsidiaryConfig.id` is currently typed as `string`
  * for back-compat, but every entry is one of the canonical Zeus IDs.
- * This helper narrows the type for downstream consumers.
  */
 export function getSubsidiaryConfig(id: SubsidiaryId): SubsidiaryConfig | undefined {
   return SUBSIDIARIES.find((s) => s.id === id);
@@ -553,7 +446,7 @@ export function getSubsidiaryConfig(id: SubsidiaryId): SubsidiaryConfig | undefi
 // ============================================================================
 
 /**
- * Flatten navigation tree into a list of command items for the command palette
+ * Flatten navigation tree into a list of command items for the command palette.
  */
 export function flattenNavigation(
   items: NavItem[],
@@ -586,8 +479,8 @@ export function flattenNavigation(
  */
 export function getAllCommandItems(): CommandItem[] {
   return [
-    ...flattenNavigation(FINISHES_NAVIGATION),
-    ...flattenNavigation(ADVISORY_NAVIGATION),
+    ...flattenNavigation(AGENCY_NAVIGATION),
+    ...flattenNavigation(COMMERCIAL_NAVIGATION),
     ...flattenNavigation(CORPORATE_NAVIGATION),
     ...flattenNavigation(UTILITY_NAVIGATION),
     ...flattenNavigation(ADMIN_NAVIGATION),
@@ -599,13 +492,13 @@ export function getAllCommandItems(): CommandItem[] {
  */
 export function getSubsidiaryNavigation(subsidiaryId: string): NavItem[] {
   const subsidiary = SUBSIDIARIES.find(s => s.id === subsidiaryId);
-  return subsidiary?.navigation || FINISHES_NAVIGATION;
+  return subsidiary?.navigation || AGENCY_NAVIGATION;
 }
 
 /**
  * Filter navigation items by user's accessible modules.
- * Items without a `module` field are always shown (e.g., Suppliers).
- * Items with a `module` field are only shown if the module is in the accessible list.
+ * Items without a `module` field are always shown.
+ * Items with a `module` field are only shown if the module is accessible.
  */
 export function filterNavigationByAccess(
   items: NavItem[],
@@ -615,9 +508,7 @@ export function filterNavigationByAccess(
   if (isPrivileged) return items;
 
   return items.filter((item) => {
-    // No module restriction — always visible
     if (!item.module) return true;
-    // Check if user has access to this module
     return accessibleModuleIds.includes(item.module);
   });
 }
@@ -627,8 +518,8 @@ export function filterNavigationByAccess(
  */
 export function getActiveSection(pathname: string): string | null {
   const allItems = [
-    ...FINISHES_NAVIGATION,
-    ...ADVISORY_NAVIGATION,
+    ...AGENCY_NAVIGATION,
+    ...COMMERCIAL_NAVIGATION,
     ...CORPORATE_NAVIGATION,
   ];
 
@@ -647,3 +538,20 @@ export function getActiveSection(pathname: string): string | null {
 
   return null;
 }
+
+// ============================================================================
+// BACK-COMPAT ALIASES — deprecated; will be deleted once consumers move over.
+// ============================================================================
+
+/**
+ * @deprecated Use AGENCY_NAVIGATION. The FINISHES_NAVIGATION alias is
+ * retained for one cycle so external consumers (storybook stories,
+ * snapshot tests) don't break on rename. Slated for removal in Phase 4.B.
+ */
+export const FINISHES_NAVIGATION = AGENCY_NAVIGATION;
+
+/**
+ * @deprecated Use AGENCY_NAVIGATION. The advisory-only sidebar layout
+ * has been folded into the shared agency nav.
+ */
+export const ADVISORY_NAVIGATION = AGENCY_NAVIGATION;
