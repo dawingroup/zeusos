@@ -100,6 +100,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Without this step the Firebase Functions emulator (started below
+      # via `--only ...,functions`) fails at startup with
+      # `Cannot find module 'firebase-functions/v2/https'` because the
+      # root-level `npm ci` doesn't touch `functions/node_modules/`.
+      # Every Playwright spec that hits a callable then times out at the
+      # first `page.fill`, surfacing as a red advisory check on every PR.
+      - name: Install functions dependencies
+        run: npm ci --prefix functions
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
