@@ -8,9 +8,8 @@ import { cn } from '@/shared/lib/utils';
 import { getIconByName } from '@/shared/utils/iconMap';
 import {
   ADMIN_NAVIGATION,
-  AGENCY_NAVIGATION,
-  GLOBAL_NAVIGATION,
   UTILITY_NAVIGATION,
+  getSubsidiaryNavigation,
   type NavItem,
 } from '@/config/navigation.unified';
 import { useSidebar } from '@/integration/store';
@@ -41,10 +40,10 @@ export function UnifiedSidebar({
 
   const sections = useMemo<NavSection[]>(() => {
     const subsidiaryLabel = currentSubsidiary?.shortName ?? 'Agency';
+    const subsidiaryItems = getSubsidiaryNavigation(currentSubsidiary?.id ?? 'zeus-the-agency');
 
     return [
-      { id: 'subsidiary', label: subsidiaryLabel, items: AGENCY_NAVIGATION },
-      { id: 'workspace', label: 'Workspace', items: GLOBAL_NAVIGATION },
+      { id: 'subsidiary', label: subsidiaryLabel, items: subsidiaryItems },
       { id: 'intelligence', label: 'Intelligence', items: UTILITY_NAVIGATION },
       { id: 'admin', label: 'Admin', items: ADMIN_NAVIGATION },
     ];
