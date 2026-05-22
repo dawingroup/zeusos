@@ -48,12 +48,11 @@ const { parsePurchaseOrderPdf } = require('./src/ai/parsePurchaseOrderPdf');
 const { enhanceBOQItems } = require('./src/matflow/enhanceBOQItems');
 const { generateFormulaBreakdown } = require('./src/matflow/generateFormulaBreakdown');
 
-// Workshop Viewer AI
-const { analyzeWorkshopModel } = require('./src/workshop/analyzeWorkshopModel');
-const { recognizeCabinetParts } = require('./src/workshop/recognizeCabinetParts');
-const { generateMesh } = require('./src/workshop/generateMesh');
-const { generateParametric } = require('./src/workshop/generateParametric');
-const { uploadToTrimbleConnect, checkTrimbleUpdates, importFromTrimbleConnect, syncTrimbleConnect } = require('./src/workshop/trimbleConnect');
+// (Workshop Viewer AI — DawinOS construction-domain CFns removed in
+// Phase 1.C cleanup follow-up. The five CFns and the `workshop/` directory
+// have no callers in ZeusOS. Removed because `generateMesh` and
+// `generateParametric` referenced a deprecated `TRIPO_API_KEY` Secret
+// Manager secret that blocked `firebase deploy --only functions`.)
 
 // Material Pricing AI
 exports.priceMaterialAI = priceMaterialAI;
@@ -238,14 +237,7 @@ exports.capitalProviderResearch = capitalProviderResearch;
 exports.parsePurchaseOrderPdf = parsePurchaseOrderPdf;
 exports.enhanceBOQItems = enhanceBOQItems;
 exports.generateFormulaBreakdown = generateFormulaBreakdown;
-exports.analyzeWorkshopModel = analyzeWorkshopModel;
-exports.recognizeCabinetParts = recognizeCabinetParts;
-exports.generateMesh = generateMesh;
-exports.generateParametric = generateParametric;
-exports.uploadToTrimbleConnect = uploadToTrimbleConnect;
-exports.checkTrimbleUpdates = checkTrimbleUpdates;
-exports.importFromTrimbleConnect = importFromTrimbleConnect;
-exports.syncTrimbleConnect = syncTrimbleConnect;
+// (Workshop / Trimble CFn exports removed — see import block above.)
 exports.generateProductNames = generateProductNames;
 exports.generateProductContent = generateProductContent;
 exports.generateDiscoverabilityData = generateDiscoverabilityData;
