@@ -21,7 +21,7 @@
  * Run against the Firestore emulator: `npm run test:rules:emulated`.
  */
 
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest';
 import {
   assertFails,
   assertSucceeds,

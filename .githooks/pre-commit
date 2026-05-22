@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Block direct commits to protected branches.
+#
+# Multiple parallel Claude Code sessions have committed straight to the
+# integration branch instead of working on a feature branch + PR. This
+# hook is a hard guard against that. To bypass in genuine emergencies:
+#
+#   ALLOW_DIRECT_COMMIT=1 git commit ...
+#
+# To add or remove protected branches, edit PROTECTED_BRANCHES below.
+
+set -eu
+
+PROTECTED_BRANCHES=(
+  "main"
+  "master"
+  "phase-3e-delivery-workspace"
+)
+
+if [ "${ALLOW_DIRECT_COMMIT:-0}" = "1" ]; then
+  echo "pre-commit: ALLOW_DIRECT_COMMIT=1 set — skipping branch protection." >&2
+  exit 0
+fi
+
+# Detached HEAD has no symbolic ref — let the commit through (e.g. rebases).
+current_branch="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+if [ -z "$current_branch" ]; then
+  exit 0
+fi
+
+for protected in "${PROTECTED_BRANCHES[@]}"; do
+  if [ "$current_branch" = "$protected" ]; then
+    cat >&2 <<EOF
+
+✖ Direct commits to '${current_branch}' are blocked.
+
+  This branch is protected. Create a feature branch and open a PR instead:
+
+      git switch -c <feature-branch-name>
+      git commit ...
+      git push -u origin <feature-branch-name>
+      gh pr create
+
+  Emergency bypass (use sparingly, document why in the commit message):
+
+      ALLOW_DIRECT_COMMIT=1 git commit ...
+
+  Protected branches: ${PROTECTED_BRANCHES[*]}
+  Hook: .githooks/pre-commit
+
+EOF
+    exit 1
+  fi
+done
+
+exit 0
