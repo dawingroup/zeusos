@@ -4,6 +4,8 @@
  * Wired into `functions/index.js` so the Firebase CLI picks them up.
  * Members:
  *   - 11 IWO state-machine callables (Phase 3.B, spec §6.1).
+ *   - openMasterJobOnQuoteAccepted + signAcceptanceCriterion
+ *     (Phase 3.F Pass 2 closures, spec §6.1 + §11.10).
  *   - routeDirectClientRequest (Phase 3.E, spec §7.4 Layer 3).
  */
 
@@ -16,6 +18,8 @@ const { submitDeliverable } = require('./submitDeliverable');
 const { acceptInternal, requestRevision } = require('./acceptInternalRequestRevision');
 const { closeWorkOrder } = require('./closeWorkOrder');
 const { cancelWorkOrder } = require('./cancelWorkOrder');
+const { openMasterJobOnQuoteAccepted } = require('./openMasterJobOnQuoteAccepted');
+const { signAcceptanceCriterion } = require('./signAcceptanceCriterion');
 const { routeDirectClientRequest } = require('./routeDirectClientRequest');
 
 module.exports = {
@@ -30,5 +34,7 @@ module.exports = {
   requestRevision,
   closeWorkOrder,
   cancelWorkOrder,
+  openMasterJobOnQuoteAccepted,
+  signAcceptanceCriterion,
   routeDirectClientRequest,
 };

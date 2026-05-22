@@ -1,10 +1,42 @@
 /**
- * Inter-Company Invoice — raised automatically when an IWO closes
- * (Phase 3.B trigger, deferred). Settlement between a subsidiary and the
- * parent. Always in the subsidiary's currency; FX exposure stays with the
- * parent until the client invoice is consolidated.
+ * Inter-Company Invoice — raised automatically when an IWO closes.
+ * Settlement between a subsidiary and the parent. Always in the
+ * subsidiary's currency; FX exposure stays with the parent until the
+ * client invoice is consolidated.
  *
  * See plan §14.8 + Tech Spec §4.5.
+ *
+ * ─────────────────────────────────────────────────────────────────
+ * TYPE DUPLICATION NOTE (follow-up — coordinate before reconciling)
+ * ─────────────────────────────────────────────────────────────────
+ * There are currently THREE shapes claiming to be `InterCompanyInvoice`:
+ *
+ * 1. THIS file (Phase 3.F billing module) — rich shape with
+ *    `Money`-nested `amount`, `lines[]` array, `TaxTreatment` object,
+ *    `glPostingIds[]`, status enum incl. DRAFT/SETTLED/VOID.
+ *
+ * 2. `src/modules/intercompany/types/intercompany-invoice.types.ts`
+ *    (Phase 3.A.5 bounded-context skeleton) — flatter shape with
+ *    `amountMinor`/`currency` split, no lines array, simpler status
+ *    enum (RAISED/POSTED/PAID), `taxTreatment?: string`.
+ *
+ * 3. `functions/src/assignment/services/intercompany.admin.js`
+ *    (Phase 3.B writer) — the **on-the-wire shape** actually written
+ *    to Firestore on IWO close. Mostly compatible with THIS file:
+ *    `amount: { amountMinor, currency }`, `lines[]`, `postedToGL:false`,
+ *    `status: 'RAISED'`. Differs in `taxTreatment: { kind: 'PENDING',
+ *    source: 'phase-3b-deferred' }` and adds `isPartial: boolean` for
+ *    §11.5 partial-cancel settlement.
+ *
+ * Reconciliation should be done in one PR by whoever owns the
+ * post-3.D cleanup sweep. The bias should be toward THIS shape (3.F)
+ * because the billing UI + GL-adapter trigger already consume it and
+ * 3.B's writer is mostly aligned. The 3.A.5 module type can be
+ * narrowed to re-export from here (or dropped if no consumer exists).
+ *
+ * Until then: producers should write the 3.B on-the-wire shape;
+ * consumers should be lenient about `taxTreatment` (accept both
+ * object and `{kind:'PENDING'}`).
  */
 
 import type { Timestamp } from 'firebase/firestore';
