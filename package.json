@@ -31,6 +31,8 @@
     "test:po": "vitest run --config vitest.config.po.ts",
     "test:po:watch": "vitest --config vitest.config.po.ts",
     "test:po:coverage": "vitest run --coverage --config vitest.config.po.ts",
+    "test:rules": "vitest run --config vitest.rules.config.ts",
+    "test:rules:emulated": "bash scripts/firebase-safe.sh emulators:exec --only firestore 'npm run test:rules'",
     "emulators": "bash scripts/firebase-safe.sh emulators:start",
     "emulators:test": "bash scripts/firebase-safe.sh emulators:exec --only firestore,auth 'npm run test:integration'"
   },
@@ -90,6 +92,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.1",
     "@playwright/test": "^1.40.0",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",

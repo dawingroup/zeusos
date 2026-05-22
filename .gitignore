@@ -51,6 +51,15 @@ functions/.env.*
 .firebase/
 .tmp-firebase-config/
 firebase-debug.log
+firestore-debug.log
+ui-debug.log
+pubsub-debug.log
+firestore-export-metadata.json
+
+# Playwright / e2e artefacts
+e2e/reports/
+playwright-report/
+test-results/
 # Local copy of legacy Cloud Runtime Config — may contain plaintext secrets
 .runtimeconfig.json
 **/.runtimeconfig.json
