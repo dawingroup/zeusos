@@ -310,14 +310,9 @@ async function main() {
     console.log(`  ✓ fixture ${collection}/${id}`);
   }
 
-  // Intentionally do NOT log the password value — CodeQL flags it as
-  // a clear-text-logging sink for sensitive data. The default value is
-  // documented at the top of this file (line 31) and in CLAUDE.md;
-  // override via the E2E_USER_PASSWORD env var.
-  const passwordSource = process.env.E2E_USER_PASSWORD
-    ? 'from $E2E_USER_PASSWORD'
-    : 'seed default (see file header)';
-  console.log(`\n  Done. Test password source: ${passwordSource}\n`);
+  // Default password is documented in the file header (line 31).
+  // Override via E2E_USER_PASSWORD env var. Not logged here — see header.
+  console.log(`\n  Done. ${USERS.length} users + ${FIRESTORE_FIXTURES.length} fixtures seeded.\n`);
 }
 
 main().catch((err) => {
