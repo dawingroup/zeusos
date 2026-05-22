@@ -4780,6 +4780,21 @@ exports.openMasterJobOnQuoteAccepted = assignment.openMasterJobOnQuoteAccepted;
 exports.signAcceptanceCriterion = assignment.signAcceptanceCriterion;
 
 // ============================================================
+// Phase 4.1 — Procurement / Finance handshake (plan §15)
+// ============================================================
+// Three outbox consumers that close the Phase 4 acceptance gate
+// "supplier invoice triggers PO + journal entry". Currently
+// scaffolded — bodies are documented TODOs, but the triggers are
+// real so events aren't silently dropped. See
+// docs/PHASE_4_1_HANDSHAKE.md for the implementation contract.
+const { onTalentInvoiceApproved } = require('./src/talent/onTalentInvoiceApproved');
+const { onMediaSupplierInvoicePaid } = require('./src/media/onMediaSupplierInvoicePaid');
+const { postJournalEntryOnInvoicePaid } = require('./src/finance/postJournalEntryOnInvoicePaid');
+exports.onTalentInvoiceApproved = onTalentInvoiceApproved;
+exports.onMediaSupplierInvoicePaid = onMediaSupplierInvoicePaid;
+exports.postJournalEntryOnInvoicePaid = postJournalEntryOnInvoicePaid;
+
+// ============================================================
 // Billing — Phase 3.F (client invoices + GL adapter)
 // ============================================================
 // AM-driven client-invoice lifecycle (generate → issue → record

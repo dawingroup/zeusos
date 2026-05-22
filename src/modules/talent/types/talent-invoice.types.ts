@@ -23,6 +23,8 @@ export interface TalentInvoice {
   talentProfileId: string;
   contractId?: string;
   masterJobId?: string;
+  /** Parent org id (for scoping and audit). */
+  orgId: string;
   amountMinor: number;
   currency: string;
   /** Storage reference to the invoice document. */
