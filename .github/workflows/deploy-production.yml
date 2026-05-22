@@ -20,7 +20,7 @@ concurrency:
 
 env:
   NODE_VERSION: '20'
-  FIREBASE_PROJECT: dawinos
+  FIREBASE_PROJECT: zeusos
 
 permissions:
   contents: read
@@ -82,7 +82,7 @@ jobs:
     needs: build-and-test
     environment:
       name: production
-      url: https://dawinos.web.app
+      url: https://os.zeustheagency.com
 
     steps:
       - name: Checkout repository
@@ -143,7 +143,7 @@ jobs:
       - name: Health check
         run: |
           for i in {1..10}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" https://dawinos.web.app)
+            response=$(curl -s -o /dev/null -w "%{http_code}" https://os.zeustheagency.com)
             if [ "$response" = "200" ]; then
               echo "Health check passed"
               exit 0
@@ -156,4 +156,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -s https://dawinos.web.app | grep -q "DawinOS" || echo "Smoke test warning"
+          curl -s https://os.zeustheagency.com | grep -q "ZeusOS" || echo "Smoke test warning"
