@@ -3,11 +3,19 @@
 // DawinOS v2.0 - Testing Strategy
 // Complete payroll processing workflow E2E test
 // ============================================================================
+//
+// TODO(Phase 3.I / HR module backfill): This spec was inherited from DawinOS
+// and uses the stale `finance@dawinos.test` credential + DawinOS-specific
+// testids (nav-payroll, period-selector, payroll-summary, …). None of those
+// users or testids exist in the ZeusOS surface today. Skipped to keep CI
+// signal clean — sibling `employee-onboarding.spec.ts` was already skipped
+// for the same reason. Tracked in Phase 3.I UI testid backfill work.
+// ============================================================================
 
 import { test, expect } from '@playwright/test';
 import { TEST_TIMEOUTS } from '../../fixtures/timeouts';
 
-test.describe('Payroll Processing Workflow', () => {
+test.describe.skip('Payroll Processing Workflow', () => {
   test.beforeEach(async ({ page }) => {
     // Login as Finance Manager
     await page.goto('/login');
