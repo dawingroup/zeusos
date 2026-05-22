@@ -105,7 +105,6 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
   {
-<<<<<<< HEAD
     id: 'media',
     label: 'Media Plans',
     href: '/media',
@@ -133,13 +132,7 @@ export const AGENCY_NAVIGATION: NavItem[] = [
       { id: 'talent-invoices',  label: 'Invoices',  href: '/talent/invoices', icon: 'FileText' },
     ],
   },
-  // NOTE: The DawinOS "Investment Pipeline" entry (/advisory/investment) was
-  // removed here — ZeusOS is a marketing consortium, not an advisory/VC
-  // firm. The underlying src/subsidiaries/advisory/ module is slated for
-  // full removal in a Phase 1.D-style cleanup PR.
   {
-=======
->>>>>>> dd91698 (chore(advisory): remove advisory subsidiary module)
     id: 'ai-assistant',
     label: 'AI Assistant',
     href: '/ai-assistant',
