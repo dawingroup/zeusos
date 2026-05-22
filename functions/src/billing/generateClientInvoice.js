@@ -19,6 +19,59 @@ const { readIdempotentResponse, storeIdempotentResponse } = require('./lib/idemp
 
 const ISSUER_ORG_ID = 'zeus-group';
 
+// Seed FX cross-rates (vs UGX). Mirrors EXCHANGE_RATES_TO_UGX in
+// src/modules/finance/constants/currency.constants.ts. Used when the
+// fx_rates/{date} snapshot is missing — Phase 5 wires the daily writer.
+const SEED_FX_TO_UGX = {
+  UGX: 1,
+  USD: 3700,
+  EUR: 4000,
+  GBP: 4600,
+  AED: 1000,
+  KES: 29,
+  ZAR: 205,
+};
+
+/**
+ * Resolve the rate to convert `from` → `to` for a given consolidation
+ * date. Tries `fx_rates/{date}` first, falls back to seeded cross-rates
+ * via UGX. Same-currency short-circuits to 1.0.
+ *
+ * Mirrors src/modules/billing/services/fx-rate.service.ts#getEffectiveRate.
+ */
+async function resolveFxRate(db, fromCurrency, toCurrency, date) {
+  if (fromCurrency === toCurrency) return { rate: 1, source: 'manual' };
+
+  const snap = await db.doc(`fx_rates/${date}`).get();
+  if (snap.exists) {
+    const data = snap.data() || {};
+    const base = data.base;
+    const rates = data.rates || {};
+    const fromVsBase = fromCurrency === base ? 1 : rates[fromCurrency];
+    const toVsBase   = toCurrency   === base ? 1 : rates[toCurrency];
+    if (fromVsBase != null && toVsBase != null && fromVsBase !== 0) {
+      return { rate: toVsBase / fromVsBase, source: data.source || 'manual' };
+    }
+  }
+
+  // Fallback — cross via UGX.
+  const fromUgx = SEED_FX_TO_UGX[fromCurrency];
+  const toUgx   = SEED_FX_TO_UGX[toCurrency];
+  if (fromUgx == null || toUgx == null || toUgx === 0) {
+    throw new HttpsError(
+      'failed-precondition',
+      `FX rate unavailable: ${fromCurrency} → ${toCurrency} on ${date}. ` +
+        'Seed cross-rates do not cover one of these currencies. ' +
+        'Post the rate to fx_rates/{YYYY-MM-DD} or extend SEED_FX_TO_UGX.',
+    );
+  }
+  return { rate: fromUgx / toUgx, source: 'manual' };
+}
+
+function convertMinor(amountMinor, rate) {
+  return Math.round(amountMinor * rate);
+}
+
 function jurisdictionForOrg(orgId) {
   // Same mapping as src/modules/billing/services/tax-treatment.service.ts.
   // When Phase 3.A.5 ships `organizations.{base_country}`, this gets
@@ -110,6 +163,42 @@ exports.generateClientInvoice = onCall(
       return { ...d, fromJurisdiction: j, toJurisdiction: j };
     })();
 
+    // Multi-currency consolidation per spec §11.6: each line is in the
+    // source subsidiary's currency; we convert ONCE here at the
+    // consolidation date so the client invoice is monolingually in
+    // `quote.currency`. FX exposure between IC settlement and client
+    // payment sits with the parent. Rates captured in fxConsolidation
+    // for audit.
+    const clientCurrency = quote.currency;
+    const usedRates = {};
+    const convertedLines = [];
+    let fxSource = 'manual';
+    for (const l of quoteLines) {
+      const lineCurrency = l.currency || clientCurrency;
+      let convertedMinor = l.clientMinor || 0;
+      let rate = 1;
+      if (lineCurrency !== clientCurrency) {
+        const { rate: r, source } = await resolveFxRate(db, lineCurrency, clientCurrency, consolidationDate);
+        rate = r;
+        convertedMinor = convertMinor(l.clientMinor || 0, r);
+        fxSource = source;
+      }
+      usedRates[lineCurrency] = rate;
+      convertedLines.push({
+        id: l.id,
+        quoteLineId: l.id,
+        description: clientFriendlyDescription(l.description),
+        amountMinor: convertedMinor,
+        // Internal-only — must NEVER reach client-facing surfaces.
+        // Stripped by toClientFacingInvoice() in the client bundle.
+        costMinor: l.costMinor || 0,
+        sourceSubsidiaryId: l.subsidiaryOrgId,
+        // Audit trail of the original pre-conversion amount.
+        sourceAmountMinor: l.clientMinor || 0,
+        sourceCurrency: lineCurrency,
+      });
+    }
+
     const response = await db.runTransaction(async (tx) => {
       const guardSnap = await tx.get(guardRef);
       if (guardSnap.exists) {
@@ -124,29 +213,20 @@ exports.generateClientInvoice = onCall(
         }
       }
 
-      const totalMinor = quoteLines.reduce((s, l) => s + (l.clientMinor || 0), 0);
+      const totalMinor = convertedLines.reduce((s, l) => s + (l.amountMinor || 0), 0);
 
       const invoiceRef = db.collection('client_invoices').doc();
       const invoice = {
         clientId: quote.clientId,
         masterJobId,
         issuerOrgId: ISSUER_ORG_ID,
-        total: { amountMinor: totalMinor, currency: quote.currency },
-        lines: quoteLines.map(l => ({
-          id: l.id,
-          quoteLineId: l.id,
-          description: clientFriendlyDescription(l.description),
-          amountMinor: l.clientMinor || 0,
-          // Internal-only — must NEVER reach client-facing surfaces.
-          // Stripped by toClientFacingInvoice() in the client bundle.
-          costMinor: l.costMinor || 0,
-          sourceSubsidiaryId: l.subsidiaryOrgId,
-        })),
+        total: { amountMinor: totalMinor, currency: clientCurrency },
+        lines: convertedLines,
         taxTreatment,
         fxConsolidation: {
           effectiveDate: consolidationDate,
-          rates: { [quote.currency]: 1 },
-          source: 'manual',
+          rates: usedRates,
+          source: fxSource,
         },
         status: 'DRAFT',
         paidMinor: 0,

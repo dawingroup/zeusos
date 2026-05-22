@@ -1,50 +1,46 @@
 /**
  * Commercial-scope guard for billing endpoints — layer 2 of spec §7.4.
  *
- * Same shape as functions/src/pricing/lib/auth.js#assertPricingAdmin
- * but the scope label is BILLING_ADMIN. Today's check approximates
- * "home_org_kind === 'PARENT'" via globalRole admin/owner + parent-org
- * membership. When Phase 3.A.5 lands, replace with the canonical check.
+ * Delegates the org-kind + super-user check to the canonical
+ * `assertParentOrgPrincipal` (Phase 3.B/3.D in
+ * `functions/src/assignment/lib/auth.js`) so all three commercial
+ * surfaces — Account-Management, Pricing, Billing — share one
+ * implementation. Adds the BILLING_ADMIN-specific requirement that
+ * the caller's globalRole must be admin or owner on top of being a
+ * parent-org principal.
+ *
+ * Super-users are admitted by `assertParentOrgPrincipal` regardless
+ * of globalRole; that path bypasses the extra admin/owner check
+ * which is the desired behaviour (Daniel needs to unstick flows).
  */
 
 const { HttpsError } = require('firebase-functions/v2/https');
-const { getFirestore } = require('firebase-admin/firestore');
+const { assertParentOrgPrincipal, PARENT_ORG_ID } = require('../../assignment/lib/auth');
 
-const PARENT_ORG_ID = 'zeus-group';
-const SUPERS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
+const SUPER_EMAILS = new Set([
+  'onzimai@zeusgroup.co.ug',
+  'onzimai@dawin.group',
+  'admin@zeusgroup.co.ug',
+]);
 
 async function assertBillingAdmin(auth) {
-  if (!auth || !auth.uid) {
-    throw new HttpsError('unauthenticated', 'Authentication required.');
+  const { uid, user } = await assertParentOrgPrincipal(auth);
+
+  // Super-users skip the extra admin/owner requirement.
+  const isSuperUser =
+    !!(auth.token && auth.token.email && SUPER_EMAILS.has(auth.token.email)) ||
+    user.globalRole === 'owner';
+  if (isSuperUser) {
+    return { uid, user, isSuperUser: true };
   }
-  const db = getFirestore();
-  let userDoc = await db.doc(`organizations/default/users/${auth.uid}`).get();
-  if (!userDoc.exists) {
-    userDoc = await db.doc(`users/${auth.uid}`).get();
-  }
-  if (!userDoc.exists) {
-    throw new HttpsError('permission-denied', 'Caller has no user profile.');
-  }
-  const u = userDoc.data() || {};
-  if (auth.token && auth.token.email && SUPERS.includes(auth.token.email)) {
-    return { user: u, isSuperUser: true };
-  }
-  const role = u.globalRole;
-  if (!role || !['admin', 'owner'].includes(role)) {
+
+  if (!['admin', 'owner'].includes(user.globalRole)) {
     throw new HttpsError(
       'permission-denied',
-      'BILLING_ADMIN requires globalRole admin/owner.',
+      'BILLING_ADMIN requires globalRole admin/owner on top of parent-org membership.',
     );
   }
-  const hasParent = Array.isArray(u.subsidiaryAccess)
-    && u.subsidiaryAccess.some(s => s && s.subsidiaryId === PARENT_ORG_ID && s.hasAccess);
-  if (!hasParent) {
-    throw new HttpsError(
-      'permission-denied',
-      'BILLING_ADMIN requires parent-org membership (subsidiary principals rejected per spec §7.4).',
-    );
-  }
-  return { user: u, isSuperUser: false };
+  return { uid, user, isSuperUser: false };
 }
 
 module.exports = { assertBillingAdmin, PARENT_ORG_ID };
