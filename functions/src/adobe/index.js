@@ -26,13 +26,6 @@ const {
   adobeCompressPdfV2,
 } = require('./pdf-services-v2');
 
-// PDF Services Functions (Gen 1 - for CORS compatibility with org policy)
-const {
-  adobeCreatePdfGen1,
-  adobeExtractPdfGen1,
-  adobeCompressPdfGen1,
-} = require('./pdf-services-gen1');
-
 // Token Service utilities (for internal use)
 const {
   getAccessToken,
@@ -57,11 +50,6 @@ module.exports = {
   adobeCreatePdfV2,
   adobeExtractPdfV2,
   adobeCompressPdfV2,
-
-  // PDF Services (Gen 1 - for CORS compatibility)
-  adobeCreatePdfGen1,
-  adobeExtractPdfGen1,
-  adobeCompressPdfGen1,
 
   // Utilities (for future phases)
   _internal: {

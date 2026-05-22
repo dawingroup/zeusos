@@ -38,18 +38,6 @@ function getAdobeSecrets() {
 }
 
 /**
- * Get the required secrets for Adobe operations (Gen 1 - string names)
- * Used with functions.runWith({ secrets: [...] })
- */
-function getAdobeSecretsV1() {
-  return [
-    'ADOBE_CLIENT_ID',
-    'ADOBE_CLIENT_SECRET',
-    'ADOBE_ORG_ID',
-  ];
-}
-
-/**
  * Get OAuth access token from Adobe IMS
  *
  * @returns {Promise<{accessToken: string, expiresIn: number}>}
@@ -187,5 +175,4 @@ module.exports = {
   isAdobeConfigured,
   getAdobeConfig,
   getAdobeSecrets,
-  getAdobeSecretsV1,
 };
