@@ -4495,5 +4495,40 @@ service cloud.firestore {
       allow update: if isParentOrgPrincipal();
       allow delete: if false; // Invoices are immutable once submitted.
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 P1 — Asset Library
+    //
+    // asset_library_items/{itemId}
+    //   read:           all staff
+    //   create/update:  all staff
+    //   delete:         admin only
+    //
+    //   versions/{versionId}   — version history (append-only by convention;
+    //                            update allowed for changeNotes only).
+    //   usages/{usageId}       — back-references to where the asset is used.
+    //
+    // asset_library_collections/{collectionId}
+    //   read:           all staff
+    //   create/update:  all staff
+    //   delete:         admin only
+    //
+    // Asset Library is internal-facing only. Approval flow lives in
+    // Talent/Billing; here it's a read-mostly catalog. Any staff member
+    // in any sub-brand can browse and contribute.
+    // ════════════════════════════════════════════════════════════════
+
+    match /asset_library_items/{itemId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isStaffAuth();
+      allow delete: if isAdmin();
+      match /versions/{versionId}      { allow read: if isStaffAuth(); allow create, update: if isStaffAuth(); allow delete: if isAdmin(); }
+      match /usages/{usageId}          { allow read: if isStaffAuth(); allow create, update, delete: if isStaffAuth(); }
+    }
+    match /asset_library_collections/{collectionId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isStaffAuth();
+      allow delete: if isAdmin();
+    }
   }
 }
