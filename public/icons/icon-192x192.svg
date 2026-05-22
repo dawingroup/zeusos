@@ -1,17 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
   <defs>
-    <linearGradient id="dawinGradient192" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#872E5C;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#E18425;stop-opacity:1" />
+    <linearGradient id="zeusGradient192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#F5D900;stop-opacity:1" />
+      <stop offset="55%"  style="stop-color:#E63946;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00C5E5;stop-opacity:1" />
     </linearGradient>
   </defs>
 
-  <!-- Rounded square background with gradient -->
-  <rect x="4" y="4" width="184" height="184" rx="38" fill="url(#dawinGradient192)" />
+  <!-- Rounded square background — Zeus Group sub-brand gradient -->
+  <rect x="4" y="4" width="184" height="184" rx="38" fill="url(#zeusGradient192)" />
 
-  <!-- Letter D -->
-  <path d="M 38 48 L 38 144 L 80 144 C 106 144 119 131 119 96 C 119 61 106 48 80 48 Z M 58 67 L 76 67 C 92 67 100 77 100 96 C 100 115 92 125 76 125 L 58 125 Z" fill="white" />
-
-  <!-- Letter G -->
-  <path d="M 130 77 C 138 69 146 65 154 65 C 162 65 169 69 173 77 L 163 84 C 161 81 158 77 154 77 C 146 77 140 83 140 96 C 140 109 146 115 154 115 C 158 115 161 113 163 109 L 163 100 L 154 100 L 154 90 L 173 90 L 173 115 C 169 121 162 127 154 127 C 138 127 128 117 128 96 C 128 75 138 65 154 65 Z" fill="white" />
+  <!-- Bold "Z" mark — placeholder for Zeus's polygonal Z -->
+  <path d="M 42 54 L 150 54 L 150 73 L 77 123 L 150 123 L 150 142 L 42 142 L 42 123 L 115 73 L 42 73 Z" fill="white" />
 </svg>

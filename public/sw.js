@@ -1,5 +1,5 @@
 /**
- * Service Worker for DawinOS MatFlow PWA
+ * Service Worker for ZeusOS PWA
  * Handles offline caching, background sync, and push notifications
  */
 
@@ -25,9 +25,9 @@
 // not a function` whenever a project's date field was present but not a
 // Firestore Timestamp. v81 ships the fix (utils/dates.ts `tsToDate`)
 // alongside this cache bump so returning users dump the broken bundle.
-const CACHE_NAME = 'matflow-v81';
-const STATIC_CACHE = 'matflow-static-v81';
-const DYNAMIC_CACHE = 'matflow-dynamic-v81';
+const CACHE_NAME = 'zeusos-v1';
+const STATIC_CACHE = 'zeusos-static-v1';
+const DYNAMIC_CACHE = 'zeusos-dynamic-v1';
 
 // Static assets to cache on install
 const STATIC_ASSETS = [
@@ -288,11 +288,11 @@ self.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
   
   let data = {
-    title: 'MatFlow Update',
+    title: 'ZeusOS Update',
     body: 'You have a new notification',
     icon: '/icons/icon-192x192.png',
     badge: '/icons/badge-72x72.png',
-    tag: 'matflow-notification',
+    tag: 'zeusos-notification',
     data: {},
   };
   
@@ -336,13 +336,13 @@ self.addEventListener('notificationclick', (event) => {
   // Handle different notification types
   switch (data.type) {
     case 'delivery':
-      targetUrl = `/advisory/matflow/projects/${data.projectId}/deliveries/${data.deliveryId}`;
+      targetUrl = `/campaigns/${data.projectId}/deliveries/${data.deliveryId}`;
       break;
     case 'procurement':
-      targetUrl = `/advisory/matflow/projects/${data.projectId}/procurement`;
+      targetUrl = `/campaigns/${data.projectId}`;
       break;
     case 'sync':
-      targetUrl = `/advisory/matflow/projects/${data.projectId}`;
+      targetUrl = `/campaigns/${data.projectId}`;
       break;
     default:
       targetUrl = data.url || '/';
@@ -388,11 +388,11 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync:', event.tag);
   
-  if (event.tag === 'matflow-sync') {
+  if (event.tag === 'zeusos-sync') {
     event.waitUntil(syncOfflineData());
   }
   
-  if (event.tag === 'matflow-delivery-sync') {
+  if (event.tag === 'zeusos-delivery-sync') {
     event.waitUntil(syncDeliveries());
   }
 });
