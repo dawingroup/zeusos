@@ -5045,3 +5045,26 @@ exports.voidQuote = voidQuote;
 exports.createRateCardVersion = createRateCardVersion;
 exports.activateRateCard = activateRateCard;
 exports.retireRateCard = retireRateCard;
+
+// ============================================================
+// Assignment & Handoff — Phase 3.B (IWO state machine)
+// ============================================================
+// Spec §6 (state machine) + §7 (handoff engine) + §9.1-9.3 (API).
+// Cross-cutting infra: `src/platform/idempotency.js`, `src/platform/outbox.js`.
+const assignment = require('./src/assignment');
+exports.issueWorkOrder = assignment.issueWorkOrder;
+exports.acceptWorkOrder = assignment.acceptWorkOrder;
+exports.rejectWorkOrder = assignment.rejectWorkOrder;
+exports.startWorkOrder = assignment.startWorkOrder;
+exports.postTimeEntry = assignment.postTimeEntry;
+exports.postCostEntry = assignment.postCostEntry;
+exports.submitDeliverable = assignment.submitDeliverable;
+exports.acceptInternal = assignment.acceptInternal;
+exports.requestRevision = assignment.requestRevision;
+exports.closeWorkOrder = assignment.closeWorkOrder;
+exports.cancelWorkOrder = assignment.cancelWorkOrder;
+
+// Domain-event outbox consumer (logs + marks processed; richer
+// consumers wired in Phase 3.D/3.F).
+const { onDomainEventCreated } = require('./src/platform/outbox');
+exports.onDomainEventCreated = onDomainEventCreated;

@@ -1,0 +1,114 @@
+/**
+ * Domain-event transactional outbox — spec §10 / §14.9.
+ *
+ * Every commercial / financial state change writes its event to
+ * `domain_events/{eventId}` inside the same Firestore transaction as
+ * the state mutation. A downstream Firestore `onDocumentCreated`
+ * trigger (`onDomainEventCreated` in this module) reads new rows
+ * asynchronously and dispatches to consumers (billing, notifications,
+ * reporting). For Phase 3.B the consumer just logs + marks `processed`.
+ *
+ * Event id is a ULID so events sort by emission time across shards.
+ */
+
+const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const { ulid } = require('./ulid');
+
+const DOMAIN_EVENTS_COLLECTION = 'domain_events';
+
+/**
+ * The 12 canonical event types (spec §10). Validation happens here so a
+ * typo can't slip through.
+ */
+const DOMAIN_EVENT_TYPES = new Set([
+  'SowActivated',
+  'QuoteAccepted',
+  'MasterJobOpened',
+  'IWOIssued',
+  'IWOAccepted',
+  'IWORejected',
+  'BudgetThresholdCrossed',
+  'DeliverableSubmitted',
+  'IWOClosed',
+  'InterCompanyInvoiceRaised',
+  'ClientInvoiceIssued',
+  'DirectClientRequestRouted',
+]);
+
+/**
+ * Append one event to the outbox inside an existing transaction.
+ *
+ * @param {{ tx: FirebaseFirestore.Transaction, db: FirebaseFirestore.Firestore,
+ *           eventType: string,
+ *           aggregateType: 'MSA'|'SOW'|'Quote'|'MasterJob'|'IWO'|'ClientInvoice'|'InterCompanyInvoice',
+ *           aggregateId: string,
+ *           payload: object,
+ *           emittedByUserId?: string,
+ *           idempotencyKey?: string }} args
+ * @returns {{ id: string }}
+ */
+function appendDomainEvent(args) {
+  const {
+    tx, db,
+    eventType, aggregateType, aggregateId, payload,
+    emittedByUserId, idempotencyKey,
+  } = args;
+
+  if (!DOMAIN_EVENT_TYPES.has(eventType)) {
+    throw new Error(`Unknown domain event type: ${eventType}`);
+  }
+  if (!aggregateType) throw new Error('appendDomainEvent: aggregateType required.');
+  if (!aggregateId) throw new Error('appendDomainEvent: aggregateId required.');
+
+  const eventId = ulid();
+  const ref = db.collection(DOMAIN_EVENTS_COLLECTION).doc(eventId);
+  tx.set(ref, {
+    id: eventId,
+    eventType,
+    ulid: eventId,
+    aggregateType,
+    aggregateId,
+    payload,
+    emittedByUserId: emittedByUserId || 'system',
+    emittedAt: FieldValue.serverTimestamp(),
+    ...(idempotencyKey ? { idempotencyKey } : {}),
+    processed: false,
+    processedBy: [],
+  });
+  return { id: eventId };
+}
+
+/**
+ * Async consumer — for Phase 3.B we just log + mark processed.
+ * Subsequent phases (3.D notifications, 3.F billing run) add their own
+ * consumers that also tag `processedBy` to make at-least-once dispatch
+ * deterministic.
+ */
+const onDomainEventCreated = onDocumentCreated(
+  {
+    document: `${DOMAIN_EVENTS_COLLECTION}/{eventId}`,
+    region: 'europe-west1',
+  },
+  async (event) => {
+    const data = event.data && event.data.data();
+    if (!data) return;
+    // eslint-disable-next-line no-console
+    console.log(
+      `[domain-events] ${data.eventType} aggregate=${data.aggregateType}:${data.aggregateId} id=${event.params.eventId}`,
+    );
+    const db = getFirestore();
+    await db.collection(DOMAIN_EVENTS_COLLECTION).doc(event.params.eventId).update({
+      processed: true,
+      processedAt: FieldValue.serverTimestamp(),
+      processedBy: FieldValue.arrayUnion('phase-3b-stub'),
+    });
+  },
+);
+
+module.exports = {
+  appendDomainEvent,
+  onDomainEventCreated,
+  DOMAIN_EVENTS_COLLECTION,
+  DOMAIN_EVENT_TYPES,
+};
