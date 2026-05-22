@@ -113,19 +113,10 @@ export const AGENCY_NAVIGATION: NavItem[] = [
       { id: 'talent-invoices',  label: 'Invoices',  href: '/talent/invoices', icon: 'FileText' },
     ],
   },
-  {
-    id: 'investment',
-    label: 'Investment Pipeline',
-    href: '/advisory/investment',
-    icon: 'Briefcase',
-    description: 'Deal pipeline & portfolio (Zeus Digital advisory subsidiary)',
-    keywords: ['deals', 'pipeline', 'portfolio', 'investment'],
-    children: [
-      { id: 'investment-pipeline', label: 'Pipeline',  href: '/advisory/investment/pipeline', icon: 'Kanban' },
-      { id: 'investment-deals',    label: 'Deals',     href: '/advisory/investment/deals',    icon: 'Handshake' },
-      { id: 'investment-reports',  label: 'Reports',   href: '/advisory/investment/reports',  icon: 'BarChart3' },
-    ],
-  },
+  // NOTE: The DawinOS "Investment Pipeline" entry (/advisory/investment) was
+  // removed here — ZeusOS is a marketing consortium, not an advisory/VC
+  // firm. The underlying src/subsidiaries/advisory/ module is slated for
+  // full removal in a Phase 1.D-style cleanup PR.
   {
     id: 'ai-assistant',
     label: 'AI Assistant',
@@ -422,7 +413,7 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
 //
 // Mapping per the sub-brand mandate:
 //   • Zeus The Agency   — full-service. Default order (Engagements first).
-//   • Zeus Digital      — digital + advisory. Investment › Engagements › Media.
+//   • Zeus Digital      — digital-first. Media › Engagements.
 //   • Labyrinth A&V     — production house. Production › Media › Engagements.
 //   • Odd Gorilla       — creative shop. Engagements › Talent › Production.
 //   • House of Zeus     — strategy + house ops. Default order for now.
@@ -443,7 +434,7 @@ function reorderByIds(items: NavItem[], priorityIds: string[]): NavItem[] {
 }
 
 export const ZEUS_AGENCY_NAVIGATION: NavItem[]   = AGENCY_NAVIGATION;
-export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['investment', 'engagements', 'media']);
+export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['media', 'engagements']);
 export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'media', 'engagements']);
 export const ODD_GORILLA_NAVIGATION: NavItem[]   = reorderByIds(AGENCY_NAVIGATION, ['engagements', 'talent', 'production']);
 export const HOUSE_OF_ZEUS_NAVIGATION: NavItem[] = AGENCY_NAVIGATION;
