@@ -66,45 +66,6 @@ export interface SubsidiaryConfig {
 
 export const AGENCY_NAVIGATION: NavItem[] = [
   {
-    id: 'campaigns',
-    label: 'Media Plans',
-    href: '/media',
-    icon: 'Megaphone',
-    description: 'Media buying plans, buys, actuals, and post-campaign reports',
-    keywords: ['media', 'plan', 'buy', 'tv', 'radio', 'ooh', 'digital', 'campaign'],
-    children: [
-      { id: 'media-plans-list', label: 'All Plans', href: '/media', icon: 'List' },
-    ],
-  },
-  {
-    id: 'production',
-    label: 'Production',
-    href: '/production',
-    icon: 'Film',
-    description: 'Kanban for TVC, radio, photography, print, and exhibition production jobs',
-    keywords: ['production', 'tvc', 'shoot', 'kanban', 'producer'],
-  },
-  {
-    id: 'talent',
-    label: 'Talent Roster',
-    href: '/talent',
-    icon: 'Users',
-    description: 'Staff and freelancer profiles, contracts, and invoice queue',
-    keywords: ['talent', 'freelancer', 'staff', 'roster', 'contract', 'invoice'],
-    children: [
-      { id: 'talent-roster',   label: 'Roster',   href: '/talent',          icon: 'Users' },
-      { id: 'talent-invoices', label: 'Invoices', href: '/talent/invoices', icon: 'Receipt' },
-    ],
-  },
-  {
-    id: 'delivery-inbox',
-    label: 'Delivery Inbox',
-    href: '/delivery/inbox',
-    icon: 'Inbox',
-    description: 'Internal work orders awaiting acceptance and in-flight work',
-    keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
-  },
-  {
     id: 'media',
     label: 'Media Plans',
     href: '/media',
@@ -132,6 +93,18 @@ export const AGENCY_NAVIGATION: NavItem[] = [
       { id: 'talent-invoices',  label: 'Invoices',  href: '/talent/invoices', icon: 'FileText' },
     ],
   },
+  {
+    id: 'delivery-inbox',
+    label: 'Delivery Inbox',
+    href: '/delivery/inbox',
+    icon: 'Inbox',
+    description: 'Internal work orders awaiting acceptance and in-flight work',
+    keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
+  },
+  // NOTE: The DawinOS "Investment Pipeline" entry (/advisory/investment) was
+  // removed in Phase 1.D — ZeusOS is a marketing consortium, not an
+  // advisory/VC firm. The src/subsidiaries/advisory/ module was removed
+  // entirely in PR #20.
   {
     id: 'ai-assistant',
     label: 'AI Assistant',
