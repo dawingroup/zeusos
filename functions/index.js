@@ -55,47 +55,6 @@ const { generateMesh } = require('./src/workshop/generateMesh');
 const { generateParametric } = require('./src/workshop/generateParametric');
 const { uploadToTrimbleConnect, checkTrimbleUpdates, importFromTrimbleConnect, syncTrimbleConnect } = require('./src/workshop/trimbleConnect');
 
-// Design Studio — MDP Generator + Shortage Trigger
-const { generateMDP: generateMDPFn } = require('./src/design-studio/generateMDP');
-const { onMDPShortageDetected } = require('./src/design-studio/onMDPShortageDetected');
-exports.generateMDP = generateMDPFn;
-exports.onMDPShortageDetected = onMDPShortageDetected;
-
-// Design Studio — Validation, Enrichment, DKB
-const { validateConfiguration: validateConfigurationFn } = require('./src/design-studio/validateConfiguration');
-const { enrichTripoPrompt: enrichTripoPromptFn } = require('./src/design-studio/enrichTripoPrompt');
-const { compileDKB: compileDKBFn } = require('./src/design-studio/compileDKB');
-const { syncDKBToMemory: syncDKBToMemoryFn, syncDKBToMemoryScheduled } = require('./src/design-studio/syncDKBToMemory');
-const { onPDDStatusChange } = require('./src/design-studio/onPDDStatusChange');
-exports.validateConfiguration = validateConfigurationFn;
-exports.enrichTripoPrompt = enrichTripoPromptFn;
-exports.compileDKB = compileDKBFn;
-exports.syncDKBToMemory = syncDKBToMemoryFn;
-exports.syncDKBToMemoryScheduled = syncDKBToMemoryScheduled;
-exports.onPDDStatusChange = onPDDStatusChange;
-
-// Design Studio — Phase 2: Scene Composition & AI Grouping
-const { composeSceneGLB } = require('./src/design-studio/composeSceneGLB');
-const { extractAssembliesFromGLB } = require('./src/design-studio/extractAssembliesFromGLB');
-const { generateCabinetRender } = require('./src/design-studio/generateCabinetRender');
-const { generateProjectPDF } = require('./src/design-studio/generateProjectPDF');
-const { recomputeSceneRollup } = require('./src/design-studio/recomputeSceneRollup');
-const { validateSceneForProduction } = require('./src/design-studio/validateSceneForProduction');
-const { createMOsForScene } = require('./src/design-studio/createMOsForScene');
-const { aiGroupModel } = require('./src/design-studio/aiGroupModel');
-const { aiDetectCabinets } = require('./src/design-studio/aiDetectCabinets');
-const { aiReconcileParts } = require('./src/design-studio/aiReconcileParts');
-exports.composeSceneGLB = composeSceneGLB;
-exports.extractAssembliesFromGLB = extractAssembliesFromGLB;
-exports.generateCabinetRender = generateCabinetRender;
-exports.generateProjectPDF = generateProjectPDF;
-exports.recomputeSceneRollup = recomputeSceneRollup;
-exports.validateSceneForProduction = validateSceneForProduction;
-exports.createMOsForScene = createMOsForScene;
-exports.aiGroupModel = aiGroupModel;
-exports.aiDetectCabinets = aiDetectCabinets;
-exports.aiReconcileParts = aiReconcileParts;
-
 // Material Pricing AI
 exports.priceMaterialAI = priceMaterialAI;
 
@@ -5064,3 +5023,58 @@ exports.cancelWorkOrder = assignment.cancelWorkOrder;
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');
 exports.onDomainEventCreated = onDomainEventCreated;
+
+// ============================================================
+// Account Management — Phase 3.D (Commercial-core UI backing)
+// ============================================================
+// Contracts mutations (MSA / SOW / ChangeOrder / Client) plus the
+// `openMasterJobOnQuoteAccepted` outbox listener that lights up a
+// master_job the moment 3.C emits a `QuoteAccepted` event. All
+// callables reject SUBSIDIARY principals via `assertParentOrgPrincipal`
+// (spec §7.4 layer 2).
+const { upsertClient } = require('./src/contracts/clientAdmin');
+const { upsertMsa, activateMsa } = require('./src/contracts/msaAdmin');
+const {
+  upsertSow,
+  submitSowForApproval,
+  approveSow,
+  cancelSow,
+} = require('./src/contracts/sowAdmin');
+const {
+  upsertChangeOrder,
+  approveChangeOrder,
+  rejectChangeOrder,
+} = require('./src/contracts/changeOrderAdmin');
+exports.upsertClient = upsertClient;
+exports.upsertMsa = upsertMsa;
+exports.activateMsa = activateMsa;
+exports.upsertSow = upsertSow;
+exports.submitSowForApproval = submitSowForApproval;
+exports.approveSow = approveSow;
+exports.cancelSow = cancelSow;
+exports.upsertChangeOrder = upsertChangeOrder;
+exports.approveChangeOrder = approveChangeOrder;
+exports.rejectChangeOrder = rejectChangeOrder;
+exports.openMasterJobOnQuoteAccepted = assignment.openMasterJobOnQuoteAccepted;
+exports.signAcceptanceCriterion = assignment.signAcceptanceCriterion;
+
+// ============================================================
+// Billing — Phase 3.F (client invoices + GL adapter)
+// ============================================================
+// AM-driven client-invoice lifecycle (generate → issue → record
+// payment) plus the GL-posting consumer for the IC invoices that
+// 3.B raises on IWO close. The IC invoice itself is raised inside
+// 3.B's closeWorkOrder transaction; this module owns the cross-
+// entity GL posting that 3.B explicitly defers to "the Phase 3.F
+// billing-run consumer". QBO/Xero connectors still deferred to
+// Phase 5 — today the GL audit-trail adapter writes to gl_postings/.
+const { issueClientInvoice } = require('./src/billing/issueClientInvoice');
+const { recordClientPayment } = require('./src/billing/recordClientPayment');
+const { generateClientInvoice } = require('./src/billing/generateClientInvoice');
+const {
+  onIntercompanyInvoiceCreated,
+} = require('./src/billing/onIntercompanyInvoiceCreated');
+exports.issueClientInvoice = issueClientInvoice;
+exports.recordClientPayment = recordClientPayment;
+exports.generateClientInvoice = generateClientInvoice;
+exports.onIntercompanyInvoiceCreated = onIntercompanyInvoiceCreated;

@@ -4309,5 +4309,47 @@ service cloud.firestore {
     match /idempotency_keys/{key} {
       allow read, write: if false;
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Billing — Phase 3.F GL adapter + FX rate collections
+    // ════════════════════════════════════════════════════════════════
+    // Complements the 3.A.5 rules above (intercompany_invoices,
+    // client_invoices, client_invoice_lines, domain_events). The GL
+    // posting + connection + FX-rate collections sit one level deeper
+    // — they're how billing actually moves money against entity books.
+
+    // gl_postings — audit-trail of every GL post regardless of adapter.
+    // Written only by Cloud Functions (Admin SDK). Subsidiaries see only
+    // postings on their own books; parent sees everything. The cost
+    // memo on each line is internal — Phase 5 may field-guard further
+    // once we know which CoA codes carry transfer-price detail.
+    match /gl_postings/{postingId} {
+      allow read: if isParentOrgPrincipal()
+        || (
+          isSubsidiaryOrgPrincipal()
+          && resource.data.entityOrgId == callerHomeOrgId()
+        );
+      allow write: if false;
+    }
+
+    // gl_connections — adapter config (QBO realmId, OAuth tokens,
+    // status). NEVER readable from the client SDK — the tokens are
+    // sensitive. Cloud Functions read via Admin SDK. The GL Adapter
+    // Status page reads health via the resolveAdapter().status() path
+    // which returns a sanitised summary, not the raw config doc.
+    match /gl_connections/{orgId} {
+      allow read, write: if false;
+    }
+
+    // fx_rates — daily snapshot collection keyed by ISO date. The
+    // billing FX service falls back to the seeded EXCHANGE_RATES_TO_UGX
+    // when a snapshot is missing, so this collection is optional today.
+    // Phase 5 wires a scheduled writer; until then only an admin may
+    // manually post a corrected day.
+    match /fx_rates/{date} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
   }
 }

@@ -14,6 +14,8 @@ const { submitDeliverable } = require('./submitDeliverable');
 const { acceptInternal, requestRevision } = require('./acceptInternalRequestRevision');
 const { closeWorkOrder } = require('./closeWorkOrder');
 const { cancelWorkOrder } = require('./cancelWorkOrder');
+const { openMasterJobOnQuoteAccepted } = require('./openMasterJobOnQuoteAccepted');
+const { signAcceptanceCriterion } = require('./signAcceptanceCriterion');
 
 module.exports = {
   issueWorkOrder,
@@ -27,4 +29,6 @@ module.exports = {
   requestRevision,
   closeWorkOrder,
   cancelWorkOrder,
+  openMasterJobOnQuoteAccepted,
+  signAcceptanceCriterion,
 };

@@ -128,11 +128,19 @@ class QueryRef {
       });
     });
     const limited = typeof this._limit === 'number' ? matched.slice(0, this._limit) : matched;
-    return {
+    const store = this._store;
+    const querySnap = {
       empty: limited.length === 0,
-      docs: limited.map(({ id, data }) => ({ id, data: () => ({ ...data }), exists: true })),
+      docs: limited.map(({ id, path, data }) => ({
+        id,
+        data: () => ({ ...data }),
+        exists: true,
+        ref: new DocRef(store, path),
+      })),
       size: limited.length,
+      forEach(cb) { this.docs.forEach(cb); },
     };
+    return querySnap;
   }
 }
 
@@ -161,6 +169,12 @@ class Transaction {
     this._writes = [];          // queued ops applied on commit
   }
   async get(refOrPath) {
+    // tx.get(query) — Admin SDK supports passing a Query; the stub
+    // delegates to QueryRef.get for collection scans (used by
+    // approveChangeOrder to ripple the new ceiling to OPEN master_jobs).
+    if (refOrPath && refOrPath instanceof QueryRef) {
+      return refOrPath.get();
+    }
     const path = typeof refOrPath === 'string' ? refOrPath : refOrPath._path;
     const data = this._store.get(path);
     const snap = new DocSnap(path, data);
