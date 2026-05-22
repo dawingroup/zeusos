@@ -4,6 +4,7 @@
   "description": "ZeusOS — Operations platform for Zeus Group (East African marketing consortium). Forked from DawinOS.",
   "type": "module",
   "scripts": {
+    "prepare": "[ -d .githooks ] && git config core.hooksPath .githooks || true",
     "dev": "vite",
     "prebuild": "bash scripts/ensure-env.sh || true",
     "build": "vite build",

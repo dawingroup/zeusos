@@ -550,6 +550,7 @@ export function AppShell({ children }: AppShellProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => signOut()}
+              data-testid="logout-button"
               className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
             >
               <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
@@ -644,7 +645,7 @@ export function AppShell({ children }: AppShellProps) {
               </>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem onClick={() => signOut()} data-testid="logout-button">
               <LogOut className="mr-2 h-4 w-4" />
               Sign out
             </DropdownMenuItem>

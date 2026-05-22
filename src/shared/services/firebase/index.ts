@@ -7,14 +7,15 @@
 export { app } from './config';
 
 // Authentication
-export { 
-  auth, 
-  googleProvider, 
-  signInWithGoogle, 
-  signOut, 
+export {
+  auth,
+  googleProvider,
+  signInWithGoogle,
+  signInWithEmail,
+  signOut,
   getGoogleAccessToken,
   onAuthChange,
-  type User 
+  type User
 } from './auth';
 
 // Firestore

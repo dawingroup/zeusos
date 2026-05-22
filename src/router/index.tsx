@@ -82,11 +82,10 @@ const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'))
 
 // ──────────────────────────────────────────────────────────────────────────
 // Pricing — Phase 3.C (Pricing engine + Quote builder).
-// PHASE 3.A.5 PLACEHOLDER — these pages read from stubbed `rate_cards` /
-// `quotes` root collections; re-point to `organizations/{id}/…` when
-// 3.A.5 lands.
+// Pricing surface gated by the shared ParentOrgGuard (3.D unified the
+// authority signature with Account-Management + Billing).
 // ──────────────────────────────────────────────────────────────────────────
-import { PricingAdminGuard } from '@/modules/pricing/components/PricingAdminGuard';
+import { ParentOrgGuard } from '@/router/guards/ParentOrgGuard';
 const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
 const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
 const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
@@ -399,15 +398,12 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // Pricing — Phase 3.C
-      // PHASE 3.A.5 PLACEHOLDER: PricingAdminGuard approximates "home org
-      // kind = PARENT" via `globalRole IN ('admin','owner') AND
-      // subsidiaryAccess includes 'zeus-group'`. Replace when 3.A.5 lands.
+      // Pricing — Phase 3.C, gated by ParentOrgGuard (3.D unification).
       { path: 'pricing',                       element: <Navigate to="/pricing/rate-cards" replace /> },
-      { path: 'pricing/rate-cards',            element: <PageWrapper><PricingAdminGuard><RateCardsPage /></PricingAdminGuard></PageWrapper> },
-      { path: 'pricing/rate-cards/:id',        element: <PageWrapper><PricingAdminGuard><RateCardEditorPage /></PricingAdminGuard></PageWrapper> },
-      { path: 'pricing/quotes/:id',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
-      { path: 'pricing/quotes/new',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
+      { path: 'pricing/rate-cards',            element: <PageWrapper><ParentOrgGuard><RateCardsPage /></ParentOrgGuard></PageWrapper> },
+      { path: 'pricing/rate-cards/:id',        element: <PageWrapper><ParentOrgGuard><RateCardEditorPage /></ParentOrgGuard></PageWrapper> },
+      { path: 'pricing/quotes/:id',            element: <PageWrapper><ParentOrgGuard><QuoteBuilderPage /></ParentOrgGuard></PageWrapper> },
+      { path: 'pricing/quotes/new',            element: <PageWrapper><ParentOrgGuard><QuoteBuilderPage /></ParentOrgGuard></PageWrapper> },
 
       // Delivery — Phase 3.E (subsidiary workspace). Guarded so parent-org
       // users get redirected to the AM-side IWO view (3.D, TODO) and

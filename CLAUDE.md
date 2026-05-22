@@ -32,6 +32,24 @@ Domain model overview (Tech Spec v1.0 + plan §14): [`docs/DOMAIN_MODEL.md`](doc
 cp /Users/danielonzimai/Developer/zeusos/.env "$PWD/.env"
 ```
 
+## Branch protection
+
+We work feature-branch + PR; direct commits to integration branches are blocked by a `pre-commit` hook in `.githooks/pre-commit`. Protected branches: `main`, `master`, `phase-3e-delivery-workspace`.
+
+**One-time setup per clone / worktree** (the hook lives in the tree but `core.hooksPath` is a local-only config):
+```bash
+git config core.hooksPath .githooks
+```
+
+**Workflow:** `git switch -c <feature-branch>` → commit → push → `gh pr create`.
+
+**Emergency bypass** (use sparingly; explain why in the commit message):
+```bash
+ALLOW_DIRECT_COMMIT=1 git commit ...
+```
+
+To change the list of protected branches, edit the `PROTECTED_BRANCHES` array in `.githooks/pre-commit`.
+
 ## Phase status (Phase 0 in progress)
 
 - ✅ Source copied from DawinOS@80364790

@@ -16,10 +16,12 @@ export default defineConfig({
       'functions',
       '**/node_modules/**',
       'src/extensions/**/node_modules/**',
-      // Integration tests require Firebase emulators
+      // Integration + rules tests require Firebase emulators — run separately
+      // with `npm run test:rules` (vitest.rules.config.ts).
       'src/testing/migration/**',
       'src/testing/performance/**',
       'src/testing/integration/**',
+      'src/testing/rules/**',
       // These tests call real Firestore-dependent services and need emulators
       'src/subsidiaries/advisory/matflow/services/__tests__/auto-po-generation.test.ts',
       'src/subsidiaries/advisory/matflow/services/__tests__/po-delivery-tracking.test.ts',

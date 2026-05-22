@@ -1,6 +1,10 @@
 /**
  * LoginPage
- * User authentication page with email/password and Google sign-in
+ * User authentication page with email/password and Google sign-in.
+ *
+ * Email/password form is always rendered — it works against both the
+ * Firebase Auth emulator (Playwright e2e suite) and in production.
+ * Google OAuth remains the primary sign-in path for production users.
  */
 
 import { useState } from 'react';
@@ -8,6 +12,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
+import { Input } from '@/core/components/ui/input';
+import { Label } from '@/core/components/ui/label';
 import {
   Card,
   CardContent,
@@ -21,16 +27,21 @@ import { useAuth } from '@/shared/hooks';
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithEmail } = useAuth();
+
   const [error, setError] = useState<string | null>(null);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+
+  // Email/password form state
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   const handleGoogleSignIn = async () => {
     setError(null);
     setIsGoogleLoading(true);
-
     try {
       const user = await signInWithGoogle();
       if (user) {
@@ -44,6 +55,30 @@ export default function LoginPage() {
       setIsGoogleLoading(false);
     }
   };
+
+  const handleEmailSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!email || !password) {
+      setError('Email and password are required.');
+      return;
+    }
+    setIsEmailLoading(true);
+    try {
+      const user = await signInWithEmail(email, password);
+      if (user) {
+        navigate(from, { replace: true });
+      } else {
+        setError('Invalid email or password.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in.');
+    } finally {
+      setIsEmailLoading(false);
+    }
+  };
+
+  const isBusy = isGoogleLoading || isEmailLoading;
 
   return (
     <>
@@ -69,19 +104,76 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="space-y-4">
             {error && (
-              <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/50 text-destructive text-sm">
+              <div
+                role="alert"
+                data-testid="login-error"
+                className="p-3 rounded-lg bg-destructive/10 border border-destructive/50 text-destructive text-sm"
+              >
                 {error}
               </div>
             )}
 
+            {/* Email / password form */}
+            <form onSubmit={handleEmailSignIn} noValidate className="space-y-3">
+              <div className="space-y-1">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  data-testid="email-input"
+                  type="email"
+                  placeholder="you@zeusgroup.com"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isBusy}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  data-testid="password-input"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isBusy}
+                />
+              </div>
+              <Button
+                type="submit"
+                data-testid="login-button"
+                className="w-full"
+                disabled={isBusy}
+              >
+                {isEmailLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                Sign in
+              </Button>
+            </form>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+              </div>
+            </div>
+
+            {/* Google sign-in */}
             <Button
               type="button"
               variant="outline"
               className="w-full"
               onClick={handleGoogleSignIn}
-              disabled={isGoogleLoading}
+              disabled={isBusy}
+              data-testid="google-login-button"
             >
               {isGoogleLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -111,7 +203,7 @@ export default function LoginPage() {
 
           <CardFooter className="flex flex-col space-y-4">
             <div className="text-sm text-center text-muted-foreground">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <span className="text-muted-foreground">
                 Contact your administrator
               </span>
