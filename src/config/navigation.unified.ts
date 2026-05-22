@@ -8,7 +8,9 @@
  *   - ADVISORY_NAVIGATION reduced to the still-wired /advisory/investment
  *     subtree; MatFlow and Infrastructure Delivery routes were removed in
  *     Phase 1.C.
- *   - AGENCY_NAVIGATION is the shared sidebar for all Zeus sub-brands.
+ *   - AGENCY_NAVIGATION is the base sidebar; per-subsidiary variants
+ *     (ZEUS_DIGITAL_NAVIGATION, LABYRINTH_NAVIGATION, etc.) reorder the
+ *     same items so each sub-brand's primary specialty comes first.
  *   - COMMERCIAL_NAVIGATION exposes Account Management, Pricing, and
  *     Billing — gated to parent-org admins/owners in the AppShell to
  *     mirror the ParentOrgGuard / Cloud Function / Firestore rules
@@ -59,8 +61,11 @@ export interface SubsidiaryConfig {
 // AGENCY NAVIGATION — main sidebar for every sub-brand
 // ============================================================================
 // Items here are visible to every authenticated user that has the parent
-// subsidiary access. Per-subsidiary differentiation (e.g. Labyrinth's
-// Production-first layout) is a Phase 4.B follow-up.
+// subsidiary access. Per-subsidiary reordering is applied via the named
+// *_NAVIGATION constants below (e.g. LABYRINTH_NAVIGATION) — each variant
+// is the same set of items, just with the brand's primary specialty
+// surfaced first. No items are hidden per sub-brand; all five sub-brands
+// have access to every module in this list.
 
 export const AGENCY_NAVIGATION: NavItem[] = [
   {
@@ -111,18 +116,37 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
   },
   {
-    id: 'investment',
-    label: 'Investment Pipeline',
-    href: '/advisory/investment',
-    icon: 'Briefcase',
-    description: 'Deal pipeline & portfolio (Zeus Digital advisory subsidiary)',
-    keywords: ['deals', 'pipeline', 'portfolio', 'investment'],
+    id: 'media',
+    label: 'Media Plans',
+    href: '/media',
+    icon: 'Megaphone',
+    description: 'Media plans, buys, actuals, and post-campaign reports',
+    keywords: ['media', 'plans', 'buys', 'actuals', 'campaign', 'report', 'pcr'],
+  },
+  {
+    id: 'production',
+    label: 'Production',
+    href: '/production',
+    icon: 'Clapperboard',
+    description: 'Production board — shoots, post, and delivery (10-stage Kanban)',
+    keywords: ['production', 'shoot', 'post', 'edit', 'callsheet', 'kanban'],
+  },
+  {
+    id: 'talent',
+    label: 'Talent Roster',
+    href: '/talent',
+    icon: 'Star',
+    description: 'Freelancer profiles, contracts, and invoice approvals',
+    keywords: ['talent', 'freelancer', 'roster', 'contracts', 'invoices'],
     children: [
-      { id: 'investment-pipeline', label: 'Pipeline',  href: '/advisory/investment/pipeline', icon: 'Kanban' },
-      { id: 'investment-deals',    label: 'Deals',     href: '/advisory/investment/deals',    icon: 'Handshake' },
-      { id: 'investment-reports',  label: 'Reports',   href: '/advisory/investment/reports',  icon: 'BarChart3' },
+      { id: 'talent-roster',    label: 'Roster',    href: '/talent',          icon: 'Star' },
+      { id: 'talent-invoices',  label: 'Invoices',  href: '/talent/invoices', icon: 'FileText' },
     ],
   },
+  // NOTE: The DawinOS "Investment Pipeline" entry (/advisory/investment) was
+  // removed here — ZeusOS is a marketing consortium, not an advisory/VC
+  // firm. The underlying src/subsidiaries/advisory/ module is slated for
+  // full removal in a Phase 1.D-style cleanup PR.
   {
     id: 'ai-assistant',
     label: 'AI Assistant',
@@ -417,11 +441,45 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
 ];
 
 // ============================================================================
+// PER-SUBSIDIARY NAVIGATION VARIANTS
+// ============================================================================
+// Each Zeus sub-brand surfaces its primary specialty first. Variants are
+// reorderings of AGENCY_NAVIGATION — never subsets. Items not named in a
+// priority list keep their relative order at the tail. Unknown ids are
+// silently skipped by the helper, so variants stay forward-compatible
+// against future AGENCY_NAVIGATION additions.
+//
+// Mapping per the sub-brand mandate:
+//   • Zeus The Agency   — full-service. Default order (Engagements first).
+//   • Zeus Digital      — digital-first. Media › Engagements.
+//   • Labyrinth A&V     — production house. Production › Media › Engagements.
+//   • Odd Gorilla       — creative shop. Engagements › Talent › Production.
+//   • House of Zeus     — strategy + house ops. Default order for now.
+
+/**
+ * Return `items` with the entries whose ids appear in `priorityIds` pushed
+ * to the front (in the order given). Missing ids are skipped. Items not in
+ * the priority list keep their relative order and follow at the tail.
+ */
+function reorderByIds(items: NavItem[], priorityIds: string[]): NavItem[] {
+  const byId = new Map(items.map((i) => [i.id, i]));
+  const head = priorityIds
+    .map((id) => byId.get(id))
+    .filter((x): x is NavItem => !!x);
+  const headIds = new Set(priorityIds);
+  const tail = items.filter((i) => !headIds.has(i.id));
+  return [...head, ...tail];
+}
+
+export const ZEUS_AGENCY_NAVIGATION: NavItem[]   = AGENCY_NAVIGATION;
+export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['media', 'engagements']);
+export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'media', 'engagements']);
+export const ODD_GORILLA_NAVIGATION: NavItem[]   = reorderByIds(AGENCY_NAVIGATION, ['engagements', 'talent', 'production']);
+export const HOUSE_OF_ZEUS_NAVIGATION: NavItem[] = AGENCY_NAVIGATION;
+
+// ============================================================================
 // SUBSIDIARY CONFIGURATIONS
 // ============================================================================
-// All five Zeus sub-brands share AGENCY_NAVIGATION. Per-brand reordering
-// (e.g. Labyrinth → Production first, Zeus Digital → Investment first) is
-// a Phase 4.B follow-up.
 
 export const SUBSIDIARIES: SubsidiaryConfig[] = [
   {
@@ -431,7 +489,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#F5D900',
     icon: 'Sparkles',
     defaultPath: '/',
-    navigation: AGENCY_NAVIGATION,
+    navigation: ZEUS_AGENCY_NAVIGATION,
   },
   {
     id: 'zeus-digital',
@@ -440,7 +498,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#00C5E5',
     icon: 'Zap',
     defaultPath: '/',
-    navigation: AGENCY_NAVIGATION,
+    navigation: ZEUS_DIGITAL_NAVIGATION,
   },
   {
     id: 'labyrinth',
@@ -449,7 +507,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#C8F0D6',
     icon: 'Music',
     defaultPath: '/',
-    navigation: AGENCY_NAVIGATION,
+    navigation: LABYRINTH_NAVIGATION,
   },
   {
     id: 'odd-gorilla',
@@ -458,7 +516,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#FFB0B8',
     icon: 'PawPrint',
     defaultPath: '/',
-    navigation: AGENCY_NAVIGATION,
+    navigation: ODD_GORILLA_NAVIGATION,
   },
   {
     id: 'house-of-zeus',
@@ -467,7 +525,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     color: '#C8FF3C',
     icon: 'Home',
     defaultPath: '/',
-    navigation: AGENCY_NAVIGATION,
+    navigation: HOUSE_OF_ZEUS_NAVIGATION,
   },
 ];
 
@@ -530,7 +588,7 @@ export function getAllCommandItems(): CommandItem[] {
  */
 export function getSubsidiaryNavigation(subsidiaryId: string): NavItem[] {
   const subsidiary = SUBSIDIARIES.find(s => s.id === subsidiaryId);
-  return subsidiary?.navigation || AGENCY_NAVIGATION;
+  return subsidiary?.navigation || ZEUS_AGENCY_NAVIGATION;
 }
 
 /**
