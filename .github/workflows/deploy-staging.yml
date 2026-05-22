@@ -18,7 +18,7 @@ concurrency:
 
 env:
   NODE_VERSION: '20'
-  FIREBASE_PROJECT: dawinos
+  FIREBASE_PROJECT: zeusos
 
 # Required for Workload Identity Federation
 permissions:
@@ -83,22 +83,42 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
+      # Workload Identity Federation secrets must be configured in the
+      # `dawingroup/zeusos` repo settings before this job can actually
+      # deploy. Until they are, every subsequent step is a no-op and the
+      # job exits green so PR CI isn't blocked. See PHASE_3_CI_NOTES.md.
+      - name: Check WIF availability
+        id: check-wif
+        env:
+          WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+        run: |
+          if [ -z "$WIF_PROVIDER" ]; then
+            echo "::warning::WIF_PROVIDER secret not configured for this repo — skipping Firebase preview deploy. Configure Workload Identity Federation in the zeusos GCP project and add WIF_PROVIDER + WIF_SERVICE_ACCOUNT repo secrets to enable PR previews."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout repository
+        if: steps.check-wif.outputs.skip != 'true'
         uses: actions/checkout@v4
 
       - name: Download build artifact
+        if: steps.check-wif.outputs.skip != 'true'
         uses: actions/download-artifact@v4
         with:
           name: dist-staging
           path: dist
 
       - name: Setup Node.js
+        if: steps.check-wif.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
       # Authenticate using Workload Identity Federation (keyless)
       - name: Authenticate to Google Cloud
+        if: steps.check-wif.outputs.skip != 'true'
         id: auth
         uses: google-github-actions/auth@v2
         with:
@@ -106,22 +126,26 @@ jobs:
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
+        if: steps.check-wif.outputs.skip != 'true'
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.FIREBASE_PROJECT }}
 
       - name: Install Firebase CLI
+        if: steps.check-wif.outputs.skip != 'true'
         run: npm install -g firebase-tools
 
       - name: Deploy to preview channel
+        if: steps.check-wif.outputs.skip != 'true'
         id: deploy-preview
         run: |
           CHANNEL_ID="pr-${{ github.event.pull_request.number }}"
           firebase hosting:channel:deploy $CHANNEL_ID --project ${{ env.FIREBASE_PROJECT }} --expires 7d --json > deploy-output.json
-          PREVIEW_URL=$(cat deploy-output.json | jq -r '.result["dawinos"].url')
+          PREVIEW_URL=$(cat deploy-output.json | jq -r '.result["zeusos"].url')
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Comment preview URL
+        if: steps.check-wif.outputs.skip != 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -142,7 +166,7 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     environment:
       name: staging
-      url: https://dawinos--staging.web.app
+      url: https://zeusos--staging.web.app
 
     steps:
       - name: Checkout repository
