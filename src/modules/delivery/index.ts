@@ -17,3 +17,19 @@ export type {
   DeliverableKind,
   ApprovalSlot,
 } from './types/deliverable.types';
+
+// Phase 3.E — subsidiary delivery workspace.
+export { SubsidiaryDeliveryGuard } from './components/SubsidiaryDeliveryGuard';
+export { RouteToAMButton } from './components/RouteToAMButton';
+export type { RouteToAMButtonProps } from './components/RouteToAMButton';
+export {
+  isParentOrgUser,
+  isSubsidiaryUser,
+  resolveHomeSubsidiaryId,
+} from './components/deliveryAccess';
+export {
+  computeBurnMeter,
+  sumEntries,
+  type BurnMeter,
+  type BurnStatus,
+} from './services/burnMeter';

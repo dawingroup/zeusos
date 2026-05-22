@@ -299,6 +299,18 @@ export const UTILITY_NAVIGATION: NavItem[] = [
 
 export const GLOBAL_NAVIGATION: NavItem[] = [
   {
+    // Phase 3.E — subsidiary delivery inbox. The route is guarded so
+    // parent-org users get redirected; everyone else sees their IWO
+    // queue here. No `module` field, so the access filter always shows
+    // it — the guard handles gating, not the menu.
+    id: 'delivery-inbox',
+    label: 'Delivery Inbox',
+    href: '/delivery/inbox',
+    icon: 'Inbox',
+    description: 'Internal work orders awaiting acceptance and in-flight work',
+    keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
+  },
+  {
     id: 'customers',
     label: 'Customers',
     href: '/customers',

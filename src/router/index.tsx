@@ -91,6 +91,16 @@ const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/R
 const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
 const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
 
+// ──────────────────────────────────────────────────────────────────────────
+// Delivery — Phase 3.E (subsidiary workspace). Three-layer §7.4 boundary:
+//   1. SubsidiaryDeliveryGuard rejects parent-org users (this file).
+//   2. AppShell nav builder hides commercial routes for subsidiary users.
+//   3. Firestore rules + Cloud Function auth checks block the API path.
+// ──────────────────────────────────────────────────────────────────────────
+import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
+const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
+const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
+
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
 
@@ -398,6 +408,13 @@ export const router = createBrowserRouter([
       { path: 'pricing/rate-cards/:id',        element: <PageWrapper><PricingAdminGuard><RateCardEditorPage /></PricingAdminGuard></PageWrapper> },
       { path: 'pricing/quotes/:id',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
       { path: 'pricing/quotes/new',            element: <PageWrapper><PricingAdminGuard><QuoteBuilderPage /></PricingAdminGuard></PageWrapper> },
+
+      // Delivery — Phase 3.E (subsidiary workspace). Guarded so parent-org
+      // users get redirected to the AM-side IWO view (3.D, TODO) and
+      // subsidiary users pass through.
+      { path: 'delivery',           element: <Navigate to="/delivery/inbox" replace /> },
+      { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       // Intelligence Layer
       {
