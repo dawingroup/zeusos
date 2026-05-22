@@ -224,9 +224,10 @@ export default function IWOWorkspacePage() {
   const canStart = iwo.state === 'ACCEPTED';
 
   return (
-    <div style={{ padding: 24, maxWidth: 960, margin: '0 auto' }}>
+    <div style={{ padding: 24, maxWidth: 960, margin: '0 auto' }} data-testid="iwo-workspace-page">
       <button
         type="button"
+        data-testid="iwo-back-to-inbox"
         onClick={() => navigate('/delivery/inbox')}
         style={{
           padding: '4px 8px', marginBottom: 16, border: '1px solid #cbd5e1',
@@ -237,12 +238,12 @@ export default function IWOWorkspacePage() {
       </button>
 
       <header style={{ marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>
+        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }} data-testid="iwo-code">
           {iwo.code}
         </h1>
         <div style={{ marginTop: 4, fontSize: 13, color: '#475569', display: 'flex', gap: 16 }}>
-          <span>State: <strong>{iwo.state}</strong></span>
-          <span>Budget: {formatMinor(iwo.budgetMinor, iwo.currency)}</span>
+          <span>State: <strong data-testid="iwo-state">{iwo.state}</strong></span>
+          <span data-testid="iwo-budget">Budget: {formatMinor(iwo.budgetMinor, iwo.currency)}</span>
         </div>
       </header>
 
@@ -317,6 +318,7 @@ export default function IWOWorkspacePage() {
         <section style={{ marginBottom: 24 }}>
           <button
             type="button"
+            data-testid="iwo-start"
             onClick={handleStart}
             disabled={busy}
             style={{
@@ -332,12 +334,13 @@ export default function IWOWorkspacePage() {
 
       {iwo.state === 'IN_PROGRESS' && (
         <>
-          <section style={{ marginBottom: 24 }}>
+          <section style={{ marginBottom: 24 }} data-testid="iwo-post-time-section">
             <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Post time</h2>
-            <form onSubmit={handlePostTime} style={{ display: 'grid', gap: 8, maxWidth: 480 }}>
+            <form onSubmit={handlePostTime} style={{ display: 'grid', gap: 8, maxWidth: 480 }} data-testid="iwo-post-time-form">
               <label style={{ fontSize: 12, color: '#475569' }}>
                 Date
                 <input
+                  data-testid="te-date"
                   type="date"
                   value={teDate}
                   onChange={(e) => setTeDate(e.target.value)}
@@ -348,6 +351,7 @@ export default function IWOWorkspacePage() {
               <label style={{ fontSize: 12, color: '#475569' }}>
                 Minutes
                 <input
+                  data-testid="te-minutes"
                   type="number"
                   min={1}
                   step={1}
@@ -360,6 +364,7 @@ export default function IWOWorkspacePage() {
               <label style={{ fontSize: 12, color: '#475569' }}>
                 Note (optional)
                 <input
+                  data-testid="te-note"
                   type="text"
                   value={teNote}
                   onChange={(e) => setTeNote(e.target.value)}
@@ -368,6 +373,7 @@ export default function IWOWorkspacePage() {
               </label>
               <button
                 type="submit"
+                data-testid="te-submit"
                 disabled={!canPostEntries || busy}
                 style={{
                   padding: '8px 14px', borderRadius: 6, border: 'none',
@@ -443,12 +449,13 @@ export default function IWOWorkspacePage() {
             </form>
           </section>
 
-          <section style={{ marginBottom: 24 }}>
+          <section style={{ marginBottom: 24 }} data-testid="iwo-submit-deliverable-section">
             <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Submit deliverable</h2>
-            <form onSubmit={handleSubmitDeliverable} style={{ display: 'grid', gap: 8, maxWidth: 480 }}>
+            <form onSubmit={handleSubmitDeliverable} style={{ display: 'grid', gap: 8, maxWidth: 480 }} data-testid="iwo-submit-deliverable-form">
               <label style={{ fontSize: 12, color: '#475569' }}>
                 Asset ids (comma or whitespace separated; ≥1 required)
                 <input
+                  data-testid="del-asset-ids"
                   type="text"
                   value={delAssetIds}
                   onChange={(e) => setDelAssetIds(e.target.value)}
@@ -459,6 +466,7 @@ export default function IWOWorkspacePage() {
               <label style={{ fontSize: 12, color: '#475569' }}>
                 Description (optional)
                 <input
+                  data-testid="del-desc"
                   type="text"
                   value={delDesc}
                   onChange={(e) => setDelDesc(e.target.value)}
@@ -467,6 +475,7 @@ export default function IWOWorkspacePage() {
               </label>
               <button
                 type="submit"
+                data-testid="iwo-deliver"
                 disabled={!canSubmitDeliverable || busy}
                 style={{
                   padding: '8px 14px', borderRadius: 6, border: 'none',
