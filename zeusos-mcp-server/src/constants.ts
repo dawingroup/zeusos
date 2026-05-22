@@ -38,34 +38,12 @@ export const COLLECTIONS = {
   DESIGN_PROJECTS: 'designProjects',
 } as const;
 
-// ─── MatFlow paths ────────────────────────────────────────────────────────────
-// Source: src/subsidiaries/advisory/matflow/firebase/matflow-collections.ts
-// Source: src/subsidiaries/advisory/matflow/utils/collections.ts (formulas)
-export const MATFLOW_PATHS = {
-  formulas: 'matflow/data/formulas',
-  materials: 'advisoryPlatform/matflow/materials',
-} as const;
-
 // ─── Company-scoped paths (companies/{companyId}/...) ─────────────────────────
 export const COMPANY_PATHS = {
   expenditureQueue: (companyId: string = DEFAULT_ORG_ID) =>
     `companies/${companyId}/expenditure_queue`,
   spendPlans: (companyId: string = DEFAULT_ORG_ID) =>
     `companies/${companyId}/spend_plans`,
-} as const;
-
-// ─── Advisory + Campaign paths (path-scoped, no field filter needed) ─────────
-// Phase 2.D: advisory_projects collection renamed → campaigns. The exported
-// constant name stays ADVISORY_PATHS for tool-surface stability; only the
-// Firestore path strings are updated.
-// Source: src/subsidiaries/advisory/core/project/services/project.service.ts:41
-export const ADVISORY_PATHS = {
-  projects: (orgId: string = DEFAULT_ORG_ID) =>
-    `organizations/${orgId}/campaigns`,
-  allocationGroups: (orgId: string = DEFAULT_ORG_ID) =>
-    `organizations/${orgId}/allocation_groups`,
-  programs: (orgId: string = DEFAULT_ORG_ID) =>
-    `organizations/${orgId}/advisory_programs`,
 } as const;
 
 // ─── Manufacturing order subcollections ──────────────────────────────────────
@@ -149,22 +127,6 @@ export const FINISH_CATEGORIES = [
   'custom',
 ] as const;
 
-// Source: src/subsidiaries/advisory/core/project/types/project.types.ts
-export const ADVISORY_PROJECT_STATUSES = [
-  'planning',
-  'procurement',
-  'mobilization',
-  'active',
-  'substantial_completion',
-  'defects_liability',
-  'completed',
-  'suspended',
-  'cancelled',
-] as const;
-
-// Source: src/subsidiaries/advisory/delivery/types/allocation.ts
-export const ALLOCATION_GROUP_STATUSES = ['Draft', 'Finalized'] as const;
-
 // ─── Type helpers ─────────────────────────────────────────────────────────────
 export type POStatus = (typeof PO_STATUSES)[number];
 export type MOStatus = (typeof MO_STATUSES)[number];
@@ -173,5 +135,3 @@ export type InventoryStatus = (typeof INVENTORY_STATUSES)[number];
 export type InventoryCategory = (typeof INVENTORY_CATEGORIES)[number];
 export type InventoryTier = (typeof INVENTORY_TIERS)[number];
 export type FinishCategory = (typeof FINISH_CATEGORIES)[number];
-export type AdvisoryProjectStatus = (typeof ADVISORY_PROJECT_STATUSES)[number];
-export type AllocationGroupStatus = (typeof ALLOCATION_GROUP_STATUSES)[number];

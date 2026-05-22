@@ -340,9 +340,9 @@ After generating, use \`zeusos_get_spend_plan\` (without an ID) to see the full 
     title: 'Market Intelligence Reports',
     description: `Retrieve AI-generated market intelligence reports for ZeusOS subsidiaries. Each report contains competitor analyses, threat assessments, emerging industry trends, and strategic pricing/positioning recommendations based on live web data.
 
-Subsidiary IDs: finishes | advisory | technology | capital`,
+Subsidiary IDs: finishes | technology | capital`,
     inputSchema: {
-      subsidiary_id: z.enum(['finishes', 'advisory', 'technology', 'capital'])
+      subsidiary_id: z.enum(['finishes', 'technology', 'capital'])
         .describe('Which subsidiary to get intelligence for'),
       limit: z.number().int().min(1).max(10).optional()
         .describe('Number of recent reports (default: 3)'),

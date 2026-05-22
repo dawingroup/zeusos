@@ -7,23 +7,20 @@
  *   TRANSPORT=http              — starts an Express HTTP server
  *                                 Use for local HTTP testing; Cloud Functions uses handler.ts directly
  *
- * Phase 1.D scope: tool surface trimmed to the kept ZeusOS domains —
- * Advisory (project / financial backbone for Campaigns), Finance, Strategy,
- * Intelligence, Quotes, Memory, Advisory AI. Construction-domain tool packs
- * (purchasing, manufacturing, inventory, matflow, boq, categories, finishes,
- * designManager) were removed alongside the source modules. Marketing-domain
- * tool packs (campaigns, media, production, talent, asset-library) will be
- * added in Phase 3+.
+ * Phase 1.D removed Advisory: tool surface trimmed to the kept ZeusOS domains
+ * — Finance, Strategy, Intelligence, Quotes, Memory. Construction-domain tool
+ * packs (purchasing, manufacturing, inventory, matflow, boq, categories,
+ * finishes, designManager) were removed alongside the source modules.
+ * Marketing-domain tool packs (campaigns, media, production, talent,
+ * asset-library) will be added in Phase 3+.
  */
 
 import express from 'express';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { registerAdvisoryTools } from './tools/advisory.js';
 import { registerIntelligenceTools } from './tools/intelligence.js';
 import { registerMemoryTools } from './tools/memory.js';
-import { registerAdvisoryAiTools } from './tools/advisory-ai.js';
 import { registerQuoteTools } from './tools/quotes.js';
 import { registerFinanceTools } from './tools/finance.js';
 import { registerStrategyTools } from './tools/strategy.js';
@@ -38,10 +35,8 @@ function buildServer(): McpServer {
     name: 'zeusos-mcp-server',
     version: '0.1.0',
   });
-  registerAdvisoryTools(server);
   registerIntelligenceTools(server);
   registerMemoryTools(server);
-  registerAdvisoryAiTools(server);
   registerQuoteTools(server);
   registerFinanceTools(server);
   registerStrategyTools(server);

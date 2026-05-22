@@ -2,10 +2,8 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import type { Request, Response } from 'express';
 import { createHash, randomUUID } from 'node:crypto';
-import { registerAdvisoryTools } from './tools/advisory.js';
 import { registerIntelligenceTools } from './tools/intelligence.js';
 import { registerMemoryTools } from './tools/memory.js';
-import { registerAdvisoryAiTools } from './tools/advisory-ai.js';
 import { registerQuoteTools } from './tools/quotes.js';
 import { registerFinanceTools } from './tools/finance.js';
 import { registerStrategyTools } from './tools/strategy.js';
@@ -27,8 +25,9 @@ function parseBearerToken(authHeader: string | undefined): string | null {
 
 function isMutatingTool(toolName: string): boolean {
   // Construction-domain mutating tools (inventory / finishes / formulas / BOQ /
-  // designManager / process_receipt) were removed in Phase 1.D. The kept
-  // mutating-tool surface is finance + quotes + memory + strategy + advisory.
+  // designManager / process_receipt) were removed in Phase 1.D, along with the
+  // Advisory tool pack. The kept mutating-tool surface is finance + quotes +
+  // memory + strategy.
   const explicitMutating = new Set([
     'zeusos_create_quote',
     'zeusos_update_quote',
@@ -111,10 +110,8 @@ function getServer(): McpServer {
       name: 'zeusos-mcp-server',
       version: '0.1.0',
     });
-    registerAdvisoryTools(_server);
     registerIntelligenceTools(_server);
     registerMemoryTools(_server);
-    registerAdvisoryAiTools(_server);
     registerQuoteTools(_server);
     registerFinanceTools(_server);
     registerStrategyTools(_server);
