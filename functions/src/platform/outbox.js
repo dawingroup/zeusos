@@ -18,7 +18,8 @@ const { ulid } = require('./ulid');
 const DOMAIN_EVENTS_COLLECTION = 'domain_events';
 
 /**
- * The 13 canonical event types (spec §10 + §11.9).
+ * The 17 canonical event types (spec §10 + §11.9 + plan §15 Phase 4
+ * procurement / finance handshake).
  *
  * `IntraEntityCostAllocated` is the §11.9 sibling of
  * `InterCompanyInvoiceRaised`: when the receiving subsidiary is NOT a
@@ -27,9 +28,26 @@ const DOMAIN_EVENTS_COLLECTION = 'domain_events';
  * invoice. Both events keep the audit log complete regardless of which
  * settlement path the IWO took.
  *
+ * The four new Phase 4.1 events close the §15 acceptance gate
+ * "supplier invoice triggers PO + journal entry":
+ *
+ *   • `TalentInvoiceApproved`     — emitted by `approveTalentInvoiceFn`
+ *                                    when a freelancer invoice moves
+ *                                    SUBMITTED → APPROVED.
+ *   • `MediaSupplierInvoicePaid`  — emitted by `markMediaSupplierInvoicePaidFn`
+ *                                    when a media-buy supplier invoice
+ *                                    transitions to PAID.
+ *   • `PurchaseOrderRaised`       — emitted by the two new outbox
+ *                                    consumers (talent + media) after
+ *                                    they raise a PO doc in Procurement.
+ *   • `JournalEntryPosted`        — emitted by the finance consumer
+ *                                    after it posts a debit/credit JE
+ *                                    against the chart of accounts.
+ *
  * Validation happens here so a typo can't slip through.
  */
 const DOMAIN_EVENT_TYPES = new Set([
+  // Phase 3 — Commercial Gravity lifecycle (spec §10).
   'SowActivated',
   'QuoteAccepted',
   'MasterJobOpened',
@@ -43,6 +61,11 @@ const DOMAIN_EVENT_TYPES = new Set([
   'IntraEntityCostAllocated',
   'ClientInvoiceIssued',
   'DirectClientRequestRouted',
+  // Phase 4.1 — Procurement / Finance handshake (plan §15 acceptance).
+  'TalentInvoiceApproved',
+  'MediaSupplierInvoicePaid',
+  'PurchaseOrderRaised',
+  'JournalEntryPosted',
 ]);
 
 /**
@@ -50,7 +73,7 @@ const DOMAIN_EVENT_TYPES = new Set([
  *
  * @param {{ tx: FirebaseFirestore.Transaction, db: FirebaseFirestore.Firestore,
  *           eventType: string,
- *           aggregateType: 'MSA'|'SOW'|'Quote'|'MasterJob'|'IWO'|'ClientInvoice'|'InterCompanyInvoice'|'CostAllocation',
+ *           aggregateType: 'MSA'|'SOW'|'Quote'|'MasterJob'|'IWO'|'ClientInvoice'|'InterCompanyInvoice'|'CostAllocation'|'TalentInvoice'|'MediaSupplierInvoice'|'PurchaseOrder'|'JournalEntry',
  *           aggregateId: string,
  *           payload: object,
  *           emittedByUserId?: string,
