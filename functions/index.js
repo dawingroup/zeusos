@@ -792,10 +792,6 @@ exports.metaDataDeletionCallback = metaDataDeletionCallback;
 exports.socialPublisher = socialPublisher;
 exports.generateSocialCopy = generateSocialCopy;
 
-// Data Migration Functions
-const { migrateMatflowProjects } = require('./src/migrations/migrateMatflowProjects');
-exports.migrateMatflowProjects = migrateMatflowProjects;
-
 // Adobe PDF Services Functions
 const {
   adobeCreatePdf,
