@@ -4364,5 +4364,136 @@ service cloud.firestore {
       allow create, update: if isAdmin();
       allow delete: if false;
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Media Plan & Buying
+    //
+    // media_plans/{planId} — plan header
+    //   read:   all staff
+    //   create: isCommercialActor (parent-org mediaPlanner) OR isParentOrgPrincipal
+    //   update: same — includes closing a plan
+    //   delete: admin only
+    //
+    // media_plans/{planId}/media_buys/{buyId} — buy rows
+    //   read:   all staff
+    //   write:  same as plan (media planners + parent-org principals)
+    //
+    // media_plans/{planId}/actuals/{actualId} — reconciliation records
+    //   read:   all staff
+    //   create: any authenticated staff (subsidiary media buyers post actuals)
+    //   update/delete: admin only (actuals are an audit trail)
+    //
+    // post_campaign_reports/{reportId} — summary documents
+    //   read:   all staff
+    //   write:  isParentOrgPrincipal (AM creates reports)
+    // ════════════════════════════════════════════════════════════════
+
+    match /media_plans/{planId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+
+      match /media_buys/{buyId} {
+        allow read: if isStaffAuth();
+        allow create, update: if isParentOrgPrincipal();
+        allow delete: if isAdmin();
+      }
+
+      match /actuals/{actualId} {
+        allow read: if isStaffAuth();
+        allow create: if isStaffAuth();
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    match /post_campaign_reports/{reportId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Production Jobs
+    //
+    // production_jobs/{jobId} — header
+    //   read:   all staff
+    //   create/update: any authenticated staff (any team member can advance
+    //                  production jobs; stage gate is enforced in app layer)
+    //   delete: admin only
+    //
+    // Subcollections (checklist_items, shoot_days, post_phases):
+    //   read:   all staff
+    //   write:  any authenticated staff
+    // ════════════════════════════════════════════════════════════════
+
+    match /production_jobs/{jobId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isStaffAuth();
+      allow delete: if isAdmin();
+
+      match /checklist_items/{itemId} {
+        allow read: if isStaffAuth();
+        allow create, update, delete: if isStaffAuth();
+      }
+
+      match /shoot_days/{dayId} {
+        allow read: if isStaffAuth();
+        allow create, update: if isStaffAuth();
+        allow delete: if isAdmin();
+      }
+
+      match /post_phases/{phaseId} {
+        allow read: if isStaffAuth();
+        allow create, update: if isStaffAuth();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Talent Roster
+    //
+    // talent_profiles/{profileId}
+    //   read:   all staff
+    //   create/update (non-bankDetails fields): HR or admin
+    //   write bankDetails: admin only (sensitive)
+    //
+    // freelancer_contracts/{contractId}
+    //   read:   all staff
+    //   write:  isCommercialActor (parent-org AM) — per spec
+    //
+    // talent_invoices/{invoiceId}
+    //   read:   all staff (AM reviews the queue)
+    //   create (submit): the talent themselves (by talentProfileId match) OR admin
+    //   update approve/reject: isCommercialActor (AM) — enforced by service layer
+    //   update paid:    isParentOrgPrincipal (Finance/AM confirms payment)
+    // ════════════════════════════════════════════════════════════════
+
+    match /talent_profiles/{profileId} {
+      allow read: if isStaffAuth();
+      // Any HR/admin can create or update non-sensitive fields.
+      allow create: if isAdmin();
+      allow update: if isAdmin()
+        || (
+          isStaffAuth()
+          // Non-admin may update everything EXCEPT bankDetails.
+          && !('bankDetails' in request.resource.data.diff(resource.data).affectedKeys())
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /freelancer_contracts/{contractId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    match /talent_invoices/{invoiceId} {
+      allow read: if isStaffAuth();
+      // Freelancers submit; admin can also submit on their behalf.
+      allow create: if isStaffAuth();
+      // Approve/reject/pay: AM (parent-org principal) only.
+      allow update: if isParentOrgPrincipal();
+      allow delete: if false; // Invoices are immutable once submitted.
+    }
   }
 }

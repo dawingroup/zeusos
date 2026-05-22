@@ -100,6 +100,28 @@ import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 
+// ──────────────────────────────────────────────────────────────────────────
+// Media Plan & Buying — Phase 4
+// ──────────────────────────────────────────────────────────────────────────
+const MediaPlansListPage     = lazyWithRetry(() => import('@/modules/media/pages/MediaPlansListPage'));
+const MediaPlanDetailPage    = lazyWithRetry(() => import('@/modules/media/pages/MediaPlanDetailPage'));
+const MediaPlanActualsPage   = lazyWithRetry(() => import('@/modules/media/pages/MediaPlanActualsPage'));
+const PostCampaignReportPage = lazyWithRetry(() => import('@/modules/media/pages/PostCampaignReportPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Production — Phase 4
+// ──────────────────────────────────────────────────────────────────────────
+const ProductionBoardPage     = lazyWithRetry(() => import('@/modules/production/pages/ProductionBoardPage'));
+const ProductionJobDetailPage = lazyWithRetry(() => import('@/modules/production/pages/ProductionJobDetailPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Talent Roster — Phase 4
+// ──────────────────────────────────────────────────────────────────────────
+const TalentRosterPage       = lazyWithRetry(() => import('@/modules/talent/pages/TalentRosterPage'));
+const TalentProfilePage      = lazyWithRetry(() => import('@/modules/talent/pages/TalentProfilePage'));
+const FreelancerContractsPage = lazyWithRetry(() => import('@/modules/talent/pages/FreelancerContractsPage'));
+const TalentInvoicesPage     = lazyWithRetry(() => import('@/modules/talent/pages/TalentInvoicesPage'));
+
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
 
@@ -452,6 +474,29 @@ export const router = createBrowserRouter([
       { path: 'admin/roles',         element: <PageWrapper><RoleManagementPage /></PageWrapper> },
       { path: 'admin/audit-log',     element: <PageWrapper><AuditLogPage /></PageWrapper> },
       { path: 'admin/design-system', element: <PageWrapper><DesignSystemPage /></PageWrapper> },
+
+      // ── Media Plan & Buying — Phase 4 ─────────────────────────────────────
+      // Gated: parent-org users for plan creation; subsidiary buyers can post
+      // actuals. Access guard deferred to Phase 4.B when isCommercialActor is
+      // available as a React hook — for now any authenticated user can access.
+      { path: 'media',                 element: <PageWrapper><ModuleContentWrapper><MediaPlansListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'media/:planId',         element: <PageWrapper><ModuleContentWrapper><MediaPlanDetailPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'media/:planId/actuals', element: <PageWrapper><ModuleContentWrapper><MediaPlanActualsPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'media/:planId/report',  element: <PageWrapper><ModuleContentWrapper><PostCampaignReportPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── Production — Phase 4 ───────────────────────────────────────────────
+      // Gated: parent-org AND subsidiary production team. Access guard
+      // deferred to Phase 4.B.
+      { path: 'production',        element: <PageWrapper><ModuleContentWrapper><ProductionBoardPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'production/:jobId', element: <PageWrapper><ModuleContentWrapper><ProductionJobDetailPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── Talent Roster — Phase 4 ────────────────────────────────────────────
+      // Gated: HR + parent-org AM for approvals; freelancer self-service
+      // invite is a Phase 5 stub.
+      { path: 'talent',                      element: <PageWrapper><ModuleContentWrapper><TalentRosterPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'talent/invoices',             element: <PageWrapper><ModuleContentWrapper><TalentInvoicesPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'talent/:profileId',           element: <PageWrapper><ModuleContentWrapper><TalentProfilePage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'talent/:profileId/contracts', element: <PageWrapper><ModuleContentWrapper><FreelancerContractsPage /></ModuleContentWrapper></PageWrapper> },
     ],
   },
 
