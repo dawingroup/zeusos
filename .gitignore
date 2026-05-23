@@ -46,6 +46,11 @@ Thumbs.db
 .env
 .env.*
 functions/.env.*
+# Exception: per-project Firebase Functions env files are non-secret and
+# expected to be committed. They provide deploy-time values for
+# `defineString()` params (CI doesn't carry per-developer .env). Secrets
+# stay in Secret Manager / `.secret.local`.
+!functions/.env.zeusos
 
 # Firebase
 .firebase/
