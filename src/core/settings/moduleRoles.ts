@@ -110,12 +110,6 @@ export const MODULE_ROLES: Record<SubsidiaryModule, ModuleRoleDef[]> = {
     { id: 'tax_compliance',    label: 'Tax Compliance',    description: 'URA filings (PAYE, VAT, WHT, NSSF) and corporate tax compliance.' },
   ],
 
-  // ─── Capital Hub (corporate-treasury — kept from DawinOS) ────────────────
-  capital: [
-    { id: 'capital_owner',      label: 'Capital Owner',      description: 'Owns the capital-seeking strategy and active facilities.' },
-    { id: 'capital_analyst',    label: 'Capital Analyst',    description: 'Prepares applications, readiness packs, and funder responses.' },
-  ],
-
   // ─── Compliance ──────────────────────────────────────────────────────────
   compliance: [
     { id: 'compliance_officer', label: 'Compliance Officer', description: 'Owns the obligations register, UAA membership renewals, client NDA tracking.' },
