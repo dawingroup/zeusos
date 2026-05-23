@@ -4814,3 +4814,18 @@ exports.issueClientInvoice = issueClientInvoice;
 exports.recordClientPayment = recordClientPayment;
 exports.generateClientInvoice = generateClientInvoice;
 exports.onIntercompanyInvoiceCreated = onIntercompanyInvoiceCreated;
+
+// ============================================================
+// Asset Library — Phase 5.C (DAM-lite)
+// ============================================================
+// `onAssetUploaded` — Storage trigger that generates 200x200 and
+// 800x800 thumbnails when staff upload a raster image. Populates
+// `thumbnailUrl` and `previewUrl` on the matching asset_library_items
+// doc.
+// `resolveShareLink` — public HTTPS endpoint that resolves a share
+// token to a fresh signed Storage URL. Validates expiry + revocation
+// in Firestore; never exposes the underlying object directly.
+const { onAssetUploaded } = require('./src/asset-library/onAssetUploaded');
+const { resolveShareLink } = require('./src/asset-library/resolveShareLink');
+exports.onAssetUploaded = onAssetUploaded;
+exports.resolveShareLink = resolveShareLink;

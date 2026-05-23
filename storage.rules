@@ -431,5 +431,35 @@ service firebase.storage {
       allow read: if isAuthenticated();
       allow write: if isAuthenticated() && isValidLargeFileSize();
     }
+
+    // ============================================
+    // ASSET LIBRARY (Phase 5.C — DAM-lite)
+    // ============================================
+    // Path layout:
+    //   asset-library/{itemId}/source/{fileName}   ← uploaded by staff
+    //   asset-library/{itemId}/thumb/200.jpg       ← written by onAssetUploaded CF
+    //   asset-library/{itemId}/preview/800.jpg     ← written by onAssetUploaded CF
+    //
+    // Read: any authenticated staff member (the rules layer trusts
+    // Firestore-side subsidiary scoping; the bucket carries low-fidelity
+    // thumbs anyway). External access goes through the
+    // `resolveShareLink` HTTPS Function which signs a fresh URL —
+    // unauthenticated reads against the bucket itself stay denied.
+    //
+    // Write: staff only on the source path; the derived paths are
+    // written exclusively by the Cloud Function (admin SDK bypasses
+    // these rules), so the client cannot upload directly there.
+    match /asset-library/{itemId}/source/{fileName} {
+      allow read:  if isAuthenticated();
+      allow write: if isAuthenticated() && isValidLargeFileSize();
+    }
+    match /asset-library/{itemId}/thumb/{fileName} {
+      allow read:  if isAuthenticated();
+      allow write: if false; // Cloud Function only.
+    }
+    match /asset-library/{itemId}/preview/{fileName} {
+      allow read:  if isAuthenticated();
+      allow write: if false; // Cloud Function only.
+    }
   }
 }

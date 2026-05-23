@@ -11,13 +11,13 @@ import {
   AssetUploadForm,
   type AssetUploadInput,
 } from '../components/AssetUploadForm';
-import { createAsset } from '../services/asset-item.service';
+import { createAssetWithUpload } from '../services/asset-item.service';
 
 export default function AssetUploadPage() {
   const navigate = useNavigate();
 
-  async function handleSave(values: AssetUploadInput) {
-    await createAsset(values);
+  async function handleSave(values: AssetUploadInput, file: File) {
+    await createAssetWithUpload(values, file);
     navigate('/assets');
   }
 
@@ -30,8 +30,9 @@ export default function AssetUploadPage() {
       <header>
         <h1 className="text-xl font-semibold">Upload Asset</h1>
         <p className="text-sm text-muted-foreground">
-          Fill in the details below. File upload to Cloud Storage is wired in Phase 5;
-          for now the storage reference is recorded as a string.
+          The file is uploaded to Cloud Storage and indexed for the library.
+          Raster images get auto-generated 200px / 800px thumbnails seconds
+          after upload.
         </p>
       </header>
 

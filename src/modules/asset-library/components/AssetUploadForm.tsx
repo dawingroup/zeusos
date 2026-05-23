@@ -1,9 +1,10 @@
 /**
  * AssetUploadForm — slide-over for uploading a new asset.
  *
- * Storage upload is stubbed for Phase 4: the file input only records
- * the filename into `storageRef`. Phase 5 will replace this with an
- * actual Cloud Storage `uploadBytes` call.
+ * Phase 5.C: the file is uploaded to Cloud Storage at
+ * `asset-library/{itemId}/source/{fileName}`. The `onAssetUploaded`
+ * trigger fires on raster images and writes `thumbnailUrl` /
+ * `previewUrl` back onto the doc.
  */
 
 import { useState } from 'react';
@@ -34,16 +35,21 @@ const FILE_TYPES: AssetFileType[] = [
   'OTHER',
 ];
 
+/**
+ * Header-only fields the caller fills in (the storage path + size are
+ * derived from the picked File and resolved by `createAssetWithUpload`).
+ */
 export type AssetUploadInput = Omit<
   AssetItem,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'storageRef' | 'fileSizeBytes' | 'thumbnailUrl' | 'previewUrl'
 >;
 
 interface Props {
   open: boolean;
   defaultSubsidiaryOrgId?: string;
   onClose: () => void;
-  onSave: (values: AssetUploadInput) => Promise<void>;
+  /** Called with the doc-side fields plus the raw File to upload. */
+  onSave: (values: AssetUploadInput, file: File) => Promise<void>;
 }
 
 export function AssetUploadForm({
@@ -60,10 +66,9 @@ export function AssetUploadForm({
     defaultSubsidiaryOrgId ?? 'zeus-the-agency',
   );
   const [tagsRaw, setTagsRaw] = useState('');
-  const [storageRef, setStorageRef] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [thumbnailRef, setThumbnailRef] = useState('');
   const [dimensions, setDimensions] = useState('');
-  const [fileSizeBytes, setFileSizeBytes] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,6 +76,10 @@ export function AssetUploadForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!file) {
+      setError('Please pick a file to upload.');
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
@@ -78,23 +87,24 @@ export function AssetUploadForm({
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
-      await onSave({
-        name,
-        category,
-        clientId: clientId || undefined,
-        subsidiaryOrgId,
-        tags,
-        // Initial-upload version is "v1"; the actual versionId is
-        // assigned by Firestore on the first addVersion call.
-        currentVersionId: 'v1',
-        storageRef,
-        thumbnailRef: thumbnailRef || undefined,
-        fileType,
-        fileSizeBytes,
-        dimensions: dimensions || undefined,
-        status: 'ACTIVE',
-        uploadedBy: 'current-user', // replaced by auth context in real implementation
-      });
+      await onSave(
+        {
+          name,
+          category,
+          clientId: clientId || undefined,
+          subsidiaryOrgId,
+          tags,
+          // Initial-upload version is "v1"; the actual versionId is
+          // assigned by Firestore on the first addVersion call.
+          currentVersionId: 'v1',
+          thumbnailRef: thumbnailRef || undefined,
+          fileType,
+          dimensions: dimensions || undefined,
+          status: 'ACTIVE',
+          uploadedBy: 'current-user', // replaced by auth context in real implementation
+        },
+        file,
+      );
       onClose();
     } catch (err) {
       setError(String((err as Error).message));
@@ -104,11 +114,9 @@ export function AssetUploadForm({
   }
 
   function handleFilePick(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    // Phase 5 will upload to Cloud Storage; for now record the name+size.
-    setStorageRef(`uploads/pending/${file.name}`);
-    setFileSizeBytes(file.size);
+    const picked = e.target.files?.[0];
+    if (!picked) return;
+    setFile(picked);
   }
 
   return (
@@ -216,11 +224,15 @@ export function AssetUploadForm({
               onChange={handleFilePick}
               className="w-full text-sm"
             />
-            {storageRef && (
+            {file && (
               <p className="mt-1 text-xs text-muted-foreground">
-                Recorded: {storageRef} ({fileSizeBytes} bytes)
+                {file.name} · {(file.size / 1024).toFixed(1)} KB
               </p>
             )}
+            <p className="mt-1 text-xs text-muted-foreground">
+              Raster images get auto-generated thumbnails. PDFs, videos and
+              fonts upload as-is.
+            </p>
           </div>
 
           <div>
@@ -259,10 +271,10 @@ export function AssetUploadForm({
             </button>
             <button
               type="submit"
-              disabled={saving || !storageRef}
+              disabled={saving || !file}
               className="rounded bg-primary px-4 py-1.5 text-sm text-primary-foreground disabled:opacity-60"
             >
-              {saving ? 'Saving…' : 'Save Asset'}
+              {saving ? 'Uploading…' : 'Save Asset'}
             </button>
           </div>
         </form>

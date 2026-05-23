@@ -13,6 +13,7 @@ import {
   addDoc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -20,7 +21,13 @@ import {
   orderBy,
   serverTimestamp,
 } from 'firebase/firestore';
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+} from 'firebase/storage';
 import { db } from '@/shared/services/firebase';
+import { app } from '@/shared/services/firebase/config';
 import type {
   AssetItem,
   AssetCategory,
@@ -30,6 +37,17 @@ import type { AssetUsage } from '../types/asset-usage.types';
 
 const ITEMS_COLL    = 'asset_library_items';
 const USAGES_SUBCOLL = 'usages';
+
+/**
+ * Path layout the `onAssetUploaded` Cloud Function listens on. Uploading
+ * to anything else will not trigger thumbnail generation.
+ */
+export function assetSourceStoragePath(itemId: string, fileName: string): string {
+  // Strip any directory separators from the filename — paranoia against
+  // a user-supplied name like "../foo".
+  const safeName = fileName.replace(/[\\/]+/g, '_');
+  return `asset-library/${itemId}/source/${safeName}`;
+}
 
 // ─────────────────────────────────────────────────────────────────
 // AssetItem CRUD
@@ -44,6 +62,45 @@ export async function createAsset(
     updatedAt: serverTimestamp(),
   });
   return getAsset(ref.id) as Promise<AssetItem>;
+}
+
+/**
+ * Create the AssetItem doc and upload the source file in one shot.
+ *
+ * Flow:
+ *   1. Reserve a Firestore doc id so we can compute the storage path.
+ *   2. Upload to `asset-library/{itemId}/source/{fileName}` — this is
+ *      the path the `onAssetUploaded` Cloud Function watches; it will
+ *      asynchronously populate `thumbnailUrl` and `previewUrl` on the
+ *      same doc.
+ *   3. Write the AssetItem doc with the resolved `storageRef`.
+ *
+ * The caller doesn't need to do anything to surface the thumbnail —
+ * the trigger will write it back, and existing readers (AssetCard /
+ * AssetGrid / AssetDetailPage) re-render on the next fetch.
+ */
+export async function createAssetWithUpload(
+  input: Omit<AssetItem, 'id' | 'createdAt' | 'updatedAt' | 'storageRef' | 'fileSizeBytes' | 'thumbnailUrl' | 'previewUrl'>,
+  file: File,
+): Promise<AssetItem> {
+  // Reserve the Firestore id so the storage path can reference it.
+  const itemRef = doc(collection(db, ITEMS_COLL));
+  const path = assetSourceStoragePath(itemRef.id, file.name);
+
+  const storage = getStorage(app);
+  await uploadBytes(storageRef(storage, path), file, {
+    contentType: file.type || undefined,
+  });
+
+  await setDoc(itemRef, {
+    ...input,
+    storageRef: path,
+    fileSizeBytes: file.size,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+
+  return (await getAsset(itemRef.id)) as AssetItem;
 }
 
 export async function getAsset(itemId: string): Promise<AssetItem | null> {

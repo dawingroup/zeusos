@@ -1,14 +1,22 @@
 import type { AssetCategory } from '../types/asset-item.types';
 
+/**
+ * All badges use the Zeus navy + red palette. Hue differentiation is
+ * dropped in favour of a single consistent surface — categories are
+ * already obvious from the asset name and the (separate) file-type
+ * facet, and the dawins-era pastel grid was visually noisy. A few
+ * categories keep a red accent to highlight client-facing identity
+ * assets (logos, brand guidelines, palettes).
+ */
 const CATEGORY_STYLES: Record<AssetCategory, string> = {
-  LOGO:          'bg-purple-100 text-purple-700',
-  GUIDELINE:     'bg-indigo-100 text-indigo-700',
-  PHOTO:         'bg-amber-100 text-amber-700',
-  VIDEO:         'bg-rose-100 text-rose-700',
-  FONT:          'bg-blue-100 text-blue-700',
-  COLOR_PALETTE: 'bg-pink-100 text-pink-700',
-  TEMPLATE:      'bg-emerald-100 text-emerald-700',
-  OTHER:         'bg-gray-100 text-gray-700',
+  LOGO:          'bg-zeusRed-50 text-zeusRed-dark ring-1 ring-zeusRed-light/40',
+  GUIDELINE:     'bg-zeusRed-50 text-zeusRed-dark ring-1 ring-zeusRed-light/40',
+  COLOR_PALETTE: 'bg-zeusRed-50 text-zeusRed-dark ring-1 ring-zeusRed-light/40',
+  PHOTO:         'bg-zeusNavy-50 text-zeusNavy ring-1 ring-zeusNavy-100',
+  VIDEO:         'bg-zeusNavy-50 text-zeusNavy ring-1 ring-zeusNavy-100',
+  FONT:          'bg-zeusNavy-50 text-zeusNavy ring-1 ring-zeusNavy-100',
+  TEMPLATE:      'bg-zeusNavy-50 text-zeusNavy ring-1 ring-zeusNavy-100',
+  OTHER:         'bg-muted text-muted-foreground ring-1 ring-border',
 };
 
 const CATEGORY_LABEL: Record<AssetCategory, string> = {

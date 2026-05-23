@@ -52,6 +52,15 @@ export interface AssetItem {
   storageRef: string;
   /** Optional thumbnail Storage path for grid previews. */
   thumbnailRef?: string;
+  /**
+   * Public download URL for the 200x200 thumbnail produced by the
+   * `onAssetUploaded` Cloud Function. Populated asynchronously after
+   * upload; absent until the trigger has run, in which case AssetCard
+   * falls back to a category-shaped placeholder.
+   */
+  thumbnailUrl?: string;
+  /** Public download URL for the 800px preview (AssetDetailPage hero). */
+  previewUrl?: string;
   fileType: AssetFileType;
   /** Size in bytes of the current version. */
   fileSizeBytes: number;

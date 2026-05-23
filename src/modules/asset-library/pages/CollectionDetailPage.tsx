@@ -17,6 +17,7 @@ import { getAsset } from '../services/asset-item.service';
 import type { AssetCollection } from '../types/asset-collection.types';
 import type { AssetItem } from '../types/asset-item.types';
 import { AssetGrid } from '../components/AssetGrid';
+import { ShareLinkDialog } from '../components/ShareLinkDialog';
 
 export default function CollectionDetailPage() {
   const { colId } = useParams<{ colId: string }>();
@@ -25,6 +26,7 @@ export default function CollectionDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [addId, setAddId] = useState('');
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   async function reload() {
     if (!colId) return;
@@ -74,16 +76,31 @@ export default function CollectionDetailPage() {
         {collection.name}
       </nav>
 
-      <header className="space-y-1">
-        <h1 className="text-xl font-semibold">{collection.name}</h1>
-        {collection.description && (
-          <p className="text-sm text-muted-foreground">{collection.description}</p>
-        )}
-        <p className="text-xs text-muted-foreground">
-          {collection.itemIds.length} items · {collection.subsidiaryOrgId}
-          {collection.clientId ? ` · Client: ${collection.clientId}` : ''}
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold">{collection.name}</h1>
+          {collection.description && (
+            <p className="text-sm text-muted-foreground">{collection.description}</p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            {collection.itemIds.length} items · {collection.subsidiaryOrgId}
+            {collection.clientId ? ` · Client: ${collection.clientId}` : ''}
+          </p>
+        </div>
+        <button
+          onClick={() => setShareDialogOpen(true)}
+          className="rounded bg-zeusRed px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-zeusRed-dark"
+        >
+          Share with client
+        </button>
       </header>
+
+      <ShareLinkDialog
+        open={shareDialogOpen}
+        target={{ kind: 'collection', collectionId: collection.id }}
+        targetName={collection.name}
+        onClose={() => setShareDialogOpen(false)}
+      />
 
       <form
         onSubmit={handleAdd}

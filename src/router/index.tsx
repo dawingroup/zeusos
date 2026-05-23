@@ -131,6 +131,9 @@ const AssetUploadPage       = lazyWithRetry(() => import('@/modules/asset-librar
 const CollectionsPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionsPage'));
 const CollectionDetailPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionDetailPage'));
 
+// Public share-link viewer (mounted OUTSIDE the AuthGuard).
+const SharedAssetPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/SharedAssetPage'));
+
 // Public legal pages (Meta App Review surface)
 const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/legal/PrivacyPolicyPage'));
 
@@ -267,6 +270,10 @@ export const router = createBrowserRouter([
   { path: '/login', element: <Navigate to="/auth/login" replace /> },
   { path: '/privacy', element: <PageWrapper><PrivacyPolicyPage /></PageWrapper> },
   { path: '/mcp/pair', element: <PageWrapper><MCPPairingPage /></PageWrapper> },
+  // Phase 5.C — public asset/collection share viewer. The resolver
+  // Cloud Function validates the token; the page lives outside the
+  // AuthGuard so clients can open it without a Zeus login.
+  { path: '/share/:token', element: <PageWrapper><SharedAssetPage /></PageWrapper> },
 
   // Authenticated app shell
   {

@@ -19,6 +19,7 @@ import type { AssetUsage } from '../types/asset-usage.types';
 import { AssetCategoryBadge } from '../components/AssetCategoryBadge';
 import { AssetVersionList } from '../components/AssetVersionList';
 import { AssetUsageList } from '../components/AssetUsageList';
+import { ShareLinkDialog } from '../components/ShareLinkDialog';
 
 type Tab = 'info' | 'versions' | 'usages';
 
@@ -30,6 +31,7 @@ export default function AssetDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>('info');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   async function reload() {
     if (!itemId) return;
@@ -90,15 +92,30 @@ export default function AssetDetailPage() {
             {item.clientId ? ` · Client: ${item.clientId}` : ''}
           </p>
         </div>
-        {item.status !== 'ARCHIVED' && (
+        <div className="flex gap-2">
           <button
-            onClick={handleArchive}
-            className="rounded border px-3 py-1.5 text-sm hover:bg-muted/40"
+            onClick={() => setShareDialogOpen(true)}
+            className="rounded bg-zeusRed px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-zeusRed-dark"
           >
-            Archive
+            Share with client
           </button>
-        )}
+          {item.status !== 'ARCHIVED' && (
+            <button
+              onClick={handleArchive}
+              className="rounded border px-3 py-1.5 text-sm hover:bg-muted/40"
+            >
+              Archive
+            </button>
+          )}
+        </div>
       </header>
+
+      <ShareLinkDialog
+        open={shareDialogOpen}
+        target={{ kind: 'asset', assetItemId: item.id }}
+        targetName={item.name}
+        onClose={() => setShareDialogOpen(false)}
+      />
 
       {/* Tabs */}
       <div className="border-b flex gap-4">
@@ -119,15 +136,17 @@ export default function AssetDetailPage() {
 
       {activeTab === 'info' && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="aspect-square rounded border bg-muted/40 flex items-center justify-center">
-            {item.thumbnailRef ? (
+          <div className="aspect-square rounded border bg-muted/40 flex items-center justify-center overflow-hidden">
+            {item.previewUrl || item.thumbnailUrl || item.thumbnailRef ? (
               <img
-                src={item.thumbnailRef}
+                src={item.previewUrl ?? item.thumbnailUrl ?? item.thumbnailRef}
                 alt={item.name}
                 className="object-contain max-h-full max-w-full"
               />
             ) : (
-              <span className="text-sm text-muted-foreground">No preview</span>
+              <span className="text-sm text-muted-foreground">
+                Preview not available
+              </span>
             )}
           </div>
           <dl className="grid grid-cols-2 gap-3">
