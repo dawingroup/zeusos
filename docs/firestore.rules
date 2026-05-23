@@ -3403,6 +3403,14 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Suppliers directory — Phase 4 shared directory of external vendors
+    // (audit copy; deployed source at firestore.rules)
+    match /supplier_orgs/{supplierId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
     // Media Supplier Invoices — Phase 4 upstream emitter for PO + JE flow
     // (audit copy; deployed source at firestore.rules)
     match /media_supplier_invoices/{invoiceId} {

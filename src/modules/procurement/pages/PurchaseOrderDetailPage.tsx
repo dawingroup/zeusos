@@ -14,6 +14,8 @@ import type { PurchaseOrder } from '../types/purchase-order.types';
 import type { JournalEntry } from '../types/journal-entry.types';
 import { PurchaseOrderStatusBadge } from '../components/PurchaseOrderStatusBadge';
 import { PurchaseOrderKindBadge } from '../components/PurchaseOrderKindBadge';
+import { getSupplier } from '@/modules/suppliers/services/supplier.service';
+import type { Supplier } from '@/modules/suppliers/types/supplier.types';
 
 function formatMoney(minor: number, currency: string): string {
   return `${currency} ${(minor / 100).toLocaleString(undefined, { minimumFractionDigits: 0 })}`;
@@ -32,6 +34,7 @@ export default function PurchaseOrderDetailPage() {
   const { poId } = useParams<{ poId: string }>();
   const [po, setPo] = useState<PurchaseOrder | null>(null);
   const [je, setJe] = useState<JournalEntry | null>(null);
+  const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,9 +43,14 @@ export default function PurchaseOrderDetailPage() {
     setLoading(true);
     setError(null);
     Promise.all([getPurchaseOrder(poId), getJournalEntryForPO(poId)])
-      .then(([poDoc, jeDoc]) => {
+      .then(async ([poDoc, jeDoc]) => {
         setPo(poDoc);
         setJe(jeDoc);
+        // Resolve supplierOrgId → Supplier (only relevant for media POs)
+        if (poDoc?.supplierOrgId) {
+          const s = await getSupplier(poDoc.supplierOrgId).catch(() => null);
+          setSupplier(s);
+        }
       })
       .catch((err) => setError(String((err as Error).message)))
       .finally(() => setLoading(false));
@@ -93,8 +101,20 @@ export default function PurchaseOrderDetailPage() {
           )}
           {po.supplierOrgId && (
             <div>
-              <dt className="text-xs text-muted-foreground">Supplier org</dt>
-              <dd className="font-mono text-xs">{po.supplierOrgId}</dd>
+              <dt className="text-xs text-muted-foreground">Supplier</dt>
+              <dd className="text-xs">
+                {supplier ? (
+                  <Link
+                    to={`/suppliers/${supplier.id}`}
+                    className="hover:underline"
+                    data-testid="po-supplier-link"
+                  >
+                    {supplier.name}
+                  </Link>
+                ) : (
+                  <span className="font-mono text-muted-foreground">{po.supplierOrgId}</span>
+                )}
+              </dd>
             </div>
           )}
           {po.mediaPlanId && (

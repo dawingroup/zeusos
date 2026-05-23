@@ -4126,6 +4126,26 @@ service cloud.firestore {
     }
 
     // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Suppliers directory
+    //
+    // supplier_orgs/{supplierId} — shared directory of external 3rd-party
+    // vendors (media houses, talent agencies, production houses, etc.).
+    // Replaces the construction-focused DawinOS Suppliers module removed
+    // in Phase 1.C.
+    //
+    //   read:   all staff (used by media-ops, AM, Finance, talent ops)
+    //   create / update: parent-org principal (AM curates the shared list;
+    //                    subsidiaries cannot mutate the directory)
+    //   delete: admin only (soft-delete via status=INACTIVE preferred)
+    // ════════════════════════════════════════════════════════════════
+
+    match /supplier_orgs/{supplierId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
     // Phase 4 — Media Supplier Invoices
     //
     // media_supplier_invoices/{invoiceId}
