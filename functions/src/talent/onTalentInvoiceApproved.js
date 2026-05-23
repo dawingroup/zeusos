@@ -23,11 +23,12 @@
  *     on the same key. Mirrors the §4.5 UNIQUE pattern used for IC
  *     invoices.
  *
- * Status: Phase 4.1 SCAFFOLD. The handler is registered with the
- * runtime but its body is a documented TODO — see the implementation
- * checklist below. The trigger + processedBy hook are wired so the
- * `TalentInvoiceApproved` event will not be silently dropped: the
- * harness short-circuits on the tag once a real implementation lands.
+ * Status: Phase 4.1 SCAFFOLD → COMPLETE. Body, idempotency check,
+ * transactional PO write, and PurchaseOrderRaised emit are all live;
+ * functions/__tests__/talent/onTalentInvoiceApproved.test.js exercises
+ * the happy path + idempotency replay + malformed-payload guard. The
+ * upstream emitter is src/modules/talent/services/talent-invoice.service.ts
+ * (approveTalentInvoice batch-writes the invoice status + the event).
  */
 
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
