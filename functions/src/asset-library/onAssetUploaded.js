@@ -40,7 +40,7 @@ const RASTER_CONTENT_TYPES = new Set([
 
 exports.onAssetUploaded = onObjectFinalized(
   {
-    region: 'europe-west1',
+    region: 'us-east1',
     memory: '512MiB',
     timeoutSeconds: 120,
   },
