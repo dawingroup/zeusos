@@ -104,7 +104,13 @@ const { shopifyPublishCaseStudy } = require('./src/integrations/shopify/publishC
 const { publishFinishMetaobject } = require('./src/integrations/shopify/publishFinishMetaobject');
 const { finishShopifySync } = require('./src/triggers/finishShopifySync');
 const { publishProjectMetaobject } = require('./src/integrations/shopify/publishProjectMetaobject');
-const { projectCaseStudyShopifySync } = require('./src/triggers/projectCaseStudyShopifySync');
+// projectCaseStudyShopifySync removed — was a DawinOS Shopify trigger
+// (DesignProject case-study sync) that flipped from HTTPS to Firestore
+// background trigger between releases. Firebase refuses in-place trigger-
+// kind transitions ("Changing from an HTTPS function to a background
+// triggered function is not allowed"), which broke every prod deploy.
+// Zeus doesn't have a Shopify storefront — the underlying flow is dead.
+// Full removal of the Shopify export surface is tracked as task #1b.
 const { applyProductMetafieldsFn } = require('./src/integrations/shopify/applyProductMetafieldsCallable');
 const { manufacturingShopifyWorkshopStatus } = require('./src/triggers/manufacturingShopifyWorkshopStatus');
 const { publishVoiceMetaobject } = require('./src/integrations/shopify/publishVoiceMetaobject');
@@ -130,7 +136,7 @@ exports.shopifyPublishCaseStudy = shopifyPublishCaseStudy;
 exports.publishFinishMetaobject = publishFinishMetaobject;
 exports.finishShopifySync = finishShopifySync;
 exports.publishProjectMetaobject = publishProjectMetaobject;
-exports.projectCaseStudyShopifySync = projectCaseStudyShopifySync;
+// projectCaseStudyShopifySync export removed — see line 107 for rationale.
 exports.applyProductMetafields = applyProductMetafieldsFn;
 exports.manufacturingShopifyWorkshopStatus = manufacturingShopifyWorkshopStatus;
 exports.publishVoiceMetaobject = publishVoiceMetaobject;
