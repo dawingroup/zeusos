@@ -18,10 +18,12 @@ service cloud.firestore {
     
     function isAdmin() {
       return isAuthenticated() && (
-        // Super user bypass — TODO(ZeusOS Phase 0 open item #2):
-        // replace placeholder with Zeus Group super-admin email
-        // (likely Jeffrey Amani) once confirmed by client.
-        request.auth.token.email == 'admin@zeusgroup.co.ug'
+        // Super-user bypass — kept in sync with isSuperUser() below.
+        // Zeus Group super-admin emails (project owners). Phase 0 open item #2
+        // tracks the canonical email; both are accepted during transition.
+        request.auth.token.email == 'onzimai@zeusgroup.co.ug'
+        || request.auth.token.email == 'onzimai@dawin.group'
+        || request.auth.token.email == 'admin@zeusgroup.co.ug'
         // Check root users collection
         || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
             && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
