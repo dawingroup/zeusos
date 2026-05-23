@@ -4124,5 +4124,70 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['revoked']);
       allow delete: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Suppliers directory
+    //
+    // supplier_orgs/{supplierId} — shared directory of external 3rd-party
+    // vendors (media houses, talent agencies, production houses, etc.).
+    // Replaces the construction-focused DawinOS Suppliers module removed
+    // in Phase 1.C.
+    //
+    //   read:   all staff (used by media-ops, AM, Finance, talent ops)
+    //   create / update: parent-org principal (AM curates the shared list;
+    //                    subsidiaries cannot mutate the directory)
+    //   delete: admin only (soft-delete via status=INACTIVE preferred)
+    // ════════════════════════════════════════════════════════════════
+
+    match /supplier_orgs/{supplierId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — Media Supplier Invoices
+    //
+    // media_supplier_invoices/{invoiceId}
+    //   read:   all staff (media-ops sees the queue)
+    //   create (submit): any authenticated staff (traffic/media-ops submits on
+    //                    behalf of the supplier)
+    //   update approve/reject: parent-org principal (AM/Finance Lead)
+    //   update paid:    parent-org principal (Finance confirms payment;
+    //                   triggers MediaSupplierInvoicePaid event → PO + JE)
+    //   delete: admin only
+    // ════════════════════════════════════════════════════════════════
+
+    match /media_supplier_invoices/{invoiceId} {
+      allow read: if isStaffAuth();
+      allow create: if isStaffAuth();
+      allow update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4.1 — Procurement / Finance handshake (parent-org only)
+    //
+    // purchase_orders/{poId} — written by onTalentInvoiceApproved +
+    //   onMediaSupplierInvoicePaid Cloud Functions. Contains supplier
+    //   costs that subsidiaries must NOT see (spec §7.4 commercial
+    //   gravity).
+    //
+    // journal_entries/{jeId} — written by postJournalEntryOnInvoicePaid
+    //   Cloud Function. Same parent-org-only constraint.
+    //
+    //   read:   admin/executive OR parent-org member matching doc orgId
+    //   write:  Cloud Functions only (client writes blocked)
+    // ════════════════════════════════════════════════════════════════
+
+    match /purchase_orders/{poId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    match /journal_entries/{jeId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
+    }
   }
 }

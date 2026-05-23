@@ -3403,21 +3403,35 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Suppliers directory — Phase 4 shared directory of external vendors
+    // (audit copy; deployed source at firestore.rules)
+    match /supplier_orgs/{supplierId} {
+      allow read: if isStaffAuth();
+      allow create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
+    // Media Supplier Invoices — Phase 4 upstream emitter for PO + JE flow
+    // (audit copy; deployed source at firestore.rules)
+    match /media_supplier_invoices/{invoiceId} {
+      allow read: if isStaffAuth();
+      allow create: if isStaffAuth();
+      allow update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+    }
+
     // Purchase Orders — Phase 4.1 procurement anchor (talent + media suppliers)
-    // Contains supplier costs that subsidiaries must NOT read. Only parent org
-    // (is_legal_entity == true) and global admins can read.
+    // CFn-only write. Parent-org-only read (supplier costs leak otherwise).
     match /purchase_orders/{poId} {
-      allow read: if isAdmin() || isExecutive() ||
-        (isAuthenticated() && isOrgMember(resource.data.orgId));
-      allow write: if false;  // Cloud Functions only (onTalentInvoiceApproved, onMediaSupplierInvoicePaid)
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
     }
 
     // Journal Entries — Phase 4.1 GL posting (POs + client invoices)
-    // Contains financial detail tied to supplier costs. Parent org read only.
+    // CFn-only write. Parent-org-only read.
     match /journal_entries/{jeId} {
-      allow read: if isAdmin() || isExecutive() ||
-        (isAuthenticated() && isOrgMember(resource.data.orgId));
-      allow write: if false;  // Cloud Functions only (postJournalEntryOnInvoicePaid)
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
     }
   }
 }

@@ -3,23 +3,20 @@
  * Single source of truth for all navigation items across ZeusOS.
  * Consolidates: config/navigation.ts + integration/constants/navigation.constants.ts
  *
- * Phase 3.H follow-up — navigation cleanup:
- *   - FINISHES_NAVIGATION (DawinOS construction modules) deleted.
- *   - ADVISORY_NAVIGATION and the /advisory/investment subtree removed in
- *     Phase 1.D (a marketing consortium does not run a deal pipeline).
+ * Phase 4.B navigation cleanup:
+ *   - FINISHES_NAVIGATION (DawinOS construction back-compat alias) removed.
+ *   - ADVISORY_NAVIGATION removed in Phase 1.D (no deal pipeline here).
  *   - AGENCY_NAVIGATION is the shared sidebar for all Zeus sub-brands.
- *   - COMMERCIAL_NAVIGATION exposes Account Management, Pricing, and
- *     Billing — gated to parent-org admins/owners in the AppShell to
- *     mirror the ParentOrgGuard / Cloud Function / Firestore rules
- *     boundary (§7.4 "commercial gravity").
- *   - CORPORATE_NAVIGATION child hrefs aligned to the actual routes in
- *     src/router/index.tsx; dead sub-links removed.
- *   - GLOBAL_NAVIGATION trimmed: Customers, Suppliers, and Messaging
- *     pointed at routes that don't exist post-Phase-1.C; only Delivery
- *     Inbox (subsidiary workspace) remains.
- *   - Phase 4 modules (Media Plans, Production, Talent Roster) are
- *     folded into AGENCY_NAVIGATION; the Talent Invoice approval queue
- *     also appears in COMMERCIAL_NAVIGATION (AM-only).
+ *   - Per-subsidiary reorder ids are now real AGENCY_NAVIGATION ids (the
+ *     earlier `'engagements'` priority was a silent no-op against the
+ *     sub-brand sidebar — that surface only carries media/production/
+ *     talent/delivery/ai; engagements live in COMMERCIAL_NAVIGATION,
+ *     which is parent-org only).
+ *   - GLOBAL_NAVIGATION is empty: Delivery Inbox lives in AGENCY_NAVIGATION;
+ *     parent-org users get it filtered out in AppShell.
+ *   - COMMERCIAL_NAVIGATION exposes Account Management, Pricing, Billing,
+ *     Procurement — gated to parent-org admins/owners in the AppShell.
+ *   - CORPORATE_NAVIGATION child hrefs aligned to actual routes.
  */
 
 import type { CommandItem } from '@/core/components/navigation/CommandPalette';
@@ -100,6 +97,14 @@ export const AGENCY_NAVIGATION: NavItem[] = [
     icon: 'Inbox',
     description: 'Internal work orders awaiting acceptance and in-flight work',
     keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
+  },
+  {
+    id: 'suppliers',
+    label: 'Suppliers',
+    href: '/suppliers',
+    icon: 'Building2',
+    description: 'Directory of media houses, talent agencies, production houses, and other vendors',
+    keywords: ['supplier', 'vendor', 'media house', 'agency', 'directory'],
   },
   // NOTE: The DawinOS "Investment Pipeline" entry (/advisory/investment) was
   // removed in Phase 1.D — ZeusOS is a marketing consortium, not an
@@ -251,21 +256,12 @@ export const UTILITY_NAVIGATION: NavItem[] = [
 // ============================================================================
 // GLOBAL NAVIGATION (sidebar — workspace section)
 // ============================================================================
-// Items shared across every subsidiary. Delivery Inbox is also surfaced
-// here so subsidiary users keep it visible when they switch sub-brands;
-// AppShell hides it for parent-org users (the SubsidiaryDeliveryGuard
-// would 403 them).
+// Reserved for items shared across every subsidiary that don't already
+// live in AGENCY_NAVIGATION. Delivery Inbox used to live here too; it
+// now lives in AGENCY_NAVIGATION (with AppShell filtering it out for
+// parent-org users, since SubsidiaryDeliveryGuard would 403 them).
 
-export const GLOBAL_NAVIGATION: NavItem[] = [
-  {
-    id: 'delivery-inbox',
-    label: 'Delivery Inbox',
-    href: '/delivery/inbox',
-    icon: 'Inbox',
-    description: 'Internal work orders awaiting acceptance and in-flight work',
-    keywords: ['delivery', 'iwo', 'work orders', 'tasks', 'time', 'cost'],
-  },
-];
+export const GLOBAL_NAVIGATION: NavItem[] = [];
 
 // ============================================================================
 // ADMIN NAVIGATION
@@ -419,12 +415,12 @@ export const CORPORATE_NAVIGATION: NavItem[] = [
 // silently skipped by the helper, so variants stay forward-compatible
 // against future AGENCY_NAVIGATION additions.
 //
-// Mapping per the sub-brand mandate:
-//   • Zeus The Agency   — full-service. Default order (Engagements first).
-//   • Zeus Digital      — digital-first. Media › Engagements.
-//   • Labyrinth A&V     — production house. Production › Media › Engagements.
-//   • Odd Gorilla       — creative shop. Engagements › Talent › Production.
-//   • House of Zeus     — strategy + house ops. Default order for now.
+// Mapping per the sub-brand mandate (ids must exist in AGENCY_NAVIGATION):
+//   • Zeus The Agency   — full-service. Default order.
+//   • Zeus Digital      — digital-first. Media › Production › Talent.
+//   • Labyrinth A&V     — production house. Production › Media › Talent.
+//   • Odd Gorilla       — creative shop. Talent › Production › Media.
+//   • House of Zeus     — house ops. Delivery Inbox first, then default.
 
 /**
  * Return `items` with the entries whose ids appear in `priorityIds` pushed
@@ -442,10 +438,10 @@ function reorderByIds(items: NavItem[], priorityIds: string[]): NavItem[] {
 }
 
 export const ZEUS_AGENCY_NAVIGATION: NavItem[]   = AGENCY_NAVIGATION;
-export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['media', 'engagements']);
-export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'media', 'engagements']);
-export const ODD_GORILLA_NAVIGATION: NavItem[]   = reorderByIds(AGENCY_NAVIGATION, ['engagements', 'talent', 'production']);
-export const HOUSE_OF_ZEUS_NAVIGATION: NavItem[] = AGENCY_NAVIGATION;
+export const ZEUS_DIGITAL_NAVIGATION: NavItem[]  = reorderByIds(AGENCY_NAVIGATION, ['media', 'production', 'talent']);
+export const LABYRINTH_NAVIGATION: NavItem[]     = reorderByIds(AGENCY_NAVIGATION, ['production', 'media', 'talent']);
+export const ODD_GORILLA_NAVIGATION: NavItem[]   = reorderByIds(AGENCY_NAVIGATION, ['talent', 'production', 'media']);
+export const HOUSE_OF_ZEUS_NAVIGATION: NavItem[] = reorderByIds(AGENCY_NAVIGATION, ['delivery-inbox', 'production', 'talent']);
 
 // ============================================================================
 // SUBSIDIARY CONFIGURATIONS
@@ -605,14 +601,4 @@ export function getActiveSection(pathname: string): string | null {
   return null;
 }
 
-// ============================================================================
-// BACK-COMPAT ALIASES — deprecated; will be deleted once consumers move over.
-// ============================================================================
-
-/**
- * @deprecated Use AGENCY_NAVIGATION. The FINISHES_NAVIGATION alias is
- * retained for one cycle so external consumers (storybook stories,
- * snapshot tests) don't break on rename. Slated for removal in Phase 4.B.
- */
-export const FINISHES_NAVIGATION = AGENCY_NAVIGATION;
 

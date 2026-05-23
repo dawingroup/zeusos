@@ -47,10 +47,10 @@ import { GlobalTaskButton } from '@/modules/intelligence-layer/components/Global
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
 import {
   getAllCommandItems,
+  getSubsidiaryNavigation,
   AGENCY_NAVIGATION,
   COMMERCIAL_NAVIGATION,
   CORPORATE_NAVIGATION,
-  GLOBAL_NAVIGATION,
   ADMIN_NAVIGATION,
   filterNavigationByAccess,
   type NavItem,
@@ -159,8 +159,10 @@ export function AppShell({ children }: AppShellProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // All sub-brands share AGENCY_NAVIGATION; per-subsidiary reordering is
-  // a Phase 4.B follow-up.
+  // Per-subsidiary nav: each sub-brand reorders AGENCY_NAVIGATION around
+  // its primary specialty. Defined in navigation.unified.ts; selected
+  // here off the active subsidiary. Parent-org (zeus-group) falls back
+  // to the canonical AGENCY_NAVIGATION order.
   const isPrivileged = isModuleAdmin || isSuperUser;
 
   // Parent-org admin/owner principal — mirrors ParentOrgGuard. Used for
@@ -177,8 +179,20 @@ export function AppShell({ children }: AppShellProps) {
   }, [dawinUser]);
 
   const mainNavItems = useMemo(() => {
-    return filterNavigationByAccess(AGENCY_NAVIGATION, allAccessibleModuleIds, isPrivileged);
-  }, [allAccessibleModuleIds, isPrivileged]);
+    const subId = currentSubsidiary?.id;
+    const source =
+      subId && subId !== 'zeus-group'
+        ? getSubsidiaryNavigation(subId)
+        : AGENCY_NAVIGATION;
+    const filtered = filterNavigationByAccess(source, allAccessibleModuleIds, isPrivileged);
+    // Phase 3.E — Delivery Inbox is subsidiary-scoped (SubsidiaryDeliveryGuard
+    // would 403 parent-org users). Hide it for parent-org admins/owners;
+    // super-users keep it for smoke testing.
+    if (isPrivileged) return filtered;
+    return isParentOrgPrincipal
+      ? filtered.filter((item) => item.id !== 'delivery-inbox')
+      : filtered;
+  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal, currentSubsidiary?.id]);
 
   // Commercial — Account Management surface. Visible to parent-org
   // admins/owners and super-users (smoke testing); subsidiary principals
@@ -192,18 +206,6 @@ export function AppShell({ children }: AppShellProps) {
   const corporateNavItems = useMemo(() => {
     return filterNavigationByAccess(CORPORATE_NAVIGATION, allAccessibleModuleIds, isPrivileged);
   }, [allAccessibleModuleIds, isPrivileged]);
-
-  const globalNavItems = useMemo(() => {
-    const filtered = filterNavigationByAccess(GLOBAL_NAVIGATION, allAccessibleModuleIds, isPrivileged);
-    // Phase 3.E — hide Delivery Inbox from parent-org users; the route
-    // would redirect them anyway, and the inbox is semantically
-    // subsidiary-side. Super-users (privileged) keep it for smoke
-    // testing.
-    if (isPrivileged) return filtered;
-    return isParentOrgPrincipal
-      ? filtered.filter((item) => item.id !== 'delivery-inbox')
-      : filtered;
-  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal]);
 
   // Desktop: collapsed rail by default, toggle to expand. Mobile: always expanded (full drawer).
   const sidebarExpanded = isDesktop ? !sidebarCollapsed : true;
@@ -246,7 +248,6 @@ export function AppShell({ children }: AppShellProps) {
       ...mainNavItems,
       ...commercialNavItems,
       ...corporateNavItems,
-      ...globalNavItems,
       ...adminNavItems,
     ];
     const activeParents = allItems.filter(item => 
@@ -794,18 +795,6 @@ export function AppShell({ children }: AppShellProps) {
                     </p>
                   )}
                   {commercialNavItems.map((item: NavItem) => renderNavItem(item))}
-                </div>
-              )}
-
-              {/* Workspace — subsidiary shortcuts (Delivery Inbox) */}
-              {globalNavItems.length > 0 && (
-                <div className="space-y-1">
-                  {sidebarExpanded && (
-                    <p className="px-2 text-[10px] font-medium text-[var(--fg-on-dark-muted)] uppercase tracking-[0.1em] mb-1.5">
-                      Workspace
-                    </p>
-                  )}
-                  {globalNavItems.map((item: NavItem) => renderNavItem(item))}
                 </div>
               )}
 

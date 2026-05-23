@@ -123,6 +123,14 @@ const JournalEntriesListPage  = lazyWithRetry(() => import('@/modules/procuremen
 const JournalEntryDetailPage  = lazyWithRetry(() => import('@/modules/procurement/pages/JournalEntryDetailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
+// Suppliers — Phase 4 (shared directory of external 3rd-party vendors)
+// ──────────────────────────────────────────────────────────────────────────
+const SuppliersListPage    = lazyWithRetry(() => import('@/modules/suppliers/pages/SuppliersListPage'));
+const SupplierDetailPage   = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierDetailPage'));
+const SupplierCreatePage   = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierCreatePage'));
+const SupplierEditPage     = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierEditPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
 // Asset Library — Phase 4 P1
 // ──────────────────────────────────────────────────────────────────────────
 const AssetLibraryListPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetLibraryListPage'));
@@ -513,6 +521,13 @@ export const router = createBrowserRouter([
       { path: 'procurement/purchase-orders/:poId',   element: <PageWrapper><ModuleContentWrapper><PurchaseOrderDetailPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'procurement/journal-entries',         element: <PageWrapper><ModuleContentWrapper><JournalEntriesListPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'procurement/journal-entries/:jeId',   element: <PageWrapper><ModuleContentWrapper><JournalEntryDetailPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── Suppliers — Phase 4 (shared directory of external vendors) ────────
+      // Staff read; firestore.rules enforces parent-org-only write.
+      { path: 'suppliers',                    element: <PageWrapper><ModuleContentWrapper><SuppliersListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'suppliers/new',                element: <PageWrapper><ModuleContentWrapper><SupplierCreatePage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'suppliers/:supplierId',        element: <PageWrapper><ModuleContentWrapper><SupplierDetailPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'suppliers/:supplierId/edit',   element: <PageWrapper><ModuleContentWrapper><SupplierEditPage /></ModuleContentWrapper></PageWrapper> },
 
       // ── Asset Library — Phase 4 P1 ────────────────────────────────────────
       // Staff-wide access — any authenticated user can browse and upload.
