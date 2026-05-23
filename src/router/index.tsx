@@ -8,7 +8,7 @@
  * advisory/investment subsidiary was removed in Phase 1.D (this is a
  * marketing consortium, not an advisory firm).
  *
- * Routes for the kept core modules (HR, Finance, Capital, Compliance, Strategy,
+ * Routes for the kept core modules (HR, Finance, Compliance, Strategy,
  * Market Intelligence, Intelligence Layer, Performance, Admin, Profile) are
  * wired here at the layout / landing-page level. Sub-page detail routes will
  * be re-added incrementally as Phase 3 (Campaign & Job Manager) and Phase 4
@@ -192,17 +192,6 @@ const SpendPlanPage = lazyWithRetry(() => import('@/modules/finance/pages/SpendP
 const ExpenditureQueuePage = lazyWithRetry(() => import('@/modules/finance/pages/ExpenditureQueuePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
-// Capital Hub
-// ──────────────────────────────────────────────────────────────────────────
-const CapitalLayout = lazyWithRetry(() => import('@/modules/capital/components/CapitalLayout'));
-const CapitalDashboardPage = lazyWithRetry(() => import('@/modules/capital/pages/CapitalDashboardPage'));
-const CapitalNeedsPage = lazyWithRetry(() => import('@/modules/capital/pages/CapitalNeedsPage'));
-const CapitalProductsPage = lazyWithRetry(() => import('@/modules/capital/pages/CapitalProductsPage'));
-const ReadinessPage = lazyWithRetry(() => import('@/modules/capital/pages/ReadinessPage'));
-const CapitalApplicationsPage = lazyWithRetry(() => import('@/modules/capital/pages/ApplicationsPage'));
-const CapitalFacilitiesPage = lazyWithRetry(() => import('@/modules/capital/pages/FacilitiesPage'));
-
-// ──────────────────────────────────────────────────────────────────────────
 // Compliance
 // ──────────────────────────────────────────────────────────────────────────
 const ComplianceLayout = lazyWithRetry(() =>
@@ -383,20 +372,6 @@ export const router = createBrowserRouter([
           { path: 'cfo-briefing',         element: <CFOBriefingPage /> },
           { path: 'spend-plan',           element: <SpendPlanPage /> },
           { path: 'expenditure-queue',    element: <ExpenditureQueuePage /> },
-        ],
-      },
-
-      // Capital
-      {
-        path: 'capital',
-        element: <PageWrapper><CapitalLayout /></PageWrapper>,
-        children: [
-          { index: true,             element: <CapitalDashboardPage /> },
-          { path: 'needs',           element: <CapitalNeedsPage /> },
-          { path: 'products',        element: <CapitalProductsPage /> },
-          { path: 'readiness',       element: <ReadinessPage /> },
-          { path: 'applications',    element: <CapitalApplicationsPage /> },
-          { path: 'facilities',      element: <CapitalFacilitiesPage /> },
         ],
       },
 

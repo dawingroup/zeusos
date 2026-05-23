@@ -108,12 +108,16 @@ export function RoleAssignmentSection({ employee, onUpdate, isEditable = true }:
     }
   };
 
+  // FIXME: this list still uses DawinOS-era subsidiary keys (finishes,
+  // advisory, technology) that no longer match ZeusOS's sub-brand IDs
+  // (zeus-the-agency, zeus-digital, labyrinth, odd-gorilla,
+  // house-of-zeus). Tracked as a follow-up; Capital removed here per
+  // plan §4.1 decision.
   const subsidiaries = [
     { value: 'all', label: 'All Subsidiaries' },
     { value: 'finishes', label: 'Zeus Group' },
     { value: 'advisory', label: 'Zeus Group' },
     { value: 'technology', label: 'Zeus Technology' },
-    { value: 'capital', label: 'Zeus Capital' },
   ];
 
   const jobLevels = [

@@ -15,7 +15,6 @@ import type { GlobalRole } from '@/core/settings/types';
 const MODULE_MINIMUM_ROLES: Partial<Record<SubsidiaryModule, GlobalRole>> = {
   strategy: 'manager',
   finance: 'manager',
-  capital: 'manager',
   hr: 'member', // overall HR is member+, but payroll is admin+ (handled at feature level)
 };
 

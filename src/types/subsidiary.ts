@@ -49,7 +49,6 @@ export type SubsidiaryModule =
   | 'strategy'
   | 'hr'
   | 'finance'
-  | 'capital'
   | 'compliance'
   | 'intelligence-layer';
 

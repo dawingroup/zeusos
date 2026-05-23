@@ -111,14 +111,6 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     color: 'bg-emerald-600',
     hasRealData: false,
   },
-  'capital': {
-    label: 'Capital Hub',
-    description: 'Capital seeking, readiness & application tracking',
-    icon: 'Building2',
-    href: '/capital',
-    color: 'bg-emerald-700',
-    hasRealData: true,
-  },
   'compliance': {
     label: 'Compliance',
     description: 'Document register, obligations, UAA membership renewal',
@@ -144,7 +136,6 @@ const CORPORATE_MODULE_IDS: SubsidiaryModule[] = [
   'hr',
   'finance',
   'market_intelligence',
-  'capital',
   'compliance',
   'intelligence-layer',
   'asset-registry',

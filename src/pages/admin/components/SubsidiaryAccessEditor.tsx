@@ -57,12 +57,11 @@ const MODULE_LABELS: Record<string, string> = {
 const MODULE_SENSITIVITY: Partial<Record<string, { minRole: GlobalRole; label: string }>> = {
   strategy: { minRole: 'manager', label: 'Manager+' },
   finance: { minRole: 'manager', label: 'Manager+' },
-  capital: { minRole: 'manager', label: 'Manager+' },
 };
 
 /** Corporate modules shown in their own section */
 const CORPORATE_MODULE_IDS: SubsidiaryModule[] = [
-  'strategy', 'hr', 'finance', 'capital', 'market_intelligence', 'intelligence-layer', 'compliance', 'asset-registry',
+  'strategy', 'hr', 'finance', 'market_intelligence', 'intelligence-layer', 'compliance', 'asset-registry',
 ];
 
 export function SubsidiaryAccessEditor({ access, onChange, disabled }: SubsidiaryAccessEditorProps) {

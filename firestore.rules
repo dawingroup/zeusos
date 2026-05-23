@@ -1098,40 +1098,6 @@ service cloud.firestore {
     }
 
     // ============================================
-    // Capital Hub Collections
-    // ============================================
-
-    match /companies/{companyId}/capital_needs/{needId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /companies/{companyId}/capital_products/{productId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /companies/{companyId}/capital_applications/{applicationId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /companies/{companyId}/capital_facilities/{facilityId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /companies/{companyId}/capital_readiness/{assessmentId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    // ============================================
     // Market Intelligence / Environment Scanning
     // ============================================
 
