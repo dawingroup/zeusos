@@ -40,7 +40,9 @@ export type CurrencyCode = 'UGX' | 'USD' | 'KES' | 'EUR' | 'GBP';
 export interface PurchaseOrder {
   id: string;
   kind: PurchaseOrderKind;
-  /** The talent_invoice or media_supplier_invoice that raised this PO. */
+  /** The talent_invoice or media_supplier_invoice that raised this PO.
+   *  For manual VENDOR_OTHER entries this is an external supplier ref or
+   *  falls back to the PO id. */
   sourceInvoiceId: string;
   /** Either a talent profile id (TALENT_FREELANCER) or supplier org id. */
   supplierProfileId?: string;
@@ -59,6 +61,12 @@ export interface PurchaseOrder {
   postedToGL: boolean;
   /** Idempotency key copied from the upstream emission for replay safety. */
   idempotencyKey?: string | null;
+  /** Organization scope (spec §7.4) — set on auto-raised and manual POs. */
+  orgId?: string;
+  /** UID of the admin who raised a manual VENDOR_OTHER PO. */
+  raisedBy?: string;
+  /** Free-text notes for manual entries. */
+  notes?: string;
   raisedAt: Timestamp | string;
   postedAt?: Timestamp | string;
   closedAt?: Timestamp | string;

@@ -11,6 +11,7 @@ import {
   collection,
   doc,
   addDoc,
+  deleteDoc,
   getDoc,
   getDocs,
   updateDoc,
@@ -73,6 +74,10 @@ export async function updateProductionJob(
   updates: Partial<Omit<ProductionJob, 'id' | 'createdAt' | 'createdBy' | 'stage' | 'stageHistory'>>,
 ): Promise<void> {
   await updateDoc(doc(db, JOBS_COLL, jobId), { ...updates, updatedAt: serverTimestamp() });
+}
+
+export async function deleteProductionJob(jobId: string): Promise<void> {
+  await deleteDoc(doc(db, JOBS_COLL, jobId));
 }
 
 /**

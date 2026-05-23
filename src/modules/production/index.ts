@@ -21,6 +21,7 @@ export {
   getProductionJob,
   listProductionJobs,
   updateProductionJob,
+  deleteProductionJob,
   advanceProductionStage,
 } from './services/production-job.service';
 
@@ -40,4 +41,5 @@ export { CallSheetPanel } from './components/CallSheetPanel';
 export { PostProductionPanel } from './components/PostProductionPanel';
 
 export { default as ProductionBoardPage } from './pages/ProductionBoardPage';
+export { default as ProductionJobCreatePage } from './pages/ProductionJobCreatePage';
 export { default as ProductionJobDetailPage } from './pages/ProductionJobDetailPage';

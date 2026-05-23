@@ -96,6 +96,7 @@ const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IW
 // Media Plan & Buying — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
 const MediaPlansListPage     = lazyWithRetry(() => import('@/modules/media/pages/MediaPlansListPage'));
+const MediaPlanCreatePage    = lazyWithRetry(() => import('@/modules/media/pages/MediaPlanCreatePage'));
 const MediaPlanDetailPage    = lazyWithRetry(() => import('@/modules/media/pages/MediaPlanDetailPage'));
 const MediaPlanActualsPage   = lazyWithRetry(() => import('@/modules/media/pages/MediaPlanActualsPage'));
 const PostCampaignReportPage = lazyWithRetry(() => import('@/modules/media/pages/PostCampaignReportPage'));
@@ -104,6 +105,7 @@ const PostCampaignReportPage = lazyWithRetry(() => import('@/modules/media/pages
 // Production — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
 const ProductionBoardPage      = lazyWithRetry(() => import('@/modules/production/pages/ProductionBoardPage'));
+const ProductionJobCreatePage  = lazyWithRetry(() => import('@/modules/production/pages/ProductionJobCreatePage'));
 const ProductionJobDetailPage  = lazyWithRetry(() => import('@/modules/production/pages/ProductionJobDetailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
@@ -118,6 +120,7 @@ const TalentInvoicesPage     = lazyWithRetry(() => import('@/modules/talent/page
 // Procurement — Phase 4.1 (parent-org-only viewer for POs + JEs)
 // ──────────────────────────────────────────────────────────────────────────
 const PurchaseOrdersListPage  = lazyWithRetry(() => import('@/modules/procurement/pages/PurchaseOrdersListPage'));
+const PurchaseOrderCreatePage = lazyWithRetry(() => import('@/modules/procurement/pages/PurchaseOrderCreatePage'));
 const PurchaseOrderDetailPage = lazyWithRetry(() => import('@/modules/procurement/pages/PurchaseOrderDetailPage'));
 const JournalEntriesListPage  = lazyWithRetry(() => import('@/modules/procurement/pages/JournalEntriesListPage'));
 const JournalEntryDetailPage  = lazyWithRetry(() => import('@/modules/procurement/pages/JournalEntryDetailPage'));
@@ -505,6 +508,7 @@ export const router = createBrowserRouter([
       // actuals. Access guard deferred to Phase 4.B when isCommercialActor is
       // available as a React hook — for now any authenticated user can access.
       { path: 'media',                 element: <PageWrapper><ModuleContentWrapper><MediaPlansListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'media/new',             element: <PageWrapper><ModuleContentWrapper><MediaPlanCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'media/:planId',         element: <PageWrapper><ModuleContentWrapper><MediaPlanDetailPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'media/:planId/actuals', element: <PageWrapper><ModuleContentWrapper><MediaPlanActualsPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'media/:planId/report',  element: <PageWrapper><ModuleContentWrapper><PostCampaignReportPage /></ModuleContentWrapper></PageWrapper> },
@@ -513,6 +517,7 @@ export const router = createBrowserRouter([
       // Gated: parent-org AND subsidiary production team. Access guard
       // deferred to Phase 4.B.
       { path: 'production',        element: <PageWrapper><ModuleContentWrapper><ProductionBoardPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'production/new',    element: <PageWrapper><ModuleContentWrapper><ProductionJobCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'production/:jobId', element: <PageWrapper><ModuleContentWrapper><ProductionJobDetailPage /></ModuleContentWrapper></PageWrapper> },
 
       // ── Talent Roster — Phase 4 ────────────────────────────────────────────
@@ -526,6 +531,7 @@ export const router = createBrowserRouter([
       // ── Procurement — Phase 4.1 (parent-org viewer for POs + JEs) ─────────
       // Firestore rules block subsidiary reads on purchase_orders + journal_entries.
       { path: 'procurement/purchase-orders',         element: <PageWrapper><ModuleContentWrapper><PurchaseOrdersListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'procurement/purchase-orders/new',     element: <PageWrapper><ModuleContentWrapper><PurchaseOrderCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'procurement/purchase-orders/:poId',   element: <PageWrapper><ModuleContentWrapper><PurchaseOrderDetailPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'procurement/journal-entries',         element: <PageWrapper><ModuleContentWrapper><JournalEntriesListPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'procurement/journal-entries/:jeId',   element: <PageWrapper><ModuleContentWrapper><JournalEntryDetailPage /></ModuleContentWrapper></PageWrapper> },

@@ -16,6 +16,7 @@ export {
   listMediaPlans,
   updateMediaPlan,
   closeMediaPlan,
+  deleteMediaPlan,
   addMediaBuy,
   listMediaBuys,
   updateMediaBuy,
@@ -32,6 +33,7 @@ export { MediaBuyForm } from './components/MediaBuyForm';
 export { ActualReconcileForm } from './components/ActualReconcileForm';
 
 export { default as MediaPlansListPage } from './pages/MediaPlansListPage';
+export { default as MediaPlanCreatePage } from './pages/MediaPlanCreatePage';
 export { default as MediaPlanDetailPage } from './pages/MediaPlanDetailPage';
 export { default as MediaPlanActualsPage } from './pages/MediaPlanActualsPage';
 export { default as PostCampaignReportPage } from './pages/PostCampaignReportPage';

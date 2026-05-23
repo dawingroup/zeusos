@@ -103,6 +103,13 @@ export default function PurchaseOrdersListPage() {
               <option key={s} value={s}>{s === 'ALL' ? 'All statuses' : s}</option>
             ))}
           </select>
+          <Link
+            to="/procurement/purchase-orders/new"
+            className="rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+            data-testid="po-new-btn"
+          >
+            + New PO
+          </Link>
         </div>
       </header>
 

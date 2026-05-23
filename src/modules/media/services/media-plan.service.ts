@@ -81,6 +81,10 @@ export async function closeMediaPlan(planId: string): Promise<void> {
   await updateMediaPlan(planId, { status: 'CLOSED' });
 }
 
+export async function deleteMediaPlan(planId: string): Promise<void> {
+  await deleteDoc(doc(db, PLANS_COLL, planId));
+}
+
 // ─────────────────────────────────────────────────────────────────
 // MediaBuy CRUD
 // ─────────────────────────────────────────────────────────────────
