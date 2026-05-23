@@ -68,6 +68,12 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Run ESLint
+        # NOTE: ESLint is intentionally advisory (the `|| true` swallows
+        # failures). Main currently carries ~49k lint problems (43k
+        # errors, 6k warnings) inherited from DawinOS. Removing `|| true`
+        # would block every PR. A dedicated cleanup PR will land the
+        # baseline-fixes and promote lint to gating — until then, treat
+        # ESLint output as a signal-only report.
         run: npm run lint || true
 
   # ===========================================================================
@@ -95,7 +101,11 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Run TypeScript check
-        run: npx tsc --noEmit || true
+        # tsc is gating (no `|| true`) — typecheck is clean on main as of
+        # 2026-05-23. ESLint is still advisory (see Lint step) because of
+        # a 49k-problem backlog tracked separately; promote it once that
+        # cleanup PR lands.
+        run: npx tsc --noEmit
 
   # ===========================================================================
   # UNIT TESTS
