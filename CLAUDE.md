@@ -52,41 +52,65 @@ ALLOW_DIRECT_COMMIT=1 git commit ...
 
 To change the list of protected branches, edit the `PROTECTED_BRANCHES` array in `.githooks/pre-commit`.
 
-## Phase status (Phase 0 in progress)
+## Phase status (Phase 4 complete; Phase 5 in flight)
 
-- ✅ Source copied from DawinOS@80364790
-- ✅ Firebase project wired (`.firebaserc`, `.env`)
-- ⏳ Initial git commit
-- ⏳ `npm install` + boot verification
-- ❌ Phase 1: strip construction modules, rebrand
-- ❌ Phase 2: subsidiary setup, retained modules smoke test
-- ❌ Phase 3: Campaign & Job Manager (new core module)
-- ❌ Phase 4: Media Plan, Production, Talent Roster
-- ❌ Phase 5: AI/MCP rebuild, executive dashboard, go-live
+Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-have-onboarded-a-lovely-planet.md` is the source of truth — this is the working dashboard.
 
-## Inherited DawinOS conventions
+- ✅ **Phase 0** — Repo bootstrap, Firebase project (`zeusos`) wired, branch protection (`.githooks/pre-commit`), CI scaffolding
+- ✅ **Phase 1.A–1.D** — DawinOS strip: design-manager, finishes, cutlist, inventory, manufacturing, construction, fulfillment, advisory subsidiary, three.js. Branding to Zeus palette. (Phase 1.E — strip the matching `functions/` exports — is in flight, see PR #42.)
+- ✅ **Phase 2** — 5 sub-brands + Zeus Group parent modelled as `OrganizationKind = PARENT | SUBSIDIARY`; module-roles registry; CRM seeded
+- ✅ **Phase 3.A.5** — Domain re-model per Tech Spec v1.0 §14 (Commercial Gravity). 11 new top-level Firestore collections: `master_jobs`, `internal_work_orders`, `clients`, `msas`, `sows`, `change_orders`, `rate_cards`, `quotes`, `budget_holds`, `intercompany_invoices`, `client_invoices`, `domain_events`. See [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
+- ✅ **Phase 3.B** — IWO state machine Cloud Functions in `functions/src/assignment/` (issue/accept/reject/start/postTime/postCost/submit/acceptInternal/requestRevision/close/cancel + handoff packet validation + idempotency keys + outbox)
+- ✅ **Phase 3.C** — Pricing engine + Quote builder + RateCard versioning (`functions/src/pricing/`, `src/modules/pricing/`)
+- ✅ **Phase 3.D** — Account-Management UI: Clients / MSAs / SOWs / ChangeOrders / MasterJobs / Review Queue / Intake (`src/modules/account-management/`)
+- ✅ **Phase 3.E** — Subsidiary Delivery Workspace: IWO Inbox, IWO Workspace, burn meter, RouteToAMButton (`src/modules/delivery/`)
+- ✅ **Phase 3.F** — Billing: ClientInvoice (UNIQUE per master_job), InterCompanyInvoice, GL adapter, FX rates (`src/modules/billing/`, `functions/src/billing/`)
+- 🟡 **Phase 3.G** — Boundary tests: 40 Firestore-rules tests gating; Playwright lifecycle `continue-on-error: true` pending Phase 3.H test-id backfill across 3.D/3.E pages
+- ✅ **Phase 4** — Module surfaces: Media Plans + Buys + Actuals + PCR; Production Kanban + Checklist + Shoot Days + Post Phases; Talent Roster + Contracts + Invoices + Influencers/Models; Asset Library DAM-lite
+- 🟡 **Phase 4.1** — Procurement ↔ Finance handshake: 4 new domain events + 3 outbox-consumer CFns wired; talent body still SCAFFOLD; chart-of-accounts JSON pending. See [`docs/PHASE_4_1_HANDSHAKE.md`](docs/PHASE_4_1_HANDSHAKE.md).
+- 🟡 **Phase 5.A** — MCP server marketing rebuild (11 tool packs in `zeusos-mcp-server/src/tools/`); read tools live; write callables (`zeusos_create_brief`, `zeusos_advance_master_job_stage`) deferred to 5.A.2
+- ❌ **Phase 5.B** — Executive Dashboard rebuild for Zeus (still DawinOS layout)
+- ✅ **Phase 5.C** — Asset Library polish (thumbnails + share links + collections)
+- ❌ **Phase 5.D** — Time & Effort Tracking module (`src/modules/time-tracking/` not yet created)
+- ❌ **Phase 5.E** — Client Portal rebrand (`customer-hub` carryover; no Zeus visual identity pass)
+- ❌ **Phase 5.F** — Production launch + custom domain DNS active + GA/PostHog (DNS for `os.zeustheagency.com` not yet verified — deploy health-check still hits `zeusos.web.app`)
+- ❌ **Phase 5.G** — Onboarding session with Zeus team (gated by 5.F)
+
+**Open decisions** (plan §12):
+- QuickBooks Online — open item #3, decision pending. Currently disabled via empty env in `functions/.env.zeusos`.
+- Notion, Meta, Google Drive integrations — same: disabled until enabled per plan §3.
+
+**Known broken / stale**:
+- `functions/index.js` still has ~65 DawinOS-legacy exports (Shopify, Adobe, matflow, inventory-AI, design-manager triggers) — task tracker item `#1b`. PR #48 removed the `projectCaseStudyShopifySync` trigger that was breaking prod deploys due to a trigger-kind change.
+- `firestore.rules` still has match blocks for `bom` (nested under `manufacturingOrders`) and `materials`, `inventoryItems`, `finishLibrary`, `designProjects`, `designItems` — left in PR #45 because the cloud-function tools / semanticSearch / partyMerge services still reference them. Sweeps when the corresponding callers are stripped.
+- `ci.yml` still runs `lint || true` (line ~70) — ESLint stays advisory until the inherited 49k-problem backlog is paid down. `typecheck` is now gating (PR #46).
+
+## Conventions
 
 - Feature modules live in `src/modules/<module-name>/`
-- Subsidiary scoping via `SubsidiaryAccess` on each user — ZeusOS uses keys `zeus-the-agency`, `zeus-digital`, `labyrinth`, `odd-gorilla`, `house-of-zeus`
-- Firestore collections to be aware of: `users`, `organizations/{orgId}/users`, and the legal-entity Organization records at `organizations/{orgId}` (Phase 3.A.5 seed — see `scripts/seed-zeus-legal-entities.cjs`). Phase 3.A.5 also renamed the engagement-level collection `campaigns` → `master_jobs` (Phase 2.D's earlier rename of `advisory_projects` → `campaigns` is now superseded).
-- MCP server lives in `dawinos-mcp-server/` until Phase 1 rename to `zeusos-mcp-server`
+- Cloud Functions live in `functions/src/<context>/` (assignment, billing, contracts, pricing, asset-library, talent, media, finance, …)
+- Subsidiary scoping via `SubsidiaryAccess` on each user. Canonical IDs (single source of truth in [src/core/settings/types.ts](src/core/settings/types.ts)): `zeus-group` (parent), `zeus-the-agency`, `zeus-digital`, `labyrinth`, `odd-gorilla`, `house-of-zeus`.
+- Each `organizations/{orgId}` doc carries `kind: 'PARENT' \| 'SUBSIDIARY'`, `is_legal_entity`, `base_currency`, `gl_connection_id`. The Commercial Gravity invariant ("subsidiary never quotes") is enforced at three layers: `RoleGuard requireOrgKind="PARENT"` in the UI ([src/router/guards/ParentOrgGuard.tsx](src/router/guards/ParentOrgGuard.tsx)), Cloud Function `assertParentOrgPrincipal` helpers, and `firestore.rules` `isParentOrgPrincipal()`.
+- Engagement-level collection is `master_jobs` (not `campaigns`). The marketing-facing `Campaign` interface composes onto `master_job.campaign` — see [`src/modules/campaigns/types/campaign.types.ts`](src/modules/campaigns/types/campaign.types.ts).
+- MCP server: `zeusos-mcp-server/` (bundled into `functions/vendor/zeusos-mcp-server/` at deploy time by the `functions` predeploy script in `firebase.json`).
+- Outbox: every state-changing Cloud Function appends to `domain_events/{eventId}` via `appendDomainEvent` in `functions/src/platform/outbox.js`. 11 canonical event types — see [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
 
-## Modules being removed in Phase 1
+## Module surface (current)
 
-Construction/millwork-specific — do NOT extend or fix bugs in these, just remove:
-- `src/modules/design-manager/`
-- `src/subsidiaries/finishes/`
-- `src/modules/cutlist-processor/`
-- `src/modules/inventory/`
-- `src/modules/manufacturing/`
-- `src/modules/construction/`
-- `src/modules/fulfillment/`
-- All Three.js / 3D viewer dependencies
+Active `src/modules/`:
 
-## Modules being kept
+| Domain | Modules |
+|---|---|
+| Commercial (parent-org only) | `account-management`, `contracts`, `pricing`, `assignment`, `billing`, `intercompany` |
+| Delivery (per-subsidiary) | `delivery`, `media`, `production`, `talent`, `asset-library`, `campaigns` |
+| Operations | `crm`, `procurement`, `suppliers`, `finance`, `hr-central`, `hr`, `strategy`, `compliance`, `admin` |
+| Platform | `platform` (outbox + idempotency), `shared-ops`, `intelligence`, `intelligence-layer`, `market-intelligence` |
+| Removed in this fork | `capital` (PR #47 — plan §4.1 closed; Zeus isn't an investment vehicle), `design-manager`, `inventory`, `manufacturing`, `construction`, `cutlist-processor`, `finishes`, `fulfillment`, `advisory subsidiary` |
 
-Users, Auth, Roles, HR Central, Finance, Procurement, Suppliers, CRM, Strategy, Assets, Compliance, Customer Hub, Admin, Executive Dashboard — these carry over with light branding edits only.
+The Phase 1 strip is **done in `src/`** but `functions/index.js` still carries the DawinOS-legacy exports (Shopify / matflow / Adobe / inventory triggers / design-manager triggers / QBO / Notion / Meta WhatsApp). Those run on every cold-start until task `#1b` lands.
 
-## New modules being built
-
-`src/modules/campaigns/` (P0), `src/modules/media/` (P0), `src/modules/production/` (P1), `src/modules/talent/` (P1), `src/modules/asset-library/` (P1).
+Removed (do not recreate):
+- `src/modules/design-manager/`, `src/subsidiaries/finishes/`, `src/modules/cutlist-processor/`, `src/modules/inventory/`, `src/modules/manufacturing/`, `src/modules/construction/`, `src/modules/fulfillment/`
+- `src/subsidiaries/advisory/` (PR #20 — Zeus is not an advisory firm)
+- All three.js / camera-controls / three-mesh-bvh
+- DawinOS `dawinos-mcp-server/` (renamed and rebuilt as `zeusos-mcp-server/` in Phase 5.A)
