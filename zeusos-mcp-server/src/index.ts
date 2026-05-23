@@ -11,8 +11,10 @@
  * — Finance, Strategy, Intelligence, Quotes, Memory. Construction-domain tool
  * packs (purchasing, manufacturing, inventory, matflow, boq, categories,
  * finishes, designManager) were removed alongside the source modules.
- * Marketing-domain tool packs (campaigns, media, production, talent,
- * asset-library) will be added in Phase 3+.
+ *
+ * Phase 5.A added the marketing-domain packs on top of the Phase 3 + 4
+ * schema: Campaigns/MasterJobs, IWOs, Media, Production, Talent, Billing.
+ * See `TODO_MCP_SERVER.md` for the full surface map.
  */
 
 import express from 'express';
@@ -24,6 +26,12 @@ import { registerMemoryTools } from './tools/memory.js';
 import { registerQuoteTools } from './tools/quotes.js';
 import { registerFinanceTools } from './tools/finance.js';
 import { registerStrategyTools } from './tools/strategy.js';
+import { registerCampaignTools } from './tools/campaigns.js';
+import { registerIwoTools } from './tools/iwos.js';
+import { registerMediaTools } from './tools/media.js';
+import { registerProductionTools } from './tools/production.js';
+import { registerTalentTools } from './tools/talent.js';
+import { registerBillingTools } from './tools/billing.js';
 
 // ─── Re-export handler for Cloud Functions wrapper ────────────────────────────
 export { createMcpHandler } from './handler.js';
@@ -40,6 +48,13 @@ function buildServer(): McpServer {
   registerQuoteTools(server);
   registerFinanceTools(server);
   registerStrategyTools(server);
+  // Phase 5.A marketing-domain packs
+  registerCampaignTools(server);
+  registerIwoTools(server);
+  registerMediaTools(server);
+  registerProductionTools(server);
+  registerTalentTools(server);
+  registerBillingTools(server);
   return server;
 }
 

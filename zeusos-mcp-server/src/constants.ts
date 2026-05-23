@@ -46,6 +46,104 @@ export const COMPANY_PATHS = {
     `companies/${companyId}/spend_plans`,
 } as const;
 
+// ─── Phase 3 + 4 marketing-domain collections (Phase 5.A) ───────────────────
+// All top-level. Confirmed against firestore.rules + src/modules/*/services/firestore.ts.
+// See TODO_MCP_SERVER.md "Audit: collection paths in use" for the source map.
+export const MARKETING_COLLECTIONS = {
+  MASTER_JOBS: 'master_jobs',
+  INTERNAL_WORK_ORDERS: 'internal_work_orders',
+  BUDGET_HOLDS: 'budget_holds',
+  MEDIA_PLANS: 'media_plans',
+  MEDIA_SUPPLIER_INVOICES: 'media_supplier_invoices',
+  PRODUCTION_JOBS: 'production_jobs',
+  TALENT_PROFILES: 'talent_profiles',
+  TALENT_INVOICES: 'talent_invoices',
+  FREELANCER_CONTRACTS: 'freelancer_contracts',
+  CLIENT_INVOICES: 'client_invoices',
+  INTERCOMPANY_INVOICES: 'intercompany_invoices',
+  CLIENTS: 'clients',
+  DOMAIN_EVENTS: 'domain_events',
+} as const;
+
+// IWO subcollections
+export const IWO_SUBCOLLECTIONS = {
+  HANDOFF_PACKET: 'handoff_packet',
+  TIME_ENTRIES: 'time_entries',
+  COST_ENTRIES: 'cost_entries',
+  DELIVERABLES: 'deliverables',
+} as const;
+
+// MediaPlan subcollections
+export const MEDIA_PLAN_SUBCOLLECTIONS = {
+  MEDIA_BUYS: 'media_buys',
+  ACTUALS: 'actuals',
+} as const;
+
+// ─── Subsidiary IDs (mirrors src/core/settings/types.ts SubsidiaryId) ────────
+export const ZEUS_SUBSIDIARY_IDS = [
+  'zeus-group',         // parent
+  'zeus-the-agency',
+  'zeus-digital',
+  'labyrinth',
+  'odd-gorilla',
+  'house-of-zeus',
+] as const;
+export type ZeusSubsidiaryId = (typeof ZEUS_SUBSIDIARY_IDS)[number];
+
+// ─── IWO states (mirrors src/modules/assignment/constants/iwo-states.ts) ────
+export const IWO_STATES = [
+  'DRAFT',
+  'ISSUED',
+  'ACCEPTED',
+  'REJECTED',
+  'IN_PROGRESS',
+  'DELIVERED',
+  'ACCEPTED_INTERNALLY',
+  'CLOSED',
+  'CANCELLED',
+] as const;
+export type IWOState = (typeof IWO_STATES)[number];
+
+export const IWO_ACTIVE_STATES: readonly IWOState[] = [
+  'ISSUED',
+  'ACCEPTED',
+  'IN_PROGRESS',
+  'DELIVERED',
+  'ACCEPTED_INTERNALLY',
+];
+
+// ─── MasterJob statuses ──────────────────────────────────────────────────────
+export const MASTER_JOB_STATUSES = ['OPEN', 'DELIVERING', 'CLOSED', 'CANCELLED'] as const;
+export type MasterJobStatus = (typeof MASTER_JOB_STATUSES)[number];
+
+// ─── Production stages (mirrors src/modules/production/types/production-job.types.ts) ───
+export const PRODUCTION_STAGES = [
+  'BRIEF',
+  'PRE_PRODUCTION',
+  'TALENT_BOOKING',
+  'LOCATION_LOCK',
+  'EQUIPMENT',
+  'SHOOT',
+  'POST_PRODUCTION',
+  'CLIENT_REVIEW',
+  'MASTER_DELIVERY',
+  'COMPLETE',
+] as const;
+export type ProductionStage = (typeof PRODUCTION_STAGES)[number];
+
+export const PRODUCTION_JOB_TYPES = ['TVC', 'RADIO', 'PHOTOGRAPHY', 'PRINT', 'EXHIBITION', 'OTHER'] as const;
+
+// ─── Media vehicle types (mirrors src/modules/media/types/media-buy.types.ts) ───
+export const MEDIA_VEHICLE_TYPES = ['TV', 'RADIO', 'PRINT', 'OOH', 'DIGITAL', 'SOCIAL', 'SEARCH', 'PROGRAMMATIC'] as const;
+export type MediaVehicleType = (typeof MEDIA_VEHICLE_TYPES)[number];
+
+// ─── Invoice statuses ───────────────────────────────────────────────────────
+export const CLIENT_INVOICE_STATUSES = ['DRAFT', 'ISSUED', 'PART_PAID', 'PAID', 'VOID'] as const;
+export const TALENT_INVOICE_STATUSES = ['SUBMITTED', 'APPROVED', 'PAID', 'REJECTED'] as const;
+export const MEDIA_SUPPLIER_INVOICE_STATUSES = ['SUBMITTED', 'APPROVED', 'PAID', 'REJECTED'] as const;
+export const TALENT_TYPES = ['STAFF', 'FREELANCER'] as const;
+export const TALENT_STATUSES = ['ACTIVE', 'INACTIVE', 'BLACKLISTED'] as const;
+
 // ─── Manufacturing order subcollections ──────────────────────────────────────
 // Source: functions/src/tools/manufacturingTools.js:151,172,193
 export const MO_SUBCOLLECTIONS = {
