@@ -17,16 +17,25 @@ export type {
 export type { AssetVersion } from './types/asset-version.types';
 export type { AssetUsage, AssetUsageSubjectType } from './types/asset-usage.types';
 export type { AssetCollection } from './types/asset-collection.types';
+export type {
+  ShareLink,
+  ShareLinkTarget,
+  CreateShareLinkOptions,
+} from './types/share-link.types';
 
 export {
   createAsset,
+  createAssetWithUpload,
   getAsset,
   listAssets,
   updateAsset,
+  replaceAssetSource,
   archiveAsset,
+  deleteAsset,
   recordAssetUsage,
   listAssetUsages,
   removeAssetUsage,
+  assetSourceStoragePath,
 } from './services/asset-item.service';
 
 export {
@@ -45,16 +54,26 @@ export {
   removeItemFromCollection,
 } from './services/asset-collection.service';
 
+export {
+  createShareLink,
+  revokeShareLink,
+  buildShareUrl,
+} from './services/share-link.service';
+
 export { AssetCategoryBadge } from './components/AssetCategoryBadge';
 export { AssetCard } from './components/AssetCard';
 export { AssetGrid } from './components/AssetGrid';
 export { AssetSearchBar } from './components/AssetSearchBar';
 export { AssetVersionList } from './components/AssetVersionList';
 export { AssetUsageList } from './components/AssetUsageList';
-export { AssetUploadForm } from './components/AssetUploadForm';
+export { AssetForm, type AssetFormValues } from './components/AssetForm';
+export { ShareLinkDialog } from './components/ShareLinkDialog';
+export { DeleteAssetDialog } from './components/DeleteAssetDialog';
 
 export { default as AssetLibraryListPage } from './pages/AssetLibraryListPage';
 export { default as AssetDetailPage } from './pages/AssetDetailPage';
 export { default as AssetUploadPage } from './pages/AssetUploadPage';
+export { default as AssetEditPage } from './pages/AssetEditPage';
 export { default as CollectionsPage } from './pages/CollectionsPage';
 export { default as CollectionDetailPage } from './pages/CollectionDetailPage';
+export { default as SharedAssetPage } from './pages/SharedAssetPage';

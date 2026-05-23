@@ -4050,21 +4050,78 @@ service cloud.firestore {
     //   create/update:  all staff
     //   delete:         admin only
     //
-    // Asset Library is internal-facing only. Approval flow lives in
-    // Talent/Billing; here it's a read-mostly catalog. Any staff member
-    // in any sub-brand can browse and contribute.
+    // Phase 5.C tightened the read path:
+    //   - Parent-org principals (AM staff, super-admins) see everything.
+    //   - Subsidiary-org principals only see assets / collections
+    //     tagged with their `subsidiaryOrgId`.
+    //   - Freelancers / external users have no client-side read; they
+    //     must go through the `share_links` resolver (Cloud Function
+    //     with admin SDK, bypassing rules).
+    // Writes remain open to any staff member — a Zeus Digital creative
+    // can contribute a logo for a Labyrinth project if they're working
+    // jointly. The subsidiaryOrgId on the doc is the source of truth
+    // for reads.
     // ════════════════════════════════════════════════════════════════
 
     match /asset_library_items/{itemId} {
-      allow read: if isStaffAuth();
+      allow read: if isStaffAuth() && (
+        isParentOrgPrincipal()
+        || (isSubsidiaryOrgPrincipal() && resource.data.subsidiaryOrgId == callerHomeOrgId())
+      );
+      // Listing requires the same scope; subsidiary clients must
+      // narrow by `subsidiaryOrgId == <their home org>` to satisfy
+      // the read rule per result.
       allow create, update: if isStaffAuth();
       allow delete: if isAdmin();
-      match /versions/{versionId}      { allow read: if isStaffAuth(); allow create, update: if isStaffAuth(); allow delete: if isAdmin(); }
-      match /usages/{usageId}          { allow read: if isStaffAuth(); allow create, update, delete: if isStaffAuth(); }
+      match /versions/{versionId} {
+        // Sub-doc reads inherit the parent's subsidiaryOrgId.
+        allow read: if isStaffAuth() && (
+          isParentOrgPrincipal()
+          || (isSubsidiaryOrgPrincipal()
+              && get(/databases/$(database)/documents/asset_library_items/$(itemId)).data.subsidiaryOrgId == callerHomeOrgId())
+        );
+        allow create, update: if isStaffAuth();
+        allow delete: if isAdmin();
+      }
+      match /usages/{usageId} {
+        allow read: if isStaffAuth() && (
+          isParentOrgPrincipal()
+          || (isSubsidiaryOrgPrincipal()
+              && get(/databases/$(database)/documents/asset_library_items/$(itemId)).data.subsidiaryOrgId == callerHomeOrgId())
+        );
+        allow create, update, delete: if isStaffAuth();
+      }
     }
     match /asset_library_collections/{collectionId} {
-      allow read: if isStaffAuth();
+      allow read: if isStaffAuth() && (
+        isParentOrgPrincipal()
+        || (isSubsidiaryOrgPrincipal() && resource.data.subsidiaryOrgId == callerHomeOrgId())
+      );
       allow create, update: if isStaffAuth();
+      allow delete: if isAdmin();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SHARE LINKS — Phase 5.C
+    // ────────────────────────────────────────────────────────────────
+    // Public client links to one asset or one collection. The doc id
+    // IS the public token, but the doc itself is NEVER readable from
+    // the client — the `resolveShareLink` Cloud Function looks it up
+    // with admin SDK and validates expiry + revoke state server-side.
+    //
+    //   read:   nobody (resolver runs as admin)
+    //   create: any staff auth (and only with their own UID as createdBy)
+    //   update: only the creator, and only to flip `revoked` true
+    //   delete: admin only
+    // ════════════════════════════════════════════════════════════════
+
+    match /share_links/{token} {
+      allow read: if false;
+      allow create: if isStaffAuth()
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isStaffAuth()
+        && resource.data.createdBy == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['revoked']);
       allow delete: if isAdmin();
     }
   }

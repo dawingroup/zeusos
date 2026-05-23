@@ -3,11 +3,12 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   getAsset,
   listAssetUsages,
   archiveAsset,
+  deleteAsset,
 } from '../services/asset-item.service';
 import {
   listVersions,
@@ -19,17 +20,22 @@ import type { AssetUsage } from '../types/asset-usage.types';
 import { AssetCategoryBadge } from '../components/AssetCategoryBadge';
 import { AssetVersionList } from '../components/AssetVersionList';
 import { AssetUsageList } from '../components/AssetUsageList';
+import { ShareLinkDialog } from '../components/ShareLinkDialog';
+import { DeleteAssetDialog } from '../components/DeleteAssetDialog';
 
 type Tab = 'info' | 'versions' | 'usages';
 
 export default function AssetDetailPage() {
   const { itemId } = useParams<{ itemId: string }>();
+  const navigate = useNavigate();
   const [item, setItem] = useState<AssetItem | null>(null);
   const [versions, setVersions] = useState<AssetVersion[]>([]);
   const [usages, setUsages] = useState<AssetUsage[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>('info');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   async function reload() {
     if (!itemId) return;
@@ -63,6 +69,13 @@ export default function AssetDetailPage() {
     await reload();
   }
 
+  async function handleDelete() {
+    if (!itemId) return;
+    await deleteAsset(itemId);
+    // Storage tree cleanup happens server-side via onAssetDeleted.
+    navigate('/assets');
+  }
+
   if (loading) return <p className="p-6 text-sm text-muted-foreground">Loading…</p>;
   if (error)   return <p className="p-6 text-sm text-destructive">Error: {error}</p>;
   if (!item)   return <p className="p-6 text-sm text-muted-foreground">Asset not found.</p>;
@@ -90,15 +103,48 @@ export default function AssetDetailPage() {
             {item.clientId ? ` · Client: ${item.clientId}` : ''}
           </p>
         </div>
-        {item.status !== 'ARCHIVED' && (
+        <div className="flex flex-wrap gap-2">
           <button
-            onClick={handleArchive}
-            className="rounded border px-3 py-1.5 text-sm hover:bg-muted/40"
+            onClick={() => setShareDialogOpen(true)}
+            className="rounded bg-zeusRed px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-zeusRed-dark"
           >
-            Archive
+            Share with client
           </button>
-        )}
+          <Link
+            to={`/assets/${item.id}/edit`}
+            className="rounded border border-zeusNavy-100 px-3 py-1.5 text-sm text-zeusNavy hover:bg-zeusNavy-50"
+          >
+            Edit
+          </Link>
+          {item.status !== 'ARCHIVED' && (
+            <button
+              onClick={handleArchive}
+              className="rounded border border-zeusNavy-100 px-3 py-1.5 text-sm text-zeusNavy hover:bg-zeusNavy-50"
+            >
+              Archive
+            </button>
+          )}
+          <button
+            onClick={() => setDeleteDialogOpen(true)}
+            className="rounded border border-zeusRed-light px-3 py-1.5 text-sm text-zeusRed-dark hover:bg-zeusRed-50"
+          >
+            Delete
+          </button>
+        </div>
       </header>
+
+      <ShareLinkDialog
+        open={shareDialogOpen}
+        target={{ kind: 'asset', assetItemId: item.id }}
+        targetName={item.name}
+        onClose={() => setShareDialogOpen(false)}
+      />
+      <DeleteAssetDialog
+        open={deleteDialogOpen}
+        assetName={item.name}
+        onCancel={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+      />
 
       {/* Tabs */}
       <div className="border-b flex gap-4">
@@ -119,15 +165,17 @@ export default function AssetDetailPage() {
 
       {activeTab === 'info' && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="aspect-square rounded border bg-muted/40 flex items-center justify-center">
-            {item.thumbnailRef ? (
+          <div className="aspect-square rounded border bg-muted/40 flex items-center justify-center overflow-hidden">
+            {item.previewUrl || item.thumbnailUrl || item.thumbnailRef ? (
               <img
-                src={item.thumbnailRef}
+                src={item.previewUrl ?? item.thumbnailUrl ?? item.thumbnailRef}
                 alt={item.name}
                 className="object-contain max-h-full max-w-full"
               />
             ) : (
-              <span className="text-sm text-muted-foreground">No preview</span>
+              <span className="text-sm text-muted-foreground">
+                Preview not available
+              </span>
             )}
           </div>
           <dl className="grid grid-cols-2 gap-3">
