@@ -348,13 +348,6 @@ service cloud.firestore {
       allow create, update: if isAuthenticated();
     }
 
-    // Workshop Viewer Sessions
-    match /workshop_viewer_sessions/{sessionId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update, delete: if isAuthenticated();
-    }
-
     // Credit Usage (AI generation tracking)
     match /creditUsage/{subsidiaryId} {
       allow read: if isAuthenticated();
@@ -434,83 +427,6 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create, update: if isAuthenticated();
       allow delete: if isAdmin();
-    }
-
-    // Design Scenes (multi-cabinet scene composition)
-    match /designScenes/{sceneId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-
-      match /cabinets/{cabinetId} {
-        allow read: if isAuthenticated();
-        // P2 Slice 6: every cabinet in a project-backed scene MUST carry a
-        // non-empty `designItemId`. Standalone scenes (no real projectId)
-        // are exempt — they're the legacy / quick-review escape hatch. The
-        // rule reads the parent scene once to decide which regime applies.
-        // Update enforcement uses `affectedKeys()` so legacy docs without
-        // the field survive unrelated updates until the backfill runs.
-        allow create: if isAuthenticated()
-          && (
-            // Standalone scenes: no enforcement.
-            !exists(/databases/$(database)/documents/designScenes/$(sceneId))
-            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == null
-            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == ''
-            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == 'standalone'
-            // Project-backed: require non-empty designItemId.
-            || (request.resource.data.designItemId is string
-                && request.resource.data.designItemId.size() > 0)
-          );
-
-        allow update: if isAuthenticated()
-          && (
-            // Standalone scenes: no enforcement.
-            get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == null
-            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == ''
-            || get(/databases/$(database)/documents/designScenes/$(sceneId)).data.projectId == 'standalone'
-            // The payload doesn't touch designItemId — defer to existing value.
-            || !('designItemId' in request.resource.data.diff(resource.data).affectedKeys())
-            // The payload sets designItemId to a valid non-empty string.
-            || (request.resource.data.designItemId is string
-                && request.resource.data.designItemId.size() > 0)
-          );
-
-        allow delete: if isAuthenticated();
-
-        match /modelPackage/{packageId} {
-          allow read: if isAuthenticated();
-          allow create, update: if isAuthenticated();
-          allow delete: if isAdmin();
-
-          match /versions/{versionId} {
-            allow read: if isAuthenticated();
-            allow create, update: if isAuthenticated();
-            allow delete: if isAdmin();
-          }
-        }
-
-        match /assemblies/{assemblyId} {
-          allow read: if isAuthenticated();
-          allow create, update: if isAuthenticated();
-          allow delete: if isAuthenticated();
-
-          match /parts/{partId} {
-            allow read: if isAuthenticated();
-            allow create, update: if isAuthenticated();
-            allow delete: if isAuthenticated();
-          }
-        }
-      }
-
-      // Cabinet Alignment System — groups subcollection (Phase 1).
-      // Groups bind multiple cabinets into a single logical unit for
-      // drag/rotate/numeric edits. Any authenticated user with access
-      // to the parent scene can read + write groups.
-      match /groups/{groupId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
     }
 
     // Project PDFs
@@ -1689,86 +1605,6 @@ service cloud.firestore {
     }
     
     // ----------------------------------------
-    // Global MatFlow Collections
-    // ----------------------------------------
-
-    // Legacy MatFlow Projects (root-level collection for migration)
-    match /matflow_projects/{projectId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-
-      // Subcollections
-      match /{subcollection}/{docId} {
-        allow read: if isAuthenticated();
-        allow write: if isAuthenticated();
-      }
-    }
-
-    // Standard Formulas - Read by all authenticated, write by authenticated (for seeding)
-    match /matflow/data/formulas/{formulaId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-    
-    // Material Rates - Read by all authenticated, write by authenticated (for seeding)
-    match /matflow/data/material_rates/{rateId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-    
-    // Role Definitions - Read by all authenticated, write by authenticated (for seeding)
-    match /matflow/data/roles/{roleId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-    
-    // ----------------------------------------
-    // Organization MatFlow Projects
-    // ----------------------------------------
-    
-    match /organizations/{orgId}/matflow_projects/{projectId} {
-      // Simplified rules for development - allow authenticated users
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated() &&
-        request.resource.data.createdBy == request.auth.uid;
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin() ||
-        resource.data.createdBy == request.auth.uid;
-
-      // ----------------------------------------
-      // BOQ Items Subcollection
-      // ----------------------------------------
-
-      match /boq_items/{itemId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
-
-      // ----------------------------------------
-      // Procurement Entries Subcollection
-      // ----------------------------------------
-
-      match /procurement_entries/{entryId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
-
-      // ----------------------------------------
-      // Parsing Jobs Subcollection
-      // ----------------------------------------
-
-      match /parsing_jobs/{jobId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
-    }
-
-    // ----------------------------------------
     // Shared Helper Functions
     // Retained from the (now-removed) advisory platform — still used by
     // Strategy module rules (hasPlatformRole) and v2.0 rules (hasRequiredFields).
@@ -2391,35 +2227,8 @@ service cloud.firestore {
         allow update, delete: if isAdmin();
       }
       
-      // Control BOQ Items (subcollection)
-      match /boq_items/{itemId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
-      
-      // Control BOQ Document (subcollection)
-      match /control_boq/{docId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAdmin();
-      }
-    }
-    
-    // BOQ Items (root-level collection for cross-project queries)
-    match /boq_items/{itemId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAuthenticated();
     }
 
-    // Control BOQ Items (root-level collection with projectId field)
-    match /control_boq/{itemId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAuthenticated();
-    }
-    
     // IPCs (Interim Payment Certificates)
     match /ipcs/{ipcId} {
       allow read: if isAuthenticated();
@@ -3595,13 +3404,6 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated();
       allow update, delete: if isAdmin();
-    }
-
-    // Furniture Type Knowledge Base — continuously editable by admins
-    match /furniture_types/{typeId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAdmin();
-      allow delete: if isAdmin();
     }
 
     // Design Revisions — Workshop Viewer revision timeline
