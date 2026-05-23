@@ -14,6 +14,16 @@ on:
 env:
   NODE_VERSION: '20'
 
+# Workflow-level default permissions. `actions/checkout@v4` needs
+# `contents: read` to fetch the PR merge ref via the GITHUB_TOKEN —
+# without this, the org-default restricted token (introduced in GH
+# Actions 2023) causes intermittent `could not read Username for
+# https://github.com: terminal prompts disabled` failures during
+# `git fetch refs/pull/<n>/merge`. Per-job overrides (e.g. `codeql-
+# analysis` adding `security-events: write`) still apply.
+permissions:
+  contents: read
+
 jobs:
   # ===========================================================================
   # DEPENDENCY AUDIT
