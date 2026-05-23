@@ -1,9 +1,11 @@
 /**
- * Purchase Order service — read POs raised by the Phase 4.1 procurement
- * consumers (onTalentInvoiceApproved + onMediaSupplierInvoicePaid).
+ * Purchase Order service — reads + manual VENDOR_OTHER writes.
  *
- * Writes are Cloud-Function-only (firestore.rules enforces this). The UI
- * is purely a viewer onto the procurement-side ledger.
+ * TALENT_FREELANCER and MEDIA_SUPPLIER POs are written by Cloud Functions
+ * (onTalentInvoiceApproved + onMediaSupplierInvoicePaid) using the Admin
+ * SDK. Admins can additionally create/update/delete VENDOR_OTHER POs
+ * (print, props, catering, ad-hoc) via the manual-entry UI; firestore.rules
+ * enforces the kind restriction.
  *
  * Org-scoping: queries are filtered by orgId so subsidiaries don't see
  * each other's supplier costs (spec §7.4 commercial gravity).
@@ -12,11 +14,15 @@
 import {
   collection,
   doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
   getDoc,
   getDocs,
   query,
   where,
   orderBy,
+  serverTimestamp,
   limit as limitFn,
 } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase';
@@ -70,4 +76,63 @@ export async function getPurchaseOrderBySourceInvoice(
   if (snap.empty) return null;
   const d = snap.docs[0];
   return { id: d.id, ...(d.data() as Omit<PurchaseOrder, 'id'>) };
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Manual entry — VENDOR_OTHER only. Rules enforce the kind constraint.
+// ─────────────────────────────────────────────────────────────────
+
+export interface CreateManualPOInput {
+  orgId: string;
+  supplierOrgId?: string;
+  amountMinor: number;
+  currency: PurchaseOrder['currency'];
+  masterJobId: string;
+  sourceInvoiceId?: string;   // optional external reference (e.g. supplier doc #)
+  notes?: string;
+  raisedBy: string;
+}
+
+/**
+ * Create a manual VENDOR_OTHER PO. Doc id is generated client-side so
+ * the manual path stays distinct from the deterministic auto-raised ids.
+ */
+export async function createManualPurchaseOrder(
+  input: CreateManualPOInput,
+): Promise<PurchaseOrder> {
+  const id = `po_vendor_manual_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const ref = doc(db, POS_COLL, id);
+  const payload = {
+    kind: 'VENDOR_OTHER' as const,
+    sourceInvoiceId: input.sourceInvoiceId ?? id,
+    supplierOrgId: input.supplierOrgId,
+    amountMinor: input.amountMinor,
+    currency: input.currency,
+    masterJobId: input.masterJobId,
+    status: 'OPEN' as PurchaseOrderStatus,
+    postedToGL: false,
+    orgId: input.orgId,
+    raisedBy: input.raisedBy,
+    notes: input.notes,
+    raisedAt: serverTimestamp(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+  await setDoc(ref, payload);
+  const snap = await getDoc(ref);
+  return { id: snap.id, ...(snap.data() as Omit<PurchaseOrder, 'id'>) };
+}
+
+export async function updatePurchaseOrder(
+  poId: string,
+  updates: Partial<Pick<PurchaseOrder, 'amountMinor' | 'currency' | 'status' | 'masterJobId' | 'supplierOrgId' | 'sourceInvoiceId'>> & { notes?: string },
+): Promise<void> {
+  await updateDoc(doc(db, POS_COLL, poId), {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function deletePurchaseOrder(poId: string): Promise<void> {
+  await deleteDoc(doc(db, POS_COLL, poId));
 }

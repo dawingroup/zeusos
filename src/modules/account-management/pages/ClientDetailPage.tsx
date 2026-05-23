@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   getClient,
   listMsasForClient,
@@ -17,6 +17,7 @@ import type { SOW } from '@/modules/contracts/types/sow.types';
 import { formatMinor } from '../utils/money';
 
 export default function ClientDetailPage() {
+  const navigate = useNavigate();
   const { clientId } = useParams<{ clientId: string }>();
   const [client, setClient] = useState<Client | null>(null);
   const [msas, setMsas] = useState<MSA[]>([]);
@@ -25,6 +26,7 @@ export default function ClientDetailPage() {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Partial<Client>>({});
   const [busy, setBusy] = useState(false);
+  const [archiving, setArchiving] = useState(false);
 
   useEffect(() => {
     if (!clientId) return;
@@ -73,6 +75,34 @@ export default function ClientDetailPage() {
     }
   };
 
+  const handleArchive = async () => {
+    if (!client) return;
+    const ok = window.confirm(
+      `Archive client "${client.name}"? This sets status=BLOCKED. ` +
+      `Existing MSAs and SOWs are preserved. You can reactivate later by editing the client.`,
+    );
+    if (!ok) return;
+    setArchiving(true);
+    try {
+      await upsertClientFn({
+        id: client.id,
+        name: client.name,
+        code: client.code,
+        billingCurrency: client.billingCurrency,
+        sector: client.sector,
+        status: 'BLOCKED',
+        contacts: client.contacts,
+        relationshipManagerUserId: client.relationshipManagerUserId,
+        notes: client.notes,
+      });
+      navigate('/clients');
+    } catch (err) {
+      alert(`Archive failed: ${(err as Error).message}`);
+    } finally {
+      setArchiving(false);
+    }
+  };
+
   if (loading) return <div className="p-6">Loading…</div>;
   if (!client) return <div className="p-6">Client not found. <Link to="/clients" className="text-blue-700">Back</Link></div>;
 
@@ -87,14 +117,25 @@ export default function ClientDetailPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          {!editing && (
-            <button
-              type="button"
-              onClick={() => { setDraft(client); setEditing(true); }}
-              className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
-            >
-              Edit
-            </button>
+          {!editing && client.status !== 'BLOCKED' && (
+            <>
+              <button
+                type="button"
+                onClick={() => { setDraft(client); setEditing(true); }}
+                className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={handleArchive}
+                disabled={archiving}
+                className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50"
+                data-testid="client-archive-btn"
+              >
+                {archiving ? 'Archiving…' : 'Archive'}
+              </button>
+            </>
           )}
           <Link
             to={`/clients/${client.id}/msas/new`}

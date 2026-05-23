@@ -25,6 +25,7 @@ interface Row {
 export default function ClientsPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,12 +70,23 @@ export default function ClientsPage() {
             never shown on these documents.
           </p>
         </div>
-        <Link
-          to="/clients/new"
-          className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-        >
-          + New client
-        </Link>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={showArchived}
+              onChange={e => setShowArchived(e.target.checked)}
+              className="rounded"
+            />
+            Show archived
+          </label>
+          <Link
+            to="/clients/new"
+            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            + New client
+          </Link>
+        </div>
       </header>
 
       {loading && <p className="text-sm text-muted-foreground">Loading clients…</p>}
@@ -98,8 +110,13 @@ export default function ClientsPage() {
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ client, openMsas, activeSows, ceilingByCurrency }) => (
-              <tr key={client.id} className="border-b hover:bg-slate-50">
+            {rows
+              .filter(({ client }) => showArchived || client.status !== 'BLOCKED')
+              .map(({ client, openMsas, activeSows, ceilingByCurrency }) => (
+              <tr
+                key={client.id}
+                className={`border-b hover:bg-slate-50 ${client.status === 'BLOCKED' ? 'opacity-50' : ''}`}
+              >
                 <td className="px-3 py-2">
                   <Link to={`/clients/${client.id}`} className="font-medium text-blue-700 hover:underline">
                     {client.name}

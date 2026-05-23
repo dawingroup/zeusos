@@ -3,12 +3,14 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   getProductionJob,
   advanceProductionStage,
+  updateProductionJob,
+  deleteProductionJob,
 } from '../services/production-job.service';
-import type { ProductionJob } from '../types/production-job.types';
+import type { ProductionJob, ProductionJobType } from '../types/production-job.types';
 import { PRODUCTION_STAGES } from '../types/production-job.types';
 import { ProductionStageBadge } from '../components/ProductionStageBadge';
 import { ChecklistPanel } from '../components/ChecklistPanel';
@@ -17,13 +19,20 @@ import { PostProductionPanel } from '../components/PostProductionPanel';
 
 type Tab = 'overview' | 'checklist' | 'callsheets' | 'postproduction';
 
+const TYPES: ProductionJobType[] = ['TVC', 'RADIO', 'PHOTOGRAPHY', 'PRINT', 'EXHIBITION', 'OTHER'];
+
 export default function ProductionJobDetailPage() {
+  const navigate = useNavigate();
   const { jobId } = useParams<{ jobId: string }>();
   const [job, setJob] = useState<ProductionJob | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [advancing, setAdvancing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<Partial<ProductionJob>>({});
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   async function reload() {
     if (!jobId) return;
@@ -46,6 +55,45 @@ export default function ProductionJobDetailPage() {
       setError(String((err as Error).message));
     } finally {
       setAdvancing(false);
+    }
+  }
+
+  async function handleSaveEdit() {
+    if (!jobId || !job) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const updates = {
+        title: draft.title ?? job.title,
+        type: (draft.type ?? job.type) as ProductionJobType,
+        producerId: draft.producerId ?? job.producerId,
+        scheduledShootDate: draft.scheduledShootDate ?? job.scheduledShootDate,
+        notes: draft.notes ?? job.notes,
+      };
+      await updateProductionJob(jobId, updates);
+      await reload();
+      setEditing(false);
+    } catch (err) {
+      setError(String((err as Error).message));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!jobId || !job) return;
+    const ok = window.confirm(
+      `Delete production job "${job.title}"? This permanently removes the job. ` +
+      `Checklists, shoot days, and post-production phases under it will be orphaned.`,
+    );
+    if (!ok) return;
+    setDeleting(true);
+    try {
+      await deleteProductionJob(jobId);
+      navigate('/production');
+    } catch (err) {
+      setError(String((err as Error).message));
+      setDeleting(false);
     }
   }
 
@@ -79,16 +127,104 @@ export default function ProductionJobDetailPage() {
             {job.scheduledShootDate ? ` · Shoot: ${job.scheduledShootDate}` : ''}
           </p>
         </div>
-        {canAdvance && (
+        <div className="flex gap-2">
+          {!editing && (
+            <button
+              type="button"
+              onClick={() => { setDraft(job); setEditing(true); }}
+              className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
+              data-testid="production-edit-btn"
+            >
+              Edit
+            </button>
+          )}
           <button
-            onClick={handleAdvance}
-            disabled={advancing}
-            className="rounded bg-primary px-3 py-1.5 text-sm text-primary-foreground disabled:opacity-60"
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50"
+            data-testid="production-delete-btn"
           >
-            {advancing ? 'Advancing…' : `Advance to ${PRODUCTION_STAGES[stageIdx + 1]}`}
+            {deleting ? 'Deleting…' : 'Delete'}
           </button>
-        )}
+          {canAdvance && (
+            <button
+              onClick={handleAdvance}
+              disabled={advancing}
+              className="rounded bg-primary px-3 py-1.5 text-sm text-primary-foreground disabled:opacity-60"
+            >
+              {advancing ? 'Advancing…' : `Advance to ${PRODUCTION_STAGES[stageIdx + 1]}`}
+            </button>
+          )}
+        </div>
       </header>
+
+      {editing && (
+        <section className="rounded border bg-slate-50 p-4">
+          <h2 className="mb-3 text-sm font-semibold">Edit job</h2>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <label className="col-span-2 block">
+              <span className="block text-xs text-muted-foreground">Title</span>
+              <input
+                value={draft.title ?? ''}
+                onChange={e => setDraft(d => ({ ...d, title: e.target.value }))}
+                className="mt-1 w-full rounded border px-2 py-1"
+              />
+            </label>
+            <label className="block">
+              <span className="block text-xs text-muted-foreground">Type</span>
+              <select
+                value={(draft.type ?? job.type) as string}
+                onChange={e => setDraft(d => ({ ...d, type: e.target.value as ProductionJobType }))}
+                className="mt-1 w-full rounded border px-2 py-1"
+              >
+                {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </label>
+            <label className="block">
+              <span className="block text-xs text-muted-foreground">Producer</span>
+              <input
+                value={draft.producerId ?? ''}
+                onChange={e => setDraft(d => ({ ...d, producerId: e.target.value }))}
+                className="mt-1 w-full rounded border px-2 py-1"
+              />
+            </label>
+            <label className="col-span-2 block">
+              <span className="block text-xs text-muted-foreground">Scheduled shoot date</span>
+              <input
+                type="date"
+                value={draft.scheduledShootDate ?? ''}
+                onChange={e => setDraft(d => ({ ...d, scheduledShootDate: e.target.value }))}
+                className="mt-1 w-full rounded border px-2 py-1"
+              />
+            </label>
+            <label className="col-span-2 block">
+              <span className="block text-xs text-muted-foreground">Notes</span>
+              <textarea
+                value={draft.notes ?? ''}
+                onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))}
+                rows={3}
+                className="mt-1 w-full rounded border px-2 py-1"
+              />
+            </label>
+          </div>
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={handleSaveEdit}
+              disabled={saving}
+              className="rounded bg-primary px-3 py-1.5 text-sm text-primary-foreground disabled:opacity-50"
+            >
+              {saving ? 'Saving…' : 'Save'}
+            </button>
+            <button
+              onClick={() => setEditing(false)}
+              className="rounded border px-3 py-1.5 text-sm hover:bg-white"
+            >
+              Cancel
+            </button>
+          </div>
+        </section>
+      )}
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
