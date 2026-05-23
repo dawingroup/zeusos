@@ -93,12 +93,21 @@ jobs:
   secret-scan:
     name: Secret Scanning
     runs-on: ubuntu-latest
-    
+    # `actions/checkout@v4` with `fetch-depth: 0` intermittently loses
+    # the implicit GITHUB_TOKEN when the workflow-level permission is
+    # restricted (see PR #42 — even after adding `contents: read`).
+    # Passing the token explicitly is the documented robust path.
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Explicit token reference — defends against the auth-header
+          # drop seen on large fetches (refs/heads/* + refs/tags/*).
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: TruffleHog OSS
         uses: trufflesecurity/trufflehog@v3.95.3
