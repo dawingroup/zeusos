@@ -1,0 +1,113 @@
+name: Deploy Preview
+
+# Builds every PR and deploys it to a Firebase Hosting preview channel
+# so reviewers can click a live URL instead of running the branch locally.
+#
+# Channel naming: `pr-<number>`. Channels auto-expire after 7 days.
+# Firebase merges the deploy URL into the PR via a check-summary annotation.
+#
+# This complements:
+#   - ci.yml              — lint / typecheck / test / build (per-commit)
+#   - boundary-tests.yml  — Firestore rules + Playwright lifecycle
+#   - deploy-production.yml — push-to-main → live channel
+#   - security-scan.yml   — npm audit, CodeQL, secret scan, rules validate
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.githooks/**'
+  workflow_dispatch:
+
+concurrency:
+  # Cancel any in-flight preview deploy for the same PR when a new
+  # commit lands. Independent of the live-channel concurrency group.
+  group: deploy-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  FIREBASE_PROJECT: zeusos
+
+permissions:
+  contents: read
+  # `pull-requests: write` lets a follow-up step (Phase 5.E) comment
+  # the channel URL back onto the PR. Today the URL is in the job
+  # summary; the permission is forward-compatible for the bot.
+  pull-requests: write
+
+jobs:
+  deploy-preview:
+    name: Deploy to preview channel
+    runs-on: ubuntu-latest
+    # Skip PRs from forks — they can't access FIREBASE_TOKEN secret.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_APP_ENV: preview
+          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Verify FIREBASE_TOKEN is set
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          if [ -z "$FIREBASE_TOKEN" ]; then
+            echo "::error::FIREBASE_TOKEN secret is not set — same token as deploy-production.yml."
+            exit 1
+          fi
+          echo "Firebase token present (length: ${#FIREBASE_TOKEN})"
+
+      - name: Deploy to preview channel
+        id: preview_deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          # Channel id is `pr-<number>` for PRs, falls back to the ref
+          # slug for manual workflow_dispatch runs.
+          CHANNEL_ID: pr-${{ github.event.pull_request.number || github.run_id }}
+        run: |
+          set -euo pipefail
+          # 7-day expiry — enough for review cycles without burning channel quota.
+          firebase hosting:channel:deploy "$CHANNEL_ID" \
+            --project "${{ env.FIREBASE_PROJECT }}" \
+            --expires 7d \
+            --json > deploy-output.json
+          url=$(jq -r '.result["zeusos"].url // .result[].url // empty' deploy-output.json | head -1)
+          if [ -z "$url" ]; then
+            echo "::error::Could not parse preview URL from firebase output:"
+            cat deploy-output.json
+            exit 1
+          fi
+          echo "preview_url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Preview deployed"
+            echo ""
+            echo "🔗 **[$url]($url)**"
+            echo ""
+            echo "Channel: \`$CHANNEL_ID\` · expires in 7 days"
+          } >> "$GITHUB_STEP_SUMMARY"
