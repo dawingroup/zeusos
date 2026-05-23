@@ -103,8 +103,8 @@ const PostCampaignReportPage = lazyWithRetry(() => import('@/modules/media/pages
 // ──────────────────────────────────────────────────────────────────────────
 // Production — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
-const ProductionBoardPage     = lazyWithRetry(() => import('@/modules/production/pages/ProductionBoardPage'));
-const ProductionJobDetailPage = lazyWithRetry(() => import('@/modules/production/pages/ProductionJobDetailPage'));
+const ProductionBoardPage      = lazyWithRetry(() => import('@/modules/production/pages/ProductionBoardPage'));
+const ProductionJobDetailPage  = lazyWithRetry(() => import('@/modules/production/pages/ProductionJobDetailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Talent Roster — Phase 4
@@ -129,6 +129,14 @@ const SuppliersListPage    = lazyWithRetry(() => import('@/modules/suppliers/pag
 const SupplierDetailPage   = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierDetailPage'));
 const SupplierCreatePage   = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierCreatePage'));
 const SupplierEditPage     = lazyWithRetry(() => import('@/modules/suppliers/pages/SupplierEditPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// CRM — sales pipeline (parent-org only)
+// ──────────────────────────────────────────────────────────────────────────
+const LeadsListPage      = lazyWithRetry(() => import('@/modules/crm/pages/LeadsListPage'));
+const LeadDetailPage     = lazyWithRetry(() => import('@/modules/crm/pages/LeadDetailPage'));
+const LeadCreatePage     = lazyWithRetry(() => import('@/modules/crm/pages/LeadCreatePage'));
+const PipelineKanbanPage = lazyWithRetry(() => import('@/modules/crm/pages/PipelineKanbanPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Asset Library — Phase 4 P1
@@ -528,6 +536,13 @@ export const router = createBrowserRouter([
       { path: 'suppliers/new',                element: <PageWrapper><ModuleContentWrapper><SupplierCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'suppliers/:supplierId',        element: <PageWrapper><ModuleContentWrapper><SupplierDetailPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'suppliers/:supplierId/edit',   element: <PageWrapper><ModuleContentWrapper><SupplierEditPage /></ModuleContentWrapper></PageWrapper> },
+
+      // ── CRM — sales pipeline (parent-org only) ─────────────────────────────
+      // Firestore rules enforce parent-org-only on crm_leads.
+      { path: 'crm',                  element: <PageWrapper><ModuleContentWrapper><LeadsListPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'crm/new',              element: <PageWrapper><ModuleContentWrapper><LeadCreatePage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'crm/pipeline',         element: <PageWrapper><ModuleContentWrapper><PipelineKanbanPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'crm/:leadId',          element: <PageWrapper><ModuleContentWrapper><LeadDetailPage /></ModuleContentWrapper></PageWrapper> },
 
       // ── Asset Library — Phase 4 P1 ────────────────────────────────────────
       // Staff-wide access — any authenticated user can browse and upload.

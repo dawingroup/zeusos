@@ -8,7 +8,7 @@ import { listTalentProfiles } from '../services/talent-profile.service';
 import type { TalentProfile, TalentType, TalentStatus } from '../types/talent-profile.types';
 import { TalentCard } from '../components/TalentCard';
 
-const TYPE_OPTIONS: Array<TalentType | 'ALL'> = ['ALL', 'STAFF', 'FREELANCER'];
+const TYPE_OPTIONS: Array<TalentType | 'ALL'> = ['ALL', 'INFLUENCER', 'MODEL', 'FREELANCER', 'STAFF'];
 const STATUS_OPTIONS: Array<TalentStatus | 'ALL'> = ['ALL', 'ACTIVE', 'INACTIVE', 'BLACKLISTED'];
 
 export default function TalentRosterPage() {
@@ -49,7 +49,7 @@ export default function TalentRosterPage() {
         <div>
           <h1 className="text-xl font-semibold">Talent Roster</h1>
           <p className="text-sm text-muted-foreground">
-            Staff and freelancer profiles, rate cards, and contracts.
+            Influencers, models, freelancers, and staff — profiles, rate cards, and contracts.
           </p>
         </div>
         <Link

@@ -20,6 +20,8 @@ import { TalentTypeBadge } from '../components/TalentTypeBadge';
 import { ContractStatusBadge } from '../components/ContractStatusBadge';
 import { TalentInvoiceForm } from '../components/TalentInvoiceForm';
 import { InvoiceApprovalPanel } from '../components/InvoiceApprovalPanel';
+import { InfluencerPanel } from '../components/InfluencerPanel';
+import { ModelPanel } from '../components/ModelPanel';
 
 type Tab = 'info' | 'contracts' | 'invoices';
 
@@ -124,6 +126,12 @@ export default function TalentProfilePage() {
               <p className="text-sm">{profile.notes}</p>
             </div>
           )}
+
+          {/* Kind-specific panels — render only when the type matches.
+              Both panels degrade gracefully if the kind-specific block is
+              missing entirely (empty sub-sections are hidden). */}
+          {profile.type === 'INFLUENCER' && <InfluencerPanel profile={profile} />}
+          {profile.type === 'MODEL' && <ModelPanel profile={profile} />}
         </div>
       )}
 

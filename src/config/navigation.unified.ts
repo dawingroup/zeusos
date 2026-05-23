@@ -129,6 +129,18 @@ export const AGENCY_NAVIGATION: NavItem[] = [
 
 export const COMMERCIAL_NAVIGATION: NavItem[] = [
   {
+    id: 'crm',
+    label: 'Pipeline',
+    href: '/crm',
+    icon: 'Target',
+    description: 'Sales pipeline — leads, prospects, pitches; convert won deals to Clients',
+    keywords: ['crm', 'pipeline', 'lead', 'prospect', 'pitch', 'sales'],
+    children: [
+      { id: 'crm-list',     label: 'Leads',    href: '/crm',          icon: 'List' },
+      { id: 'crm-pipeline', label: 'Pipeline', href: '/crm/pipeline', icon: 'KanbanSquare' },
+    ],
+  },
+  {
     id: 'clients',
     label: 'Clients',
     href: '/clients',

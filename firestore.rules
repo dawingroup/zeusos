@@ -4126,19 +4126,15 @@ service cloud.firestore {
     }
 
     // ════════════════════════════════════════════════════════════════
-    // Phase 4 — Suppliers directory
+    // Phase 4 — Suppliers directory (shared across sub-brands)
     //
     // supplier_orgs/{supplierId} — shared directory of external 3rd-party
     // vendors (media houses, talent agencies, production houses, etc.).
-    // Replaces the construction-focused DawinOS Suppliers module removed
-    // in Phase 1.C.
     //
     //   read:   all staff (used by media-ops, AM, Finance, talent ops)
-    //   create / update: parent-org principal (AM curates the shared list;
-    //                    subsidiaries cannot mutate the directory)
+    //   create / update: parent-org principal (AM curates the shared list)
     //   delete: admin only (soft-delete via status=INACTIVE preferred)
     // ════════════════════════════════════════════════════════════════
-
     match /supplier_orgs/{supplierId} {
       allow read: if isStaffAuth();
       allow create, update: if isParentOrgPrincipal();
@@ -4146,18 +4142,14 @@ service cloud.firestore {
     }
 
     // ════════════════════════════════════════════════════════════════
-    // Phase 4 — Media Supplier Invoices
+    // Phase 4 — Media Supplier Invoices (upstream emitter for PO + JE)
     //
-    // media_supplier_invoices/{invoiceId}
     //   read:   all staff (media-ops sees the queue)
-    //   create (submit): any authenticated staff (traffic/media-ops submits on
-    //                    behalf of the supplier)
-    //   update approve/reject: parent-org principal (AM/Finance Lead)
-    //   update paid:    parent-org principal (Finance confirms payment;
-    //                   triggers MediaSupplierInvoicePaid event → PO + JE)
+    //   create: any authenticated staff (traffic/media-ops submits on
+    //           behalf of the supplier)
+    //   update: parent-org principal (AM/Finance approves/pays)
     //   delete: admin only
     // ════════════════════════════════════════════════════════════════
-
     match /media_supplier_invoices/{invoiceId} {
       allow read: if isStaffAuth();
       allow create: if isStaffAuth();
@@ -4168,26 +4160,42 @@ service cloud.firestore {
     // ════════════════════════════════════════════════════════════════
     // Phase 4.1 — Procurement / Finance handshake (parent-org only)
     //
-    // purchase_orders/{poId} — written by onTalentInvoiceApproved +
-    //   onMediaSupplierInvoicePaid Cloud Functions. Contains supplier
-    //   costs that subsidiaries must NOT see (spec §7.4 commercial
-    //   gravity).
+    // TALENT_FREELANCER and MEDIA_SUPPLIER POs are created by Cloud
+    // Functions (onTalentInvoiceApproved, onMediaSupplierInvoicePaid)
+    // using the Admin SDK, which bypasses these rules. The manual-entry
+    // path below is restricted to VENDOR_OTHER (print, props, catering,
+    // ad-hoc spend) so the upstream invoice-driven flow stays the only
+    // way TALENT_FREELANCER / MEDIA_SUPPLIER POs land.
     //
-    // journal_entries/{jeId} — written by postJournalEntryOnInvoicePaid
-    //   Cloud Function. Same parent-org-only constraint.
-    //
-    //   read:   admin/executive OR parent-org member matching doc orgId
-    //   write:  Cloud Functions only (client writes blocked)
+    // Reads contain supplier costs that subsidiaries must not see.
     // ════════════════════════════════════════════════════════════════
-
     match /purchase_orders/{poId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow create: if isAdmin() && request.resource.data.kind == 'VENDOR_OTHER';
+      allow update: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
+      allow delete: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
+    }
+    match /journal_entries/{jeId} {
       allow read: if isAdmin() || isParentOrgPrincipal();
       allow write: if false;
     }
 
-    match /journal_entries/{jeId} {
-      allow read: if isAdmin() || isParentOrgPrincipal();
-      allow write: if false;
+    // ════════════════════════════════════════════════════════════════
+    // Phase 4 — CRM (sales pipeline, parent-org only)
+    //
+    // crm_leads/{leadId} — lead/prospect tracker. Subsidiaries cannot
+    // read or write; the pipeline is parent-org AM territory.
+    // Activities sub-collection inherits the same rule but is
+    // append-only (no client updates; audit hygiene).
+    // ════════════════════════════════════════════════════════════════
+    match /crm_leads/{leadId} {
+      allow read, create, update: if isParentOrgPrincipal();
+      allow delete: if isAdmin();
+      match /activities/{activityId} {
+        allow read, create: if isParentOrgPrincipal();
+        allow update: if false;
+        allow delete: if isAdmin();
+      }
     }
   }
 }
