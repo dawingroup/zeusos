@@ -79,6 +79,12 @@ jobs:
     name: Playwright — quote lifecycle (advisory)
     runs-on: ubuntu-latest
     continue-on-error: true
+    # Advisory job — must not burn the full 6h GH max-duration if the
+    # emulator stack or seed script wedges (see scripts/seed-e2e-users.cjs
+    # for the bounded 90s timeout inside the script itself). 20m is well
+    # above a clean green run (~8m) and stops the silent 6h burn that
+    # happened on PR #36.
+    timeout-minutes: 20
     needs: rules-tests
 
     steps:

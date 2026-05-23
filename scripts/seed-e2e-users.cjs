@@ -49,6 +49,20 @@
  * docs are set() with { merge: false } so shape stays canonical.
  */
 
+process.stdout.write('[seed-e2e-users] starting\n');
+
+const SEED_TIMEOUT_MS = Number(process.env.SEED_TIMEOUT_MS) || 90_000;
+const timeoutHandle = setTimeout(() => {
+  console.error(
+    `\n  FATAL: seed-e2e-users.cjs timed out after ${SEED_TIMEOUT_MS}ms.\n` +
+      `  Likely causes: Auth/Firestore emulator not ready, or Admin SDK\n` +
+      `  hanging on credential discovery (FIREBASE_AUTH_EMULATOR_HOST=` +
+      `${process.env.FIREBASE_AUTH_EMULATOR_HOST || 'unset'},\n` +
+      `  FIRESTORE_EMULATOR_HOST=${process.env.FIRESTORE_EMULATOR_HOST || 'unset'}).\n`,
+  );
+  process.exit(2);
+}, SEED_TIMEOUT_MS);
+
 const admin = require('firebase-admin');
 
 const PROJECT_ID = process.env.GCLOUD_PROJECT || 'zeusos-e2e';
@@ -315,7 +329,10 @@ async function main() {
   console.log(`\n  Done. ${USERS.length} users + ${FIRESTORE_FIXTURES.length} fixtures seeded.\n`);
 }
 
-main().catch((err) => {
-  console.error('\n  FATAL:', err);
-  process.exit(1);
-});
+main()
+  .then(() => clearTimeout(timeoutHandle))
+  .catch((err) => {
+    clearTimeout(timeoutHandle);
+    console.error('\n  FATAL:', err);
+    process.exit(1);
+  });
