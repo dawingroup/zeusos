@@ -11,6 +11,14 @@
 
 name: Boundary Tests
 
+# Project ID note — the `demo-` prefix on `--project demo-zeusos-
+# boundary-tests` is load-bearing. Firebase recognises `demo-*` as
+# "emulator-only, no real GCP backing" and skips all ADC credential
+# discovery. Without the prefix, the Functions emulator subprocess
+# wedges on `compute.googleapis.com/.../metadata` lookups for the
+# full 20m job timeout (see PR #42 investigation — symptom was two
+# MetadataLookupWarnings followed by 17+ minutes of silence).
+
 on:
   push:
     branches: [main]
@@ -65,7 +73,7 @@ jobs:
         run: |
           firebase emulators:exec \
             --only firestore \
-            --project zeusos-boundary-tests \
+            --project demo-zeusos-boundary-tests \
             'npm run test:rules'
         env:
           CI: true
@@ -131,7 +139,7 @@ jobs:
         run: |
           firebase emulators:exec \
             --only firestore,auth,functions \
-            --project zeusos-boundary-tests \
+            --project demo-zeusos-boundary-tests \
             "FIRESTORE_EMULATOR_HOST=localhost:8080 \
              FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 \
              node scripts/seed-e2e-users.cjs && \
