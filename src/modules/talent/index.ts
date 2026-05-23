@@ -10,6 +10,11 @@ export type {
   TalentProfile,
   TalentType,
   TalentStatus,
+  SocialHandle,
+  SocialPlatform,
+  AudienceDemographics,
+  InfluencerProfile,
+  ModelProfile,
 } from './types/talent-profile.types';
 export type {
   FreelancerContract,
@@ -43,6 +48,8 @@ export { ContractStatusBadge } from './components/ContractStatusBadge';
 export { TalentCard } from './components/TalentCard';
 export { TalentInvoiceForm } from './components/TalentInvoiceForm';
 export { InvoiceApprovalPanel } from './components/InvoiceApprovalPanel';
+export { InfluencerPanel } from './components/InfluencerPanel';
+export { ModelPanel } from './components/ModelPanel';
 
 export { default as TalentRosterPage } from './pages/TalentRosterPage';
 export { default as TalentProfilePage } from './pages/TalentProfilePage';

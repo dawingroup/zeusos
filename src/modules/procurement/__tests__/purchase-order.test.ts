@@ -32,7 +32,9 @@ describe('listPurchaseOrders orgId guard', () => {
   });
 
   it('throws when called without filters at all (default orgId is "")', async () => {
-    // @ts-expect-error — intentionally testing missing required arg
+    // No type-error directive needed — listPurchaseOrders has a default
+    // filters arg ({ orgId: '' }), so the no-arg call is type-valid but
+    // the empty orgId triggers the runtime guard.
     await expect(listPurchaseOrders()).rejects.toThrow();
   });
 });
