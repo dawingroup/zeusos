@@ -79,6 +79,13 @@ jobs:
     name: Playwright — quote lifecycle (advisory)
     runs-on: ubuntu-latest
     continue-on-error: true
+    # Advisory job — but must not burn the full 6h GH max-duration if
+    # the emulator stack or seed script wedges. A clean green run is
+    # ~8m; 20m is generous. The script-level 90s `SEED_TIMEOUT_MS`
+    # guard in scripts/seed-e2e-users.cjs surfaces the actual root
+    # cause (firebase-admin@13 ADC discovery wedge) inside 90s, well
+    # before this job-level cap kicks in.
+    timeout-minutes: 20
     needs: rules-tests
 
     steps:
