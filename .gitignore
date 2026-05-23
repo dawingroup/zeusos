@@ -68,6 +68,10 @@ test-results/
 dist/
 .env.qb.local
 
+# Bundled MCP server build output. Regenerated on every `firebase deploy`
+# by the `functions` predeploy step in firebase.json — must not be tracked.
+functions/vendor/zeusos-mcp-server/
+
 # gcloud `iam service-accounts keys create` (local Firestore / audit)
 .secrets/
 .claude/

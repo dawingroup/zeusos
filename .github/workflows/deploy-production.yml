@@ -82,7 +82,7 @@ jobs:
     needs: build-and-test
     environment:
       name: production
-      url: https://os.zeustheagency.com
+      url: https://zeusos.web.app
 
     steps:
       - name: Checkout repository
@@ -143,6 +143,21 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
+      # Cloud Functions deploy. The firebase.json `functions` predeploy
+      # rebuilds the bundled MCP server from `zeusos-mcp-server/` and
+      # copies dist into `functions/vendor/zeusos-mcp-server/`, so the
+      # vendor directory does not need to be checked into git.
+      # `npm ci` in the functions dir is required because the Firebase
+      # CLI does not install transitive function deps automatically when
+      # invoked from CI.
+      - name: Install functions dependencies
+        run: npm ci --prefix functions
+
+      - name: Deploy Cloud Functions
+        run: firebase deploy --only functions --project ${{ env.FIREBASE_PROJECT }}
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
   # ===========================================================================
   # POST-DEPLOYMENT VERIFICATION
   # ===========================================================================
@@ -152,10 +167,15 @@ jobs:
     needs: deploy
 
     steps:
+      # The custom domain os.zeustheagency.com is not yet DNS-active — see
+      # docs/CUSTOM_DOMAIN_SETUP.md. Until DNS is verified, hit the
+      # Firebase-managed URL so the verify job reflects the actual deploy
+      # rather than DNS state. Swap back to the custom domain once it
+      # resolves in CI.
       - name: Health check
         run: |
           for i in {1..10}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" https://os.zeustheagency.com)
+            response=$(curl -s -o /dev/null -w "%{http_code}" https://zeusos.web.app)
             if [ "$response" = "200" ]; then
               echo "Health check passed"
               exit 0
@@ -168,4 +188,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -s https://os.zeustheagency.com | grep -q "ZeusOS" || echo "Smoke test warning"
+          curl -s https://zeusos.web.app | grep -q "ZeusOS" || echo "Smoke test warning"

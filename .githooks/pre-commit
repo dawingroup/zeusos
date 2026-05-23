@@ -14,7 +14,6 @@ set -eu
 PROTECTED_BRANCHES=(
   "main"
   "master"
-  "phase-3e-delivery-workspace"
 )
 
 if [ "${ALLOW_DIRECT_COMMIT:-0}" = "1" ]; then

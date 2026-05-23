@@ -13,9 +13,9 @@ name: Boundary Tests
 
 on:
   push:
-    branches: [main, develop, 'phase-3g-**']
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 concurrency:
   group: boundary-tests-${{ github.ref }}
