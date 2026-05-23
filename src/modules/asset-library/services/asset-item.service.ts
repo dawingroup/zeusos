@@ -141,8 +141,49 @@ export async function updateAsset(
   });
 }
 
+/**
+ * Replace the source file for an existing asset. Uploads to the
+ * `asset-library/{itemId}/source/{newName}` path and updates the
+ * doc's `storageRef` + `fileSizeBytes`. The `onAssetUploaded` Cloud
+ * Function fires automatically and regenerates thumbnails.
+ *
+ * The previous source file is left in storage as an orphan — the
+ * `onAssetDeleted` Cloud Function sweeps the entire
+ * `asset-library/{itemId}/` prefix when the asset is deleted, so the
+ * orphan eventually goes away.
+ */
+export async function replaceAssetSource(itemId: string, file: File): Promise<void> {
+  const path = assetSourceStoragePath(itemId, file.name);
+  const storage = getStorage(app);
+  await uploadBytes(storageRef(storage, path), file, {
+    contentType: file.type || undefined,
+  });
+  await updateDoc(doc(db, ITEMS_COLL, itemId), {
+    storageRef: path,
+    fileSizeBytes: file.size,
+    // Clear the cached thumbnail URLs; the trigger will repopulate
+    // them once the new source has been processed. Until then the UI
+    // falls back to the category placeholder.
+    thumbnailUrl: null,
+    previewUrl: null,
+    updatedAt: serverTimestamp(),
+  });
+}
+
 export async function archiveAsset(itemId: string): Promise<void> {
   await updateAsset(itemId, { status: 'ARCHIVED' });
+}
+
+/**
+ * Hard-delete an asset from Firestore. The matching Storage tree
+ * (`asset-library/{itemId}/source/*`, `/thumb/*`, `/preview/*`) is
+ * swept by the `onAssetDeleted` Cloud Function.
+ *
+ * Firestore rules require admin to delete — non-admin callers get a
+ * permission-denied error from this method.
+ */
+export async function deleteAsset(itemId: string): Promise<void> {
+  await deleteDoc(doc(db, ITEMS_COLL, itemId));
 }
 
 // ─────────────────────────────────────────────────────────────────

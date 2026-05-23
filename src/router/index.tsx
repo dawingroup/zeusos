@@ -128,6 +128,7 @@ const JournalEntryDetailPage  = lazyWithRetry(() => import('@/modules/procuremen
 const AssetLibraryListPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetLibraryListPage'));
 const AssetDetailPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetDetailPage'));
 const AssetUploadPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetUploadPage'));
+const AssetEditPage         = lazyWithRetry(() => import('@/modules/asset-library/pages/AssetEditPage'));
 const CollectionsPage       = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionsPage'));
 const CollectionDetailPage  = lazyWithRetry(() => import('@/modules/asset-library/pages/CollectionDetailPage'));
 
@@ -521,6 +522,7 @@ export const router = createBrowserRouter([
       { path: 'assets/collections',        element: <PageWrapper><ModuleContentWrapper><CollectionsPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'assets/collections/:colId', element: <PageWrapper><ModuleContentWrapper><CollectionDetailPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'assets/:itemId',            element: <PageWrapper><ModuleContentWrapper><AssetDetailPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'assets/:itemId/edit',       element: <PageWrapper><ModuleContentWrapper><AssetEditPage /></ModuleContentWrapper></PageWrapper> },
     ],
   },
 
