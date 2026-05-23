@@ -49,11 +49,69 @@
  * docs are set() with { merge: false } so shape stays canonical.
  */
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Early-fail diagnostics — the rest of this file performs Admin SDK work
+// that, on `firebase-admin@13.6.0`, can wedge for the full GH Actions 6h
+// max-duration when ADC credential discovery fails to short-circuit even
+// with emulator env vars set. The block below makes the hang visible
+// inside 90s with a descriptive FATAL line, instead of silent 6h burn.
+//
+// See PR #39 investigation for the upstream firebase-admin issue.
+// ──────────────────────────────────────────────────────────────────────────────
+
+// Print BEFORE requiring firebase-admin so a wedged Admin-SDK init still
+// leaves a visible CI log line.
+process.stdout.write('[seed-e2e-users] starting\n');
+
+const SEED_TIMEOUT_MS = Number(process.env.SEED_TIMEOUT_MS) || 90_000;
+const timeoutHandle = setTimeout(() => {
+  console.error(
+    `\n  FATAL: seed-e2e-users.cjs timed out after ${SEED_TIMEOUT_MS}ms.\n` +
+      `  Likely causes: Auth/Firestore emulator not ready, or Admin SDK\n` +
+      `  hanging on credential discovery (FIREBASE_AUTH_EMULATOR_HOST=` +
+      `${process.env.FIREBASE_AUTH_EMULATOR_HOST || 'unset'},\n` +
+      `  FIRESTORE_EMULATOR_HOST=${process.env.FIRESTORE_EMULATOR_HOST || 'unset'}).\n`,
+  );
+  process.exit(2);
+}, SEED_TIMEOUT_MS);
+
 const admin = require('firebase-admin');
+const crypto = require('crypto');
 
 const PROJECT_ID = process.env.GCLOUD_PROJECT || 'zeusos-e2e';
 
-admin.initializeApp({ projectId: PROJECT_ID });
+// ──────────────────────────────────────────────────────────────────────────────
+// Root-cause workaround for the firebase-admin@13 emulator hang.
+//
+// In v13, admin.initializeApp() lazily triggers Application Default
+// Credential discovery on the first SDK call (e.g. auth.getUserByEmail()).
+// In a CI runner without a GCE metadata server, the discovery wedges
+// indefinitely on `compute.googleapis.com/.../metadata` lookups — even
+// when FIREBASE_AUTH_EMULATOR_HOST and FIRESTORE_EMULATOR_HOST are set
+// (the SDK still discovers credentials before consulting emulator env).
+//
+// Bypass by passing an explicit `cert()` credential built from an
+// ephemeral in-memory RSA key. The Firestore init type-checks for
+// ServiceAccountCredential (the class `cert()` produces) and accepts
+// it, so initialization succeeds without ADC discovery. Every SDK
+// operation then routes to the localhost emulator via the env vars
+// above, which never validates the credential — the key never touches
+// the network.
+// ──────────────────────────────────────────────────────────────────────────────
+const { privateKey: stubPrivateKey } = crypto.generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+});
+
+admin.initializeApp({
+  projectId: PROJECT_ID,
+  credential: admin.credential.cert({
+    projectId: PROJECT_ID,
+    clientEmail: `seed-stub@${PROJECT_ID}.iam.gserviceaccount.com`,
+    privateKey: stubPrivateKey,
+  }),
+});
 
 const auth = admin.auth();
 const db = admin.firestore();
@@ -315,7 +373,10 @@ async function main() {
   console.log(`\n  Done. ${USERS.length} users + ${FIRESTORE_FIXTURES.length} fixtures seeded.\n`);
 }
 
-main().catch((err) => {
-  console.error('\n  FATAL:', err);
-  process.exit(1);
-});
+main()
+  .then(() => clearTimeout(timeoutHandle))
+  .catch((err) => {
+    clearTimeout(timeoutHandle);
+    console.error('\n  FATAL:', err);
+    process.exit(1);
+  });
