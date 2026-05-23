@@ -8,50 +8,8 @@ const admin = require('firebase-admin');
 const { ALLOWED_ORIGINS } = require('./src/config/cors');
 
 // Initialize Firebase Admin
-//
-// Production path: `admin.initializeApp()` with no args — the Functions
-// runtime injects credentials automatically via the App Engine service
-// account.
-//
-// Emulator path: firebase-admin@12 still triggers Application Default
-// Credential discovery on the first SDK call (e.g. `admin.firestore()`
-// at line 14 below). In a CI runner without a GCE metadata server,
-// discovery wedges on `compute.googleapis.com/.../metadata` lookups
-// for the full job timeout — symptom: two MetadataLookupWarning lines
-// followed by 17+ minutes of silence (see PR #42 boundary-tests
-// investigation). Setting `FUNCTIONS_EMULATOR=true` is automatic for
-// emulator subprocesses, but it doesn't bypass ADC on its own.
-//
-// Workaround: in the emulator path, build an in-memory RSA key and pass
-// it via `admin.credential.cert()`. The Firestore init type-check
-// accepts the resulting `ServiceAccountCredential` and skips ADC
-// discovery entirely. The fake credential never touches the network
-// because emulator env vars (`FIRESTORE_EMULATOR_HOST` etc.) route all
-// SDK operations to localhost — the emulator stub doesn't validate
-// the credential.
 if (!admin.apps.length) {
-  if (process.env.FUNCTIONS_EMULATOR === 'true') {
-    const crypto = require('crypto');
-    const { privateKey: emulatorStubKey } = crypto.generateKeyPairSync('rsa', {
-      modulusLength: 2048,
-      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-      publicKeyEncoding: { type: 'spki', format: 'pem' },
-    });
-    const emulatorProjectId =
-      process.env.GCLOUD_PROJECT ||
-      process.env.GCP_PROJECT ||
-      'demo-zeusos-emulator';
-    admin.initializeApp({
-      projectId: emulatorProjectId,
-      credential: admin.credential.cert({
-        projectId: emulatorProjectId,
-        clientEmail: `functions-emulator@${emulatorProjectId}.iam.gserviceaccount.com`,
-        privateKey: emulatorStubKey,
-      }),
-    });
-  } else {
-    admin.initializeApp();
-  }
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
