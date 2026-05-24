@@ -89,17 +89,25 @@ test('rejects missing context.eventType', async () => {
   );
 });
 
-test('rule types other than role throw unimplemented (Phase 6.A.2)', async () => {
+test('dispatcher routes to each rule type and returns matching ruleTypeUsed (Phase 6.A.2)', async () => {
   const { db } = makeFirestore();
-  for (const t of ['department', 'user', 'manager', 'creator', 'dynamic']) {
-    await assert.rejects(
-      () => resolveAssignment({
-        db,
-        rule: { type: t },
-        context: { eventType: 'iwo.sla_due_soon' },
-      }),
-      /Phase 6\.A\.2/
-    );
+  // Each rule type with the minimum input to reach its body and
+  // return a "no winner" empty result (no seed data required).
+  const cases = [
+    { rule: { type: 'department', departmentId: 'dept_creative' }, expected: 'department' },
+    { rule: { type: 'user', userId: 'EMP-noexist' }, expected: 'user' },
+    { rule: { type: 'manager', userId: 'EMP-noexist' }, expected: 'manager' },
+    { rule: { type: 'creator' }, expected: 'creator' },
+    { rule: { type: 'dynamic', criteria: { departmentId: 'dept_creative' } }, expected: 'dynamic' },
+  ];
+  for (const { rule, expected } of cases) {
+    const r = await resolveAssignment({
+      db,
+      rule,
+      context: { eventType: 'iwo.sla_due_soon' },
+    });
+    assert.equal(r.ruleTypeUsed, expected);
+    assert.equal(r.assignedEmployeeId, null);
   }
 });
 
