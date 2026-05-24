@@ -466,12 +466,18 @@ export function AppShell({ children }: AppShellProps) {
       {/* Boot the global-search index (no-op when feature flag is off). */}
       <SearchIndexMount />
       <OfflineBanner />
-      
-      {/* Desktop Header - Group nav pills + cluster (Phase 2) */}
+
+      {/* Desktop Header - Group nav pills + cluster (Phase 2). On lg+,
+          left-padded to start at the sidebar's right edge (sidebar is
+          fixed-width: 16 collapsed, 60 expanded). */}
       <header
         className={cn(
-          'hidden lg:flex sticky top-0 z-40 h-14 items-center gap-3 px-6 transition-shadow duration-200',
+          'hidden lg:flex sticky top-0 z-40 h-14 items-center gap-3 pr-6 transition-shadow duration-200',
           'border-b border-[var(--border-default)] bg-[var(--bg-surface)]',
+          // Sidebar widths: w-60 (15rem) expanded · w-16 (4rem) collapsed.
+          // Add the same 1.5rem (px-6 equivalent) gutter on top so content
+          // doesn't kiss the sidebar's right edge.
+          sidebarExpanded ? 'lg:pl-[16.5rem]' : 'lg:pl-[5.5rem]',
           isScrolled && 'shadow-[var(--shadow-sm)]'
         )}
       >
@@ -728,12 +734,17 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar — dark-themed per portal redesign */}
+        {/* Sidebar — dark-themed per portal redesign. Full-height on
+            desktop (lg:top-0 + lg:h-screen), slides in below mobile
+            header on small screens. z-[60] sits above the desktop
+            header (z-40) so the sidebar visually covers the header's
+            left gutter; the header has lg:pl-[16.5rem]/[5.5rem] so its
+            content starts to the right of the sidebar regardless. */}
         <aside
           className={cn(
             'fixed left-0 z-[60] border-r',
             'top-14 bottom-0', // Mobile: below header
-            'lg:sticky lg:top-14 lg:h-[calc(100vh-3.5rem)] lg:translate-x-0',
+            'lg:fixed lg:top-0 lg:h-screen lg:bottom-auto lg:translate-x-0',
             // Mobile: slide in/out
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
             'transition-all duration-300 ease-in-out',
@@ -823,8 +834,14 @@ export function AppShell({ children }: AppShellProps) {
           />
         )}
 
-        {/* Main Content */}
-        <main className="flex-1 lg:ml-0 min-w-0">
+        {/* Main Content. lg:ml-* offsets for the fixed sidebar so content
+            doesn't render under it. */}
+        <main
+          className={cn(
+            'flex-1 min-w-0',
+            sidebarExpanded ? 'lg:ml-60' : 'lg:ml-16'
+          )}
+        >
           {children}
         </main>
       </div>
