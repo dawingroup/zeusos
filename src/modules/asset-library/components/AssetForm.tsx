@@ -153,7 +153,7 @@ export function AssetForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <section className="space-y-4 rounded-md border border-zeusNavy-100 bg-white p-5">
+      <section className="space-y-4 rounded-md border border-zeusNavy-100 bg-card p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-zeusNavy/70">
           Identity
         </h2>
@@ -195,7 +195,7 @@ export function AssetForm({
         </div>
       </section>
 
-      <section className="space-y-4 rounded-md border border-zeusNavy-100 bg-white p-5">
+      <section className="space-y-4 rounded-md border border-zeusNavy-100 bg-card p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-zeusNavy/70">
           Ownership
         </h2>
@@ -263,7 +263,7 @@ export function AssetForm({
         </div>
       </section>
 
-      <section className="space-y-3 rounded-md border border-zeusNavy-100 bg-white p-5">
+      <section className="space-y-3 rounded-md border border-zeusNavy-100 bg-card p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-zeusNavy/70">
           File{mode === 'edit' ? ' (optional replacement)' : ''}
         </h2>

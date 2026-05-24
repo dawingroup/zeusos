@@ -89,7 +89,7 @@ export function ShareLinkDialog({
         onClick={handleClose}
         aria-hidden="true"
       />
-      <div className="relative z-10 w-full max-w-md rounded-lg bg-white p-5 shadow-xl">
+      <div className="relative z-10 w-full max-w-md rounded-lg bg-card p-5 shadow-xl">
         <header className="mb-3 flex items-start justify-between">
           <div>
             <h2 className="text-base font-semibold text-zeusNavy">

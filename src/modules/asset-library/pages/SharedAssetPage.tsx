@@ -91,7 +91,7 @@ export default function SharedAssetPage() {
 
   return (
     <div className="min-h-screen bg-zeusNavy-50">
-      <header className="border-b border-zeusNavy-100 bg-white px-6 py-3">
+      <header className="border-b border-zeusNavy-100 bg-card px-6 py-3">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-base font-semibold text-zeusNavy">Zeus Group</span>
@@ -157,7 +157,7 @@ function AssetViewer({
         </p>
       </header>
 
-      <div className="flex min-h-[360px] items-center justify-center rounded-lg border border-zeusNavy-100 bg-white p-4 shadow-sm">
+      <div className="flex min-h-[360px] items-center justify-center rounded-lg border border-zeusNavy-100 bg-card p-4 shadow-sm">
         <AssetInlinePreview asset={asset} signedUrl={signedUrl} />
       </div>
 
@@ -198,7 +198,7 @@ function CollectionViewer({
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex flex-col overflow-hidden rounded-lg border border-zeusNavy-100 bg-white shadow-sm"
+            className="flex flex-col overflow-hidden rounded-lg border border-zeusNavy-100 bg-card shadow-sm"
           >
             <div className="aspect-square bg-zeusNavy-50/40 p-3">
               <AssetInlinePreview asset={item} signedUrl={item.signedUrl ?? ''} />

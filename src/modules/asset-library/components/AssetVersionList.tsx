@@ -64,11 +64,11 @@ export function AssetVersionList({
               {versions.map((v) => {
                 const isCurrent = v.id === currentVersionId;
                 return (
-                  <tr key={v.id} className={isCurrent ? 'bg-emerald-50/40' : ''}>
+                  <tr key={v.id} className={isCurrent ? 'bg-[var(--rag-green-soft)]/40' : ''}>
                     <td className="px-3 py-2 font-medium">
                       {v.versionLabel}
                       {isCurrent && (
-                        <span className="ml-2 inline-flex items-center rounded bg-emerald-100 px-1.5 py-0.5 text-xs text-emerald-700">
+                        <span className="ml-2 inline-flex items-center rounded bg-[var(--rag-green-soft)] px-1.5 py-0.5 text-xs text-[var(--rag-green)]">
                           current
                         </span>
                       )}
