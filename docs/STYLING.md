@@ -230,6 +230,24 @@ status indicator. **Don't roll your own colored spans.**
 different from RAG — they're lifecycle states, not health signals. The KPI
 library uses its own `STATUS_BADGE_CLASS` map for that. Don't conflate.
 
+### `.rag` vs token-form classNames — both render identically
+
+The U.3 sweep migrated most existing pill markup from raw palette to **token-form**:
+
+```jsx
+<span className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] px-2 py-1 rounded-full text-xs font-medium">
+  Off track
+</span>
+```
+
+This is **functionally correct**: dark-mode-aware, accent-swap-aware, token-derived. **For new code, prefer the `.rag` class** for conciseness:
+
+```jsx
+<span className="rag red">Off track</span>
+```
+
+Both render identically. The `.rag` class encodes the pill geometry (padding 2px 8px, fully rounded, 11px font, 500 weight) so you don't restate it each time. **Do not migrate existing token-form pills in bulk** — they're correct as-is; let new code use `.rag`, and refactor incidentally when you touch a file.
+
 ---
 
 ## 5.5 Semantic-color helpers — `src/shared/lib/semantic-colors.ts`
