@@ -1,3 +1,4 @@
+/* eslint-disable design-system/no-inline-style-literals -- TODO(U.4): early Phase 3.C scaffolding, uses inline px + hex throughout. Real Tailwind/token refactor scheduled for U.4. */
 /**
  * QuoteBuilderPage — the AM workhorse.
  *

@@ -1,8 +1,9 @@
+/* eslint-disable design-system/no-inline-style-literals -- @react-pdf/renderer uses inline styles per docs/STYLING.md §15 */
 /**
  * ============================================================================
  * DAWIN OS - PAYROLL PDF GENERATOR MODULE
  * ============================================================================
- * 
+ *
  * Generates PDF payslips and payroll reports with Uganda tax compliance
  * 
  * Usage:

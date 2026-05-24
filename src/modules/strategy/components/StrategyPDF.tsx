@@ -1,7 +1,12 @@
 /**
  * Strategy PDF Component
  * Renders the strategy report as a downloadable PDF using @react-pdf/renderer
+ *
+ * NB: hex colours and px font-sizes are intentional here per docs/STYLING.md §15
+ * (PDFs use their own internal stylesheet — Tailwind utilities don't apply).
+ * Token values are mirrored manually; update both if a token changes.
  */
+/* eslint-disable design-system/no-inline-style-literals */
 
 import {
   Document,

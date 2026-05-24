@@ -1,3 +1,4 @@
+/* eslint-disable design-system/no-inline-style-literals -- TODO(U.4): early Phase 3.C scaffolding, uses inline px + hex throughout. Real Tailwind/token refactor scheduled for U.4. */
 /**
  * RateCardEditorPage — line editor for one rate card (role_code, unit,
  * cost_minor, currency). Read-only once status leaves DRAFT.

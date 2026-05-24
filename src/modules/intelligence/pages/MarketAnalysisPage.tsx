@@ -34,6 +34,7 @@ import {
 import { useMarketData } from '../hooks/useMarketData';
 import { TrendIndicator } from '../components/shared/TrendIndicator';
 import { MODULE_COLOR, INDUSTRY_SECTORS } from '../constants';
+import { ragForDelta, ragToken, softRagToken } from '@/shared/lib/semantic-colors';
 
 const MarketAnalysisPage: React.FC = () => {
   const [selectedSector, setSelectedSector] = useState<string>('fintech');
@@ -240,8 +241,8 @@ const MarketAnalysisPage: React.FC = () => {
                       <Badge
                         className="text-xs"
                         style={{
-                          backgroundColor: segment.growthRate > 0 ? '#4caf5020' : '#f4433620',
-                          color: segment.growthRate > 0 ? '#4caf50' : '#f44336',
+                          backgroundColor: softRagToken(ragForDelta(segment.growthRate)),
+                          color: ragToken(ragForDelta(segment.growthRate)),
                         }}
                       >
                         {segment.growthRate > 0 ? '+' : ''}{segment.growthRate}%
@@ -267,7 +268,13 @@ const MarketAnalysisPage: React.FC = () => {
                     <div
                       className="p-3 rounded-lg text-white"
                       style={{
-                        backgroundColor: trend.direction.includes('up') ? '#4caf50' : trend.direction.includes('down') ? '#f44336' : '#9e9e9e',
+                        backgroundColor: ragToken(
+                          trend.direction.includes('up')
+                            ? 'green'
+                            : trend.direction.includes('down')
+                              ? 'red'
+                              : 'na',
+                        ),
                       }}
                     >
                       {trend.direction.includes('up') ? (
@@ -358,7 +365,7 @@ const MarketAnalysisPage: React.FC = () => {
                 </div>
                 <div className="border-t pt-4">
                   <p className="text-xs text-muted-foreground">Market Concentration</p>
-                  <Badge className="mt-1" style={{ backgroundColor: '#ff980020', color: '#ff9800' }}>
+                  <Badge className="mt-1" style={{ backgroundColor: softRagToken('amber'), color: ragToken('amber') }}>
                     {keyPlayers.length <= 5 ? 'Concentrated' : 'Fragmented'}
                   </Badge>
                 </div>
