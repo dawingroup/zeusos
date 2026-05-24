@@ -217,6 +217,9 @@ export * from './skills';
 // Succession Planning Module
 export * from './succession';
 
+// Phase 6.A — Human Capital Model (Addendum v1.2 §2.1)
+export * from './role-profiles/types';
+
 // Module info
 export const HR_CENTRAL_MODULE = {
   id: 'hr-central',

@@ -3967,5 +3967,32 @@ service cloud.firestore {
         allow delete: if isAdmin();
       }
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 6.A — Human Capital Model (Addendum v1.2 §2.1 / §6.2)
+    //
+    // role_profile/{roleProfileId} — typed contract describing what a
+    // holder can do, approve, and absorb in workload. Reads are
+    // staff-wide (the role catalogue is org-visible — anyone can see
+    // "who's an Art Director on Zeus Digital"). Writes are admin-only
+    // until the role-management UI ships in 6.A.2.
+    //
+    // role_assignment/{id} — effective-dated EmployeeId ↔ RoleProfileId
+    // edge consumed by the EmployeeAssignmentService. Same read/write
+    // posture as role_profile.
+    //
+    // The capability data itself (TaskCapability verb matrix on the
+    // role profile, plus per-assignment overrides) is the grant — see
+    // v1.2 §6.3 "capability is data, in two places."
+    // ════════════════════════════════════════════════════════════════
+    match /role_profile/{roleProfileId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
+
+    match /role_assignment/{assignmentId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }
