@@ -7,7 +7,6 @@ export { Footer } from './Footer';
 export { Header, type HeaderProps } from './Header';
 export { ModuleNav, type ModuleNavProps, type NavItem } from './ModuleNav';
 export { PageHeader } from './PageHeader';
-export { AppLayout, type AppLayoutProps } from './AppLayout';
 export { AppShell } from './AppShell';
 export { PageTemplate } from './PageTemplate';
 export { ListPageTemplate } from './ListPageTemplate';
