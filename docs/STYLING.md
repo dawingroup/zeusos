@@ -232,6 +232,79 @@ library uses its own `STATUS_BADGE_CLASS` map for that. Don't conflate.
 
 ---
 
+## 5.5 Semantic-color helpers — `src/shared/lib/semantic-colors.ts`
+
+When you need a token-derived color from JavaScript (not just CSS) — Recharts
+series fills, `style={{ color: ... }}` based on a runtime value, sentiment
+scores driven by data — use the helpers in
+[`src/shared/lib/semantic-colors.ts`](../src/shared/lib/semantic-colors.ts).
+They are the typed single-source-of-truth and the **only** sanctioned escape
+hatch from the `design-system/no-inline-style-literals` lint rule.
+
+| Helper | Use |
+|---|---|
+| `ragToken(color)` | CSS-var ref for solid RAG color (`var(--rag-green)` etc.) — pass to `style.color`, SVG `stroke`, etc. |
+| `softRagToken(color)` | CSS-var ref for soft RAG variant (pill backgrounds, alert headers) |
+| `ragClass(color)` | className `"rag green"` etc. — for JSX where you'd otherwise hand-write the className string |
+| `ragForDelta(delta)` | Map +/− number to `green`/`red`/`na` — for variance numbers, period-over-period changes |
+| `ragForAttainment(pct, thresholds?)` | Map actual-vs-target percentage to RAG (defaults: ≥100 green / ≥85 amber / <85 red) |
+| `ragForSentiment(score)` | Map -100..100 sentiment score to RAG (e.g. social listening, NPS net) |
+| `chartSeriesColor(idx)` | `hsl(var(--chart-N))` for the n-th Recharts series. Wraps after 5. |
+| `chartSeriesColorAlpha(idx, alpha)` | Same with opacity — useful for under-line area fills |
+| `cashFlowToken` | `{ pos, neg, net }` CSS-var refs for waterfall bars |
+| `statusBadgeClass(status)` | Workflow lifecycle (`draft`/`active`/`paused`/`deprecated`/`archived`) → soft className. **Different concept from RAG** — see §5. |
+
+**Examples** (from anti-pattern to correct):
+
+```diff
+- style={{ color: value > 0 ? '#22C55E' : '#EF4444' }}
++ style={{ color: ragToken(ragForDelta(value)) }}
+
+- <Bar fill="#1976d2" />
++ <Bar fill={chartSeriesColor(0)} />
+
+- <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full">Off track</span>
++ <span className={ragClass('red')}>Off track</span>
+```
+
+When extending: add a new helper rather than hard-coding tokens in the consumer. New semantic categories (NPS bands, urgency tiers, …) belong in this file.
+
+---
+
+## 5.6 Phase U.3 sentiment codemod — `scripts/ui-align-sentiment-sweep.mjs`
+
+Companion to the gray codemod ([`scripts/ui-align-gray-sweep.mjs`](../scripts/ui-align-gray-sweep.mjs)) used in U.2. Handles the mechanical sentiment cases — direct color substitution without JSX restructuring.
+
+What it migrates (variant prefixes preserved):
+
+| From | To |
+|---|---|
+| `text-{red\|rose}-{300..900}` | `text-[var(--rag-red)]` |
+| `text-{amber\|yellow\|orange}-{300..900}` | `text-[var(--rag-amber)]` |
+| `text-{green\|emerald}-{300..900}` | `text-[var(--rag-green)]` |
+| `text-{blue\|sky}-{300..900}` | `text-[var(--rag-blue)]` |
+| `bg-{family}-{50\|100}` | `bg-[var(--rag-{color}-soft)]` |
+| `bg-{family}-{500..900}` | `bg-[var(--rag-{color})]` |
+| `border-{family}-{200..600}` | `border-[var(--rag-{color})]` |
+| `ring-{family}-*` / `divide-{family}-*` | corresponding solid RAG |
+
+What it does **not** touch (intentional — needs judgment or JSX awareness):
+
+- Paired `bg-X-50 text-X-700` patterns that should collapse to a `<span className={ragClass('X')}>` — would need a jscodeshift AST pass
+- Recharts `<Bar fill="#..." />` and other JS color strings — migrate to `chartSeriesColor(idx)` by hand
+- Specialty palettes (`purple`, `indigo`, `violet`, `pink`, `cyan`, `sky`) — these usually mean "category color" rather than RAG; per-module decision
+
+**Usage:**
+```bash
+# Dry-run first to see scope
+node scripts/ui-align-sentiment-sweep.mjs --dry 'src/modules/finance/**/*.{ts,tsx}'
+
+# Apply
+node scripts/ui-align-sentiment-sweep.mjs 'src/modules/finance/**/*.{ts,tsx}'
+```
+
+---
+
 ## 6. Buttons
 
 Use shadcn `<Button>` for all new code
