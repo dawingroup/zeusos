@@ -14,7 +14,7 @@ export interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100/50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header with Module Switcher */}
       <Header />
 
