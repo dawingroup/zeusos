@@ -115,7 +115,7 @@ export default function ClientsPage() {
               .map(({ client, openMsas, activeSows, ceilingByCurrency }) => (
               <tr
                 key={client.id}
-                className={`border-b hover:bg-slate-50 ${client.status === 'BLOCKED' ? 'opacity-50' : ''}`}
+                className={`border-b hover:bg-[var(--bg-sunken)] ${client.status === 'BLOCKED' ? 'opacity-50' : ''}`}
               >
                 <td className="px-3 py-2">
                   <Link to={`/clients/${client.id}`} className="font-medium text-blue-700 hover:underline">

@@ -149,7 +149,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
   }
 
   return (
-    <div className="fixed bottom-0 right-0 w-full md:w-[420px] h-[600px] bg-white border-l border-t border-gray-200 shadow-2xl rounded-tl-xl flex flex-col z-50">
+    <div className="fixed bottom-0 right-0 w-full md:w-[420px] h-[600px] bg-card border-l border-t border-[var(--border-subtle)] shadow-2xl rounded-tl-xl flex flex-col z-50">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-tl-xl">
         <div className="flex items-center gap-2">
@@ -160,10 +160,10 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-card/20 px-2 py-0.5 rounded-full">
             {REVIEW_SECTION_LABELS[activeSection]}
           </span>
-          <button onClick={onToggle} className="p-1 hover:bg-white/20 rounded">
+          <button onClick={onToggle} className="p-1 hover:bg-card/20 rounded">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -174,10 +174,10 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
         {conversationHistory.length === 0 && (
           <div className="text-center py-8">
             <Bot className="w-12 h-12 mx-auto text-purple-300 mb-3" />
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-muted-foreground mb-1">
               I'm your AI Strategy Consultant
             </p>
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-xs text-[var(--fg-tertiary)] mb-4">
               Ask me to analyze sections, suggest improvements, or generate OKRs & KPIs.
             </p>
             {/* Quick Prompts */}
@@ -211,7 +211,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                 className={`px-3 py-2 rounded-lg text-sm ${
                   msg.role === 'user'
                     ? 'bg-blue-600 text-white rounded-br-sm'
-                    : 'bg-gray-100 text-gray-800 rounded-bl-sm'
+                    : 'bg-[var(--bg-sunken)] text-foreground rounded-bl-sm'
                 }`}
               >
                 <div className="whitespace-pre-wrap break-words leading-relaxed">{msg.content}</div>
@@ -264,7 +264,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                             )}
                             <button
                               onClick={() => copyToClipboard(suggestion.content)}
-                              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-800 border border-gray-300 rounded"
+                              className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-foreground border border-[var(--border-default)] rounded"
                             >
                               <Copy className="w-3 h-3" />
                               Copy
@@ -277,7 +277,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                 </div>
               )}
 
-              <p className="text-[10px] text-gray-400 mt-1">
+              <p className="text-[10px] text-[var(--fg-tertiary)] mt-1">
                 {new Date(msg.timestamp).toLocaleTimeString()}
               </p>
             </div>
@@ -294,7 +294,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
             <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
               <Bot className="w-4 h-4 text-purple-600" />
             </div>
-            <div className="px-3 py-2 rounded-lg bg-gray-100 text-gray-500 text-sm">
+            <div className="px-3 py-2 rounded-lg bg-[var(--bg-sunken)] text-muted-foreground text-sm">
               <Loader2 className="w-4 h-4 animate-spin inline mr-2" />
               Analyzing...
             </div>
@@ -306,7 +306,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
 
       {/* Document Section Actions */}
       {selectedDocumentSectionId && (onAssessDocumentSection || onRewriteDocumentSection) && (
-        <div className="flex items-center gap-2 px-4 py-2 border-t border-gray-200 bg-purple-50">
+        <div className="flex items-center gap-2 px-4 py-2 border-t border-[var(--border-subtle)] bg-purple-50">
           <span className="text-xs text-purple-700 font-medium">Section Actions:</span>
           {onAssessDocumentSection && (
             <button
@@ -331,7 +331,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
       )}
 
       {/* Input */}
-      <div className="border-t border-gray-200 px-4 py-3">
+      <div className="border-t border-[var(--border-subtle)] px-4 py-3">
         <div className="flex items-end gap-2">
           <textarea
             ref={inputRef}
@@ -340,7 +340,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
             onKeyDown={handleKeyDown}
             placeholder="Ask about your strategy..."
             rows={1}
-            className="flex-1 text-sm border border-gray-300 rounded-lg px-3 py-2 resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 max-h-24"
+            className="flex-1 text-sm border border-[var(--border-default)] rounded-lg px-3 py-2 resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 max-h-24"
             style={{ minHeight: '38px' }}
           />
           <button
@@ -355,7 +355,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
             )}
           </button>
         </div>
-        <p className="text-[10px] text-gray-400 mt-1 text-center">
+        <p className="text-[10px] text-[var(--fg-tertiary)] mt-1 text-center">
           Powered by Claude — AI suggestions should be reviewed by leadership
         </p>
       </div>

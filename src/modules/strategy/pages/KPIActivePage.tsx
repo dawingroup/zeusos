@@ -55,7 +55,7 @@ function TrendIcon({ trend }: { trend?: 'up' | 'down' | 'stable' }) {
     case 'down':
       return <ArrowDown className="w-3.5 h-3.5 text-red-500" />;
     default:
-      return <Minus className="w-3.5 h-3.5 text-gray-400" />;
+      return <Minus className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />;
   }
 }
 
@@ -64,12 +64,12 @@ function TrendIcon({ trend }: { trend?: 'up' | 'down' | 'stable' }) {
 function TargetCell({ kpi }: { kpi: KPIDefinition }) {
   const t = kpi.target;
   if (!t || t.value == null) {
-    return <span className="text-sm text-gray-400 italic">No target</span>;
+    return <span className="text-sm text-[var(--fg-tertiary)] italic">No target</span>;
   }
 
   return (
     <div className="text-right">
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-muted-foreground">
         {formatKPIValue(t.value, kpi.type, kpi.unit)}
       </span>
       {/* Stretch / Minimum indicators */}
@@ -106,22 +106,22 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
   const hasTarget = kpi.target?.value != null;
 
   return (
-    <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+    <tr className="border-b border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] transition-colors">
       <td className="py-3 px-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">
+            <span className="text-xs font-mono text-[var(--fg-tertiary)] bg-[var(--bg-sunken)] px-1.5 py-0.5 rounded">
               {kpi.code}
             </span>
-            <span className="text-sm font-medium text-gray-900">{kpi.name}</span>
+            <span className="text-sm font-medium text-foreground">{kpi.name}</span>
           </div>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {KPI_CATEGORY_LABELS[kpi.category as KPICategory] || kpi.category}
           </span>
         </div>
       </td>
       <td className="py-3 px-4 text-right">
-        <span className="text-sm font-semibold text-gray-900">
+        <span className="text-sm font-semibold text-foreground">
           {kpi.currentValue != null
             ? formatKPIValue(kpi.currentValue, kpi.type, kpi.unit)
             : '-'}
@@ -136,7 +136,7 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
             {parseFloat(variance) >= 0 ? '+' : ''}{variance}%
           </span>
         ) : (
-          <span className="text-sm text-gray-400">-</span>
+          <span className="text-sm text-[var(--fg-tertiary)]">-</span>
         )}
       </td>
       <td className="py-3 px-4">
@@ -149,21 +149,21 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
         <div className="flex items-center gap-1 justify-end">
           <button
             onClick={() => onSetTarget(kpi)}
-            className={`p-1 rounded ${hasTarget ? 'text-gray-400 hover:text-blue-600' : 'text-blue-500 hover:text-blue-700'}`}
+            className={`p-1 rounded ${hasTarget ? 'text-[var(--fg-tertiary)] hover:text-blue-600' : 'text-blue-500 hover:text-blue-700'}`}
             title={hasTarget ? 'Edit Target' : 'Set Target'}
           >
             <Target className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => onPause(kpi.id)}
-            className="p-1 text-gray-400 hover:text-amber-600 rounded"
+            className="p-1 text-[var(--fg-tertiary)] hover:text-amber-600 rounded"
             title="Pause"
           >
             <Pause className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => onArchive(kpi.id)}
-            className="p-1 text-gray-400 hover:text-red-600 rounded"
+            className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 rounded"
             title="Archive"
           >
             <Archive className="w-3.5 h-3.5" />
@@ -224,15 +224,15 @@ export function KPIActivePage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Active KPI Tracking</h1>
-          <p className="text-gray-600 text-sm">
+          <h1 className="text-2xl font-bold text-foreground mb-1">Active KPI Tracking</h1>
+          <p className="text-muted-foreground text-sm">
             {activeKPIs.length} KPIs being actively tracked.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => refresh()}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground bg-card border border-[var(--border-subtle)] rounded-lg hover:bg-[var(--bg-sunken)]"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
@@ -250,20 +250,20 @@ export function KPIActivePage() {
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-6">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search KPIs..."
-            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 bg-card border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white"
+          className="text-sm border border-[var(--border-subtle)] rounded-lg px-3 py-2 bg-card"
         >
           <option value="">All Categories</option>
           {uniqueCategories.map((cat) => (
@@ -276,7 +276,7 @@ export function KPIActivePage() {
         <select
           value={performanceFilter}
           onChange={(e) => setPerformanceFilter(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white"
+          className="text-sm border border-[var(--border-subtle)] rounded-lg px-3 py-2 bg-card"
         >
           <option value="">All Performance</option>
           {Object.entries(KPI_PERFORMANCE_LABELS).map(([value, label]) => (
@@ -287,11 +287,11 @@ export function KPIActivePage() {
 
       {/* Table */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading KPIs...</div>
+        <div className="text-center py-12 text-muted-foreground">Loading KPIs...</div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12">
-          <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 text-sm mb-2">No active KPIs found.</p>
+          <Activity className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-muted-foreground text-sm mb-2">No active KPIs found.</p>
           <button
             onClick={() => navigate('/strategy/kpis/library')}
             className="text-sm text-blue-600 hover:text-blue-800 font-medium"
@@ -300,18 +300,18 @@ export function KPIActivePage() {
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-card rounded-lg border border-[var(--border-subtle)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="py-2.5 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">KPI</th>
-                  <th className="py-2.5 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Current</th>
-                  <th className="py-2.5 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
-                  <th className="py-2.5 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Variance</th>
-                  <th className="py-2.5 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="py-2.5 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Trend</th>
-                  <th className="py-2.5 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
+                  <th className="py-2.5 px-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">KPI</th>
+                  <th className="py-2.5 px-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Current</th>
+                  <th className="py-2.5 px-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Target</th>
+                  <th className="py-2.5 px-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Variance</th>
+                  <th className="py-2.5 px-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                  <th className="py-2.5 px-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">Trend</th>
+                  <th className="py-2.5 px-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>

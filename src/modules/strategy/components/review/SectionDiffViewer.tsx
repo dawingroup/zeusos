@@ -87,19 +87,19 @@ export function SectionDiffViewer({ original, rewrite, heading }: SectionDiffVie
   const diff = useMemo(() => computeWordDiff(original, rewrite), [original, rewrite]);
 
   return (
-    <div className="rounded-lg border bg-white">
+    <div className="rounded-lg border bg-card">
       {heading && (
-        <div className="px-4 py-2 border-b bg-gray-50">
-          <h4 className="text-sm font-medium text-gray-700">{heading}</h4>
+        <div className="px-4 py-2 border-b bg-[var(--bg-sunken)]">
+          <h4 className="text-sm font-medium text-muted-foreground">{heading}</h4>
         </div>
       )}
       <div className="grid grid-cols-2 divide-x">
         {/* Original */}
         <div className="p-4">
-          <h5 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
             Original
           </h5>
-          <div className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+          <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
             {diff.left.map((seg, i) => (
               <span
                 key={i}
@@ -113,10 +113,10 @@ export function SectionDiffViewer({ original, rewrite, heading }: SectionDiffVie
 
         {/* Rewrite */}
         <div className="p-4">
-          <h5 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
             Rewrite
           </h5>
-          <div className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+          <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
             {diff.right.map((seg, i) => (
               <span
                 key={i}

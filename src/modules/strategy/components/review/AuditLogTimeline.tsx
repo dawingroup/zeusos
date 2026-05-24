@@ -36,7 +36,7 @@ const CHANGE_TYPE_CONFIG: Record<ChangeType, { label: string; Icon: typeof Clock
   rewrite: { label: 'Rewrite Applied', Icon: Wand2, color: 'text-purple-500 bg-purple-50' },
   minor_edit: { label: 'Minor Edit', Icon: Pencil, color: 'text-blue-500 bg-blue-50' },
   assessment_only: { label: 'Assessment', Icon: Eye, color: 'text-indigo-500 bg-indigo-50' },
-  manual_edit: { label: 'Manual Edit', Icon: Pencil, color: 'text-gray-500 bg-gray-50' },
+  manual_edit: { label: 'Manual Edit', Icon: Pencil, color: 'text-muted-foreground bg-[var(--bg-sunken)]' },
   new_section: { label: 'Section Added', Icon: Plus, color: 'text-green-500 bg-green-50' },
   removed: { label: 'Section Removed', Icon: Trash2, color: 'text-red-500 bg-red-50' },
 };
@@ -61,7 +61,7 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8 text-gray-500">
+      <div className="flex items-center justify-center py-8 text-muted-foreground">
         <Loader2 className="h-5 w-5 animate-spin mr-2" />
         Loading audit log...
       </div>
@@ -70,7 +70,7 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
 
   if (entries.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
         <p className="text-sm">No audit entries yet.</p>
       </div>
@@ -80,7 +80,7 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
   return (
     <div className="relative">
       {/* Vertical line */}
-      <div className="absolute left-5 top-0 bottom-0 w-px bg-gray-200" />
+      <div className="absolute left-5 top-0 bottom-0 w-px bg-[var(--bg-sunken)]" />
 
       <div className="space-y-4">
         {entries.map((entry) => {
@@ -101,21 +101,21 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
               </div>
 
               {/* Card */}
-              <div className="rounded-lg border bg-white shadow-sm">
+              <div className="rounded-lg border bg-card shadow-sm">
                 <div
-                  className="flex items-center justify-between p-3 cursor-pointer hover:bg-gray-50"
+                  className="flex items-center justify-between p-3 cursor-pointer hover:bg-[var(--bg-sunken)]"
                   onClick={() => setExpandedId(isExpanded ? null : entry.id)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-foreground">
                         {config.label}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-[var(--fg-tertiary)]">
                         {entry.sectionHeading}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {formatTimestamp(entry.timestamp as { seconds: number })}
                       {entry.approvedBy && (
                         <> &middot; by {entry.approvedBy}</>
@@ -126,10 +126,10 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                   {/* Score change indicator */}
                   {scoreChanged && (
                     <div className="flex items-center gap-1 mr-2 text-xs">
-                      <span className="text-gray-400">
+                      <span className="text-[var(--fg-tertiary)]">
                         {entry.alignmentScoreBefore ?? '—'}
                       </span>
-                      <span className="text-gray-300">&rarr;</span>
+                      <span className="text-[var(--fg-tertiary)]">&rarr;</span>
                       <span
                         className={
                           (entry.alignmentScoreAfter || 0) > (entry.alignmentScoreBefore || 0)
@@ -149,9 +149,9 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                   ) : null}
 
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4 text-gray-400 ml-2" />
+                    <ChevronUp className="h-4 w-4 text-[var(--fg-tertiary)] ml-2" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-400 ml-2" />
+                    <ChevronDown className="h-4 w-4 text-[var(--fg-tertiary)] ml-2" />
                   )}
                 </div>
 
@@ -160,26 +160,26 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                   <div className="px-3 pb-3 space-y-2 border-t pt-2">
                     {/* Rationale */}
                     <div>
-                      <span className="text-xs font-medium text-gray-500">Rationale:</span>
-                      <p className="text-xs text-gray-700 mt-0.5">{entry.rationale}</p>
+                      <span className="text-xs font-medium text-muted-foreground">Rationale:</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">{entry.rationale}</p>
                     </div>
 
                     {/* Before/After Summaries */}
                     {entry.beforeSummary !== entry.afterSummary && (
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <span className="text-[10px] font-medium text-gray-500 uppercase">
+                          <span className="text-[10px] font-medium text-muted-foreground uppercase">
                             Before
                           </span>
-                          <p className="text-xs text-gray-600 mt-0.5 line-clamp-3">
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-3">
                             {entry.beforeSummary}
                           </p>
                         </div>
                         <div>
-                          <span className="text-[10px] font-medium text-gray-500 uppercase">
+                          <span className="text-[10px] font-medium text-muted-foreground uppercase">
                             After
                           </span>
-                          <p className="text-xs text-gray-600 mt-0.5 line-clamp-3">
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-3">
                             {entry.afterSummary}
                           </p>
                         </div>
@@ -189,14 +189,14 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                     {/* Data Sources */}
                     {entry.dataSourcesQueried.length > 0 && (
                       <div>
-                        <span className="text-[10px] font-medium text-gray-500 uppercase">
+                        <span className="text-[10px] font-medium text-muted-foreground uppercase">
                           Data Sources
                         </span>
                         <div className="flex flex-wrap gap-1 mt-0.5">
                           {entry.dataSourcesQueried.map((src) => (
                             <span
                               key={src}
-                              className="text-[10px] px-1 py-0.5 bg-gray-100 text-gray-600 rounded"
+                              className="text-[10px] px-1 py-0.5 bg-[var(--bg-sunken)] text-muted-foreground rounded"
                             >
                               {src.replace(/_/g, ' ')}
                             </span>

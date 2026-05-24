@@ -30,10 +30,10 @@ export const ExecutiveDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         <div className="space-y-6">
-          <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
+          <div className="h-8 w-64 bg-[var(--bg-sunken)] rounded animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-28 bg-white rounded-lg border animate-pulse" />
+              <div key={i} className="h-28 bg-card rounded-lg border animate-pulse" />
             ))}
           </div>
         </div>
@@ -114,9 +114,9 @@ export const ExecutiveDashboard: React.FC = () => {
         {/* OKR Progress & KPI Summary */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* OKR Progress */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">OKR Progress</h2>
+              <h2 className="text-lg font-semibold text-foreground">OKR Progress</h2>
               <button
                 onClick={() => navigate('/strategy/okrs')}
                 className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
@@ -125,7 +125,7 @@ export const ExecutiveDashboard: React.FC = () => {
               </button>
             </div>
             {topOKRs.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 <Zap className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No active OKRs found</p>
                 <button
@@ -138,17 +138,17 @@ export const ExecutiveDashboard: React.FC = () => {
             ) : (
               <div className="space-y-3">
                 {topOKRs.map(okr => (
-                  <div key={okr.id} className="p-3 border border-gray-100 rounded-lg">
+                  <div key={okr.id} className="p-3 border border-[var(--border-subtle)] rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-900 truncate flex-1 mr-2">
+                      <span className="text-sm font-medium text-foreground truncate flex-1 mr-2">
                         {okr.title}
                       </span>
-                      <span className="text-xs text-gray-500 whitespace-nowrap">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {okr.keyResultCount} KRs
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 bg-gray-100 rounded-full h-2">
+                      <div className="flex-1 bg-[var(--bg-sunken)] rounded-full h-2">
                         <div
                           className="h-2 rounded-full transition-all"
                           style={{
@@ -157,7 +157,7 @@ export const ExecutiveDashboard: React.FC = () => {
                           }}
                         />
                       </div>
-                      <span className="text-xs font-semibold text-gray-700 w-10 text-right">
+                      <span className="text-xs font-semibold text-muted-foreground w-10 text-right">
                         {okr.progress}%
                       </span>
                     </div>
@@ -168,9 +168,9 @@ export const ExecutiveDashboard: React.FC = () => {
           </div>
 
           {/* KPI Summary */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">KPI Scorecard</h2>
+              <h2 className="text-lg font-semibold text-foreground">KPI Scorecard</h2>
               <button
                 onClick={() => navigate('/strategy/kpis')}
                 className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
@@ -179,7 +179,7 @@ export const ExecutiveDashboard: React.FC = () => {
               </button>
             </div>
             {topKPIs.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 <BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No active KPIs found</p>
                 <button
@@ -192,12 +192,12 @@ export const ExecutiveDashboard: React.FC = () => {
             ) : (
               <div className="space-y-3">
                 {topKPIs.map(kpi => (
-                  <div key={kpi.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                  <div key={kpi.id} className="flex items-center justify-between p-3 border border-[var(--border-subtle)] rounded-lg">
                     <div className="flex-1 min-w-0 mr-3">
-                      <span className="text-sm font-medium text-gray-900 truncate block">
+                      <span className="text-sm font-medium text-foreground truncate block">
                         {kpi.name}
                       </span>
-                      <span className="text-xs text-gray-500 capitalize">{kpi.category}</span>
+                      <span className="text-xs text-muted-foreground capitalize">{kpi.category}</span>
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-semibold">
@@ -212,15 +212,15 @@ export const ExecutiveDashboard: React.FC = () => {
         </div>
 
         {/* Strategy Review Link */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <FileText className="h-5 w-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">Strategy Reviews</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-medium text-foreground">Strategy Reviews</h3>
+                <p className="text-sm text-muted-foreground">
                   AI-powered business strategy review tool with SWOT, BMC, and OKR generation
                 </p>
               </div>
@@ -237,9 +237,9 @@ export const ExecutiveDashboard: React.FC = () => {
 
         {/* Alignment Heatmap Placeholder (rendered by parent when sections exist) */}
         {metrics && 'sectionsNeedingRewrite' in metrics && (metrics as Record<string, unknown>).sectionsNeedingRewrite != null && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-gray-900 flex items-center gap-2">
+              <h3 className="font-medium text-foreground flex items-center gap-2">
                 <Activity className="h-4 w-4 text-blue-600" />
                 Strategy Alignment
               </h3>
@@ -247,7 +247,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 {String((metrics as Record<string, unknown>).sectionsNeedingRewrite)} sections need review
               </span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               Open a strategy review to see the full alignment heatmap.
             </p>
           </div>

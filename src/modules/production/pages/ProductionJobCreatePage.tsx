@@ -176,7 +176,7 @@ export default function ProductionJobCreatePage() {
         >
           {busy ? 'Creating…' : 'Create job'}
         </button>
-        <Link to="/production" className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Cancel</Link>
+        <Link to="/production" className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>
       </div>
     </div>
   );

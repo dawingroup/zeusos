@@ -25,16 +25,16 @@ const SCORE_BG: Record<number, string> = {
   3: 'bg-yellow-400',
   2: 'bg-orange-400',
   1: 'bg-red-500',
-  0: 'bg-gray-200',
+  0: 'bg-[var(--bg-sunken)]',
 };
 
 const SCORE_TEXT: Record<number, string> = {
   5: 'text-white',
   4: 'text-white',
-  3: 'text-gray-900',
+  3: 'text-foreground',
   2: 'text-white',
   1: 'text-white',
-  0: 'text-gray-400',
+  0: 'text-[var(--fg-tertiary)]',
 };
 
 const TYPE_LABELS: Record<SectionType, string> = {
@@ -55,7 +55,7 @@ const TYPE_LABELS: Record<SectionType, string> = {
 export function AlignmentHeatmap({ sections, onSectionClick }: AlignmentHeatmapProps) {
   if (sections.length === 0) {
     return (
-      <div className="text-center py-4 text-gray-400 text-sm">
+      <div className="text-center py-4 text-[var(--fg-tertiary)] text-sm">
         No sections to display
       </div>
     );
@@ -71,7 +71,7 @@ export function AlignmentHeatmap({ sections, onSectionClick }: AlignmentHeatmapP
     <div>
       {/* Summary */}
       <div className="flex items-center justify-between mb-3">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           <span className="font-medium">{assessed.length}</span>/{sections.length} assessed
         </div>
         {avgScore > 0 && (
@@ -116,7 +116,7 @@ export function AlignmentHeatmap({ sections, onSectionClick }: AlignmentHeatmapP
         {[1, 2, 3, 4, 5].map((score) => (
           <div key={score} className="flex items-center gap-1">
             <div className={`w-3 h-3 rounded ${SCORE_BG[score]}`} />
-            <span className="text-[10px] text-gray-500">{score}</span>
+            <span className="text-[10px] text-muted-foreground">{score}</span>
           </div>
         ))}
       </div>

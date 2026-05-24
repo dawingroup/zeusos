@@ -81,7 +81,7 @@ export default function MasterJobsPage() {
               {jobs.map(j => {
                 const pct = j.ceilingMinor > 0 ? Math.round((j.allocatedMinor / j.ceilingMinor) * 100) : 0;
                 return (
-                  <tr key={j.id} className="border-t hover:bg-slate-50">
+                  <tr key={j.id} className="border-t hover:bg-[var(--bg-sunken)]">
                     <td className="px-3 py-2">
                       <Link to={`/master-jobs/${j.id}`} className="font-mono text-xs text-blue-700 hover:underline">{j.code}</Link>
                     </td>

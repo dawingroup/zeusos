@@ -122,7 +122,7 @@ export default function ClientDetailPage() {
               <button
                 type="button"
                 onClick={() => { setDraft(client); setEditing(true); }}
-                className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
+                className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]"
               >
                 Edit
               </button>
@@ -147,7 +147,7 @@ export default function ClientDetailPage() {
       </header>
 
       {editing && (
-        <section className="rounded border bg-slate-50 p-4">
+        <section className="rounded border bg-[var(--bg-sunken)] p-4">
           <h2 className="mb-3 text-sm font-semibold">Edit client</h2>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <label className="block">
@@ -208,7 +208,7 @@ export default function ClientDetailPage() {
             <button onClick={handleSave} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
               {busy ? 'Saving…' : 'Save'}
             </button>
-            <button onClick={() => setEditing(false)} className="rounded border px-3 py-1.5 text-sm hover:bg-white">Cancel</button>
+            <button onClick={() => setEditing(false)} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Cancel</button>
           </div>
         </section>
       )}
@@ -221,7 +221,7 @@ export default function ClientDetailPage() {
         {msas.length > 0 && (
           <div className="space-y-3">
             {msas.map(msa => (
-              <div key={msa.id} className="rounded border bg-white">
+              <div key={msa.id} className="rounded border bg-card">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
                   <div>
                     <Link to={`/clients/${client.id}/msas/${msa.id}`} className="font-medium text-blue-700 hover:underline">
@@ -231,7 +231,7 @@ export default function ClientDetailPage() {
                   </div>
                   <Link
                     to={`/clients/${client.id}/msas/${msa.id}/sows/new`}
-                    className="rounded border px-2 py-1 text-xs hover:bg-slate-50"
+                    className="rounded border px-2 py-1 text-xs hover:bg-[var(--bg-sunken)]"
                   >
                     + New SOW
                   </Link>
@@ -247,7 +247,7 @@ export default function ClientDetailPage() {
                   </thead>
                   <tbody>
                     {(sowsByMsa[msa.id] || []).map(sow => (
-                      <tr key={sow.id} className="border-t hover:bg-slate-50">
+                      <tr key={sow.id} className="border-t hover:bg-[var(--bg-sunken)]">
                         <td className="px-3 py-2">
                           <Link to={`/clients/${client.id}/msas/${msa.id}/sows/${sow.id}`} className="font-mono text-xs text-blue-700 hover:underline">
                             {sow.code || sow.id}

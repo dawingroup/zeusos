@@ -77,7 +77,7 @@ export function StrategyGenerator({
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="relative bg-card rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-indigo-600 to-purple-600">
             <div>
@@ -111,13 +111,13 @@ export function StrategyGenerator({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                       Project Type
                     </label>
                     <select
                       value={projectType}
                       onChange={(e) => setProjectType(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
                     >
                       <option>Custom Millwork</option>
                       <option>Kitchen Cabinetry</option>
@@ -130,13 +130,13 @@ export function StrategyGenerator({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                       Location / Market
                     </label>
                     <select
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
                     >
                       <option>East Africa</option>
                       <option>Uganda</option>
@@ -149,14 +149,14 @@ export function StrategyGenerator({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
                     Client Brief *
                   </label>
                   <textarea
                     value={clientBrief}
                     onChange={(e) => setClientBrief(e.target.value)}
                     rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="Describe the project requirements, client preferences, style direction, functional needs, budget considerations, etc."
                   />
                 </div>
@@ -187,13 +187,13 @@ export function StrategyGenerator({
 
                 {/* Executive Summary */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Executive Summary</h4>
-                  <p className="text-gray-600 text-sm">{report.executiveSummary}</p>
+                  <h4 className="font-semibold text-foreground mb-2">Executive Summary</h4>
+                  <p className="text-muted-foreground text-sm">{report.executiveSummary}</p>
                 </div>
 
                 {/* Trends Preview */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Key Trends</h4>
+                  <h4 className="font-semibold text-foreground mb-2">Key Trends</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {report.trends.slice(0, 4).map((trend, i) => (
                       <div key={i} className="bg-blue-50 rounded-lg p-3">
@@ -229,7 +229,7 @@ export function StrategyGenerator({
 
                 {/* Color Scheme Preview */}
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Color Scheme</h4>
+                  <h4 className="font-semibold text-foreground mb-2">Color Scheme</h4>
                   <div className="flex gap-3">
                     <div
                       className="w-16 h-16 rounded-lg shadow-inner flex items-center justify-center"
@@ -256,12 +256,12 @@ export function StrategyGenerator({
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+          <div className="flex justify-between items-center p-6 border-t bg-[var(--bg-sunken)]">
             {!report ? (
               <>
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
                 >
                   Cancel
                 </button>
@@ -292,14 +292,14 @@ export function StrategyGenerator({
               <>
                 <button
                   onClick={() => setReport(null)}
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-muted-foreground hover:text-foreground"
                 >
                   ← Generate Another
                 </button>
                 <div className="flex gap-3">
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+                    className="px-4 py-2 text-muted-foreground bg-[var(--bg-sunken)] rounded-lg hover:bg-[var(--bg-sunken)]"
                   >
                     Close
                   </button>

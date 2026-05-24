@@ -91,7 +91,7 @@ export const REVIEW_SECTION_STATUS_LABELS: Record<string, string> = {
 };
 
 export const REVIEW_SECTION_STATUS_COLORS: Record<string, string> = {
-  [REVIEW_SECTION_STATUS.NOT_STARTED]: 'bg-gray-100 text-gray-600',
+  [REVIEW_SECTION_STATUS.NOT_STARTED]: 'bg-[var(--bg-sunken)] text-muted-foreground',
   [REVIEW_SECTION_STATUS.IN_REVIEW]: 'bg-blue-100 text-blue-700',
   [REVIEW_SECTION_STATUS.NEEDS_UPDATE]: 'bg-amber-100 text-amber-700',
   [REVIEW_SECTION_STATUS.APPROVED]: 'bg-green-100 text-green-700',
@@ -165,7 +165,7 @@ export const BMC_BLOCK_COLORS: Record<BMCBlockKey, string> = {
   [BMC_BLOCKS.CUSTOMER_RELATIONSHIPS]: 'border-pink-300 bg-pink-50',
   [BMC_BLOCKS.CHANNELS]: 'border-orange-300 bg-orange-50',
   [BMC_BLOCKS.CUSTOMER_SEGMENTS]: 'border-red-300 bg-red-50',
-  [BMC_BLOCKS.COST_STRUCTURE]: 'border-gray-300 bg-gray-50',
+  [BMC_BLOCKS.COST_STRUCTURE]: 'border-[var(--border-default)] bg-[var(--bg-sunken)]',
   [BMC_BLOCKS.REVENUE_STREAMS]: 'border-yellow-300 bg-yellow-50',
 };
 

@@ -183,14 +183,14 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
   }, {});
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
           <Package className="w-5 h-5 text-teal-600" />
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Asset Gap Analysis</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className="text-sm font-semibold text-foreground">Asset Gap Analysis</h3>
+            <p className="text-xs text-muted-foreground">
               {gaps.length > 0
                 ? `${gaps.length} gaps identified • ${gaps.filter(g => g.priority === 'critical' || g.priority === 'high').length} high priority`
                 : 'Identify asset requirements for business growth'}
@@ -217,8 +217,8 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
 
       {/* Asset Data Summary */}
       {assetData && assetData.totalAssets > 0 && (
-        <div className="px-5 py-3 border-b border-gray-100 bg-gray-50/50">
-          <div className="flex items-center gap-4 text-xs text-gray-600">
+        <div className="px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]/50">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span><strong>{assetData.totalAssets}</strong> total assets</span>
             <span>Utilization: <strong>{assetData.utilizationSummary}</strong></span>
             {assetData.maintenanceOverdue > 0 && (
@@ -255,12 +255,12 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
 
       {/* Category Summary Chips */}
       {gaps.length > 0 && (
-        <div className="px-5 py-2 border-b border-gray-100 flex items-center gap-2 flex-wrap">
+        <div className="px-5 py-2 border-b border-[var(--border-subtle)] flex items-center gap-2 flex-wrap">
           {Object.entries(gapsByCategory).map(([cat, count]) => {
             const config = CATEGORY_CONFIG[cat];
             const Icon = config?.icon || Package;
             return (
-              <span key={cat} className="flex items-center gap-1 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">
+              <span key={cat} className="flex items-center gap-1 px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded-full">
                 <Icon className={`w-3 h-3 ${config?.color || ''}`} />
                 {config?.label || cat}: {count}
               </span>
@@ -270,32 +270,32 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
       )}
 
       {/* Gap Items */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-[var(--border-subtle)]">
         {gaps.length === 0 && !isAnalyzing ? (
           <div className="px-5 py-8 text-center">
-            <Package className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm text-gray-500 mb-1">No asset gaps analyzed yet</p>
-            <p className="text-xs text-gray-400">Click "Run Analysis" to identify asset requirements for growth.</p>
+            <Package className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground mb-1">No asset gaps analyzed yet</p>
+            <p className="text-xs text-[var(--fg-tertiary)]">Click "Run Analysis" to identify asset requirements for growth.</p>
           </div>
         ) : (
           gaps.map(gap => {
             const isExpanded = expandedGaps.has(gap.id);
-            const config = CATEGORY_CONFIG[gap.category] || { label: gap.category, icon: Package, color: 'text-gray-600' };
+            const config = CATEGORY_CONFIG[gap.category] || { label: gap.category, icon: Package, color: 'text-muted-foreground' };
             const Icon = config.icon;
             return (
               <div key={gap.id}>
                 <div
                   onClick={() => toggleGap(gap.id)}
-                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Icon className={`w-4 h-4 ${config.color} flex-shrink-0`} />
                     <div className="min-w-0">
-                      <h4 className="text-sm font-medium text-gray-900 truncate">{gap.title}</h4>
+                      <h4 className="text-sm font-medium text-foreground truncate">{gap.title}</h4>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] text-gray-400">{config.label}</span>
-                        {gap.estimatedCost && <span className="text-[10px] text-gray-400">Est: {gap.estimatedCost}</span>}
-                        {gap.timeframe && <span className="text-[10px] text-gray-400">{gap.timeframe}</span>}
+                        <span className="text-[10px] text-[var(--fg-tertiary)]">{config.label}</span>
+                        {gap.estimatedCost && <span className="text-[10px] text-[var(--fg-tertiary)]">Est: {gap.estimatedCost}</span>}
+                        {gap.timeframe && <span className="text-[10px] text-[var(--fg-tertiary)]">{gap.timeframe}</span>}
                       </div>
                     </div>
                   </div>
@@ -303,12 +303,12 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
                     <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${PRIORITY_COLORS[gap.priority]}`}>
                       {gap.priority}
                     </span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                    {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
                   </div>
                 </div>
                 {isExpanded && (
                   <div className="px-5 pb-4 space-y-2">
-                    <p className="text-sm text-gray-700">{gap.description}</p>
+                    <p className="text-sm text-muted-foreground">{gap.description}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="p-2.5 bg-red-50 rounded-lg">
                         <p className="text-[10px] font-medium text-red-600 uppercase tracking-wider mb-1">Business Impact</p>

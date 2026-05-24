@@ -362,7 +362,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
             )}
             <button
               onClick={() => onClearDocument?.()}
-              className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground rounded"
               title="Replace document"
             >
               <RefreshCw className="w-4 h-4" />
@@ -385,30 +385,30 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
           isDragging
             ? 'border-blue-500 bg-blue-50'
             : isParsing
-              ? 'border-gray-200 bg-gray-50 cursor-wait'
-              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+              ? 'border-[var(--border-subtle)] bg-[var(--bg-sunken)] cursor-wait'
+              : 'border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-sunken)]'
         }`}
       >
         {isParsing ? (
           <>
             <Loader2 className="w-12 h-12 mx-auto mb-4 text-blue-500 animate-spin" />
-            <p className="text-sm font-medium text-gray-900 mb-1">
+            <p className="text-sm font-medium text-foreground mb-1">
               Parsing document content...
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Extracting text from your file for AI analysis
             </p>
           </>
         ) : (
           <>
-            <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`} />
-            <p className="text-sm font-medium text-gray-900 mb-1">
+            <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-blue-500' : 'text-[var(--fg-tertiary)]'}`} />
+            <p className="text-sm font-medium text-foreground mb-1">
               Upload your current Business Strategy & Plan
             </p>
-            <p className="text-xs text-gray-500 mb-3">
+            <p className="text-xs text-muted-foreground mb-3">
               Drop files here or click to browse
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-[var(--fg-tertiary)]">
               Supported: PDF, Word (.docx), Text (.txt, .md) — Max {MAX_SIZE_MB}MB
             </p>
           </>
@@ -445,7 +445,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
 
       {/* Selected File Preview */}
       {selectedFile && !isParsing && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {selectedFile.type === 'application/pdf' ? (
@@ -454,8 +454,8 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                 <File className="w-8 h-8 text-blue-500" />
               )}
               <div>
-                <p className="font-medium text-gray-900">{selectedFile.name}</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-foreground">{selectedFile.name}</p>
+                <p className="text-sm text-muted-foreground">
                   {formatFileSize(selectedFile.size)}
                   {extractedText && (
                     <span className="ml-2 text-green-600">
@@ -474,7 +474,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                   setTruncationWarning(false);
                   cachedArrayBuffer.current = null;
                 }}
-                className="p-2 text-gray-400 hover:text-gray-600"
+                className="p-2 text-[var(--fg-tertiary)] hover:text-muted-foreground"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -501,10 +501,10 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
           {/* Text content paste area for binary files when server parsing returned nothing */}
           {!extractedText && isBinaryFile(selectedFile) && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
                 Paste document content for AI analysis (optional)
               </label>
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-muted-foreground mb-2">
                 Automatic text extraction returned no content. For best AI analysis, paste the text content manually.
               </p>
               <textarea
@@ -515,7 +515,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                 }}
                 placeholder="Paste the text content of your strategy document here..."
                 rows={6}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           )}
@@ -525,7 +525,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
       {/* Manual text entry option */}
       {!selectedFile && !existingDocument && !isManualEntry && !isParsing && (
         <div className="text-center">
-          <p className="text-sm text-gray-500 mb-2">or</p>
+          <p className="text-sm text-muted-foreground mb-2">or</p>
           <button
             onClick={() => setIsManualEntry(true)}
             className="text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -537,8 +537,8 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
 
       {/* Manual Entry Area */}
       {isManualEntry && !selectedFile && !existingDocument && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-lg p-4">
+          <label className="block text-sm font-medium text-muted-foreground mb-2">
             Paste your strategy document content
           </label>
           <textarea
@@ -549,10 +549,10 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
             }}
             placeholder="Paste the full text content of your business strategy and plan here for AI analysis..."
             rows={10}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           {extractedText && (
-            <p className={`text-xs mt-1 ${extractedText.length > AI_CONTENT_CHAR_LIMIT ? 'text-amber-600' : 'text-gray-400'}`}>
+            <p className={`text-xs mt-1 ${extractedText.length > AI_CONTENT_CHAR_LIMIT ? 'text-amber-600' : 'text-[var(--fg-tertiary)]'}`}>
               {extractedText.length.toLocaleString()} characters
               {extractedText.length > AI_CONTENT_CHAR_LIMIT && ` (AI will analyze first ${AI_CONTENT_CHAR_LIMIT.toLocaleString()})`}
             </p>
@@ -587,7 +587,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                 setExtractedText('');
                 setTruncationWarning(false);
               }}
-              className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
+              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
               Cancel
             </button>

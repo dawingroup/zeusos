@@ -602,7 +602,7 @@ export const StrategyReviewPage: React.FC = () => {
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-3" />
-          <p className="text-sm text-gray-600">Loading strategy review...</p>
+          <p className="text-sm text-muted-foreground">Loading strategy review...</p>
         </div>
       </div>
     );
@@ -611,18 +611,18 @@ export const StrategyReviewPage: React.FC = () => {
   return (
     <div key={reviewId || 'new'}>
       {/* Top Bar */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 z-40 bg-card border-b border-[var(--border-subtle)] shadow-sm">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/strategy/plans')}
-              className="p-1.5 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+              className="p-1.5 text-muted-foreground hover:text-muted-foreground rounded-lg hover:bg-[var(--bg-sunken)]"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">Business Strategy Review</h1>
-              <p className="text-xs text-gray-500">
+              <h1 className="text-lg font-bold text-foreground">Business Strategy Review</h1>
+              <p className="text-xs text-muted-foreground">
                 {reviewData.status === 'draft' ? 'Draft' : reviewData.status === 'in_progress' ? 'In Progress' : 'Completed'}
                 {' — '}{completedSections}/{totalSections} sections • Score: {avgScore}/5
                 {lastSavedAt && (
@@ -634,11 +634,11 @@ export const StrategyReviewPage: React.FC = () => {
           <div className="flex items-center gap-3">
             {/* Subsidiary Selector */}
             <div className="hidden md:flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5 text-gray-400" />
+              <Building2 className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
               <select
                 value={selectedSubsidiaryId}
                 onChange={(e) => setSelectedSubsidiaryId(e.target.value)}
-                className="text-xs border border-gray-200 rounded-md px-2 py-1 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="text-xs border border-[var(--border-subtle)] rounded-md px-2 py-1 bg-card text-muted-foreground focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 {subsidiaryOptions.map(s => (
                   <option key={s.id} value={s.id}>{s.name}</option>
@@ -648,21 +648,21 @@ export const StrategyReviewPage: React.FC = () => {
 
             {/* Progress */}
             <div className="hidden md:flex items-center gap-2">
-              <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-32 h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-600 rounded-full transition-all duration-500"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <span className="text-xs font-medium text-gray-600">{progressPercent}%</span>
+              <span className="text-xs font-medium text-muted-foreground">{progressPercent}%</span>
             </div>
 
             {/* View Mode Toggle */}
-            <div className="hidden md:flex items-center bg-gray-100 rounded-lg p-0.5">
+            <div className="hidden md:flex items-center bg-[var(--bg-sunken)] rounded-lg p-0.5">
               <button
                 onClick={() => setViewMode('sections')}
                 className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                  viewMode === 'sections' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                  viewMode === 'sections' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'
                 }`}
               >
                 <PanelLeft className="w-3.5 h-3.5" />
@@ -671,7 +671,7 @@ export const StrategyReviewPage: React.FC = () => {
               <button
                 onClick={() => setViewMode('editor')}
                 className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                  viewMode === 'editor' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                  viewMode === 'editor' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-muted-foreground'
                 }`}
               >
                 <BookOpen className="w-3.5 h-3.5" />
@@ -713,8 +713,8 @@ export const StrategyReviewPage: React.FC = () => {
           <div className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-20 space-y-1">
               {/* Upload Section */}
-              <div className="mb-4 p-3 bg-white border border-gray-200 rounded-xl">
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              <div className="mb-4 p-3 bg-card border border-[var(--border-subtle)] rounded-xl">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                   Strategy Document
                 </h4>
                 <StrategyDocumentUpload
@@ -728,7 +728,7 @@ export const StrategyReviewPage: React.FC = () => {
               </div>
 
               {/* Section Navigation */}
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">
+              <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
                 Review Sections
               </h4>
               {REVIEW_SECTION_ORDER.map((sectionKey) => {
@@ -742,20 +742,20 @@ export const StrategyReviewPage: React.FC = () => {
                     className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-all text-left ${
                       isActive
                         ? 'bg-blue-50 text-blue-700 font-medium border border-blue-200'
-                        : 'text-gray-600 hover:bg-gray-100'
+                        : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-[var(--fg-tertiary)]'}`} />
                     <span className="flex-1 truncate">{REVIEW_SECTION_LABELS[sectionKey]}</span>
                     {sectionReview?.score > 0 && (
-                      <span className="text-xs text-gray-400">{sectionReview.score}/5</span>
+                      <span className="text-xs text-[var(--fg-tertiary)]">{sectionReview.score}/5</span>
                     )}
                     {sectionReview?.status && sectionReview.status !== 'not_started' && (
                       <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
                         sectionReview.status === 'approved' ? 'bg-green-500' :
                         sectionReview.status === 'in_review' ? 'bg-blue-500' :
                         sectionReview.status === 'needs_update' ? 'bg-amber-500' :
-                        'bg-gray-300'
+                        'bg-[var(--bg-sunken)]'
                       }`} />
                     )}
                   </button>
@@ -771,7 +771,7 @@ export const StrategyReviewPage: React.FC = () => {
               <select
                 value={activeSection}
                 onChange={(e) => setActiveSection(e.target.value as ReviewSectionKey)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
               >
                 {REVIEW_SECTION_ORDER.map(key => (
                   <option key={key} value={key}>{REVIEW_SECTION_LABELS[key]}</option>
@@ -781,7 +781,7 @@ export const StrategyReviewPage: React.FC = () => {
 
             {/* Document Upload for mobile / when no sidebar */}
             <div className="lg:hidden mb-4">
-              <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="bg-card border border-[var(--border-subtle)] rounded-xl p-4">
                 <StrategyDocumentUpload
                   companyId={companyId}
                   existingDocument={reviewData.uploadedDocument}
@@ -890,7 +890,7 @@ export const StrategyReviewPage: React.FC = () => {
             </div>
 
             {/* Section Navigation Footer */}
-            <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--border-subtle)]">
               <button
                 onClick={() => {
                   const currentIndex = REVIEW_SECTION_ORDER.indexOf(activeSection);
@@ -899,7 +899,7 @@ export const StrategyReviewPage: React.FC = () => {
                   }
                 }}
                 disabled={REVIEW_SECTION_ORDER.indexOf(activeSection) === 0}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Previous Section

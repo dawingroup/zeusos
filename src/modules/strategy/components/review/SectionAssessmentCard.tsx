@@ -69,7 +69,7 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div className="absolute flex flex-col items-center justify-center" style={{ marginTop: '16px' }}>
         <span className={`text-2xl font-bold ${color.text}`}>{score}</span>
-        <span className="text-[10px] text-gray-500">/5</span>
+        <span className="text-[10px] text-muted-foreground">/5</span>
       </div>
       <p className={`text-xs font-medium mt-2 ${color.text}`}>{label}</p>
     </div>
@@ -100,10 +100,10 @@ export function SectionAssessmentCard({
   const RecIcon = recConfig.Icon;
 
   return (
-    <div className="rounded-lg border bg-white shadow-sm">
+    <div className="rounded-lg border bg-card shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
-        <h4 className="text-sm font-semibold text-gray-900 truncate">
+        <h4 className="text-sm font-semibold text-foreground truncate">
           {assessment.sectionHeading}
         </h4>
         <span className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full ${recConfig.className}`}>
@@ -123,12 +123,12 @@ export function SectionAssessmentCard({
           {/* Gaps */}
           {assessment.gaps.length > 0 && (
             <div>
-              <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <h5 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                 Gaps Identified
               </h5>
               <ul className="space-y-1">
                 {assessment.gaps.map((gap, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-xs text-gray-700">
+                  <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
                     <AlertTriangle className="h-3 w-3 text-yellow-500 mt-0.5 flex-shrink-0" />
                     {gap}
                   </li>
@@ -140,12 +140,12 @@ export function SectionAssessmentCard({
           {/* Outdated Claims */}
           {assessment.outdatedClaims.length > 0 && (
             <div>
-              <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <h5 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                 Outdated Claims
               </h5>
               <ul className="space-y-1">
                 {assessment.outdatedClaims.map((claim, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-xs text-gray-700">
+                  <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
                     <Minus className="h-3 w-3 text-red-400 mt-0.5 flex-shrink-0" />
                     {claim}
                   </li>
@@ -157,14 +157,14 @@ export function SectionAssessmentCard({
           {/* Data Sources */}
           {assessment.dataSourcesQueried.length > 0 && (
             <div>
-              <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+              <h5 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                 Data Sources
               </h5>
               <div className="flex flex-wrap gap-1">
                 {assessment.dataSourcesQueried.map((source) => (
                   <span
                     key={source}
-                    className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded"
+                    className="text-[10px] px-1.5 py-0.5 bg-[var(--bg-sunken)] text-muted-foreground rounded"
                   >
                     {source.replace(/_/g, ' ')}
                   </span>

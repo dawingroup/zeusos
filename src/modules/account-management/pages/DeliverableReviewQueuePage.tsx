@@ -120,7 +120,7 @@ export default function DeliverableReviewQueuePage() {
         const unsignedRequired = criteria.filter(c => c.required && !c.signedByUserId);
         const canAccept = unsignedRequired.length === 0 && criteria.length > 0;
         return (
-          <article key={iwo.id} className="rounded border bg-white p-4 shadow-sm">
+          <article key={iwo.id} className="rounded border bg-card p-4 shadow-sm">
             <header className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <Link to={`/master-jobs/${iwo.masterJobId}`} className="font-mono text-xs text-blue-700 hover:underline">{iwo.code}</Link>
@@ -153,7 +153,7 @@ export default function DeliverableReviewQueuePage() {
             {packet && (
               <details className="mt-3 text-xs">
                 <summary className="cursor-pointer text-muted-foreground">Brief</summary>
-                <pre className="mt-2 whitespace-pre-wrap rounded border bg-slate-50 p-3 font-mono text-xs">{packet.briefMd}</pre>
+                <pre className="mt-2 whitespace-pre-wrap rounded border bg-[var(--bg-sunken)] p-3 font-mono text-xs">{packet.briefMd}</pre>
               </details>
             )}
 

@@ -1,9 +1,9 @@
 import type { MediaPlanStatus } from '../types/media-plan.types';
 
 const STATUS_STYLES: Record<MediaPlanStatus, string> = {
-  DRAFT:  'bg-gray-100 text-gray-700',
+  DRAFT:  'bg-[var(--bg-sunken)] text-muted-foreground',
   ACTIVE: 'bg-green-100 text-green-700',
-  CLOSED: 'bg-slate-100 text-slate-600',
+  CLOSED: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const STATUS_LABEL: Record<MediaPlanStatus, string> = {

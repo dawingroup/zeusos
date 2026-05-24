@@ -12,7 +12,7 @@ interface Props {
 
 const STATUS_DOT: Record<string, string> = {
   ACTIVE:      'bg-green-500',
-  INACTIVE:    'bg-gray-400',
+  INACTIVE:    'bg-[var(--bg-sunken)]',
   BLACKLISTED: 'bg-red-500',
 };
 
@@ -23,7 +23,7 @@ export function TalentCard({ profile }: Props) {
       className="flex items-center gap-3 rounded border bg-background p-3 hover:bg-muted/20 transition-colors"
     >
       <div
-        className={`h-2 w-2 flex-shrink-0 rounded-full ${STATUS_DOT[profile.status] ?? 'bg-gray-300'}`}
+        className={`h-2 w-2 flex-shrink-0 rounded-full ${STATUS_DOT[profile.status] ?? 'bg-[var(--bg-sunken)]'}`}
         title={profile.status}
       />
       <div className="flex-1 min-w-0">

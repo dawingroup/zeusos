@@ -57,12 +57,12 @@ function Tile({ label, value, sub, tone }: TileProps) {
     tone === 'red' ? 'border-red-200 bg-red-50' :
     tone === 'amber' ? 'border-amber-200 bg-amber-50' :
     tone === 'green' ? 'border-emerald-200 bg-emerald-50' :
-    'border-slate-200 bg-white';
+    'border-[var(--border-subtle)] bg-card';
   return (
     <div className={`rounded border p-3 ${toneClasses}`}>
-      <div className="text-xs uppercase text-slate-600">{label}</div>
+      <div className="text-xs uppercase text-muted-foreground">{label}</div>
       <div className="mt-1 text-lg font-semibold tabular-nums">{value}</div>
-      <div className="text-xs text-slate-500">{sub}</div>
+      <div className="text-xs text-muted-foreground">{sub}</div>
     </div>
   );
 }

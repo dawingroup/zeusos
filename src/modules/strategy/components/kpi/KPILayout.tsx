@@ -37,7 +37,7 @@ export function KPILayout() {
     <div>
       {/* Pill-style sub-navigation */}
       <div className="mb-6">
-        <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg w-fit">
+        <div className="flex items-center gap-1 p-1 bg-[var(--bg-sunken)] rounded-lg w-fit">
           {KPI_SUB_TABS.map((tab) => {
             const Icon = tab.icon;
             const active = isActive(tab);
@@ -49,8 +49,8 @@ export function KPILayout() {
                 className={`
                   flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all
                   ${active
-                    ? 'bg-white text-blue-700 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-card text-blue-700 shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
                   }
                 `}
               >
