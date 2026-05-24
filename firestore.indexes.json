@@ -6433,6 +6433,13 @@
         { "fieldPath": "departmentId", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "client_competitors",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

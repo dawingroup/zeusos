@@ -3994,5 +3994,31 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       allow write: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 6.C v2 — Conflict Firewall (ADR-0001 Q4 + v1.1 C3)
+    //
+    // Per ADR-0001 Q4 Zeus leadership chose the NAMED-COMPETITOR-LIST
+    // model over category exclusivity. One collection, one edge type:
+    //
+    //   client_competitors/{clientId__competitorClientId}
+    //       Each row says "client X considers client Y a competitor".
+    //       Asymmetric — adding (pepsi → coke) does NOT auto-create
+    //       (coke → pepsi); the AM enters both sides at intake.
+    //
+    //       Reads are staff-wide so the routing engine + agents
+    //       (ZA-004 Conflict Sentinel, Phase 6.F) can walk the list.
+    //       Writes are admin-only for now; the per-AM "owner of the
+    //       client can manage" path lands in Phase 6.UI.D with the
+    //       intake form for competitor lists.
+    //
+    // Capability is data — see Phase 6.A docstring (v1.2 §6.3).
+    // The Category / ClientCategory / ConflictWall collections from
+    // the v1 firewall design have been removed (ADR-0001 supersedes).
+    // ════════════════════════════════════════════════════════════════
+    match /client_competitors/{competitorEdgeId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }

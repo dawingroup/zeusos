@@ -142,10 +142,10 @@ async function runRouteBrand({ db, input, now = new Date() }) {
     if (!c.hasCapability) c.rejectionReason = 'NO_CAPABILITY';
   }
 
-  // Step 2: conflict firewall — stubbed in 6.B (lands in 6.C with the
-  // Conflict Sentinel + conflict_wall collection). For now, this is
-  // a hook future code can swap in without changing the call signature.
-  await excludeConflicted({ db, candidates, accountId, accountCategory });
+  // Step 2: conflict firewall — Phase 6.C real impl. Queries
+  // conflict_walls; mutates candidates in place; emits
+  // ConflictExclusivityRisk when any brand is walled.
+  await excludeConflicted({ db, candidates, accountId, accountCategory, masterJobId });
 
   // Step 3: capacity check per brand. Soft signal — counts open IWOs
   // assigned to the brand vs DEFAULT_BRAND_CAPACITY_THRESHOLD (or an
@@ -208,16 +208,32 @@ async function runRouteBrand({ db, input, now = new Date() }) {
 }
 
 /**
- * Phase 6.B stub. Phase 6.C implements the real conflict-firewall
- * check against `conflict_wall/{id}` rows pinning accounts to a
- * serving brand. For now this is a no-op so candidates flow through
- * — the conflict_wall collection doesn't exist yet.
+ * Phase 6.C v2 implementation — delegates to functions/src/conflict-firewall/.
+ *
+ * Per ADR-0001 Q4, the firewall walks the requesting client's
+ * `client_competitors` edge. For each listed competitor, check
+ * whether any candidate brand has an OPEN IWO whose master_job
+ * belongs to that competitor. If yes → wall the brand.
+ *
+ * Mutates the candidates array in place (sets `conflicted: true` and
+ * `rejectionReason: 'CONFLICTED'` on each walled candidate). Also
+ * emits `ConflictExclusivityRisk` via the outbox when 1+ brands are
+ * excluded, so Conflict Sentinel (ZA-004) + reporting see the breach
+ * risk live. See excludeConflicted.js for the signature.
+ *
+ * The legacy `accountCategory` arg is accepted but ignored — kept
+ * only so existing 6.B call sites don't need same-PR updates.
  */
-async function excludeConflicted({ db, candidates, accountId, accountCategory }) {
-  void db; void candidates; void accountId; void accountCategory;
-  // 6.C will: for each candidate brand, check if any of its current
-  // accounts shares accountCategory with the requested account → if
-  // yes, mark candidate.conflicted = true and set rejectionReason.
+const { excludeConflicted: realExcludeConflicted } = require('../../conflict-firewall/excludeConflicted');
+
+async function excludeConflicted({ db, candidates, accountId, accountCategory, masterJobId }) {
+  // accountCategory deprecated in v2 — pass-through ignored.
+  void accountCategory;
+  await realExcludeConflicted({
+    db, candidates,
+    requestingClientId: accountId,
+    masterJobId,
+  });
 }
 
 /**
