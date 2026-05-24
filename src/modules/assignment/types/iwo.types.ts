@@ -26,6 +26,7 @@ import type { Timestamp } from 'firebase/firestore';
 import type { SubsidiaryId } from '@/core/settings/types';
 import type { IWOState } from '../constants/iwo-states';
 import type { BriefTier } from '@/modules/hr-central/role-profiles/types';
+import type { ApprovalChain } from './approval-chain.types';
 
 export interface InternalWorkOrder {
   id: string;
@@ -91,6 +92,18 @@ export interface InternalWorkOrder {
    * Optional — only populated after a delivery-side assigner pass.
    */
   assignedEmployeeId?: string;
+
+  /**
+   * ECD Approval Ladder state — initialized when IWO transitions
+   * IN_PROGRESS → DELIVERED. Must reach terminal-rung `GRANTED`
+   * before `acceptInternalRequestRevision` will allow DELIVERED →
+   * ACCEPTED_INTERNALLY. Tier-driven depth: TIER_1 = 6 rungs,
+   * TIER_2 = 4 rungs, TIER_3 = 2 rungs.
+   * Added in Phase 6.D per Addendum v1.1 §7 / change C5.
+   * Optional during the rollout window — pre-6.D IWOs already
+   * past DELIVERED skip the gate.
+   */
+  approvalChain?: ApprovalChain;
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;
