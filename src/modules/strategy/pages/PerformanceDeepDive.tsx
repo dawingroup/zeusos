@@ -13,24 +13,24 @@ export const PerformanceDeepDive: React.FC = () => {
       <div>
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Performance Analytics
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Deep-dive into performance metrics, trends, and comparisons.
           </p>
         </div>
 
         {/* Coming Soon Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-12">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="bg-gray-100 rounded-full p-6 mb-4">
-              <Construction className="w-16 h-16 text-gray-400" />
+            <div className="bg-[var(--bg-sunken)] rounded-full p-6 mb-4">
+              <Construction className="w-16 h-16 text-[var(--fg-tertiary)]" />
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+            <h2 className="text-2xl font-semibold text-foreground mb-3">
               Coming Soon
             </h2>
-            <p className="text-gray-600 max-w-md">
+            <p className="text-muted-foreground max-w-md">
               The performance analytics interface is under development.
               Check back soon for advanced analytics and reporting capabilities.
             </p>

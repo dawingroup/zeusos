@@ -26,7 +26,7 @@ const PHASE_KINDS: PostPhaseKind[] = [
 const STATUS_OPTIONS: PostPhaseStatus[] = ['PENDING', 'IN_PROGRESS', 'DONE'];
 
 const STATUS_STYLES: Record<PostPhaseStatus, string> = {
-  PENDING:     'bg-gray-100 text-gray-600',
+  PENDING:     'bg-[var(--bg-sunken)] text-muted-foreground',
   IN_PROGRESS: 'bg-yellow-100 text-yellow-700',
   DONE:        'bg-green-100 text-green-700',
 };

@@ -52,18 +52,18 @@ export function KPILibraryFilters({
     <div className="space-y-3">
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)]" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search KPIs by name, formula, or tag..."
-          className="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-lg text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-10 pr-10 py-2.5 bg-card border border-[var(--border-subtle)] rounded-lg text-sm placeholder:text-[var(--fg-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         {searchQuery && (
           <button
             onClick={() => onSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fg-tertiary)] hover:text-muted-foreground"
           >
             <X className="w-4 h-4" />
           </button>
@@ -72,7 +72,7 @@ export function KPILibraryFilters({
 
       {/* Filter row */}
       <div className="flex flex-wrap items-center gap-2">
-        <Filter className="w-4 h-4 text-gray-400" />
+        <Filter className="w-4 h-4 text-[var(--fg-tertiary)]" />
 
         {/* Category */}
         <select
@@ -81,7 +81,7 @@ export function KPILibraryFilters({
             onCategoryChange(e.target.value);
             onSubCategoryChange('');
           }}
-          className="text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Categories</option>
           {KPI_LIBRARY_CATEGORIES.map((cat) => (
@@ -96,7 +96,7 @@ export function KPILibraryFilters({
           <select
             value={selectedSubCategory}
             onChange={(e) => onSubCategoryChange(e.target.value)}
-            className="text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Sub-Categories</option>
             {activeCategory.subCategories.map((sc) => (
@@ -111,7 +111,7 @@ export function KPILibraryFilters({
         <select
           value={selectedModule}
           onChange={(e) => onModuleChange(e.target.value)}
-          className="text-sm border border-gray-200 rounded-md px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {MODULE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -121,12 +121,12 @@ export function KPILibraryFilters({
         </select>
 
         {/* Tracked only toggle */}
-        <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
+        <label className="flex items-center gap-1.5 text-sm text-muted-foreground cursor-pointer">
           <input
             type="checkbox"
             checked={showTrackedOnly}
             onChange={(e) => onTrackedOnlyChange(e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
           />
           Tracked only
         </label>
@@ -142,7 +142,7 @@ export function KPILibraryFilters({
         )}
 
         {/* Result count */}
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-[var(--fg-tertiary)]">
           {filteredCount} of {totalCount} KPIs
         </span>
       </div>

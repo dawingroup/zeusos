@@ -64,7 +64,7 @@ function getOverallConfidence(obj: OKRObjective): string {
 function ProgressBar({ value, color = '#2563EB' }: { value: number; color?: string }) {
   const pct = Math.max(0, Math.min(100, Math.round(value)));
   return (
-    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+    <div className="h-1.5 w-full bg-[var(--bg-sunken)] rounded-full overflow-hidden">
       <div
         className="h-full rounded-full transition-all"
         style={{ width: `${pct}%`, backgroundColor: color }}
@@ -145,8 +145,8 @@ export const OKRDashboard: React.FC = () => {
             <Target className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">OKRs</h1>
-            <p className="text-sm text-gray-500">
+            <h1 className="text-xl font-bold text-foreground">OKRs</h1>
+            <p className="text-sm text-muted-foreground">
               Objectives & Key Results across Zeus Group
             </p>
           </div>
@@ -184,9 +184,9 @@ export const OKRDashboard: React.FC = () => {
       {/* Empty state */}
       {objectives.length === 0 && (
         <Card className="p-10 text-center border-dashed">
-          <Target className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-          <h3 className="text-sm font-semibold text-gray-900 mb-1">No objectives yet</h3>
-          <p className="text-xs text-gray-500 mb-4">
+          <Target className="w-10 h-10 mx-auto text-[var(--fg-tertiary)] mb-3" />
+          <h3 className="text-sm font-semibold text-foreground mb-1">No objectives yet</h3>
+          <p className="text-xs text-muted-foreground mb-4">
             Set your first company-level objective to start tracking progress.
           </p>
           <Button size="sm" onClick={() => navigate('/strategy/okrs/new')}>
@@ -202,8 +202,8 @@ export const OKRDashboard: React.FC = () => {
           <Card className="lg:col-span-2 p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-sm font-semibold text-gray-900">Top objectives</h2>
-                <p className="text-xs text-gray-500">Active OKRs ranked by progress</p>
+                <h2 className="text-sm font-semibold text-foreground">Top objectives</h2>
+                <p className="text-xs text-muted-foreground">Active OKRs ranked by progress</p>
               </div>
               <button
                 onClick={() => navigate('/strategy/okrs/all')}
@@ -220,14 +220,14 @@ export const OKRDashboard: React.FC = () => {
                   <li
                     key={o.id}
                     onClick={() => navigate(`/strategy/okrs/${o.id}`)}
-                    className="p-3 border border-gray-100 rounded-md hover:border-gray-200 hover:bg-gray-50/50 cursor-pointer transition-colors"
+                    className="p-3 border border-[var(--border-subtle)] rounded-md hover:border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)]/50 cursor-pointer transition-colors"
                   >
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex items-start gap-2 min-w-0">
-                        <Icon className="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0" />
+                        <Icon className="w-3.5 h-3.5 text-[var(--fg-tertiary)] mt-0.5 shrink-0" />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{o.title}</p>
-                          <p className="text-[11px] text-gray-500 mt-0.5">
+                          <p className="text-sm font-medium text-foreground truncate">{o.title}</p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
                             {OKR_LEVEL_LABELS[o.level]} · {o.ownerName} · {o.keyResults.length} KR{o.keyResults.length === 1 ? '' : 's'}
                           </p>
                         </div>
@@ -241,7 +241,7 @@ export const OKRDashboard: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-3">
                       <ProgressBar value={o.progress ?? 0} />
-                      <span className="text-xs font-semibold text-gray-700 tabular-nums w-10 text-right">
+                      <span className="text-xs font-semibold text-muted-foreground tabular-nums w-10 text-right">
                         {Math.round(o.progress ?? 0)}%
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export const OKRDashboard: React.FC = () => {
           <div className="space-y-4">
             {/* By level */}
             <Card className="p-5">
-              <h2 className="text-sm font-semibold text-gray-900 mb-3">By level</h2>
+              <h2 className="text-sm font-semibold text-foreground mb-3">By level</h2>
               <ul className="space-y-2">
                 {OKR_LEVEL_ORDER.map((level) => {
                   const items = objectivesByLevel[level] ?? [];
@@ -265,24 +265,24 @@ export const OKRDashboard: React.FC = () => {
                   return (
                     <li key={level} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Icon className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-xs text-gray-700">{OKR_LEVEL_LABELS[level]}</span>
+                        <Icon className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
+                        <span className="text-xs text-muted-foreground">{OKR_LEVEL_LABELS[level]}</span>
                       </div>
-                      <span className="text-xs font-semibold tabular-nums text-gray-900">
-                        {active}<span className="text-gray-400">/{items.length}</span>
+                      <span className="text-xs font-semibold tabular-nums text-foreground">
+                        {active}<span className="text-[var(--fg-tertiary)]">/{items.length}</span>
                       </span>
                     </li>
                   );
                 })}
                 {objectives.length === 0 && (
-                  <li className="text-xs text-gray-400 italic">No objectives</li>
+                  <li className="text-xs text-[var(--fg-tertiary)] italic">No objectives</li>
                 )}
               </ul>
             </Card>
 
             {/* Status mix */}
             <Card className="p-5">
-              <h2 className="text-sm font-semibold text-gray-900 mb-3">Status</h2>
+              <h2 className="text-sm font-semibold text-foreground mb-3">Status</h2>
               <div className="space-y-2 text-xs">
                 <StatusRow label={OKR_STATUS_LABELS.active} count={activeObjectives.length} total={objectives.length} color="#2563EB" />
                 <StatusRow label={OKR_STATUS_LABELS.draft} count={draftObjectives.length} total={objectives.length} color="#9CA3AF" />
@@ -323,7 +323,7 @@ export const OKRDashboard: React.FC = () => {
 
       {/* Footer hint */}
       {objectives.length > 0 && (
-        <div className="flex items-center gap-2 text-[11px] text-gray-400">
+        <div className="flex items-center gap-2 text-[11px] text-[var(--fg-tertiary)]">
           <TrendingUp className="w-3 h-3" />
           Showing {Math.min(topObjectives.length, 5)} of {activeObjectives.length} active objective{activeObjectives.length === 1 ? '' : 's'}.
         </div>
@@ -343,7 +343,7 @@ function MetricCard({
 }) {
   return (
     <Card className="p-4">
-      <p className="text-[11px] text-gray-500 uppercase tracking-wide">{label}</p>
+      <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{label}</p>
       <p
         className="text-2xl font-bold mt-1 tabular-nums"
         style={{ color: accent }}
@@ -369,10 +369,10 @@ function StatusRow({
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-gray-700">{label}</span>
-        <span className="text-gray-900 font-semibold tabular-nums">{count}</span>
+        <span className="text-muted-foreground">{label}</span>
+        <span className="text-foreground font-semibold tabular-nums">{count}</span>
       </div>
-      <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-1 w-full bg-[var(--bg-sunken)] rounded-full overflow-hidden">
         <div
           className="h-full rounded-full"
           style={{ width: `${pct}%`, backgroundColor: color }}

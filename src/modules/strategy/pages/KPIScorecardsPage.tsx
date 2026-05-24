@@ -32,8 +32,8 @@ export function KPIScorecardsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">KPI Scorecards</h1>
-          <p className="text-gray-600 text-sm">
+          <h1 className="text-2xl font-bold text-foreground mb-1">KPI Scorecards</h1>
+          <p className="text-muted-foreground text-sm">
             Organize KPIs into balanced scorecards for strategic performance tracking.
           </p>
         </div>
@@ -48,14 +48,14 @@ export function KPIScorecardsPage() {
 
       {/* Scorecards Grid */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading scorecards...</div>
+        <div className="text-center py-12 text-muted-foreground">Loading scorecards...</div>
       ) : scorecards.length === 0 ? (
         <div className="text-center py-16">
-          <div className="bg-gray-100 rounded-full p-6 inline-block mb-4">
-            <ClipboardCheck className="w-12 h-12 text-gray-400" />
+          <div className="bg-[var(--bg-sunken)] rounded-full p-6 inline-block mb-4">
+            <ClipboardCheck className="w-12 h-12 text-[var(--fg-tertiary)]" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">No Scorecards Yet</h2>
-          <p className="text-gray-500 text-sm max-w-md mx-auto mb-4">
+          <h2 className="text-lg font-semibold text-foreground mb-2">No Scorecards Yet</h2>
+          <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
             Create a scorecard to group related KPIs and track performance across strategic perspectives.
           </p>
           <button
@@ -71,24 +71,24 @@ export function KPIScorecardsPage() {
           {scorecards.map((sc) => (
             <div
               key={sc.id}
-              className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-card rounded-lg border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => navigate(`/strategy/kpis/scorecards/${sc.id}`)}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="bg-blue-50 rounded-lg p-2">
                   <BarChart3 className="w-5 h-5 text-blue-600" />
                 </div>
-                <span className="text-xs font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+                <span className="text-xs font-medium text-muted-foreground bg-[var(--bg-sunken)] rounded-full px-2 py-0.5">
                   {KPI_SCORECARD_TYPE_LABELS[sc.type as KPIScorecardType] || sc.type}
                 </span>
               </div>
 
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">{sc.name}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-1">{sc.name}</h3>
               {sc.description && (
-                <p className="text-xs text-gray-500 mb-3 line-clamp-2">{sc.description}</p>
+                <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{sc.description}</p>
               )}
 
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Layers className="w-3.5 h-3.5" />
                   {sc.sections?.length || 0} sections
@@ -100,14 +100,14 @@ export function KPIScorecardsPage() {
               </div>
 
               {sc.overallScore != null && (
-                <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="mt-3 pt-3 border-t border-[var(--border-subtle)]">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Overall Score</span>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-xs text-muted-foreground">Overall Score</span>
+                    <span className="text-sm font-semibold text-foreground">
                       {sc.overallScore.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="mt-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="mt-1 h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{

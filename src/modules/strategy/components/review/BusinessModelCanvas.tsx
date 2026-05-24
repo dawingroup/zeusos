@@ -81,8 +81,8 @@ export const BusinessModelCanvas: React.FC<BusinessModelCanvasProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Business Model Canvas</h3>
-          <p className="text-sm text-gray-500">{totalItems} items across 9 blocks</p>
+          <h3 className="text-lg font-semibold text-foreground">Business Model Canvas</h3>
+          <p className="text-sm text-muted-foreground">{totalItems} items across 9 blocks</p>
         </div>
         {onRequestAI && (
           <button
@@ -280,26 +280,26 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
       {/* Block Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             {label}
           </h4>
-          <span className="text-xs text-gray-500">({items.length})</span>
+          <span className="text-xs text-muted-foreground">({items.length})</span>
           <div className="relative">
             <button
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-[var(--fg-tertiary)] hover:text-muted-foreground"
             >
               <Info className="w-3 h-3" />
             </button>
             {showTooltip && (
-              <div className="absolute z-50 bottom-full left-0 mb-1 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg shadow-lg">
+              <div className="absolute z-50 bottom-full left-0 mb-1 w-64 p-2 bg-foreground text-background text-xs rounded-lg shadow-lg">
                 {description}
               </div>
             )}
           </div>
         </div>
-        <button onClick={onToggleExpand} className="text-gray-500 hover:text-gray-700">
+        <button onClick={onToggleExpand} className="text-muted-foreground hover:text-muted-foreground">
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
@@ -313,10 +313,10 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
               item.aiSuggested ? 'bg-purple-100/50 border border-purple-200' :
               item.isNew ? 'bg-green-100/50 border border-green-200' :
               item.isModified ? 'bg-amber-100/50 border border-amber-200' :
-              'bg-white/60'
+              'bg-card/60'
             }`}
           >
-            <GripVertical className="w-3 h-3 text-gray-300 mt-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100" />
+            <GripVertical className="w-3 h-3 text-[var(--fg-tertiary)] mt-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100" />
             {isExpanded ? (
               <input
                 type="text"
@@ -326,7 +326,7 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
                 readOnly={readOnly}
               />
             ) : (
-              <span className="flex-1 text-gray-700 leading-tight">{item.text}</span>
+              <span className="flex-1 text-muted-foreground leading-tight">{item.text}</span>
             )}
             {item.aiSuggested && (
               <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0 mt-0.5" />
@@ -337,7 +337,7 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
             {!readOnly && (
               <button
                 onClick={() => onRemoveItem(item.id)}
-                className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5"
+                className="text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -345,7 +345,7 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
           </div>
         ))}
         {items.length === 0 && (
-          <p className="text-xs text-gray-400 italic text-center py-2">No items yet</p>
+          <p className="text-xs text-[var(--fg-tertiary)] italic text-center py-2">No items yet</p>
         )}
       </div>
 
@@ -358,12 +358,12 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
             onChange={(e) => onNewItemTextChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onAddItem()}
             placeholder="Add item..."
-            className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 bg-white/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
+            className="flex-1 text-xs border border-[var(--border-default)] rounded px-2 py-1 bg-card/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
           />
           <button
             onClick={onAddItem}
             disabled={!newItemText.trim()}
-            className="p-1 text-gray-500 hover:text-blue-600 disabled:opacity-30"
+            className="p-1 text-muted-foreground hover:text-blue-600 disabled:opacity-30"
           >
             <Plus className="w-4 h-4" />
           </button>

@@ -193,14 +193,14 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
   }, {});
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
           <Users className="w-5 h-5 text-orange-600" />
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Operational Gap Analysis</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className="text-sm font-semibold text-foreground">Operational Gap Analysis</h3>
+            <p className="text-xs text-muted-foreground">
               {gaps.length > 0
                 ? `${gaps.length} gaps identified across ${Object.keys(gapsByArea).length} areas`
                 : 'AI-powered analysis of organizational, process, and technology gaps'}
@@ -227,8 +227,8 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
 
       {/* HR Data Preview */}
       {hrData?.stats && (
-        <div className="px-5 py-3 border-b border-gray-100 bg-gray-50/50">
-          <div className="flex items-center gap-4 text-xs text-gray-600">
+        <div className="px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]/50">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span><strong>{hrData.stats.totalEmployees}</strong> employees</span>
             <span><strong>{Object.keys(hrData.stats.byDepartment).length}</strong> departments</span>
             <span>Turnover: <strong>{(hrData.stats.turnoverRate * 100).toFixed(1)}%</strong></span>
@@ -261,11 +261,11 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
 
       {/* Filter Tabs */}
       {gaps.length > 0 && (
-        <div className="px-5 py-2 border-b border-gray-100 flex items-center gap-1">
+        <div className="px-5 py-2 border-b border-[var(--border-subtle)] flex items-center gap-1">
           <button
             onClick={() => setActiveFilter('all')}
             className={`px-2.5 py-1 text-xs rounded-md transition-colors ${
-              activeFilter === 'all' ? 'bg-gray-200 text-gray-800 font-medium' : 'text-gray-500 hover:text-gray-700'
+              activeFilter === 'all' ? 'bg-[var(--bg-sunken)] text-foreground font-medium' : 'text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             All ({gaps.length})
@@ -277,7 +277,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
                 key={area}
                 onClick={() => setActiveFilter(area)}
                 className={`flex items-center gap-1 px-2.5 py-1 text-xs rounded-md transition-colors ${
-                  activeFilter === area ? 'bg-gray-200 text-gray-800 font-medium' : 'text-gray-500 hover:text-gray-700'
+                  activeFilter === area ? 'bg-[var(--bg-sunken)] text-foreground font-medium' : 'text-muted-foreground hover:text-muted-foreground'
                 }`}
               >
                 <Icon className="w-3 h-3" />
@@ -289,12 +289,12 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
       )}
 
       {/* Gap Items */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-[var(--border-subtle)]">
         {gaps.length === 0 && !isAnalyzing ? (
           <div className="px-5 py-8 text-center">
-            <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm text-gray-500 mb-1">No gaps analyzed yet</p>
-            <p className="text-xs text-gray-400 mb-3">Click "Run Analysis" to identify operational gaps using your HR and organizational data.</p>
+            <Users className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground mb-1">No gaps analyzed yet</p>
+            <p className="text-xs text-[var(--fg-tertiary)] mb-3">Click "Run Analysis" to identify operational gaps using your HR and organizational data.</p>
           </div>
         ) : (
           filteredGaps.map(gap => {
@@ -304,25 +304,25 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
               <div key={gap.id}>
                 <div
                   onClick={() => toggleGap(gap.id)}
-                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <Icon className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <Icon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     <div className="min-w-0">
-                      <h4 className="text-sm font-medium text-gray-900 truncate">{gap.title}</h4>
-                      <span className="text-[10px] text-gray-400">{AREA_LABELS[gap.area] || gap.area}</span>
+                      <h4 className="text-sm font-medium text-foreground truncate">{gap.title}</h4>
+                      <span className="text-[10px] text-[var(--fg-tertiary)]">{AREA_LABELS[gap.area] || gap.area}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span className={`px-2 py-0.5 text-[10px] font-medium rounded-full border ${SEVERITY_COLORS[gap.severity]}`}>
                       {gap.severity}
                     </span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                    {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
                   </div>
                 </div>
                 {isExpanded && (
                   <div className="px-5 pb-4 space-y-2">
-                    <p className="text-sm text-gray-700">{gap.description}</p>
+                    <p className="text-sm text-muted-foreground">{gap.description}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="p-2.5 bg-red-50 rounded-lg">
                         <p className="text-[10px] font-medium text-red-600 uppercase tracking-wider mb-1">Current State</p>

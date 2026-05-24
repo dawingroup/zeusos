@@ -24,8 +24,8 @@ interface ModuleLinkBadgeProps {
 export function ModuleLinkBadge({ linkage, showLink = true, size = 'sm' }: ModuleLinkBadgeProps) {
   const config = MODULE_CONFIG[linkage.module] || {
     label: linkage.module,
-    color: 'text-gray-700',
-    bg: 'bg-gray-50 border-gray-200',
+    color: 'text-muted-foreground',
+    bg: 'bg-[var(--bg-sunken)] border-[var(--border-subtle)]',
   };
 
   const sizeClasses = size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-sm px-3 py-1';

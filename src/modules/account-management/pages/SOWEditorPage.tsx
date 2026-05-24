@@ -247,7 +247,7 @@ export default function SOWEditorPage() {
               className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
               {busy ? 'Saving…' : isExisting ? 'Save' : 'Create'}
             </button>
-            <Link to={`/clients/${clientId}`} className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Cancel</Link>
+            <Link to={`/clients/${clientId}`} className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>
           </div>
         )}
       </fieldset>

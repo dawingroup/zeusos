@@ -84,38 +84,38 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-card rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-200">
+        <div className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="bg-blue-50 rounded-lg p-2">
               <BookOpen className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Add KPI to Tracking</h2>
-              <p className="text-sm text-gray-500">Configure and start tracking this KPI</p>
+              <h2 className="text-lg font-semibold text-foreground">Add KPI to Tracking</h2>
+              <p className="text-sm text-muted-foreground">Configure and start tracking this KPI</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* KPI Info */}
-        <div className="p-5 bg-gray-50 border-b border-gray-200">
+        <div className="p-5 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono text-gray-400 bg-white px-1.5 py-0.5 rounded border">
+            <span className="text-xs font-mono text-[var(--fg-tertiary)] bg-card px-1.5 py-0.5 rounded border">
               {entry.code}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               {KPI_CATEGORY_LABELS[entry.category]}
             </span>
           </div>
-          <h3 className="font-semibold text-gray-900 mb-1">{entry.name}</h3>
-          <p className="text-sm text-gray-600 mb-2">{entry.description}</p>
-          <div className="bg-white rounded-md px-3 py-2 border border-gray-200">
-            <p className="text-xs text-gray-400 font-medium mb-0.5">Formula</p>
-            <p className="text-xs text-gray-700 font-mono">{entry.formula}</p>
+          <h3 className="font-semibold text-foreground mb-1">{entry.name}</h3>
+          <p className="text-sm text-muted-foreground mb-2">{entry.description}</p>
+          <div className="bg-card rounded-md px-3 py-2 border border-[var(--border-subtle)]">
+            <p className="text-xs text-[var(--fg-tertiary)] font-medium mb-0.5">Formula</p>
+            <p className="text-xs text-muted-foreground font-mono">{entry.formula}</p>
           </div>
         </div>
 
@@ -124,18 +124,18 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
           {/* Pre-filled read-only info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Direction</label>
-              <p className="text-sm text-gray-700">{KPI_DIRECTION_LABELS[entry.direction]}</p>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Direction</label>
+              <p className="text-sm text-muted-foreground">{KPI_DIRECTION_LABELS[entry.direction]}</p>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Frequency</label>
-              <p className="text-sm text-gray-700">{KPI_FREQUENCY_LABELS[entry.frequency]}</p>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Frequency</label>
+              <p className="text-sm text-muted-foreground">{KPI_FREQUENCY_LABELS[entry.frequency]}</p>
             </div>
           </div>
 
           {/* Target value */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Target Value <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center gap-2">
@@ -145,11 +145,11 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={targetValue}
                 onChange={(e) => setTargetValue(e.target.value)}
                 placeholder="Enter target value"
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
               {entry.unit && (
-                <span className="text-sm text-gray-500 font-medium">{entry.unit}</span>
+                <span className="text-sm text-muted-foreground font-medium">{entry.unit}</span>
               )}
             </div>
           </div>
@@ -157,7 +157,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
           {/* Stretch & Minimum targets */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Stretch Target
               </label>
               <input
@@ -166,12 +166,12 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={stretchValue}
                 onChange={(e) => setStretchValue(e.target.value)}
                 placeholder="Aspirational"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-0.5">Ambitious goal</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Ambitious goal</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Minimum Acceptable
               </label>
               <input
@@ -180,19 +180,19 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={minimumValue}
                 onChange={(e) => setMinimumValue(e.target.value)}
                 placeholder="Floor threshold"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-0.5">Below this = critical</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Below this = critical</p>
             </div>
           </div>
 
           {/* Scope */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scope</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-1">Scope</label>
             <select
               value={scope}
               onChange={(e) => setScope(e.target.value as KPIScope)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {Object.entries(KPI_SCOPE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -204,13 +204,13 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
 
           {/* Owner */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Owner Name</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-1">Owner Name</label>
             <input
               type="text"
               value={ownerName}
               onChange={(e) => setOwnerName(e.target.value)}
               placeholder="Who is responsible for this KPI?"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -224,7 +224,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-subtle)] rounded-lg hover:bg-[var(--bg-sunken)]"
             >
               Cancel
             </button>

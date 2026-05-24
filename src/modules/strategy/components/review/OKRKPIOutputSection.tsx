@@ -182,7 +182,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
     critical: 'bg-red-100 text-red-700',
     high: 'bg-orange-100 text-orange-700',
     medium: 'bg-blue-100 text-blue-700',
-    low: 'bg-gray-100 text-gray-700',
+    low: 'bg-[var(--bg-sunken)] text-muted-foreground',
   };
 
   const CATEGORY_COLORS = {
@@ -196,13 +196,13 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
   return (
     <div className="space-y-4">
       {/* Tabs */}
-      <div className="flex items-center gap-4 border-b border-gray-200">
+      <div className="flex items-center gap-4 border-b border-[var(--border-subtle)]">
         <button
           onClick={() => setActiveTab('okrs')}
           className={`flex items-center gap-2 pb-2 px-1 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'okrs'
               ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-muted-foreground hover:text-muted-foreground'
           }`}
         >
           <Target className="w-4 h-4" />
@@ -213,7 +213,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           className={`flex items-center gap-2 pb-2 px-1 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'kpis'
               ? 'border-green-600 text-green-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-muted-foreground hover:text-muted-foreground'
           }`}
         >
           <BarChart3 className="w-4 h-4" />
@@ -246,15 +246,15 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           )}
 
           {okrs.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
+            <div className="text-center py-8 text-[var(--fg-tertiary)]">
               <Target className="w-10 h-10 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No OKRs generated yet. Use AI to generate strategic OKRs.</p>
             </div>
           ) : (
             okrs.map((okr) => (
-              <div key={okr.id} className={`border rounded-lg overflow-hidden ${okr.accepted ? 'border-green-300 bg-green-50/30' : 'border-gray-200'}`}>
+              <div key={okr.id} className={`border rounded-lg overflow-hidden ${okr.accepted ? 'border-green-300 bg-green-50/30' : 'border-[var(--border-subtle)]'}`}>
                 <div
-                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50"
+                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--bg-sunken)]"
                   onClick={() => setExpandedOKR(expandedOKR === okr.id ? null : okr.id)}
                 >
                   <div className="flex items-center gap-2 flex-1">
@@ -263,34 +263,34 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                     ) : (
                       <Target className="w-4 h-4 text-blue-500 flex-shrink-0" />
                     )}
-                    <span className="text-sm font-medium text-gray-900">{okr.objective}</span>
+                    <span className="text-sm font-medium text-foreground">{okr.objective}</span>
                     <span className={`px-2 py-0.5 text-xs rounded-full ${PRIORITY_COLORS[okr.priority]}`}>
                       {okr.priority}
                     </span>
                     {okr.aiGenerated && <Sparkles className="w-3 h-3 text-purple-500" />}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500">{okr.keyResults.length} KRs</span>
-                    {expandedOKR === okr.id ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                    <span className="text-xs text-muted-foreground">{okr.keyResults.length} KRs</span>
+                    {expandedOKR === okr.id ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
                   </div>
                 </div>
 
                 {expandedOKR === okr.id && (
-                  <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
-                    <p className="text-sm text-gray-600">{okr.description}</p>
-                    <div className="flex gap-3 text-xs text-gray-500">
+                  <div className="px-4 pb-4 border-t border-[var(--border-subtle)] pt-3 space-y-3">
+                    <p className="text-sm text-muted-foreground">{okr.description}</p>
+                    <div className="flex gap-3 text-xs text-muted-foreground">
                       <span>Timeframe: {okr.timeframe}</span>
                       <span>Owner: {okr.owner}</span>
                     </div>
 
                     {okr.keyResults.length > 0 && (
                       <div className="space-y-2">
-                        <h5 className="text-xs font-semibold text-gray-700 uppercase">Key Results</h5>
+                        <h5 className="text-xs font-semibold text-muted-foreground uppercase">Key Results</h5>
                         {okr.keyResults.map((kr, i) => (
-                          <div key={kr.id} className="flex items-center gap-3 p-2 bg-white rounded border border-gray-100">
+                          <div key={kr.id} className="flex items-center gap-3 p-2 bg-card rounded border border-[var(--border-subtle)]">
                             <span className="text-xs font-medium text-blue-600 w-6">KR{i + 1}</span>
-                            <span className="flex-1 text-sm text-gray-700">{kr.title}</span>
-                            <span className="text-xs text-gray-500">
+                            <span className="flex-1 text-sm text-muted-foreground">{kr.title}</span>
+                            <span className="text-xs text-muted-foreground">
                               {kr.currentValue}/{kr.targetValue} {kr.unit}
                             </span>
                           </div>
@@ -345,30 +345,30 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           )}
 
           {kpis.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
+            <div className="text-center py-8 text-[var(--fg-tertiary)]">
               <BarChart3 className="w-10 h-10 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No KPIs generated yet. Use AI to generate strategic KPIs.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {kpis.map((kpi) => (
-                <div key={kpi.id} className={`border rounded-lg p-4 ${kpi.accepted ? 'border-green-300 bg-green-50/30' : 'border-gray-200'}`}>
+                <div key={kpi.id} className={`border rounded-lg p-4 ${kpi.accepted ? 'border-green-300 bg-green-50/30' : 'border-[var(--border-subtle)]'}`}>
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <BarChart3 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                      <h5 className="text-sm font-medium text-gray-900">{kpi.name}</h5>
+                      <h5 className="text-sm font-medium text-foreground">{kpi.name}</h5>
                     </div>
                     {kpi.aiGenerated && <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0" />}
                   </div>
-                  <p className="text-xs text-gray-600 mb-2">{kpi.description}</p>
+                  <p className="text-xs text-muted-foreground mb-2">{kpi.description}</p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     <span className={`px-2 py-0.5 text-xs rounded-full ${CATEGORY_COLORS[kpi.category]}`}>
                       {kpi.category}
                     </span>
-                    <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">
+                    <span className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded-full">
                       {kpi.frequency}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       Target: {kpi.targetValue} {kpi.unit}
                     </span>
                   </div>

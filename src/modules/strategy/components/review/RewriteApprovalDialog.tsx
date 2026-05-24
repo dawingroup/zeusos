@@ -79,14 +79,14 @@ export function RewriteApprovalDialog({
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative bg-white rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] flex flex-col">
+      <div className="relative bg-card rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Review Rewrite</h2>
-            <p className="text-sm text-gray-500">{section.headingText}</p>
+            <h2 className="text-lg font-semibold text-foreground">Review Rewrite</h2>
+            <p className="text-sm text-muted-foreground">{section.headingText}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground text-xl">
             &times;
           </button>
         </div>
@@ -95,16 +95,16 @@ export function RewriteApprovalDialog({
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
           {/* Assessment Summary */}
           {assessment && (
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 text-sm">
-              <span className="font-medium text-gray-700">
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-sunken)] text-sm">
+              <span className="font-medium text-muted-foreground">
                 Score: {assessment.score}/5
               </span>
-              <span className="text-gray-400">|</span>
-              <span className="text-gray-600">
+              <span className="text-[var(--fg-tertiary)]">|</span>
+              <span className="text-muted-foreground">
                 {assessment.gaps.length} gap(s) found
               </span>
-              <span className="text-gray-400">|</span>
-              <span className="text-gray-600 capitalize">
+              <span className="text-[var(--fg-tertiary)]">|</span>
+              <span className="text-muted-foreground capitalize">
                 {assessment.recommendation.replace(/_/g, ' ')}
               </span>
             </div>
@@ -122,7 +122,7 @@ export function RewriteApprovalDialog({
           {/* Mode: Edit */}
           {mode === 'edit' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
                 Edit the rewrite before approving:
               </label>
               <textarea
@@ -136,7 +136,7 @@ export function RewriteApprovalDialog({
           {/* Mode: Reject */}
           {mode === 'reject' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
                 Reason for rejection (optional):
               </label>
               <textarea
@@ -150,13 +150,13 @@ export function RewriteApprovalDialog({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between px-6 py-4 border-t bg-gray-50">
+        <div className="flex items-center justify-between px-6 py-4 border-t bg-[var(--bg-sunken)]">
           {/* Mode Toggles */}
           <div className="flex gap-2">
             {mode !== 'review' && (
               <button
                 onClick={() => setMode('review')}
-                className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
+                className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground"
               >
                 Back to Review
               </button>

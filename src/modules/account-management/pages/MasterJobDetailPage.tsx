@@ -16,15 +16,15 @@ import { formatMinor } from '../utils/money';
 import type { IWOState } from '@/modules/assignment/constants/iwo-states';
 
 const STATE_TONE: Record<IWOState, string> = {
-  DRAFT:                 'bg-slate-100 text-slate-700',
+  DRAFT:                 'bg-[var(--bg-sunken)] text-muted-foreground',
   ISSUED:                'bg-blue-100 text-blue-800',
   ACCEPTED:              'bg-cyan-100 text-cyan-800',
   REJECTED:              'bg-red-100 text-red-800',
   IN_PROGRESS:           'bg-indigo-100 text-indigo-800',
   DELIVERED:             'bg-amber-100 text-amber-900',
   ACCEPTED_INTERNALLY:   'bg-emerald-100 text-emerald-800',
-  CLOSED:                'bg-slate-200 text-slate-800',
-  CANCELLED:             'bg-zinc-200 text-zinc-700',
+  CLOSED:                'bg-[var(--bg-sunken)] text-foreground',
+  CANCELLED:             'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 export default function MasterJobDetailPage() {
@@ -83,7 +83,7 @@ export default function MasterJobDetailPage() {
             </thead>
             <tbody>
               {rollup.workOrders.map(wo => (
-                <tr key={wo.id} className="border-t hover:bg-slate-50" data-testid={`mj-iwo-row-${wo.id}`}>
+                <tr key={wo.id} className="border-t hover:bg-[var(--bg-sunken)]" data-testid={`mj-iwo-row-${wo.id}`}>
                   <td className="px-3 py-2 font-mono text-xs" data-testid={`mj-iwo-row-${wo.id}-code`}>{wo.code}</td>
                   <td className="px-3 py-2">{wo.subsidiary.name}</td>
                   <td className="px-3 py-2">
@@ -111,7 +111,7 @@ export default function MasterJobDetailPage() {
       {rollup.clientInvoice && (
         <section>
           <h2 className="mb-2 text-sm font-semibold uppercase text-muted-foreground">Client invoice</h2>
-          <div className="rounded border bg-white p-4">
+          <div className="rounded border bg-card p-4">
             <div className="text-sm">Status: <strong>{rollup.clientInvoice.status}</strong></div>
             <div className="mt-1 tabular-nums">{formatMinor(rollup.clientInvoice.amountMinor, rollup.clientInvoice.currency)}</div>
           </div>

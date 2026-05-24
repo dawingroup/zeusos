@@ -1,7 +1,7 @@
 import type { ProductionStage } from '../types/production-job.types';
 
 const STAGE_STYLES: Record<ProductionStage, string> = {
-  BRIEF:            'bg-gray-100 text-gray-700',
+  BRIEF:            'bg-[var(--bg-sunken)] text-muted-foreground',
   PRE_PRODUCTION:   'bg-yellow-100 text-yellow-700',
   TALENT_BOOKING:   'bg-orange-100 text-orange-700',
   LOCATION_LOCK:    'bg-amber-100 text-amber-700',

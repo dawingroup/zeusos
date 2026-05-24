@@ -46,19 +46,19 @@ function directionLabel(direction: string): string {
 
 export function KPILibraryCard({ entry, isTracked, onAddToTracking }: KPILibraryCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4 hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">
+            <span className="text-xs font-mono text-[var(--fg-tertiary)] bg-[var(--bg-sunken)] px-1.5 py-0.5 rounded">
               {entry.code}
             </span>
             <div className="flex items-center gap-1" title={directionLabel(entry.direction)}>
               <DirectionIcon direction={entry.direction} />
             </div>
           </div>
-          <h3 className="text-sm font-semibold text-gray-900 leading-tight">{entry.name}</h3>
+          <h3 className="text-sm font-semibold text-foreground leading-tight">{entry.name}</h3>
         </div>
 
         {/* Tracking button */}
@@ -79,23 +79,23 @@ export function KPILibraryCard({ entry, isTracked, onAddToTracking }: KPILibrary
       </div>
 
       {/* Description */}
-      <p className="text-xs text-gray-500 mb-3 line-clamp-2">{entry.description}</p>
+      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{entry.description}</p>
 
       {/* Formula */}
-      <div className="bg-gray-50 rounded-md px-3 py-2 mb-3">
-        <p className="text-xs text-gray-400 font-medium mb-0.5">Formula</p>
-        <p className="text-xs text-gray-700 font-mono leading-relaxed">{entry.formula}</p>
+      <div className="bg-[var(--bg-sunken)] rounded-md px-3 py-2 mb-3">
+        <p className="text-xs text-[var(--fg-tertiary)] font-medium mb-0.5">Formula</p>
+        <p className="text-xs text-muted-foreground font-mono leading-relaxed">{entry.formula}</p>
       </div>
 
       {/* Tags row */}
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="text-[10px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+        <span className="text-[10px] font-medium text-muted-foreground bg-[var(--bg-sunken)] rounded-full px-2 py-0.5">
           {KPI_CATEGORY_LABELS[entry.category] || entry.category}
         </span>
-        <span className="text-[10px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+        <span className="text-[10px] font-medium text-muted-foreground bg-[var(--bg-sunken)] rounded-full px-2 py-0.5">
           {BSC_PERSPECTIVE_LABELS[entry.bscPerspective] || entry.bscPerspective}
         </span>
-        <span className="text-[10px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+        <span className="text-[10px] font-medium text-muted-foreground bg-[var(--bg-sunken)] rounded-full px-2 py-0.5">
           {KPI_FREQUENCY_LABELS[entry.frequency] || entry.frequency}
         </span>
         {entry.moduleLinkage && (

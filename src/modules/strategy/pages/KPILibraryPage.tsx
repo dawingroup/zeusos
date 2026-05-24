@@ -53,8 +53,8 @@ export function KPILibraryPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">KPI Library</h1>
-        <p className="text-gray-600 text-sm">
+        <h1 className="text-2xl font-bold text-foreground mb-1">KPI Library</h1>
+        <p className="text-muted-foreground text-sm">
           Browse {library.totalCount} industry-standard KPIs organized by category. Add any KPI to start tracking.
         </p>
       </div>
@@ -81,7 +81,7 @@ export function KPILibraryPage() {
       {/* KPI Grid */}
       {library.entries.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-sm">No KPIs match your filters.</p>
+          <p className="text-muted-foreground text-sm">No KPIs match your filters.</p>
           <button
             onClick={library.clearFilters}
             className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"

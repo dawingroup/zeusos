@@ -91,7 +91,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
           {items.map((item) => (
             <div
               key={item.id}
-              className={`group flex items-start gap-2 p-2 rounded-md bg-white/60 border ${
+              className={`group flex items-start gap-2 p-2 rounded-md bg-card/60 border ${
                 item.aiSuggested ? 'border-purple-300' : 'border-transparent'
               }`}
             >
@@ -117,7 +117,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
                 {!readOnly && (
                   <button
                     onClick={() => handleRemoveItem(quadrant, item.id)}
-                    className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100"
+                    className="text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -139,12 +139,12 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
               onChange={(e) => setNewItemText(prev => ({ ...prev, [quadrant]: e.target.value }))}
               onKeyDown={(e) => e.key === 'Enter' && handleAddItem(quadrant)}
               placeholder={`Add ${label.toLowerCase()}...`}
-              className="flex-1 text-sm border border-gray-300 rounded px-2.5 py-1.5 bg-white/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
+              className="flex-1 text-sm border border-[var(--border-default)] rounded px-2.5 py-1.5 bg-card/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
             />
             <button
               onClick={() => handleAddItem(quadrant)}
               disabled={!text.trim()}
-              className="p-1.5 text-gray-500 hover:text-blue-600 disabled:opacity-30 bg-white/60 rounded"
+              className="p-1.5 text-muted-foreground hover:text-blue-600 disabled:opacity-30 bg-card/60 rounded"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -159,8 +159,8 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">SWOT Analysis</h3>
-          <p className="text-sm text-gray-500">{totalItems} items identified</p>
+          <h3 className="text-lg font-semibold text-foreground">SWOT Analysis</h3>
+          <p className="text-sm text-muted-foreground">{totalItems} items identified</p>
         </div>
         {onRequestAI && (
           <button

@@ -217,20 +217,20 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
   }, [reviewData]);
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden ${showSectionSidebar ? 'grid grid-cols-[280px_1fr]' : ''}`}>
+    <div className={`bg-card border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden ${showSectionSidebar ? 'grid grid-cols-[280px_1fr]' : ''}`}>
       {showSectionSidebar && sectionSidebar && (
-        <div className="border-r border-gray-200 overflow-y-auto max-h-[80vh]">
+        <div className="border-r border-[var(--border-subtle)] overflow-y-auto max-h-[80vh]">
           {sectionSidebar}
         </div>
       )}
       <div>
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-blue-600" />
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Strategy Document</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="text-sm font-semibold text-foreground">Strategy Document</h3>
+              <p className="text-xs text-muted-foreground">
                 {sectionsAnalyzed} sections with AI insights
               </p>
             </div>
@@ -240,7 +240,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
             <button
               onClick={() => setShowAnnotations(!showAnnotations)}
               className={`flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                showAnnotations ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-gray-100 text-gray-500 border border-gray-200'
+                showAnnotations ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-[var(--bg-sunken)] text-muted-foreground border border-[var(--border-subtle)]'
               }`}
             >
               <Lightbulb className="w-3 h-3" />
@@ -250,7 +250,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
             {/* Expand / Collapse */}
             <button
               onClick={expandedSections.size > 0 ? collapseAll : expandAll}
-              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1"
+              className="text-xs text-muted-foreground hover:text-muted-foreground px-2 py-1"
             >
               {expandedSections.size > 0 ? 'Collapse All' : 'Expand All'}
             </button>
@@ -262,7 +262,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${
                 reviewData.googleDocUrl
                   ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
-                  : 'text-gray-700 bg-white border border-gray-200 hover:bg-gray-50'
+                  : 'text-muted-foreground bg-card border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {isCreatingGoogleDoc ? (
@@ -326,7 +326,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
         )}
 
         {/* Document Sections */}
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-[var(--border-subtle)]">
           {REVIEW_SECTION_ORDER.map(sectionKey => {
             const review = reviewData.sectionReviews[sectionKey as keyof typeof reviewData.sectionReviews];
             if (!review) return null;
@@ -341,10 +341,10 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                 {/* Section Header */}
                 <div
                   onClick={() => toggleSection(sectionKey)}
-                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <h4 className="text-sm font-semibold text-gray-900">{label}</h4>
+                    <h4 className="text-sm font-semibold text-foreground">{label}</h4>
                     <div className="flex items-center gap-1.5">
                       {review.score > 0 && (
                         <span className={`flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ${
@@ -370,7 +370,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                       )}
                     </div>
                   </div>
-                  {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                  {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
                 </div>
 
                 {/* Section Content — Inline Document + AI Annotation Card */}
@@ -380,11 +380,11 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                       {/* Main Document Content — editable */}
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Document Content</span>
+                          <span className="text-xs font-medium text-[var(--fg-tertiary)] uppercase tracking-wider">Document Content</span>
                           {hasContent && (
                             <button
                               onClick={() => handleCopy(review.currentContent, `${sectionKey}-doc`)}
-                              className="text-gray-400 hover:text-gray-600"
+                              className="text-[var(--fg-tertiary)] hover:text-muted-foreground"
                             >
                               {copiedField === `${sectionKey}-doc` ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
                             </button>
@@ -395,7 +395,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                           onChange={(e) => onSectionChange(sectionKey, { ...review, currentContent: e.target.value })}
                           placeholder="Document content for this section will appear here after upload and AI analysis..."
                           rows={8}
-                          className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[160px] leading-relaxed"
+                          className="w-full border border-[var(--border-subtle)] rounded-lg px-4 py-3 text-sm resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[160px] leading-relaxed"
                           readOnly={readOnly}
                         />
                       </div>
@@ -455,9 +455,9 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
 
                           {/* Score Details */}
                           {review.score > 0 && (
-                            <div className="border border-gray-200 rounded-lg bg-gray-50 px-3 py-2">
-                              <p className="text-xs text-gray-500">
-                                <span className="font-medium text-gray-700">Score: {review.score}/5</span>
+                            <div className="border border-[var(--border-subtle)] rounded-lg bg-[var(--bg-sunken)] px-3 py-2">
+                              <p className="text-xs text-muted-foreground">
+                                <span className="font-medium text-muted-foreground">Score: {review.score}/5</span>
                                 {' — '}
                                 {review.score >= 4 ? 'Strong section' :
                                  review.score >= 3 ? 'Adequate, room for improvement' :

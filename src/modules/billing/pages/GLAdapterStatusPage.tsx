@@ -117,7 +117,7 @@ function statusBadgeClass(status: GLConnectionHealth['status']): string {
     case 'CONNECTED':
       return 'rounded bg-green-100 px-2 py-0.5 text-xs text-green-800';
     case 'NOT_CONFIGURED':
-      return 'rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-700';
+      return 'rounded bg-[var(--bg-sunken)] px-2 py-0.5 text-xs text-muted-foreground';
     case 'DISCONNECTED':
       return 'rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800';
     case 'ERROR':

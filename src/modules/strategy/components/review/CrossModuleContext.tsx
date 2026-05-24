@@ -71,41 +71,41 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
   const loadedCount = modules.filter(m => m.loaded).length;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden">
       <div
-        className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+        className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-3">
-          <Layers className="w-5 h-5 text-gray-600" />
+          <Layers className="w-5 h-5 text-muted-foreground" />
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Cross-Module Data Context</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className="text-sm font-semibold text-foreground">Cross-Module Data Context</h3>
+            <p className="text-xs text-muted-foreground">
               {ctx ? `${loadedCount}/${modules.length} modules loaded` : 'Aggregated data for AI analysis'}
-              {lastFetched && <span className="ml-2 text-gray-400">Updated {lastFetched}</span>}
+              {lastFetched && <span className="ml-2 text-[var(--fg-tertiary)]">Updated {lastFetched}</span>}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={(e) => { e.stopPropagation(); loadData(); }} disabled={isLoading}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100">
+            className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)]">
             <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} /> Refresh
           </button>
-          {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
         </div>
       </div>
 
       {/* Module Status Chips */}
       <div className="px-5 pb-3 flex flex-wrap gap-1.5">
         {isLoading && !ctx ? (
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Loader2 className="w-3 h-3 animate-spin" /> Loading cross-module data...
           </div>
         ) : modules.map(m => {
           const Icon = m.icon;
           return (
             <span key={m.name} className={`flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-full border ${
-              m.loaded ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-50 text-gray-400 border-gray-200'
+              m.loaded ? 'bg-green-50 text-green-700 border-green-200' : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] border-[var(--border-subtle)]'
             }`}>
               <Icon className="w-3 h-3" /> {m.name}
               {m.loaded ? <><CheckCircle className="w-2.5 h-2.5" /> {m.count}</> : <XCircle className="w-2.5 h-2.5" />}
@@ -116,7 +116,7 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
 
       {/* Expanded Details */}
       {isExpanded && ctx && (
-        <div className="border-t border-gray-100 divide-y divide-gray-100">
+        <div className="border-t border-[var(--border-subtle)] divide-y divide-[var(--border-subtle)]">
           {/* HR */}
           {ctx.hr.stats && (
             <div className="px-5 py-3">
@@ -145,8 +145,8 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
             <div className="px-5 py-3">
               <h4 className="text-xs font-semibold text-green-600 mb-1.5 flex items-center gap-1"><DollarSign className="w-3 h-3" /> Finance Summary (QuickBooks)</h4>
               <div className="space-y-1 text-xs">
-                {ctx.finance.revenueOverview && <p className="text-gray-700">{ctx.finance.revenueOverview}</p>}
-                {ctx.finance.expenseOverview && <p className="text-gray-700">{ctx.finance.expenseOverview}</p>}
+                {ctx.finance.revenueOverview && <p className="text-muted-foreground">{ctx.finance.revenueOverview}</p>}
+                {ctx.finance.expenseOverview && <p className="text-muted-foreground">{ctx.finance.expenseOverview}</p>}
                 {ctx.finance.keyMetrics && Object.keys(ctx.finance.keyMetrics).length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mt-1">
                     {Object.entries(ctx.finance.keyMetrics).map(([k, v]) => (

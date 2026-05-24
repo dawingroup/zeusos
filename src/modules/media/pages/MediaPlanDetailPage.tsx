@@ -132,7 +132,7 @@ export default function MediaPlanDetailPage() {
             <button
               type="button"
               onClick={() => { setDraft(plan); setEditingPlan(true); }}
-              className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
+              className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]"
               data-testid="media-plan-edit-btn"
             >
               Edit Plan
@@ -157,7 +157,7 @@ export default function MediaPlanDetailPage() {
       </header>
 
       {editingPlan && (
-        <section className="rounded border bg-slate-50 p-4">
+        <section className="rounded border bg-[var(--bg-sunken)] p-4">
           <h2 className="mb-3 text-sm font-semibold">Edit plan</h2>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <label className="col-span-2 block">
@@ -237,7 +237,7 @@ export default function MediaPlanDetailPage() {
             </button>
             <button
               onClick={() => setEditingPlan(false)}
-              className="rounded border px-3 py-1.5 text-sm hover:bg-white"
+              className="rounded border px-3 py-1.5 text-sm hover:bg-card"
             >
               Cancel
             </button>

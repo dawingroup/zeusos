@@ -45,7 +45,7 @@ const PIVOT_CATEGORIES: { value: PivotCategory; label: string; icon: React.FC<{ 
 ];
 
 const PIVOT_STATUSES: { value: PivotStatus; label: string; color: string }[] = [
-  { value: 'planned', label: 'Planned', color: 'bg-gray-100 text-gray-700' },
+  { value: 'planned', label: 'Planned', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
   { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-700' },
   { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-700' },
   { value: 'abandoned', label: 'Abandoned', color: 'bg-red-100 text-red-700' },
@@ -141,22 +141,22 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
 
   if (isLoading) {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-xl p-8 text-center">
         <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto mb-2" />
-        <p className="text-sm text-gray-500">Loading business pivots...</p>
+        <p className="text-sm text-muted-foreground">Loading business pivots...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
           <ArrowRightLeft className="w-5 h-5 text-indigo-600" />
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Business Pivots & Strategic Shifts</h3>
-            <p className="text-xs text-gray-500">{pivots.length} pivot{pivots.length !== 1 ? 's' : ''} documented</p>
+            <h3 className="text-sm font-semibold text-foreground">Business Pivots & Strategic Shifts</h3>
+            <p className="text-xs text-muted-foreground">{pivots.length} pivot{pivots.length !== 1 ? 's' : ''} documented</p>
           </div>
         </div>
         {!readOnly && (
@@ -179,12 +179,12 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
       )}
 
       {/* Timeline */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-[var(--border-subtle)]">
         {pivots.length === 0 && !isFormOpen ? (
           <div className="px-5 py-8 text-center">
-            <ArrowRightLeft className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm text-gray-500 mb-1">No business pivots documented yet</p>
-            <p className="text-xs text-gray-400 mb-3">Record strategic shifts to provide context for AI-powered strategy reviews.</p>
+            <ArrowRightLeft className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground mb-1">No business pivots documented yet</p>
+            <p className="text-xs text-[var(--fg-tertiary)] mb-3">Record strategic shifts to provide context for AI-powered strategy reviews.</p>
             {!readOnly && (
               <button onClick={handleNew} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
                 <Plus className="w-3.5 h-3.5" /> Add First Pivot
@@ -193,8 +193,8 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
           </div>
         ) : sortedYears.map(year => (
           <div key={year}>
-            <div className="px-5 py-2 bg-gray-50 border-b border-gray-100">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{year}</span>
+            <div className="px-5 py-2 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)]">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{year}</span>
             </div>
             {pivotsByYear[year].map(pivot => (
               <PivotCard
@@ -227,74 +227,74 @@ interface PivotFormProps {
 }
 
 const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel, isSaving, onToggleArea }) => (
-  <div className="px-5 py-4 border-b border-gray-200 bg-indigo-50/30">
-    <h4 className="text-sm font-semibold text-gray-900 mb-3">{pivot.id ? 'Edit Pivot' : 'New Business Pivot'}</h4>
+  <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-indigo-50/30">
+    <h4 className="text-sm font-semibold text-foreground mb-3">{pivot.id ? 'Edit Pivot' : 'New Business Pivot'}</h4>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Title *</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Title *</label>
         <input type="text" value={pivot.title} onChange={(e) => onChange({ ...pivot, title: e.target.value })}
           placeholder="e.g., Shift from retail to B2B customers"
-          className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
       </div>
       <div className="flex gap-3">
         <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Pivot Date</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Pivot Date</label>
           <input type="date" value={pivot.pivotDate} onChange={(e) => onChange({ ...pivot, pivotDate: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
         <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
           <select value={pivot.status} onChange={(e) => onChange({ ...pivot, status: e.target.value as PivotStatus })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
             {PIVOT_STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Category</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Category</label>
         <select value={pivot.category} onChange={(e) => onChange({ ...pivot, category: e.target.value as PivotCategory })}
-          className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
           {PIVOT_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
         </select>
       </div>
       <div className="md:col-span-2">
-        <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Description</label>
         <textarea value={pivot.description} onChange={(e) => onChange({ ...pivot, description: e.target.value })}
           placeholder="Describe the pivot, why it was undertaken, and what changed..." rows={3}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Impact Assessment</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Impact Assessment</label>
         <textarea value={pivot.impactAssessment} onChange={(e) => onChange({ ...pivot, impactAssessment: e.target.value })}
           placeholder="What was the impact on the business?" rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Outcomes</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Outcomes</label>
         <textarea value={pivot.outcomes} onChange={(e) => onChange({ ...pivot, outcomes: e.target.value })}
           placeholder="What were the results?" rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
       </div>
       <div className="md:col-span-2">
-        <label className="block text-xs font-medium text-gray-600 mb-1">Lessons Learned</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Lessons Learned</label>
         <textarea value={pivot.lessonsLearned} onChange={(e) => onChange({ ...pivot, lessonsLearned: e.target.value })}
           placeholder="Key takeaways and lessons..." rows={2}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
       </div>
       <div className="md:col-span-2">
-        <label className="block text-xs font-medium text-gray-600 mb-1">Affected Business Areas</label>
+        <label className="block text-xs font-medium text-muted-foreground mb-1">Affected Business Areas</label>
         <div className="flex flex-wrap gap-1.5">
           {AFFECTED_AREAS.map(area => (
             <button key={area} onClick={() => onToggleArea(area)}
               className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
-                pivot.affectedAreas.includes(area) ? 'bg-indigo-100 text-indigo-700 border-indigo-300' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                pivot.affectedAreas.includes(area) ? 'bg-indigo-100 text-indigo-700 border-indigo-300' : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--border-default)]'
               }`}>{area}</button>
           ))}
         </div>
       </div>
     </div>
-    <div className="flex items-center justify-end gap-2 mt-4 pt-3 border-t border-gray-200">
-      <button onClick={onCancel} className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800">
+    <div className="flex items-center justify-end gap-2 mt-4 pt-3 border-t border-[var(--border-subtle)]">
+      <button onClick={onCancel} className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
         <X className="w-3.5 h-3.5" /> Cancel
       </button>
       <button onClick={onSave} disabled={!pivot.title.trim() || isSaving}
@@ -322,17 +322,17 @@ const PivotCard: React.FC<PivotCardProps> = ({ pivot, isExpanded, onToggle, onEd
   const CatIcon = catConfig?.icon || MoreHorizontal;
 
   return (
-    <div className={`border-l-4 ${CATEGORY_COLORS[pivot.category]} mx-3 my-2 rounded-lg overflow-hidden bg-white`}>
-      <div onClick={onToggle} className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50/50 transition-colors">
+    <div className={`border-l-4 ${CATEGORY_COLORS[pivot.category]} mx-3 my-2 rounded-lg overflow-hidden bg-card`}>
+      <div onClick={onToggle} className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--bg-sunken)]/50 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
-          <CatIcon className="w-4 h-4 text-gray-600 flex-shrink-0" />
+          <CatIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <div className="min-w-0">
-            <h4 className="text-sm font-semibold text-gray-900 truncate">{pivot.title}</h4>
+            <h4 className="text-sm font-semibold text-foreground truncate">{pivot.title}</h4>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                 <Calendar className="w-3 h-3" />{new Date(pivot.pivotDate).toLocaleDateString()}
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                 <Tag className="w-3 h-3" />{catConfig?.label || pivot.category}
               </span>
             </div>
@@ -344,28 +344,28 @@ const PivotCard: React.FC<PivotCardProps> = ({ pivot, isExpanded, onToggle, onEd
           )}
           {!readOnly && (
             <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-              <button onClick={onEdit} className="p-1 text-gray-400 hover:text-blue-600 rounded"><Edit3 className="w-3.5 h-3.5" /></button>
-              <button onClick={onDelete} disabled={isDeleting} className="p-1 text-gray-400 hover:text-red-600 rounded">
+              <button onClick={onEdit} className="p-1 text-[var(--fg-tertiary)] hover:text-blue-600 rounded"><Edit3 className="w-3.5 h-3.5" /></button>
+              <button onClick={onDelete} disabled={isDeleting} className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 rounded">
                 {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
               </button>
             </div>
           )}
-          {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+          {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />}
         </div>
       </div>
 
       {isExpanded && (
-        <div className="px-4 pb-3 space-y-2 border-t border-gray-100 pt-2">
+        <div className="px-4 pb-3 space-y-2 border-t border-[var(--border-subtle)] pt-2">
           {pivot.description && <Detail label="Description" text={pivot.description} />}
           {pivot.impactAssessment && <Detail label="Impact Assessment" text={pivot.impactAssessment} />}
           {pivot.outcomes && <Detail label="Outcomes" text={pivot.outcomes} />}
           {pivot.lessonsLearned && <Detail label="Lessons Learned" text={pivot.lessonsLearned} />}
           {pivot.affectedAreas.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-gray-500 mb-1">Affected Areas</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">Affected Areas</p>
               <div className="flex flex-wrap gap-1">
                 {pivot.affectedAreas.map(a => (
-                  <span key={a} className="px-2 py-0.5 text-[10px] bg-gray-100 text-gray-600 rounded-full">{a}</span>
+                  <span key={a} className="px-2 py-0.5 text-[10px] bg-[var(--bg-sunken)] text-muted-foreground rounded-full">{a}</span>
                 ))}
               </div>
             </div>
@@ -378,8 +378,8 @@ const PivotCard: React.FC<PivotCardProps> = ({ pivot, isExpanded, onToggle, onEd
 
 const Detail: React.FC<{ label: string; text: string }> = ({ label, text }) => (
   <div>
-    <p className="text-xs font-medium text-gray-500 mb-0.5">{label}</p>
-    <p className="text-sm text-gray-700 whitespace-pre-wrap">{text}</p>
+    <p className="text-xs font-medium text-muted-foreground mb-0.5">{label}</p>
+    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{text}</p>
   </div>
 );
 

@@ -181,7 +181,7 @@ export default function MediaPlanCreatePage() {
         >
           {busy ? 'Creating…' : 'Create plan'}
         </button>
-        <Link to="/media" className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Cancel</Link>
+        <Link to="/media" className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>
       </div>
     </div>
   );

@@ -147,40 +147,40 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Dialog */}
-      <div className="relative bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-card rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-200">
+        <div className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="bg-blue-50 rounded-lg p-2">
               <Target className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-foreground">
                 {hasExistingTarget ? 'Edit Target' : 'Set Target'}
               </h2>
-              <p className="text-sm text-gray-500">{kpi.name}</p>
+              <p className="text-sm text-muted-foreground">{kpi.name}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* KPI Context */}
-        <div className="px-5 py-3 bg-gray-50 border-b border-gray-200">
+        <div className="px-5 py-3 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-4 text-sm">
             <div>
-              <span className="text-xs text-gray-400">Code</span>
-              <p className="font-mono text-gray-700">{kpi.code}</p>
+              <span className="text-xs text-[var(--fg-tertiary)]">Code</span>
+              <p className="font-mono text-muted-foreground">{kpi.code}</p>
             </div>
             <div>
-              <span className="text-xs text-gray-400">Direction</span>
-              <p className="text-gray-700">{KPI_DIRECTION_LABELS[kpi.direction]}</p>
+              <span className="text-xs text-[var(--fg-tertiary)]">Direction</span>
+              <p className="text-muted-foreground">{KPI_DIRECTION_LABELS[kpi.direction]}</p>
             </div>
             {kpi.currentValue != null && (
               <div>
-                <span className="text-xs text-gray-400">Current Value</span>
-                <p className="font-semibold text-gray-900">
+                <span className="text-xs text-[var(--fg-tertiary)]">Current Value</span>
+                <p className="font-semibold text-foreground">
                   {formatKPIValue(kpi.currentValue, kpi.type, kpi.unit)}
                 </p>
               </div>
@@ -193,10 +193,10 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
           {/* Range-based target fields */}
           {isRange ? (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Target Range <span className="text-red-500">*</span>
               </label>
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-muted-foreground mb-2">
                 Performance is optimal within this range.
               </p>
               <div className="flex items-center gap-2">
@@ -207,11 +207,11 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={rangeMin}
                     onChange={(e) => setRangeMin(e.target.value)}
                     placeholder="Min"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <span className="text-gray-400 text-sm">to</span>
+                <span className="text-[var(--fg-tertiary)] text-sm">to</span>
                 <div className="flex-1">
                   <input
                     type="number"
@@ -219,19 +219,19 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={rangeMax}
                     onChange={(e) => setRangeMax(e.target.value)}
                     placeholder="Max"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
                 {kpi.unit && (
-                  <span className="text-sm text-gray-500 font-medium shrink-0">{kpi.unit}</span>
+                  <span className="text-sm text-muted-foreground font-medium shrink-0">{kpi.unit}</span>
                 )}
               </div>
             </div>
           ) : (
             /* Standard target value */
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Target Value <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center gap-2">
@@ -241,11 +241,11 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                   value={targetValue}
                   onChange={(e) => setTargetValue(e.target.value)}
                   placeholder="Enter target value"
-                  className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
                 {kpi.unit && (
-                  <span className="text-sm text-gray-500 font-medium">{kpi.unit}</span>
+                  <span className="text-sm text-muted-foreground font-medium">{kpi.unit}</span>
                 )}
               </div>
             </div>
@@ -254,7 +254,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
           {/* Stretch & Minimum — inline row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Stretch Target
               </label>
               <input
@@ -263,12 +263,12 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                 value={stretchValue}
                 onChange={(e) => setStretchValue(e.target.value)}
                 placeholder="Aspirational"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-0.5">Ambitious goal</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Ambitious goal</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Minimum Acceptable
               </label>
               <input
@@ -277,9 +277,9 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                 value={minimumValue}
                 onChange={(e) => setMinimumValue(e.target.value)}
                 placeholder="Floor threshold"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-0.5">Below this = critical</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Below this = critical</p>
             </div>
           </div>
 
@@ -287,7 +287,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
           <button
             type="button"
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-muted-foreground"
           >
             {showAdvanced ? (
               <ChevronUp className="w-4 h-4" />
@@ -298,11 +298,11 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
           </button>
 
           {showAdvanced && (
-            <div className="space-y-4 pt-2 border-t border-gray-100">
+            <div className="space-y-4 pt-2 border-t border-[var(--border-subtle)]">
               {/* Fiscal period */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
                     Fiscal Year
                   </label>
                   <input
@@ -310,17 +310,17 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={fiscalYear}
                     onChange={(e) => setFiscalYear(e.target.value)}
                     placeholder={String(currentFiscalYear())}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
                     Quarter
                   </label>
                   <select
                     value={quarter}
                     onChange={(e) => setQuarter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Full Year</option>
                     <option value="1">Q1</option>
@@ -333,7 +333,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
 
               {/* Baseline */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   Baseline Value
                 </label>
                 <div className="flex items-center gap-2">
@@ -343,13 +343,13 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={baselineValue}
                     onChange={(e) => setBaselineValue(e.target.value)}
                     placeholder="Starting measurement"
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   {kpi.unit && (
-                    <span className="text-sm text-gray-500 font-medium">{kpi.unit}</span>
+                    <span className="text-sm text-muted-foreground font-medium">{kpi.unit}</span>
                   )}
                 </div>
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">
                   Reference point for measuring improvement
                 </p>
               </div>
@@ -366,7 +366,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-subtle)] rounded-lg hover:bg-[var(--bg-sunken)]"
             >
               Cancel
             </button>

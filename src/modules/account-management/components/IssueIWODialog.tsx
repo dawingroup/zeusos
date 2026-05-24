@@ -142,10 +142,10 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-3xl rounded-lg bg-white shadow-xl">
+      <div className="w-full max-w-3xl rounded-lg bg-card shadow-xl">
         <header className="flex items-center justify-between border-b px-5 py-3">
           <h2 className="text-lg font-semibold">Issue Work Order · {masterJob.code}</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-800">✕</button>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">✕</button>
         </header>
 
         <div className="border-b px-5 py-2">
@@ -155,7 +155,7 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
               const active = n === step;
               const done = n < step;
               return (
-                <li key={label} className={`${active ? 'font-semibold text-blue-700' : done ? 'text-slate-500' : 'text-slate-400'}`}>
+                <li key={label} className={`${active ? 'font-semibold text-blue-700' : done ? 'text-muted-foreground' : 'text-[var(--fg-tertiary)]'}`}>
                   {label}
                 </li>
               );
@@ -185,7 +185,7 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
 
           {step === 2 && (
             <div className="space-y-3">
-              <div className="rounded border bg-slate-50 p-3 text-xs">
+              <div className="rounded border bg-[var(--bg-sunken)] p-3 text-xs">
                 <div>Current allocation: <strong>{formatMinor(masterJob.allocatedMinor, masterJob.currency)}</strong></div>
                 <div>Headroom (ceiling − allocated): <strong>{formatMinor(headroomMinor, masterJob.currency)}</strong></div>
               </div>
@@ -316,10 +316,10 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
           )}
         </div>
 
-        <footer className="flex justify-between border-t bg-slate-50 px-5 py-3">
-          <button onClick={onClose} className="rounded border px-3 py-1.5 text-sm hover:bg-white">Cancel</button>
+        <footer className="flex justify-between border-t bg-[var(--bg-sunken)] px-5 py-3">
+          <button onClick={onClose} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Cancel</button>
           <div className="flex gap-2">
-            {step > 1 && <button onClick={() => setStep((s) => (s - 1) as 1 | 2 | 3)} className="rounded border px-3 py-1.5 text-sm hover:bg-white">Back</button>}
+            {step > 1 && <button onClick={() => setStep((s) => (s - 1) as 1 | 2 | 3)} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Back</button>}
             {step === 1 && <button onClick={() => setStep(2)} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">Next →</button>}
             {step === 2 && <button onClick={handleNextFromStep2} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">Next →</button>}
             {step === 3 && (

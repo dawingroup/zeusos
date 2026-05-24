@@ -108,10 +108,10 @@ export const StrategyOverview: React.FC = () => {
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Strategic Plans
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Review, analyze, and update your organization's business strategy with AI-powered insights.
             </p>
           </div>
@@ -143,7 +143,7 @@ export const StrategyOverview: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/strategy/plans/review/new')}
-              className="flex items-center gap-2 px-6 py-3 text-base font-semibold text-blue-700 bg-white rounded-xl hover:bg-blue-50 shadow-md transition-colors whitespace-nowrap"
+              className="flex items-center gap-2 px-6 py-3 text-base font-semibold text-blue-700 bg-card rounded-xl hover:bg-blue-50 shadow-md transition-colors whitespace-nowrap"
             >
               Start Strategy Review
               <ArrowRight className="w-5 h-5" />
@@ -158,22 +158,22 @@ export const StrategyOverview: React.FC = () => {
             return (
               <div
                 key={feature.title}
-                className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
+                className="bg-card rounded-xl border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow"
               >
                 <div className={`${feature.color} w-10 h-10 rounded-lg flex items-center justify-center mb-3`}>
                   <Icon className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
+                <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </div>
             );
           })}
         </div>
 
         {/* Previous Reviews */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+        <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Your Strategy Reviews</h3>
+            <h3 className="text-lg font-semibold text-foreground">Your Strategy Reviews</h3>
             <button
               onClick={() => navigate('/strategy/plans/review/new')}
               className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -188,12 +188,12 @@ export const StrategyOverview: React.FC = () => {
               {reviewsError}
             </div>
           ) : loadingReviews ? (
-            <div className="flex items-center justify-center py-8 text-gray-400">
+            <div className="flex items-center justify-center py-8 text-[var(--fg-tertiary)]">
               <Loader2 className="w-5 h-5 animate-spin mr-2" />
               Loading reviews...
             </div>
           ) : reviews.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted-foreground">
               <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No strategy reviews yet</p>
               <button
@@ -209,17 +209,17 @@ export const StrategyOverview: React.FC = () => {
                 <div
                   key={review.id}
                   onClick={() => navigate(`/strategy/plans/review/${review.id}`)}
-                  className="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 cursor-pointer transition-colors group"
+                  className="flex items-center justify-between p-4 rounded-lg border border-[var(--border-subtle)] hover:border-blue-200 hover:bg-blue-50/50 cursor-pointer transition-colors group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
                       <FileText className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-sm font-medium text-gray-900 truncate">
+                      <h4 className="text-sm font-medium text-foreground truncate">
                         {review.title || review.uploadedDocument?.fileName || 'Untitled Review'}
                       </h4>
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {review.updatedAt ? new Date(review.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Not saved'}
@@ -230,7 +230,7 @@ export const StrategyOverview: React.FC = () => {
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                           review.status === 'completed' ? 'bg-green-100 text-green-700' :
                           review.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
-                          'bg-gray-100 text-gray-600'
+                          'bg-[var(--bg-sunken)] text-muted-foreground'
                         }`}>
                           {review.status === 'in_progress' ? 'In Progress' : review.status === 'completed' ? 'Completed' : 'Draft'}
                         </span>
@@ -241,12 +241,12 @@ export const StrategyOverview: React.FC = () => {
                     <button
                       onClick={(e) => handleDelete(review.id, e)}
                       disabled={deletingId === review.id}
-                      className="p-1.5 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
                       title="Delete review"
                     >
                       {deletingId === review.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                     </button>
-                    <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-blue-500 transition-colors" />
                   </div>
                 </div>
               ))}
@@ -255,23 +255,23 @@ export const StrategyOverview: React.FC = () => {
         </div>
 
         {/* Review Sections Overview */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Review Sections Guide</h3>
-            <span className="text-sm text-gray-500">10 sections • Comprehensive assessment</span>
+            <h3 className="text-lg font-semibold text-foreground">Review Sections Guide</h3>
+            <span className="text-sm text-muted-foreground">10 sections • Comprehensive assessment</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {reviewSections.map((section, i) => (
               <div
                 key={section.label}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--bg-sunken)] transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                   <span className="text-xs font-bold text-blue-700">{i + 1}</span>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900">{section.label}</h4>
-                  <p className="text-xs text-gray-500">{section.status}</p>
+                  <h4 className="text-sm font-medium text-foreground">{section.label}</h4>
+                  <p className="text-xs text-muted-foreground">{section.status}</p>
                 </div>
               </div>
             ))}

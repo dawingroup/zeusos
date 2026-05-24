@@ -64,8 +64,8 @@ const SECTION_TYPE_COLORS: Record<SectionType, string> = {
   growth: 'bg-green-100 text-green-700',
   risk: 'bg-red-100 text-red-700',
   people: 'bg-pink-100 text-pink-700',
-  governance: 'bg-slate-100 text-slate-700',
-  general: 'bg-gray-100 text-gray-700',
+  governance: 'bg-[var(--bg-sunken)] text-muted-foreground',
+  general: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const SCORE_COLORS: Record<number, string> = {
@@ -77,7 +77,7 @@ const SCORE_COLORS: Record<number, string> = {
 };
 
 const REWRITE_STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  none: { label: 'No Changes', className: 'bg-gray-100 text-gray-600' },
+  none: { label: 'No Changes', className: 'bg-[var(--bg-sunken)] text-muted-foreground' },
   pending_review: { label: 'Pending Review', className: 'bg-yellow-100 text-yellow-700' },
   approved: { label: 'Approved', className: 'bg-green-100 text-green-700' },
   rejected: { label: 'Rejected', className: 'bg-red-100 text-red-700' },
@@ -105,7 +105,7 @@ export function SectionRegistryPanel({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8 text-gray-500">
+      <div className="flex items-center justify-center py-8 text-muted-foreground">
         <Loader2 className="h-5 w-5 animate-spin mr-2" />
         Loading sections...
       </div>
@@ -114,7 +114,7 @@ export function SectionRegistryPanel({
 
   if (sections.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
         <p className="text-sm">No sections parsed yet.</p>
         <p className="text-xs mt-1">Upload a strategy document to get started.</p>
@@ -134,13 +134,13 @@ export function SectionRegistryPanel({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-gray-50">
+      <div className="flex items-center justify-between p-3 border-b bg-[var(--bg-sunken)]">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">
+          <h3 className="text-sm font-semibold text-foreground">
             Document Sections ({sections.length})
           </h3>
           {avgScore !== null && (
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Avg. alignment: {avgScore}/5
             </p>
           )}
@@ -166,7 +166,7 @@ export function SectionRegistryPanel({
           const typeColor = SECTION_TYPE_COLORS[section.sectionType];
           const scoreColor = section.alignmentScore
             ? SCORE_COLORS[section.alignmentScore]
-            : 'bg-gray-100 text-gray-500 border-gray-200';
+            : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]';
           const isSelected = section.id === selectedSectionId;
           const isExpanded = section.id === expandedId;
           const statusConfig = REWRITE_STATUS_CONFIG[section.rewriteStatus] || REWRITE_STATUS_CONFIG.none;
@@ -175,7 +175,7 @@ export function SectionRegistryPanel({
             <div
               key={section.id}
               className={`border-b transition-colors ${
-                isSelected ? 'bg-blue-50 border-l-2 border-l-blue-500' : 'hover:bg-gray-50'
+                isSelected ? 'bg-blue-50 border-l-2 border-l-blue-500' : 'hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {/* Section Row */}
@@ -188,7 +188,7 @@ export function SectionRegistryPanel({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {section.headingText}
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
@@ -215,12 +215,12 @@ export function SectionRegistryPanel({
                     e.stopPropagation();
                     setExpandedId(isExpanded ? null : section.id);
                   }}
-                  className="flex-shrink-0 p-1 rounded hover:bg-gray-200"
+                  className="flex-shrink-0 p-1 rounded hover:bg-[var(--bg-sunken)]"
                 >
                   {isExpanded ? (
-                    <ChevronUp className="h-3.5 w-3.5 text-gray-400" />
+                    <ChevronUp className="h-3.5 w-3.5 text-[var(--fg-tertiary)]" />
                   ) : (
-                    <ChevronDown className="h-3.5 w-3.5 text-gray-400" />
+                    <ChevronDown className="h-3.5 w-3.5 text-[var(--fg-tertiary)]" />
                   )}
                 </button>
               </div>
@@ -229,7 +229,7 @@ export function SectionRegistryPanel({
               {isExpanded && (
                 <div className="px-3 pb-3 flex flex-wrap gap-1.5">
                   {section.alignmentScore && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       {ALIGNMENT_SCORE_LABELS[section.alignmentScore]?.label || ''}
                     </span>
                   )}

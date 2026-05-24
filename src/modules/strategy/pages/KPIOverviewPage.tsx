@@ -46,7 +46,7 @@ function CategoryCard({ category, kpiCount }: {
   return (
     <Link
       to={`/strategy/kpis/library?category=${category.id}`}
-      className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md hover:border-gray-300 transition-all group"
+      className="bg-card rounded-lg border border-[var(--border-subtle)] p-4 hover:shadow-md hover:border-[var(--border-default)] transition-all group"
     >
       <div className="flex items-start justify-between mb-3">
         <div
@@ -55,10 +55,10 @@ function CategoryCard({ category, kpiCount }: {
         >
           <Icon className="w-5 h-5" style={{ color: category.color }} />
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+        <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-muted-foreground transition-colors" />
       </div>
-      <h3 className="text-sm font-semibold text-gray-900 mb-1">{category.label}</h3>
-      <p className="text-xs text-gray-500">
+      <h3 className="text-sm font-semibold text-foreground mb-1">{category.label}</h3>
+      <p className="text-xs text-muted-foreground">
         {kpiCount} KPIs &middot; {category.subCategories.length} sub-categories
       </p>
     </Link>
@@ -104,8 +104,8 @@ export function KPIOverviewPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">KPI Library & Tracking</h1>
-        <p className="text-gray-600 text-sm">
+        <h1 className="text-2xl font-bold text-foreground mb-1">KPI Library & Tracking</h1>
+        <p className="text-muted-foreground text-sm">
           Browse {KPI_LIBRARY.length}+ industry-standard KPIs, add them to active tracking, and build scorecards.
         </p>
       </div>
@@ -132,14 +132,14 @@ export function KPIOverviewPage() {
         </button>
         <button
           onClick={() => navigate('/strategy/kpis/active')}
-          className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-card text-muted-foreground text-sm font-medium rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] transition-colors"
         >
           <Activity className="w-4 h-4" />
           Active Tracking
         </button>
         <button
           onClick={() => navigate('/strategy/kpis/scorecards')}
-          className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-card text-muted-foreground text-sm font-medium rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] transition-colors"
         >
           <BarChart3 className="w-4 h-4" />
           Scorecards
@@ -148,7 +148,7 @@ export function KPIOverviewPage() {
 
       {/* Category Cards */}
       <div className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Browse by Category</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">Browse by Category</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {KPI_LIBRARY_CATEGORIES.map((cat) => (
             <CategoryCard
@@ -162,24 +162,24 @@ export function KPIOverviewPage() {
 
       {/* Cross-Module Links */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Module Integrations</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">Module Integrations</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Finance Link */}
           <Link
             to="/finance/overview/kpis"
-            className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow group"
+            className="bg-card rounded-lg border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow group"
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="bg-green-50 rounded-lg p-2.5">
                 <DollarSign className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-900">Finance Module KPIs</h3>
-                <p className="text-xs text-gray-500">6 auto-computed financial metrics from QBO</p>
+                <h3 className="text-sm font-semibold text-foreground">Finance Module KPIs</h3>
+                <p className="text-xs text-muted-foreground">6 auto-computed financial metrics from QBO</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto" />
+              <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-muted-foreground ml-auto" />
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Gross Margin, Operating Margin, Net Margin, EBITDA Margin, Revenue, COGS Ratio
             </p>
           </Link>
@@ -187,19 +187,19 @@ export function KPIOverviewPage() {
           {/* HR Link */}
           <Link
             to="/hr/performance/reviews"
-            className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow group"
+            className="bg-card rounded-lg border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow group"
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="bg-purple-50 rounded-lg p-2.5">
                 <UserCheck className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-gray-900">HR Module</h3>
-                <p className="text-xs text-gray-500">8 people KPIs available in library</p>
+                <h3 className="text-sm font-semibold text-foreground">HR Module</h3>
+                <p className="text-xs text-muted-foreground">8 people KPIs available in library</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 ml-auto" />
+              <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-muted-foreground ml-auto" />
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               Staff Turnover, Retention, Absenteeism, Training, Performance Reviews, Headcount
             </p>
           </Link>
