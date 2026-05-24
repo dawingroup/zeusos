@@ -85,14 +85,14 @@ export default function ServiceCredentialsPage() {
       <div className="flex items-center gap-4 mb-6">
         <Link
           to="/admin/settings"
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
           aria-label="Back to Settings"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-500" />
+          <ChevronLeft className="w-5 h-5 text-muted-foreground" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">Service Credentials &amp; API Keys</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground">Service Credentials &amp; API Keys</h1>
+          <p className="text-muted-foreground">
             Manage integration and AI service keys stored in Firebase Secret Manager. Values are
             never displayed; only the last 4 characters are shown for verification.
           </p>
@@ -119,7 +119,7 @@ export default function ServiceCredentialsPage() {
       )}
 
       {/* Propagation note */}
-      <div className="mb-6 px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700">
+      <div className="mb-6 px-4 py-3 rounded-lg bg-[var(--bg-sunken)] border border-[var(--border-subtle)] text-sm text-muted-foreground">
         Saved values reach Cloud Functions on their next cold start (usually under a minute).
         Rotating OAuth-style secrets (Adobe, QuickBooks, Shopify) may require re-authorization
         through their respective consoles.
@@ -135,7 +135,7 @@ export default function ServiceCredentialsPage() {
             <div className="text-xs mt-1">
               If this is the first time you're using the API Keys page, deploy the admin secrets
               functions:
-              <code className="block mt-1 px-2 py-1 bg-white border border-red-200 rounded font-mono text-[11px]">
+              <code className="block mt-1 px-2 py-1 bg-card border border-red-200 rounded font-mono text-[11px]">
                 firebase deploy --only
                 functions:adminListServiceCredentials,functions:adminSetServiceCredential,functions:adminTestServiceCredential
               </code>
@@ -147,7 +147,7 @@ export default function ServiceCredentialsPage() {
       {/* Loading */}
       {isLoading && !credentials.length && (
         <div className="flex items-center justify-center h-40">
-          <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+          <Loader2 className="w-5 h-5 animate-spin text-[var(--fg-tertiary)]" />
         </div>
       )}
 
@@ -159,7 +159,7 @@ export default function ServiceCredentialsPage() {
             if (!items.length) return null;
             return (
               <section key={group}>
-                <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">
+                <h2 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2">
                   {GROUP_LABELS[group]}
                 </h2>
                 <div className="space-y-2">
@@ -179,7 +179,7 @@ export default function ServiceCredentialsPage() {
       )}
 
       {!isLoading && !credentials.length && !error && (
-        <div className="text-center py-12 text-sm text-gray-500">
+        <div className="text-center py-12 text-sm text-muted-foreground">
           No managed credentials are defined yet. Edit{' '}
           <code className="font-mono">functions/src/admin/secrets.js</code> to register one.
         </div>

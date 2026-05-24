@@ -148,7 +148,7 @@ export default function PurchaseOrderCreatePage() {
         >
           {busy ? 'Creating…' : 'Create PO'}
         </button>
-        <Link to="/procurement/purchase-orders" className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Cancel</Link>
+        <Link to="/procurement/purchase-orders" className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>
       </div>
     </div>
   );

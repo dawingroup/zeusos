@@ -22,12 +22,15 @@
  * the regex word-boundaries match the bare utility part, leaving the prefix
  * untouched.
  *
+ * Neutral families covered: gray | slate | zinc | neutral | stone.
+ * These are visually interchangeable in a brand-neutral context and all
+ * map to the same Zeus token. If a project ever needs to preserve a
+ * specific Tailwind family distinction, narrow the G regex.
+ *
  * What it does NOT touch:
  *   - Sentiment colors (blue/red/green/amber/yellow/etc.) — those need
  *     judgment and are handled in Phase U.3 with the hex eradication +
  *     .rag/.pill migration.
- *   - slate / zinc / neutral / stone families — not present in current code;
- *     extend MAPPINGS if/when needed.
  *
  * Usage:
  *   node scripts/ui-align-gray-sweep.mjs <glob> [<glob> ...]
@@ -50,7 +53,7 @@ if (patterns.length === 0) {
   exit(1);
 }
 
-const G = '(?:gray)';
+const G = '(?:gray|slate|zinc|neutral|stone)';
 
 const MAPPINGS = [
   // backgrounds

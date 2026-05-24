@@ -3,7 +3,7 @@ import type { PurchaseOrderStatus } from '../types/purchase-order.types';
 const STATUS_STYLES: Record<PurchaseOrderStatus, string> = {
   OPEN:   'bg-amber-100 text-amber-800',
   POSTED: 'bg-emerald-100 text-emerald-800',
-  CLOSED: 'bg-slate-100 text-slate-600',
+  CLOSED: 'bg-[var(--bg-sunken)] text-muted-foreground',
   VOID:   'bg-rose-100 text-rose-700',
 };
 

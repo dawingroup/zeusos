@@ -114,21 +114,21 @@ export default function DriveFolderSettingsPage() {
       <div>
         <Link
           to="/admin/settings"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Settings
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold text-gray-900 flex items-center gap-2">
-          <FolderTree className="h-6 w-6 text-gray-500" />
+        <h1 className="mt-2 text-2xl font-semibold text-foreground flex items-center gap-2">
+          <FolderTree className="h-6 w-6 text-muted-foreground" />
           Drive Folder Mapping
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           Bind every ZeusOS module slot to a Google Drive folder. Changes take
           effect within 60 seconds on the next trigger fire — no redeploy
           needed.
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-[var(--fg-tertiary)] mt-1">
           {totalMapped} of {DRIVE_FOLDER_SLOT_CATALOG.length} slots mapped
         </p>
       </div>
@@ -145,7 +145,7 @@ export default function DriveFolderSettingsPage() {
           {settings?.serviceAccountEmail ? (
             <p className="mt-1 flex items-center gap-1">
               <Mail className="h-3 w-3" />
-              <code className="font-mono text-[11px] bg-white/60 px-1 py-0.5 rounded">
+              <code className="font-mono text-[11px] bg-card/60 px-1 py-0.5 rounded">
                 {settings.serviceAccountEmail}
               </code>
             </p>
@@ -161,18 +161,18 @@ export default function DriveFolderSettingsPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--fg-tertiary)]" />
         <input
           type="text"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           placeholder="Search slots by name, description, or path..."
-          className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="w-full pl-9 pr-3 py-2 text-sm border border-[var(--border-subtle)] rounded-lg focus:outline-none focus:ring-1 focus:ring-[var(--border-default)]"
         />
       </div>
 
       {loading ? (
-        <div className="py-8 text-center text-sm text-gray-400">Loading…</div>
+        <div className="py-8 text-center text-sm text-[var(--fg-tertiary)]">Loading…</div>
       ) : (
         <div className="space-y-3">
           {GROUP_ORDER.map((group) => {
@@ -192,23 +192,23 @@ export default function DriveFolderSettingsPage() {
             return (
               <section
                 key={group}
-                className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50"
+                className="border border-[var(--border-subtle)] rounded-lg overflow-hidden bg-[var(--bg-sunken)]"
               >
                 <button
                   onClick={() => !expandedByFilter && toggleGroup(group)}
-                  className="w-full flex items-start gap-2 px-4 py-3 text-left hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-start gap-2 px-4 py-3 text-left hover:bg-[var(--bg-sunken)] transition-colors"
                   disabled={!!expandedByFilter}
                 >
                   <span className="shrink-0 mt-0.5">
                     {isOpen ? (
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 text-gray-500" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     )}
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h2 className="text-sm font-semibold text-gray-800">
+                      <h2 className="text-sm font-semibold text-foreground">
                         {meta.label}
                       </h2>
                       <span
@@ -218,20 +218,20 @@ export default function DriveFolderSettingsPage() {
                             ? 'bg-emerald-100 text-emerald-700'
                             : mapped > 0
                               ? 'bg-amber-100 text-amber-700'
-                              : 'bg-gray-200 text-gray-500')
+                              : 'bg-[var(--bg-sunken)] text-muted-foreground')
                         }
                       >
                         {mapped} / {descriptors.length}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       {meta.description}
                     </p>
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 py-3 space-y-3 bg-white border-t border-gray-200">
+                  <div className="px-4 py-3 space-y-3 bg-card border-t border-[var(--border-subtle)]">
                     {filtered.map((descriptor) => (
                       <DriveFolderSlotCard
                         key={descriptor.slot}

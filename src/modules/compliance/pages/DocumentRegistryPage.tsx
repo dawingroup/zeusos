@@ -165,7 +165,7 @@ export function DocumentRegistryPage() {
                         <span>{completedCount}/{checklist.length} steps</span>
                         <span className="font-medium">{progress}%</span>
                       </div>
-                      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                         <div
                           className={cn(
                             'h-full rounded-full transition-all',

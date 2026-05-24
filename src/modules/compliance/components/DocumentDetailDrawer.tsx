@@ -250,7 +250,7 @@ export function DocumentDetailDrawer({
                 <span className="text-muted-foreground">Compliance Progress</span>
                 <span className="font-medium">{progress}%</span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                 <div
                   className={cn(
                     'h-full rounded-full transition-all duration-300',
@@ -282,10 +282,10 @@ export function DocumentDetailDrawer({
           )}
 
           {/* Document File Section */}
-          <div className="rounded-lg border bg-gray-50 p-4 space-y-3">
+          <div className="rounded-lg border bg-[var(--bg-sunken)] p-4 space-y-3">
             <SectionHeader icon={FileText} title="Document File" />
             {doc.fileUrl ? (
-              <div className="flex items-center justify-between bg-white rounded-md border p-3">
+              <div className="flex items-center justify-between bg-card rounded-md border p-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <FileText className="h-4 w-4 text-blue-600 shrink-0" />
                   <span className="text-sm truncate">{doc.fileName || 'Document'}</span>
@@ -345,7 +345,7 @@ export function DocumentDetailDrawer({
                       key={item.id}
                       className={cn(
                         'flex items-start gap-3 p-2 rounded-md transition-colors',
-                        item.completed ? 'bg-green-50' : 'hover:bg-gray-50'
+                        item.completed ? 'bg-green-50' : 'hover:bg-[var(--bg-sunken)]'
                       )}
                     >
                       <input
@@ -353,7 +353,7 @@ export function DocumentDetailDrawer({
                         checked={item.completed}
                         onChange={() => handleToggleChecklist(item)}
                         disabled={togglingItem === item.id}
-                        className="mt-1 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 shrink-0"
+                        className="mt-1 h-4 w-4 rounded border-[var(--border-default)] text-emerald-600 focus:ring-emerald-500 shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <p className={cn(
@@ -469,14 +469,14 @@ export function DocumentDetailDrawer({
                 onToggle={() => setHistoryCollapsed(!historyCollapsed)}
               />
               {!historyCollapsed && (
-                <div className="relative ml-2 pl-4 border-l-2 border-gray-200 space-y-3">
+                <div className="relative ml-2 pl-4 border-l-2 border-[var(--border-subtle)] space-y-3">
                   {history.map(entry => {
                     const Icon = HISTORY_ICONS[entry.action] || Circle;
                     const time = entry.performedAt?.toDate?.();
                     return (
                       <div key={entry.id} className="relative">
-                        <div className="absolute -left-[1.35rem] top-0.5 h-4 w-4 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center">
-                          <Icon className="h-2.5 w-2.5 text-gray-500" />
+                        <div className="absolute -left-[1.35rem] top-0.5 h-4 w-4 rounded-full bg-card border-2 border-[var(--border-default)] flex items-center justify-center">
+                          <Icon className="h-2.5 w-2.5 text-muted-foreground" />
                         </div>
                         <div>
                           <p className="text-sm">{entry.description}</p>
