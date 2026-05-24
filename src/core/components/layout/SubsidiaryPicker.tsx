@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, Check } from 'lucide-react';
+import { ChevronDown, Check, ShieldAlert } from 'lucide-react';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import {
   DropdownMenu,
@@ -9,6 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/core/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
+import { isConflictIsolated } from '@/core/navigation/manifest';
+import type { SubsidiaryId } from '@/core/settings/types';
 import { cn } from '@/shared/lib/utils';
 
 const TYPE_LABEL: Record<string, string> = {
@@ -35,6 +38,8 @@ export function SubsidiaryPicker({ className }: { className?: string }) {
 
   if (!currentSubsidiary) return null;
 
+  const isolated = isConflictIsolated(currentSubsidiary.id as SubsidiaryId);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -56,6 +61,25 @@ export function SubsidiaryPicker({ className }: { className?: string }) {
         <span className="md:hidden font-mono text-[11px]">
           {CODE[currentSubsidiary.id] ?? currentSubsidiary.shortName.slice(0, 2).toUpperCase()}
         </span>
+        {isolated && (
+          <TooltipProvider delayDuration={150}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className="inline-flex items-center gap-1 h-5 px-1.5 rounded-full border border-[var(--rag-amber)] text-[10px] font-semibold uppercase tracking-wide text-[var(--rag-amber)]"
+                  aria-label="Conflict-isolated workspace"
+                  data-testid="orgswitcher-isolation-badge"
+                >
+                  <ShieldAlert className="h-3 w-3" aria-hidden="true" />
+                  Isolated
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                Conflict-isolated workspace — your clients are not visible to other brands.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <ChevronDown className="h-3.5 w-3.5 text-[var(--fg-tertiary)]" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">

@@ -47,7 +47,6 @@ import { GlobalTaskButton } from '@/modules/intelligence-layer/components/Global
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
 import {
   getAllCommandItems,
-  getSubsidiaryNavigation,
   AGENCY_NAVIGATION,
   COMMERCIAL_NAVIGATION,
   CORPORATE_NAVIGATION,
@@ -55,6 +54,8 @@ import {
   filterNavigationByAccess,
   type NavItem,
 } from '@/config/navigation.unified';
+import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
+import type { SubsidiaryId } from '@/core/settings/types';
 import { useUserModules } from '@/hooks/useUserModules';
 import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIntelligenceMenu';
 import { cn } from '@/shared/lib/utils';
@@ -68,6 +69,21 @@ import { GroupNavPills } from '@/core/components/layout/GroupNavPills';
 import { SubsidiaryPicker } from '@/core/components/layout/SubsidiaryPicker';
 import { PreferencesMenu } from '@/core/components/layout/PreferencesMenu';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
+
+// Flat legacy-NavItem lookup used by the manifest adapter so we keep
+// child dropdowns (Talent → Roster/Invoices, Billing → Client/Inter-
+// Co/GL, …) intact when the manifest item maps to an existing legacy
+// entry. Built once at module load — `AGENCY_NAVIGATION`,
+// `COMMERCIAL_NAVIGATION`, and `ADMIN_NAVIGATION` are static.
+const LEGACY_LOOKUP: Map<string, NavItem> = (() => {
+  const map = new Map<string, NavItem>();
+  const collect = (item: NavItem) => {
+    map.set(item.id, item);
+    item.children?.forEach(collect);
+  };
+  [...AGENCY_NAVIGATION, ...COMMERCIAL_NAVIGATION, ...ADMIN_NAVIGATION].forEach(collect);
+  return map;
+})();
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -159,15 +175,19 @@ export function AppShell({ children }: AppShellProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Per-subsidiary nav: each sub-brand reorders AGENCY_NAVIGATION around
-  // its primary specialty. Defined in navigation.unified.ts; selected
-  // here off the active subsidiary. Parent-org (zeus-group) falls back
-  // to the canonical AGENCY_NAVIGATION order.
+  // Phase 6.UI.0 — sidebar is now sourced from the navigation manifest
+  // (`src/core/navigation/manifest.ts`). The manifest resolves
+  // (orgKind, subsidiaryId) → ordered NavItem list per the brief, so
+  // each subsidiary sees a sidebar tuned to its workflow without the
+  // AppShell having to know the per-brand ordering.
   const isPrivileged = isModuleAdmin || isSuperUser;
 
-  // Parent-org admin/owner principal — mirrors ParentOrgGuard. Used for
-  // both showing the Commercial nav (AM/Pricing/Billing) and for hiding
-  // the subsidiary-only Delivery Inbox.
+  // Parent-org admin/owner principal — mirrors ParentOrgGuard. The
+  // manifest splits "PARENT" vs "SUBSIDIARY" off this signal: when the
+  // user is a parent-org principal AND has the `zeus-group` org
+  // selected, we render the PARENT manifest (Account Mgmt, Traffic,
+  // Pricing, Billing, Conflict Firewall, …). Otherwise we render the
+  // SUBSIDIARY manifest for the selected sub-brand.
   const isParentOrgPrincipal = useMemo(() => {
     return (
       (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
@@ -179,28 +199,31 @@ export function AppShell({ children }: AppShellProps) {
   }, [dawinUser]);
 
   const mainNavItems = useMemo(() => {
-    const subId = currentSubsidiary?.id;
-    const source =
-      subId && subId !== 'zeus-group'
-        ? getSubsidiaryNavigation(subId)
-        : AGENCY_NAVIGATION;
-    const filtered = filterNavigationByAccess(source, allAccessibleModuleIds, isPrivileged);
-    // Phase 3.E — Delivery Inbox is subsidiary-scoped (SubsidiaryDeliveryGuard
-    // would 403 parent-org users). Hide it for parent-org admins/owners;
-    // super-users keep it for smoke testing.
-    if (isPrivileged) return filtered;
-    return isParentOrgPrincipal
-      ? filtered.filter((item) => item.id !== 'delivery-inbox')
-      : filtered;
-  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal, currentSubsidiary?.id]);
+    const subId = (currentSubsidiary?.id ?? 'zeus-group') as SubsidiaryId;
+    const orgKind = isParentOrgPrincipal && subId === 'zeus-group' ? 'PARENT' : 'SUBSIDIARY';
 
-  // Commercial — Account Management surface. Visible to parent-org
-  // admins/owners and super-users (smoke testing); subsidiary principals
-  // never see these since the routes would 403 via ParentOrgGuard.
-  const commercialNavItems = useMemo(() => {
-    if (!isPrivileged && !isParentOrgPrincipal) return [];
-    return filterNavigationByAccess(COMMERCIAL_NAVIGATION, allAccessibleModuleIds, isPrivileged);
-  }, [allAccessibleModuleIds, isPrivileged, isParentOrgPrincipal]);
+    const resolved = resolveNav(orgKind, subId);
+    const adapted = resolved.map((item) => adaptManifestToLegacyNavItem(item, LEGACY_LOOKUP));
+
+    // Filter manifest items the user can't access via the module-level
+    // gate. Privileged accounts (super-user, module admin) bypass.
+    const filtered = filterNavigationByAccess(adapted, allAccessibleModuleIds, isPrivileged);
+
+    // Admin gating — only show the Admin item if the user has an
+    // admin-tier global role or is on the seed admin email list.
+    const adminEmails = ['onzimai@zeusgroup.co.ug'];
+    const isAdminEmail = !!user?.email && adminEmails.includes(user.email);
+    const hasAdminRole = !!dawinUser && ['admin', 'owner', 'super_admin'].includes(dawinUser.globalRole);
+    if (hasAdminRole || isAdminEmail || isPrivileged) return filtered;
+    return filtered.filter((item) => item.id !== 'admin');
+  }, [
+    allAccessibleModuleIds,
+    isPrivileged,
+    isParentOrgPrincipal,
+    currentSubsidiary?.id,
+    user?.email,
+    dawinUser,
+  ]);
 
   // Corporate modules filtered by access (header pills)
   const corporateNavItems = useMemo(() => {
@@ -246,7 +269,6 @@ export function AppShell({ children }: AppShellProps) {
   useEffect(() => {
     const allItems = [
       ...mainNavItems,
-      ...commercialNavItems,
       ...corporateNavItems,
       ...adminNavItems,
     ];
@@ -779,49 +801,15 @@ export function AppShell({ children }: AppShellProps) {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className={cn('p-3 space-y-5', !sidebarExpanded && 'lg:px-2')}>
-              {/* Dashboard Link */}
-              <div className="space-y-1">
-                {renderNavItem({
-                  id: 'dashboard',
-                  label: 'Dashboard',
-                  href: '/',
-                  icon: 'LayoutDashboard',
-                  description: 'Main dashboard overview',
-                  keywords: ['home', 'dashboard', 'overview'],
-                })}
-              </div>
-
-              {/* Main Navigation - Agency surface (shared across all sub-brands) */}
-              <div className="space-y-1">
-                {mainNavItems.map(item => renderNavItem(item))}
-              </div>
-
-              {/* Commercial — parent-org Account Management surface */}
-              {commercialNavItems.length > 0 && (
-                <div className="space-y-1">
-                  {sidebarExpanded && (
-                    <p className="px-2 text-[10px] font-medium text-[var(--fg-on-dark-muted)] uppercase tracking-[0.1em] mb-1.5">
-                      Commercial
-                    </p>
-                  )}
-                  {commercialNavItems.map((item: NavItem) => renderNavItem(item))}
-                </div>
-              )}
-
-              {/* Admin */}
-              {adminNavItems.length > 0 && (
-                <div>
-                  {sidebarExpanded && (
-                    <p className="px-2 text-[10px] font-medium text-[var(--fg-on-dark-muted)] uppercase tracking-[0.1em] mb-1.5">
-                      Admin
-                    </p>
-                  )}
-                  <div className="space-y-1">
-                    {adminNavItems.map((item: NavItem) => renderNavItem(item))}
-                  </div>
-                </div>
-              )}
+            <div className={cn('p-3 space-y-1', !sidebarExpanded && 'lg:px-2')}>
+              {/* Phase 6.UI.0 — single resolved manifest. Dashboard,
+                  Commercial (Account Mgmt / Pricing / Billing) and
+                  Admin all live inside `mainNavItems` for PARENT
+                  principals; SUBSIDIARY principals see Inbox / ECD
+                  Review / Active Work / per-brand middle / Burn &
+                  SLA / HR / Reports — resolved by
+                  `src/core/navigation/manifest.ts`. */}
+              {mainNavItems.map((item: NavItem) => renderNavItem(item))}
             </div>
           </ScrollArea>
         </aside>

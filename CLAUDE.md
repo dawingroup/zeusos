@@ -75,6 +75,7 @@ Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-ha
 - ❌ **Phase 5.E** — Client Portal rebrand (`customer-hub` carryover; no Zeus visual identity pass)
 - ❌ **Phase 5.F** — Production launch + custom domain DNS active + GA/PostHog (DNS for `os.zeustheagency.com` not yet verified — deploy health-check still hits `zeusos.web.app`)
 - ❌ **Phase 5.G** — Onboarding session with Zeus team (gated by 5.F)
+- 🟡 **Phase 6.UI.0** — Sidebar manifest + subsidiary-aware ordering. `src/core/navigation/manifest.ts` resolves `(OrganizationKind, SubsidiaryId)` → ordered NavItem list; `src/core/settings/brand-capabilities.ts` mirrors `BRAND_CAPABILITIES` from `functions/src/assignment/services/route-brand.service.js`. AppShell rewired off `resolveNav`; Odd Gorilla shows an "Isolated" badge on the org-switcher chip + a banner on the IWO Inbox. PRs 2–6 (Traffic, Conflict Firewall, ECD Review, CES, Role Profiles) still pending.
 
 **Open decisions** (plan §12):
 - QuickBooks Online — open item #3, decision pending. Currently disabled via empty env in `functions/.env.zeusos`.
