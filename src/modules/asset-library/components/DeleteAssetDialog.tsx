@@ -52,7 +52,7 @@ export function DeleteAssetDialog({ open, assetName, onCancel, onConfirm }: Prop
         onClick={handleCancel}
         aria-hidden="true"
       />
-      <div className="relative z-10 w-full max-w-md rounded-lg bg-white p-5 shadow-xl">
+      <div className="relative z-10 w-full max-w-md rounded-lg bg-card p-5 shadow-xl">
         <header className="mb-3">
           <h2 className="text-base font-semibold text-zeusRed-dark">Delete asset</h2>
           <p className="mt-1 text-sm text-zeusNavy/80">
