@@ -59,7 +59,7 @@ export function PayrollBatchDetailPage() {
 
   if (isLoading && !batch) {
     return (
-      <div className="py-16 flex items-center justify-center text-gray-500">
+      <div className="py-16 flex items-center justify-center text-muted-foreground">
         <Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading batch…
       </div>
     );
@@ -82,7 +82,7 @@ export function PayrollBatchDetailPage() {
 
   if (!batch) {
     return (
-      <div className="text-center py-16 text-gray-500">
+      <div className="text-center py-16 text-muted-foreground">
         <p>Batch not found.</p>
         <Button variant="outline" size="sm" className="mt-3" onClick={() => navigate('/hr/payroll/batches')}>
           Back to batches

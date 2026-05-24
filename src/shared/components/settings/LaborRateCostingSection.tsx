@@ -348,25 +348,25 @@ export function LaborRateCostingSection({
   const productiveMonthlyHours = Math.round(monthlyHours * (productiveHoursPercent / 100));
 
   return (
-    <div className="border-t border-gray-200 pt-6 mt-6">
+    <div className="border-t border-[var(--border-subtle)] pt-6 mt-6">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center gap-3 w-full text-left"
       >
         {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
         )}
-        <Calculator className="w-5 h-5 text-gray-500" />
+        <Calculator className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">Labor Rate Calculator</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-semibold text-foreground">Labor Rate Calculator</h3>
+          <p className="text-sm text-muted-foreground">
             Auto-calculate blended labor cost per hour from payroll data
           </p>
         </div>
         {effectiveRate > 0 && !isExpanded && (
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-medium text-muted-foreground">
             {effectiveRate.toLocaleString()} UGX/hr
           </span>
         )}
@@ -381,7 +381,7 @@ export function LaborRateCostingSection({
                 <button
                   onClick={handleCalculate}
                   disabled={isCalculating || !productionDeptId}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg disabled:opacity-50"
                 >
                   {isCalculating ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -403,7 +403,7 @@ export function LaborRateCostingSection({
                 <button
                   onClick={handleCalculate}
                   disabled={isCalculating || !productionDeptId}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg disabled:opacity-50"
                 >
                   {isCalculating ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -414,14 +414,14 @@ export function LaborRateCostingSection({
                 </button>
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset to Defaults
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   Cancel
                 </button>
@@ -441,60 +441,60 @@ export function LaborRateCostingSection({
             )}
           </div>
           {!manualOverride && (
-            <p className="text-xs text-gray-500 -mt-3">
+            <p className="text-xs text-muted-foreground -mt-3">
               Auto-sync is enabled: rate refreshes from HR payroll data every 5 minutes while this panel is open.
             </p>
           )}
-          <p className="text-xs text-gray-500 -mt-4">
+          <p className="text-xs text-muted-foreground -mt-4">
             Tip: add the same department multiple times to split direct vs overhead allocations.
           </p>
 
           {/* Current Rate Display */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Active Labor Rate
               </label>
-              <p className="text-gray-900">
+              <p className="text-foreground">
                 {effectiveRate > 0
                   ? `${effectiveRate.toLocaleString()} UGX/hr`
                   : 'Not configured'}
                 {manualOverride ? (
-                  <span className="ml-2 text-xs text-gray-500">(manual override)</span>
+                  <span className="ml-2 text-xs text-muted-foreground">(manual override)</span>
                 ) : cachedAt ? (
-                  <span className="ml-2 text-xs text-gray-500">
+                  <span className="ml-2 text-xs text-muted-foreground">
                     (synced {new Date(cachedAt).toLocaleString()})
                   </span>
                 ) : null}
               </p>
               {calculation && (
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Direct {calculation.directRatePerHour.toLocaleString()} + Overhead {calculation.overheadRatePerHour.toLocaleString()} = {calculation.calculatedRatePerHour.toLocaleString()} UGX/hr
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Calculated Labor Rate
               </label>
-              <p className="text-gray-900">
+              <p className="text-foreground">
                 {calculatedRate > 0
                   ? `${calculatedRate.toLocaleString()} UGX/hr`
                   : 'Not calculated'}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Returned by payroll calculator
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Production Department
               </label>
               {isEditing ? (
                 <select
                   value={productionDeptId}
                   onChange={(e) => setProductionDeptId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                 >
                   <option value="">Select department...</option>
                   {departmentOptions.map((dept) => (
@@ -504,11 +504,11 @@ export function LaborRateCostingSection({
                   ))}
                 </select>
               ) : (
-                <p className="text-gray-900">{productionDeptLabel || 'Not selected'}</p>
+                <p className="text-foreground">{productionDeptLabel || 'Not selected'}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Manual Override
               </label>
               {isEditing ? (
@@ -523,12 +523,12 @@ export function LaborRateCostingSection({
                       setManualOverride(val > 0 ? val : undefined);
                     }}
                     placeholder="Auto"
-                    className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                    className="w-28 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                   />
-                  <span className="text-sm text-gray-500">UGX/hr</span>
+                  <span className="text-sm text-muted-foreground">UGX/hr</span>
                 </div>
               ) : (
-                <p className="text-gray-900">
+                <p className="text-foreground">
                   {manualOverride ? `${manualOverride.toLocaleString()} UGX/hr` : 'None (use calculated)'}
                 </p>
               )}
@@ -536,12 +536,12 @@ export function LaborRateCostingSection({
           </div>
 
           {/* Working Hours */}
-          <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+          <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
             Working Hours
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Hours per Day
               </label>
               {isEditing ? (
@@ -551,14 +551,14 @@ export function LaborRateCostingSection({
                   max={24}
                   value={hoursPerDay}
                   onChange={(e) => setHoursPerDay(parseInt(e.target.value) || 8)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                  className="w-24 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                 />
               ) : (
-                <p className="text-gray-900">{hoursPerDay} hrs</p>
+                <p className="text-foreground">{hoursPerDay} hrs</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Working Days / Month
               </label>
               {isEditing ? (
@@ -568,15 +568,15 @@ export function LaborRateCostingSection({
                   max={31}
                   value={workingDaysPerMonth}
                   onChange={(e) => setWorkingDaysPerMonth(parseInt(e.target.value) || 22)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                  className="w-24 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                 />
               ) : (
-                <p className="text-gray-900">{workingDaysPerMonth} days</p>
+                <p className="text-foreground">{workingDaysPerMonth} days</p>
               )}
             </div>
             <div>
               <label
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-muted-foreground mb-1"
                 title="Share of paid hours that are actually productive — net of leave, public holidays, sick days, and idle time. Lower this if your team typically loses time to non-billable activities."
               >
                 Productive Hours %
@@ -588,19 +588,19 @@ export function LaborRateCostingSection({
                   max={100}
                   value={productiveHoursPercent}
                   onChange={(e) => setProductiveHoursPercent(parseInt(e.target.value) || 85)}
-                  className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                  className="w-24 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                 />
               ) : (
-                <p className="text-gray-900">{productiveHoursPercent}%</p>
+                <p className="text-foreground">{productiveHoursPercent}%</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Monthly Hours
               </label>
-              <p className="text-gray-900">
+              <p className="text-foreground">
                 <span className="font-medium">{productiveMonthlyHours}</span>
-                <span className="text-gray-400"> productive · {monthlyHours} paid</span>
+                <span className="text-[var(--fg-tertiary)]"> productive · {monthlyHours} paid</span>
               </p>
             </div>
           </div>
@@ -608,7 +608,7 @@ export function LaborRateCostingSection({
           {/* Partial Contributors */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 Partial Contributors
               </h4>
               {isEditing && (
@@ -623,7 +623,7 @@ export function LaborRateCostingSection({
             </div>
 
             {partialContributors.length === 0 ? (
-              <p className="text-sm text-gray-400 italic">No partial contributors configured</p>
+              <p className="text-sm text-[var(--fg-tertiary)] italic">No partial contributors configured</p>
             ) : isEditing ? (
               <div className="space-y-2">
                 {partialContributors.map((contributor, index) => (
@@ -631,7 +631,7 @@ export function LaborRateCostingSection({
                     <select
                       value={contributor.departmentId}
                       onChange={(e) => updatePartialContributor(index, 'departmentId', e.target.value)}
-                      className="flex-1 max-w-sm px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                      className="flex-1 max-w-sm px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                     >
                       <option value="">Select department...</option>
                       {departmentOptions.map((dept) => (
@@ -643,7 +643,7 @@ export function LaborRateCostingSection({
                     <select
                       value={contributor.costBucket || 'overhead'}
                       onChange={(e) => updatePartialContributor(index, 'costBucket', e.target.value)}
-                      className="w-28 px-2 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                      className="w-28 px-2 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                     >
                       <option value="direct">Direct</option>
                       <option value="overhead">Overhead</option>
@@ -655,13 +655,13 @@ export function LaborRateCostingSection({
                         max={100}
                         value={contributor.allocationPercent}
                         onChange={(e) => updatePartialContributor(index, 'allocationPercent', parseInt(e.target.value) || 0)}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm text-right focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                        className="w-20 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm text-right focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                       />
-                      <span className="text-sm text-gray-500">%</span>
+                      <span className="text-sm text-muted-foreground">%</span>
                     </div>
                     <button
                       onClick={() => removePartialContributor(index)}
-                      className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded"
+                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-red-500 hover:bg-red-50 rounded"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -672,18 +672,18 @@ export function LaborRateCostingSection({
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 text-gray-600">
+                    <tr className="bg-[var(--bg-sunken)] text-muted-foreground">
                       <th className="px-3 py-2 text-left font-medium">Department</th>
                       <th className="px-3 py-2 text-left font-medium">Bucket</th>
                       <th className="px-3 py-2 text-right font-medium">Allocation</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[var(--border-subtle)]">
                     {partialContributors.map((c, i) => (
-                      <tr key={i} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-gray-900">{c.departmentName || c.departmentId}</td>
-                        <td className="px-3 py-2 text-gray-700 capitalize">{c.costBucket || 'overhead'}</td>
-                        <td className="px-3 py-2 text-right text-gray-900">{c.allocationPercent}%</td>
+                      <tr key={i} className="hover:bg-[var(--bg-sunken)]">
+                        <td className="px-3 py-2 text-foreground">{c.departmentName || c.departmentId}</td>
+                        <td className="px-3 py-2 text-muted-foreground capitalize">{c.costBucket || 'overhead'}</td>
+                        <td className="px-3 py-2 text-right text-foreground">{c.allocationPercent}%</td>
                       </tr>
                     ))}
                   </tbody>
@@ -710,13 +710,13 @@ export function LaborRateCostingSection({
                   production department above for an accurate direct-labor rate.
                 </div>
               )}
-              <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+              <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
                 Calculation Breakdown
               </h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 text-gray-600">
+                    <tr className="bg-[var(--bg-sunken)] text-muted-foreground">
                       <th className="px-3 py-2 text-left font-medium">Name</th>
                       <th className="px-3 py-2 text-left font-medium">Department</th>
                       <th
@@ -731,51 +731,51 @@ export function LaborRateCostingSection({
                       <th className="px-3 py-2 text-right font-medium">Weighted Cost</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[var(--border-subtle)]">
                     {calculation.staff.map((entry) => (
-                      <tr key={entry.employeeId} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-gray-900">{entry.name}</td>
-                        <td className="px-3 py-2 text-gray-600">{entry.department}</td>
-                        <td className="px-3 py-2 text-right text-gray-900">
+                      <tr key={entry.employeeId} className="hover:bg-[var(--bg-sunken)]">
+                        <td className="px-3 py-2 text-foreground">{entry.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{entry.department}</td>
+                        <td className="px-3 py-2 text-right text-foreground">
                           {entry.monthlyPayCost.toLocaleString()}
                         </td>
-                        <td className="px-3 py-2 text-gray-600 capitalize">
+                        <td className="px-3 py-2 text-muted-foreground capitalize">
                           {entry.paySource === 'employee_record' ? 'Employee record' : entry.paySource}
                         </td>
-                        <td className="px-3 py-2 text-gray-600 capitalize">
+                        <td className="px-3 py-2 text-muted-foreground capitalize">
                           {entry.costBucket}
                         </td>
-                        <td className="px-3 py-2 text-right text-gray-900">
+                        <td className="px-3 py-2 text-right text-foreground">
                           {Math.round(entry.allocation * 100)}%
                         </td>
-                        <td className="px-3 py-2 text-right font-medium text-gray-900">
+                        <td className="px-3 py-2 text-right font-medium text-foreground">
                           {entry.weightedCost.toLocaleString()}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-gray-50 font-medium">
-                      <td colSpan={6} className="px-3 py-2 text-right text-gray-700">
+                    <tr className="bg-[var(--bg-sunken)] font-medium">
+                      <td colSpan={6} className="px-3 py-2 text-right text-muted-foreground">
                         Total Weighted Cost
                       </td>
-                      <td className="px-3 py-2 text-right text-gray-900">
+                      <td className="px-3 py-2 text-right text-foreground">
                         {calculation.totalWeightedMonthlyCost.toLocaleString()} UGX
                       </td>
                     </tr>
-                    <tr className="bg-gray-50 font-medium">
-                      <td colSpan={6} className="px-3 py-2 text-right text-gray-700">
+                    <tr className="bg-[var(--bg-sunken)] font-medium">
+                      <td colSpan={6} className="px-3 py-2 text-right text-muted-foreground">
                         Direct Cost {calculation.directWeightedMonthlyCost.toLocaleString()} UGX + Overhead Cost {calculation.overheadWeightedMonthlyCost.toLocaleString()} UGX
                       </td>
-                      <td className="px-3 py-2 text-right text-gray-900">
+                      <td className="px-3 py-2 text-right text-foreground">
                         {calculation.directRatePerHour.toLocaleString()} + {calculation.overheadRatePerHour.toLocaleString()} UGX/hr
                       </td>
                     </tr>
-                    <tr className="bg-gray-50 font-medium">
-                      <td colSpan={6} className="px-3 py-2 text-right text-gray-700">
+                    <tr className="bg-[var(--bg-sunken)] font-medium">
+                      <td colSpan={6} className="px-3 py-2 text-right text-muted-foreground">
                         {calculation.headcount.fullTime} full-time + {calculation.headcount.partial} partial = {calculation.totalPlannedMonthlyHours} hrs/month
                       </td>
-                      <td className="px-3 py-2 text-right font-bold text-gray-900">
+                      <td className="px-3 py-2 text-right font-bold text-foreground">
                         {calculation.calculatedRatePerHour.toLocaleString()} UGX/hr
                       </td>
                     </tr>

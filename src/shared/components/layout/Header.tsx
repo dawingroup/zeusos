@@ -32,24 +32,24 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
   const currentModule = getCurrentModule();
 
   return (
-    <header className="sticky top-0 z-50 h-14 border-b border-gray-200 bg-white/95 backdrop-blur px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+    <header className="sticky top-0 z-50 h-14 border-b border-[var(--border-subtle)] bg-card/95 backdrop-blur px-4 sm:px-6 lg:px-8 flex items-center justify-between">
       {/* Left: Logo and Brand */}
       <div className="flex items-center gap-3">
         <DawinGroupLogo size={36} />
-        <div className="hidden sm:block border-l pl-3 border-gray-200">
-          <h1 className="text-sm font-semibold text-gray-900">{title}</h1>
-          <p className="text-[10px] text-gray-500">Manufacturing Tools</p>
+        <div className="hidden sm:block border-l pl-3 border-[var(--border-subtle)]">
+          <h1 className="text-sm font-semibold text-foreground">{title}</h1>
+          <p className="text-[10px] text-muted-foreground">Manufacturing Tools</p>
         </div>
       </div>
 
       {/* Center: Module Switcher */}
-      <div className="flex items-center gap-1 border rounded-lg p-1 bg-gray-50">
+      <div className="flex items-center gap-1 border rounded-lg p-1 bg-[var(--bg-sunken)]">
         <button
           onClick={() => navigate('/clipper')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'clipper'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Image className="h-4 w-4" />
@@ -60,7 +60,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'design'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <FolderOpen className="h-4 w-4" />
@@ -72,7 +72,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'assets'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Wrench className="h-4 w-4" />
@@ -83,7 +83,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'features'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Layers className="h-4 w-4" />
@@ -94,7 +94,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'inventory'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Package className="h-4 w-4" />
@@ -105,7 +105,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'launch'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Rocket className="h-4 w-4" />
@@ -116,7 +116,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'crm'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Users className="h-4 w-4" />
@@ -127,7 +127,7 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors min-h-[36px] sm:min-h-auto ${
             currentModule === 'finance'
               ? 'bg-[#1d1d1f] text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <DollarSign className="h-4 w-4" />
@@ -147,24 +147,24 @@ export function Header({ title = 'Zeus Group' }: HeaderProps) {
                   className="w-8 h-8 rounded-full"
                 />
               ) : (
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-gray-600" />
+                <div className="w-8 h-8 bg-[var(--bg-sunken)] rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-muted-foreground" />
                 </div>
               )}
-              <span className="text-sm text-gray-700 hidden md:block">
+              <span className="text-sm text-muted-foreground hidden md:block">
                 {user.displayName || user.email}
               </span>
             </div>
             <button
               onClick={() => navigate('/admin/settings')}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors min-h-[44px] min-w-[44px] sm:min-h-auto sm:min-w-auto flex items-center justify-center"
+              className="p-2 text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-md transition-colors min-h-[44px] min-w-[44px] sm:min-h-auto sm:min-w-auto flex items-center justify-center"
               title="Settings"
             >
               <Settings className="w-4 h-4" />
             </button>
             <button
               onClick={() => signOut()}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors min-h-[44px] min-w-[44px] sm:min-h-auto sm:min-w-auto flex items-center justify-center"
+              className="p-2 text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-md transition-colors min-h-[44px] min-w-[44px] sm:min-h-auto sm:min-w-auto flex items-center justify-center"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />

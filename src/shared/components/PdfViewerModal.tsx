@@ -187,18 +187,18 @@ export function PdfViewerModal({
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-5xl bg-white rounded-xl shadow-2xl">
+        <div className="relative w-full max-w-5xl bg-card rounded-xl shadow-2xl">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
             <div className="flex items-center gap-3 min-w-0">
               <div className="p-2 bg-red-100 rounded-lg">
                 <FileText className="w-5 h-5 text-red-600" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-lg font-semibold text-gray-900 truncate">
+                <h3 className="text-lg font-semibold text-foreground truncate">
                   {fileName || 'Document'}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {isPdf ? 'PDF Document' : mimeType || 'Document'}
                 </p>
               </div>
@@ -209,7 +209,7 @@ export function PdfViewerModal({
               <a
                 href={url}
                 download={fileName}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Download className="w-4 h-4" />
@@ -221,7 +221,7 @@ export function PdfViewerModal({
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink className="w-4 h-4" />
@@ -231,7 +231,7 @@ export function PdfViewerModal({
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -242,9 +242,9 @@ export function PdfViewerModal({
           <div className="relative" style={{ height: '70vh' }}>
             {/* Loading state */}
             {viewerState === 'loading' && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[var(--bg-sunken)]">
                 <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
-                <p className="text-gray-600">Loading document...</p>
+                <p className="text-muted-foreground">Loading document...</p>
               </div>
             )}
 
@@ -270,14 +270,14 @@ export function PdfViewerModal({
                   />
                 ) : (
                   // Non-PDF document message
-                  <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-                    <div className="p-4 bg-gray-100 rounded-full mb-4">
-                      <FileText className="w-12 h-12 text-gray-400" />
+                  <div className="flex flex-col items-center justify-center h-full bg-[var(--bg-sunken)]">
+                    <div className="p-4 bg-[var(--bg-sunken)] rounded-full mb-4">
+                      <FileText className="w-12 h-12 text-[var(--fg-tertiary)]" />
                     </div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">
+                    <h4 className="text-lg font-medium text-foreground mb-2">
                       Preview not available
                     </h4>
-                    <p className="text-gray-500 mb-6 text-center max-w-md">
+                    <p className="text-muted-foreground mb-6 text-center max-w-md">
                       This document type cannot be previewed in the browser.
                       Please download or open it in a new tab.
                     </p>
@@ -294,7 +294,7 @@ export function PdfViewerModal({
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-sunken)] text-muted-foreground rounded-lg hover:bg-[var(--bg-sunken)] transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
                         Open in New Tab

@@ -82,7 +82,7 @@ export default function SettingsPage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Please sign in to access settings.</p>
+        <p className="text-muted-foreground">Please sign in to access settings.</p>
       </div>
     );
   }
@@ -93,18 +93,18 @@ export default function SettingsPage() {
       <div className="flex items-center gap-4 mb-6">
         <Link
           to="/"
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-500" />
+          <ChevronLeft className="w-5 h-5 text-muted-foreground" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-500">Manage organization settings, users, and access control</p>
+          <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground">Manage organization settings, users, and access control</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-[var(--border-subtle)] mb-6">
         <div className="flex gap-1 overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -117,14 +117,14 @@ export default function SettingsPage() {
                   'flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap',
                   activeTab === tab.id
                     ? 'border-[#872E5C] text-[#872E5C]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700',
+                    : 'border-transparent text-muted-foreground hover:text-muted-foreground',
                   tab.disabled && 'opacity-50 cursor-not-allowed'
                 )}
               >
                 <Icon className="w-4 h-4" />
                 {tab.label}
                 {tab.disabled && (
-                  <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded-full">
                     Soon
                   </span>
                 )}
@@ -135,7 +135,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)]">
         {activeTab === 'general' && <GeneralTab canEdit={canEditSettings} />}
         {activeTab === 'branding' && <BrandingTab canEdit={canEditSettings} />}
         {activeTab === 'subsidiaries' && <SubsidiariesTab />}
@@ -169,7 +169,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--fg-tertiary)]" />
       </div>
     );
   }
@@ -196,7 +196,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Organization Information</h3>
+        <h3 className="text-lg font-semibold text-foreground">Organization Information</h3>
         {canEdit && !isEditing && (
           <button
             onClick={() => {
@@ -220,7 +220,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             Organization Name
           </label>
           {isEditing ? (
@@ -228,15 +228,15 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           ) : (
-            <p className="text-gray-900">{settings?.info?.name || 'Not set'}</p>
+            <p className="text-foreground">{settings?.info?.name || 'Not set'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             Short Name
           </label>
           {isEditing ? (
@@ -244,15 +244,15 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               type="text"
               value={formData.shortName}
               onChange={(e) => setFormData({ ...formData, shortName: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           ) : (
-            <p className="text-gray-900">{settings?.info?.shortName || 'Not set'}</p>
+            <p className="text-foreground">{settings?.info?.shortName || 'Not set'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             <Mail className="w-4 h-4 inline mr-1" />
             Email
           </label>
@@ -261,15 +261,15 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           ) : (
-            <p className="text-gray-900">{settings?.info?.email || 'Not set'}</p>
+            <p className="text-foreground">{settings?.info?.email || 'Not set'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             Phone
           </label>
           {isEditing ? (
@@ -277,15 +277,15 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           ) : (
-            <p className="text-gray-900">{settings?.info?.phone || 'Not set'}</p>
+            <p className="text-foreground">{settings?.info?.phone || 'Not set'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             <Globe className="w-4 h-4 inline mr-1" />
             Website
           </label>
@@ -294,22 +294,22 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               type="url"
               value={formData.website}
               onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           ) : (
-            <p className="text-gray-900">{settings?.info?.website || 'Not set'}</p>
+            <p className="text-foreground">{settings?.info?.website || 'Not set'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             Default Currency
           </label>
           {isEditing ? (
             <select
               value={formData.defaultCurrency}
               onChange={(e) => setFormData({ ...formData, defaultCurrency: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             >
               <option value="UGX">UGX - Ugandan Shilling</option>
               <option value="USD">USD - US Dollar</option>
@@ -318,12 +318,12 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               <option value="KES">KES - Kenyan Shilling</option>
             </select>
           ) : (
-            <p className="text-gray-900">{settings?.defaultCurrency || 'UGX'}</p>
+            <p className="text-foreground">{settings?.defaultCurrency || 'UGX'}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             <Clock className="w-4 h-4 inline mr-1" />
             Timezone
           </label>
@@ -331,7 +331,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
             <select
               value={formData.timezone}
               onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             >
               <option value="Africa/Kampala">Africa/Kampala (EAT)</option>
               <option value="Africa/Nairobi">Africa/Nairobi (EAT)</option>
@@ -340,7 +340,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
               <option value="America/New_York">America/New_York (EST)</option>
             </select>
           ) : (
-            <p className="text-gray-900">{settings?.timezone || 'Africa/Kampala'}</p>
+            <p className="text-foreground">{settings?.timezone || 'Africa/Kampala'}</p>
           )}
         </div>
       </div>
@@ -349,7 +349,7 @@ function GeneralTab({ canEdit }: { canEdit: boolean }) {
         <div className="flex justify-end gap-3 pt-4 border-t">
           <button
             onClick={() => setIsEditing(false)}
-            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+            className="px-4 py-2 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
           >
             Cancel
           </button>
@@ -381,8 +381,8 @@ function BrandingTab({ canEdit: _canEdit }: { canEdit: boolean }) {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Platform Branding</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <h3 className="text-lg font-semibold text-foreground">Platform Branding</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Group-wide logos, colors, and UI defaults applied to new users. Per-subsidiary
           branding lives in the Subsidiaries tab.
         </p>
@@ -408,16 +408,16 @@ function UsersTab({ canManage }: { canManage: boolean }) {
       case 'owner': return 'bg-purple-100 text-purple-800';
       case 'admin': return 'bg-blue-100 text-blue-800';
       case 'manager': return 'bg-green-100 text-green-800';
-      case 'member': return 'bg-gray-100 text-gray-800';
+      case 'member': return 'bg-[var(--bg-sunken)] text-foreground';
       case 'viewer': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-[var(--bg-sunken)] text-foreground';
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--fg-tertiary)]" />
       </div>
     );
   }
@@ -453,28 +453,28 @@ function UsersTab({ canManage }: { canManage: boolean }) {
       {/* Team Members Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Team Members</h3>
-          <p className="text-sm text-gray-500">Users who have signed in to ZeusOS</p>
+          <h3 className="text-lg font-semibold text-foreground">Team Members</h3>
+          <p className="text-sm text-muted-foreground">Users who have signed in to ZeusOS</p>
         </div>
       </div>
 
       {users.length === 0 ? (
         <div className="text-center py-12">
-          <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No users yet</p>
+          <Users className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-muted-foreground">No users yet</p>
         </div>
       ) : (
         <div className="space-y-3">
           {users.map((u) => (
             <div
               key={u.id}
-              className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="flex items-center gap-4 p-4 border border-[var(--border-subtle)] rounded-lg hover:bg-[var(--bg-sunken)]"
             >
-              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-[var(--bg-sunken)] rounded-full flex items-center justify-center">
                 {u.photoUrl ? (
                   <img src={u.photoUrl} alt="" className="w-10 h-10 rounded-full" />
                 ) : (
-                  <span className="text-gray-600 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     {u.displayName?.charAt(0)?.toUpperCase() || '?'}
                   </span>
                 )}
@@ -482,7 +482,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-gray-900 truncate">{u.displayName}</p>
+                  <p className="font-medium text-foreground truncate">{u.displayName}</p>
                   <span className={cn('text-xs px-2 py-0.5 rounded-full', getRoleBadgeColor(u.globalRole))}>
                     {u.globalRole}
                   </span>
@@ -492,7 +492,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-500 truncate">{u.email}</p>
+                <p className="text-sm text-muted-foreground truncate">{u.email}</p>
               </div>
 
               {canManage && u.globalRole !== 'owner' && (
@@ -501,7 +501,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
                     value={u.globalRole}
                     onChange={(e) => updateUserRole(u.id, e.target.value as GlobalRole)}
                     disabled={isSubmitting}
-                    className="text-sm border border-gray-300 rounded-lg px-2 py-1"
+                    className="text-sm border border-[var(--border-default)] rounded-lg px-2 py-1"
                   >
                     {GLOBAL_ROLE_DEFINITIONS.filter(r => r.role !== 'owner').map((role) => (
                       <option key={role.role} value={role.role}>
@@ -635,7 +635,7 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--fg-tertiary)]" />
       </div>
     );
   }
@@ -643,8 +643,8 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">Module Access Control</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <h3 className="text-lg font-semibold text-foreground">Module Access Control</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Configure subsidiary, module, and feature-level access per user. Provision platform
           accounts for HR employees that don't have one yet.
         </p>
@@ -652,11 +652,11 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
 
       {/* Admin Migration Tool */}
       {canManage && (
-        <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+        <div className="p-4 border border-[var(--border-subtle)] rounded-lg bg-[var(--bg-sunken)]">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium text-gray-900">User Document Migration</h4>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <h4 className="font-medium text-foreground">User Document Migration</h4>
+              <p className="text-sm text-muted-foreground mt-0.5">
                 Fix legacy user documents by syncing Firebase Auth UIDs. Run this if users can&apos;t access modules.
               </p>
             </div>
@@ -688,22 +688,22 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
       {/* Users list + access editor */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h4 className="font-medium text-gray-900">Platform users ({filteredUsers.length})</h4>
+          <h4 className="font-medium text-foreground">Platform users ({filteredUsers.length})</h4>
           <div className="relative w-64">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search users..."
-              className="w-full pl-3 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+              className="w-full pl-3 pr-3 py-2 text-sm border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
             />
           </div>
         </div>
 
         {filteredUsers.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-gray-200 rounded-lg">
-            <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500">No users match your search</p>
+          <div className="text-center py-12 border border-dashed border-[var(--border-subtle)] rounded-lg">
+            <Shield className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+            <p className="text-muted-foreground">No users match your search</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -711,33 +711,33 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
               const isSelected = selectedUserId === u.id;
               const subsCount = u.subsidiaryAccess?.filter((s) => s.hasAccess).length || 0;
               return (
-                <div key={u.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div key={u.id} className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
                   <div
                     className={cn(
                       'flex items-center gap-4 p-4 cursor-pointer transition-colors',
-                      isSelected ? 'bg-purple-50' : 'bg-gray-50 hover:bg-gray-100',
+                      isSelected ? 'bg-purple-50' : 'bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)]',
                     )}
                     onClick={() => handleSelectUser(u)}
                   >
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-gray-600 font-medium text-sm">
+                    <div className="w-8 h-8 bg-[var(--bg-sunken)] rounded-full flex items-center justify-center">
+                      <span className="text-muted-foreground font-medium text-sm">
                         {u.displayName?.charAt(0)?.toUpperCase() || '?'}
                       </span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">{u.displayName}</p>
-                      <p className="text-sm text-gray-500">{u.email}</p>
+                      <p className="font-medium text-foreground">{u.displayName}</p>
+                      <p className="text-sm text-muted-foreground">{u.email}</p>
                     </div>
-                    <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-gray-200 text-gray-700">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-[var(--bg-sunken)] text-muted-foreground">
                       {u.globalRole}
                     </span>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       {subsCount} {subsCount === 1 ? 'subsidiary' : 'subsidiaries'}
                     </div>
                   </div>
 
                   {isSelected && draftAccess && (
-                    <div className="p-4 border-t border-gray-200 space-y-4">
+                    <div className="p-4 border-t border-[var(--border-subtle)] space-y-4">
                       {saveError && (
                         <div className="px-3 py-2 rounded bg-red-50 text-red-700 text-sm flex items-start gap-2">
                           <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
@@ -758,7 +758,7 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
                         userRole={u.globalRole as GlobalRole}
                       />
 
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+                      <div className="flex items-center justify-between pt-2 border-t border-[var(--border-subtle)]">
                         <Link
                           to={`/admin/users/${u.id}`}
                           className="text-sm text-[#872E5C] hover:text-[#6a2449]"
@@ -775,7 +775,7 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
                                 setSaveSuccess(null);
                               }}
                               disabled={!draftDirty || isSubmitting}
-                              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                              className="px-3 py-1.5 text-sm border border-[var(--border-default)] rounded-md hover:bg-[var(--bg-sunken)] disabled:opacity-50"
                             >
                               Discard
                             </button>
@@ -873,15 +873,15 @@ function UnprovisionedEmployeesSection({ canManage }: { canManage: boolean }) {
           {success}
         </div>
       )}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-[var(--border-subtle)]">
         {unprovisioned.slice(0, 10).map((emp) => (
           <div key={emp.id as unknown as string} className="flex items-center gap-3 px-4 py-2.5">
-            <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
+            <div className="w-7 h-7 rounded-full bg-[var(--bg-sunken)] flex items-center justify-center text-xs font-medium text-muted-foreground">
               {emp.fullName?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{emp.fullName}</p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-sm font-medium text-foreground truncate">{emp.fullName}</p>
+              <p className="text-xs text-muted-foreground truncate">
                 {emp.email} {emp.title ? `· ${emp.title}` : ''}
               </p>
             </div>
@@ -903,7 +903,7 @@ function UnprovisionedEmployeesSection({ canManage }: { canManage: boolean }) {
           </div>
         ))}
         {unprovisioned.length > 10 && (
-          <div className="px-4 py-2 text-xs text-gray-500 bg-gray-50">
+          <div className="px-4 py-2 text-xs text-muted-foreground bg-[var(--bg-sunken)]">
             …and {unprovisioned.length - 10} more. Use the HR module&apos;s employee directory to
             provision the rest.
           </div>
@@ -921,22 +921,22 @@ function IntegrationsTab() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">External Integrations</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <h3 className="text-lg font-semibold text-foreground">External Integrations</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Test and manage connections to external services
         </p>
       </div>
 
       {/* Google Drive — folder mapping */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+        <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">GD</span>
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-gray-900">Google Drive — Folder Mapping</h4>
-              <p className="text-sm text-gray-500">
+              <h4 className="font-medium text-foreground">Google Drive — Folder Mapping</h4>
+              <p className="text-sm text-muted-foreground">
                 Bind each Unified File Manager slot to its Shared-Drive folder.
               </p>
             </div>
@@ -951,15 +951,15 @@ function IntegrationsTab() {
       </div>
 
       {/* Shopify Sync */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+        <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">Sh</span>
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-gray-900">Shopify Sync</h4>
-              <p className="text-sm text-gray-500">
+              <h4 className="font-medium text-foreground">Shopify Sync</h4>
+              <p className="text-sm text-muted-foreground">
                 Monitor and manage product sync to dawinfinishes.com.
               </p>
             </div>
@@ -974,21 +974,21 @@ function IntegrationsTab() {
       </div>
 
       {/* Service Credentials / API Keys */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+        <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">🔑</span>
+            <div className="w-10 h-10 bg-foreground rounded-lg flex items-center justify-center">
+              <span className="text-background font-bold text-sm">🔑</span>
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-gray-900">Service Credentials &amp; API Keys</h4>
-              <p className="text-sm text-gray-500">
+              <h4 className="font-medium text-foreground">Service Credentials &amp; API Keys</h4>
+              <p className="text-sm text-muted-foreground">
                 Manage AI / integration service keys (Gemini, Adobe, Shopify, WhatsApp, QBO, …) stored in Firebase Secret Manager.
               </p>
             </div>
             <Link
               to="/admin/api-keys"
-              className="text-sm font-medium text-slate-700 hover:text-slate-900"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
             >
               Configure →
             </Link>
@@ -997,15 +997,15 @@ function IntegrationsTab() {
       </div>
 
       {/* Adobe PDF Services */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+        <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">Ai</span>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900">Adobe PDF Services</h4>
-              <p className="text-sm text-gray-500">PDF creation, extraction, compression & more</p>
+              <h4 className="font-medium text-foreground">Adobe PDF Services</h4>
+              <p className="text-sm text-muted-foreground">PDF creation, extraction, compression & more</p>
             </div>
           </div>
         </div>
@@ -1015,15 +1015,15 @@ function IntegrationsTab() {
       </div>
 
       {/* Adobe PDF Embed API */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+      <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+        <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">PDF</span>
             </div>
             <div>
-              <h4 className="font-medium text-gray-900">Adobe PDF Embed API</h4>
-              <p className="text-sm text-gray-500">In-browser PDF viewing with annotations</p>
+              <h4 className="font-medium text-foreground">Adobe PDF Embed API</h4>
+              <p className="text-sm text-muted-foreground">In-browser PDF viewing with annotations</p>
             </div>
           </div>
         </div>
@@ -1033,14 +1033,14 @@ function IntegrationsTab() {
       </div>
 
       {/* Placeholder for other integrations */}
-      <div className="border border-gray-200 rounded-lg p-4 opacity-50">
+      <div className="border border-[var(--border-subtle)] rounded-lg p-4 opacity-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-            <Plug className="w-5 h-5 text-gray-400" />
+          <div className="w-10 h-10 bg-[var(--bg-sunken)] rounded-lg flex items-center justify-center">
+            <Plug className="w-5 h-5 text-[var(--fg-tertiary)]" />
           </div>
           <div>
-            <h4 className="font-medium text-gray-500">More Integrations Coming Soon</h4>
-            <p className="text-sm text-gray-400">Adobe Sign, Photoshop, Firefly & more</p>
+            <h4 className="font-medium text-muted-foreground">More Integrations Coming Soon</h4>
+            <p className="text-sm text-[var(--fg-tertiary)]">Adobe Sign, Photoshop, Firefly & more</p>
           </div>
         </div>
       </div>
@@ -1094,8 +1094,8 @@ function ModulesTab() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">Module Settings</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <h3 className="text-lg font-semibold text-foreground">Module Settings</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Settings owned by individual modules — open each module's settings page to configure.
         </p>
       </div>
@@ -1106,9 +1106,9 @@ function ModulesTab() {
           return (
             <div
               key={m.href}
-              className="border border-gray-200 rounded-lg overflow-hidden"
+              className="border border-[var(--border-subtle)] rounded-lg overflow-hidden"
             >
-              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
                 <div className="flex items-center gap-3">
                   <div
                     className={cn(
@@ -1119,8 +1119,8 @@ function ModulesTab() {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{m.label}</h4>
-                    <p className="text-sm text-gray-500">{m.description}</p>
+                    <h4 className="font-medium text-foreground">{m.label}</h4>
+                    <p className="text-sm text-muted-foreground">{m.description}</p>
                   </div>
                   <Link
                     to={m.href}
@@ -1260,7 +1260,7 @@ function AdobePdfTestPanel() {
         <button
           onClick={testConnectivity}
           disabled={status === 'loading'}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)] rounded-lg text-sm font-medium disabled:opacity-50"
         >
           Test Connectivity
         </button>
@@ -1285,14 +1285,14 @@ function AdobePdfTestPanel() {
         status === 'loading' && 'bg-blue-50',
         status === 'success' && 'bg-green-50',
         status === 'error' && 'bg-red-50',
-        status === 'idle' && 'bg-gray-50'
+        status === 'idle' && 'bg-[var(--bg-sunken)]'
       )}>
         <p className={cn(
           'font-medium text-sm',
           status === 'loading' && 'text-blue-600',
           status === 'success' && 'text-green-600',
           status === 'error' && 'text-red-600',
-          status === 'idle' && 'text-gray-600'
+          status === 'idle' && 'text-muted-foreground'
         )}>
           {status === 'loading' && <Loader2 className="w-4 h-4 inline mr-2 animate-spin" />}
           {status === 'success' && <Check className="w-4 h-4 inline mr-2" />}
@@ -1301,7 +1301,7 @@ function AdobePdfTestPanel() {
         </p>
 
         {resultData as React.ReactNode && (
-          <pre className="mt-2 p-2 bg-white rounded text-xs overflow-auto max-h-32 border">
+          <pre className="mt-2 p-2 bg-card rounded text-xs overflow-auto max-h-32 border">
             {JSON.stringify(resultData, null, 2).slice(0, 500)}
             {JSON.stringify(resultData, null, 2).length > 500 && '...'}
           </pre>
@@ -1422,7 +1422,7 @@ function AdobePdfEmbedTestPanel() {
         {viewerState !== 'hidden' && (
           <button
             onClick={hideViewer}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium"
+            className="px-4 py-2 bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)] rounded-lg text-sm font-medium"
           >
             Hide Viewer
           </button>
@@ -1445,8 +1445,8 @@ function AdobePdfEmbedTestPanel() {
 
       {/* Loading indicator - shown separately from the viewer div */}
       {viewerState === 'loading' && (
-        <div className="flex items-center justify-center h-[500px] bg-gray-50 border border-gray-200 rounded-lg">
-          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+        <div className="flex items-center justify-center h-[500px] bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-lg">
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--fg-tertiary)]" />
         </div>
       )}
 
@@ -1457,7 +1457,7 @@ function AdobePdfEmbedTestPanel() {
       */}
       <div
         id={viewDivId}
-        className="border border-gray-200 rounded-lg overflow-hidden"
+        className="border border-[var(--border-subtle)] rounded-lg overflow-hidden"
         style={{
           height: viewerState === 'ready' ? '500px' : '0px',
           display: viewerState === 'ready' ? 'block' : 'none'
@@ -1465,7 +1465,7 @@ function AdobePdfEmbedTestPanel() {
       />
 
       {viewerState === 'hidden' && !error && clientId && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           Click &quot;Test PDF Embed&quot; to load the Adobe PDF viewer with a sample document.
         </p>
       )}
@@ -1481,12 +1481,12 @@ function TemplatesTab() {
   return (
     <div className="p-6">
       <div className="text-center py-12">
-        <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-        <h3 className="text-lg font-medium text-gray-900 mb-1">Document Templates</h3>
-        <p className="text-gray-500 mb-4">
+        <FileText className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+        <h3 className="text-lg font-medium text-foreground mb-1">Document Templates</h3>
+        <p className="text-muted-foreground mb-4">
           Configure document templates for invoices, reports, and exports across modules.
         </p>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-500 rounded-lg">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--bg-sunken)] text-muted-foreground rounded-lg">
           <AlertCircle className="w-4 h-4" />
           Coming Soon
         </div>

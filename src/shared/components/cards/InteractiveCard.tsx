@@ -36,11 +36,11 @@ export function InteractiveCard({
   children,
   className,
   padding = 'md',
-  hoverBorderColor = 'hover:border-gray-300',
+  hoverBorderColor = 'hover:border-[var(--border-default)]',
   ...props
 }: InteractiveCardProps) {
   const baseClasses = cn(
-    "bg-white rounded-lg shadow-sm border border-gray-200",
+    "bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]",
     "hover:shadow-md transition-all cursor-pointer",
     hoverBorderColor,
     paddingClasses[padding],

@@ -54,7 +54,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           {...props}
         />
         <span
-          className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-[0_1px_2px_rgba(20,20,22,0.18)] transition-transform duration-150"
+          className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-card shadow-[0_1px_2px_rgba(20,20,22,0.18)] transition-transform duration-150"
           style={{ transform: value ? 'translateX(14px)' : 'translateX(0)' }}
           aria-hidden="true"
         />

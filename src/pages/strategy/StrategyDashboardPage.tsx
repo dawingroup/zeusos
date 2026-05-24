@@ -133,7 +133,7 @@ function getStatusColor(status: string): string {
     case 'critical':
       return 'text-red-600';
     default:
-      return 'text-gray-600';
+      return 'text-muted-foreground';
   }
 }
 
@@ -149,7 +149,7 @@ function getStatusBadge(status: string): string {
     case 'critical':
       return 'bg-red-100 text-red-800';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-[var(--bg-sunken)] text-foreground';
   }
 }
 
@@ -395,7 +395,7 @@ export function StrategyDashboardPage() {
                       'text-[10px] ml-2 shrink-0',
                       initiative.priority === 'critical' ? 'bg-red-100 text-red-800' :
                       initiative.priority === 'high' ? 'bg-amber-100 text-amber-800' :
-                      'bg-gray-100 text-gray-800'
+                      'bg-[var(--bg-sunken)] text-foreground'
                     )}
                   >
                     {initiative.priority}

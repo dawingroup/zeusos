@@ -126,10 +126,10 @@ export function MonthlyPayrollRunDetailPage() {
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> Back to batches
           </Button>
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-semibold text-foreground">
             Monthly run · {run.period}
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {run.subBatchCount} sub-batch{run.subBatchCount === 1 ? '' : 'es'} ·
             {' '}{run.totalEmployees} employee{run.totalEmployees === 1 ? '' : 's'} ·
             {' '}created {createdAt ? format(createdAt, 'd MMM yyyy, HH:mm') : '—'}

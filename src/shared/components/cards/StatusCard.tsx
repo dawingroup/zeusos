@@ -37,7 +37,7 @@ export function StatusCard({ children, color, className, padding = 'md' }: Statu
   return (
     <div
       className={cn(
-        "bg-white rounded-lg shadow-sm border border-gray-200 border-l-4",
+        "bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] border-l-4",
         colorClasses[color],
         paddingClasses[padding],
         className

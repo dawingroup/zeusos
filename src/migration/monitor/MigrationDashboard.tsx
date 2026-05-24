@@ -28,7 +28,7 @@ import {
 import { rollbackManager } from '../utils/rollback-manager';
 
 const STATUS_COLORS: Record<MigrationStatus, string> = {
-  pending: 'bg-gray-100 text-gray-700',
+  pending: 'bg-[var(--bg-sunken)] text-muted-foreground',
   in_progress: 'bg-blue-100 text-blue-700',
   validating: 'bg-yellow-100 text-yellow-700',
   completed: 'bg-green-100 text-green-700',
@@ -106,17 +106,17 @@ export const MigrationDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[var(--bg-sunken)] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Migration Dashboard</h1>
-            <p className="text-gray-500 mt-1">Monitor v5 to v6 data migrations</p>
+            <h1 className="text-2xl font-bold text-foreground">Migration Dashboard</h1>
+            <p className="text-muted-foreground mt-1">Monitor v5 to v6 data migrations</p>
           </div>
           <button
             onClick={() => getMigrationSummary().then(setSummary)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 text-sm font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-lg hover:bg-[var(--bg-sunken)] text-sm font-medium"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
@@ -136,41 +136,41 @@ export const MigrationDashboard: React.FC = () => {
         {/* Stats Row */}
         {summary && (
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl border p-4">
-              <p className="text-sm text-gray-500">Documents Migrated</p>
+            <div className="bg-card rounded-xl border p-4">
+              <p className="text-sm text-muted-foreground">Documents Migrated</p>
               <p className="text-xl font-semibold">{summary.totalDocumentsMigrated.toLocaleString()}</p>
             </div>
-            <div className="bg-white rounded-xl border p-4">
-              <p className="text-sm text-gray-500">Total Errors</p>
+            <div className="bg-card rounded-xl border p-4">
+              <p className="text-sm text-muted-foreground">Total Errors</p>
               <p className="text-xl font-semibold">{summary.totalErrors}</p>
             </div>
           </div>
         )}
 
         {/* Jobs List */}
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="bg-card rounded-xl border overflow-hidden">
           <div className="px-6 py-4 border-b">
             <h2 className="text-lg font-semibold">Migration Jobs</h2>
           </div>
 
           {jobs.length === 0 ? (
-            <div className="p-12 text-center text-gray-500">
+            <div className="p-12 text-center text-muted-foreground">
               <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>No migration jobs found</p>
             </div>
           ) : (
             <div className="divide-y">
               {jobs.map((job) => (
-                <div key={job.id} className="p-4 hover:bg-gray-50">
+                <div key={job.id} className="p-4 hover:bg-[var(--bg-sunken)]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <span className="font-medium capitalize">{job.config.entityType}</span>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <code className="px-1.5 py-0.5 bg-[var(--bg-sunken)] rounded text-xs">
                           {job.config.sourceCollection}
                         </code>
                         <ArrowRight className="w-3 h-3" />
-                        <code className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">
+                        <code className="px-1.5 py-0.5 bg-[var(--bg-sunken)] rounded text-xs">
                           {job.config.targetCollection}
                         </code>
                       </div>
@@ -186,7 +186,7 @@ export const MigrationDashboard: React.FC = () => {
                         <button
                           onClick={() => handleRollback(job.id)}
                           disabled={isRollingBack === job.id}
-                          className="p-2 text-gray-400 hover:text-orange-600 disabled:opacity-50"
+                          className="p-2 text-[var(--fg-tertiary)] hover:text-orange-600 disabled:opacity-50"
                           title="Rollback"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -197,11 +197,11 @@ export const MigrationDashboard: React.FC = () => {
 
                   {/* Progress Bar */}
                   <div className="mt-3">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
                       <span>{job.successfulDocuments} successful</span>
                       <span>{job.processedDocuments} / {job.totalDocuments}</span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
                           job.status === 'completed' ? 'bg-green-500' :
@@ -213,7 +213,7 @@ export const MigrationDashboard: React.FC = () => {
                   </div>
 
                   {/* Metadata */}
-                  <div className="mt-3 flex items-center gap-6 text-xs text-gray-500">
+                  <div className="mt-3 flex items-center gap-6 text-xs text-muted-foreground">
                     <span>Duration: {formatDuration(job.startedAt, job.completedAt)}</span>
                     <span>Failed: {job.failedDocuments}</span>
                     {job.errors.length > 0 && (
@@ -270,10 +270,10 @@ const SummaryCard: React.FC<{
 }> = ({ label, value, color }) => {
   const colorClass = color === 'blue' ? 'text-blue-600' :
                      color === 'green' ? 'text-green-600' :
-                     color === 'red' ? 'text-red-600' : 'text-gray-900';
+                     color === 'red' ? 'text-red-600' : 'text-foreground';
   return (
-    <div className="bg-white rounded-xl border p-4">
-      <p className="text-sm text-gray-500">{label}</p>
+    <div className="bg-card rounded-xl border p-4">
+      <p className="text-sm text-muted-foreground">{label}</p>
       <p className={`text-2xl font-bold ${colorClass}`}>{value}</p>
     </div>
   );

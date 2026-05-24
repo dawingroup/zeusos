@@ -143,7 +143,7 @@ function SubsidiarySelector() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl hover:border-gray-300 transition-colors shadow-sm"
+        className="flex items-center gap-3 px-4 py-3 bg-card border border-[var(--border-subtle)] rounded-xl hover:border-[var(--border-default)] transition-colors shadow-sm"
       >
         <div
           className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg"
@@ -152,16 +152,16 @@ function SubsidiarySelector() {
           {currentSubsidiary.shortName.charAt(0)}
         </div>
         <div className="text-left">
-          <p className="text-sm font-semibold text-gray-900">{currentSubsidiary.name}</p>
-          <p className="text-xs text-gray-500">{currentSubsidiary.description}</p>
+          <p className="text-sm font-semibold text-foreground">{currentSubsidiary.name}</p>
+          <p className="text-xs text-muted-foreground">{currentSubsidiary.description}</p>
         </div>
-        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-5 h-5 text-[var(--fg-tertiary)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-card border border-[var(--border-subtle)] rounded-xl shadow-lg z-50 overflow-hidden">
           <div className="p-2">
-            <p className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <p className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Select Subsidiary
             </p>
             {subsidiaries.map((subsidiary) => (
@@ -176,9 +176,9 @@ function SubsidiarySelector() {
                 disabled={subsidiary.status !== 'active'}
                 className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors ${
                   subsidiary.status === 'active'
-                    ? 'hover:bg-gray-50 cursor-pointer'
+                    ? 'hover:bg-[var(--bg-sunken)] cursor-pointer'
                     : 'opacity-50 cursor-not-allowed'
-                } ${currentSubsidiary.id === subsidiary.id ? 'bg-gray-50' : ''}`}
+                } ${currentSubsidiary.id === subsidiary.id ? 'bg-[var(--bg-sunken)]' : ''}`}
               >
                 <div
                   className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
@@ -187,15 +187,15 @@ function SubsidiarySelector() {
                   {subsidiary.shortName.charAt(0)}
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-medium text-gray-900 flex items-center gap-2">
+                  <p className="text-sm font-medium text-foreground flex items-center gap-2">
                     {subsidiary.name}
                     {subsidiary.status === 'coming-soon' && (
-                      <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">
+                      <span className="text-[10px] bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded-full">
                         Coming Soon
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-gray-500">{subsidiary.description}</p>
+                  <p className="text-xs text-muted-foreground">{subsidiary.description}</p>
                 </div>
                 {currentSubsidiary.id === subsidiary.id && (
                   <Check className="w-5 h-5 text-green-500" />
@@ -365,7 +365,7 @@ function QuickActions({ accessibleModuleIds }: { accessibleModuleIds: string[] }
             <Link
               key={action.moduleId}
               to={action.href}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-card/20 hover:bg-card/30 rounded-lg text-sm font-medium transition-colors"
             >
               {IconComp && <IconComp className="w-4 h-4" />}
               {action.label}
@@ -419,14 +419,14 @@ function AITaskSection({ userRole }: { userRole: string }) {
   const visibleLinks = links.filter((l) => l.show);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
+    <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-5">
       <div className="flex items-center gap-3 mb-4">
         <div className="p-2 rounded-lg bg-violet-100">
           <Brain className="w-5 h-5 text-violet-600" />
         </div>
         <div>
-          <h2 className="text-base font-semibold text-gray-900">AI Intelligence & Tasks</h2>
-          <p className="text-xs text-gray-500">AI-powered task automation & smart workflows</p>
+          <h2 className="text-base font-semibold text-foreground">AI Intelligence & Tasks</h2>
+          <p className="text-xs text-muted-foreground">AI-powered task automation & smart workflows</p>
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -436,12 +436,12 @@ function AITaskSection({ userRole }: { userRole: string }) {
             <Link
               key={link.href}
               to={link.href}
-              className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:border-violet-200 hover:bg-violet-50/50 transition-colors group"
+              className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-subtle)] hover:border-violet-200 hover:bg-violet-50/50 transition-colors group"
             >
               <IconComp className="w-5 h-5 text-violet-500 mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm font-medium text-gray-900 group-hover:text-violet-700 truncate">{link.label}</p>
-                <p className="text-xs text-gray-500 line-clamp-1">{link.description}</p>
+                <p className="text-sm font-medium text-foreground group-hover:text-violet-700 truncate">{link.label}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1">{link.description}</p>
               </div>
             </Link>
           );
@@ -555,10 +555,10 @@ export default function UnifiedDashboard() {
 
       {/* Empty state if no modules at all */}
       {subsidiaryModules.length === 0 && corporateModules.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-          <Lock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No modules assigned</h3>
-          <p className="text-gray-500 max-w-md mx-auto">
+        <div className="text-center py-16 bg-card rounded-xl border border-[var(--border-subtle)]">
+          <Lock className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">No modules assigned</h3>
+          <p className="text-muted-foreground max-w-md mx-auto">
             Your account does not have access to any modules yet. Please contact your administrator
             to get module access configured.
           </p>
@@ -566,8 +566,8 @@ export default function UnifiedDashboard() {
       )}
 
       {/* Footer */}
-      <div className="text-center py-4 border-t border-gray-200">
-        <p className="text-sm text-gray-500">
+      <div className="text-center py-4 border-t border-[var(--border-subtle)]">
+        <p className="text-sm text-muted-foreground">
           ZeusOS v2.0 — Design-to-Production Platform
         </p>
       </div>

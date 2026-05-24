@@ -32,7 +32,7 @@ export function ViewModeToggle({
   const buttonPaddingClasses = size === 'sm' ? 'p-1.5' : 'p-2';
 
   return (
-    <div className={cn("flex bg-gray-100 rounded-lg p-1", className)}>
+    <div className={cn("flex bg-[var(--bg-sunken)] rounded-lg p-1", className)}>
       {modes.map((mode) => {
         const Icon = mode.icon;
         const isActive = activeMode === mode.id;
@@ -45,8 +45,8 @@ export function ViewModeToggle({
               buttonPaddingClasses,
               "rounded-md transition-colors flex items-center gap-1.5",
               isActive
-                ? "bg-white shadow-sm text-gray-900"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-card shadow-sm text-foreground"
+                : "text-muted-foreground hover:text-muted-foreground"
             )}
             title={mode.label}
             aria-label={mode.label || mode.id}

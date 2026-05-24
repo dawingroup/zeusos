@@ -53,7 +53,7 @@ export default function ClipQueue({ clips, onDelete }: ClipQueueProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Filter tabs */}
-      <div className="flex border-b px-2 py-1 bg-white gap-1">
+      <div className="flex border-b px-2 py-1 bg-card gap-1">
         {filters.map((f) => (
           <button
             key={f.key}
@@ -61,7 +61,7 @@ export default function ClipQueue({ clips, onDelete }: ClipQueueProps) {
             className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
               filter === f.key
                 ? 'bg-blue-100 text-blue-700'
-                : 'text-gray-600 hover:bg-gray-100'
+                : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'
             }`}
           >
             {f.label}
@@ -87,7 +87,7 @@ export default function ClipQueue({ clips, onDelete }: ClipQueueProps) {
             </button>
             <button
               onClick={() => setSelectedIds(new Set())}
-              className="text-sm text-gray-600 hover:text-gray-700"
+              className="text-sm text-muted-foreground hover:text-muted-foreground"
             >
               Clear
             </button>

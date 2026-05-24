@@ -120,7 +120,7 @@ export default function MCPPairingPage() {
       <Helmet>
         <title>Pair MCP Proxy · ZeusOS</title>
       </Helmet>
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--bg-sunken)] p-6">
         <Card className="w-full max-w-lg">
           <CardHeader>
             <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export default function MCPPairingPage() {
 
           <CardContent className="space-y-4 text-sm">
             {phase === 'validating' && (
-              <p className="flex items-center gap-2 text-slate-600">
+              <p className="flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" /> Verifying request…
               </p>
             )}
@@ -148,10 +148,10 @@ export default function MCPPairingPage() {
             {(phase === 'ready' || phase === 'sending') && user && (
               <>
                 <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1.5">
-                  <dt className="font-medium text-slate-600">Account</dt>
-                  <dd className="font-mono text-slate-900">{user.email}</dd>
-                  <dt className="font-medium text-slate-600">Local port</dt>
-                  <dd className="font-mono text-slate-900">127.0.0.1:{port}</dd>
+                  <dt className="font-medium text-muted-foreground">Account</dt>
+                  <dd className="font-mono text-foreground">{user.email}</dd>
+                  <dt className="font-medium text-muted-foreground">Local port</dt>
+                  <dd className="font-mono text-foreground">127.0.0.1:{port}</dd>
                 </dl>
                 <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-900">
                   <p className="font-medium">Only proceed if you started this from your own terminal.</p>

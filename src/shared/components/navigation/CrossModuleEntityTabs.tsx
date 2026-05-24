@@ -62,7 +62,7 @@ export function CrossModuleEntityTabs({
     <nav
       aria-label="Related records"
       className={cn(
-        'flex flex-wrap gap-1 rounded-lg border border-gray-200 bg-slate-50/90 p-1 shadow-sm',
+        'flex flex-wrap gap-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/90 p-1 shadow-sm',
         className,
       )}
     >
@@ -82,7 +82,7 @@ export function CrossModuleEntityTabs({
                   base,
                   isActive
                     ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-gray-700 hover:bg-white hover:text-gray-900',
+                    : 'text-muted-foreground hover:bg-card hover:text-foreground',
                 )
               }
             >
@@ -96,7 +96,7 @@ export function CrossModuleEntityTabs({
         return (
           <span
             key={key}
-            className={cn(base, 'cursor-not-allowed text-gray-400 opacity-60')}
+            className={cn(base, 'cursor-not-allowed text-[var(--fg-tertiary)] opacity-60')}
             title={`No ${label.toLowerCase()} linked`}
           >
             <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />

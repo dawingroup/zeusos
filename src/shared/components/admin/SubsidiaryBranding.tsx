@@ -114,9 +114,9 @@ function SubsidiaryBrandingTab({
         <div className="space-y-4">
           <Label className="text-sm font-medium">Logo</Label>
           <div className="flex items-center gap-6">
-            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden">
+            <div className="w-32 h-32 bg-[var(--bg-sunken)] rounded-lg flex items-center justify-center border-2 border-dashed border-[var(--border-default)] overflow-hidden">
               {uploading ? (
-                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                <Loader2 className="w-8 h-8 animate-spin text-[var(--fg-tertiary)]" />
               ) : branding?.logoUrl ? (
                 <img
                   src={branding.logoUrl}
@@ -124,7 +124,7 @@ function SubsidiaryBrandingTab({
                   className="w-full h-full object-contain p-2"
                 />
               ) : (
-                <Upload className="w-8 h-8 text-gray-400" />
+                <Upload className="w-8 h-8 text-[var(--fg-tertiary)]" />
               )}
             </div>
             <div className="space-y-2">
@@ -434,7 +434,7 @@ export default function SubsidiaryBranding() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--fg-tertiary)]" />
       </div>
     );
   }
