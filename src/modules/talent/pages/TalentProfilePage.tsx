@@ -8,6 +8,7 @@ import { useAuth } from '@/core/hooks/useAuth';
 import {
   getTalentProfile,
   listContractsForProfile,
+  createFreelancerContract,
 } from '../services/talent-profile.service';
 import {
   listTalentInvoices,
@@ -19,6 +20,7 @@ import type { TalentInvoice } from '../types/talent-invoice.types';
 import { TalentTypeBadge } from '../components/TalentTypeBadge';
 import { ContractStatusBadge } from '../components/ContractStatusBadge';
 import { TalentInvoiceForm } from '../components/TalentInvoiceForm';
+import { FreelancerContractForm } from '../components/FreelancerContractForm';
 import { InvoiceApprovalPanel } from '../components/InvoiceApprovalPanel';
 import { InfluencerPanel } from '../components/InfluencerPanel';
 import { ModelPanel } from '../components/ModelPanel';
@@ -29,11 +31,13 @@ export default function TalentProfilePage() {
   const { profileId } = useParams<{ profileId: string }>();
   const { user } = useAuth();
   const orgId = (user as { organizationId?: string })?.organizationId || 'default';
+  const userId = user?.uid ?? 'unknown-user';
   const [profile, setProfile] = useState<TalentProfile | null>(null);
   const [contracts, setContracts] = useState<FreelancerContract[]>([]);
   const [invoices, setInvoices] = useState<TalentInvoice[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>('info');
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+  const [showContractForm, setShowContractForm] = useState(false);
   const [loading, setLoading] = useState(true);
 
   async function reload() {
@@ -137,9 +141,35 @@ export default function TalentProfilePage() {
 
       {activeTab === 'contracts' && (
         <div className="space-y-3">
-          {contracts.length === 0 && (
+          {!showContractForm && (
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowContractForm(true)}
+                className="rounded bg-primary px-3 py-1.5 text-sm text-primary-foreground"
+                data-testid="contract-new"
+              >
+                + New contract
+              </button>
+            </div>
+          )}
+
+          {showContractForm && (
+            <FreelancerContractForm
+              talentProfileId={profile.id}
+              createdBy={userId}
+              onSave={async (values) => {
+                await createFreelancerContract(values);
+                setShowContractForm(false);
+                await reload();
+              }}
+              onCancel={() => setShowContractForm(false)}
+            />
+          )}
+
+          {contracts.length === 0 && !showContractForm && (
             <p className="text-sm text-muted-foreground">No contracts on file.</p>
           )}
+
           {contracts.map((contract) => (
             <div key={contract.id} className="rounded border p-3 space-y-1">
               <div className="flex items-center justify-between">
@@ -150,6 +180,9 @@ export default function TalentProfilePage() {
                 {contract.startDate} – {contract.endDate} ·{' '}
                 {contract.currency} {(contract.totalFeeMinor / 100).toLocaleString()}
               </p>
+              {contract.notes && (
+                <p className="text-xs text-muted-foreground">{contract.notes}</p>
+              )}
             </div>
           ))}
         </div>

@@ -112,6 +112,7 @@ const ProductionJobDetailPage  = lazyWithRetry(() => import('@/modules/productio
 // Talent Roster — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
 const TalentRosterPage       = lazyWithRetry(() => import('@/modules/talent/pages/TalentRosterPage'));
+const TalentCreatePage       = lazyWithRetry(() => import('@/modules/talent/pages/TalentCreatePage'));
 const TalentProfilePage      = lazyWithRetry(() => import('@/modules/talent/pages/TalentProfilePage'));
 const FreelancerContractsPage = lazyWithRetry(() => import('@/modules/talent/pages/FreelancerContractsPage'));
 const TalentInvoicesPage     = lazyWithRetry(() => import('@/modules/talent/pages/TalentInvoicesPage'));
@@ -499,6 +500,7 @@ export const router = createBrowserRouter([
       // Gated: HR + parent-org AM for approvals; freelancer self-service
       // invite is a Phase 5 stub.
       { path: 'talent',                      element: <PageWrapper><ModuleContentWrapper><TalentRosterPage /></ModuleContentWrapper></PageWrapper> },
+      { path: 'talent/new',                  element: <PageWrapper><ModuleContentWrapper><TalentCreatePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/invoices',             element: <PageWrapper><ModuleContentWrapper><TalentInvoicesPage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId',           element: <PageWrapper><ModuleContentWrapper><TalentProfilePage /></ModuleContentWrapper></PageWrapper> },
       { path: 'talent/:profileId/contracts', element: <PageWrapper><ModuleContentWrapper><FreelancerContractsPage /></ModuleContentWrapper></PageWrapper> },

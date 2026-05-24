@@ -1,12 +1,16 @@
 /**
  * ActivityLogPanel — vertical timeline of activities on a lead.
  *
- * Renders a simple log + a "Log activity" sub-form for adding new entries
- * (calls, emails, meetings, notes). STAGE_CHANGE activities are surfaced
- * with a distinct icon to show automatic transitions in context.
+ * Renders quick-action pills (Call / Email / Meeting / Note / Task), the
+ * editable form below them, and the activity timeline. STAGE_CHANGE
+ * activities are surfaced with a distinct badge so automatic transitions
+ * are obvious in context.
+ *
+ * Quick-action pills set the kind and focus the summary input so a user
+ * can capture a Call or Note in two clicks.
  */
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { LeadActivity, ActivityKind } from '../types/lead.types';
 import { logActivity } from '../services/lead.service';
 
@@ -52,6 +56,16 @@ export function ActivityLogPanel({ leadId, activities, performedBy, onLogged }: 
   const [detail, setDetail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const summaryRef = useRef<HTMLInputElement>(null);
+
+  function handleQuickAction(next: ActivityKind) {
+    setKind(next);
+    setError(null);
+    // Focus the summary so the user can start typing immediately. RAF
+    // because the kind state update doesn't need to flush first; the
+    // ref already exists.
+    requestAnimationFrame(() => summaryRef.current?.focus());
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,6 +94,30 @@ export function ActivityLogPanel({ leadId, activities, performedBy, onLogged }: 
 
   return (
     <div className="space-y-4">
+      {/* Quick-action pills — click sets the kind and focuses the summary. */}
+      <div className="flex flex-wrap gap-2" data-testid="activity-quick-actions">
+        {LOGGABLE_KINDS.map((k) => {
+          const isActive = k === kind;
+          return (
+            <button
+              key={k}
+              type="button"
+              onClick={() => handleQuickAction(k)}
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                isActive
+                  ? `${KIND_BADGE[k]} border-transparent`
+                  : 'bg-background hover:bg-muted/40'
+              }`}
+              data-testid={`quick-${k.toLowerCase()}`}
+              data-kind={k}
+              aria-pressed={isActive}
+            >
+              + {KIND_LABEL[k]}
+            </button>
+          );
+        })}
+      </div>
+
       {/* New-activity form */}
       <form onSubmit={handleSubmit} className="rounded border bg-card p-4 space-y-3" data-testid="log-activity-form">
         <div className="flex items-center gap-2">
@@ -94,6 +132,7 @@ export function ActivityLogPanel({ leadId, activities, performedBy, onLogged }: 
             ))}
           </select>
           <input
+            ref={summaryRef}
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             placeholder='Summary (e.g. "Discovery call with Jane, 30 min")'
