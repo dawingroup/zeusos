@@ -6433,6 +6433,30 @@
         { "fieldPath": "departmentId", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "client_categories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId", "order": "ASCENDING" },
+        { "fieldPath": "exclusive", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "conflict_walls",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "servingOrgId", "order": "ASCENDING" },
+        { "fieldPath": "categoryId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "conflict_walls",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId", "order": "ASCENDING" },
+        { "fieldPath": "categoryId", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

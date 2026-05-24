@@ -3994,5 +3994,46 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       allow write: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 6.C — Conflict Firewall (Addendum v1.1 §6 / change C3)
+    //
+    // Three collections enforce category-exclusivity at routing time
+    // and provide audit cover for Account Mgmt decisions.
+    //
+    //   categories         — master list of competitive categories.
+    //                        Admin-curated; staff-readable so AMs can
+    //                        pick from the same list.
+    //
+    //   client_categories  — edge linking a client to one or more
+    //                        categories. Admin-write for now; the
+    //                        "AM-of-client can self-serve" path lands
+    //                        in 6.C.2 alongside the UI.
+    //
+    //   conflict_walls     — snapped-into-place wall pinning brand ↔
+    //                        client ↔ category. System-only write
+    //                        (created by issueWorkOrder cascade in
+    //                        6.C.2). Manual override remains admin.
+    //                        Staff-readable so reporting + agent
+    //                        watchers (ZA-004, 6.F) can consume.
+    //
+    // Capability is data — see Phase 6.A docstring (v1.2 §6.3). The
+    // routing engine (functions/src/assignment/services/route-brand
+    // .service.js) reads these collections from server context only.
+    // ════════════════════════════════════════════════════════════════
+    match /categories/{categoryId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
+
+    match /client_categories/{clientCategoryId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
+
+    match /conflict_walls/{wallId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }
