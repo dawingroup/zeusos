@@ -225,7 +225,7 @@ export default function QBOSyncDashboardPage() {
         <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <ShoppingCart className="h-5 w-5 text-purple-600" />
+              <ShoppingCart className="h-5 w-5 text-[var(--rag-blue)]" />
               <h3 className="font-medium text-foreground">Purchase Orders</h3>
             </div>
           </div>
@@ -241,7 +241,7 @@ export default function QBOSyncDashboardPage() {
           <button
             onClick={() => handleSyncAll('pos')}
             disabled={!isConnected || syncing === 'pos'}
-            className="mt-3 w-full px-3 py-1.5 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full px-3 py-1.5 text-sm bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {syncing === 'pos' ? 'Syncing...' : 'Retry Failed POs'}
           </button>

@@ -352,7 +352,7 @@ export function FinanceOverviewPage() {
             onClick={() => navigate('/assets')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-purple-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-blue)]" />
             Asset Registry
           </button>
           <button

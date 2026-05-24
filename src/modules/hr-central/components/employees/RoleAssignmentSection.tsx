@@ -99,10 +99,10 @@ export function RoleAssignmentSection({ employee, onUpdate, isEditable = true }:
 
   const getJobLevelBadgeColor = (level?: string) => {
     switch (level) {
-      case 'EXECUTIVE': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      case 'EXECUTIVE': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] dark:bg-[var(--rag-blue)] dark:text-[var(--rag-blue-soft)]';
       case 'MANAGER': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] dark:bg-[var(--rag-blue)] dark:text-[var(--rag-blue-soft)]';
       case 'SENIOR': return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] dark:bg-[var(--rag-green)] dark:text-[var(--rag-green-soft)]';
-      case 'LEAD': return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200';
+      case 'LEAD': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] dark:bg-[var(--rag-blue)] dark:text-[var(--rag-blue-soft)]';
       case 'JUNIOR': return 'bg-[var(--bg-sunken)] text-foreground dark:bg-gray-800 dark:text-[var(--fg-tertiary)]';
       default: return 'bg-[var(--bg-sunken)] text-foreground dark:bg-gray-800 dark:text-[var(--fg-tertiary)]';
     }

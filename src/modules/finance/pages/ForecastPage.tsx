@@ -1508,7 +1508,7 @@ export function ForecastPage() {
                   { label: 'CapEx Items', count: microForecasts.capex.length, color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]' },
                   { label: 'Loans', count: microForecasts.loans.length, color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]' },
                   { label: 'Capital Events', count: microForecasts.capitalEvents.length, color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]' },
-                  { label: 'Dividends', count: microForecasts.dividends.length, color: 'bg-purple-50 text-purple-700 border-purple-200' },
+                  { label: 'Dividends', count: microForecasts.dividends.length, color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]' },
                 ].map(s => (
                   <div key={s.label} className={`rounded-lg border p-3 ${s.color}`}>
                     <p className="text-lg font-bold">{s.count}</p>

@@ -33,9 +33,9 @@ interface AuditLogTimelineProps {
 // ----------------------------------------------------------------------------
 
 const CHANGE_TYPE_CONFIG: Record<ChangeType, { label: string; Icon: typeof Clock; color: string }> = {
-  rewrite: { label: 'Rewrite Applied', Icon: Wand2, color: 'text-purple-500 bg-purple-50' },
+  rewrite: { label: 'Rewrite Applied', Icon: Wand2, color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' },
   minor_edit: { label: 'Minor Edit', Icon: Pencil, color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' },
-  assessment_only: { label: 'Assessment', Icon: Eye, color: 'text-indigo-500 bg-indigo-50' },
+  assessment_only: { label: 'Assessment', Icon: Eye, color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' },
   manual_edit: { label: 'Manual Edit', Icon: Pencil, color: 'text-muted-foreground bg-[var(--bg-sunken)]' },
   new_section: { label: 'Section Added', Icon: Plus, color: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]' },
   removed: { label: 'Section Removed', Icon: Trash2, color: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]' },

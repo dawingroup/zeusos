@@ -38,8 +38,8 @@ const getStatusColor = (status: ReviewStatus): string => {
   const colors: Record<ReviewStatus, string> = {
     draft: 'bg-[var(--bg-sunken)] text-foreground',
     self_assessment: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-    manager_review: 'bg-indigo-100 text-indigo-800',
-    calibration: 'bg-purple-100 text-purple-800',
+    manager_review: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+    calibration: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     acknowledgement: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
     cancelled: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
@@ -96,8 +96,8 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-              <ClipboardList className="w-5 h-5 text-indigo-600" />
+            <div className="w-10 h-10 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center">
+              <ClipboardList className="w-5 h-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">{review.employeeName}</h3>
@@ -132,7 +132,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
           </div>
           <div className="w-full bg-[var(--bg-sunken)] rounded-full h-1.5">
             <div 
-              className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
+              className="bg-[var(--rag-blue)] h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -158,14 +158,14 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
       <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex gap-2">
         <button
           onClick={onView}
-          className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+          className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
         >
           View Details
         </button>
         {canTakeAction && (
           <button
             onClick={onAction}
-            className="ml-auto px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
+            className="ml-auto px-3 py-1.5 text-sm font-medium text-white bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] rounded-md"
           >
             {actionLabel}
           </button>

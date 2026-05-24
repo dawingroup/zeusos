@@ -101,7 +101,7 @@ export function CashProjectionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <TrendingUp className="w-5 h-5 text-purple-600" />
+          <TrendingUp className="w-5 h-5 text-[var(--rag-blue)]" />
           <h2 className="text-xl font-bold text-foreground">Cash Flow Projections</h2>
         </div>
         <div className="flex items-center gap-2">

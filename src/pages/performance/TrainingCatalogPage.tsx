@@ -61,8 +61,8 @@ const TRAINING_TYPE_CONFIG: Record<
   certification: {
     label: 'Certification',
     icon: Award,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)]',
     description: 'Professional certifications (PMP, CFA, AWS, etc.)',
   },
   workshop: {
@@ -75,22 +75,22 @@ const TRAINING_TYPE_CONFIG: Record<
   mentorship: {
     label: '1-on-1 Mentorship',
     icon: User,
-    color: 'text-pink-600',
-    bgColor: 'bg-pink-50',
+    color: 'text-[var(--rag-red)]',
+    bgColor: 'bg-[var(--rag-red-soft)]',
     description: 'Personal mentorship sessions (e.g., with CEO)',
   },
   on_the_job: {
     label: 'On-the-Job',
     icon: Building,
-    color: 'text-teal-600',
-    bgColor: 'bg-teal-50',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)]',
     description: 'Learning through hands-on work and projects',
   },
   e_learning: {
     label: 'Video/E-Learning',
     icon: Video,
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-50',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)]',
     description: 'Video content from Google Drive or other sources',
   },
 };

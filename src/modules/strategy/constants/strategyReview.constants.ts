@@ -158,11 +158,11 @@ export const BMC_BLOCK_DESCRIPTIONS: Record<BMCBlockKey, string> = {
 };
 
 export const BMC_BLOCK_COLORS: Record<BMCBlockKey, string> = {
-  [BMC_BLOCKS.KEY_PARTNERS]: 'border-purple-300 bg-purple-50',
+  [BMC_BLOCKS.KEY_PARTNERS]: 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
   [BMC_BLOCKS.KEY_ACTIVITIES]: 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
-  [BMC_BLOCKS.KEY_RESOURCES]: 'border-indigo-300 bg-indigo-50',
+  [BMC_BLOCKS.KEY_RESOURCES]: 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
   [BMC_BLOCKS.VALUE_PROPOSITIONS]: 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]',
-  [BMC_BLOCKS.CUSTOMER_RELATIONSHIPS]: 'border-pink-300 bg-pink-50',
+  [BMC_BLOCKS.CUSTOMER_RELATIONSHIPS]: 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]',
   [BMC_BLOCKS.CHANNELS]: 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
   [BMC_BLOCKS.CUSTOMER_SEGMENTS]: 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]',
   [BMC_BLOCKS.COST_STRUCTURE]: 'border-[var(--border-default)] bg-[var(--bg-sunken)]',

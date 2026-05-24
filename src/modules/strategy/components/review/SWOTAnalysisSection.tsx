@@ -92,7 +92,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
             <div
               key={item.id}
               className={`group flex items-start gap-2 p-2 rounded-md bg-card/60 border ${
-                item.aiSuggested ? 'border-purple-300' : 'border-transparent'
+                item.aiSuggested ? 'border-[var(--rag-blue)]' : 'border-transparent'
               }`}
             >
               <div className="flex-1">
@@ -102,7 +102,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
                 )}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                {item.aiSuggested && <Sparkles className="w-3 h-3 text-purple-500" />}
+                {item.aiSuggested && <Sparkles className="w-3 h-3 text-[var(--rag-blue)]" />}
                 {!readOnly && (
                   <select
                     value={item.impact}
@@ -166,7 +166,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
           <button
             onClick={onRequestAI}
             disabled={isAILoading}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
           >
             <Sparkles className="w-4 h-4" />
             {isAILoading ? 'Analyzing...' : 'AI Analysis'}

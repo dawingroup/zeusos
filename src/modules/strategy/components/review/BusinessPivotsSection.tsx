@@ -153,14 +153,14 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
-          <ArrowRightLeft className="w-5 h-5 text-indigo-600" />
+          <ArrowRightLeft className="w-5 h-5 text-[var(--rag-blue)]" />
           <div>
             <h3 className="text-sm font-semibold text-foreground">Business Pivots & Strategic Shifts</h3>
             <p className="text-xs text-muted-foreground">{pivots.length} pivot{pivots.length !== 1 ? 's' : ''} documented</p>
           </div>
         </div>
         {!readOnly && (
-          <button onClick={handleNew} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">
+          <button onClick={handleNew} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] transition-colors">
             <Plus className="w-3.5 h-3.5" /> Add Pivot
           </button>
         )}
@@ -186,7 +186,7 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
             <p className="text-sm text-muted-foreground mb-1">No business pivots documented yet</p>
             <p className="text-xs text-[var(--fg-tertiary)] mb-3">Record strategic shifts to provide context for AI-powered strategy reviews.</p>
             {!readOnly && (
-              <button onClick={handleNew} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+              <button onClick={handleNew} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg hover:bg-[var(--rag-blue-soft)]">
                 <Plus className="w-3.5 h-3.5" /> Add First Pivot
               </button>
             )}
@@ -227,25 +227,25 @@ interface PivotFormProps {
 }
 
 const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel, isSaving, onToggleArea }) => (
-  <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-indigo-50/30">
+  <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--rag-blue-soft)]/30">
     <h4 className="text-sm font-semibold text-foreground mb-3">{pivot.id ? 'Edit Pivot' : 'New Business Pivot'}</h4>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <div>
         <label className="block text-xs font-medium text-muted-foreground mb-1">Title *</label>
         <input type="text" value={pivot.title} onChange={(e) => onChange({ ...pivot, title: e.target.value })}
           placeholder="e.g., Shift from retail to B2B customers"
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
       </div>
       <div className="flex gap-3">
         <div className="flex-1">
           <label className="block text-xs font-medium text-muted-foreground mb-1">Pivot Date</label>
           <input type="date" value={pivot.pivotDate} onChange={(e) => onChange({ ...pivot, pivotDate: e.target.value })}
-            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
         </div>
         <div className="flex-1">
           <label className="block text-xs font-medium text-muted-foreground mb-1">Status</label>
           <select value={pivot.status} onChange={(e) => onChange({ ...pivot, status: e.target.value as PivotStatus })}
-            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]">
             {PIVOT_STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </div>
@@ -253,7 +253,7 @@ const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel
       <div>
         <label className="block text-xs font-medium text-muted-foreground mb-1">Category</label>
         <select value={pivot.category} onChange={(e) => onChange({ ...pivot, category: e.target.value as PivotCategory })}
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]">
           {PIVOT_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
         </select>
       </div>
@@ -261,25 +261,25 @@ const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel
         <label className="block text-xs font-medium text-muted-foreground mb-1">Description</label>
         <textarea value={pivot.description} onChange={(e) => onChange({ ...pivot, description: e.target.value })}
           placeholder="Describe the pivot, why it was undertaken, and what changed..." rows={3}
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
       </div>
       <div>
         <label className="block text-xs font-medium text-muted-foreground mb-1">Impact Assessment</label>
         <textarea value={pivot.impactAssessment} onChange={(e) => onChange({ ...pivot, impactAssessment: e.target.value })}
           placeholder="What was the impact on the business?" rows={2}
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
       </div>
       <div>
         <label className="block text-xs font-medium text-muted-foreground mb-1">Outcomes</label>
         <textarea value={pivot.outcomes} onChange={(e) => onChange({ ...pivot, outcomes: e.target.value })}
           placeholder="What were the results?" rows={2}
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
       </div>
       <div className="md:col-span-2">
         <label className="block text-xs font-medium text-muted-foreground mb-1">Lessons Learned</label>
         <textarea value={pivot.lessonsLearned} onChange={(e) => onChange({ ...pivot, lessonsLearned: e.target.value })}
           placeholder="Key takeaways and lessons..." rows={2}
-          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]" />
       </div>
       <div className="md:col-span-2">
         <label className="block text-xs font-medium text-muted-foreground mb-1">Affected Business Areas</label>
@@ -287,7 +287,7 @@ const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel
           {AFFECTED_AREAS.map(area => (
             <button key={area} onClick={() => onToggleArea(area)}
               className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
-                pivot.affectedAreas.includes(area) ? 'bg-indigo-100 text-indigo-700 border-indigo-300' : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--border-default)]'
+                pivot.affectedAreas.includes(area) ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]' : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--border-default)]'
               }`}>{area}</button>
           ))}
         </div>
@@ -298,7 +298,7 @@ const PivotForm: React.FC<PivotFormProps> = ({ pivot, onChange, onSave, onCancel
         <X className="w-3.5 h-3.5" /> Cancel
       </button>
       <button onClick={onSave} disabled={!pivot.title.trim() || isSaving}
-        className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors">
+        className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors">
         {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
         {pivot.id ? 'Update Pivot' : 'Save Pivot'}
       </button>

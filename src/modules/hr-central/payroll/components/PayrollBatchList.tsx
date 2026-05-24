@@ -53,12 +53,12 @@ function StatusBadge({ status }: { status: PayrollBatchStatus }) {
   const colorMap: Record<string, string> = {
     gray: 'bg-[var(--bg-sunken)] text-foreground',
     blue: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-    indigo: 'bg-indigo-100 text-indigo-800',
+    indigo: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     yellow: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     orange: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
-    cyan: 'bg-cyan-100 text-cyan-800',
-    teal: 'bg-teal-100 text-teal-800',
-    purple: 'bg-purple-100 text-purple-800',
+    cyan: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+    teal: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+    purple: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     green: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
     red: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   };

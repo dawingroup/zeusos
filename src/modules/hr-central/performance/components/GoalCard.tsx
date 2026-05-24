@@ -39,7 +39,7 @@ const getStatusColor = (status: GoalStatus): string => {
   const colors: Record<GoalStatus, string> = {
     not_started: 'bg-[var(--bg-sunken)] text-foreground',
     in_progress: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-    on_track: 'bg-indigo-100 text-indigo-800',
+    on_track: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     at_risk: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
     exceeded: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
@@ -90,7 +90,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
   const isOverdue = goal.dueDate && new Date(goal.dueDate) < new Date() && 
     goal.status !== 'completed' && goal.status !== 'exceeded';
   
-  const progressColor = goal.progress >= 100 ? 'bg-[var(--rag-green)]' : 'bg-indigo-600';
+  const progressColor = goal.progress >= 100 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-blue)]';
   
   return (
     <div className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm h-full flex flex-col">

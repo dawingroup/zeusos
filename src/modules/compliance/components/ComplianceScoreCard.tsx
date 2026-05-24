@@ -20,10 +20,10 @@ function getScoreColor(score: number): string {
 }
 
 function getScoreRingColor(score: number): string {
-  if (score >= 80) return 'stroke-green-500';
-  if (score >= 60) return 'stroke-amber-500';
-  if (score >= 40) return 'stroke-orange-500';
-  return 'stroke-red-500';
+  if (score >= 80) return 'stroke-[var(--rag-green)]';
+  if (score >= 60) return 'stroke-[var(--rag-amber)]';
+  if (score >= 40) return 'stroke-[var(--rag-amber)]';
+  return 'stroke-[var(--rag-red)]';
 }
 
 function getScoreLabel(score: number): string {

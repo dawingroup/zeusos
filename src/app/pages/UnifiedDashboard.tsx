@@ -421,8 +421,8 @@ function AITaskSection({ userRole }: { userRole: string }) {
   return (
     <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-5">
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 rounded-lg bg-violet-100">
-          <Brain className="w-5 h-5 text-violet-600" />
+        <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+          <Brain className="w-5 h-5 text-[var(--rag-blue)]" />
         </div>
         <div>
           <h2 className="text-base font-semibold text-foreground">AI Intelligence & Tasks</h2>
@@ -436,11 +436,11 @@ function AITaskSection({ userRole }: { userRole: string }) {
             <Link
               key={link.href}
               to={link.href}
-              className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-subtle)] hover:border-violet-200 hover:bg-violet-50/50 transition-colors group"
+              className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border-subtle)] hover:border-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]/50 transition-colors group"
             >
-              <IconComp className="w-5 h-5 text-violet-500 mt-0.5 flex-shrink-0" />
+              <IconComp className="w-5 h-5 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground group-hover:text-violet-700 truncate">{link.label}</p>
+                <p className="text-sm font-medium text-foreground group-hover:text-[var(--rag-blue)] truncate">{link.label}</p>
                 <p className="text-xs text-muted-foreground line-clamp-1">{link.description}</p>
               </div>
             </Link>

@@ -369,7 +369,7 @@ export function TaskDetailDialog({
                 {task.aiChecklist.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start gap-3 p-3 border border-[var(--rag-amber)]/50 bg-[var(--rag-amber-soft)]/30 dark:bg-amber-950/10 dark:border-amber-800/30 rounded-lg"
+                    className="flex items-start gap-3 p-3 border border-[var(--rag-amber)]/50 bg-[var(--rag-amber-soft)]/30 dark:bg-[var(--rag-amber)]/10 dark:border-[var(--rag-amber)]/30 rounded-lg"
                   >
                     <span className="text-xs font-medium text-[var(--rag-amber)] mt-0.5 min-w-[18px]">
                       {item.order}.
@@ -405,7 +405,7 @@ export function TaskDetailDialog({
                 {task.aiRelevantDocuments.map((doc, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-3 p-3 border border-[var(--rag-blue)]/50 bg-[var(--rag-blue-soft)]/30 dark:bg-blue-950/10 dark:border-blue-800/30 rounded-lg"
+                    className="flex items-start gap-3 p-3 border border-[var(--rag-blue)]/50 bg-[var(--rag-blue-soft)]/30 dark:bg-[var(--rag-blue)]/10 dark:border-[var(--rag-blue)]/30 rounded-lg"
                   >
                     <FileText className="h-4 w-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">

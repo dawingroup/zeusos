@@ -2,10 +2,10 @@ import type { SupplierKind } from '../types/supplier.types';
 
 const KIND_STYLES: Record<SupplierKind, string> = {
   MEDIA_HOUSE:     'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  TALENT_AGENCY:   'bg-violet-100 text-violet-800',
+  TALENT_AGENCY:   'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   PRODUCTION_HOUSE:'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   PRINT_SHOP:      'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
-  TECH_VENDOR:     'bg-indigo-100 text-indigo-800',
+  TECH_VENDOR:     'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   VENDOR_OTHER:    'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 

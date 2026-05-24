@@ -101,11 +101,11 @@ export function RoleProfilePanel() {
   const getLevelBadge = (level?: string) => {
     switch (level) {
       case 'DIRECTOR':
-        return <Badge className="bg-purple-500 hover:bg-purple-500">Director</Badge>;
+        return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)]">Director</Badge>;
       case 'MANAGER':
         return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)]">Manager</Badge>;
       case 'LEAD':
-        return <Badge className="bg-cyan-500 hover:bg-cyan-500">Lead</Badge>;
+        return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)]">Lead</Badge>;
       case 'SENIOR':
         return <Badge className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)]">Senior</Badge>;
       case 'JUNIOR':
@@ -260,7 +260,7 @@ export function RoleProfilePanel() {
                       <div className="text-xs text-muted-foreground">Skills</div>
                     </div>
                     <div className="text-center" title="Approval Authorities">
-                      <div className="font-semibold text-purple-600">
+                      <div className="font-semibold text-[var(--rag-blue)]">
                         {role.approvalAuthorities?.length || 0}
                       </div>
                       <div className="text-xs text-muted-foreground">Approvals</div>
@@ -417,7 +417,7 @@ export function RoleProfilePanel() {
                 {selectedRole.approvalAuthorities && selectedRole.approvalAuthorities.length > 0 && (
                   <CollapsibleSection
                     title={`Approval Authorities (${selectedRole.approvalAuthorities.length})`}
-                    icon={<CheckCircle className="h-4 w-4 text-purple-500" />}
+                    icon={<CheckCircle className="h-4 w-4 text-[var(--rag-blue)]" />}
                   >
                     <div className="space-y-2">
                       {selectedRole.approvalAuthorities.map((auth, idx) => (
@@ -441,23 +441,23 @@ export function RoleProfilePanel() {
                 {selectedRole.typicalTaskLoad && (
                   <CollapsibleSection
                     title="Workload Limits"
-                    icon={<ClipboardList className="h-4 w-4 text-cyan-500" />}
+                    icon={<ClipboardList className="h-4 w-4 text-[var(--rag-blue)]" />}
                   >
                     <div className="grid grid-cols-3 gap-4">
                       <div className="p-3 border rounded-lg text-center">
-                        <div className="text-2xl font-bold text-cyan-600">
+                        <div className="text-2xl font-bold text-[var(--rag-blue)]">
                           {selectedRole.typicalTaskLoad.daily}
                         </div>
                         <div className="text-xs text-muted-foreground">Daily Tasks</div>
                       </div>
                       <div className="p-3 border rounded-lg text-center">
-                        <div className="text-2xl font-bold text-cyan-600">
+                        <div className="text-2xl font-bold text-[var(--rag-blue)]">
                           {selectedRole.typicalTaskLoad.weekly}
                         </div>
                         <div className="text-xs text-muted-foreground">Weekly Tasks</div>
                       </div>
                       <div className="p-3 border rounded-lg text-center">
-                        <div className="text-2xl font-bold text-cyan-600">
+                        <div className="text-2xl font-bold text-[var(--rag-blue)]">
                           {selectedRole.typicalTaskLoad.maxConcurrent}
                         </div>
                         <div className="text-xs text-muted-foreground">Max Concurrent</div>

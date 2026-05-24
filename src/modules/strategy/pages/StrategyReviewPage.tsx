@@ -683,8 +683,8 @@ export const StrategyReviewPage: React.FC = () => {
               onClick={() => setIsAIPanelOpen(!isAIPanelOpen)}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                 isAIPanelOpen
-                  ? 'text-purple-700 bg-purple-100'
-                  : 'text-purple-600 hover:bg-purple-50'
+                  ? 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
+                  : 'text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]'
               }`}
             >
               <Sparkles className="w-4 h-4" />
@@ -795,11 +795,11 @@ export const StrategyReviewPage: React.FC = () => {
 
             {/* Analyzing Banner */}
             {isAnalyzingDocument && (
-              <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-xl flex items-center gap-3">
-                <Loader2 className="w-5 h-5 text-purple-600 animate-spin flex-shrink-0" />
+              <div className="mb-4 p-4 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-xl flex items-center gap-3">
+                <Loader2 className="w-5 h-5 text-[var(--rag-blue)] animate-spin flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-purple-900">AI is analyzing your strategy document...</p>
-                  <p className="text-xs text-purple-700">Claude is reviewing the document and will pre-populate sections with suggestions.</p>
+                  <p className="text-sm font-medium text-[var(--rag-blue)]">AI is analyzing your strategy document...</p>
+                  <p className="text-xs text-[var(--rag-blue)]">Claude is reviewing the document and will pre-populate sections with suggestions.</p>
                 </div>
               </div>
             )}

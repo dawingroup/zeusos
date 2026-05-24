@@ -405,7 +405,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
 
   const getRoleBadgeColor = (role: GlobalRole) => {
     switch (role) {
-      case 'owner': return 'bg-purple-100 text-purple-800';
+      case 'owner': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
       case 'admin': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
       case 'manager': return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
       case 'member': return 'bg-[var(--bg-sunken)] text-foreground';
@@ -715,7 +715,7 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
                   <div
                     className={cn(
                       'flex items-center gap-4 p-4 cursor-pointer transition-colors',
-                      isSelected ? 'bg-purple-50' : 'bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)]',
+                      isSelected ? 'bg-[var(--rag-blue-soft)]' : 'bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)]',
                     )}
                     onClick={() => handleSelectUser(u)}
                   >

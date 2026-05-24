@@ -236,7 +236,7 @@ const CompetitorDetailPage: React.FC = () => {
     const icons: Record<string, React.ReactNode> = {
       product_launch: <Rocket className="h-4 w-4 text-[var(--rag-blue)]" />,
       funding: <DollarSign className="h-4 w-4 text-[var(--rag-green)]" />,
-      partnership: <Link2 className="h-4 w-4 text-purple-500" />,
+      partnership: <Link2 className="h-4 w-4 text-[var(--rag-blue)]" />,
       hiring: <UserPlus className="h-4 w-4 text-[var(--rag-blue)]" />,
       expansion: <TrendingUp className="h-4 w-4 text-[var(--rag-amber)]" />,
       news: <FileText className="h-4 w-4 text-muted-foreground" />,

@@ -3,8 +3,8 @@ import type { TalentType } from '../types/talent-profile.types';
 const TYPE_STYLES: Record<TalentType, string> = {
   STAFF:      'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   FREELANCER: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
-  INFLUENCER: 'bg-pink-100 text-pink-700',
-  MODEL:      'bg-purple-100 text-purple-700',
+  INFLUENCER: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  MODEL:      'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
 };
 
 const TYPE_LABEL: Record<TalentType, string> = {

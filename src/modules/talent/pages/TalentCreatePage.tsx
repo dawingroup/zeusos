@@ -314,8 +314,8 @@ export default function TalentCreatePage() {
 
         {/* ── Influencer-specific ─────────────────────────────────── */}
         {showInfluencer && (
-          <fieldset className="space-y-3 rounded border border-violet-300 bg-violet-50/40 p-3">
-            <legend className="px-1 text-sm font-medium text-violet-900">Influencer details</legend>
+          <fieldset className="space-y-3 rounded border border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]/40 p-3">
+            <legend className="px-1 text-sm font-medium text-[var(--rag-blue)]">Influencer details</legend>
 
             <div>
               <label className="mb-1 block text-xs font-medium">Niches</label>
@@ -420,8 +420,8 @@ export default function TalentCreatePage() {
 
         {/* ── Model-specific ──────────────────────────────────────── */}
         {showModel && (
-          <fieldset className="space-y-3 rounded border border-pink-300 bg-pink-50/40 p-3">
-            <legend className="px-1 text-sm font-medium text-pink-900">Model details</legend>
+          <fieldset className="space-y-3 rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)]/40 p-3">
+            <legend className="px-1 text-sm font-medium text-[var(--rag-red)]">Model details</legend>
 
             <div className="grid grid-cols-2 gap-3">
               <div>

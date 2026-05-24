@@ -131,7 +131,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                 onRequestAI();
               }}
               disabled={isAILoading}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
             >
               <Sparkles className="w-3.5 h-3.5" />
               {isAILoading ? 'Analyzing...' : 'AI Assist'}
@@ -192,7 +192,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                   {review.currentContent && !readOnly && (
                     <button
                       onClick={handleApplyAISuggestions}
-                      className="flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-700 bg-purple-50 hover:bg-purple-100 px-2 py-0.5 rounded-md transition-colors"
+                      className="flex items-center gap-1 text-xs font-medium text-[var(--rag-blue)] hover:text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] hover:bg-[var(--rag-blue-soft)] px-2 py-0.5 rounded-md transition-colors"
                       title="Pre-fill with AI analysis and recommendations"
                     >
                       <Wand2 className="w-3 h-3" />

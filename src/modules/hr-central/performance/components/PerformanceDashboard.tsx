@@ -90,7 +90,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <h1 className="text-2xl font-bold text-foreground">Performance Management</h1>
         <div className="flex gap-2">
           {isManager && (
-            <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm">
+            <button className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] font-medium text-sm">
               <Plus className="w-4 h-4" />
               New Review
             </button>
@@ -129,7 +129,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                 onClick={() => setActiveTab(tab.id)}
                 className={`inline-flex items-center gap-2 px-4 py-3 border-b-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? 'border-indigo-600 text-indigo-600'
+                    ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                     : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
@@ -144,7 +144,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[var(--rag-blue)] animate-spin" />
         </div>
       )}
       
@@ -179,7 +179,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               <Target className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-foreground">No Goals Set</h3>
               <p className="text-muted-foreground mb-4">Create goals to track your progress</p>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm">
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] font-medium text-sm">
                 <Plus className="w-4 h-4" />
                 Add Goal
               </button>
@@ -233,7 +233,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                 <span className="text-sm text-muted-foreground w-16">{rating} Star</span>
                 <div className="flex-1 h-5 bg-[var(--bg-sunken)] rounded overflow-hidden">
                   <div
-                    className="h-full bg-indigo-600 rounded"
+                    className="h-full bg-[var(--rag-blue)] rounded"
                     style={{ width: `${analytics.totalReviews > 0 ? ((count as number) / analytics.totalReviews) * 100 : 0}%` }}
                   />
                 </div>

@@ -81,7 +81,7 @@ function ScoreGauge({ score }: { score: number }) {
 // ----------------------------------------------------------------------------
 
 const RECOMMENDATION_CONFIG = {
-  rewrite: { label: 'Rewrite Recommended', Icon: Wand2, className: 'bg-purple-100 text-purple-700' },
+  rewrite: { label: 'Rewrite Recommended', Icon: Wand2, className: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
   minor_update: { label: 'Minor Update', Icon: Pencil, className: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
   no_action: { label: 'No Action Needed', Icon: CheckCircle, className: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
   flag_for_ceo: { label: 'Flag for CEO', Icon: Flag, className: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
@@ -181,7 +181,7 @@ export function SectionAssessmentCard({
           <button
             onClick={onGenerateRewrite}
             disabled={isRewriting}
-            className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-[var(--rag-blue)] text-white hover:bg-[var(--rag-blue)] disabled:opacity-50"
           >
             <Wand2 className="h-4 w-4" />
             {isRewriting ? 'Generating Rewrite...' : 'Generate AI Rewrite'}

@@ -287,7 +287,7 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
-              <Users className="h-4 w-4 text-purple-500" />
+              <Users className="h-4 w-4 text-[var(--rag-blue)]" />
               Workload Distribution
             </CardTitle>
           </CardHeader>
@@ -386,7 +386,7 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
                     key={employee.id}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-sm font-medium">
                       {employee.initials}
                     </div>
                     <div className="flex-1 min-w-0">

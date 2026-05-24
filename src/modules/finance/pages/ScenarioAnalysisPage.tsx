@@ -103,7 +103,7 @@ export function ScenarioAnalysisPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <TrendingUp className="w-5 h-5 text-violet-600" />
+          <TrendingUp className="w-5 h-5 text-[var(--rag-blue)]" />
           <h2 className="text-xl font-bold text-foreground">Scenario Analysis</h2>
         </div>
       </div>
@@ -190,7 +190,7 @@ export function ScenarioAnalysisPage() {
             </div>
 
             <Button
-              className="w-full mt-4 bg-violet-600 hover:bg-violet-700 text-white"
+              className="w-full mt-4 bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white"
               onClick={handleRunScenario}
               disabled={isGenerating || !scenarioName.trim()}
             >
@@ -249,7 +249,7 @@ export function ScenarioAnalysisPage() {
                   <div className="space-y-1.5">
                     {latestResult.analysis!.keyInsights.map((insight: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-2 text-sm">
-                        <ArrowRight className="w-3.5 h-3.5 mt-0.5 text-indigo-500 shrink-0" />
+                        <ArrowRight className="w-3.5 h-3.5 mt-0.5 text-[var(--rag-blue)] shrink-0" />
                         <span className="text-muted-foreground">{insight}</span>
                       </div>
                     ))}

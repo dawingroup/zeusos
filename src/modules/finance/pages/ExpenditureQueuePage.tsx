@@ -106,7 +106,7 @@ function ExpenditureRow({
           <TierBadge tier={item.priorityTier} />
           {item.commitmentLevel && <CommitmentBadge level={item.commitmentLevel} />}
           {item.isOutsourcedPO && (
-            <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold rounded bg-violet-100 text-violet-700 border border-violet-200">
+            <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border border-[var(--rag-blue)]">
               OPO
             </span>
           )}
@@ -703,7 +703,7 @@ export function ExpenditureQueuePage() {
                 {selectedItem.isOutsourcedPO && (
                   <div className="flex justify-between text-sm items-center">
                     <span className="text-muted-foreground">Outsourced PO</span>
-                    <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded bg-violet-100 text-violet-700 border border-violet-200">
+                    <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border border-[var(--rag-blue)]">
                       OPO
                     </span>
                   </div>

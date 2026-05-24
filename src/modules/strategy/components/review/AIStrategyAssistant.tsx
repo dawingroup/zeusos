@@ -140,7 +140,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
     return (
       <button
         onClick={onToggle}
-        className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition-all z-50"
+        className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-3 bg-[var(--rag-blue)] text-white rounded-full shadow-lg hover:bg-[var(--rag-blue)] transition-all z-50"
       >
         <Sparkles className="w-5 h-5" />
         <span className="font-medium text-sm">AI Strategy Assistant</span>
@@ -151,12 +151,12 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
   return (
     <div className="fixed bottom-0 right-0 w-full md:w-[420px] h-[600px] bg-card border-l border-t border-[var(--border-subtle)] shadow-2xl rounded-tl-xl flex flex-col z-50">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 $1-[var(--rag-blue)] text-white rounded-tl-xl">
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r $1-[var(--rag-blue)] $1-[var(--rag-blue)] text-white rounded-tl-xl">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5" />
           <div>
             <h3 className="font-semibold text-sm">AI Strategy Assistant</h3>
-            <p className="text-xs text-purple-200">Powered by Claude</p>
+            <p className="text-xs text-[var(--rag-blue-soft)]">Powered by Claude</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -173,7 +173,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
         {conversationHistory.length === 0 && (
           <div className="text-center py-8">
-            <Bot className="w-12 h-12 mx-auto text-purple-300 mb-3" />
+            <Bot className="w-12 h-12 mx-auto text-[var(--rag-blue)] mb-3" />
             <p className="text-sm text-muted-foreground mb-1">
               I'm your AI Strategy Consultant
             </p>
@@ -189,7 +189,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                     setInput(qp.prompt);
                     inputRef.current?.focus();
                   }}
-                  className="w-full text-left px-3 py-2 text-xs bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200"
+                  className="w-full text-left px-3 py-2 text-xs bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue-soft)] transition-colors border border-[var(--rag-blue)]"
                 >
                   <Lightbulb className="w-3 h-3 inline mr-1.5" />
                   {qp.label}
@@ -202,8 +202,8 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
         {conversationHistory.map((msg) => (
           <div key={msg.id} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'assistant' && (
-              <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Bot className="w-4 h-4 text-purple-600" />
+              <div className="w-7 h-7 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Bot className="w-4 h-4 text-[var(--rag-blue)]" />
               </div>
             )}
             <div className={`max-w-[85%] ${msg.role === 'user' ? 'order-first' : ''}`}>
@@ -223,34 +223,34 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                   {msg.suggestions.map((suggestion) => (
                     <div
                       key={suggestion.id}
-                      className="border border-purple-200 rounded-lg bg-purple-50 overflow-hidden"
+                      className="border border-[var(--rag-blue)] rounded-lg bg-[var(--rag-blue-soft)] overflow-hidden"
                     >
                       <button
                         onClick={() => toggleSuggestion(suggestion.id)}
-                        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-purple-100 transition-colors"
+                        className="w-full flex items-center justify-between px-3 py-2 text-left hover:bg-[var(--rag-blue-soft)] transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <Lightbulb className="w-3.5 h-3.5 text-purple-600" />
-                          <span className="text-xs font-medium text-purple-900">{suggestion.title}</span>
-                          <span className="text-xs text-purple-500 bg-purple-200 px-1.5 py-0.5 rounded">
+                          <Lightbulb className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
+                          <span className="text-xs font-medium text-[var(--rag-blue)]">{suggestion.title}</span>
+                          <span className="text-xs text-[var(--rag-blue)] bg-[var(--rag-blue)] px-1.5 py-0.5 rounded">
                             {Math.round(suggestion.confidence * 100)}%
                           </span>
                         </div>
                         {expandedSuggestions.has(suggestion.id) ? (
-                          <ChevronUp className="w-3.5 h-3.5 text-purple-400" />
+                          <ChevronUp className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                         ) : (
-                          <ChevronDown className="w-3.5 h-3.5 text-purple-400" />
+                          <ChevronDown className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                         )}
                       </button>
 
                       {expandedSuggestions.has(suggestion.id) && (
-                        <div className="px-3 pb-2 border-t border-purple-200">
-                          <p className="text-xs text-purple-800 mt-2 whitespace-pre-wrap">{suggestion.content}</p>
+                        <div className="px-3 pb-2 border-t border-[var(--rag-blue)]">
+                          <p className="text-xs text-[var(--rag-blue)] mt-2 whitespace-pre-wrap">{suggestion.content}</p>
                           <div className="flex items-center gap-2 mt-2">
                             {onApplySuggestion && !suggestion.applied && (
                               <button
                                 onClick={() => onApplySuggestion(suggestion)}
-                                className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-white bg-purple-600 rounded hover:bg-purple-700"
+                                className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-white bg-[var(--rag-blue)] rounded hover:bg-[var(--rag-blue)]"
                               >
                                 <CheckCircle2 className="w-3 h-3" />
                                 Apply
@@ -291,8 +291,8 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
 
         {isLoading && (
           <div className="flex gap-2">
-            <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-purple-600" />
+            <div className="w-7 h-7 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center flex-shrink-0">
+              <Bot className="w-4 h-4 text-[var(--rag-blue)]" />
             </div>
             <div className="px-3 py-2 rounded-lg bg-[var(--bg-sunken)] text-muted-foreground text-sm">
               <Loader2 className="w-4 h-4 animate-spin inline mr-2" />
@@ -306,13 +306,13 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
 
       {/* Document Section Actions */}
       {selectedDocumentSectionId && (onAssessDocumentSection || onRewriteDocumentSection) && (
-        <div className="flex items-center gap-2 px-4 py-2 border-t border-[var(--border-subtle)] bg-purple-50">
-          <span className="text-xs text-purple-700 font-medium">Section Actions:</span>
+        <div className="flex items-center gap-2 px-4 py-2 border-t border-[var(--border-subtle)] bg-[var(--rag-blue-soft)]">
+          <span className="text-xs text-[var(--rag-blue)] font-medium">Section Actions:</span>
           {onAssessDocumentSection && (
             <button
               onClick={() => onAssessDocumentSection(selectedDocumentSectionId)}
               disabled={isAssessingSection}
-              className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               {isAssessingSection ? <Loader2 className="h-3 w-3 animate-spin" /> : <Lightbulb className="h-3 w-3" />}
               Assess
@@ -322,7 +322,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
             <button
               onClick={() => onRewriteDocumentSection(selectedDocumentSectionId)}
               disabled={isAssessingSection}
-              className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-purple-100 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
+              className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               <Sparkles className="h-3 w-3" /> Rewrite
             </button>
@@ -340,13 +340,13 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
             onKeyDown={handleKeyDown}
             placeholder="Ask about your strategy..."
             rows={1}
-            className="flex-1 text-sm border border-[var(--border-default)] rounded-lg px-3 py-2 resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 max-h-24"
+            className="flex-1 text-sm border border-[var(--border-default)] rounded-lg px-3 py-2 resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)] max-h-24"
             style={{ minHeight: '38px' }}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

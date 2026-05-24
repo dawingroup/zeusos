@@ -67,7 +67,7 @@ export function InfluencerPanel({ profile }: Props) {
               <dt className="text-xs text-muted-foreground">Niches</dt>
               <dd className="mt-1 flex flex-wrap gap-1">
                 {inf.niches.map((n) => (
-                  <span key={n} className="rounded bg-pink-100 px-2 py-0.5 text-xs text-pink-800">
+                  <span key={n} className="rounded bg-[var(--rag-red-soft)] px-2 py-0.5 text-xs text-[var(--rag-red)]">
                     {n}
                   </span>
                 ))}
@@ -102,7 +102,7 @@ export function InfluencerPanel({ profile }: Props) {
                           href={h.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-pink-700 hover:underline"
+                          className="text-[var(--rag-red)] hover:underline"
                         >
                           {h.handle}
                         </a>

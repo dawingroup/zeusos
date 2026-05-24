@@ -60,7 +60,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'Parts Source',
     description: 'Extract parts from this product',
     icon: Puzzle,
-    color: 'text-purple-500',
+    color: 'text-[var(--rag-blue)]',
     linkType: 'design-item',
   },
   {
@@ -76,7 +76,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'New Material',
     description: 'Add to materials library',
     icon: Palette,
-    color: 'text-pink-500',
+    color: 'text-[var(--rag-red)]',
     linkType: 'material',
   },
   {
@@ -92,7 +92,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'Product Idea',
     description: 'New product for launch pipeline',
     icon: Rocket,
-    color: 'text-indigo-500',
+    color: 'text-[var(--rag-blue)]',
     linkType: 'product',
   },
 ];

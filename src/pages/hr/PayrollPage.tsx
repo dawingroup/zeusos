@@ -686,8 +686,8 @@ export function PayrollPage() {
                   <TableHead className="text-right font-semibold text-[var(--rag-blue)]">Overtime</TableHead>
                   <TableHead className="text-right font-semibold">Gross</TableHead>
                   <TableHead className="text-right font-semibold text-[var(--rag-amber)]">PAYE</TableHead>
-                  <TableHead className="text-right font-semibold text-cyan-600">NSSF</TableHead>
-                  <TableHead className="text-right font-semibold text-violet-600">LST</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-blue)]">NSSF</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-blue)]">LST</TableHead>
                   <TableHead className="text-right font-semibold text-[var(--rag-amber)]">Advances</TableHead>
                   <TableHead className="text-right font-semibold text-[var(--rag-green)]">Net Pay</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
@@ -711,8 +711,8 @@ export function PayrollPage() {
                     </TableCell>
                     <TableCell className="text-right tabular-nums font-medium">{formatCurrency(item.grossPay)}</TableCell>
                     <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">-{formatCurrency(item.paye)}</TableCell>
-                    <TableCell className="text-right tabular-nums text-cyan-600">-{formatCurrency(item.nssf)}</TableCell>
-                    <TableCell className="text-right tabular-nums text-violet-600">-{formatCurrency(item.lst)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">-{formatCurrency(item.nssf)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">-{formatCurrency(item.lst)}</TableCell>
                     <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">
                       {item.advanceDeduction > 0 ? `-${formatCurrency(item.advanceDeduction)}` : '-'}
                     </TableCell>
@@ -759,8 +759,8 @@ export function PayrollPage() {
                   </TableCell>
                   <TableCell className="text-right tabular-nums">{formatCurrency(currentMonthTotals.totalGross)}</TableCell>
                   <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">-{formatCurrency(currentMonthTotals.totalPAYE)}</TableCell>
-                  <TableCell className="text-right tabular-nums text-cyan-600">-{formatCurrency(currentMonthTotals.totalNSSF)}</TableCell>
-                  <TableCell className="text-right tabular-nums text-violet-600">-{formatCurrency(currentMonthTotals.totalLST)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">-{formatCurrency(currentMonthTotals.totalNSSF)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">-{formatCurrency(currentMonthTotals.totalLST)}</TableCell>
                   <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">
                     -{formatCurrency(filteredPayrollItems.reduce((s, i) => s + i.advanceDeduction, 0))}
                   </TableCell>

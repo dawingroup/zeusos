@@ -52,8 +52,8 @@ const STATUS_META: Record<AttendanceStatus, { letter: string; label: string; bg:
   late:     { letter: 'L',  label: 'Late',      bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
   half_day: { letter: 'H',  label: 'Half Day',  bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
   leave:    { letter: 'LV', label: 'Leave',     bg: 'bg-[var(--rag-blue-soft)]',   text: 'text-[var(--rag-blue)]' },
-  sick:     { letter: 'S',  label: 'Sick',      bg: 'bg-pink-100',   text: 'text-pink-800' },
-  holiday:  { letter: 'PH', label: 'Holiday',   bg: 'bg-purple-100', text: 'text-purple-800' },
+  sick:     { letter: 'S',  label: 'Sick',      bg: 'bg-[var(--rag-red-soft)]',   text: 'text-[var(--rag-red)]' },
+  holiday:  { letter: 'PH', label: 'Holiday',   bg: 'bg-[var(--rag-blue-soft)]', text: 'text-[var(--rag-blue)]' },
   weekend:  { letter: '·',  label: 'Weekend',   bg: 'bg-[var(--bg-sunken)]',   text: 'text-[var(--fg-tertiary)]' },
 };
 

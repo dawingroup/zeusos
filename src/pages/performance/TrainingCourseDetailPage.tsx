@@ -50,12 +50,12 @@ const TYPE_ICONS: Record<TrainingType, any> = {
 
 const TYPE_COLORS: Record<TrainingType, string> = {
   external_course: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
-  e_learning: 'text-indigo-600 bg-indigo-50 border-indigo-200',
-  mentorship: 'text-pink-600 bg-pink-50 border-pink-200',
+  e_learning: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
+  mentorship: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)] border-[var(--rag-red)]',
   workshop: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]',
   internal_course: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)] border-[var(--rag-green)]',
-  certification: 'text-purple-600 bg-purple-50 border-purple-200',
-  on_the_job: 'text-teal-600 bg-teal-50 border-teal-200',
+  certification: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
+  on_the_job: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
 };
 
 const TYPE_LABELS: Record<TrainingType, string> = {
@@ -312,7 +312,7 @@ export function TrainingCourseDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Video className="h-5 w-5 text-indigo-600" />
+                  <Video className="h-5 w-5 text-[var(--rag-blue)]" />
                   Video Content
                 </CardTitle>
               </CardHeader>
@@ -374,7 +374,7 @@ export function TrainingCourseDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-pink-600" />
+                  <User className="h-5 w-5 text-[var(--rag-red)]" />
                   Mentorship
                 </CardTitle>
               </CardHeader>

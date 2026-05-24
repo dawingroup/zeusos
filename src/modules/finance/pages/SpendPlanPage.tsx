@@ -235,7 +235,7 @@ export function SpendPlanPage() {
                 {plan.savingsAllocation > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Savings</span>
-                    <span className="font-medium text-purple-600">-{formatUGX(plan.savingsAllocation)}</span>
+                    <span className="font-medium text-[var(--rag-blue)]">-{formatUGX(plan.savingsAllocation)}</span>
                   </div>
                 )}
                 <hr className="border-[var(--border-subtle)]" />

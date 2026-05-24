@@ -132,11 +132,11 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
           {/* Assets */}
           {ctx.assets.totalAssets > 0 && (
             <div className="px-5 py-3">
-              <h4 className="text-xs font-semibold text-teal-600 mb-1.5 flex items-center gap-1"><Package className="w-3 h-3" /> Assets Summary</h4>
+              <h4 className="text-xs font-semibold text-[var(--rag-blue)] mb-1.5 flex items-center gap-1"><Package className="w-3 h-3" /> Assets Summary</h4>
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <Stat label="Total" value={String(ctx.assets.totalAssets)} bg="bg-teal-50" text="text-teal-800" />
-                <Stat label="Utilization" value={ctx.assets.utilizationSummary} bg="bg-teal-50" text="text-teal-800" />
-                <Stat label="Maint. Overdue" value={String(ctx.assets.maintenanceOverdue)} bg={ctx.assets.maintenanceOverdue > 0 ? 'bg-[var(--rag-red-soft)]' : 'bg-teal-50'} text={ctx.assets.maintenanceOverdue > 0 ? 'text-[var(--rag-red)]' : 'text-teal-800'} />
+                <Stat label="Total" value={String(ctx.assets.totalAssets)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Utilization" value={ctx.assets.utilizationSummary} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Maint. Overdue" value={String(ctx.assets.maintenanceOverdue)} bg={ctx.assets.maintenanceOverdue > 0 ? 'bg-[var(--rag-red-soft)]' : 'bg-[var(--rag-blue-soft)]'} text={ctx.assets.maintenanceOverdue > 0 ? 'text-[var(--rag-red)]' : 'text-[var(--rag-blue)]'} />
               </div>
             </div>
           )}
@@ -160,20 +160,20 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
           {/* Market Intel */}
           {(ctx.marketIntel.recentSignals.length > 0 || ctx.marketIntel.activeScenarios.length > 0 || ctx.marketIntel.reports.length > 0) && (
             <div className="px-5 py-3">
-              <h4 className="text-xs font-semibold text-violet-600 mb-1.5 flex items-center gap-1"><Globe className="w-3 h-3" /> Market Intelligence</h4>
+              <h4 className="text-xs font-semibold text-[var(--rag-blue)] mb-1.5 flex items-center gap-1"><Globe className="w-3 h-3" /> Market Intelligence</h4>
               <div className="grid grid-cols-4 gap-2 text-xs">
-                <Stat label="Signals" value={String(ctx.marketIntel.recentSignals.length)} bg="bg-violet-50" text="text-violet-800" />
-                <Stat label="Scenarios" value={String(ctx.marketIntel.activeScenarios.length)} bg="bg-violet-50" text="text-violet-800" />
-                <Stat label="Regulatory" value={String(ctx.marketIntel.regulatoryItems.length)} bg="bg-violet-50" text="text-violet-800" />
-                <Stat label="Indicators" value={String(ctx.marketIntel.trackedIndicators.length)} bg="bg-violet-50" text="text-violet-800" />
-                <Stat label="Reports" value={String(ctx.marketIntel.reports.length)} bg="bg-violet-50" text="text-violet-800" />
+                <Stat label="Signals" value={String(ctx.marketIntel.recentSignals.length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Scenarios" value={String(ctx.marketIntel.activeScenarios.length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Regulatory" value={String(ctx.marketIntel.regulatoryItems.length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Indicators" value={String(ctx.marketIntel.trackedIndicators.length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Reports" value={String(ctx.marketIntel.reports.length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
               </div>
               {ctx.marketIntel.reports.length > 0 && (
                 <div className="mt-2 space-y-1">
                   {ctx.marketIntel.reports.slice(0, 3).map((r, i) => (
-                    <div key={i} className="flex items-center justify-between p-1.5 bg-violet-50 rounded text-xs">
-                      <span className="font-medium text-violet-800 truncate">{r.title}</span>
-                      <span className="text-[10px] text-violet-600 flex-shrink-0">{r.status} • {r.type}</span>
+                    <div key={i} className="flex items-center justify-between p-1.5 bg-[var(--rag-blue-soft)] rounded text-xs">
+                      <span className="font-medium text-[var(--rag-blue)] truncate">{r.title}</span>
+                      <span className="text-[10px] text-[var(--rag-blue)] flex-shrink-0">{r.status} • {r.type}</span>
                     </div>
                   ))}
                 </div>
@@ -183,12 +183,12 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
           {/* Pivots */}
           {ctx.pivots.length > 0 && (
             <div className="px-5 py-3">
-              <h4 className="text-xs font-semibold text-indigo-600 mb-1.5 flex items-center gap-1"><ArrowRightLeft className="w-3 h-3" /> Business Pivots</h4>
+              <h4 className="text-xs font-semibold text-[var(--rag-blue)] mb-1.5 flex items-center gap-1"><ArrowRightLeft className="w-3 h-3" /> Business Pivots</h4>
               <div className="space-y-1">
                 {ctx.pivots.slice(0, 3).map(p => (
-                  <div key={p.id} className="flex items-center justify-between p-1.5 bg-indigo-50 rounded text-xs">
-                    <span className="font-medium text-indigo-800 truncate">{p.title}</span>
-                    <span className="text-[10px] text-indigo-600 flex-shrink-0">{p.status} • {new Date(p.pivotDate).toLocaleDateString()}</span>
+                  <div key={p.id} className="flex items-center justify-between p-1.5 bg-[var(--rag-blue-soft)] rounded text-xs">
+                    <span className="font-medium text-[var(--rag-blue)] truncate">{p.title}</span>
+                    <span className="text-[10px] text-[var(--rag-blue)] flex-shrink-0">{p.status} • {new Date(p.pivotDate).toLocaleDateString()}</span>
                   </div>
                 ))}
               </div>

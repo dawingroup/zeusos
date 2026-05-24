@@ -141,8 +141,8 @@ export const OKRDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-50">
-            <Target className="w-5 h-5 text-indigo-600" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--rag-blue-soft)]">
+            <Target className="w-5 h-5 text-[var(--rag-blue)]" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">OKRs</h1>
@@ -207,7 +207,7 @@ export const OKRDashboard: React.FC = () => {
               </div>
               <button
                 onClick={() => navigate('/strategy/okrs/all')}
-                className="text-xs text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+                className="text-xs text-[var(--rag-blue)] hover:text-[var(--rag-blue)] inline-flex items-center gap-1"
               >
                 View all <ArrowRight className="w-3 h-3" />
               </button>
