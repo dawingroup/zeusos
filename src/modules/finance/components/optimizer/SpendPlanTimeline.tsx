@@ -93,7 +93,7 @@ export function SpendPlanTimeline({
 
   if (!entries.length) {
     return (
-      <Card className={`p-6 text-center text-gray-400 ${className}`}>
+      <Card className={`p-6 text-center text-[var(--fg-tertiary)] ${className}`}>
         No items in today&apos;s spend plan
       </Card>
     );
@@ -109,7 +109,7 @@ export function SpendPlanTimeline({
 
       {/* Timeline */}
       <div className="relative">
-        <div className="absolute left-5 top-0 bottom-0 w-px bg-gray-200" />
+        <div className="absolute left-5 top-0 bottom-0 w-px bg-[var(--bg-sunken)]" />
 
         {entries.map((entry) => (
           <div key={entry.id} className="relative flex gap-3 pb-4 last:pb-0">
@@ -120,7 +120,7 @@ export function SpendPlanTimeline({
                 ? 'bg-green-50 border-green-300'
                 : entry.type === 'savings'
                   ? 'bg-purple-50 border-purple-300'
-                  : 'bg-white border-gray-200'}
+                  : 'bg-card border-[var(--border-subtle)]'}
             `}>
               {entry.type === 'receipt' ? (
                 <ArrowDown className="w-4 h-4 text-green-600" />
@@ -129,11 +129,11 @@ export function SpendPlanTimeline({
               ) : entry.status === 'approved' ? (
                 <CheckCircle className="w-4 h-4 text-green-600" />
               ) : entry.status === 'deferred' ? (
-                <Pause className="w-4 h-4 text-gray-400" />
+                <Pause className="w-4 h-4 text-[var(--fg-tertiary)]" />
               ) : entry.tier === 'CRITICAL' ? (
                 <AlertTriangle className="w-4 h-4 text-red-500" />
               ) : (
-                <ArrowUp className="w-4 h-4 text-gray-500" />
+                <ArrowUp className="w-4 h-4 text-muted-foreground" />
               )}
             </div>
 
@@ -141,7 +141,7 @@ export function SpendPlanTimeline({
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {entry.description}
                     {entry.isPartial && (
                       <span className="ml-1 text-xs text-amber-600">(partial)</span>
@@ -161,11 +161,11 @@ export function SpendPlanTimeline({
                 </div>
                 <div className="text-right shrink-0">
                   <p className={`text-sm font-semibold ${
-                    entry.type === 'receipt' ? 'text-green-600' : 'text-gray-900'
+                    entry.type === 'receipt' ? 'text-green-600' : 'text-foreground'
                   }`}>
                     {entry.type === 'receipt' ? '+' : '-'}{formatUGX(entry.amount)}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-[var(--fg-tertiary)]">
                     Bal: {formatUGX(entry.runningBalance)}
                   </p>
                 </div>
@@ -185,7 +185,7 @@ export function SpendPlanTimeline({
                   {onDefer && (
                     <button
                       onClick={() => onDefer(entry.id)}
-                      className="text-xs text-gray-500 hover:text-gray-700 font-medium"
+                      className="text-xs text-muted-foreground hover:text-muted-foreground font-medium"
                     >
                       Defer
                     </button>
@@ -200,15 +200,15 @@ export function SpendPlanTimeline({
       {/* Closing Balance */}
       <div className={`
         flex items-center justify-between px-3 py-2 rounded-lg mt-4
-        ${plan.closingBalance < 0 ? 'bg-red-50' : 'bg-gray-50'}
+        ${plan.closingBalance < 0 ? 'bg-red-50' : 'bg-[var(--bg-sunken)]'}
       `}>
         <span className={`text-sm font-medium ${
-          plan.closingBalance < 0 ? 'text-red-700' : 'text-gray-700'
+          plan.closingBalance < 0 ? 'text-red-700' : 'text-muted-foreground'
         }`}>
           Closing Balance
         </span>
         <span className={`text-sm font-bold ${
-          plan.closingBalance < 0 ? 'text-red-900' : 'text-gray-900'
+          plan.closingBalance < 0 ? 'text-red-900' : 'text-foreground'
         }`}>
           {formatUGX(plan.closingBalance)}
         </span>

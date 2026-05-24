@@ -80,7 +80,7 @@ export function ReconciliationScheduleList({
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse h-16 bg-gray-100 rounded-lg" />
+          <div key={i} className="animate-pulse h-16 bg-[var(--bg-sunken)] rounded-lg" />
         ))}
       </div>
     );
@@ -90,28 +90,28 @@ export function ReconciliationScheduleList({
     <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white rounded-lg border p-3 text-center">
-          <p className="text-2xl font-bold text-gray-900">{schedules.length}</p>
-          <p className="text-xs text-gray-500">Total Schedules</p>
+        <div className="bg-card rounded-lg border p-3 text-center">
+          <p className="text-2xl font-bold text-foreground">{schedules.length}</p>
+          <p className="text-xs text-muted-foreground">Total Schedules</p>
         </div>
-        <div className={`rounded-lg border p-3 text-center ${overdueCount > 0 ? 'bg-red-50 border-red-200' : 'bg-white'}`}>
-          <p className={`text-2xl font-bold ${overdueCount > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+        <div className={`rounded-lg border p-3 text-center ${overdueCount > 0 ? 'bg-red-50 border-red-200' : 'bg-card'}`}>
+          <p className={`text-2xl font-bold ${overdueCount > 0 ? 'text-red-600' : 'text-foreground'}`}>
             {overdueCount}
           </p>
-          <p className="text-xs text-gray-500">Overdue</p>
+          <p className="text-xs text-muted-foreground">Overdue</p>
         </div>
-        <div className={`rounded-lg border p-3 text-center ${dueThisWeekCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white'}`}>
-          <p className={`text-2xl font-bold ${dueThisWeekCount > 0 ? 'text-amber-600' : 'text-gray-900'}`}>
+        <div className={`rounded-lg border p-3 text-center ${dueThisWeekCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-card'}`}>
+          <p className={`text-2xl font-bold ${dueThisWeekCount > 0 ? 'text-amber-600' : 'text-foreground'}`}>
             {dueThisWeekCount}
           </p>
-          <p className="text-xs text-gray-500">Due This Week</p>
+          <p className="text-xs text-muted-foreground">Due This Week</p>
         </div>
       </div>
 
       {/* Add Button */}
       <button
         onClick={onAdd}
-        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-green-400 hover:text-green-600 transition-colors"
       >
         <Plus className="w-4 h-4" />
         Add Reconciliation Schedule
@@ -119,7 +119,7 @@ export function ReconciliationScheduleList({
 
       {/* Schedule List */}
       {schedules.length === 0 ? (
-        <div className="text-center py-8 text-gray-400">
+        <div className="text-center py-8 text-[var(--fg-tertiary)]">
           <Calendar className="w-10 h-10 mx-auto mb-2 opacity-50" />
           <p className="text-sm">No reconciliation schedules yet</p>
         </div>
@@ -132,14 +132,14 @@ export function ReconciliationScheduleList({
             return (
               <div
                 key={schedule.id}
-                className={`bg-white rounded-lg border p-4 hover:shadow-sm transition-shadow ${
+                className={`bg-card rounded-lg border p-4 hover:shadow-sm transition-shadow ${
                   !schedule.isActive ? 'opacity-60' : ''
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-medium text-gray-900 truncate">
+                      <h4 className="font-medium text-foreground truncate">
                         {schedule.name}
                       </h4>
                       <span
@@ -149,7 +149,7 @@ export function ReconciliationScheduleList({
                         {status.label}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         Due: {formatDate(schedule.nextDueDate)}
@@ -184,19 +184,19 @@ export function ReconciliationScheduleList({
                     <div className="relative">
                       <button
                         onClick={() => setOpenMenuId(openMenuId === schedule.id ? null : schedule.id)}
-                        className="p-1.5 rounded-md hover:bg-gray-100 text-gray-400"
+                        className="p-1.5 rounded-md hover:bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]"
                       >
                         <MoreVertical className="w-4 h-4" />
                       </button>
 
                       {openMenuId === schedule.id && (
-                        <div className="absolute right-0 top-8 z-10 bg-white rounded-lg shadow-lg border py-1 w-40">
+                        <div className="absolute right-0 top-8 z-10 bg-card rounded-lg shadow-lg border py-1 w-40">
                           <button
                             onClick={() => {
                               onToggle(schedule.id, !schedule.isActive);
                               setOpenMenuId(null);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-gray-50"
+                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]"
                           >
                             {schedule.isActive ? (
                               <>

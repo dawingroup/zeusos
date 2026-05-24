@@ -133,9 +133,9 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   const fiscalYearOptions = Array.from({ length: 7 }, (_, i) => currentFY - 5 + i);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm">
       <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           <FileText className="w-5 h-5 text-[#872E5C]" />
           Report Parameters
         </h3>
@@ -143,13 +143,13 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Report Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Report Type
             </label>
             <select
               value={reportType}
               onChange={(e) => setReportType(e.target.value as ReportType)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
             >
               <optgroup label="Financial Statements">
                 {REPORTS_BY_CATEGORY.financial_statements.map((rt) => (
@@ -171,14 +171,14 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
           {/* Period Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               <Calendar className="w-4 h-4 inline mr-1" />
               Period
             </label>
             <select
               value={periodType}
               onChange={(e) => setPeriodType(e.target.value as ReportPeriod)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
             >
               {Object.entries(REPORT_PERIOD_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -188,13 +188,13 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
           {/* Fiscal Year */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               Fiscal Year
             </label>
             <select
               value={fiscalYear}
               onChange={(e) => setFiscalYear(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
             >
               {fiscalYearOptions.map((year) => (
                 <option key={year} value={year}>
@@ -208,25 +208,25 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           {periodType === REPORT_PERIODS.CUSTOM && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   Start Date
                 </label>
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+                  className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   End Date
                 </label>
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+                  className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
                 />
               </div>
             </>
@@ -234,14 +234,14 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
           {/* Comparison */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">
               <GitCompare className="w-4 h-4 inline mr-1" />
               Compare With
             </label>
             <select
               value={comparisonType}
               onChange={(e) => setComparisonType(e.target.value as ComparisonType)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
             >
               {Object.entries(COMPARISON_TYPE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -252,13 +252,13 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           {/* Budget Selection */}
           {comparisonType === COMPARISON_TYPES.BUDGET && budgets.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Select Budget
               </label>
               <select
                 value={budgetId}
                 onChange={(e) => setBudgetId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
+                className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[#872E5C]/20 focus:border-[#872E5C]"
               >
                 <option value="">Select a budget...</option>
                 {budgets.map((b) => (
@@ -272,7 +272,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         {/* Advanced Options Toggle */}
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="mt-4 flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+          className="mt-4 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <Settings className="w-4 h-4" />
           Advanced Options
@@ -281,17 +281,17 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
         {/* Advanced Options */}
         {showAdvanced && (
-          <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Department Filter */}
             {departments.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   Department
                 </label>
                 <select
                   value={departmentId}
                   onChange={(e) => setDepartmentId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm"
                 >
                   <option value="">All Departments</option>
                   {departments.map((d) => (
@@ -308,18 +308,18 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                   type="checkbox"
                   checked={showZeroBalances}
                   onChange={(e) => setShowZeroBalances(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-[#872E5C] focus:ring-[#872E5C]"
+                  className="w-4 h-4 rounded border-[var(--border-default)] text-[#872E5C] focus:ring-[#872E5C]"
                 />
-                <span className="text-sm text-gray-700">Show Zero Balances</span>
+                <span className="text-sm text-muted-foreground">Show Zero Balances</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showAccountCodes}
                   onChange={(e) => setShowAccountCodes(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-[#872E5C] focus:ring-[#872E5C]"
+                  className="w-4 h-4 rounded border-[var(--border-default)] text-[#872E5C] focus:ring-[#872E5C]"
                 />
-                <span className="text-sm text-gray-700">Show Account Codes</span>
+                <span className="text-sm text-muted-foreground">Show Account Codes</span>
               </label>
             </div>
           </div>
@@ -328,7 +328,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         {/* Period Summary & Generate Button */}
         <div className="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+            <span className="inline-flex items-center px-3 py-1 bg-[var(--bg-sunken)] text-muted-foreground text-sm rounded-full">
               {new Date(startDate).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}
               {' - '}
               {new Date(endDate).toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}

@@ -224,15 +224,15 @@ export function QBOAccountMappingSettings({
 
     return (
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-muted-foreground mb-1">
           {ACCOUNT_MAPPING_LABELS[field]}
           {isRequired && <span className="text-red-500 ml-1">*</span>}
         </label>
-        <p className="text-xs text-gray-500 mb-2">{ACCOUNT_MAPPING_DESCRIPTIONS[field]}</p>
+        <p className="text-xs text-muted-foreground mb-2">{ACCOUNT_MAPPING_DESCRIPTIONS[field]}</p>
         <select
           value={currentValue}
           onChange={(e) => handleAccountChange(field, e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           required={isRequired}
         >
           <option value="">-- Select Account --</option>
@@ -249,7 +249,7 @@ export function QBOAccountMappingSettings({
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-gray-500">Loading QuickBooks accounts...</div>
+        <div className="text-muted-foreground">Loading QuickBooks accounts...</div>
       </div>
     );
   }
@@ -269,8 +269,8 @@ export function QBOAccountMappingSettings({
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">QuickBooks Account Mapping</h2>
-        <p className="text-gray-600">
+        <h2 className="text-2xl font-bold text-foreground mb-2">QuickBooks Account Mapping</h2>
+        <p className="text-muted-foreground">
           Map ZeusOS transaction types to your QuickBooks chart of accounts for proper
           accounting integration.
         </p>
@@ -330,8 +330,8 @@ export function QBOAccountMappingSettings({
       )}
 
       {/* Account Mapping Form */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Required Accounts</h3>
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Required Accounts</h3>
 
         {renderAccountDropdown('accountsPayable', 'Liability')}
         {renderAccountDropdown('accountsReceivable', 'Asset')}
@@ -341,14 +341,14 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Revenue Sub-Accounts */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           Revenue Sub-Accounts
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-muted-foreground ml-2">
             (Map each income stream to a specific revenue account in QuickBooks)
           </span>
         </h3>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-muted-foreground mb-4">
           When a sub-account is not mapped, the default Sales Revenue account above is used as fallback.
         </p>
 
@@ -359,14 +359,14 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* COGS Sub-Accounts */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           COGS Sub-Accounts
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-muted-foreground ml-2">
             (Map each cost category to a specific COGS account in QuickBooks)
           </span>
         </h3>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-muted-foreground mb-4">
           When a sub-account is not mapped, the default COGS account above is used as fallback.
         </p>
 
@@ -378,59 +378,59 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* PO Line Item Category Accounts */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           PO Line Item Category Accounts
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-muted-foreground ml-2">
             (Route PO line items to specific QBO accounts by category)
           </span>
         </h3>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-muted-foreground mb-4">
           Each PO line item has a category (Inventory, Asset, Service, or Overhead) that determines
           which QBO account it posts to on the bill. Map the accounts below so each category routes correctly.
         </p>
 
         {/* Category routing table */}
-        <div className="mb-5 border border-gray-200 rounded-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50">
+        <div className="mb-5 border border-[var(--border-subtle)] rounded-md overflow-hidden">
+          <table className="min-w-full divide-y divide-[var(--border-subtle)] text-sm">
+            <thead className="bg-[var(--bg-sunken)]">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Routes To</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fallback</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Category</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Routes To</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Fallback</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-card divide-y divide-[var(--border-subtle)]">
               <tr>
-                <td className="px-4 py-2 font-medium text-gray-900">Inventory</td>
-                <td className="px-4 py-2 text-gray-700">Inventory Asset account</td>
-                <td className="px-4 py-2 text-gray-500 text-xs">Mapped above in Required Accounts</td>
+                <td className="px-4 py-2 font-medium text-foreground">Inventory</td>
+                <td className="px-4 py-2 text-muted-foreground">Inventory Asset account</td>
+                <td className="px-4 py-2 text-muted-foreground text-xs">Mapped above in Required Accounts</td>
               </tr>
               <tr>
-                <td className="px-4 py-2 font-medium text-gray-900">Asset</td>
-                <td className="px-4 py-2 text-gray-700">Fixed Assets account</td>
-                <td className="px-4 py-2 text-gray-500 text-xs">Falls back to Inventory Asset if not mapped</td>
+                <td className="px-4 py-2 font-medium text-foreground">Asset</td>
+                <td className="px-4 py-2 text-muted-foreground">Fixed Assets account</td>
+                <td className="px-4 py-2 text-muted-foreground text-xs">Falls back to Inventory Asset if not mapped</td>
               </tr>
               <tr>
-                <td className="px-4 py-2 font-medium text-gray-900">Service</td>
-                <td className="px-4 py-2 text-gray-700">COGS - Services &amp; Projects account</td>
-                <td className="px-4 py-2 text-gray-500 text-xs">Falls back to default COGS if not mapped</td>
+                <td className="px-4 py-2 font-medium text-foreground">Service</td>
+                <td className="px-4 py-2 text-muted-foreground">COGS - Services &amp; Projects account</td>
+                <td className="px-4 py-2 text-muted-foreground text-xs">Falls back to default COGS if not mapped</td>
               </tr>
               <tr>
-                <td className="px-4 py-2 font-medium text-gray-900">Overhead</td>
-                <td className="px-4 py-2 text-gray-700">Overhead / Operating Expense account</td>
-                <td className="px-4 py-2 text-gray-500 text-xs">Falls back to default COGS if not mapped</td>
+                <td className="px-4 py-2 font-medium text-foreground">Overhead</td>
+                <td className="px-4 py-2 text-muted-foreground">Overhead / Operating Expense account</td>
+                <td className="px-4 py-2 text-muted-foreground text-xs">Falls back to default COGS if not mapped</td>
               </tr>
               <tr>
-                <td className="px-4 py-2 font-medium text-gray-900">Manufacturing Overhead</td>
-                <td className="px-4 py-2 text-gray-700">Manufacturing Overhead Expense account</td>
-                <td className="px-4 py-2 text-gray-500 text-xs">Falls back to Overhead, then default COGS if not mapped</td>
+                <td className="px-4 py-2 font-medium text-foreground">Manufacturing Overhead</td>
+                <td className="px-4 py-2 text-muted-foreground">Manufacturing Overhead Expense account</td>
+                <td className="px-4 py-2 text-muted-foreground text-xs">Falls back to Overhead, then default COGS if not mapped</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p className="text-xs text-gray-500 mb-4 italic">
+        <p className="text-xs text-muted-foreground mb-4 italic">
           The Inventory and Service accounts are already mapped in the sections above. Map the Asset, Overhead,
           and Manufacturing Overhead accounts below to complete category-based routing.
         </p>
@@ -441,14 +441,14 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Item Auto-Resolution */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           Item Auto-Resolution
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-muted-foreground ml-2">
             (ZeusOS items are automatically matched to QBO items)
           </span>
         </h3>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-muted-foreground mb-4">
           When syncing Sales Orders, Invoices, or Bills, ZeusOS automatically searches QuickBooks
           for matching items by name. If no match is found, a new QBO item is created. Fuzzy matches
           with low confidence are flagged for your review below.
@@ -486,39 +486,39 @@ export function QBOAccountMappingSettings({
 
         {/* Resolution Log Table */}
         {resolutionLog.length === 0 ? (
-          <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
-            <p className="text-sm text-gray-600">
+          <div className="p-3 bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-md">
+            <p className="text-sm text-muted-foreground">
               No item resolutions yet. Items will appear here as ZeusOS syncs data to QuickBooks.
             </p>
           </div>
         ) : (
-          <div className="border border-gray-200 rounded-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="border border-[var(--border-subtle)] rounded-md overflow-hidden">
+            <table className="min-w-full divide-y divide-[var(--border-subtle)]">
+              <thead className="bg-[var(--bg-sunken)]">
                 <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">ZeusOS Item</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">QBO Item</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Match</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase">ZeusOS Item</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase">QBO Item</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Match</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Status</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-card divide-y divide-[var(--border-subtle)]">
                 {resolutionLog.map((entry) => (
                   <tr key={entry.id} className={entry.status === 'pending-review' ? 'bg-amber-50' : ''}>
-                    <td className="px-3 py-2 text-sm text-gray-900">
+                    <td className="px-3 py-2 text-sm text-foreground">
                       <div className="font-medium">{entry.dawinosName}</div>
                       {entry.dawinosSku && (
-                        <div className="text-xs text-gray-500">{entry.dawinosSku}</div>
+                        <div className="text-xs text-muted-foreground">{entry.dawinosSku}</div>
                       )}
                     </td>
-                    <td className="px-3 py-2 text-sm text-gray-700">{entry.qboItemName}</td>
+                    <td className="px-3 py-2 text-sm text-muted-foreground">{entry.qboItemName}</td>
                     <td className="px-3 py-2">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                         entry.matchType === 'exact' ? 'bg-green-100 text-green-800' :
                         entry.matchType === 'fuzzy' ? 'bg-blue-100 text-blue-800' :
                         entry.matchType === 'created' ? 'bg-purple-100 text-purple-800' :
-                        'bg-gray-100 text-gray-800'
+                        'bg-[var(--bg-sunken)] text-foreground'
                       }`}>
                         {entry.matchType}
                         {entry.matchScore != null && entry.matchType === 'fuzzy' && (
@@ -596,10 +596,10 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Landed Cost Handling */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           Landed Cost Handling
-          <span className="text-sm font-normal text-gray-500 ml-2">
+          <span className="text-sm font-normal text-muted-foreground ml-2">
             (How shipping, customs, duties, etc. are posted on QBO bills)
           </span>
         </h3>
@@ -611,13 +611,13 @@ export function QBOAccountMappingSettings({
             value="capitalize"
             checked={landedCostMethod === 'capitalize'}
             onChange={() => setLandedCostMethod('capitalize')}
-            className="mt-1 h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+            className="mt-1 h-4 w-4 border-[var(--border-default)] text-green-600 focus:ring-green-500"
           />
           <div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-foreground">
               Capitalize into Inventory (Recommended)
             </span>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Landed costs are added to the inventory asset account on the bill.
               They flow to COGS only when inventory is consumed or sold. Prevents double-counting.
             </p>
@@ -631,13 +631,13 @@ export function QBOAccountMappingSettings({
             value="expense"
             checked={landedCostMethod === 'expense'}
             onChange={() => setLandedCostMethod('expense')}
-            className="mt-1 h-4 w-4 border-gray-300 text-green-600 focus:ring-green-500"
+            className="mt-1 h-4 w-4 border-[var(--border-default)] text-green-600 focus:ring-green-500"
           />
           <div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-foreground">
               Direct Expense (Legacy)
             </span>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Landed costs are posted to separate expense accounts on the bill.
               Warning: since ZeusOS already includes landed costs in inventory valuation,
               this may cause double-counting on your P&amp;L.
@@ -669,8 +669,8 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* PO Traceability on QBO Bills */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           PO Traceability on Bills
         </h3>
 
@@ -705,9 +705,9 @@ export function QBOAccountMappingSettings({
           </div>
         </div>
 
-        <div className="bg-gray-50 border border-gray-200 rounded-md p-3">
-          <p className="text-xs text-gray-500">
-            <span className="font-medium text-gray-600">About QBO custom fields:</span> The
+        <div className="bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-md p-3">
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-muted-foreground">About QBO custom fields:</span> The
             QuickBooks REST API does not support reading or writing custom fields on Bill
             transactions. Custom fields created under QBO Settings are only accessible through
             the QBO web interface. PO traceability is achieved through the supported methods above.
@@ -734,7 +734,7 @@ export function QBOAccountMappingSettings({
           >
             {batchUpdating ? 'Updating...' : 'Sync Bill Numbers'}
           </button>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             Update all existing QBO bills to use the PO number as the bill number
           </span>
         </div>
@@ -746,20 +746,20 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Automation Settings */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Automation</h3>
+      <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Automation</h3>
         <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={autoCreateBills}
             onChange={(e) => setAutoCreateBills(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+            className="h-4 w-4 rounded border-[var(--border-default)] text-green-600 focus:ring-green-500"
           />
           <div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-foreground">
               Auto-create bills when POs are approved
             </span>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Automatically sync approved Purchase Orders to QuickBooks as Bills.
               When disabled, bills must be created manually from the PO detail page.
             </p>
@@ -768,22 +768,22 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Tax Configuration */}
-      <div className="border border-gray-200 rounded-lg p-4 bg-white">
-        <h3 className="text-sm font-semibold text-gray-900 mb-1">Tax Configuration</h3>
-        <p className="text-xs text-gray-500 mb-4">
+      <div className="border border-[var(--border-subtle)] rounded-lg p-4 bg-card">
+        <h3 className="text-sm font-semibold text-foreground mb-1">Tax Configuration</h3>
+        <p className="text-xs text-muted-foreground mb-4">
           Configure how tax is handled on invoices and sales orders synced to QuickBooks.
         </p>
 
         {/* Tax Mode */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Tax Calculation Mode</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-2">Tax Calculation Mode</label>
           <div className="space-y-2">
             {[
               { value: 'out_of_scope' as const, label: 'Out of Scope (No Tax)', desc: 'Transactions are created without any tax calculation. Best for tax-exempt businesses.' },
               { value: 'tax_exclusive' as const, label: 'Tax Exclusive', desc: 'Tax is calculated on top of line item amounts. Requires tax code IDs below.' },
               { value: 'tax_inclusive' as const, label: 'Tax Inclusive', desc: 'Line item amounts already include tax. Requires tax code IDs below.' },
             ].map((opt) => (
-              <label key={opt.value} className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <label key={opt.value} className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors">
                 <input
                   type="radio"
                   name="taxMode"
@@ -793,8 +793,8 @@ export function QBOAccountMappingSettings({
                   className="mt-0.5 text-blue-600 focus:ring-blue-500"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{opt.label}</p>
-                  <p className="text-xs text-gray-500">{opt.desc}</p>
+                  <p className="text-sm font-medium text-foreground">{opt.label}</p>
+                  <p className="text-xs text-muted-foreground">{opt.desc}</p>
                 </div>
               </label>
             ))}
@@ -803,14 +803,14 @@ export function QBOAccountMappingSettings({
 
         {/* Tax Code IDs — only shown when tax is enabled */}
         {taxMode !== 'out_of_scope' && (
-          <div className="space-y-3 pt-3 border-t border-gray-100">
-            <p className="text-xs text-gray-500">
+          <div className="space-y-3 pt-3 border-t border-[var(--border-subtle)]">
+            <p className="text-xs text-muted-foreground">
               Enter the QBO Tax Code IDs from your QuickBooks tax settings.
               Find these in QuickBooks → Taxes → Tax rates.
             </p>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">No VAT / Exempt</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">No VAT / Exempt</label>
                 <input
                   type="text"
                   value={taxCodeNoVat}
@@ -820,7 +820,7 @@ export function QBOAccountMappingSettings({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Standard VAT (18%)</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Standard VAT (18%)</label>
                 <input
                   type="text"
                   value={taxCodeStandardVat}
@@ -830,7 +830,7 @@ export function QBOAccountMappingSettings({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Zero Rated</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Zero Rated</label>
                 <input
                   type="text"
                   value={taxCodeZeroRated}
@@ -850,7 +850,7 @@ export function QBOAccountMappingSettings({
           <button
             onClick={onCancel}
             disabled={saving}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50"
+            className="px-6 py-2 border border-[var(--border-default)] text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)] focus:outline-none focus:ring-2 focus:ring-[var(--border-default)] disabled:opacity-50"
           >
             Cancel
           </button>
@@ -865,9 +865,9 @@ export function QBOAccountMappingSettings({
       </div>
 
       {/* Help Text */}
-      <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-        <h4 className="text-sm font-semibold text-gray-900 mb-2">💡 Configuration Tips</h4>
-        <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <div className="mt-6 p-4 bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-lg">
+        <h4 className="text-sm font-semibold text-foreground mb-2">💡 Configuration Tips</h4>
+        <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
           <li>All required accounts must be mapped before QuickBooks integration can work</li>
           <li>
             Optional expense accounts help categorize costs more accurately in your financial

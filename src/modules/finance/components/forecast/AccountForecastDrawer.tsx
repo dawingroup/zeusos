@@ -67,13 +67,13 @@ function ChartTooltip({ active, payload, label }: {
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-xs">
-      <p className="font-medium text-gray-700 mb-1">{label}</p>
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg shadow-lg px-3 py-2 text-xs">
+      <p className="font-medium text-muted-foreground mb-1">{label}</p>
       {payload.map(p => (
         <div key={p.name} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-gray-500 capitalize">{p.name}:</span>
-          <span className="font-semibold text-gray-800">{fmtK(p.value)}</span>
+          <span className="text-muted-foreground capitalize">{p.name}:</span>
+          <span className="font-semibold text-foreground">{fmtK(p.value)}</span>
         </div>
       ))}
     </div>
@@ -199,19 +199,19 @@ export function AccountForecastDrawer({
       />
 
       {/* Drawer panel */}
-      <div className="relative ml-auto w-full max-w-lg bg-white shadow-2xl flex flex-col overflow-hidden">
+      <div className="relative ml-auto w-full max-w-lg bg-card shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-blue-500" />
             <div>
-              <h3 className="font-semibold text-gray-900 text-sm leading-tight">{label}</h3>
-              <p className="text-xs text-gray-400 font-mono">{accountId}</p>
+              <h3 className="font-semibold text-foreground text-sm leading-tight">{label}</h3>
+              <p className="text-xs text-[var(--fg-tertiary)] font-mono">{accountId}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 rounded-md p-1 hover:bg-gray-100"
+            className="text-[var(--fg-tertiary)] hover:text-muted-foreground rounded-md p-1 hover:bg-[var(--bg-sunken)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -222,7 +222,7 @@ export function AccountForecastDrawer({
 
           {/* ── Chart ── */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               Historical vs Forecast
             </p>
             <div className="h-52 w-full">
@@ -279,18 +279,18 @@ export function AccountForecastDrawer({
             <div className="flex items-center gap-4 mt-2 justify-center">
               <div className="flex items-center gap-1.5">
                 <div className="w-6 h-0.5 bg-blue-500 rounded" />
-                <span className="text-xs text-gray-500">Actuals</span>
+                <span className="text-xs text-muted-foreground">Actuals</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-6 h-0.5 rounded" style={{ background: 'repeating-linear-gradient(90deg, #10b981 0, #10b981 5px, transparent 5px, transparent 8px)' }} />
-                <span className="text-xs text-gray-500">Forecast</span>
+                <span className="text-xs text-muted-foreground">Forecast</span>
               </div>
             </div>
           </div>
 
           {/* ── Prediction Method ── */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               Prediction Method
             </p>
             <div className="grid grid-cols-2 gap-2 mb-3">
@@ -306,22 +306,22 @@ export function AccountForecastDrawer({
                   className={`text-left border rounded-lg px-3 py-2.5 transition-colors ${
                     ruleType === opt.value
                       ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300 bg-white'
+                      : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
                   }`}
                 >
-                  <p className={`text-xs font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-gray-700'}`}>
+                  <p className={`text-xs font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-muted-foreground'}`}>
                     {opt.label}
                   </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{opt.desc}</p>
+                  <p className="text-[10px] text-[var(--fg-tertiary)] mt-0.5 leading-snug">{opt.desc}</p>
                 </button>
               ))}
             </div>
 
             {/* Smart Prediction params */}
             {ruleType === 'smart_prediction' && (
-              <div className="bg-gray-50 rounded-lg p-3 space-y-3">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-700">Algorithm</label>
+                  <label className="text-xs font-medium text-muted-foreground">Algorithm</label>
                   <div className="flex gap-2 mt-1">
                     {(['linear_regression', 'rolling_average'] as const).map(m => (
                       <button
@@ -330,7 +330,7 @@ export function AccountForecastDrawer({
                         className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                           spMethod === m
                             ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                         }`}
                       >
                         {m === 'linear_regression' ? 'Linear Regression' : 'Rolling Average'}
@@ -339,11 +339,11 @@ export function AccountForecastDrawer({
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">Lookback Window</label>
+                  <label className="text-xs font-medium text-muted-foreground">Lookback Window</label>
                   <select
                     value={spLookback}
                     onChange={e => setSpLookback(Number(e.target.value) as 3 | 6 | 12 | 24)}
-                    className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+                    className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
                   >
                     <option value={3}>3 months</option>
                     <option value={6}>6 months</option>
@@ -356,45 +356,45 @@ export function AccountForecastDrawer({
 
             {/* Constant/Growing params */}
             {ruleType === 'constant_growing' && (
-              <div className="bg-gray-50 rounded-lg p-3 space-y-3">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-700">Base Monthly Amount</label>
+                  <label className="text-xs font-medium text-muted-foreground">Base Monthly Amount</label>
                   <input
                     type="number"
                     value={cgBase}
                     onChange={e => setCgBase(parseFloat(e.target.value) || 0)}
-                    className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+                    className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
                     placeholder="e.g. 50000"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">Annual Growth Rate (%)</label>
+                  <label className="text-xs font-medium text-muted-foreground">Annual Growth Rate (%)</label>
                   <input
                     type="number"
                     value={cgRate}
                     onChange={e => setCgRate(parseFloat(e.target.value) || 0)}
                     step={0.1}
-                    className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+                    className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
                     placeholder="0 = flat"
                   />
-                  <p className="text-[10px] text-gray-400 mt-1">0 = flat amount. Compounded monthly.</p>
+                  <p className="text-[10px] text-[var(--fg-tertiary)] mt-1">0 = flat amount. Compounded monthly.</p>
                 </div>
               </div>
             )}
 
             {/* Direct Entry params */}
             {ruleType === 'direct_entry' && (
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs font-medium text-gray-700 mb-2">Monthly Amounts</p>
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+                <p className="text-xs font-medium text-muted-foreground mb-2">Monthly Amounts</p>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                   {forecastPeriods.map(p => (
                     <div key={p} className="flex items-center gap-2">
-                      <span className="w-16 text-[10px] text-gray-500 shrink-0">{periodLabel(p)}</span>
+                      <span className="w-16 text-[10px] text-muted-foreground shrink-0">{periodLabel(p)}</span>
                       <input
                         type="number"
                         value={deValues[p] ?? ''}
                         onChange={e => setDeValues(prev => ({ ...prev, [p]: parseFloat(e.target.value) || 0 }))}
-                        className="flex-1 border border-gray-300 rounded px-2 py-1 text-xs"
+                        className="flex-1 border border-[var(--border-default)] rounded px-2 py-1 text-xs"
                         placeholder="0"
                       />
                     </div>
@@ -405,16 +405,16 @@ export function AccountForecastDrawer({
 
             {/* Link to Budget params */}
             {ruleType === 'link_to_budget' && (
-              <div className="bg-gray-50 rounded-lg p-3 space-y-3">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-3">
                 {budgets.length === 0 ? (
                   <p className="text-xs text-yellow-600">No budgets found. Create one in the Budgets tab first.</p>
                 ) : (
                   <div>
-                    <label className="text-xs font-medium text-gray-700">Budget</label>
+                    <label className="text-xs font-medium text-muted-foreground">Budget</label>
                     <select
                       value={lbBudgetId}
                       onChange={e => setLbBudgetId(e.target.value)}
-                      className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+                      className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
                     >
                       {budgets.map(b => (
                         <option key={b.id} value={b.id}>{b.name}</option>
@@ -423,16 +423,16 @@ export function AccountForecastDrawer({
                   </div>
                 )}
                 <div>
-                  <label className="text-xs font-medium text-gray-700">Adjustment (%)</label>
+                  <label className="text-xs font-medium text-muted-foreground">Adjustment (%)</label>
                   <input
                     type="number"
                     value={lbAdjPct}
                     onChange={e => setLbAdjPct(parseFloat(e.target.value) || 0)}
                     step={0.5}
-                    className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+                    className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
                     placeholder="0 = no adjustment"
                   />
-                  <p className="text-[10px] text-gray-400 mt-1">+5 = 5% over budget.</p>
+                  <p className="text-[10px] text-[var(--fg-tertiary)] mt-1">+5 = 5% over budget.</p>
                 </div>
               </div>
             )}
@@ -440,10 +440,10 @@ export function AccountForecastDrawer({
 
           {/* ── Cash Timing Allocation ── */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
               Cash Timing Allocation
             </p>
-            <p className="text-[10px] text-gray-400 mb-3">
+            <p className="text-[10px] text-[var(--fg-tertiary)] mb-3">
               When does the cash actually leave/enter the bank account?
             </p>
             <div className="grid grid-cols-4 gap-2">
@@ -454,16 +454,16 @@ export function AccountForecastDrawer({
                   className={`text-center border rounded-lg py-2 transition-colors ${
                     lagMonths === lag
                       ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                      : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] text-muted-foreground'
                   }`}
                 >
                   <p className="text-xs font-semibold">{lag === 0 ? 'Same' : `+${lag}`}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{lag === 0 ? 'month' : lag === 1 ? 'month' : 'months'}</p>
+                  <p className="text-[10px] text-[var(--fg-tertiary)] mt-0.5">{lag === 0 ? 'month' : lag === 1 ? 'month' : 'months'}</p>
                 </button>
               ))}
             </div>
             {lagMonths > 0 && (
-              <p className="text-[10px] text-gray-400 mt-2">
+              <p className="text-[10px] text-[var(--fg-tertiary)] mt-2">
                 Cash for this line item will flow {lagMonths} month{lagMonths > 1 ? 's' : ''} after it's recognised in P&amp;L.
               </p>
             )}
@@ -471,7 +471,7 @@ export function AccountForecastDrawer({
         </div>
 
         {/* Footer actions */}
-        <div className="flex items-center justify-between px-5 py-4 border-t bg-gray-50 shrink-0">
+        <div className="flex items-center justify-between px-5 py-4 border-t bg-[var(--bg-sunken)] shrink-0">
           {currentRule ? (
             <button
               onClick={onDelete}

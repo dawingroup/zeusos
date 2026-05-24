@@ -102,8 +102,8 @@ export function CashForecastLandingPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Cash & Forecast</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-xl font-bold text-foreground">Cash & Forecast</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Cash optimization, projections, and three-statement forecasting
           </p>
         </div>
@@ -198,7 +198,7 @@ export function CashForecastLandingPage() {
                     >
                       {count}
                     </div>
-                    <div className="text-[9px] text-gray-400 truncate">{tier.slice(0, 4)}</div>
+                    <div className="text-[9px] text-[var(--fg-tertiary)] truncate">{tier.slice(0, 4)}</div>
                   </div>
                 );
               })}
@@ -212,7 +212,7 @@ export function CashForecastLandingPage() {
         {/* Projection Chart */}
         <Card className="lg:col-span-2 p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-900">90-Day Cash Projection</h3>
+            <h3 className="text-sm font-semibold text-foreground">90-Day Cash Projection</h3>
             <Button
               variant="ghost"
               size="sm"
@@ -233,7 +233,7 @@ export function CashForecastLandingPage() {
         {/* Today's Spend Plan */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-900">Today&apos;s Spend Plan</h3>
+            <h3 className="text-sm font-semibold text-foreground">Today&apos;s Spend Plan</h3>
             <Button
               variant="ghost"
               size="sm"
@@ -252,8 +252,8 @@ export function CashForecastLandingPage() {
             />
           ) : (
             <Card className="p-6 text-center">
-              <Clock className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-sm text-gray-500">No spend plan generated yet</p>
+              <Clock className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">No spend plan generated yet</p>
               <Button
                 variant="outline"
                 size="sm"
@@ -272,7 +272,7 @@ export function CashForecastLandingPage() {
       {expenditureQueue.length > 0 && (
         <Card className="p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-900">Top Expenditures by Score</h3>
+            <h3 className="text-sm font-semibold text-foreground">Top Expenditures by Score</h3>
             <Button
               variant="ghost"
               size="sm"
@@ -285,7 +285,7 @@ export function CashForecastLandingPage() {
           </div>
           <div className="space-y-2">
             {expenditureQueue.slice(0, 5).map((item: any) => (
-              <div key={item.id} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+              <div key={item.id} className="flex items-center gap-3 py-2 border-b border-[var(--border-subtle)] last:border-0">
                 <span
                   className="text-sm font-bold w-8 text-center"
                   style={{ color: PRIORITY_TIER_COLORS[item.priorityTier as keyof typeof PRIORITY_TIER_COLORS] }}
@@ -293,11 +293,11 @@ export function CashForecastLandingPage() {
                   {item.compositeScore.toFixed(0)}
                 </span>
                 <TierBadge tier={item.priorityTier} />
-                <span className="text-sm text-gray-700 truncate flex-1">{item.description}</span>
+                <span className="text-sm text-muted-foreground truncate flex-1">{item.description}</span>
                 {item.vendor && (
-                  <span className="text-xs text-gray-400 hidden sm:block">{item.vendor}</span>
+                  <span className="text-xs text-[var(--fg-tertiary)] hidden sm:block">{item.vendor}</span>
                 )}
-                <span className="text-sm font-medium text-gray-900 shrink-0">{formatUGX(item.amountUGX)}</span>
+                <span className="text-sm font-medium text-foreground shrink-0">{formatUGX(item.amountUGX)}</span>
               </div>
             ))}
           </div>
@@ -306,34 +306,34 @@ export function CashForecastLandingPage() {
 
       {/* Data Sources — Cross-module links */}
       <Card className="p-4">
-        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
+        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
           Cash Data Sources
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <button
             onClick={() => navigate('/finance/operations/bills')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-red-400" />
             QBO Bills & Payables
           </button>
           <button
             onClick={() => navigate('/manufacturing/procurement')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-blue-400" />
             Purchase Orders
           </button>
           <button
             onClick={() => navigate('/hr/payroll')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-amber-400" />
             Salary & PAYE
           </button>
           <button
             onClick={() => navigate('/finance/operations/invoices')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-green-400" />
             Invoices & Receipts

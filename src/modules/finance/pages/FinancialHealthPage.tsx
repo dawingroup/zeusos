@@ -232,7 +232,7 @@ function CircularScore({ score }: { score: number }) {
         <span className="text-4xl font-bold" style={{ color }}>
           {score}
         </span>
-        <span className="text-xs text-gray-400 font-medium mt-0.5">/ 100</span>
+        <span className="text-xs text-[var(--fg-tertiary)] font-medium mt-0.5">/ 100</span>
       </div>
     </div>
   );
@@ -257,18 +257,18 @@ function RatioCard({
     <Card className="p-4">
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             {ratio.label}
           </p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{formattedValue}</p>
-          <p className="text-[11px] text-gray-400 mt-0.5">{ratio.description}</p>
+          <p className="text-2xl font-bold text-foreground mt-1">{formattedValue}</p>
+          <p className="text-[11px] text-[var(--fg-tertiary)] mt-0.5">{ratio.description}</p>
         </div>
         <div className="flex flex-col items-center gap-1 ml-3">
           <div className={`w-4 h-4 rounded-full ${LIGHT_COLORS[light]}`} />
-          <span className="text-[10px] text-gray-400">{score}</span>
+          <span className="text-[10px] text-[var(--fg-tertiary)]">{score}</span>
         </div>
       </div>
-      <p className="text-[10px] text-gray-400 mt-2 border-t border-gray-100 pt-2">
+      <p className="text-[10px] text-[var(--fg-tertiary)] mt-2 border-t border-[var(--border-subtle)] pt-2">
         {ratio.healthyLabel}
       </p>
     </Card>
@@ -321,8 +321,8 @@ export function FinancialHealthPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Financial Health</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Financial Health</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Composite health score derived from P&L ratios
           {healthData && (
             <span className="ml-1">
@@ -346,10 +346,10 @@ export function FinancialHealthPage() {
             className={`p-8 flex flex-col items-center border ${getScoreBgClass(healthData.score)}`}
           >
             <CircularScore score={healthData.score} />
-            <p className="mt-4 text-sm font-semibold text-gray-700">
+            <p className="mt-4 text-sm font-semibold text-muted-foreground">
               {getScoreLabel(healthData.score)}
             </p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-[var(--fg-tertiary)] mt-1">
               Weighted average of {HEALTH_RATIOS.length} financial ratios
             </p>
           </Card>
@@ -368,7 +368,7 @@ export function FinancialHealthPage() {
           </div>
 
           {/* Legend */}
-          <div className="flex items-center gap-6 text-xs text-gray-400 justify-center">
+          <div className="flex items-center gap-6 text-xs text-[var(--fg-tertiary)] justify-center">
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-green-500" />
               <span>Healthy</span>
@@ -384,7 +384,7 @@ export function FinancialHealthPage() {
           </div>
         </>
       ) : (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data available</p>
           <p className="text-sm mt-1">Sync QBO data from Finance &gt; Settings &gt; Integrations.</p>
         </Card>

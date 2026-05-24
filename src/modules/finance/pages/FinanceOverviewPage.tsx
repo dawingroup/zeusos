@@ -153,8 +153,8 @@ export function FinanceOverviewPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Financial Overview</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-xl font-bold text-foreground">Financial Overview</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Performance summary and key metrics
           </p>
         </div>
@@ -225,40 +225,40 @@ export function FinanceOverviewPage() {
             <div className="flex items-start gap-6">
               <CircularHealthScore score={healthData?.score || 0} />
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                <h3 className="text-sm font-semibold text-foreground mb-3">
                   Financial Health
                 </h3>
                 {healthData?.metrics && (
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <p className="text-xs text-gray-500">Gross Profit</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-xs text-muted-foreground">Gross Profit</p>
+                      <p className="text-sm font-bold text-foreground">
                         {formatCompact(healthData.metrics.grossProfit)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Operating</p>
-                      <p className="text-sm font-bold text-gray-900">
+                      <p className="text-xs text-muted-foreground">Operating</p>
+                      <p className="text-sm font-bold text-foreground">
                         {formatCompact(healthData.metrics.operatingProfit)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Net Profit</p>
-                      <p className={`text-sm font-bold ${healthData.metrics.netProfit >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                      <p className="text-xs text-muted-foreground">Net Profit</p>
+                      <p className={`text-sm font-bold ${healthData.metrics.netProfit >= 0 ? 'text-foreground' : 'text-red-600'}`}>
                         {formatCompact(healthData.metrics.netProfit)}
                       </p>
                     </div>
                   </div>
                 )}
               </div>
-              <ArrowRight className="w-4 h-4 text-gray-300 shrink-0 mt-2" />
+              <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] shrink-0 mt-2" />
             </div>
           </Card>
 
           {/* Cash Projection Chart */}
           <Card className="p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900">90-Day Cash Projection</h3>
+              <h3 className="text-sm font-semibold text-foreground">90-Day Cash Projection</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -284,7 +284,7 @@ export function FinanceOverviewPage() {
         <div className="space-y-4">
           <Card className="p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900">Budget Status</h3>
+              <h3 className="text-sm font-semibold text-foreground">Budget Status</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -299,12 +299,12 @@ export function FinanceOverviewPage() {
                 {budgets.slice(0, 4).map((b) => (
                   <div key={b.id}>
                     <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-gray-700 truncate max-w-[60%]">{b.name}</span>
-                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-red-600' : b.utilization >= 85 ? 'text-amber-600' : 'text-gray-500'}`}>
+                      <span className="text-muted-foreground truncate max-w-[60%]">{b.name}</span>
+                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-red-600' : b.utilization >= 85 ? 'text-amber-600' : 'text-muted-foreground'}`}>
                         {b.utilization}%
                       </span>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${b.utilization >= 100 ? 'bg-red-500' : b.utilization >= 85 ? 'bg-amber-500' : 'bg-green-500'}`}
                         style={{ width: `${Math.min(b.utilization, 100)}%` }}
@@ -314,7 +314,7 @@ export function FinanceOverviewPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-4">No active budgets</p>
+              <p className="text-sm text-[var(--fg-tertiary)] text-center py-4">No active budgets</p>
             )}
           </Card>
 
@@ -324,10 +324,10 @@ export function FinanceOverviewPage() {
             onClick={() => navigate('/finance/overview/kpis')}
           >
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-gray-900">KPI Dashboard</h3>
-              <BarChart3 className="w-4 h-4 text-gray-300" />
+              <h3 className="text-sm font-semibold text-foreground">KPI Dashboard</h3>
+              <BarChart3 className="w-4 h-4 text-[var(--fg-tertiary)]" />
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               6 core financial KPIs with 12-month trends
             </p>
             <div className="flex items-center gap-1 mt-2 text-xs text-green-600 font-medium">
@@ -339,32 +339,32 @@ export function FinanceOverviewPage() {
 
       {/* Row 4: Cross-Module Links */}
       <Card className="p-4">
-        <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Connected Modules</h3>
+        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Connected Modules</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <button
             onClick={() => navigate('/manufacturing/procurement')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-blue-400" />
             Purchase Orders
           </button>
           <button
             onClick={() => navigate('/assets')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-purple-400" />
             Asset Registry
           </button>
           <button
             onClick={() => navigate('/hr/payroll')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-amber-400" />
             Payroll / PAYE
           </button>
           <button
             onClick={() => navigate('/strategy')}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors text-left"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
             <div className="w-2 h-2 rounded-full bg-green-400" />
             Strategy KPIs
@@ -374,7 +374,7 @@ export function FinanceOverviewPage() {
 
       {/* Row 5: Quick Access Grid */}
       <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-3">Quick Access</h3>
+        <h3 className="text-sm font-medium text-muted-foreground mb-3">Quick Access</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {QUICK_LINKS.map((link) => {
             const Icon = link.icon;
@@ -382,7 +382,7 @@ export function FinanceOverviewPage() {
               <button
                 key={link.path}
                 onClick={() => navigate(link.path)}
-                className="flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all text-left"
+                className="flex items-center gap-2.5 px-3 py-2.5 bg-card border border-[var(--border-subtle)] rounded-lg hover:border-[var(--border-default)] hover:shadow-sm transition-all text-left"
               >
                 <div
                   className="flex items-center justify-center w-7 h-7 rounded-md shrink-0"
@@ -390,7 +390,7 @@ export function FinanceOverviewPage() {
                 >
                   <Icon className="w-3.5 h-3.5" style={{ color: link.color }} />
                 </div>
-                <span className="text-sm text-gray-700 truncate">{link.label}</span>
+                <span className="text-sm text-muted-foreground truncate">{link.label}</span>
               </button>
             );
           })}

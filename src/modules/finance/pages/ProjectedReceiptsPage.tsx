@@ -95,11 +95,11 @@ function ConfidenceBadge({ level, score }: { level: ConfidenceLevel; score?: num
 }
 
 const STATUS_STYLES: Record<string, { label: string; bg: string; text: string }> = {
-  projected: { label: 'Projected', bg: 'bg-gray-50', text: 'text-gray-600' },
+  projected: { label: 'Projected', bg: 'bg-[var(--bg-sunken)]', text: 'text-muted-foreground' },
   invoiced: { label: 'Invoiced', bg: 'bg-blue-50', text: 'text-blue-700' },
   overdue: { label: 'Overdue', bg: 'bg-red-50', text: 'text-red-700' },
   received: { label: 'Received', bg: 'bg-green-50', text: 'text-green-700' },
-  cancelled: { label: 'Cancelled', bg: 'bg-gray-100', text: 'text-gray-400' },
+  cancelled: { label: 'Cancelled', bg: 'bg-[var(--bg-sunken)]', text: 'text-[var(--fg-tertiary)]' },
 };
 
 function ReceiptStatusBadge({ status }: { status: string }) {
@@ -133,21 +133,21 @@ function ReceiptRow({
 
   return (
     <TableRow
-      className="cursor-pointer hover:bg-gray-50"
+      className="cursor-pointer hover:bg-[var(--bg-sunken)]"
       onClick={() => onSelect(item.id)}
     >
       <TableCell>
         <div>
-          <p className="text-sm font-medium text-gray-900 truncate max-w-[220px]">
+          <p className="text-sm font-medium text-foreground truncate max-w-[220px]">
             {item.sourceName || 'Untitled Project'}
           </p>
-          <p className="text-xs text-gray-500 truncate max-w-[220px]">
+          <p className="text-xs text-muted-foreground truncate max-w-[220px]">
             {item.customerName || 'No client assigned'}
           </p>
         </div>
       </TableCell>
       <TableCell>
-        <span className="text-xs text-gray-600">
+        <span className="text-xs text-muted-foreground">
           {SOURCE_TYPE_LABELS[item.sourceType] || item.sourceType}
         </span>
       </TableCell>
@@ -155,7 +155,7 @@ function ReceiptRow({
         <span className="text-sm font-medium">{formatUGX(item.amount)}</span>
       </TableCell>
       <TableCell>
-        <span className="text-xs text-gray-500">{formatDate(item.expectedDate)}</span>
+        <span className="text-xs text-muted-foreground">{formatDate(item.expectedDate)}</span>
       </TableCell>
       <TableCell>
         <ConfidenceBadge level={item.confidenceLevel} score={item.confidenceScore} />
@@ -166,7 +166,7 @@ function ReceiptRow({
       <TableCell>
         {days !== null && (
           <span className={`text-xs font-medium ${
-            days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-gray-500'
+            days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-muted-foreground'
           }`}>
             {days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? 'Today' : `${days}d`}
           </span>
@@ -290,7 +290,7 @@ export default function ProjectedReceiptsPage() {
           <Landmark className="h-5 w-5 text-green-600" />
           <div>
             <h2 className="text-lg font-semibold">Projected Receipts</h2>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-[var(--fg-tertiary)]">
               {filteredCount} of {totalCount} items
             </p>
           </div>
@@ -389,7 +389,7 @@ export default function ProjectedReceiptsPage() {
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 isActive
                   ? `${style.bg} ${style.text} ring-2 ring-offset-1 ring-current`
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
               onClick={() => updateFilter('confidenceLevel', isActive ? undefined : level)}
             >
@@ -400,7 +400,7 @@ export default function ProjectedReceiptsPage() {
         })}
         {hasActiveFilters && (
           <button
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)]"
             onClick={clearFilters}
           >
             <X className="h-3 w-3" />
@@ -415,7 +415,7 @@ export default function ProjectedReceiptsPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-[var(--fg-tertiary)]" />
               <Input
                 placeholder="Search customer or source..."
                 value={filters.searchTerm || ''}
@@ -426,7 +426,7 @@ export default function ProjectedReceiptsPage() {
 
             {/* Status */}
             <select
-              className="h-9 rounded-md border border-gray-200 bg-white px-3 text-sm"
+              className="h-9 rounded-md border border-[var(--border-subtle)] bg-card px-3 text-sm"
               value={filters.status || ''}
               onChange={(e) => updateFilter('status', (e.target.value || undefined) as ProjectedReceipt['status'] | undefined)}
             >
@@ -440,7 +440,7 @@ export default function ProjectedReceiptsPage() {
 
             {/* Source Type */}
             <select
-              className="h-9 rounded-md border border-gray-200 bg-white px-3 text-sm"
+              className="h-9 rounded-md border border-[var(--border-subtle)] bg-card px-3 text-sm"
               value={filters.sourceType || ''}
               onChange={(e) => updateFilter('sourceType', (e.target.value || undefined) as ProjectedReceipt['sourceType'] | undefined)}
             >
@@ -492,7 +492,7 @@ export default function ProjectedReceiptsPage() {
             ))}
             {filteredItems.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-gray-400">
+                <TableCell colSpan={7} className="text-center py-8 text-[var(--fg-tertiary)]">
                   {hasActiveFilters
                     ? 'No receipts match your filters'
                     : 'No projected receipts found'}
@@ -504,9 +504,9 @@ export default function ProjectedReceiptsPage() {
 
         {/* Footer */}
         {filteredItems.length > 0 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t text-xs text-gray-500">
+          <div className="flex items-center justify-between px-4 py-3 border-t text-xs text-muted-foreground">
             <span>{filteredCount} items</span>
-            <span className="font-medium text-gray-700">Total: {formatUGX(filteredTotal)}</span>
+            <span className="font-medium text-muted-foreground">Total: {formatUGX(filteredTotal)}</span>
           </div>
         )}
       </Card>
@@ -523,31 +523,31 @@ export default function ProjectedReceiptsPage() {
               {/* Receipt Info */}
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wide">Customer</p>
+                  <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Customer</p>
                   <p className="text-sm font-medium">{selectedItem.customerName || 'Unknown'}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 uppercase tracking-wide">Source</p>
+                  <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Source</p>
                   <p className="text-sm">{selectedItem.sourceName}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-[var(--fg-tertiary)]">
                     {SOURCE_TYPE_LABELS[selectedItem.sourceType] || selectedItem.sourceType}
                   </p>
                 </div>
                 <div className="flex gap-6">
                   <div>
-                    <p className="text-xs text-gray-400 uppercase tracking-wide">Amount</p>
+                    <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Amount</p>
                     <p className="text-lg font-bold">{formatUGX(selectedItem.amount)}</p>
-                    <p className="text-xs text-gray-400">{selectedItem.currency}</p>
+                    <p className="text-xs text-[var(--fg-tertiary)]">{selectedItem.currency}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 uppercase tracking-wide">Expected</p>
+                    <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Expected</p>
                     <p className="text-sm font-medium">{formatDate(selectedItem.expectedDate)}</p>
                     {(() => {
                       const days = getDaysUntilDue(selectedItem);
                       if (days === null) return null;
                       return (
                         <p className={`text-xs font-medium ${
-                          days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-gray-500'
+                          days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-muted-foreground'
                         }`}>
                           {days < 0 ? `${Math.abs(days)} days overdue` : days === 0 ? 'Due today' : `In ${days} days`}
                         </p>
@@ -559,12 +559,12 @@ export default function ProjectedReceiptsPage() {
 
               {/* Confidence */}
               <div className="border-t pt-4 space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wide">Confidence</p>
+                <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Confidence</p>
                 <div className="flex items-center gap-3">
                   <ConfidenceBadge level={selectedItem.confidenceLevel} />
-                  <span className="text-sm text-gray-600">Score: {selectedItem.confidenceScore}/100</span>
+                  <span className="text-sm text-muted-foreground">Score: {selectedItem.confidenceScore}/100</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${
                       selectedItem.confidenceScore >= 70 ? 'bg-green-500'
@@ -578,11 +578,11 @@ export default function ProjectedReceiptsPage() {
 
               {/* Status */}
               <div className="border-t pt-4 space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wide">Status</p>
+                <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Status</p>
                 <ReceiptStatusBadge status={selectedItem.status} />
                 {selectedItem.actualReceivedDate && (
                   <div className="mt-2">
-                    <p className="text-xs text-gray-400">Received on</p>
+                    <p className="text-xs text-[var(--fg-tertiary)]">Received on</p>
                     <p className="text-sm">{formatDate(selectedItem.actualReceivedDate)}</p>
                     {selectedItem.actualAmount !== undefined && (
                       <p className="text-sm font-medium">
@@ -596,7 +596,7 @@ export default function ProjectedReceiptsPage() {
               {/* Actions — only show for active receipts */}
               {selectedItem.status !== 'received' && selectedItem.status !== 'cancelled' && (
                 <div className="border-t pt-4 space-y-3">
-                  <p className="text-xs text-gray-400 uppercase tracking-wide">Actions</p>
+                  <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Actions</p>
                   <div className="flex flex-col gap-2">
                     <Button
                       size="sm"
@@ -632,15 +632,15 @@ export default function ProjectedReceiptsPage() {
               {/* Milestone (if present) */}
               {selectedItem.milestoneId && (
                 <div className="border-t pt-4 space-y-2">
-                  <p className="text-xs text-gray-400 uppercase tracking-wide">Milestone</p>
+                  <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Milestone</p>
                   <p className="text-sm font-medium">{selectedItem.milestoneName || selectedItem.milestoneId}</p>
                   {selectedItem.milestoneCompletionPercent !== undefined && (
                     <div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
                         <span>Completion</span>
                         <span>{selectedItem.milestoneCompletionPercent}%</span>
                       </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                         <div
                           className="h-2 rounded-full bg-blue-500"
                           style={{ width: `${selectedItem.milestoneCompletionPercent}%` }}
@@ -653,23 +653,23 @@ export default function ProjectedReceiptsPage() {
 
               {/* Metadata */}
               <div className="border-t pt-4 space-y-2">
-                <p className="text-xs text-gray-400 uppercase tracking-wide">Details</p>
+                <p className="text-xs text-[var(--fg-tertiary)] uppercase tracking-wide">Details</p>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-gray-400">Source ID</span>
-                    <p className="text-gray-600 truncate">{selectedItem.sourceId}</p>
+                    <span className="text-[var(--fg-tertiary)]">Source ID</span>
+                    <p className="text-muted-foreground truncate">{selectedItem.sourceId}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400">Subsidiary</span>
-                    <p className="text-gray-600">{selectedItem.subsidiaryId}</p>
+                    <span className="text-[var(--fg-tertiary)]">Subsidiary</span>
+                    <p className="text-muted-foreground">{selectedItem.subsidiaryId}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400">Created</span>
-                    <p className="text-gray-600">{formatDate(selectedItem.createdAt)}</p>
+                    <span className="text-[var(--fg-tertiary)]">Created</span>
+                    <p className="text-muted-foreground">{formatDate(selectedItem.createdAt)}</p>
                   </div>
                   <div>
-                    <span className="text-gray-400">Updated</span>
-                    <p className="text-gray-600">{formatDate(selectedItem.updatedAt)}</p>
+                    <span className="text-[var(--fg-tertiary)]">Updated</span>
+                    <p className="text-muted-foreground">{formatDate(selectedItem.updatedAt)}</p>
                   </div>
                 </div>
               </div>
@@ -686,10 +686,10 @@ export default function ProjectedReceiptsPage() {
           </DialogHeader>
           {confirmDialog && (
             <div className="space-y-4 py-2">
-              <div className="bg-gray-50 rounded-lg p-3 space-y-1">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-1">
                 <p className="text-sm font-medium">{confirmDialog.sourceName}</p>
-                <p className="text-xs text-gray-500">{confirmDialog.customerName || 'No client'}</p>
-                <p className="text-xs text-gray-400">Expected: {formatUGX(confirmDialog.amount)}</p>
+                <p className="text-xs text-muted-foreground">{confirmDialog.customerName || 'No client'}</p>
+                <p className="text-xs text-[var(--fg-tertiary)]">Expected: {formatUGX(confirmDialog.amount)}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirm-amount">Actual Amount Received (UGX)</Label>

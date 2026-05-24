@@ -58,8 +58,8 @@ function TopAccountsList({ items, color }: {
         <div className="mt-2 space-y-1.5 pl-1">
           {items.map((a, i) => (
             <div key={i} className="flex justify-between text-xs">
-              <span className="text-gray-600 truncate mr-2">{a.label}</span>
-              <span className="font-medium text-gray-900 whitespace-nowrap">{fmtFull(Math.abs(a.amount))}</span>
+              <span className="text-muted-foreground truncate mr-2">{a.label}</span>
+              <span className="font-medium text-foreground whitespace-nowrap">{fmtFull(Math.abs(a.amount))}</span>
             </div>
           ))}
         </div>
@@ -80,15 +80,15 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
 
   return (
     <div className="space-y-5">
-      <h3 className="text-base font-bold text-gray-900">Breakeven</h3>
+      <h3 className="text-base font-bold text-foreground">Breakeven</h3>
 
       {/* Revenue */}
       <div>
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-green-400" />
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">REVENUE</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">REVENUE</span>
         </div>
-        <p className="text-xl font-bold text-gray-900 mt-1">{fmtFull(prof.revenue)}</p>
+        <p className="text-xl font-bold text-foreground mt-1">{fmtFull(prof.revenue)}</p>
         <TopAccountsList items={topRevenue} color="text-green-600" />
       </div>
 
@@ -96,25 +96,25 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
       <div>
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-red-400" />
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">TOTAL COSTS</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">TOTAL COSTS</span>
         </div>
-        <p className="text-xl font-bold text-gray-900 mt-1">{fmtFull(be.totalCosts)}</p>
+        <p className="text-xl font-bold text-foreground mt-1">{fmtFull(be.totalCosts)}</p>
         <TopAccountsList items={topCosts} color="text-red-600" />
       </div>
 
       {/* Breakeven Point */}
       <div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-gray-500" />
-          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">BREAKEVEN POINT</span>
+          <span className="w-3 h-3 rounded-full bg-[var(--fg-tertiary)]" />
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">BREAKEVEN POINT</span>
         </div>
-        <p className="text-xl font-bold text-gray-900 mt-1">
+        <p className="text-xl font-bold text-foreground mt-1">
           {isFinite(be.breakevenRevenue) ? fmtFull(be.breakevenRevenue) : 'N/A'}
         </p>
       </div>
 
       <div className="border-t pt-4">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">MARGIN OF SAFETY</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">MARGIN OF SAFETY</p>
         <p className={`text-xl font-bold mt-1 ${isNegSafety ? 'text-red-600' : 'text-green-600'}`}>
           {isNegSafety ? '-' : ''}{fmtFull(Math.abs(be.marginOfSafety))}
         </p>
@@ -122,20 +122,20 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
 
       <div className="border-t pt-4 space-y-4">
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-2">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-red-400 inline-block" />
             VARIABLE COSTS
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {fmtPct(be.variableCostRatio)} per unit of Revenue
           </p>
         </div>
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-2">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
             FIXED COSTS
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {fmtFull(be.fixedCosts)}
           </p>
         </div>
@@ -149,11 +149,11 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
 function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }> }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs space-y-1">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg shadow-lg p-3 text-xs space-y-1">
       {payload.map((p, i) => (
         <div key={i} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
-          <span className="text-gray-500">{p.name}:</span>
+          <span className="text-muted-foreground">{p.name}:</span>
           <span className="font-semibold">{fmtCurrency(p.value)}</span>
         </div>
       ))}
@@ -262,8 +262,8 @@ export function ProfitabilityPage() {
     return (
       <div className="space-y-5">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Profitability</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Loading analysis...</p>
+          <h2 className="text-xl font-bold text-foreground">Profitability</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Loading analysis...</p>
         </div>
         <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
@@ -278,15 +278,15 @@ export function ProfitabilityPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Profitability</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Breakeven analysis & cost structure</p>
+          <h2 className="text-xl font-bold text-foreground">Profitability</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Breakeven analysis & cost structure</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">For the Month of</span>
+          <span className="text-xs text-muted-foreground">For the Month of</span>
           <select
             value={selectedPeriod}
             onChange={e => setSelectedPeriod(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white font-medium"
+            className="border border-[var(--border-default)] rounded-md px-3 py-1.5 text-sm bg-card font-medium"
           >
             {periods.map(p => (
               <option key={p} value={p}>{periodLabel(p)}</option>
@@ -435,7 +435,7 @@ export function ProfitabilityPage() {
                   { color: 'bg-orange-500', label: 'VARIABLE COSTS' },
                   { color: 'bg-amber-500', label: 'FIXED COSTS' },
                 ].map(l => (
-                  <span key={l.label} className="flex items-center gap-1.5 text-gray-500">
+                  <span key={l.label} className="flex items-center gap-1.5 text-muted-foreground">
                     <span className={`w-3 h-1.5 rounded-sm ${l.color}`} />
                     {l.label}
                   </span>
@@ -452,7 +452,7 @@ export function ProfitabilityPage() {
       )}
 
       {!prof && !loading && (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data for the selected period</p>
           <p className="text-sm mt-1">Select a different month or sync QBO data from Integrations.</p>
         </Card>

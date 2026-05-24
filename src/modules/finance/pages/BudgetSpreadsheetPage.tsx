@@ -148,7 +148,7 @@ export function BudgetSpreadsheetPage() {
         <div className="flex items-center gap-3">
           {/* Budget selector */}
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm font-medium text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[280px]"
+            className="border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm font-medium text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[280px]"
             value={selectedBudgetId || ''}
             onChange={e => selectBudget(e.target.value)}
           >
@@ -256,24 +256,24 @@ export function BudgetSpreadsheetPage() {
       {budget && (
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
           <Card className="p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Annual Budget</p>
-            <p className="text-lg font-bold text-gray-900 tabular-nums">{formatCompact(budget.totalBudget)}</p>
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Annual Budget</p>
+            <p className="text-lg font-bold text-foreground tabular-nums">{formatCompact(budget.totalBudget)}</p>
           </Card>
           <Card className="p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Actual</p>
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Actual</p>
             <p className="text-lg font-bold text-emerald-600 tabular-nums">{formatCompact(budget.totalActual)}</p>
           </Card>
           <Card className="p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Committed</p>
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Committed</p>
             <p className="text-lg font-bold text-amber-600 tabular-nums">{formatCompact(budget.totalCommitted)}</p>
           </Card>
           <Card className="p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Available</p>
-            <p className="text-lg font-bold text-gray-600 tabular-nums">{formatCompact(budget.totalAvailable)}</p>
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Available</p>
+            <p className="text-lg font-bold text-muted-foreground tabular-nums">{formatCompact(budget.totalAvailable)}</p>
           </Card>
           <Card className="p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Line Items</p>
-            <p className="text-lg font-bold text-gray-900">{lineCount}</p>
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Line Items</p>
+            <p className="text-lg font-bold text-foreground">{lineCount}</p>
           </Card>
         </div>
       )}
@@ -291,7 +291,7 @@ export function BudgetSpreadsheetPage() {
                   <tr>
                     <td
                       colSpan={18}
-                      className="text-center py-12 text-gray-400 text-sm"
+                      className="text-center py-12 text-[var(--fg-tertiary)] text-sm"
                     >
                       No budget lines yet. Click "Add Line" to get started.
                     </td>
@@ -325,7 +325,7 @@ export function BudgetSpreadsheetPage() {
       {/* No budget selected */}
       {!budget && !isLoading && (
         <Card className="p-12 text-center">
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             {budgets.length === 0
               ? 'No budgets yet. Create your first budget to get started.'
               : 'Select a budget from the dropdown above.'}
@@ -375,9 +375,9 @@ export function BudgetSpreadsheetPage() {
       {/* Overlay when pushing to forecast */}
       {pushingToForecast && (
         <div className="fixed inset-0 z-40 bg-black/20 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 flex items-center gap-3 shadow-xl">
+          <div className="bg-card rounded-lg p-6 flex items-center gap-3 shadow-xl">
             <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-            <span className="text-sm text-gray-700">Pushing to forecast...</span>
+            <span className="text-sm text-muted-foreground">Pushing to forecast...</span>
           </div>
         </div>
       )}

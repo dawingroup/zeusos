@@ -124,13 +124,13 @@ export function ValueRuleEditor({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-base font-semibold text-gray-900">Value Rule</h3>
-        <p className="text-sm text-gray-500 mt-0.5 font-mono">{accountLabel}</p>
+        <h3 className="text-base font-semibold text-foreground">Value Rule</h3>
+        <p className="text-sm text-muted-foreground mt-0.5 font-mono">{accountLabel}</p>
       </div>
 
       {/* Rule type selector */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">Rule Type</label>
+        <label className="text-sm font-medium text-muted-foreground">Rule Type</label>
         <div className="grid grid-cols-1 gap-2">
           {RULE_OPTIONS.map(opt => (
             <button
@@ -139,13 +139,13 @@ export function ValueRuleEditor({
               className={`text-left border rounded-lg px-3 py-2 transition-colors ${
                 ruleType === opt.value
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                  : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
               }`}
             >
-              <p className={`text-sm font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-gray-700'}`}>
+              <p className={`text-sm font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-muted-foreground'}`}>
                 {opt.label}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">{opt.description}</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">{opt.description}</p>
             </button>
           ))}
         </div>
@@ -153,12 +153,12 @@ export function ValueRuleEditor({
 
       {/* Rule parameters */}
       <div className="border-t pt-4 space-y-3">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Parameters</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Parameters</p>
 
         {ruleType === 'smart_prediction' && (
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium text-gray-700">Algorithm</label>
+              <label className="text-sm font-medium text-muted-foreground">Algorithm</label>
               <div className="flex gap-2 mt-1">
                 {(['linear_regression', 'rolling_average'] as const).map(m => (
                   <button
@@ -167,7 +167,7 @@ export function ValueRuleEditor({
                     className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                       spMethod === m
                         ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                        : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                     }`}
                   >
                     {m === 'linear_regression' ? 'Linear Regression' : 'Rolling Average'}
@@ -176,18 +176,18 @@ export function ValueRuleEditor({
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Lookback Window</label>
+              <label className="text-sm font-medium text-muted-foreground">Lookback Window</label>
               <select
                 value={lookback}
                 onChange={e => setLookback(Number(e.target.value) as 3 | 6 | 12 | 24)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white mt-1"
+                className="w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card mt-1"
               >
                 <option value={3}>3 months</option>
                 <option value={6}>6 months</option>
                 <option value={12}>12 months</option>
                 <option value={24}>24 months</option>
               </select>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[var(--fg-tertiary)] mt-1">
                 {spMethod === 'linear_regression'
                   ? 'OLS linear regression fit over the last N months of QBO actuals.'
                   : 'Rolling average of the last N months of QBO actuals.'}
@@ -199,26 +199,26 @@ export function ValueRuleEditor({
         {ruleType === 'constant_growing' && (
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium text-gray-700">Base Monthly Amount</label>
+              <label className="text-sm font-medium text-muted-foreground">Base Monthly Amount</label>
               <input
                 type="number"
                 value={cgBase}
                 onChange={e => setCgBase(parseFloat(e.target.value) || 0)}
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm"
                 placeholder="e.g. 50000"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Annual Growth Rate (%)</label>
+              <label className="text-sm font-medium text-muted-foreground">Annual Growth Rate (%)</label>
               <input
                 type="number"
                 value={cgRate}
                 onChange={e => setCgRate(parseFloat(e.target.value) || 0)}
                 step={0.1}
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm"
                 placeholder="e.g. 5 for 5%"
               />
-              <p className="text-xs text-gray-400 mt-1">0 = flat. Compound growth applied monthly.</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-1">0 = flat. Compound growth applied monthly.</p>
             </div>
           </div>
         )}
@@ -227,7 +227,7 @@ export function ValueRuleEditor({
           <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
             {periods.map(p => (
               <div key={p} className="flex items-center gap-3">
-                <span className="w-20 text-xs text-gray-500 shrink-0">{periodLabel(p)}</span>
+                <span className="w-20 text-xs text-muted-foreground shrink-0">{periodLabel(p)}</span>
                 <input
                   type="number"
                   value={deValues[p] ?? ''}
@@ -235,7 +235,7 @@ export function ValueRuleEditor({
                     ...prev,
                     [p]: parseFloat(e.target.value) || 0,
                   }))}
-                  className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
+                  className="flex-1 border border-[var(--border-default)] rounded px-2 py-1 text-sm"
                   placeholder="0"
                 />
               </div>
@@ -246,14 +246,14 @@ export function ValueRuleEditor({
         {ruleType === 'link_to_budget' && (
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium text-gray-700">Budget</label>
+              <label className="text-sm font-medium text-muted-foreground">Budget</label>
               {budgets.length === 0 ? (
                 <p className="text-sm text-yellow-600 mt-1">No budgets available. Create a budget first in the Budgets tab.</p>
               ) : (
                 <select
                   value={lbBudgetId}
                   onChange={e => setLbBudgetId(e.target.value)}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                  className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card"
                 >
                   {budgets.map(b => (
                     <option key={b.id} value={b.id}>{b.name}</option>
@@ -262,16 +262,16 @@ export function ValueRuleEditor({
               )}
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700">Adjustment (%)</label>
+              <label className="text-sm font-medium text-muted-foreground">Adjustment (%)</label>
               <input
                 type="number"
                 value={lbAdjPct}
                 onChange={e => setLbAdjPct(parseFloat(e.target.value) || 0)}
                 step={0.5}
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm"
                 placeholder="0 = no adjustment"
               />
-              <p className="text-xs text-gray-400 mt-1">+5 = 5% over budget. 0 = use budget as-is.</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-1">+5 = 5% over budget. 0 = use budget as-is.</p>
             </div>
           </div>
         )}

@@ -40,7 +40,7 @@ export function KPISparkCard({
 
   return (
     <Card
-      className={`p-4 transition-all ${href ? 'cursor-pointer hover:shadow-md hover:border-gray-300' : ''}`}
+      className={`p-4 transition-all ${href ? 'cursor-pointer hover:shadow-md hover:border-[var(--border-default)]' : ''}`}
       onClick={() => href && navigate(href)}
     >
       <div className="flex items-start justify-between">
@@ -52,14 +52,14 @@ export function KPISparkCard({
             >
               <Icon className="w-3.5 h-3.5" style={{ color }} />
             </div>
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide truncate">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
               {label}
             </p>
           </div>
-          <p className="text-xl font-bold text-gray-900 mt-1">{value}</p>
+          <p className="text-xl font-bold text-foreground mt-1">{value}</p>
           <div className="flex items-center gap-2 mt-0.5">
             {subtitle && (
-              <span className="text-xs text-gray-400">{subtitle}</span>
+              <span className="text-xs text-[var(--fg-tertiary)]">{subtitle}</span>
             )}
             {change !== undefined && (
               <span

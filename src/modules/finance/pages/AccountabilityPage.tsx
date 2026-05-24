@@ -33,7 +33,7 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<AccountabilityReport['status'], string> = {
-  draft: 'bg-gray-100 text-gray-700',
+  draft: 'bg-[var(--bg-sunken)] text-muted-foreground',
   submitted: 'bg-blue-100 text-blue-700',
   under_review: 'bg-amber-100 text-amber-700',
   approved: 'bg-green-100 text-green-700',
@@ -145,7 +145,7 @@ export function AccountabilityPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
             &larr; Operations
           </Link>
         </div>
@@ -166,7 +166,7 @@ export function AccountabilityPage() {
     <div className="space-y-6">
       {/* Back link */}
       <div className="flex items-center gap-3">
-        <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+        <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
           &larr; Operations
         </Link>
       </div>
@@ -174,8 +174,8 @@ export function AccountabilityPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Accountability Reports</h2>
-          <p className="text-sm text-gray-500 mt-1">Track and review departmental expense accountability</p>
+          <h2 className="text-xl font-bold text-foreground">Accountability Reports</h2>
+          <p className="text-sm text-muted-foreground mt-1">Track and review departmental expense accountability</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -187,15 +187,15 @@ export function AccountabilityPage() {
       </div>
 
       {/* Status filter tabs */}
-      <div className="flex gap-1 p-1 bg-gray-100 rounded-lg overflow-x-auto">
+      <div className="flex gap-1 p-1 bg-[var(--bg-sunken)] rounded-lg overflow-x-auto">
         {STATUS_TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setStatusFilter(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
               statusFilter === tab.id
-                ? 'bg-white text-green-700 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-card text-green-700 shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {tab.label}
@@ -247,8 +247,8 @@ export function AccountabilityPage() {
       ) : filteredReports.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <FileText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm text-gray-500">No accountability reports found</p>
+            <FileText className="w-10 h-10 mx-auto mb-3 text-[var(--fg-tertiary)]" />
+            <p className="text-sm text-muted-foreground">No accountability reports found</p>
             <button
               onClick={() => setShowForm(true)}
               className="mt-3 text-sm text-green-600 hover:underline"
@@ -263,13 +263,13 @@ export function AccountabilityPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-gray-50">
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Title</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Department</th>
-                    <th className="text-right px-4 py-3 font-medium text-gray-700">Amount</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Submitted By</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Date</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Status</th>
+                  <tr className="border-b bg-[var(--bg-sunken)]">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Title</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Department</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Amount</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Submitted By</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
                     <th className="px-4 py-3"></th>
                   </tr>
                 </thead>
@@ -277,16 +277,16 @@ export function AccountabilityPage() {
                   {filteredReports.map((report) => (
                     <tr
                       key={report.id}
-                      className="border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="border-b last:border-b-0 hover:bg-[var(--bg-sunken)] cursor-pointer transition-colors"
                       onClick={() => setSelectedReport(report)}
                     >
-                      <td className="px-4 py-3 font-medium text-gray-900">{report.title}</td>
-                      <td className="px-4 py-3 text-gray-600">{report.department}</td>
-                      <td className="px-4 py-3 text-right text-gray-900 font-medium">
+                      <td className="px-4 py-3 font-medium text-foreground">{report.title}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{report.department}</td>
+                      <td className="px-4 py-3 text-right text-foreground font-medium">
                         {formatCurrency(report.amount, report.currency)}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{report.submittedByName}</td>
-                      <td className="px-4 py-3 text-gray-500">{formatDate(report.createdAt)}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{report.submittedByName}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{formatDate(report.createdAt)}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -297,7 +297,7 @@ export function AccountabilityPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <button className="p-1 hover:bg-gray-100 rounded-md text-gray-400">
+                        <button className="p-1 hover:bg-[var(--bg-sunken)] rounded-md text-[var(--fg-tertiary)]">
                           <Eye className="w-4 h-4" />
                         </button>
                       </td>
@@ -383,16 +383,16 @@ function NewReportFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">New Accountability Report</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">New Accountability Report</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Title</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Title</label>
             <input
               type="text"
               value={title}
@@ -403,7 +403,7 @@ function NewReportFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Department</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Department</label>
             <select
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
@@ -417,7 +417,7 @@ function NewReportFormModal({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Amount</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Amount</label>
             <input
               type="number"
               value={amount}
@@ -430,7 +430,7 @@ function NewReportFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -443,7 +443,7 @@ function NewReportFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>
@@ -504,13 +504,13 @@ function ReportDetailPanel({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={onClose}>
       <div
-        className="w-full max-w-lg bg-white shadow-xl h-full overflow-y-auto"
+        className="w-full max-w-lg bg-card shadow-xl h-full overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white z-10">
-          <h3 className="font-semibold text-gray-900">Report Details</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-card z-10">
+          <h3 className="font-semibold text-foreground">Report Details</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -519,7 +519,7 @@ function ReportDetailPanel({
           {/* Title and Status */}
           <div>
             <div className="flex items-start justify-between gap-3">
-              <h4 className="text-lg font-semibold text-gray-900">{report.title}</h4>
+              <h4 className="text-lg font-semibold text-foreground">{report.title}</h4>
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   STATUS_COLORS[report.status]
@@ -528,48 +528,48 @@ function ReportDetailPanel({
                 {STATUS_LABELS[report.status]}
               </span>
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {report.department} &middot; {formatDate(report.createdAt)}
             </p>
           </div>
 
           {/* Amount */}
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-500 mb-1">Total Amount</p>
-            <p className="text-2xl font-bold text-gray-900">
+          <div className="p-4 bg-[var(--bg-sunken)] rounded-lg">
+            <p className="text-xs text-muted-foreground mb-1">Total Amount</p>
+            <p className="text-2xl font-bold text-foreground">
               {formatCurrency(report.amount, report.currency)}
             </p>
           </div>
 
           {/* Submitted By */}
           <div>
-            <p className="text-xs font-medium text-gray-500 mb-1">Submitted By</p>
-            <p className="text-sm text-gray-900">{report.submittedByName}</p>
+            <p className="text-xs font-medium text-muted-foreground mb-1">Submitted By</p>
+            <p className="text-sm text-foreground">{report.submittedByName}</p>
           </div>
 
           {/* Description */}
           {report.description && (
             <div>
-              <p className="text-xs font-medium text-gray-500 mb-1">Description</p>
-              <p className="text-sm text-gray-700 whitespace-pre-wrap">{report.description}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.description}</p>
             </div>
           )}
 
           {/* Line Items */}
           {report.lineItems && report.lineItems.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-gray-500 mb-2">Line Items</p>
+              <p className="text-xs font-medium text-muted-foreground mb-2">Line Items</p>
               <div className="space-y-2">
                 {report.lineItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg text-sm"
+                    className="flex items-center justify-between p-3 bg-[var(--bg-sunken)] rounded-lg text-sm"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{item.description}</p>
-                      <p className="text-xs text-gray-500">{item.category}</p>
+                      <p className="font-medium text-foreground">{item.description}</p>
+                      <p className="text-xs text-muted-foreground">{item.category}</p>
                     </div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-foreground">
                       {formatCurrency(item.amount, report.currency)}
                     </p>
                   </div>
@@ -580,13 +580,13 @@ function ReportDetailPanel({
 
           {/* Review Notes (if reviewed) */}
           {report.reviewedByName && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-xs font-medium text-gray-500 mb-1">Reviewed By</p>
-              <p className="text-sm text-gray-900">{report.reviewedByName}</p>
+            <div className="p-4 bg-[var(--bg-sunken)] rounded-lg">
+              <p className="text-xs font-medium text-muted-foreground mb-1">Reviewed By</p>
+              <p className="text-sm text-foreground">{report.reviewedByName}</p>
               {report.reviewNotes && (
                 <>
-                  <p className="text-xs font-medium text-gray-500 mt-2 mb-1">Notes</p>
-                  <p className="text-sm text-gray-700">{report.reviewNotes}</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-2 mb-1">Notes</p>
+                  <p className="text-sm text-muted-foreground">{report.reviewNotes}</p>
                 </>
               )}
             </div>
@@ -626,7 +626,7 @@ function ReportDetailPanel({
                   <div className="flex gap-2">
                     <button
                       onClick={() => setShowRejectForm(false)}
-                      className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                      className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                     >
                       Cancel
                     </button>

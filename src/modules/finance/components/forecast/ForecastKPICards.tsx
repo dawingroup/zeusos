@@ -34,7 +34,7 @@ function KPICard({ label, value, loading }: KPICardProps) {
   return (
     <Card className={`border ${isNeg ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'}`}>
       <CardContent className="p-5">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{label}</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
         {loading ? (
           <Skeleton className="h-8 w-32" />
         ) : (
@@ -45,7 +45,7 @@ function KPICard({ label, value, loading }: KPICardProps) {
             </p>
           </div>
         )}
-        <p className="text-xs text-gray-400 mt-1">Forecast period total</p>
+        <p className="text-xs text-[var(--fg-tertiary)] mt-1">Forecast period total</p>
       </CardContent>
     </Card>
   );

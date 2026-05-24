@@ -52,16 +52,16 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
   const reqPos = isInf ? -1 : Math.max(0, Math.min(100, ((reqPct - scaleMin) / range) * 100));
 
   // Color for the required marker
-  const markerColor = isInf ? 'bg-gray-300' : reqPct >= 0 ? 'bg-blue-500' : 'bg-blue-500';
+  const markerColor = isInf ? 'bg-[var(--bg-sunken)]' : reqPct >= 0 ? 'bg-blue-500' : 'bg-blue-500';
 
   return (
     <div className="py-3">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-900">{result.label}</span>
+          <span className="text-sm font-medium text-foreground">{result.label}</span>
           <div className="group relative">
-            <Info className="h-3.5 w-3.5 text-gray-400" />
-            <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block bg-gray-800 text-white text-[10px] rounded px-2 py-1 whitespace-nowrap z-10">
+            <Info className="h-3.5 w-3.5 text-[var(--fg-tertiary)]" />
+            <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block bg-foreground text-background text-[10px] rounded px-2 py-1 whitespace-nowrap z-10">
               {result.leverId === 'price' && 'Change revenue via pricing (COGS unchanged)'}
               {result.leverId === 'volume' && 'Change revenue & COGS proportionally'}
               {result.leverId === 'fixedExpenses' && 'Change operating expenses'}
@@ -71,11 +71,11 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="text-right">
-            <span className="text-gray-500">To achieve goal</span>
-            <span className={`ml-2 font-bold ${isInf ? 'text-gray-400' : 'text-gray-900'}`}>{reqLabel}</span>
+            <span className="text-muted-foreground">To achieve goal</span>
+            <span className={`ml-2 font-bold ${isInf ? 'text-[var(--fg-tertiary)]' : 'text-foreground'}`}>{reqLabel}</span>
           </div>
           <div className="text-right min-w-[60px]">
-            <span className="text-gray-500">Change</span>
+            <span className="text-muted-foreground">Change</span>
             <span className="ml-2 font-bold text-blue-600">{changeLabel}</span>
           </div>
         </div>
@@ -84,7 +84,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
       {/* Scale bar + slider */}
       <div className="relative">
         {/* Scale labels */}
-        <div className="flex justify-between text-[9px] text-gray-400 mb-1">
+        <div className="flex justify-between text-[9px] text-[var(--fg-tertiary)] mb-1">
           {Array.from({ length: 9 }, (_, i) => {
             const pct = scaleMin + (range / 8) * i;
             return <span key={i}>{(pct * 100).toFixed(0)}%</span>;
@@ -92,7 +92,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
         </div>
 
         {/* Bar background */}
-        <div className="relative h-8 bg-gray-100 rounded-lg overflow-hidden">
+        <div className="relative h-8 bg-[var(--bg-sunken)] rounded-lg overflow-hidden">
           {/* Fill from 0% to current value */}
           {(() => {
             const zeroPos = ((0 - scaleMin) / range) * 100;
@@ -118,7 +118,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
 
           {/* Slider thumb circle */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-2 border-blue-500 shadow-md cursor-grab z-10"
+            className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border-2 border-blue-500 shadow-md cursor-grab z-10"
             style={{ left: `calc(${((value - scaleMin) / range) * 100}% - 10px)` }}
           />
         </div>
@@ -155,28 +155,28 @@ function GoalProgressBar({ current, target, isPercentage }: { current: number; t
     <div className="mt-4 mb-2">
       <div className="flex justify-between items-end mb-2">
         <div>
-          <span className="inline-block bg-gray-100 border border-gray-200 rounded-md px-3 py-1 text-sm font-bold text-gray-700">
+          <span className="inline-block bg-[var(--bg-sunken)] border border-[var(--border-subtle)] rounded-md px-3 py-1 text-sm font-bold text-muted-foreground">
             {fmt(current)}
           </span>
         </div>
       </div>
 
-      <div className="relative h-10 bg-gray-100 rounded-lg flex items-center">
+      <div className="relative h-10 bg-[var(--bg-sunken)] rounded-lg flex items-center">
         {/* Start label */}
-        <div className="absolute left-3 text-xs font-bold text-gray-700">START</div>
+        <div className="absolute left-3 text-xs font-bold text-muted-foreground">START</div>
         {/* Goal label */}
-        <div className="absolute right-3 text-xs font-bold text-gray-700">GOAL</div>
+        <div className="absolute right-3 text-xs font-bold text-muted-foreground">GOAL</div>
 
         {/* Progress fill */}
         {isBelow && (
           <div
-            className="absolute top-0 bottom-0 left-0 bg-gray-200 rounded-l-lg"
+            className="absolute top-0 bottom-0 left-0 bg-[var(--bg-sunken)] rounded-l-lg"
             style={{ width: `${currentPos}%` }}
           />
         )}
       </div>
 
-      <div className="flex justify-between mt-1.5 text-xs text-gray-500">
+      <div className="flex justify-between mt-1.5 text-xs text-muted-foreground">
         <span>{fmt(current)}</span>
         <span>{fmt(target)}</span>
       </div>
@@ -281,8 +281,8 @@ export function GoalSeekPage() {
     return (
       <div className="space-y-5">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Goal Seek</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Loading...</p>
+          <h2 className="text-xl font-bold text-foreground">Goal Seek</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Loading...</p>
         </div>
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-[400px] w-full" />
@@ -295,17 +295,17 @@ export function GoalSeekPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Goal Seek</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-xl font-bold text-foreground">Goal Seek</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Changes required to achieve your target metric
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">For the Month of</span>
+          <span className="text-xs text-muted-foreground">For the Month of</span>
           <select
             value={selectedPeriod}
             onChange={e => setSelectedPeriod(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white font-medium"
+            className="border border-[var(--border-default)] rounded-md px-3 py-1.5 text-sm bg-card font-medium"
           >
             {periods.map(p => (
               <option key={p} value={p}>{periodLabel(p)}</option>
@@ -324,11 +324,11 @@ export function GoalSeekPage() {
           <Card className="p-5">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex-1">
-                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Target Metric</label>
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Target Metric</label>
                 <select
                   value={metricId}
                   onChange={e => setMetricId(e.target.value as GoalMetricId)}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white font-medium"
+                  className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card font-medium"
                 >
                   {GOAL_METRICS.map(m => (
                     <option key={m.id} value={m.id}>{m.label}</option>
@@ -336,7 +336,7 @@ export function GoalSeekPage() {
                 </select>
               </div>
               <div className="text-center sm:pt-5">
-                <p className="text-xs text-gray-500">Changes required to increase</p>
+                <p className="text-xs text-muted-foreground">Changes required to increase</p>
                 <p className="text-sm font-semibold">
                   <span className="underline decoration-dotted">{metricDef.label}</span>
                   {' from '}
@@ -346,7 +346,7 @@ export function GoalSeekPage() {
                 </p>
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   Target {metricDef.isPercentage ? '(%)' : '(Amount)'}
                 </label>
                 <input
@@ -354,7 +354,7 @@ export function GoalSeekPage() {
                   value={targetInput}
                   onChange={e => setTargetInput(e.target.value)}
                   step={metricDef.isPercentage ? '0.5' : '1000'}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm font-bold text-blue-600"
+                  className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm font-bold text-blue-600"
                 />
               </div>
             </div>
@@ -370,8 +370,8 @@ export function GoalSeekPage() {
           <Card className="p-5">
             {highSensitivity.length > 0 && (
               <div className="mb-4">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">High Sensitivity</p>
-                <div className="divide-y divide-gray-100">
+                <p className="text-[10px] font-bold text-[var(--fg-tertiary)] uppercase tracking-widest mb-1">High Sensitivity</p>
+                <div className="divide-y divide-[var(--border-subtle)]">
                   {highSensitivity.map(s => {
                     const [min, max] = getScaleForSensitivity('HIGH');
                     return (
@@ -391,8 +391,8 @@ export function GoalSeekPage() {
 
             {mediumSensitivity.length > 0 && (
               <div className="mb-4">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Medium Sensitivity</p>
-                <div className="divide-y divide-gray-100">
+                <p className="text-[10px] font-bold text-[var(--fg-tertiary)] uppercase tracking-widest mb-1">Medium Sensitivity</p>
+                <div className="divide-y divide-[var(--border-subtle)]">
                   {mediumSensitivity.map(s => {
                     const [min, max] = getScaleForSensitivity('MEDIUM');
                     return (
@@ -412,8 +412,8 @@ export function GoalSeekPage() {
 
             {lowSensitivity.length > 0 && (
               <div className="mb-4">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Low Sensitivity</p>
-                <div className="divide-y divide-gray-100">
+                <p className="text-[10px] font-bold text-[var(--fg-tertiary)] uppercase tracking-widest mb-1">Low Sensitivity</p>
+                <div className="divide-y divide-[var(--border-subtle)]">
                   {lowSensitivity.map(s => {
                     const [min, max] = getScaleForSensitivity('LOW');
                     return (
@@ -433,11 +433,11 @@ export function GoalSeekPage() {
 
             {/* Projected outcome */}
             <div className="border-t pt-4 flex items-center justify-between">
-              <span className="text-sm text-gray-500">Projected {metricDef.label} with adjustments:</span>
+              <span className="text-sm text-muted-foreground">Projected {metricDef.label} with adjustments:</span>
               <span className={`text-lg font-bold ${
                 (metricDef.isPercentage ? projectedValue >= targetValue : projectedValue >= targetValue)
                   ? 'text-green-600'
-                  : 'text-gray-900'
+                  : 'text-foreground'
               }`}>
                 {metricDef.isPercentage ? fmtPct(projectedValue) : fmtCurrency(projectedValue)}
               </span>
@@ -447,7 +447,7 @@ export function GoalSeekPage() {
       )}
 
       {!actuals && !loading && (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data for the selected period</p>
           <p className="text-sm mt-1">Select a different month or sync QBO data from Integrations.</p>
         </Card>

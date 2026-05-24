@@ -47,8 +47,8 @@ export function IntegrationsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Financial Integrations</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-xl font-bold text-foreground">Financial Integrations</h2>
+        <p className="text-sm text-muted-foreground mt-1">
           Connect external accounting and reporting tools to sync financial data
         </p>
       </div>

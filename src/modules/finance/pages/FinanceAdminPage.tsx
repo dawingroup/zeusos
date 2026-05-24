@@ -71,14 +71,14 @@ export function FinanceAdminPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Finance Admin Tools</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-xl font-bold text-foreground">Finance Admin Tools</h2>
+        <p className="text-sm text-muted-foreground mt-1">
           Manage reconciliation schedules, access tax portals, and organize finance documents
         </p>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-1 p-1 bg-gray-100 rounded-lg w-fit">
+      <div className="flex gap-1 p-1 bg-[var(--bg-sunken)] rounded-lg w-fit">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -88,8 +88,8 @@ export function FinanceAdminPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-white text-green-700 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-card text-green-700 shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -218,16 +218,16 @@ function ReconciliationFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">New Reconciliation Schedule</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">New Reconciliation Schedule</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Name</label>
             <input
               type="text"
               value={name}
@@ -239,7 +239,7 @@ function ReconciliationFormModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Type</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as ReconciliationType)}
@@ -251,7 +251,7 @@ function ReconciliationFormModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Frequency</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as ReconciliationFrequency)}
@@ -264,7 +264,7 @@ function ReconciliationFormModal({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Assignee</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Assignee</label>
             <input
               type="text"
               value={assigneeName}
@@ -275,7 +275,7 @@ function ReconciliationFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Next Due Date</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Next Due Date</label>
             <input
               type="date"
               value={nextDueDate}
@@ -288,7 +288,7 @@ function ReconciliationFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>
@@ -340,16 +340,16 @@ function DocumentFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">Add Finance Document</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">Add Finance Document</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Document Name</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Document Name</label>
             <input
               type="text"
               value={name}
@@ -361,7 +361,7 @@ function DocumentFormModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as FinanceDocumentCategory)}
@@ -373,7 +373,7 @@ function DocumentFormModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Fiscal Year</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Fiscal Year</label>
               <input
                 type="text"
                 value={fiscalYear}
@@ -384,7 +384,7 @@ function DocumentFormModal({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               Google Drive URL
             </label>
             <input
@@ -396,7 +396,7 @@ function DocumentFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               Tags (comma-separated)
             </label>
             <input
@@ -411,7 +411,7 @@ function DocumentFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>
@@ -462,16 +462,16 @@ function PortalLinkFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">Add Custom Portal Link</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">Add Custom Portal Link</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Name</label>
             <input
               type="text"
               value={name}
@@ -482,7 +482,7 @@ function PortalLinkFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">URL</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">URL</label>
             <input
               type="url"
               value={url}
@@ -493,7 +493,7 @@ function PortalLinkFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Description</label>
             <input
               type="text"
               value={description}
@@ -506,7 +506,7 @@ function PortalLinkFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>

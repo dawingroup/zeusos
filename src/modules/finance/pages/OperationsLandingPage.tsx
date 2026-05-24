@@ -52,8 +52,8 @@ export function OperationsLandingPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Finance Operations</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Finance Operations</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Day-to-day financial activities & workflows
         </p>
       </div>
@@ -87,7 +87,7 @@ export function OperationsLandingPage() {
         {/* Budget Status */}
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-900">Active Budgets</h3>
+            <h3 className="text-sm font-semibold text-foreground">Active Budgets</h3>
             <button
               onClick={() => navigate('/finance/operations/budgets')}
               className="inline-flex items-center gap-1 text-xs font-medium text-green-600 hover:text-green-700"
@@ -100,15 +100,15 @@ export function OperationsLandingPage() {
               {budgets.map((b) => (
                 <div key={b.id}>
                   <div className="flex items-center justify-between text-sm mb-1">
-                    <span className="text-gray-700 truncate max-w-[50%]">{b.name}</span>
+                    <span className="text-muted-foreground truncate max-w-[50%]">{b.name}</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{b.category}</span>
-                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-red-600' : b.utilization >= 85 ? 'text-amber-600' : 'text-gray-600'}`}>
+                      <span className="text-xs text-[var(--fg-tertiary)]">{b.category}</span>
+                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-red-600' : b.utilization >= 85 ? 'text-amber-600' : 'text-muted-foreground'}`}>
                         {b.utilization}%
                       </span>
                     </div>
                   </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${b.utilization >= 100 ? 'bg-red-500' : b.utilization >= 85 ? 'bg-amber-500' : 'bg-green-500'}`}
                       style={{ width: `${Math.min(b.utilization, 100)}%` }}
@@ -118,14 +118,14 @@ export function OperationsLandingPage() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-400 text-center py-6">No active budgets</p>
+            <p className="text-sm text-[var(--fg-tertiary)] text-center py-6">No active budgets</p>
           )}
         </Card>
 
         {/* Top Accounts */}
         <Card className="p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-900">Top Accounts by Balance</h3>
+            <h3 className="text-sm font-semibold text-foreground">Top Accounts by Balance</h3>
             <button
               onClick={() => navigate('/finance/settings/accounts')}
               className="inline-flex items-center gap-1 text-xs font-medium text-green-600 hover:text-green-700"
@@ -136,7 +136,7 @@ export function OperationsLandingPage() {
           {accounts.length > 0 ? (
             <div className="space-y-2">
               {accounts.slice(0, 5).map((a) => (
-                <div key={a.id} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
+                <div key={a.id} className="flex items-center justify-between py-1.5 border-b border-[var(--border-subtle)] last:border-0">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
                       a.type === 'asset' ? 'bg-blue-50 text-blue-700' :
@@ -147,16 +147,16 @@ export function OperationsLandingPage() {
                     }`}>
                       {a.type}
                     </span>
-                    <span className="text-sm text-gray-700 truncate">{a.name}</span>
+                    <span className="text-sm text-muted-foreground truncate">{a.name}</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900 shrink-0 ml-2">
+                  <span className="text-sm font-medium text-foreground shrink-0 ml-2">
                     {formatCompact(a.balance)}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-400 text-center py-6">No account data</p>
+            <p className="text-sm text-[var(--fg-tertiary)] text-center py-6">No account data</p>
           )}
         </Card>
       </div>

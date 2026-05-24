@@ -130,7 +130,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
   return (
     <div>
       {/* Tab switcher */}
-      <div className="flex gap-1 mb-0 border-b border-gray-200">
+      <div className="flex gap-1 mb-0 border-b border-[var(--border-subtle)]">
         {TABS.map(t => (
           <button
             key={t.id}
@@ -138,7 +138,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
             className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               tab === t.id
                 ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             {t.label}
@@ -150,21 +150,21 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm table-sticky-first-col">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="sticky left-0 bg-gray-50 text-left px-3 py-2 font-medium text-gray-600 min-w-[220px]">
+            <tr className="bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)]">
+              <th className="sticky left-0 bg-[var(--bg-sunken)] text-left px-3 py-2 font-medium text-muted-foreground min-w-[220px]">
                 Account
               </th>
               {tab === 'pl' && (
-                <th className="text-center px-2 py-2 font-medium text-gray-400 text-xs w-16">Rule</th>
+                <th className="text-center px-2 py-2 font-medium text-[var(--fg-tertiary)] text-xs w-16">Rule</th>
               )}
               {loading
                 ? Array.from({ length: 4 }, (_, i) => (
-                    <th key={i} className="text-right px-3 py-2 text-gray-400 min-w-[90px]">
+                    <th key={i} className="text-right px-3 py-2 text-[var(--fg-tertiary)] min-w-[90px]">
                       <Skeleton className="h-4 w-16 ml-auto" />
                     </th>
                   ))
                 : periods.map(p => (
-                    <th key={p.period} className="text-right px-3 py-2 font-medium text-gray-600 min-w-[90px] whitespace-nowrap">
+                    <th key={p.period} className="text-right px-3 py-2 font-medium text-muted-foreground min-w-[90px] whitespace-nowrap">
                       {periodLabel(p.period)}
                     </th>
                   ))
@@ -181,18 +181,18 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
               return (
                 <tr
                   key={row.key + ri}
-                  className={`border-b border-gray-100 ${
+                  className={`border-b border-[var(--border-subtle)] ${
                     isHeader ? 'bg-gray-800' :
-                    row.subtotal ? 'bg-gray-50 border-t-2 border-gray-300' :
-                    'hover:bg-gray-50'
+                    row.subtotal ? 'bg-[var(--bg-sunken)] border-t-2 border-[var(--border-default)]' :
+                    'hover:bg-[var(--bg-sunken)]'
                   } transition-colors`}
                 >
                   {/* Label column */}
                   <td
                     className={`sticky left-0 px-3 py-1.5 font-${row.bold ? 'semibold' : 'normal'} ${
                       isHeader ? 'bg-gray-800 text-white text-xs uppercase tracking-wider' :
-                      row.subtotal ? 'bg-gray-50 text-gray-800' :
-                      row.indent ? 'pl-6 text-gray-600 bg-white' : 'text-gray-700 bg-white'
+                      row.subtotal ? 'bg-[var(--bg-sunken)] text-foreground' :
+                      row.indent ? 'pl-6 text-muted-foreground bg-card' : 'text-muted-foreground bg-card'
                     }`}
                   >
                     {row.label}
@@ -205,7 +205,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
                         <button
                           onClick={() => onEditRule?.(row.accountId!, activeRule)}
                           title="Edit value rule"
-                          className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded border border-gray-200 hover:border-blue-400 hover:text-blue-600 text-gray-400 transition-colors"
+                          className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded border border-[var(--border-subtle)] hover:border-blue-400 hover:text-blue-600 text-[var(--fg-tertiary)] transition-colors"
                         >
                           <Settings2 className="h-3 w-3" />
                           {getRuleLabel(rules, row.accountId)}
@@ -234,7 +234,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
                             key={p.period}
                             className={`text-right px-3 py-1.5 tabular-nums ${
                               isHeader ? 'text-white' :
-                              isNeg ? 'text-red-500' : 'text-gray-700'
+                              isNeg ? 'text-red-500' : 'text-muted-foreground'
                             } ${row.bold ? 'font-semibold' : ''}`}
                           >
                             {displayVal === null ? '' : fmtUSD(displayVal)}

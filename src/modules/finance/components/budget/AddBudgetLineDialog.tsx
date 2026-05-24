@@ -327,16 +327,16 @@ export function AddBudgetLineDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
+      <div className="bg-card rounded-xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="font-semibold text-gray-800">Add Budget Line</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <h3 className="font-semibold text-foreground">Add Budget Line</h3>
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab bar */}
-        <div className="flex border-b bg-gray-50 px-4">
+        <div className="flex border-b bg-[var(--bg-sunken)] px-4">
           {([
             { id: 'manual' as Tab, label: 'Manual', icon: Plus },
             { id: 'forecast' as Tab, label: 'From Forecast', icon: FileSpreadsheet },
@@ -347,7 +347,7 @@ export function AddBudgetLineDialog({
               className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors ${
                 tab === t.id
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  : 'border-transparent text-muted-foreground hover:text-muted-foreground'
               }`}
               onClick={() => setTab(t.id)}
             >
@@ -362,33 +362,33 @@ export function AddBudgetLineDialog({
           {tab === 'manual' && (
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-medium text-gray-600">Account *</label>
+                <label className="text-xs font-medium text-muted-foreground">Account *</label>
                 <input
                   type="text"
-                  className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                   placeholder="Search accounts..."
                   value={accountSearch}
                   onChange={e => setAccountSearch(e.target.value)}
                 />
                 {accountSearch && (
-                  <div className="mt-1 max-h-40 overflow-y-auto border border-gray-200 rounded-lg">
+                  <div className="mt-1 max-h-40 overflow-y-auto border border-[var(--border-subtle)] rounded-lg">
                     {accountsLoading ? (
-                      <p className="p-3 text-xs text-gray-400">Loading...</p>
+                      <p className="p-3 text-xs text-[var(--fg-tertiary)]">Loading...</p>
                     ) : filteredAccounts.length === 0 ? (
-                      <p className="p-3 text-xs text-gray-400">No accounts found</p>
+                      <p className="p-3 text-xs text-[var(--fg-tertiary)]">No accounts found</p>
                     ) : (
                       filteredAccounts.slice(0, 20).map(a => (
                         <button
                           key={a.id}
                           className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50 transition-colors ${
-                            accountId === a.id ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                            accountId === a.id ? 'bg-blue-50 text-blue-700' : 'text-muted-foreground'
                           }`}
                           onClick={() => {
                             setAccountId(a.id);
                             setAccountSearch(a.name);
                           }}
                         >
-                          <span className="text-[10px] text-gray-400 mr-1.5">{a.code}</span>
+                          <span className="text-[10px] text-[var(--fg-tertiary)] mr-1.5">{a.code}</span>
                           {a.name}
                         </button>
                       ))
@@ -396,17 +396,17 @@ export function AddBudgetLineDialog({
                   </div>
                 )}
                 {accountId && !accountSearch && (
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Selected: {accounts.find(a => a.id === accountId)?.name}
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="text-xs font-medium text-gray-600">Annual Budget (UGX) *</label>
+                <label className="text-xs font-medium text-muted-foreground">Annual Budget (UGX) *</label>
                 <input
                   type="number"
-                  className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
                   value={annualBudget || ''}
                   onChange={e => setAnnualBudget(parseFloat(e.target.value) || 0)}
                   placeholder="0"
@@ -414,9 +414,9 @@ export function AddBudgetLineDialog({
               </div>
 
               <div>
-                <label className="text-xs font-medium text-gray-600">Allocation Method</label>
+                <label className="text-xs font-medium text-muted-foreground">Allocation Method</label>
                 <select
-                  className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                   value={allocationMethod}
                   onChange={e => setAllocationMethod(e.target.value as AllocationMethod)}
                 >
@@ -427,10 +427,10 @@ export function AddBudgetLineDialog({
               </div>
 
               <div>
-                <label className="text-xs font-medium text-gray-600">Description</label>
+                <label className="text-xs font-medium text-muted-foreground">Description</label>
                 <input
                   type="text"
-                  className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                   placeholder="Optional description..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
@@ -460,10 +460,10 @@ export function AddBudgetLineDialog({
               {forecastImportResult ? (
                 <div className="text-center py-8">
                   <Check className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                  <h4 className="text-sm font-semibold text-gray-800 mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1">
                     Imported {forecastImportResult.count} line{forecastImportResult.count !== 1 ? 's' : ''}
                   </h4>
-                  <p className="text-xs text-gray-500 mb-4">
+                  <p className="text-xs text-muted-foreground mb-4">
                     Budget lines have been created from forecast data.
                   </p>
                   <Button size="sm" variant="outline" onClick={onClose}>
@@ -473,12 +473,12 @@ export function AddBudgetLineDialog({
               ) : forecastsLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-5 h-5 animate-spin text-blue-400 mr-2" />
-                  <span className="text-sm text-gray-500">Loading forecasts...</span>
+                  <span className="text-sm text-muted-foreground">Loading forecasts...</span>
                 </div>
               ) : forecasts.length === 0 ? (
                 <div className="text-center py-8">
-                  <AlertCircle className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">
+                  <AlertCircle className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">
                     No forecasts found. Create a 3-Way Forecast first.
                   </p>
                 </div>
@@ -486,9 +486,9 @@ export function AddBudgetLineDialog({
                 <>
                   {/* Forecast selector */}
                   <div>
-                    <label className="text-xs font-medium text-gray-600">Select Forecast</label>
+                    <label className="text-xs font-medium text-muted-foreground">Select Forecast</label>
                     <select
-                      className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                       value={selectedForecastId}
                       onChange={e => setSelectedForecastId(e.target.value)}
                     >
@@ -500,12 +500,12 @@ export function AddBudgetLineDialog({
 
                   {/* Adjustment */}
                   <div>
-                    <label className="text-xs font-medium text-gray-600">
-                      Adjustment % <span className="text-gray-400">(e.g. -5 for 5% haircut, 10 for 10% uplift)</span>
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Adjustment % <span className="text-[var(--fg-tertiary)]">(e.g. -5 for 5% haircut, 10 for 10% uplift)</span>
                     </label>
                     <input
                       type="number"
-                      className="mt-1 w-32 border border-gray-200 rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="mt-1 w-32 border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
                       value={adjustmentPct}
                       onChange={e => setAdjustmentPct(parseFloat(e.target.value) || 0)}
                     />
@@ -515,11 +515,11 @@ export function AddBudgetLineDialog({
                   {forecastAccountsLoading ? (
                     <div className="flex items-center justify-center py-8">
                       <Loader2 className="w-4 h-4 animate-spin text-blue-400 mr-2" />
-                      <span className="text-xs text-gray-500">Loading forecast accounts...</span>
+                      <span className="text-xs text-muted-foreground">Loading forecast accounts...</span>
                     </div>
                   ) : forecastAccounts.length === 0 ? (
                     <div className="text-center py-6">
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-[var(--fg-tertiary)]">
                         No account data in this forecast. Ensure the forecast has been calculated.
                       </p>
                     </div>
@@ -532,12 +532,12 @@ export function AddBudgetLineDialog({
                         >
                           {selectedForecastAccounts.size === forecastAccounts.length ? 'Deselect all' : 'Select all'}
                         </button>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-[var(--fg-tertiary)]">
                           {selectedForecastAccounts.size} of {forecastAccounts.length} selected
                         </span>
                       </div>
 
-                      <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg divide-y divide-gray-100">
+                      <div className="max-h-64 overflow-y-auto border border-[var(--border-subtle)] rounded-lg divide-y divide-[var(--border-subtle)]">
                         {forecastAccounts.map(row => (
                           <label
                             key={row.accountId}
@@ -547,14 +547,14 @@ export function AddBudgetLineDialog({
                           >
                             <input
                               type="checkbox"
-                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-300"
+                              className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-300"
                               checked={selectedForecastAccounts.has(row.accountId)}
                               onChange={() => toggleForecastAccount(row.accountId)}
                             />
-                            <span className="flex-1 text-sm text-gray-700 truncate">
+                            <span className="flex-1 text-sm text-muted-foreground truncate">
                               {row.accountName}
                             </span>
-                            <span className="text-xs text-gray-500 tabular-nums whitespace-nowrap">
+                            <span className="text-xs text-muted-foreground tabular-nums whitespace-nowrap">
                               {fmtCompact(row.annualTotal)}
                             </span>
                           </label>
@@ -593,10 +593,10 @@ export function AddBudgetLineDialog({
               {procImportResult ? (
                 <div className="text-center py-8">
                   <Check className="w-10 h-10 text-green-500 mx-auto mb-3" />
-                  <h4 className="text-sm font-semibold text-gray-800 mb-1">
+                  <h4 className="text-sm font-semibold text-foreground mb-1">
                     Imported {procImportResult.count} line{procImportResult.count !== 1 ? 's' : ''}
                   </h4>
-                  <p className="text-xs text-gray-500 mb-4">
+                  <p className="text-xs text-muted-foreground mb-4">
                     Procurement requirements have been added as budget lines.
                   </p>
                   <Button size="sm" variant="outline" onClick={onClose}>
@@ -606,15 +606,15 @@ export function AddBudgetLineDialog({
               ) : procurementLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-5 h-5 animate-spin text-amber-400 mr-2" />
-                  <span className="text-sm text-gray-500">Loading procurement requirements...</span>
+                  <span className="text-sm text-muted-foreground">Loading procurement requirements...</span>
                 </div>
               ) : procurementItems.length === 0 ? (
                 <div className="text-center py-8">
-                  <AlertCircle className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">
+                  <AlertCircle className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">
                     No pending procurement requirements found.
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[var(--fg-tertiary)] mt-1">
                     Open procurement requirements (pending/approved/open) will appear here.
                   </p>
                 </div>
@@ -627,12 +627,12 @@ export function AddBudgetLineDialog({
                     >
                       {selectedProcItems.size === procurementItems.length ? 'Deselect all' : 'Select all'}
                     </button>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-[var(--fg-tertiary)]">
                       {selectedProcItems.size} of {procurementItems.length} selected
                     </span>
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto border border-gray-200 rounded-lg divide-y divide-gray-100">
+                  <div className="max-h-80 overflow-y-auto border border-[var(--border-subtle)] rounded-lg divide-y divide-[var(--border-subtle)]">
                     {procurementItems.map(item => (
                       <div
                         key={item.id}
@@ -643,24 +643,24 @@ export function AddBudgetLineDialog({
                         <div className="flex items-start gap-3">
                           <input
                             type="checkbox"
-                            className="mt-0.5 rounded border-gray-300 text-amber-600 focus:ring-amber-300"
+                            className="mt-0.5 rounded border-[var(--border-default)] text-amber-600 focus:ring-amber-300"
                             checked={selectedProcItems.has(item.id)}
                             onChange={() => toggleProcItem(item.id)}
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-sm text-gray-700 truncate">{item.description}</span>
-                              <span className="text-xs text-gray-500 tabular-nums whitespace-nowrap">
+                              <span className="text-sm text-muted-foreground truncate">{item.description}</span>
+                              <span className="text-xs text-muted-foreground tabular-nums whitespace-nowrap">
                                 {fmtCompact(item.estimatedCost)}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--bg-sunken)] text-muted-foreground">
                                 {item.category}
                               </span>
-                              <span className="text-[10px] text-gray-400">{item.status}</span>
+                              <span className="text-[10px] text-[var(--fg-tertiary)]">{item.status}</span>
                               {item.expectedDate && (
-                                <span className="text-[10px] text-gray-400">
+                                <span className="text-[10px] text-[var(--fg-tertiary)]">
                                   Due: {item.expectedDate}
                                 </span>
                               )}
@@ -670,7 +670,7 @@ export function AddBudgetLineDialog({
                             {selectedProcItems.has(item.id) && (
                               <div className="mt-2">
                                 <select
-                                  className="w-full border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-amber-300"
+                                  className="w-full border border-[var(--border-subtle)] rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-amber-300"
                                   value={procAccountMap[item.id] || ''}
                                   onChange={e => setProcAccountMap(prev => ({
                                     ...prev,

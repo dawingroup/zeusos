@@ -33,9 +33,9 @@ export function CFOBriefingCard({
       <Card className={`p-5 ${className}`}>
         <div className="flex items-center gap-2 mb-3">
           <Brain className="w-4 h-4 text-indigo-500" />
-          <h3 className="text-sm font-semibold text-gray-900">AI CFO Briefing</h3>
+          <h3 className="text-sm font-semibold text-foreground">AI CFO Briefing</h3>
         </div>
-        <p className="text-xs text-gray-400 mb-3">No briefing generated for today</p>
+        <p className="text-xs text-[var(--fg-tertiary)] mb-3">No briefing generated for today</p>
         {onGenerate && (
           <Button
             variant="outline"
@@ -61,7 +61,7 @@ export function CFOBriefingCard({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Brain className="w-4 h-4 text-indigo-500" />
-          <h3 className="text-sm font-semibold text-gray-900">AI CFO Briefing</h3>
+          <h3 className="text-sm font-semibold text-foreground">AI CFO Briefing</h3>
         </div>
         {onViewFull && (
           <Button
@@ -77,14 +77,14 @@ export function CFOBriefingCard({
       </div>
 
       {/* Summary */}
-      <p className="text-sm text-gray-700 leading-relaxed mb-3">
+      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
         {briefing.executiveSummary?.length > 200
           ? briefing.executiveSummary.slice(0, 200) + '...'
           : briefing.executiveSummary}
       </p>
 
       {/* Quick Stats */}
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
         {briefing.keyDecisions?.length > 0 && (
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />

@@ -86,7 +86,7 @@ export function LiabilityRegisterPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Scale className="w-5 h-5 text-pink-600" />
-          <h2 className="text-xl font-bold text-gray-900">Liability Register</h2>
+          <h2 className="text-xl font-bold text-foreground">Liability Register</h2>
         </div>
         <Button variant="outline" size="sm" onClick={() => refresh()} disabled={isLoading}>
           <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -138,8 +138,8 @@ export function LiabilityRegisterPage() {
 
       {/* Statutory Calendar */}
       <Card className="p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-gray-400" />
+        <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+          <Calendar className="w-4 h-4 text-[var(--fg-tertiary)]" />
           Uganda Statutory Deadlines
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -149,11 +149,11 @@ export function LiabilityRegisterPage() {
               className={`p-3 rounded-lg border ${
                 deadline.daysUntilDue <= 3 ? 'border-red-200 bg-red-50'
                   : deadline.daysUntilDue <= 7 ? 'border-amber-200 bg-amber-50'
-                    : 'border-gray-200'
+                    : 'border-[var(--border-subtle)]'
               }`}
             >
-              <p className="text-sm font-semibold text-gray-900">{deadline.description}</p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-sm font-semibold text-foreground">{deadline.description}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Due: {deadline.nextDueDate.toLocaleDateString('en-UG', { month: 'short', day: 'numeric' })}
               </p>
               <div className="flex items-center gap-1 mt-1">
@@ -169,7 +169,7 @@ export function LiabilityRegisterPage() {
                   </span>
                 )}
               </div>
-              <p className="text-[10px] text-gray-400 mt-1">
+              <p className="text-[10px] text-[var(--fg-tertiary)] mt-1">
                 Late penalty: {deadline.penaltyRatePercent}%/month
               </p>
             </div>
@@ -180,7 +180,7 @@ export function LiabilityRegisterPage() {
       {/* Liabilities Table */}
       <Card>
         <div className="px-4 pt-4 pb-2">
-          <h3 className="text-sm font-semibold text-gray-900">Active Liabilities</h3>
+          <h3 className="text-sm font-semibold text-foreground">Active Liabilities</h3>
         </div>
         <div className="overflow-x-auto">
           <Table>
@@ -208,21 +208,21 @@ export function LiabilityRegisterPage() {
                 return (
                   <TableRow key={liability.id} className={isOverdue ? 'bg-red-50/30' : ''}>
                     <TableCell>
-                      <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                      <span className="text-xs bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded">
                         {LIABILITY_TYPE_LABELS[liability.type] || liability.type}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <p className="text-sm text-gray-900 truncate max-w-[200px]">{liability.description}</p>
+                      <p className="text-sm text-foreground truncate max-w-[200px]">{liability.description}</p>
                       {liability.vendorName && (
-                        <p className="text-xs text-gray-400">{liability.vendorName}</p>
+                        <p className="text-xs text-[var(--fg-tertiary)]">{liability.vendorName}</p>
                       )}
                     </TableCell>
                     <TableCell className="text-right text-sm">{formatUGX(liability.totalAmount)}</TableCell>
                     <TableCell className="text-right text-sm text-green-600">{formatUGX(liability.amountPaid || 0)}</TableCell>
                     <TableCell className="text-right text-sm font-medium">{formatUGX(liability.amountRemaining || 0)}</TableCell>
                     <TableCell>
-                      <span className={`text-xs ${isOverdue ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+                      <span className={`text-xs ${isOverdue ? 'text-red-600 font-medium' : 'text-muted-foreground'}`}>
                         {formatDate(liability.nextDueDate)}
                       </span>
                     </TableCell>
@@ -230,7 +230,7 @@ export function LiabilityRegisterPage() {
                       <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${
                         liability.priority === 'statutory' ? 'bg-red-50 text-red-700'
                           : liability.priority === 'contractual' ? 'bg-orange-50 text-orange-700'
-                            : 'bg-gray-50 text-gray-600'
+                            : 'bg-[var(--bg-sunken)] text-muted-foreground'
                       }`}>
                         {liability.priority || 'operational'}
                       </span>
@@ -253,7 +253,7 @@ export function LiabilityRegisterPage() {
               })}
               {liabilities.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-gray-400">
+                  <TableCell colSpan={8} className="text-center py-8 text-[var(--fg-tertiary)]">
                     No active liabilities
                   </TableCell>
                 </TableRow>
@@ -267,10 +267,10 @@ export function LiabilityRegisterPage() {
       {payingId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="p-5 w-full max-w-md">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">Record Payment</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">Record Payment</h4>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Amount (UGX)</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Amount (UGX)</label>
                 <Input
                   type="number"
                   value={payAmount}
@@ -279,7 +279,7 @@ export function LiabilityRegisterPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Reference</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Reference</label>
                 <Input
                   placeholder="Payment reference..."
                   value={payReference}

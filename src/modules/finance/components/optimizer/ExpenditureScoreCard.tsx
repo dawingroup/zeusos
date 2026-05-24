@@ -90,7 +90,7 @@ const COST_COMPONENTS: {
 ];
 
 const CONFIDENCE_STYLES: Record<string, { label: string; bg: string; text: string }> = {
-  estimated: { label: 'Estimated', bg: 'bg-gray-100', text: 'text-gray-600' },
+  estimated: { label: 'Estimated', bg: 'bg-[var(--bg-sunken)]', text: 'text-muted-foreground' },
   quoted: { label: 'Quoted', bg: 'bg-blue-100', text: 'text-blue-700' },
   actual: { label: 'Actual', bg: 'bg-green-100', text: 'text-green-700' },
 };
@@ -103,7 +103,7 @@ function CostBreakdownPanel({ breakdown }: { breakdown: ItemCostBreakdown }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Cost Breakdown</h5>
+        <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Cost Breakdown</h5>
         <span className={`text-xs px-1.5 py-0.5 rounded ${confidence.bg} ${confidence.text}`}>
           {confidence.label}
         </span>
@@ -111,7 +111,7 @@ function CostBreakdownPanel({ breakdown }: { breakdown: ItemCostBreakdown }) {
 
       {/* Stacked bar */}
       {nonZeroComponents.length > 0 && (
-        <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
+        <div className="flex h-3 rounded-full overflow-hidden bg-[var(--bg-sunken)]">
           {nonZeroComponents.map(c => {
             const pct = (breakdown[c.key] / total) * 100;
             return (
@@ -132,14 +132,14 @@ function CostBreakdownPanel({ breakdown }: { breakdown: ItemCostBreakdown }) {
           <div key={c.key} className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: c.color }} />
-              <span className="text-gray-600">{c.label}</span>
+              <span className="text-muted-foreground">{c.label}</span>
             </div>
-            <span className="font-medium text-gray-900">{formatUGX(breakdown[c.key])}</span>
+            <span className="font-medium text-foreground">{formatUGX(breakdown[c.key])}</span>
           </div>
         ))}
-        <div className="flex items-center justify-between text-xs pt-1.5 border-t border-gray-100">
-          <span className="font-semibold text-gray-700">Total Pure Cost</span>
-          <span className="font-semibold text-gray-900">{formatUGX(breakdown.totalPureCost)}</span>
+        <div className="flex items-center justify-between text-xs pt-1.5 border-t border-[var(--border-subtle)]">
+          <span className="font-semibold text-muted-foreground">Total Pure Cost</span>
+          <span className="font-semibold text-foreground">{formatUGX(breakdown.totalPureCost)}</span>
         </div>
       </div>
     </div>
@@ -225,7 +225,7 @@ function CrossLinksPanel({ crossLinks }: { crossLinks: ExpenditureCrossLinks }) 
 
   return (
     <div className="space-y-2">
-      <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Related Entities</h5>
+      <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Related Entities</h5>
       <div className="space-y-1">
         {availableLinks.map(config => {
           const Icon = config.icon;
@@ -238,14 +238,14 @@ function CrossLinksPanel({ crossLinks }: { crossLinks: ExpenditureCrossLinks }) 
             <button
               key={config.idKey}
               onClick={() => navigate(config.route(crossLinks))}
-              className="flex items-center gap-2.5 w-full px-2 py-1.5 text-left rounded-md hover:bg-gray-50 transition-colors group"
+              className="flex items-center gap-2.5 w-full px-2 py-1.5 text-left rounded-md hover:bg-[var(--bg-sunken)] transition-colors group"
             >
-              <Icon className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
+              <Icon className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-muted-foreground" />
               <div className="flex-1 min-w-0">
-                <span className="text-xs text-gray-500">{config.label}</span>
-                <p className="text-sm text-gray-800 truncate">{name}</p>
+                <span className="text-xs text-muted-foreground">{config.label}</span>
+                <p className="text-sm text-foreground truncate">{name}</p>
               </div>
-              <ExternalLink className="w-3 h-3 text-gray-300 group-hover:text-gray-500" />
+              <ExternalLink className="w-3 h-3 text-[var(--fg-tertiary)] group-hover:text-muted-foreground" />
             </button>
           );
         })}
@@ -298,8 +298,8 @@ export function ExpenditureScoreCard({
         <span className="text-sm font-bold" style={{ color: PRIORITY_TIER_COLORS[item.priorityTier] }}>
           {item.compositeScore.toFixed(0)}
         </span>
-        <span className="text-sm text-gray-600 truncate flex-1">{item.description}</span>
-        <span className="text-sm font-medium text-gray-900">{formatUGX(item.amountUGX)}</span>
+        <span className="text-sm text-muted-foreground truncate flex-1">{item.description}</span>
+        <span className="text-sm font-medium text-foreground">{formatUGX(item.amountUGX)}</span>
       </div>
     );
   }
@@ -309,9 +309,9 @@ export function ExpenditureScoreCard({
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-semibold text-gray-900 truncate">{item.description}</h4>
+          <h4 className="text-sm font-semibold text-foreground truncate">{item.description}</h4>
           {item.vendor && (
-            <p className="text-xs text-gray-500 mt-0.5">{item.vendor}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{item.vendor}</p>
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -328,9 +328,9 @@ export function ExpenditureScoreCard({
         >
           {item.compositeScore.toFixed(0)}
         </div>
-        <span className="text-xs text-gray-500">/100</span>
+        <span className="text-xs text-muted-foreground">/100</span>
         <div className="flex-1" />
-        <span className="text-sm font-semibold text-gray-900">{formatUGX(item.amountUGX)}</span>
+        <span className="text-sm font-semibold text-foreground">{formatUGX(item.amountUGX)}</span>
       </div>
 
       {/* Radar Chart */}
@@ -365,9 +365,9 @@ export function ExpenditureScoreCard({
       <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mt-3">
         {radarData.map(d => (
           <div key={d.dimension} className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">{d.dimension}</span>
+            <span className="text-xs text-muted-foreground">{d.dimension}</span>
             <div className="flex items-center gap-1.5">
-              <div className="w-12 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-12 h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full"
                   style={{
@@ -376,7 +376,7 @@ export function ExpenditureScoreCard({
                   }}
                 />
               </div>
-              <span className="text-xs font-medium text-gray-700 w-6 text-right">
+              <span className="text-xs font-medium text-muted-foreground w-6 text-right">
                 {d.score.toFixed(0)}
               </span>
             </div>
@@ -386,12 +386,12 @@ export function ExpenditureScoreCard({
 
       {/* Metadata */}
       {(item.projectName || item.category) && (
-        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--border-subtle)]">
           {item.projectName && (
-            <span className="text-xs text-gray-400 truncate">{item.projectName}</span>
+            <span className="text-xs text-[var(--fg-tertiary)] truncate">{item.projectName}</span>
           )}
           {item.category && (
-            <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+            <span className="text-xs bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded">
               {item.category}
             </span>
           )}

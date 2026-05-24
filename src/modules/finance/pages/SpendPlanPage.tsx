@@ -101,7 +101,7 @@ export function SpendPlanPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Calendar className="w-5 h-5 text-green-600" />
-          <h2 className="text-xl font-bold text-gray-900">Daily Spend Plan</h2>
+          <h2 className="text-xl font-bold text-foreground">Daily Spend Plan</h2>
         </div>
         <div className="flex items-center gap-2">
           <Input
@@ -131,13 +131,13 @@ export function SpendPlanPage() {
       {/* Generate Plan Controls */}
       {!plan && (
         <Card className="p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Generate Spend Plan</h3>
-          <p className="text-xs text-gray-500 mb-4">
+          <h3 className="text-sm font-semibold text-foreground mb-3">Generate Spend Plan</h3>
+          <p className="text-xs text-muted-foreground mb-4">
             Enter the current bank and savings balances to generate today&apos;s optimized spend plan.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Bank Balance (UGX)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Bank Balance (UGX)</label>
               <Input
                 type="number"
                 placeholder="e.g. 50,000,000"
@@ -146,7 +146,7 @@ export function SpendPlanPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Savings Balance (UGX)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Savings Balance (UGX)</label>
               <Input
                 type="number"
                 placeholder="e.g. 10,000,000"
@@ -186,19 +186,19 @@ export function SpendPlanPage() {
             {/* Deferred Items */}
             {plan.deferredExpenditures && plan.deferredExpenditures.length > 0 && (
               <Card className="p-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <Pause className="w-4 h-4 text-gray-400" />
+                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <Pause className="w-4 h-4 text-[var(--fg-tertiary)]" />
                   Deferred ({plan.deferredExpenditures.length})
                 </h4>
                 <div className="space-y-2">
                   {plan.deferredExpenditures.map((exp: any) => (
                     <div
                       key={exp.expenditureId}
-                      className="flex items-center gap-3 py-1.5 border-b border-gray-50 last:border-0"
+                      className="flex items-center gap-3 py-1.5 border-b border-[var(--border-subtle)] last:border-0"
                     >
                       <TierBadge tier={exp.priorityTier} />
-                      <span className="text-sm text-gray-600 truncate flex-1">{exp.description}</span>
-                      <span className="text-sm font-medium text-gray-500">{formatUGX(exp.amount)}</span>
+                      <span className="text-sm text-muted-foreground truncate flex-1">{exp.description}</span>
+                      <span className="text-sm font-medium text-muted-foreground">{formatUGX(exp.amount)}</span>
                     </div>
                   ))}
                 </div>
@@ -210,10 +210,10 @@ export function SpendPlanPage() {
           <div className="space-y-4">
             {/* Plan Stats */}
             <Card className="p-4 space-y-3">
-              <h4 className="text-sm font-semibold text-gray-900">Plan Summary</h4>
+              <h4 className="text-sm font-semibold text-foreground">Plan Summary</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Status</span>
+                  <span className="text-muted-foreground">Status</span>
                   <span className={`font-medium ${
                     plan.status === 'active' ? 'text-green-600' : 'text-amber-600'
                   }`}>
@@ -221,27 +221,27 @@ export function SpendPlanPage() {
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Opening Balance</span>
+                  <span className="text-muted-foreground">Opening Balance</span>
                   <span className="font-medium">{formatUGX(plan.openingBankBalance)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Total Inflow</span>
+                  <span className="text-muted-foreground">Total Inflow</span>
                   <span className="font-medium text-green-600">+{formatUGX(plan.totalInflow)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Total Outflow</span>
+                  <span className="text-muted-foreground">Total Outflow</span>
                   <span className="font-medium text-red-600">-{formatUGX(plan.totalOutflow)}</span>
                 </div>
                 {plan.savingsAllocation > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Savings</span>
+                    <span className="text-muted-foreground">Savings</span>
                     <span className="font-medium text-purple-600">-{formatUGX(plan.savingsAllocation)}</span>
                   </div>
                 )}
-                <hr className="border-gray-100" />
+                <hr className="border-[var(--border-subtle)]" />
                 <div className="flex justify-between text-sm">
-                  <span className="font-medium text-gray-700">Closing Balance</span>
-                  <span className={`font-bold ${plan.closingBalance < 0 ? 'text-red-600' : 'text-gray-900'}`}>
+                  <span className="font-medium text-muted-foreground">Closing Balance</span>
+                  <span className={`font-bold ${plan.closingBalance < 0 ? 'text-red-600' : 'text-foreground'}`}>
                     {formatUGX(plan.closingBalance)}
                   </span>
                 </div>
@@ -251,12 +251,12 @@ export function SpendPlanPage() {
             {/* Action Items */}
             {plan.actionItems && plan.actionItems.length > 0 && (
               <Card className="p-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">Action Items</h4>
+                <h4 className="text-sm font-semibold text-foreground mb-2">Action Items</h4>
                 <div className="space-y-2">
                   {plan.actionItems.map((action: any, idx: number) => (
                     <div key={idx} className="flex items-start gap-2 text-xs">
                       <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-blue-500 shrink-0" />
-                      <span className="text-gray-600">{action.action}</span>
+                      <span className="text-muted-foreground">{action.action}</span>
                     </div>
                   ))}
                 </div>
@@ -285,7 +285,7 @@ export function SpendPlanPage() {
       {deferringId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="p-5 w-full max-w-md">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">Defer Expenditure</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">Defer Expenditure</h4>
             <Input
               placeholder="Reason for deferring..."
               value={deferReason}

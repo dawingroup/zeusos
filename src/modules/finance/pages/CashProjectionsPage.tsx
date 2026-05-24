@@ -102,11 +102,11 @@ export function CashProjectionsPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <TrendingUp className="w-5 h-5 text-purple-600" />
-          <h2 className="text-xl font-bold text-gray-900">Cash Flow Projections</h2>
+          <h2 className="text-xl font-bold text-foreground">Cash Flow Projections</h2>
         </div>
         <div className="flex items-center gap-2">
           {projection && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-[var(--fg-tertiary)]">
               {(() => {
                 const conf = confidenceBadge(projection.metadata?.confidenceScore || 50);
                 return (
@@ -191,7 +191,7 @@ export function CashProjectionsPage() {
 
       {/* Projection Chart */}
       <Card className="p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Daily Cash Balance Projection</h3>
+        <h3 className="text-sm font-semibold text-foreground mb-4">Daily Cash Balance Projection</h3>
         <ProjectionChart
           projection={projection}
           bufferAmount={bufferAmount}
@@ -203,7 +203,7 @@ export function CashProjectionsPage() {
       {projection?.dailySnapshots && projection.dailySnapshots.length > 0 && (
         <Card>
           <div className="px-4 pt-4 pb-2">
-            <h3 className="text-sm font-semibold text-gray-900">Daily Breakdown</h3>
+            <h3 className="text-sm font-semibold text-foreground">Daily Breakdown</h3>
           </div>
           <div className="overflow-x-auto">
             <Table>
@@ -242,7 +242,7 @@ export function CashProjectionsPage() {
                         -{formatCompact(snap.totalProjectedOutflow)}
                       </TableCell>
                       <TableCell className={`text-right text-sm font-semibold ${
-                        isCrisis ? 'text-red-600' : 'text-gray-900'
+                        isCrisis ? 'text-red-600' : 'text-foreground'
                       }`}>
                         {formatCompact(snap.closingBalance)}
                       </TableCell>
@@ -268,9 +268,9 @@ export function CashProjectionsPage() {
 
       {!projection && (
         <Card className="p-8 text-center">
-          <TrendingUp className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-sm text-gray-500 mb-1">No projection data available</p>
-          <p className="text-xs text-gray-400">
+          <TrendingUp className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground mb-1">No projection data available</p>
+          <p className="text-xs text-[var(--fg-tertiary)]">
             Run the optimizer to generate cash flow projections
           </p>
         </Card>

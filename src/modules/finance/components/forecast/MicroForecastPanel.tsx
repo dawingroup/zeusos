@@ -90,8 +90,8 @@ export function RoadmapTimeline({
 
   if (events.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400 text-xs">
-        <CalendarClock className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+      <div className="text-center py-8 text-[var(--fg-tertiary)] text-xs">
+        <CalendarClock className="h-8 w-8 mx-auto mb-2 text-[var(--fg-tertiary)]" />
         No micro-forecast events yet. Add items below to see them on the timeline.
       </div>
     );
@@ -105,12 +105,12 @@ export function RoadmapTimeline({
     <div className="overflow-x-auto pb-2">
       <div className="relative min-w-[600px]">
         {/* Timeline bar */}
-        <div className="h-1 bg-gray-200 rounded-full mx-4 mt-4" />
+        <div className="h-1 bg-[var(--bg-sunken)] rounded-full mx-4 mt-4" />
 
         {/* Period markers */}
         <div className="flex justify-between px-4 mt-1 mb-6">
           {periods.filter((_, i) => i % 3 === 0).map(p => (
-            <span key={p} className="text-[9px] text-gray-400">{periodLabel(p)}</span>
+            <span key={p} className="text-[9px] text-[var(--fg-tertiary)]">{periodLabel(p)}</span>
           ))}
         </div>
 
@@ -129,8 +129,8 @@ export function RoadmapTimeline({
                     style={{ left: `${Math.min(85, pct)}%` }}
                   >
                     <div className={`w-2 h-2 rounded-full ${colorMap[e.type]} shrink-0`} />
-                    <span className="text-[10px] text-gray-600 whitespace-nowrap">
-                      {e.label} <span className="text-gray-400">{fmtK(e.amount)}</span>
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                      {e.label} <span className="text-[var(--fg-tertiary)]">{fmtK(e.amount)}</span>
                     </span>
                   </div>
                 </div>
@@ -175,59 +175,59 @@ function CapExForm({
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs font-medium text-gray-700">Asset Name</label>
+          <label className="text-xs font-medium text-muted-foreground">Asset Name</label>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="e.g. CNC Machine"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Purchase Amount</label>
+          <label className="text-xs font-medium text-muted-foreground">Purchase Amount</label>
           <input
             type="number"
             value={amount || ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="50000"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Purchase Month</label>
+          <label className="text-xs font-medium text-muted-foreground">Purchase Month</label>
           <select
             value={period}
             onChange={e => setPeriod(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             {periods.map(p => <option key={p} value={p}>{periodLabel(p)}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Useful Life (months)</label>
+          <label className="text-xs font-medium text-muted-foreground">Useful Life (months)</label>
           <input
             type="number"
             value={usefulLife}
             onChange={e => setUsefulLife(parseInt(e.target.value) || 60)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Residual Value</label>
+          <label className="text-xs font-medium text-muted-foreground">Residual Value</label>
           <input
             type="number"
             value={residual || ''}
             onChange={e => setResidual(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="0"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Depreciation</label>
+          <label className="text-xs font-medium text-muted-foreground">Depreciation</label>
           <select
             value={deprMethod}
             onChange={e => setDeprMethod(e.target.value as 'straight_line' | 'none')}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             <option value="straight_line">Straight Line</option>
             <option value="none">None</option>
@@ -273,66 +273,66 @@ function LoanForm({
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs font-medium text-gray-700">Loan Name</label>
+          <label className="text-xs font-medium text-muted-foreground">Loan Name</label>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="e.g. Equipment Loan"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Principal</label>
+          <label className="text-xs font-medium text-muted-foreground">Principal</label>
           <input
             type="number"
             value={principal || ''}
             onChange={e => setPrincipal(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="100000"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Annual Rate (%)</label>
+          <label className="text-xs font-medium text-muted-foreground">Annual Rate (%)</label>
           <input
             type="number"
             value={rate}
             step={0.25}
             onChange={e => setRate(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Term (months)</label>
+          <label className="text-xs font-medium text-muted-foreground">Term (months)</label>
           <input
             type="number"
             value={term}
             onChange={e => setTerm(parseInt(e.target.value) || 60)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Start Month</label>
+          <label className="text-xs font-medium text-muted-foreground">Start Month</label>
           <select
             value={start}
             onChange={e => setStart(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             {periods.map(p => <option key={p} value={p}>{periodLabel(p)}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Type</label>
+          <label className="text-xs font-medium text-muted-foreground">Type</label>
           <select
             value={type}
             onChange={e => setType(e.target.value as 'new_loan' | 'existing')}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             <option value="new_loan">New Loan</option>
             <option value="existing">Existing Loan</option>
           </select>
         </div>
         <div className="col-span-2">
-          <label className="text-xs font-medium text-gray-700">Repayment Structure</label>
+          <label className="text-xs font-medium text-muted-foreground">Repayment Structure</label>
           <div className="flex gap-2 mt-1">
             {(['amortising', 'interest_only', 'bullet'] as const).map(pt => (
               <button
@@ -341,7 +341,7 @@ function LoanForm({
                 className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                   paymentType === pt
                     ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                    : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
                 {pt === 'amortising' ? 'Amortising' : pt === 'interest_only' ? 'Interest Only' : 'Bullet'}
@@ -383,40 +383,40 @@ function CapitalEventForm({
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs font-medium text-gray-700">Event Name</label>
+          <label className="text-xs font-medium text-muted-foreground">Event Name</label>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="e.g. Series A"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Amount</label>
+          <label className="text-xs font-medium text-muted-foreground">Amount</label>
           <input
             type="number"
             value={amount || ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="500000"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Month</label>
+          <label className="text-xs font-medium text-muted-foreground">Month</label>
           <select
             value={period}
             onChange={e => setPeriod(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             {periods.map(p => <option key={p} value={p}>{periodLabel(p)}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Type</label>
+          <label className="text-xs font-medium text-muted-foreground">Type</label>
           <select
             value={type}
             onChange={e => setType(e.target.value as 'equity_raise' | 'equity_buyback')}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             <option value="equity_raise">Equity Raise</option>
             <option value="equity_buyback">Share Buyback</option>
@@ -456,40 +456,40 @@ function DividendForm({
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs font-medium text-gray-700">Description</label>
+          <label className="text-xs font-medium text-muted-foreground">Description</label>
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="e.g. Shareholder Dividend"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Amount per Payment</label>
+          <label className="text-xs font-medium text-muted-foreground">Amount per Payment</label>
           <input
             type="number"
             value={amount || ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs"
             placeholder="25000"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Start Month</label>
+          <label className="text-xs font-medium text-muted-foreground">Start Month</label>
           <select
             value={start}
             onChange={e => setStart(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             {periods.map(p => <option key={p} value={p}>{periodLabel(p)}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs font-medium text-gray-700">Frequency</label>
+          <label className="text-xs font-medium text-muted-foreground">Frequency</label>
           <select
             value={frequency}
             onChange={e => setFrequency(e.target.value as DividendSchedule['frequency'])}
-            className="mt-1 w-full border border-gray-300 rounded-md px-2 py-1.5 text-xs bg-white"
+            className="mt-1 w-full border border-[var(--border-default)] rounded-md px-2 py-1.5 text-xs bg-card"
           >
             <option value="monthly">Monthly</option>
             <option value="quarterly">Quarterly</option>
@@ -534,7 +534,7 @@ function ItemRow({
         <span className="font-semibold">{fmtK(amount)}</span>
         <button
           onClick={onDelete}
-          className="text-gray-400 hover:text-red-500 transition-colors p-0.5"
+          className="text-[var(--fg-tertiary)] hover:text-red-500 transition-colors p-0.5"
           title="Remove"
         >
           <Trash2 className="h-3 w-3" />
@@ -572,13 +572,13 @@ export function MicroForecastContent({
     <div className="p-5 space-y-5">
       {/* Summary */}
       <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted-foreground">
           {totalCount} scheduled event{totalCount !== 1 ? 's' : ''} across the forecast horizon
         </p>
       </div>
 
       {/* Tab Pills */}
-      <div className="flex gap-1.5 bg-gray-100 rounded-full p-1 w-fit">
+      <div className="flex gap-1.5 bg-[var(--bg-sunken)] rounded-full p-1 w-fit">
         {TAB_CONFIG.map(tab => {
           const Icon = tab.icon;
           return (
@@ -587,8 +587,8 @@ export function MicroForecastContent({
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-white shadow-sm text-gray-800'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-card shadow-sm text-foreground'
+                  : 'text-muted-foreground hover:text-muted-foreground'
               }`}
             >
               <Icon className="h-3 w-3" />
@@ -617,7 +617,7 @@ export function MicroForecastContent({
               </div>
             )}
             <div className="border-t pt-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Capital Expenditure</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Capital Expenditure</p>
               <CapExForm onSave={onSaveCapEx} periods={periods} saving={saving} />
             </div>
           </>
@@ -640,7 +640,7 @@ export function MicroForecastContent({
               </div>
             )}
             <div className="border-t pt-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Loan / Debt</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Loan / Debt</p>
               <LoanForm onSave={onSaveLoan} periods={periods} saving={saving} />
             </div>
           </>
@@ -663,7 +663,7 @@ export function MicroForecastContent({
               </div>
             )}
             <div className="border-t pt-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Capital Event</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Capital Event</p>
               <CapitalEventForm onSave={onSaveCapitalEvent} periods={periods} saving={saving} />
             </div>
           </>
@@ -686,14 +686,14 @@ export function MicroForecastContent({
               </div>
             )}
             <div className="border-t pt-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Dividend Schedule</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Dividend Schedule</p>
               <DividendForm onSave={onSaveDividend} periods={periods} saving={saving} />
             </div>
           </>
         )}
       </div>
 
-      <p className="text-[10px] text-gray-400 pt-2 border-t">
+      <p className="text-[10px] text-[var(--fg-tertiary)] pt-2 border-t">
         Changes trigger automatic three-way recalculation
       </p>
     </div>
@@ -731,18 +731,18 @@ export function MicroForecastPanel({
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
 
       {/* Panel */}
-      <div className="relative ml-auto w-full max-w-2xl bg-white shadow-2xl flex flex-col overflow-hidden">
+      <div className="relative ml-auto w-full max-w-2xl bg-card shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
           <div>
-            <h3 className="font-semibold text-gray-900 text-sm">Micro Forecasts & Roadmap</h3>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <h3 className="font-semibold text-foreground text-sm">Micro Forecasts & Roadmap</h3>
+            <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">
               {totalCount} scheduled event{totalCount !== 1 ? 's' : ''} across the forecast horizon
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 rounded-md p-1 hover:bg-gray-100"
+            className="text-[var(--fg-tertiary)] hover:text-muted-foreground rounded-md p-1 hover:bg-[var(--bg-sunken)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -752,10 +752,10 @@ export function MicroForecastPanel({
         <div className="flex-1 overflow-y-auto">
           {/* Roadmap Timeline */}
           <div className="px-5 pt-4 pb-2">
-            <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-2">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">
               Forecast Roadmap
             </p>
-            <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+            <div className="bg-[var(--bg-sunken)] rounded-lg p-3 border border-[var(--border-subtle)]">
               <RoadmapTimeline
                 micro={micro}
                 firstForecastPeriod={firstForecastPeriod}
@@ -766,7 +766,7 @@ export function MicroForecastPanel({
 
           {/* Tab Pills */}
           <div className="px-5 pt-3 pb-2">
-            <div className="flex gap-1.5 bg-gray-100 rounded-full p-1 w-fit">
+            <div className="flex gap-1.5 bg-[var(--bg-sunken)] rounded-full p-1 w-fit">
               {TAB_CONFIG.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -775,8 +775,8 @@ export function MicroForecastPanel({
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
                       activeTab === tab.id
-                        ? 'bg-white shadow-sm text-gray-800'
-                        : 'text-gray-500 hover:text-gray-700'
+                        ? 'bg-card shadow-sm text-foreground'
+                        : 'text-muted-foreground hover:text-muted-foreground'
                     }`}
                   >
                     <Icon className="h-3 w-3" />
@@ -807,7 +807,7 @@ export function MicroForecastPanel({
                   </div>
                 )}
                 <div className="border-t pt-3">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Capital Expenditure</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Capital Expenditure</p>
                   <CapExForm onSave={onSaveCapEx} periods={periods} saving={saving} />
                 </div>
               </>
@@ -830,7 +830,7 @@ export function MicroForecastPanel({
                   </div>
                 )}
                 <div className="border-t pt-3">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Loan / Debt</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Loan / Debt</p>
                   <LoanForm onSave={onSaveLoan} periods={periods} saving={saving} />
                 </div>
               </>
@@ -853,7 +853,7 @@ export function MicroForecastPanel({
                   </div>
                 )}
                 <div className="border-t pt-3">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Capital Event</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Capital Event</p>
                   <CapitalEventForm onSave={onSaveCapitalEvent} periods={periods} saving={saving} />
                 </div>
               </>
@@ -876,7 +876,7 @@ export function MicroForecastPanel({
                   </div>
                 )}
                 <div className="border-t pt-3">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Add Dividend Schedule</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Add Dividend Schedule</p>
                   <DividendForm onSave={onSaveDividend} periods={periods} saving={saving} />
                 </div>
               </>
@@ -885,8 +885,8 @@ export function MicroForecastPanel({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-4 border-t bg-gray-50 shrink-0">
-          <p className="text-[10px] text-gray-400">
+        <div className="flex items-center justify-between px-5 py-4 border-t bg-[var(--bg-sunken)] shrink-0">
+          <p className="text-[10px] text-[var(--fg-tertiary)]">
             Changes trigger automatic three-way recalculation
           </p>
           <Button variant="outline" size="sm" onClick={onClose}>

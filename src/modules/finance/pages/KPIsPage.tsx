@@ -74,7 +74,7 @@ function fmtCurrency(v: number): string {
 }
 
 function fmtChange(current: number, previous: number, isPercentage: boolean): { label: string; color: string } {
-  if (previous === 0) return { label: 'N/A', color: 'text-gray-400' };
+  if (previous === 0) return { label: 'N/A', color: 'text-[var(--fg-tertiary)]' };
   const diff = current - previous;
   const pctChange = diff / Math.abs(previous);
   const sign = diff >= 0 ? '+' : '';
@@ -197,8 +197,8 @@ export function KPIsPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Financial KPIs</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Financial KPIs</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Key financial ratios and performance metrics
           {periods.length > 0 && (
             <span className="ml-1">
@@ -229,7 +229,7 @@ export function KPIsPage() {
           ))}
         </KPIGrid>
       ) : (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data available</p>
           <p className="text-sm mt-1">Sync QBO data from Finance &gt; Settings &gt; Integrations.</p>
         </Card>

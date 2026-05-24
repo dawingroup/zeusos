@@ -67,7 +67,7 @@ function MarkdownRenderer({ content }: { content: string }) {
     function flushList() {
       if (listItems.length > 0) {
         result.push(
-          <ul key={key++} className="list-disc list-inside space-y-1 my-2 text-gray-700 text-sm">
+          <ul key={key++} className="list-disc list-inside space-y-1 my-2 text-muted-foreground text-sm">
             {listItems.map((item, i) => (
               <li key={i}>{renderInline(item)}</li>
             ))}
@@ -105,7 +105,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       // Horizontal rule
       if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
         flushList();
-        result.push(<hr key={key++} className="my-4 border-gray-200" />);
+        result.push(<hr key={key++} className="my-4 border-[var(--border-subtle)]" />);
         continue;
       }
 
@@ -113,7 +113,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       if (trimmed.startsWith('## ') && !trimmed.startsWith('### ')) {
         flushList();
         result.push(
-          <h2 key={key++} className="text-lg font-bold text-gray-900 mt-5 mb-2">
+          <h2 key={key++} className="text-lg font-bold text-foreground mt-5 mb-2">
             {renderInline(trimmed.slice(3))}
           </h2>
         );
@@ -124,7 +124,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       if (trimmed.startsWith('### ')) {
         flushList();
         result.push(
-          <h3 key={key++} className="text-base font-semibold text-gray-800 mt-4 mb-1.5">
+          <h3 key={key++} className="text-base font-semibold text-foreground mt-4 mb-1.5">
             {renderInline(trimmed.slice(4))}
           </h3>
         );
@@ -135,7 +135,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       if (trimmed.startsWith('# ') && !trimmed.startsWith('## ')) {
         flushList();
         result.push(
-          <h1 key={key++} className="text-xl font-bold text-gray-900 mt-5 mb-2">
+          <h1 key={key++} className="text-xl font-bold text-foreground mt-5 mb-2">
             {renderInline(trimmed.slice(2))}
           </h1>
         );
@@ -163,7 +163,7 @@ function MarkdownRenderer({ content }: { content: string }) {
       // Regular paragraph
       flushList();
       result.push(
-        <p key={key++} className="text-sm text-gray-700 my-1.5 leading-relaxed">
+        <p key={key++} className="text-sm text-muted-foreground my-1.5 leading-relaxed">
           {renderInline(trimmed)}
         </p>
       );
@@ -288,14 +288,14 @@ export function ReportsLandingPage() {
     return (
       <div className="space-y-5">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">AI Finance Reports</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Generate intelligent reports for different stakeholders</p>
+          <h2 className="text-xl font-bold text-foreground">AI Finance Reports</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Generate intelligent reports for different stakeholders</p>
         </div>
         <Card className="p-8 text-center">
-          <Sparkles className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="font-medium text-gray-700">AI reports require a Gemini API key</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Configure <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">VITE_GEMINI_API_KEY</code> in your environment.
+          <Sparkles className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="font-medium text-muted-foreground">AI reports require a Gemini API key</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Configure <code className="bg-[var(--bg-sunken)] px-1.5 py-0.5 rounded text-xs font-mono">VITE_GEMINI_API_KEY</code> in your environment.
           </p>
         </Card>
       </div>
@@ -306,8 +306,8 @@ export function ReportsLandingPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">AI Finance Reports</h2>
-        <p className="text-sm text-gray-500 mt-0.5">Generate intelligent reports for different stakeholders</p>
+        <h2 className="text-xl font-bold text-foreground">AI Finance Reports</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Generate intelligent reports for different stakeholders</p>
       </div>
 
       {dataError && (
@@ -330,18 +330,18 @@ export function ReportsLandingPage() {
               className={`text-left p-5 rounded-lg border-2 transition-all duration-150
                 ${isSelected
                   ? 'border-green-500 bg-green-50/50 shadow-sm'
-                  : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                  : 'border-[var(--border-subtle)] bg-card hover:border-[var(--border-default)] hover:shadow-sm'
                 }`}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2.5 rounded-lg ${isSelected ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-lg ${isSelected ? 'bg-green-100 text-green-700' : 'bg-[var(--bg-sunken)] text-muted-foreground'}`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`font-semibold ${isSelected ? 'text-green-800' : 'text-gray-900'}`}>
+                  <p className={`font-semibold ${isSelected ? 'text-green-800' : 'text-foreground'}`}>
                     {t.title}
                   </p>
-                  <p className="text-sm text-gray-500 mt-0.5">{t.description}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{t.description}</p>
                 </div>
                 {isSelected && (
                   <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -357,21 +357,21 @@ export function ReportsLandingPage() {
       {/* Configuration Panel — shown when a template is selected */}
       {selectedTemplate && (
         <Card className="p-5 space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Report Configuration
           </h3>
 
           {/* Period Range */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Start Month</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Start Month</label>
               {dataLoading ? (
                 <Skeleton className="h-9 w-full" />
               ) : (
                 <select
                   value={periodStart}
                   onChange={e => setPeriodStart(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white font-medium"
+                  className="w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card font-medium"
                 >
                   {periods.map(p => (
                     <option key={p} value={p}>{periodLabel(p)}</option>
@@ -380,14 +380,14 @@ export function ReportsLandingPage() {
               )}
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">End Month</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">End Month</label>
               {dataLoading ? (
                 <Skeleton className="h-9 w-full" />
               ) : (
                 <select
                   value={periodEnd}
                   onChange={e => setPeriodEnd(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white font-medium"
+                  className="w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card font-medium"
                 >
                   {periods.map(p => (
                     <option key={p} value={p}>{periodLabel(p)}</option>
@@ -403,15 +403,15 @@ export function ReportsLandingPage() {
 
           {/* Additional Context */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Additional Context <span className="text-gray-400">(optional)</span>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
+              Additional Context <span className="text-[var(--fg-tertiary)]">(optional)</span>
             </label>
             <textarea
               value={additionalContext}
               onChange={e => setAdditionalContext(e.target.value)}
               placeholder="E.g., 'We launched a new product line in March' or 'Focus on the cost reduction initiatives'"
               rows={3}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white resize-none placeholder:text-gray-400"
+              className="w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm bg-card resize-none placeholder:text-[var(--fg-tertiary)]"
             />
           </div>
 
@@ -422,7 +422,7 @@ export function ReportsLandingPage() {
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors
               ${canGenerate && !dataLoading
                 ? 'bg-green-600 text-white hover:bg-green-700 shadow-sm'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] cursor-not-allowed'
               }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -445,22 +445,22 @@ export function ReportsLandingPage() {
           {/* Report Header */}
           <div className="flex items-start justify-between flex-wrap gap-3 mb-5">
             <div>
-              <h2 className="text-lg font-bold text-gray-900">{generatedReport.title}</h2>
-              <p className="text-xs text-gray-500 mt-1">
+              <h2 className="text-lg font-bold text-foreground">{generatedReport.title}</h2>
+              <p className="text-xs text-muted-foreground mt-1">
                 Generated {generatedReport.generatedAt.toLocaleString()}
               </p>
             </div>
             <div className="flex items-center gap-2 print:hidden">
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-gray-300 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--border-default)] text-xs font-medium text-muted-foreground bg-card hover:bg-[var(--bg-sunken)] transition-colors"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? 'Copied' : 'Copy to Clipboard'}
               </button>
               <button
                 onClick={handlePrint}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-gray-300 text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--border-default)] text-xs font-medium text-muted-foreground bg-card hover:bg-[var(--bg-sunken)] transition-colors"
               >
                 <Printer className="w-3.5 h-3.5" />
                 Print
@@ -469,7 +469,7 @@ export function ReportsLandingPage() {
           </div>
 
           {/* Divider */}
-          <hr className="border-gray-200 mb-4" />
+          <hr className="border-[var(--border-subtle)] mb-4" />
 
           {/* Rendered Markdown Content */}
           <div className="max-w-none">
@@ -481,9 +481,9 @@ export function ReportsLandingPage() {
       {/* Empty state — no template selected and no report */}
       {!selectedTemplate && !generatedReport && !dataLoading && (
         <Card className="p-8 text-center">
-          <Sparkles className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="font-medium text-gray-500">Select a report template above to get started</p>
-          <p className="text-sm text-gray-400 mt-1">
+          <Sparkles className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="font-medium text-muted-foreground">Select a report template above to get started</p>
+          <p className="text-sm text-[var(--fg-tertiary)] mt-1">
             Choose the audience for your report and we will generate an AI-powered financial analysis.
           </p>
         </Card>
