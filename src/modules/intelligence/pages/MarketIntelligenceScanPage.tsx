@@ -144,11 +144,11 @@ function ScanConfigPanel({ onScan, isScanning }: {
               onClick={() => setSubsidiaryId(sub.id)}
               className={`p-3 rounded-lg border-2 text-left transition-all ${
                 subsidiaryId === sub.id
-                  ? 'border-blue-500 bg-blue-50'
+                  ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
                   : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
               }`}
             >
-              <p className={`text-sm font-semibold ${subsidiaryId === sub.id ? 'text-blue-700' : 'text-foreground'}`}>
+              <p className={`text-sm font-semibold ${subsidiaryId === sub.id ? 'text-[var(--rag-blue)]' : 'text-foreground'}`}>
                 {sub.name}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">{sub.description}</p>
@@ -167,7 +167,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
               onClick={() => setTimeHorizon(opt.id)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 timeHorizon === opt.id
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[var(--rag-blue)] text-white'
                   : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
@@ -187,11 +187,11 @@ function ScanConfigPanel({ onScan, isScanning }: {
               onClick={() => setDepth(opt.id)}
               className={`p-3 rounded-lg border-2 text-center transition-all ${
                 depth === opt.id
-                  ? 'border-blue-500 bg-blue-50'
+                  ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
                   : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
               }`}
             >
-              <p className={`text-sm font-semibold ${depth === opt.id ? 'text-blue-700' : 'text-muted-foreground'}`}>
+              <p className={`text-sm font-semibold ${depth === opt.id ? 'text-[var(--rag-blue)]' : 'text-muted-foreground'}`}>
                 {opt.label}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
@@ -226,7 +226,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
       <button
         onClick={() => onScan({ subsidiaryId, focusAreas, timeHorizon, depth })}
         disabled={isScanning}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-sm shadow-lg hover:from-blue-700 hover:to-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r $1-[var(--rag-blue)] to-indigo-600 text-white font-semibold text-sm shadow-lg hover:$1-[var(--rag-blue)] hover:to-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
       >
         {isScanning ? (
           <>
@@ -242,12 +242,12 @@ function ScanConfigPanel({ onScan, isScanning }: {
       </button>
 
       {isScanning && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <Radar className="w-5 h-5 text-blue-600 animate-pulse mt-0.5" />
+            <Radar className="w-5 h-5 text-[var(--rag-blue)] animate-pulse mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-blue-800">AI Analysis in Progress</p>
-              <p className="text-xs text-blue-600 mt-1">
+              <p className="text-sm font-medium text-[var(--rag-blue)]">AI Analysis in Progress</p>
+              <p className="text-xs text-[var(--rag-blue)] mt-1">
                 Gemini AI is scrubbing competitor digital profiles using real-time web search.
                 This typically takes 30-90 seconds depending on the number of competitors and depth selected.
               </p>
@@ -289,9 +289,9 @@ function ExecutiveSummarySection({ report }: { report: MarketIntelligenceReport 
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-sunken)]">
           {report.marketSentiment === 'bullish' ? (
-            <TrendingUp className="w-4 h-4 text-green-600" />
+            <TrendingUp className="w-4 h-4 text-[var(--rag-green)]" />
           ) : report.marketSentiment === 'bearish' ? (
-            <TrendingDown className="w-4 h-4 text-red-600" />
+            <TrendingDown className="w-4 h-4 text-[var(--rag-red)]" />
           ) : (
             <Activity className="w-4 h-4 text-muted-foreground" />
           )}
@@ -315,15 +315,15 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
   const [expanded, setExpanded] = useState(false);
 
   const threatColor = analysis.updatedThreatLevel === 'critical' || analysis.updatedThreatLevel === 'high'
-    ? 'text-red-700 bg-red-100'
+    ? 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]'
     : analysis.updatedThreatLevel === 'moderate'
-    ? 'text-yellow-700 bg-yellow-100'
-    : 'text-green-700 bg-green-100';
+    ? 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]'
+    : 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]';
 
   const changeIcon = analysis.threatLevelChange === 'increased'
-    ? <TrendingUp className="w-3 h-3 text-red-500" />
+    ? <TrendingUp className="w-3 h-3 text-[var(--rag-red)]" />
     : analysis.threatLevelChange === 'decreased'
-    ? <TrendingDown className="w-3 h-3 text-green-500" />
+    ? <TrendingDown className="w-3 h-3 text-[var(--rag-green)]" />
     : null;
 
   return (
@@ -334,7 +334,7 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
         className="w-full flex items-center justify-between p-4 hover:bg-[var(--bg-sunken)] transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br $1-[var(--rag-blue)] to-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">
               {analysis.competitorName?.charAt(0) || '?'}
             </span>
@@ -346,7 +346,7 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
             </div>
             <div className="flex items-center gap-2 mt-0.5">
               <Badge label={analysis.updatedThreatLevel || 'unknown'} color={threatColor.split(' ')[0]} bg={threatColor.split(' ')[1]} />
-              <Badge label={analysis.activityLevel || 'unknown'} color="text-blue-700" bg="bg-blue-100" />
+              <Badge label={analysis.activityLevel || 'unknown'} color="text-[var(--rag-blue)]" bg="bg-[var(--rag-blue-soft)]" />
               <span className="text-xs text-[var(--fg-tertiary)]">{analysis.findings?.length || 0} findings</span>
             </div>
           </div>
@@ -366,8 +366,8 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
       {expanded && (
         <div className="border-t border-[var(--border-subtle)] p-4 space-y-4">
           {/* Assessment */}
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-sm text-blue-800">{analysis.overallAssessment}</p>
+          <div className="bg-[var(--rag-blue-soft)] rounded-lg p-3">
+            <p className="text-sm text-[var(--rag-blue)]">{analysis.overallAssessment}</p>
           </div>
 
           {/* Findings */}
@@ -389,7 +389,7 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
               <ul className="space-y-1">
                 {analysis.watchItems.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Eye className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
+                    <Eye className="w-3.5 h-3.5 text-[var(--rag-amber)] mt-0.5 shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -418,7 +418,7 @@ function FindingCard({ finding }: { finding: CompetitorFinding }) {
         </div>
         <p className="text-xs text-muted-foreground mt-1">{finding.description}</p>
         {finding.implications && (
-          <p className="text-xs text-blue-600 mt-1 flex items-start gap-1">
+          <p className="text-xs text-[var(--rag-blue)] mt-1 flex items-start gap-1">
             <ArrowRight className="w-3 h-3 mt-0.5 shrink-0" />
             {finding.implications}
           </p>
@@ -468,7 +468,7 @@ function TrendSection({ trends }: { trends: IndustryTrend[] }) {
               </p>
             )}
             {trend.opportunityForUs && (
-              <div className="flex items-start gap-1.5 mt-2 text-xs text-green-700 bg-green-50 rounded p-2">
+              <div className="flex items-start gap-1.5 mt-2 text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] rounded p-2">
                 <Lightbulb className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                 {trend.opportunityForUs}
               </div>
@@ -501,7 +501,7 @@ function RecommendationCard({ rec }: { rec: StrategicRecommendation }) {
       <p className="text-sm font-semibold text-foreground">{rec.title}</p>
       <p className="text-xs text-muted-foreground mt-1">{rec.description}</p>
       {rec.rationale && (
-        <p className="text-xs text-blue-600 mt-2 italic">{rec.rationale}</p>
+        <p className="text-xs text-[var(--rag-blue)] mt-2 italic">{rec.rationale}</p>
       )}
       {rec.targetCompetitors?.length > 0 && (
         <p className="text-xs text-muted-foreground mt-2">
@@ -622,7 +622,7 @@ function ReportViewer({ report, onBack }: {
         <div>
           <button
             onClick={onBack}
-            className="text-xs text-blue-600 hover:underline flex items-center gap-1 mb-1"
+            className="text-xs text-[var(--rag-blue)] hover:underline flex items-center gap-1 mb-1"
           >
             <ChevronRight className="w-3 h-3 rotate-180" />
             Back to scan config
@@ -644,7 +644,7 @@ function ReportViewer({ report, onBack }: {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -729,7 +729,7 @@ function ReportViewer({ report, onBack }: {
                 })
                 .map((alert, idx) => <RiskAlertCard key={idx} alert={alert} />)
             ) : (
-              <p className="text-sm text-green-600 text-center py-4 flex items-center justify-center gap-2">
+              <p className="text-sm text-[var(--rag-green)] text-center py-4 flex items-center justify-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
                 No active risk alerts. The competitive landscape appears stable.
               </p>
@@ -804,7 +804,7 @@ export function MarketIntelligenceScanPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-lg">
+          <div className="p-2.5 bg-gradient-to-br $1-[var(--rag-blue)] to-indigo-700 rounded-xl shadow-lg">
             <Radar className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -823,14 +823,14 @@ export function MarketIntelligenceScanPage() {
 
       {/* Error Display */}
       {scanError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <XCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-4 flex items-start gap-3">
+          <XCircle className="w-5 h-5 text-[var(--rag-red)] mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-red-800">Scan Failed</p>
-            <p className="text-xs text-red-600 mt-1">{scanError}</p>
+            <p className="text-sm font-medium text-[var(--rag-red)]">Scan Failed</p>
+            <p className="text-xs text-[var(--rag-red)] mt-1">{scanError}</p>
             <button
               onClick={clearScan}
-              className="text-xs text-red-700 underline mt-2"
+              className="text-xs text-[var(--rag-red)] underline mt-2"
             >
               Dismiss
             </button>
@@ -840,18 +840,18 @@ export function MarketIntelligenceScanPage() {
 
       {/* Success Notice */}
       {scanResult?.success && !activeReport && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-          <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+        <div className="bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-lg p-4 flex items-start gap-3">
+          <CheckCircle2 className="w-5 h-5 text-[var(--rag-green)] mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-medium text-green-800">Scan Complete</p>
-            <p className="text-xs text-green-600 mt-1">
+            <p className="text-sm font-medium text-[var(--rag-green)]">Scan Complete</p>
+            <p className="text-xs text-[var(--rag-green)] mt-1">
               Analyzed {scanResult.competitorsAnalyzed} competitors with {scanResult.totalFindings} findings.
               {scanResult.movesCreated ? ` ${scanResult.movesCreated} major competitive moves auto-tracked.` : ''}
             </p>
             {scanResult.report && (
               <button
                 onClick={() => setActiveReport(scanResult.report!)}
-                className="text-xs text-green-700 underline mt-2 flex items-center gap-1"
+                className="text-xs text-[var(--rag-green)] underline mt-2 flex items-center gap-1"
               >
                 View Report <ArrowRight className="w-3 h-3" />
               </button>
@@ -872,7 +872,7 @@ export function MarketIntelligenceScanPage() {
                   onClick={() => setSelectedSubsidiary(sub.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     selectedSubsidiary === sub.id
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-[var(--rag-blue)] text-white'
                       : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
                   }`}
                 >
@@ -895,9 +895,9 @@ export function MarketIntelligenceScanPage() {
 
       {/* How it works */}
       {!showHistory && !activeReport && !isScanning && (
-        <div className="bg-gradient-to-br from-[var(--bg-sunken)] to-blue-50 rounded-xl border border-[var(--border-subtle)] p-5">
+        <div className="bg-gradient-to-br from-[var(--bg-sunken)] $1-[var(--rag-blue-soft)] rounded-xl border border-[var(--border-subtle)] p-5">
           <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-3">
-            <Zap className="w-4 h-4 text-blue-600" />
+            <Zap className="w-4 h-4 text-[var(--rag-blue)]" />
             How Market Intelligence Scan Works
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -908,7 +908,7 @@ export function MarketIntelligenceScanPage() {
               { step: '4', title: 'Auto-Track', desc: 'Major findings are automatically logged as competitive moves for ongoing monitoring.' },
             ].map(item => (
               <div key={item.step} className="flex gap-3">
-                <div className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                <div className="w-7 h-7 bg-[var(--rag-blue)] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                   {item.step}
                 </div>
                 <div>

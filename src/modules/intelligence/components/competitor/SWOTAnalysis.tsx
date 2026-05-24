@@ -150,9 +150,9 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
               <span
                 className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                   analysis.status === 'approved'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                     : analysis.status === 'draft'
-                    ? 'bg-yellow-100 text-yellow-700'
+                    ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                     : 'bg-[var(--bg-sunken)] text-muted-foreground'
                 }`}
               >
@@ -163,7 +163,7 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
           {showActions && analysis.status === 'draft' && onApprove && (
             <button
               onClick={onApprove}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)]"
             >
               <CheckCircle className="w-4 h-4" />
               Approve
@@ -213,7 +213,7 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
             <ul className="space-y-1">
               {analysis.strategicImplications.map((imp, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--rag-blue)] mt-1.5 flex-shrink-0" />
                   {imp}
                 </li>
               ))}
@@ -226,7 +226,7 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
             <ul className="space-y-1">
               {analysis.recommendedActions.map((action, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--rag-green)] mt-1.5 flex-shrink-0" />
                   {action}
                 </li>
               ))}

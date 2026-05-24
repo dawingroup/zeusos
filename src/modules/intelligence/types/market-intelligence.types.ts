@@ -264,30 +264,30 @@ export const SCAN_DEPTH_OPTIONS: Array<{ id: ScanDepth; label: string; descripti
 ];
 
 export const THREAT_LEVEL_CONFIG: Record<OverallThreatLevel, { color: string; bg: string; label: string }> = {
-  low: { color: 'text-green-700', bg: 'bg-green-100', label: 'Low' },
-  moderate: { color: 'text-yellow-700', bg: 'bg-yellow-100', label: 'Moderate' },
-  elevated: { color: 'text-orange-700', bg: 'bg-orange-100', label: 'Elevated' },
-  high: { color: 'text-red-700', bg: 'bg-red-100', label: 'High' },
-  critical: { color: 'text-red-900', bg: 'bg-red-200', label: 'Critical' },
+  low: { color: 'text-[var(--rag-green)]', bg: 'bg-[var(--rag-green-soft)]', label: 'Low' },
+  moderate: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]', label: 'Moderate' },
+  elevated: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]', label: 'Elevated' },
+  high: { color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)]', label: 'High' },
+  critical: { color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red)]', label: 'Critical' },
 };
 
 export const SIGNIFICANCE_CONFIG: Record<FindingSignificance, { color: string; bg: string }> = {
   minor: { color: 'text-muted-foreground', bg: 'bg-[var(--bg-sunken)]' },
-  moderate: { color: 'text-blue-700', bg: 'bg-blue-100' },
-  significant: { color: 'text-yellow-700', bg: 'bg-yellow-100' },
-  major: { color: 'text-orange-700', bg: 'bg-orange-100' },
-  transformative: { color: 'text-red-700', bg: 'bg-red-100' },
+  moderate: { color: 'text-[var(--rag-blue)]', bg: 'bg-[var(--rag-blue-soft)]' },
+  significant: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+  major: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+  transformative: { color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)]' },
 };
 
 export const PRIORITY_CONFIG: Record<RecommendationPriority, { color: string; bg: string }> = {
-  critical: { color: 'text-red-700', bg: 'bg-red-100' },
-  high: { color: 'text-orange-700', bg: 'bg-orange-100' },
-  medium: { color: 'text-yellow-700', bg: 'bg-yellow-100' },
-  low: { color: 'text-green-700', bg: 'bg-green-100' },
+  critical: { color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)]' },
+  high: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+  medium: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+  low: { color: 'text-[var(--rag-green)]', bg: 'bg-[var(--rag-green-soft)]' },
 };
 
 export const ALERT_SEVERITY_CONFIG: Record<AlertSeverity, { color: string; bg: string; icon: string }> = {
-  warning: { color: 'text-yellow-700', bg: 'bg-yellow-50 border-yellow-300', icon: 'AlertTriangle' },
-  elevated: { color: 'text-orange-700', bg: 'bg-orange-50 border-orange-300', icon: 'AlertCircle' },
-  critical: { color: 'text-red-700', bg: 'bg-red-50 border-red-300', icon: 'ShieldAlert' },
+  warning: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]', icon: 'AlertTriangle' },
+  elevated: { color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]', icon: 'AlertCircle' },
+  critical: { color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)] border-[var(--rag-red)]', icon: 'ShieldAlert' },
 };

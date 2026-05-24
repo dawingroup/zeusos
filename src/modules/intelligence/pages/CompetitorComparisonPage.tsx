@@ -249,7 +249,7 @@ const CompetitorComparisonPage: React.FC = () => {
                               <span className={isMax ? 'font-bold' : ''} style={isMax ? { color: MODULE_COLOR } : {}}>
                                 {metric.format(value)}
                               </span>
-                              {isMax && value > 0 && <Star className="h-3 w-3 inline ml-1 text-yellow-500" />}
+                              {isMax && value > 0 && <Star className="h-3 w-3 inline ml-1 text-[var(--rag-amber)]" />}
                             </td>
                           );
                         })}
@@ -276,7 +276,7 @@ const CompetitorComparisonPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-green-500" />
+                  <TrendingUp className="h-5 w-5 text-[var(--rag-green)]" />
                   Strengths Comparison
                 </CardTitle>
               </CardHeader>
@@ -287,7 +287,7 @@ const CompetitorComparisonPage: React.FC = () => {
                       <p className="font-medium mb-2">{competitor.name}</p>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-green-500"
+                          className="h-full rounded-full bg-[var(--rag-green)]"
                           style={{ width: `${(competitor as any).strengthScore ?? 50}%` }}
                         />
                       </div>
@@ -301,7 +301,7 @@ const CompetitorComparisonPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingDown className="h-5 w-5 text-red-500" />
+                  <TrendingDown className="h-5 w-5 text-[var(--rag-red)]" />
                   Weaknesses Comparison
                 </CardTitle>
               </CardHeader>
@@ -312,7 +312,7 @@ const CompetitorComparisonPage: React.FC = () => {
                       <p className="font-medium mb-2">{competitor.name}</p>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-red-500"
+                          className="h-full rounded-full bg-[var(--rag-red)]"
                           style={{ width: `${(competitor as any).weaknessScore ?? 50}%` }}
                         />
                       </div>

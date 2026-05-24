@@ -245,7 +245,7 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
         </DialogHeader>
 
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3 flex items-center gap-2">
+          <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-3 flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             {error}
           </div>
@@ -330,7 +330,7 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
           <div className="flex flex-col items-center justify-center py-16">
             <div className="relative">
               <Radar className="h-16 w-16 animate-pulse" style={{ color: MODULE_COLOR }} />
-              <Sparkles className="h-6 w-6 absolute -top-1 -right-1 text-yellow-500 animate-bounce" />
+              <Sparkles className="h-6 w-6 absolute -top-1 -right-1 text-[var(--rag-amber)] animate-bounce" />
             </div>
             <p className="mt-6 font-medium text-lg">Scanning the competitive landscape...</p>
             <p className="text-muted-foreground text-sm mt-1">Gemini is searching the web for competitors in your market</p>
@@ -463,11 +463,11 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
                             <div className="grid grid-cols-2 gap-3">
                               {candidate.strengths.length > 0 && (
                                 <div>
-                                  <span className="font-medium text-xs uppercase tracking-wide text-green-600">Strengths</span>
+                                  <span className="font-medium text-xs uppercase tracking-wide text-[var(--rag-green)]">Strengths</span>
                                   <ul className="mt-0.5 space-y-0.5">
                                     {candidate.strengths.map((s, i) => (
                                       <li key={i} className="text-xs flex items-start gap-1">
-                                        <CheckCircle2 className="h-3 w-3 text-green-500 mt-0.5 shrink-0" />
+                                        <CheckCircle2 className="h-3 w-3 text-[var(--rag-green)] mt-0.5 shrink-0" />
                                         {s}
                                       </li>
                                     ))}
@@ -476,11 +476,11 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
                               )}
                               {candidate.weaknesses.length > 0 && (
                                 <div>
-                                  <span className="font-medium text-xs uppercase tracking-wide text-red-600">Weaknesses</span>
+                                  <span className="font-medium text-xs uppercase tracking-wide text-[var(--rag-red)]">Weaknesses</span>
                                   <ul className="mt-0.5 space-y-0.5">
                                     {candidate.weaknesses.map((w, i) => (
                                       <li key={i} className="text-xs flex items-start gap-1">
-                                        <AlertTriangle className="h-3 w-3 text-red-500 mt-0.5 shrink-0" />
+                                        <AlertTriangle className="h-3 w-3 text-[var(--rag-red)] mt-0.5 shrink-0" />
                                         {w}
                                       </li>
                                     ))}

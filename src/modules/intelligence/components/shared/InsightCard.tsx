@@ -211,7 +211,7 @@ export const InsightCard: React.FC<InsightCardProps> = ({
       {insight.status !== 'new' && (
         <div className="px-4 py-2 bg-muted/50 border-t">
           <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-[var(--rag-green)]" />
             <span className="text-xs text-muted-foreground">
               {insight.status === 'actioned' ? 'Action taken' : insight.status === 'reviewed' ? 'Reviewed' : 'Dismissed'}
               {insight.reviewedAt && ` • ${new Date(insight.reviewedAt).toLocaleDateString()}`}

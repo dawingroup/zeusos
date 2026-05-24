@@ -84,10 +84,10 @@ const NewsFeedPage: React.FC = () => {
     switch (sentiment) {
       case 'very_positive':
       case 'positive':
-        return <ThumbsUp className="h-4 w-4 text-green-500" />;
+        return <ThumbsUp className="h-4 w-4 text-[var(--rag-green)]" />;
       case 'very_negative':
       case 'negative':
-        return <ThumbsDown className="h-4 w-4 text-red-500" />;
+        return <ThumbsDown className="h-4 w-4 text-[var(--rag-red)]" />;
       default:
         return <Meh className="h-4 w-4 text-muted-foreground" />;
     }

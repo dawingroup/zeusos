@@ -98,9 +98,9 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         count={stats.burning.count}
         subtitle={stats.burning.topTask}
         icon={<Flame className="h-5 w-5" />}
-        accentColor="text-red-600"
-        bgColor="bg-red-100 dark:bg-red-950/30"
-        borderColor="ring-red-400"
+        accentColor="text-[var(--rag-red)]"
+        bgColor="bg-[var(--rag-red-soft)] dark:bg-red-950/30"
+        borderColor="ring-[var(--rag-red)]"
         isActive={activeFilter === 'burning'}
         onClick={() => handleClick('burning')}
       />
@@ -109,9 +109,9 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         count={stats.nextUp.count}
         subtitle={stats.nextUp.nearestDue ? `Nearest: ${stats.nextUp.nearestDue}` : undefined}
         icon={<ArrowRight className="h-5 w-5" />}
-        accentColor="text-blue-600"
-        bgColor="bg-blue-100 dark:bg-blue-950/30"
-        borderColor="ring-blue-400"
+        accentColor="text-[var(--rag-blue)]"
+        bgColor="bg-[var(--rag-blue-soft)] dark:bg-blue-950/30"
+        borderColor="ring-[var(--rag-blue)]"
         isActive={activeFilter === 'nextUp'}
         onClick={() => handleClick('nextUp')}
       />
@@ -120,9 +120,9 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         count={stats.stuck.count}
         subtitle={stats.stuck.oldestTask}
         icon={<PauseCircle className="h-5 w-5" />}
-        accentColor="text-amber-600"
-        bgColor="bg-amber-100 dark:bg-amber-950/30"
-        borderColor="ring-amber-400"
+        accentColor="text-[var(--rag-amber)]"
+        bgColor="bg-[var(--rag-amber-soft)] dark:bg-amber-950/30"
+        borderColor="ring-[var(--rag-amber)]"
         isActive={activeFilter === 'stuck'}
         onClick={() => handleClick('stuck')}
       />
@@ -131,9 +131,9 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         count={stats.moved.count}
         subtitle="Last 24 hours"
         icon={<Activity className="h-5 w-5" />}
-        accentColor="text-green-600"
-        bgColor="bg-green-100 dark:bg-green-950/30"
-        borderColor="ring-green-400"
+        accentColor="text-[var(--rag-green)]"
+        bgColor="bg-[var(--rag-green-soft)] dark:bg-green-950/30"
+        borderColor="ring-[var(--rag-green)]"
         isActive={activeFilter === 'moved'}
         onClick={() => handleClick('moved')}
       />

@@ -206,29 +206,29 @@ export default function EmployeeTaskInboxPage() {
           label="Pending"
           value={stats.pending}
           icon={<Clock className="h-5 w-5" />}
-          color="text-amber-600"
-          bgColor="bg-amber-100"
+          color="text-[var(--rag-amber)]"
+          bgColor="bg-[var(--rag-amber-soft)]"
         />
         <StatCard
           label="In Progress"
           value={stats.inProgress}
           icon={<Play className="h-5 w-5" />}
-          color="text-blue-600"
-          bgColor="bg-blue-100"
+          color="text-[var(--rag-blue)]"
+          bgColor="bg-[var(--rag-blue-soft)]"
         />
         <StatCard
           label="Overdue"
           value={stats.overdue}
           icon={<AlertCircle className="h-5 w-5" />}
-          color="text-red-600"
-          bgColor="bg-red-100"
+          color="text-[var(--rag-red)]"
+          bgColor="bg-[var(--rag-red-soft)]"
         />
         <StatCard
           label="Due Today"
           value={stats.dueToday}
           icon={<Calendar className="h-5 w-5" />}
-          color="text-orange-600"
-          bgColor="bg-orange-100"
+          color="text-[var(--rag-amber)]"
+          bgColor="bg-[var(--rag-amber-soft)]"
         />
       </div>
 
@@ -305,9 +305,9 @@ export default function EmployeeTaskInboxPage() {
 
       {/* Error State */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-[var(--rag-red)] bg-[var(--rag-red-soft)]">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 text-red-600">
+            <div className="flex items-center gap-2 text-[var(--rag-red)]">
               <AlertCircle className="h-5 w-5" />
               <span>{error}</span>
             </div>

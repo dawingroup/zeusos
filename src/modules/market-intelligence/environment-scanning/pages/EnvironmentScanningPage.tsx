@@ -130,7 +130,7 @@ export const EnvironmentScanningPage: React.FC = () => {
         <div className="mb-4">
           <button
             onClick={() => setActiveSection('dashboard')}
-            className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+            className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] flex items-center gap-1"
           >
             ← Back to Dashboard
           </button>

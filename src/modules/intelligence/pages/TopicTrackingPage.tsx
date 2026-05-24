@@ -173,8 +173,8 @@ const TopicTrackingPage: React.FC = () => {
 
   const getTrendIcon = (direction: string) => {
     switch (direction) {
-      case 'rising': return <TrendingUp className="h-4 w-4 text-green-500" />;
-      case 'declining': return <TrendingDown className="h-4 w-4 text-red-500" />;
+      case 'rising': return <TrendingUp className="h-4 w-4 text-[var(--rag-green)]" />;
+      case 'declining': return <TrendingDown className="h-4 w-4 text-[var(--rag-red)]" />;
       default: return <Minus className="h-4 w-4 text-[var(--fg-tertiary)]" />;
     }
   };
@@ -360,7 +360,7 @@ const TopicTrackingPage: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-500"
+                        className="text-[var(--rag-red)]"
                         onClick={() => handleDeleteTopic(selectedTopic.id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -473,7 +473,7 @@ const TopicTrackingPage: React.FC = () => {
                                 onClick={() => handleToggleMentionBookmark(mention.id)}
                               >
                                 <Bookmark
-                                  className={`h-3.5 w-3.5 ${mention.isBookmarked ? 'fill-current text-yellow-500' : ''}`}
+                                  className={`h-3.5 w-3.5 ${mention.isBookmarked ? 'fill-current text-[var(--rag-amber)]' : ''}`}
                                 />
                               </Button>
                               <Button
@@ -483,7 +483,7 @@ const TopicTrackingPage: React.FC = () => {
                                 onClick={() => handleToggleMentionFlag(mention.id)}
                               >
                                 <Flag
-                                  className={`h-3.5 w-3.5 ${mention.isFlagged ? 'fill-current text-red-500' : ''}`}
+                                  className={`h-3.5 w-3.5 ${mention.isFlagged ? 'fill-current text-[var(--rag-red)]' : ''}`}
                                 />
                               </Button>
                               <a href={mention.sourceUrl} target="_blank" rel="noopener noreferrer">
@@ -605,7 +605,7 @@ const AddTopicDialog: React.FC<AddTopicDialogProps> = ({ open, onOpenChange, onS
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
+            <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-3">
               {error}
             </div>
           )}

@@ -438,11 +438,11 @@ export default function ManagerDashboardPage() {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'P0':
-        return <Badge className="bg-red-500 hover:bg-red-500 text-white text-xs">P0</Badge>;
+        return <Badge className="bg-[var(--rag-red)] hover:bg-[var(--rag-red)] text-white text-xs">P0</Badge>;
       case 'P1':
-        return <Badge className="bg-orange-500 hover:bg-orange-500 text-white text-xs">P1</Badge>;
+        return <Badge className="bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)] text-white text-xs">P1</Badge>;
       case 'P2':
-        return <Badge className="bg-blue-500 hover:bg-blue-500 text-white text-xs">P2</Badge>;
+        return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white text-xs">P2</Badge>;
       case 'P3':
         return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white text-xs">P3</Badge>;
       default:
@@ -454,13 +454,13 @@ export default function ManagerDashboardPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-green-100 text-green-700 text-xs">Done</Badge>;
+        return <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] text-xs">Done</Badge>;
       case 'in_progress':
-        return <Badge className="bg-blue-100 text-blue-700 text-xs">Active</Badge>;
+        return <Badge className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] text-xs">Active</Badge>;
       case 'pending':
-        return <Badge className="bg-amber-100 text-amber-700 text-xs">Pending</Badge>;
+        return <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] text-xs">Pending</Badge>;
       case 'blocked':
-        return <Badge className="bg-red-100 text-red-700 text-xs">Blocked</Badge>;
+        return <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-xs">Blocked</Badge>;
       default:
         return <Badge variant="outline" className="text-xs">{status}</Badge>;
     }
@@ -469,13 +469,13 @@ export default function ManagerDashboardPage() {
   // Utilization badge helper
   const getUtilizationBadge = (utilization: number) => {
     if (utilization >= 90) {
-      return <Badge className="bg-red-100 text-red-700">Overloaded</Badge>;
+      return <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)]">Overloaded</Badge>;
     } else if (utilization >= 70) {
-      return <Badge className="bg-amber-100 text-amber-700">High</Badge>;
+      return <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]">High</Badge>;
     } else if (utilization >= 40) {
-      return <Badge className="bg-green-100 text-green-700">Balanced</Badge>;
+      return <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)]">Balanced</Badge>;
     } else {
-      return <Badge className="bg-blue-100 text-blue-700">Available</Badge>;
+      return <Badge className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]">Available</Badge>;
     }
   };
 
@@ -510,8 +510,8 @@ export default function ManagerDashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <Users className="h-5 w-5 text-blue-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+              <Users className="h-5 w-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.totalMembers}</div>
@@ -522,8 +522,8 @@ export default function ManagerDashboardPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-100">
-              <Clock className="h-5 w-5 text-amber-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-amber-soft)]">
+              <Clock className="h-5 w-5 text-[var(--rag-amber)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.pendingTasks}</div>
@@ -534,8 +534,8 @@ export default function ManagerDashboardPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <Play className="h-5 w-5 text-blue-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+              <Play className="h-5 w-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.inProgressTasks}</div>
@@ -546,8 +546,8 @@ export default function ManagerDashboardPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-100">
-              <AlertCircle className="h-5 w-5 text-red-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-red-soft)]">
+              <AlertCircle className="h-5 w-5 text-[var(--rag-red)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.overdueTasks}</div>
@@ -558,8 +558,8 @@ export default function ManagerDashboardPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-100">
-              <CheckCircle className="h-5 w-5 text-green-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-green-soft)]">
+              <CheckCircle className="h-5 w-5 text-[var(--rag-green)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.activeMembers}</div>
@@ -628,7 +628,7 @@ export default function ManagerDashboardPage() {
                         className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 rounded-lg p-1 -m-1"
                         onClick={() => { drillDownMember(member); setActiveTab('team'); }}
                       >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-medium">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xs font-medium">
                           {member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -688,7 +688,7 @@ export default function ManagerDashboardPage() {
                               {task.projectName && entityRoute && (
                                 <button
                                   onClick={() => navigate(entityRoute)}
-                                  className="text-blue-600 hover:underline flex items-center gap-0.5"
+                                  className="text-[var(--rag-blue)] hover:underline flex items-center gap-0.5"
                                 >
                                   {task.projectName}
                                   <ExternalLink className="h-2.5 w-2.5" />
@@ -721,7 +721,7 @@ export default function ManagerDashboardPage() {
                     <ChevronLeft className="h-4 w-4 mr-1" />
                     Back
                   </Button>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
                     {selectedMember.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                   </div>
                   <div>
@@ -732,9 +732,9 @@ export default function ManagerDashboardPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <span className="text-amber-600 font-medium">{selectedMember.taskStats.pending} pending</span>
-                  <span className="text-blue-600 font-medium">{selectedMember.taskStats.inProgress} active</span>
-                  <span className="text-red-600 font-medium">{selectedMember.taskStats.overdue} overdue</span>
+                  <span className="text-[var(--rag-amber)] font-medium">{selectedMember.taskStats.pending} pending</span>
+                  <span className="text-[var(--rag-blue)] font-medium">{selectedMember.taskStats.inProgress} active</span>
+                  <span className="text-[var(--rag-red)] font-medium">{selectedMember.taskStats.overdue} overdue</span>
                   {getUtilizationBadge(selectedMember.utilization)}
                 </div>
               </CardHeader>
@@ -779,7 +779,7 @@ export default function ManagerDashboardPage() {
                               {task.projectName && projRoute ? (
                                 <button
                                   onClick={() => navigate(projRoute)}
-                                  className="text-blue-600 hover:underline flex items-center gap-0.5"
+                                  className="text-[var(--rag-blue)] hover:underline flex items-center gap-0.5"
                                 >
                                   {task.projectName}
                                   <ExternalLink className="h-2.5 w-2.5" />
@@ -857,7 +857,7 @@ export default function ManagerDashboardPage() {
                         className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
                         onClick={() => drillDownMember(member)}
                       >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
                           {member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -872,15 +872,15 @@ export default function ManagerDashboardPage() {
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <div className="text-center">
-                            <div className="font-semibold text-amber-600">{member.taskStats.pending}</div>
+                            <div className="font-semibold text-[var(--rag-amber)]">{member.taskStats.pending}</div>
                             <div className="text-xs text-muted-foreground">Pending</div>
                           </div>
                           <div className="text-center">
-                            <div className="font-semibold text-blue-600">{member.taskStats.inProgress}</div>
+                            <div className="font-semibold text-[var(--rag-blue)]">{member.taskStats.inProgress}</div>
                             <div className="text-xs text-muted-foreground">Active</div>
                           </div>
                           <div className="text-center">
-                            <div className="font-semibold text-red-600">{member.taskStats.overdue}</div>
+                            <div className="font-semibold text-[var(--rag-red)]">{member.taskStats.overdue}</div>
                             <div className="text-xs text-muted-foreground">Overdue</div>
                           </div>
                           <Progress value={member.utilization} className="w-20 h-2" />
@@ -949,7 +949,7 @@ export default function ManagerDashboardPage() {
                             {task.projectName && projRoute ? (
                               <button
                                 onClick={() => navigate(projRoute)}
-                                className="text-blue-600 hover:underline flex items-center gap-0.5"
+                                className="text-[var(--rag-blue)] hover:underline flex items-center gap-0.5"
                               >
                                 {task.projectName}
                                 <ExternalLink className="h-2.5 w-2.5" />
@@ -1043,7 +1043,7 @@ export default function ManagerDashboardPage() {
                         <div key={member.id} className="space-y-1.5">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-medium">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xs font-medium">
                                 {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                               </div>
                               <div>
@@ -1054,35 +1054,35 @@ export default function ManagerDashboardPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-3 text-xs">
-                              <span className="text-amber-600 font-medium">{member.taskStats.pending} pending</span>
-                              <span className="text-blue-600 font-medium">{member.taskStats.inProgress} active</span>
-                              <span className="text-green-600">{member.taskStats.completed} done</span>
+                              <span className="text-[var(--rag-amber)] font-medium">{member.taskStats.pending} pending</span>
+                              <span className="text-[var(--rag-blue)] font-medium">{member.taskStats.inProgress} active</span>
+                              <span className="text-[var(--rag-green)]">{member.taskStats.completed} done</span>
                               {member.taskStats.overdue > 0 && (
-                                <span className="text-red-600 font-medium">{member.taskStats.overdue} overdue</span>
+                                <span className="text-[var(--rag-red)] font-medium">{member.taskStats.overdue} overdue</span>
                               )}
                               {member.taskStats.blocked > 0 && (
-                                <span className="text-red-500">{member.taskStats.blocked} blocked</span>
+                                <span className="text-[var(--rag-red)]">{member.taskStats.blocked} blocked</span>
                               )}
                             </div>
                           </div>
                           <div className="flex h-3 rounded-full overflow-hidden bg-muted">
                             {member.taskStats.pending > 0 && (
                               <div
-                                className="bg-amber-400 transition-all"
+                                className="bg-[var(--rag-amber)] transition-all"
                                 style={{ width: `${(member.taskStats.pending / maxActive) * 100}%` }}
                                 title={`${member.taskStats.pending} pending`}
                               />
                             )}
                             {member.taskStats.inProgress > 0 && (
                               <div
-                                className="bg-blue-500 transition-all"
+                                className="bg-[var(--rag-blue)] transition-all"
                                 style={{ width: `${(member.taskStats.inProgress / maxActive) * 100}%` }}
                                 title={`${member.taskStats.inProgress} in progress`}
                               />
                             )}
                             {member.taskStats.blocked > 0 && (
                               <div
-                                className="bg-red-400 transition-all"
+                                className="bg-[var(--rag-red)] transition-all"
                                 style={{ width: `${(member.taskStats.blocked / maxActive) * 100}%` }}
                                 title={`${member.taskStats.blocked} blocked`}
                               />
@@ -1094,9 +1094,9 @@ export default function ManagerDashboardPage() {
 
                     {/* Legend */}
                     <div className="flex items-center gap-4 pt-3 border-t text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-400" /> Pending</span>
-                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-blue-500" /> In Progress</span>
-                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-400" /> Blocked</span>
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-[var(--rag-amber)]" /> Pending</span>
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-[var(--rag-blue)]" /> In Progress</span>
+                      <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-[var(--rag-red)]" /> Blocked</span>
                     </div>
                   </div>
                 )}

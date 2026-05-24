@@ -103,11 +103,11 @@ export function RoleProfilePanel() {
       case 'DIRECTOR':
         return <Badge className="bg-purple-500 hover:bg-purple-500">Director</Badge>;
       case 'MANAGER':
-        return <Badge className="bg-blue-500 hover:bg-blue-500">Manager</Badge>;
+        return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)]">Manager</Badge>;
       case 'LEAD':
         return <Badge className="bg-cyan-500 hover:bg-cyan-500">Lead</Badge>;
       case 'SENIOR':
-        return <Badge className="bg-green-500 hover:bg-green-500">Senior</Badge>;
+        return <Badge className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)]">Senior</Badge>;
       case 'JUNIOR':
         return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)]">Junior</Badge>;
       default:
@@ -118,7 +118,7 @@ export function RoleProfilePanel() {
   // Get subsidiary badge
   const getSubsidiaryBadge = (subsidiaryId?: string) => {
     if (subsidiaryId === 'finishes') {
-      return <Badge variant="outline" className="text-orange-600 border-orange-300">Finishes</Badge>;
+      return <Badge variant="outline" className="text-[var(--rag-amber)] border-[var(--rag-amber)]">Finishes</Badge>;
     }
     return <Badge variant="outline">Shared</Badge>;
   };
@@ -188,15 +188,15 @@ export function RoleProfilePanel() {
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Finishes Roles</div>
-          <div className="text-2xl font-bold text-orange-600">{stats.finishes}</div>
+          <div className="text-2xl font-bold text-[var(--rag-amber)]">{stats.finishes}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">With Task Capabilities</div>
-          <div className="text-2xl font-bold text-green-600">{stats.withCapabilities}</div>
+          <div className="text-2xl font-bold text-[var(--rag-green)]">{stats.withCapabilities}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">With Approvals</div>
-          <div className="text-2xl font-bold text-blue-600">{stats.withApprovals}</div>
+          <div className="text-2xl font-bold text-[var(--rag-blue)]">{stats.withApprovals}</div>
         </Card>
       </div>
 
@@ -205,7 +205,7 @@ export function RoleProfilePanel() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              <Shield className="h-4 w-4 text-yellow-500" />
+              <Shield className="h-4 w-4 text-[var(--rag-amber)]" />
               Role Profiles
             </CardTitle>
             <Badge variant="outline">{roles.length} roles</Badge>
@@ -229,7 +229,7 @@ export function RoleProfilePanel() {
                   }}
                 >
                   {/* Icon */}
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br $1-[var(--rag-amber)] $1-[var(--rag-amber)] flex items-center justify-center text-white">
                     <Shield className="h-6 w-6" />
                   </div>
 
@@ -248,13 +248,13 @@ export function RoleProfilePanel() {
                   {/* Stats */}
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-center" title="Task Capabilities">
-                      <div className="font-semibold text-blue-600">
+                      <div className="font-semibold text-[var(--rag-blue)]">
                         {role.taskCapabilities?.length || 0}
                       </div>
                       <div className="text-xs text-muted-foreground">Events</div>
                     </div>
                     <div className="text-center" title="Skills Required">
-                      <div className="font-semibold text-green-600">
+                      <div className="font-semibold text-[var(--rag-green)]">
                         {role.skills?.length || 0}
                       </div>
                       <div className="text-xs text-muted-foreground">Skills</div>
@@ -281,7 +281,7 @@ export function RoleProfilePanel() {
         <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-yellow-500" />
+              <Shield className="h-5 w-5 text-[var(--rag-amber)]" />
               Role Profile Details
             </DialogTitle>
           </DialogHeader>
@@ -289,7 +289,7 @@ export function RoleProfilePanel() {
             <div className="space-y-6">
               {/* Role Header */}
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white">
+                <div className="w-16 h-16 rounded-lg bg-gradient-to-br $1-[var(--rag-amber)] $1-[var(--rag-amber)] flex items-center justify-center text-white">
                   <Shield className="h-8 w-8" />
                 </div>
                 <div>
@@ -347,7 +347,7 @@ export function RoleProfilePanel() {
                 {selectedRole.taskCapabilities && selectedRole.taskCapabilities.length > 0 && (
                   <CollapsibleSection
                     title={`Task Capabilities (${selectedRole.taskCapabilities.length} events)`}
-                    icon={<Zap className="h-4 w-4 text-blue-500" />}
+                    icon={<Zap className="h-4 w-4 text-[var(--rag-blue)]" />}
                     defaultOpen
                   >
                     <div className="space-y-3">
@@ -366,16 +366,16 @@ export function RoleProfilePanel() {
                             ))}
                           </div>
                           <div className="flex items-center gap-4 text-xs">
-                            <span className={cap.canInitiate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+                            <span className={cap.canInitiate ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canInitiate ? '✓' : '✗'} Initiate
                             </span>
-                            <span className={cap.canExecute ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+                            <span className={cap.canExecute ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canExecute ? '✓' : '✗'} Execute
                             </span>
-                            <span className={cap.canApprove ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+                            <span className={cap.canApprove ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canApprove ? '✓' : '✗'} Approve
                             </span>
-                            <span className={cap.canDelegate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+                            <span className={cap.canDelegate ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canDelegate ? '✓' : '✗'} Delegate
                             </span>
                           </div>
@@ -389,7 +389,7 @@ export function RoleProfilePanel() {
                 {selectedRole.skills && selectedRole.skills.length > 0 && (
                   <CollapsibleSection
                     title={`Required Skills (${selectedRole.skills.length})`}
-                    icon={<Award className="h-4 w-4 text-green-500" />}
+                    icon={<Award className="h-4 w-4 text-[var(--rag-green)]" />}
                     defaultOpen
                   >
                     <div className="space-y-2">
@@ -399,7 +399,7 @@ export function RoleProfilePanel() {
                             <div className="flex items-center gap-2">
                               <span className="font-medium text-sm">{skill.name}</span>
                               {skill.isCore && (
-                                <Badge className="bg-amber-100 text-amber-700 text-xs">Core</Badge>
+                                <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] text-xs">Core</Badge>
                               )}
                             </div>
                             <p className="text-xs text-muted-foreground capitalize">{skill.category}</p>

@@ -46,9 +46,9 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'increasing':
-        return <TrendingUp className="h-4 w-4 text-red-500" />;
+        return <TrendingUp className="h-4 w-4 text-[var(--rag-red)]" />;
       case 'decreasing':
-        return <TrendingDown className="h-4 w-4 text-green-500" />;
+        return <TrendingDown className="h-4 w-4 text-[var(--rag-green)]" />;
       default:
         return <Minus className="h-4 w-4 text-muted-foreground" />;
     }
@@ -189,7 +189,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
           {anomaly.status === 'investigating' && onResolve && (
             <Button
               size="sm"
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)]"
               onClick={() => onResolve(anomaly)}
             >
               <CheckCircle className="h-4 w-4 mr-2" />

@@ -155,7 +155,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
           </button>
           <button
             onClick={onCreateSignal}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Log Signal
@@ -195,7 +195,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
         </div>
         <div className="h-8 w-px bg-[var(--bg-sunken)]" />
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-blue-600">{stats.new}</span>
+          <span className="text-lg font-bold text-[var(--rag-blue)]">{stats.new}</span>
           <span className="text-sm text-muted-foreground">New</span>
         </div>
       </div>
@@ -209,21 +209,21 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search signals..."
-            className="w-full pl-10 pr-4 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`px-3 py-2 text-sm font-medium border rounded-lg flex items-center gap-2 ${
             showFilters || selectedTypes.length > 0 || selectedStatuses.length > 0 || selectedDimensions.length > 0
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
+              ? 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]'
               : 'bg-card border-[var(--border-default)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           <Filter className="w-4 h-4" />
           Filter
           {(selectedTypes.length + selectedStatuses.length + selectedDimensions.length) > 0 && (
-            <span className="px-1.5 py-0.5 text-xs bg-blue-600 text-white rounded-full">
+            <span className="px-1.5 py-0.5 text-xs bg-[var(--rag-blue)] text-white rounded-full">
               {selectedTypes.length + selectedStatuses.length + selectedDimensions.length}
             </span>
           )}
@@ -231,7 +231,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as any)}
-          className="px-3 py-2 text-sm border border-[var(--border-default)] rounded-lg bg-card focus:ring-2 focus:ring-blue-500"
+          className="px-3 py-2 text-sm border border-[var(--border-default)] rounded-lg bg-card focus:ring-2 focus:ring-[var(--rag-blue)]"
         >
           <option value="date">Sort by Date</option>
           <option value="strength">Sort by Strength</option>
@@ -253,7 +253,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
             </div>
             <button
               onClick={clearFilters}
-              className="text-sm text-blue-600 hover:text-blue-700"
+              className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
             >
               Clear all
             </button>
@@ -270,7 +270,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
                       type="checkbox"
                       checked={selectedTypes.includes(value as SignalType)}
                       onChange={() => toggleType(value as SignalType)}
-                      className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
+                      className="rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
                     />
                     <span
                       className="w-2 h-2 rounded-full"
@@ -294,7 +294,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
                       type="checkbox"
                       checked={selectedStatuses.includes(value as SignalStatus)}
                       onChange={() => toggleStatus(value as SignalStatus)}
-                      className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
+                      className="rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
                     />
                     <span
                       className="w-2 h-2 rounded-full"
@@ -318,7 +318,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
                       type="checkbox"
                       checked={selectedDimensions.includes(value as PESTELDimension)}
                       onChange={() => toggleDimension(value as PESTELDimension)}
-                      className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
+                      className="rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
                     />
                     <span
                       className="w-2 h-2 rounded-full"
@@ -339,7 +339,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
       <div className="space-y-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--rag-blue)]" />
           </div>
         ) : filteredSignals.length === 0 ? (
           <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-12 text-center">
@@ -353,7 +353,7 @@ export const SignalFeed: React.FC<SignalFeedProps> = ({
             {signals.length === 0 && (
               <button
                 onClick={onCreateSignal}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)]"
               >
                 Log First Signal
               </button>

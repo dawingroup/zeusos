@@ -43,11 +43,11 @@ interface TaskCardProps {
 function PriorityBadge({ priority }: { priority: string }) {
   switch (priority) {
     case 'P0':
-      return <Badge className="bg-red-500 hover:bg-red-500 text-white">Critical</Badge>;
+      return <Badge className="bg-[var(--rag-red)] hover:bg-[var(--rag-red)] text-white">Critical</Badge>;
     case 'P1':
-      return <Badge className="bg-orange-500 hover:bg-orange-500 text-white">High</Badge>;
+      return <Badge className="bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)] text-white">High</Badge>;
     case 'P2':
-      return <Badge className="bg-blue-500 hover:bg-blue-500 text-white">Medium</Badge>;
+      return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white">Medium</Badge>;
     case 'P3':
       return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white">Low</Badge>;
     default:
@@ -63,28 +63,28 @@ function StatusBadge({ status }: { status: string }) {
   switch (status) {
     case 'completed':
       return (
-        <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+        <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]">
           <CheckCircle className="h-3 w-3 mr-1" />
           Completed
         </Badge>
       );
     case 'in_progress':
       return (
-        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+        <Badge className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]">
           <Play className="h-3 w-3 mr-1" />
           In Progress
         </Badge>
       );
     case 'pending':
       return (
-        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+        <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]">
           <Clock className="h-3 w-3 mr-1" />
           Pending
         </Badge>
       );
     case 'blocked':
       return (
-        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+        <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]">
           <AlertCircle className="h-3 w-3 mr-1" />
           Blocked
         </Badge>
@@ -130,11 +130,11 @@ export function TaskCard({ task, onStart, onComplete, onViewDetails }: TaskCardP
   // Urgency tier for visual indicator
   const urgencyTier =
     task.urgencyScore >= 150
-      ? 'bg-red-500'
+      ? 'bg-[var(--rag-red)]'
       : task.urgencyScore >= 100
-      ? 'bg-orange-500'
+      ? 'bg-[var(--rag-amber)]'
       : task.urgencyScore >= 50
-      ? 'bg-blue-500'
+      ? 'bg-[var(--rag-blue)]'
       : 'bg-[var(--bg-sunken)]';
 
   return (
@@ -171,11 +171,11 @@ export function TaskCard({ task, onStart, onComplete, onViewDetails }: TaskCardP
               <span
                 className={`flex items-center gap-1 ${
                   dueDateStatus === 'overdue'
-                    ? 'text-red-600 font-medium'
+                    ? 'text-[var(--rag-red)] font-medium'
                     : dueDateStatus === 'today'
-                    ? 'text-orange-600 font-medium'
+                    ? 'text-[var(--rag-amber)] font-medium'
                     : dueDateStatus === 'soon'
-                    ? 'text-blue-600'
+                    ? 'text-[var(--rag-blue)]'
                     : ''
                 }`}
               >
@@ -197,7 +197,7 @@ export function TaskCard({ task, onStart, onComplete, onViewDetails }: TaskCardP
               projectRoute ? (
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate(projectRoute); }}
-                  className="truncate max-w-[120px] text-blue-600 hover:underline flex items-center gap-1"
+                  className="truncate max-w-[120px] text-[var(--rag-blue)] hover:underline flex items-center gap-1"
                 >
                   {task.projectName}
                   <ExternalLink className="h-2.5 w-2.5 flex-shrink-0" />
@@ -223,12 +223,12 @@ export function TaskCard({ task, onStart, onComplete, onViewDetails }: TaskCardP
         <div className="flex items-center gap-1 flex-shrink-0">
           {task.status === 'pending' && onStart && (
             <Button variant="ghost" size="sm" onClick={handleStartClick} title="Start Task">
-              <Play className="h-4 w-4 text-blue-600" />
+              <Play className="h-4 w-4 text-[var(--rag-blue)]" />
             </Button>
           )}
           {task.status === 'in_progress' && onComplete && (
             <Button variant="ghost" size="sm" onClick={handleCompleteClick} title="Complete Task">
-              <CheckSquare className="h-4 w-4 text-green-600" />
+              <CheckSquare className="h-4 w-4 text-[var(--rag-green)]" />
             </Button>
           )}
         </div>

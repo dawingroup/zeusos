@@ -142,21 +142,21 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
 
       {/* Alert Banner */}
       {criticalAlerts.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <AlertTriangle className="w-6 h-6 text-red-600" />
+            <AlertTriangle className="w-6 h-6 text-[var(--rag-red)]" />
             <div>
-              <h4 className="font-semibold text-red-900">
+              <h4 className="font-semibold text-[var(--rag-red)]">
                 {criticalAlerts.length} Critical Alert{criticalAlerts.length > 1 ? 's' : ''} Active
               </h4>
-              <p className="text-sm text-red-700">
+              <p className="text-sm text-[var(--rag-red)]">
                 Immediate attention required
               </p>
             </div>
           </div>
           <button
             onClick={() => onNavigate('alerts')}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+            className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-red)] rounded-lg hover:bg-[var(--rag-red)]"
           >
             View Alerts
           </button>
@@ -189,7 +189,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                   </span>
                 )}
               </div>
-              <h3 className="font-semibold text-foreground group-hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-foreground group-hover:text-[var(--rag-blue)] transition-colors">
                 {module.title}
               </h3>
               <p className="text-xs text-muted-foreground mt-1">{module.description}</p>
@@ -200,7 +200,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                   </span>
                   <span className="text-xs text-muted-foreground">{module.label}</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-blue-600 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-[var(--rag-blue)] transition-colors" />
               </div>
             </div>
           );
@@ -231,17 +231,17 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                   <div className="text-right">
                     <div className="flex items-center gap-2">
                       <span className={`text-lg font-bold ${
-                        indicator.alertStatus === 'critical' ? 'text-red-600' :
-                        indicator.alertStatus === 'warning' ? 'text-yellow-600' :
+                        indicator.alertStatus === 'critical' ? 'text-[var(--rag-red)]' :
+                        indicator.alertStatus === 'warning' ? 'text-[var(--rag-amber)]' :
                         'text-foreground'
                       }`}>
                         {indicator.currentValue.toLocaleString()}
                       </span>
-                      {indicator.trend === 'up' && <TrendingUp className="w-4 h-4 text-green-500" />}
-                      {indicator.trend === 'down' && <TrendingUp className="w-4 h-4 text-red-500 rotate-180" />}
+                      {indicator.trend === 'up' && <TrendingUp className="w-4 h-4 text-[var(--rag-green)]" />}
+                      {indicator.trend === 'down' && <TrendingUp className="w-4 h-4 text-[var(--rag-red)] rotate-180" />}
                     </div>
                     <span className={`text-xs ${
-                      indicator.changePercent >= 0 ? 'text-green-600' : 'text-red-600'
+                      indicator.changePercent >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                     }`}>
                       {indicator.changePercent >= 0 ? '+' : ''}{indicator.changePercent.toFixed(1)}%
                     </span>
@@ -266,7 +266,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
               <h3 className="font-semibold text-foreground">Recent Signals</h3>
               <button
                 onClick={() => onNavigate('signals')}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
               >
                 View All
               </button>
@@ -321,7 +321,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
               <h3 className="font-semibold text-foreground">PESTEL Dimensions</h3>
               <button
                 onClick={() => onNavigate('pestel')}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
               >
                 View All
               </button>
@@ -359,7 +359,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
               <h3 className="font-semibold text-foreground">Upcoming Regulations</h3>
               <button
                 onClick={() => onNavigate('regulatory')}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
               >
                 View All
               </button>
@@ -380,9 +380,9 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                       </div>
                       {daysUntil && (
                         <span className={`px-2 py-0.5 text-xs font-medium rounded ${
-                          daysUntil <= 30 ? 'bg-red-100 text-red-700' :
-                          daysUntil <= 60 ? 'bg-orange-100 text-orange-700' :
-                          'bg-yellow-100 text-yellow-700'
+                          daysUntil <= 30 ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' :
+                          daysUntil <= 60 ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+                          'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                         }`}>
                           {daysUntil}d
                         </span>
@@ -406,7 +406,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
               <h3 className="font-semibold text-foreground">Active Scenarios</h3>
               <button
                 onClick={() => onNavigate('scenarios')}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
               >
                 View All
               </button>
@@ -422,11 +422,11 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                           {scenario.title}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-blue-600 font-medium">
+                          <span className="text-xs text-[var(--rag-blue)] font-medium">
                             {scenario.probability}% likely
                           </span>
                           {triggeredSignposts > 0 && (
-                            <span className="text-xs text-red-600">
+                            <span className="text-xs text-[var(--rag-red)]">
                               {triggeredSignposts} signpost triggered
                             </span>
                           )}

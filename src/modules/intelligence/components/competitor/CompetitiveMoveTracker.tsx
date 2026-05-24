@@ -64,19 +64,19 @@ const getMoveIcon = (moveType: CompetitiveMoveType) => {
 
 const getImpactColor = (significance: ImpactSignificance): string => {
   const score = IMPACT_SIGNIFICANCE_SCORES[significance];
-  if (score >= 5) return 'bg-red-500';
-  if (score >= 4) return 'bg-orange-500';
-  if (score >= 3) return 'bg-amber-500';
-  if (score >= 2) return 'bg-yellow-500';
+  if (score >= 5) return 'bg-[var(--rag-red)]';
+  if (score >= 4) return 'bg-[var(--rag-amber)]';
+  if (score >= 3) return 'bg-[var(--rag-amber)]';
+  if (score >= 2) return 'bg-[var(--rag-amber)]';
   return 'bg-[var(--bg-sunken)]';
 };
 
 const getStatusColor = (status: CompetitiveMove['status']) => {
   switch (status) {
-    case 'identified': return 'bg-blue-100 text-blue-700';
+    case 'identified': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
     case 'analyzing': return 'bg-purple-100 text-purple-700';
-    case 'responded': return 'bg-green-100 text-green-700';
-    case 'monitoring': return 'bg-amber-100 text-amber-700';
+    case 'responded': return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
+    case 'monitoring': return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]';
     case 'closed': return 'bg-[var(--bg-sunken)] text-muted-foreground';
     default: return 'bg-[var(--bg-sunken)] text-muted-foreground';
   }
@@ -209,7 +209,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
 
                 {/* Response */}
                 {move.ourResponse && (
-                  <div className="mt-2 p-2 bg-green-50 rounded text-sm text-green-700">
+                  <div className="mt-2 p-2 bg-[var(--rag-green-soft)] rounded text-sm text-[var(--rag-green)]">
                     <span className="font-medium">Our response: </span>
                     {move.ourResponse}
                   </div>

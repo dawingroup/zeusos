@@ -63,7 +63,7 @@ export const AIAssistantFAB: React.FC<AIAssistantFABProps> = ({
                   <Bot className="h-6 w-6" />
                   {notificationCount > 0 && (
                     <Badge
-                      className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-red-500"
+                      className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-[var(--rag-red)]"
                     >
                       {notificationCount}
                     </Badge>

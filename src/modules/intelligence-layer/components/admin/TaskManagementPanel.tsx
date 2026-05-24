@@ -245,11 +245,11 @@ export function TaskManagementPanel() {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'P0':
-        return <Badge className="bg-red-500 hover:bg-red-500">Critical</Badge>;
+        return <Badge className="bg-[var(--rag-red)] hover:bg-[var(--rag-red)]">Critical</Badge>;
       case 'P1':
-        return <Badge className="bg-orange-500 hover:bg-orange-500">High</Badge>;
+        return <Badge className="bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)]">High</Badge>;
       case 'P2':
-        return <Badge className="bg-blue-500 hover:bg-blue-500">Medium</Badge>;
+        return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)]">Medium</Badge>;
       case 'P3':
         return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)]">Low</Badge>;
       default:
@@ -262,28 +262,28 @@ export function TaskManagementPanel() {
     switch (status) {
       case 'completed':
         return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+          <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]">
             <CheckCircle className="h-3 w-3 mr-1" />
             Completed
           </Badge>
         );
       case 'in_progress':
         return (
-          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+          <Badge className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]">
             <Play className="h-3 w-3 mr-1" />
             In Progress
           </Badge>
         );
       case 'pending':
         return (
-          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+          <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]">
             <Clock className="h-3 w-3 mr-1" />
             Pending
           </Badge>
         );
       case 'blocked':
         return (
-          <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+          <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]">
             <AlertCircle className="h-3 w-3 mr-1" />
             Blocked
           </Badge>
@@ -414,25 +414,25 @@ export function TaskManagementPanel() {
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Pending</div>
-          <div className="text-2xl font-bold text-amber-600">
+          <div className="text-2xl font-bold text-[var(--rag-amber)]">
             {tasks.filter(t => t.status === 'pending').length}
           </div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">In Progress</div>
-          <div className="text-2xl font-bold text-blue-600">
+          <div className="text-2xl font-bold text-[var(--rag-blue)]">
             {tasks.filter(t => t.status === 'in_progress').length}
           </div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Completed</div>
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-[var(--rag-green)]">
             {tasks.filter(t => t.status === 'completed').length}
           </div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Blocked</div>
-          <div className="text-2xl font-bold text-red-600">
+          <div className="text-2xl font-bold text-[var(--rag-red)]">
             {tasks.filter(t => t.status === 'blocked').length}
           </div>
         </Card>
@@ -443,7 +443,7 @@ export function TaskManagementPanel() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              <ClipboardList className="h-4 w-4 text-green-500" />
+              <ClipboardList className="h-4 w-4 text-[var(--rag-green)]" />
               Generated Tasks
             </CardTitle>
             <Badge variant="outline">{tasks.length} tasks</Badge>
@@ -499,9 +499,9 @@ export function TaskManagementPanel() {
                         )}
                         {task.dueDate && (
                           <span className={`flex items-center gap-1 ${
-                            dueDateStatus === 'overdue' ? 'text-red-600' :
-                            dueDateStatus === 'today' ? 'text-amber-600' :
-                            dueDateStatus === 'soon' ? 'text-blue-600' : ''
+                            dueDateStatus === 'overdue' ? 'text-[var(--rag-red)]' :
+                            dueDateStatus === 'today' ? 'text-[var(--rag-amber)]' :
+                            dueDateStatus === 'soon' ? 'text-[var(--rag-blue)]' : ''
                           }`}>
                             <Calendar className="h-3 w-3" />
                             Due: {formatDate(task.dueDate)}
@@ -555,7 +555,7 @@ export function TaskManagementPanel() {
         <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
-              <ClipboardList className="h-5 w-5 text-green-500" />
+              <ClipboardList className="h-5 w-5 text-[var(--rag-green)]" />
               Task Details
             </SheetTitle>
           </SheetHeader>
@@ -614,7 +614,7 @@ export function TaskManagementPanel() {
                       {route ? (
                         <button
                           onClick={() => { navigate(route); setIsDetailOpen(false); }}
-                          className="font-medium text-blue-600 hover:underline flex items-center gap-1.5 cursor-pointer text-left"
+                          className="font-medium text-[var(--rag-blue)] hover:underline flex items-center gap-1.5 cursor-pointer text-left"
                         >
                           {selectedTask.projectName}
                           <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -640,7 +640,7 @@ export function TaskManagementPanel() {
                       <label className="text-xs text-muted-foreground">Source Item</label>
                       <button
                         onClick={() => { navigate(route); setIsDetailOpen(false); }}
-                        className="font-medium text-blue-600 hover:underline flex items-center gap-1.5 cursor-pointer text-left"
+                        className="font-medium text-[var(--rag-blue)] hover:underline flex items-center gap-1.5 cursor-pointer text-left"
                       >
                         {selectedTask.entityName || selectedTask.entityType?.replace(/-/g, ' ')}
                         <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -674,7 +674,7 @@ export function TaskManagementPanel() {
                         <div className="flex-1">
                           <p className={`text-sm ${item.isCompleted ? 'line-through text-muted-foreground' : ''}`}>
                             {item.title}
-                            {item.isRequired && <span className="text-red-500 ml-1">*</span>}
+                            {item.isRequired && <span className="text-[var(--rag-red)] ml-1">*</span>}
                           </p>
                           {item.description && (
                             <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
@@ -690,7 +690,7 @@ export function TaskManagementPanel() {
               {selectedTask.aiChecklist && selectedTask.aiChecklist.length > 0 && (
                 <div>
                   <h4 className="font-medium mb-3 flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-amber-500" />
+                    <Sparkles className="h-4 w-4 text-[var(--rag-amber)]" />
                     Suggested Steps
                     <span className="text-xs text-muted-foreground/60 font-normal">AI-generated</span>
                   </h4>
@@ -698,15 +698,15 @@ export function TaskManagementPanel() {
                     {selectedTask.aiChecklist.map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-start gap-3 p-3 border border-amber-200/50 bg-amber-50/30 dark:bg-amber-950/10 dark:border-amber-800/30 rounded-lg"
+                        className="flex items-start gap-3 p-3 border border-[var(--rag-amber)]/50 bg-[var(--rag-amber-soft)]/30 dark:bg-amber-950/10 dark:border-amber-800/30 rounded-lg"
                       >
-                        <span className="text-xs font-medium text-amber-600 mt-0.5 min-w-[18px]">
+                        <span className="text-xs font-medium text-[var(--rag-amber)] mt-0.5 min-w-[18px]">
                           {item.order}.
                         </span>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm">
                             {item.title}
-                            {item.isRequired && <span className="text-red-500 ml-1">*</span>}
+                            {item.isRequired && <span className="text-[var(--rag-red)] ml-1">*</span>}
                           </p>
                           {item.description && (
                             <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
@@ -722,7 +722,7 @@ export function TaskManagementPanel() {
               {selectedTask.aiRelevantDocuments && selectedTask.aiRelevantDocuments.length > 0 && (
                 <div>
                   <h4 className="font-medium mb-3 flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-blue-500" />
+                    <BookOpen className="h-4 w-4 text-[var(--rag-blue)]" />
                     Relevant References
                     <span className="text-xs text-muted-foreground/60 font-normal">AI-identified</span>
                   </h4>
@@ -730,9 +730,9 @@ export function TaskManagementPanel() {
                     {selectedTask.aiRelevantDocuments.map((doc, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-3 p-3 border border-blue-200/50 bg-blue-50/30 dark:bg-blue-950/10 dark:border-blue-800/30 rounded-lg"
+                        className="flex items-start gap-3 p-3 border border-[var(--rag-blue)]/50 bg-[var(--rag-blue-soft)]/30 dark:bg-blue-950/10 dark:border-blue-800/30 rounded-lg"
                       >
-                        <FileText className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                        <FileText className="h-4 w-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium">{doc.name}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">{doc.reason}</p>

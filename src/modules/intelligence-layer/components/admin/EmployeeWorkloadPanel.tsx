@@ -222,7 +222,7 @@ export function EmployeeWorkloadPanel() {
   const getCapacityBadge = (utilization: number) => {
     if (utilization >= 90) {
       return (
-        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+        <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]">
           <AlertTriangle className="h-3 w-3 mr-1" />
           Overloaded
         </Badge>
@@ -230,14 +230,14 @@ export function EmployeeWorkloadPanel() {
     }
     if (utilization >= 60) {
       return (
-        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+        <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]">
           <Clock className="h-3 w-3 mr-1" />
           At Capacity
         </Badge>
       );
     }
     return (
-      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+      <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]">
         <CheckCircle className="h-3 w-3 mr-1" />
         Available
       </Badge>
@@ -246,9 +246,9 @@ export function EmployeeWorkloadPanel() {
 
   // Get utilization color
   const getUtilizationColor = (utilization: number) => {
-    if (utilization >= 90) return 'text-red-600';
-    if (utilization >= 60) return 'text-amber-600';
-    return 'text-green-600';
+    if (utilization >= 90) return 'text-[var(--rag-red)]';
+    if (utilization >= 60) return 'text-[var(--rag-amber)]';
+    return 'text-[var(--rag-green)]';
   };
 
   // Summary stats
@@ -320,19 +320,19 @@ export function EmployeeWorkloadPanel() {
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Available</div>
-          <div className="text-2xl font-bold text-green-600">{stats.available}</div>
+          <div className="text-2xl font-bold text-[var(--rag-green)]">{stats.available}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">At Capacity</div>
-          <div className="text-2xl font-bold text-amber-600">{stats.atCapacity}</div>
+          <div className="text-2xl font-bold text-[var(--rag-amber)]">{stats.atCapacity}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Overloaded</div>
-          <div className="text-2xl font-bold text-red-600">{stats.overloaded}</div>
+          <div className="text-2xl font-bold text-[var(--rag-red)]">{stats.overloaded}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Active Tasks</div>
-          <div className="text-2xl font-bold text-blue-600">{stats.totalActiveTasks}</div>
+          <div className="text-2xl font-bold text-[var(--rag-blue)]">{stats.totalActiveTasks}</div>
         </Card>
         <Card className="p-4">
           <div className="text-sm text-muted-foreground">Avg. Utilization</div>
@@ -377,7 +377,7 @@ export function EmployeeWorkloadPanel() {
                   }}
                 >
                   {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white font-medium">
                     {employee.initials}
                   </div>
 
@@ -395,15 +395,15 @@ export function EmployeeWorkloadPanel() {
                   {/* Task Counts */}
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-center">
-                      <div className="font-semibold text-amber-600">{employee.tasks.pending}</div>
+                      <div className="font-semibold text-[var(--rag-amber)]">{employee.tasks.pending}</div>
                       <div className="text-xs text-muted-foreground">Pending</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-blue-600">{employee.tasks.inProgress}</div>
+                      <div className="font-semibold text-[var(--rag-blue)]">{employee.tasks.inProgress}</div>
                       <div className="text-xs text-muted-foreground">Active</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-semibold text-green-600">{employee.tasks.completed}</div>
+                      <div className="font-semibold text-[var(--rag-green)]">{employee.tasks.completed}</div>
                       <div className="text-xs text-muted-foreground">Done</div>
                     </div>
                   </div>
@@ -419,9 +419,9 @@ export function EmployeeWorkloadPanel() {
                     <Progress
                       value={employee.utilization}
                       className={`h-2 ${
-                        employee.utilization >= 90 ? '[&>div]:bg-red-500' :
-                        employee.utilization >= 60 ? '[&>div]:bg-amber-500' :
-                        '[&>div]:bg-green-500'
+                        employee.utilization >= 90 ? '[&>div]:bg-[var(--rag-red)]' :
+                        employee.utilization >= 60 ? '[&>div]:bg-[var(--rag-amber)]' :
+                        '[&>div]:bg-[var(--rag-green)]'
                       }`}
                     />
                   </div>
@@ -448,7 +448,7 @@ export function EmployeeWorkloadPanel() {
             <div className="space-y-6">
               {/* Employee Header */}
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xl font-medium">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xl font-medium">
                   {selectedEmployee.initials}
                 </div>
                 <div>
@@ -474,9 +474,9 @@ export function EmployeeWorkloadPanel() {
                 <Progress
                   value={selectedEmployee.utilization}
                   className={`h-3 ${
-                    selectedEmployee.utilization >= 90 ? '[&>div]:bg-red-500' :
-                    selectedEmployee.utilization >= 60 ? '[&>div]:bg-amber-500' :
-                    '[&>div]:bg-green-500'
+                    selectedEmployee.utilization >= 90 ? '[&>div]:bg-[var(--rag-red)]' :
+                    selectedEmployee.utilization >= 60 ? '[&>div]:bg-[var(--rag-amber)]' :
+                    '[&>div]:bg-[var(--rag-green)]'
                   }`}
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-2">
@@ -493,25 +493,25 @@ export function EmployeeWorkloadPanel() {
                 </h4>
                 <div className="grid grid-cols-4 gap-3">
                   <div className="p-3 border rounded-lg text-center">
-                    <div className="text-2xl font-bold text-amber-600">
+                    <div className="text-2xl font-bold text-[var(--rag-amber)]">
                       {selectedEmployee.tasks.pending}
                     </div>
                     <div className="text-xs text-muted-foreground">Pending</div>
                   </div>
                   <div className="p-3 border rounded-lg text-center">
-                    <div className="text-2xl font-bold text-blue-600">
+                    <div className="text-2xl font-bold text-[var(--rag-blue)]">
                       {selectedEmployee.tasks.inProgress}
                     </div>
                     <div className="text-xs text-muted-foreground">In Progress</div>
                   </div>
                   <div className="p-3 border rounded-lg text-center">
-                    <div className="text-2xl font-bold text-green-600">
+                    <div className="text-2xl font-bold text-[var(--rag-green)]">
                       {selectedEmployee.tasks.completed}
                     </div>
                     <div className="text-xs text-muted-foreground">Completed</div>
                   </div>
                   <div className="p-3 border rounded-lg text-center">
-                    <div className="text-2xl font-bold text-red-600">
+                    <div className="text-2xl font-bold text-[var(--rag-red)]">
                       {selectedEmployee.tasks.blocked}
                     </div>
                     <div className="text-xs text-muted-foreground">Blocked</div>
@@ -528,9 +528,9 @@ export function EmployeeWorkloadPanel() {
                       <div key={task.id} className="flex items-center gap-3 p-3 border rounded-lg">
                         <Badge
                           className={
-                            task.priority === 'P0' ? 'bg-red-500' :
-                            task.priority === 'P1' ? 'bg-orange-500' :
-                            task.priority === 'P2' ? 'bg-blue-500' :
+                            task.priority === 'P0' ? 'bg-[var(--rag-red)]' :
+                            task.priority === 'P1' ? 'bg-[var(--rag-amber)]' :
+                            task.priority === 'P2' ? 'bg-[var(--rag-blue)]' :
                             'bg-gray-500'
                           }
                         >

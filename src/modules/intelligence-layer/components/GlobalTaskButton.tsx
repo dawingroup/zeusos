@@ -135,9 +135,9 @@ export function GlobalTaskButton() {
   // Priority colors
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'P0': return 'bg-red-500';
-      case 'P1': return 'bg-orange-500';
-      case 'P2': return 'bg-blue-500';
+      case 'P0': return 'bg-[var(--rag-red)]';
+      case 'P1': return 'bg-[var(--rag-amber)]';
+      case 'P2': return 'bg-[var(--rag-blue)]';
       case 'P3': return 'bg-gray-500';
       default: return 'bg-gray-500';
     }
@@ -159,7 +159,7 @@ export function GlobalTaskButton() {
           {stats.total > 0 && (
             <Badge
               className={`absolute -top-1 -right-1 h-5 min-w-5 px-1 text-xs ${
-                stats.overdue > 0 ? 'bg-red-500' : 'bg-blue-500'
+                stats.overdue > 0 ? 'bg-[var(--rag-red)]' : 'bg-[var(--rag-blue)]'
               }`}
             >
               {stats.total > 99 ? '99+' : stats.total}
@@ -180,13 +180,13 @@ export function GlobalTaskButton() {
                 </Badge>
               )}
               {stats.inProgress > 0 && (
-                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                <Badge variant="secondary" className="text-xs bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]">
                   <Play className="h-3 w-3 mr-1" />
                   {stats.inProgress}
                 </Badge>
               )}
               {stats.overdue > 0 && (
-                <Badge variant="secondary" className="text-xs bg-red-100 text-red-700">
+                <Badge variant="secondary" className="text-xs bg-[var(--rag-red-soft)] text-[var(--rag-red)]">
                   <AlertCircle className="h-3 w-3 mr-1" />
                   {stats.overdue}
                 </Badge>
@@ -220,7 +220,7 @@ export function GlobalTaskButton() {
                       {task.dueDate && (
                         <>
                           <span>•</span>
-                          <span className={task.dueDate < new Date() ? 'text-red-600' : ''}>
+                          <span className={task.dueDate < new Date() ? 'text-[var(--rag-red)]' : ''}>
                             {task.dueDate.toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',

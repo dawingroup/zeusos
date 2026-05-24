@@ -60,10 +60,10 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
 
   const getCellColor = (impactIdx: number, probIdx: number) => {
     const score = (impactIdx + 1) * (probIdx + 1);
-    if (score >= 20) return 'bg-red-100';
-    if (score >= 12) return 'bg-orange-100';
-    if (score >= 6) return 'bg-yellow-100';
-    return 'bg-green-100';
+    if (score >= 20) return 'bg-[var(--rag-red-soft)]';
+    if (score >= 12) return 'bg-[var(--rag-amber-soft)]';
+    if (score >= 6) return 'bg-[var(--rag-amber-soft)]';
+    return 'bg-[var(--rag-green-soft)]';
   };
 
   const getQuadrantLabel = (impactIdx: number, probIdx: number) => {
@@ -100,7 +100,7 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
                     key={key}
                     className={`aspect-square rounded-lg ${getCellColor(actualImpactIdx, probIdx)} 
                       flex items-center justify-center relative group transition-all
-                      ${cellFactors.length > 0 ? 'cursor-pointer hover:ring-2 hover:ring-blue-400' : ''}`}
+                      ${cellFactors.length > 0 ? 'cursor-pointer hover:ring-2 hover:ring-[var(--rag-blue)]' : ''}`}
                   >
                     {cellFactors.length > 0 ? (
                       <div className="flex flex-wrap gap-0.5 p-1 justify-center">
@@ -188,19 +188,19 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
           </div>
           <div className="flex gap-4 mt-2">
             <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded bg-red-100" />
+              <div className="w-4 h-4 rounded bg-[var(--rag-red-soft)]" />
               <span className="text-xs text-muted-foreground">Urgent (20-25)</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded bg-orange-100" />
+              <div className="w-4 h-4 rounded bg-[var(--rag-amber-soft)]" />
               <span className="text-xs text-muted-foreground">Act (12-19)</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded bg-yellow-100" />
+              <div className="w-4 h-4 rounded bg-[var(--rag-amber-soft)]" />
               <span className="text-xs text-muted-foreground">Prepare (6-11)</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-4 h-4 rounded bg-green-100" />
+              <div className="w-4 h-4 rounded bg-[var(--rag-green-soft)]" />
               <span className="text-xs text-muted-foreground">Monitor (1-5)</span>
             </div>
           </div>
