@@ -25,6 +25,7 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { SubsidiaryId } from '@/core/settings/types';
 import type { IWOState } from '../constants/iwo-states';
+import type { BriefTier } from '@/modules/hr-central/role-profiles/types';
 
 export interface InternalWorkOrder {
   id: string;
@@ -66,6 +67,30 @@ export interface InternalWorkOrder {
   /** Idempotency key from the originating mutation — UNIQUE per spec
    *  §4.4. Cloud Functions reject duplicate keys with the cached response. */
   idempotencyKey?: string;
+
+  /**
+   * Brief tier carried from MasterJob at issue time. Drives the SLA
+   * clock (slaDueAt) + the depth of the ECD approval ladder (TIER_3
+   * may collapse to Studio Mgr → CD).
+   * Added in Phase 6.B per Addendum v1.1 §5.
+   */
+  tier?: BriefTier;
+
+  /**
+   * SLA deadline computed from `tier` × engine_config.slaHoursByTier at
+   * issue time. Watchers read this to emit `iwo.sla_due_soon` /
+   * `iwo.burn_threshold_crossed` (the watchers themselves arrive in
+   * Phase 6.F). Optional during the rollout window — issuers without
+   * a tier leave it unset.
+   */
+  slaDueAt?: Timestamp | string;
+
+  /**
+   * Person the IWO is assigned to once delivery accepts it. Used by
+   * `EmployeeAssignmentService.getCurrentLoad` to compute utilisation.
+   * Optional — only populated after a delivery-side assigner pass.
+   */
+  assignedEmployeeId?: string;
 
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;

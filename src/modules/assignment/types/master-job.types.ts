@@ -22,6 +22,7 @@
 
 import type { Timestamp } from 'firebase/firestore';
 import type { Campaign } from '@/modules/campaigns/types/campaign.types';
+import type { BriefTier } from '@/modules/hr-central/role-profiles/types';
 
 export type MasterJobStatus = 'OPEN' | 'DELIVERING' | 'CLOSED' | 'CANCELLED';
 
@@ -43,6 +44,14 @@ export interface MasterJob {
    *  ClientInvoice references this number, not allocatedMinor. */
   clientTotalMinor: number;
   currency: 'UGX' | 'USD' | 'KES' | 'EUR' | 'GBP';
+
+  /**
+   * Brief tier carried through to every IWO issued under this MasterJob.
+   * Set at intake (Account-Management classifies the brief per v1.1 §5).
+   * Optional during the rollout window — pre-6.B MasterJobs default to
+   * Tier 2 behaviour at issue time when unset.
+   */
+  tier?: BriefTier;
 
   /** Embedded marketing-domain detail — Brief / IMCTeam / 14-stage
    *  workflow / Tier System / ARAAM / PerformanceReview. The fields that
