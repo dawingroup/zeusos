@@ -98,7 +98,7 @@ export const TRAINING_STATUS_LABELS: Record<TrainingStatus, string> = {
 };
 
 export const TRAINING_STATUS_COLORS: Record<TrainingStatus, string> = {
-  planned: 'bg-gray-100 text-gray-800',
+  planned: 'bg-[var(--bg-sunken)] text-foreground',
   enrolled: 'bg-blue-100 text-blue-800',
   in_progress: 'bg-indigo-100 text-indigo-800',
   completed: 'bg-green-100 text-green-800',
@@ -126,7 +126,7 @@ export const CERTIFICATION_STATUS_LABELS: Record<CertificationStatus, string> = 
 };
 
 export const CERTIFICATION_STATUS_COLORS: Record<CertificationStatus, string> = {
-  pending: 'bg-gray-100 text-gray-800',
+  pending: 'bg-[var(--bg-sunken)] text-foreground',
   active: 'bg-green-100 text-green-800',
   expiring_soon: 'bg-amber-100 text-amber-800',
   expired: 'bg-red-100 text-red-800',
@@ -167,7 +167,7 @@ export const GAP_PRIORITY_COLORS: Record<GapPriority, string> = {
   critical: 'bg-red-100 text-red-800',
   high: 'bg-amber-100 text-amber-800',
   medium: 'bg-blue-100 text-blue-800',
-  low: 'bg-gray-100 text-gray-800',
+  low: 'bg-[var(--bg-sunken)] text-foreground',
 };
 
 // Collections

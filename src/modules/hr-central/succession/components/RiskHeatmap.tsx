@@ -40,7 +40,7 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
     riskLevel: SuccessionRiskLevel
   ): string => {
     const count = getRolesCount(criticalityLevel, riskLevel);
-    if (count === 0) return 'bg-gray-50';
+    if (count === 0) return 'bg-[var(--bg-sunken)]';
 
     // More critical = more urgent colors
     const isCriticalRole = criticalityLevel === ROLE_CRITICALITY_LEVELS.MISSION_CRITICAL;
@@ -87,10 +87,10 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
   const lowRiskRoles = roles.filter(r => r.successionRisk === SUCCESSION_RISK_LEVELS.LOW).length;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Succession Risk Heatmap</h3>
-        <span className="text-sm text-gray-500">{totalRoles} critical roles</span>
+        <h3 className="font-semibold text-foreground">Succession Risk Heatmap</h3>
+        <span className="text-sm text-muted-foreground">{totalRoles} critical roles</span>
       </div>
 
       {/* Summary Stats */}
@@ -120,7 +120,7 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
         <table className="w-full">
           <thead>
             <tr>
-              <th className="p-2 text-left text-xs font-medium text-gray-500">
+              <th className="p-2 text-left text-xs font-medium text-muted-foreground">
                 Criticality / Risk →
               </th>
               {riskLevels.map((risk) => (
@@ -140,7 +140,7 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
           <tbody>
             {criticalityLevels.map((criticality) => (
               <tr key={criticality}>
-                <td className="p-2 text-xs font-medium text-gray-700">
+                <td className="p-2 text-xs font-medium text-muted-foreground">
                   {ROLE_CRITICALITY_LABELS[criticality]}
                 </td>
                 {riskLevels.map((risk) => {
@@ -167,8 +167,8 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500 mb-2">Priority Action:</p>
+      <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
+        <p className="text-xs text-muted-foreground mb-2">Priority Action:</p>
         <div className="flex flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-4 h-4 rounded bg-red-500" />

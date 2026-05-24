@@ -47,15 +47,15 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
       {/* Overall Score */}
       <div className="flex items-center justify-between mb-4">
-        <h4 className="font-medium text-gray-900">Readiness Assessment</h4>
+        <h4 className="font-medium text-foreground">Readiness Assessment</h4>
         <div className="text-right">
           <span className={`text-2xl font-bold ${getOverallColor(assessment.overallReadiness)}`}>
             {assessment.overallReadiness}%
           </span>
-          <p className="text-xs text-gray-500">Overall</p>
+          <p className="text-xs text-muted-foreground">Overall</p>
         </div>
       </div>
 
@@ -67,11 +67,11 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
             <div key={bar.key}>
               {showLabels && (
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-gray-600">{bar.label}</span>
-                  <span className="font-medium text-gray-900">{value}%</span>
+                  <span className="text-muted-foreground">{bar.label}</span>
+                  <span className="font-medium text-foreground">{value}%</span>
                 </div>
               )}
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all duration-300 ${getBarColor(value)}`}
                   style={{ width: `${value}%` }}
@@ -86,11 +86,11 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
           <div>
             {showLabels && (
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-gray-600">Uganda Market Knowledge</span>
-                <span className="font-medium text-gray-900">{assessment.ugandaMarketKnowledge}%</span>
+                <span className="text-muted-foreground">Uganda Market Knowledge</span>
+                <span className="font-medium text-foreground">{assessment.ugandaMarketKnowledge}%</span>
               </div>
             )}
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all duration-300 ${getBarColor(
                   assessment.ugandaMarketKnowledge
@@ -104,30 +104,30 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
 
       {/* Assessment Notes */}
       {assessment.assessmentNotes && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 mb-1">Assessment Notes</p>
-          <p className="text-sm text-gray-700">{assessment.assessmentNotes}</p>
+        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
+          <p className="text-xs text-muted-foreground mb-1">Assessment Notes</p>
+          <p className="text-sm text-muted-foreground">{assessment.assessmentNotes}</p>
         </div>
       )}
 
       {/* Legend */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
+      <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
         <div className="flex flex-wrap gap-3 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-green-500" />
-            <span className="text-gray-600">Excellent (80+)</span>
+            <span className="text-muted-foreground">Excellent (80+)</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-emerald-400" />
-            <span className="text-gray-600">Good (60-79)</span>
+            <span className="text-muted-foreground">Good (60-79)</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-amber-400" />
-            <span className="text-gray-600">Developing (40-59)</span>
+            <span className="text-muted-foreground">Developing (40-59)</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-red-400" />
-            <span className="text-gray-600">Needs Work (&lt;40)</span>
+            <span className="text-muted-foreground">Needs Work (&lt;40)</span>
           </div>
         </div>
       </div>

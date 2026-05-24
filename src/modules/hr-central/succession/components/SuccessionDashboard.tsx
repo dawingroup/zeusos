@@ -98,14 +98,14 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Succession Planning</h1>
-          <p className="text-gray-500">Manage critical roles and talent pipeline</p>
+          <h1 className="text-2xl font-bold text-foreground">Succession Planning</h1>
+          <p className="text-muted-foreground">Manage critical roles and talent pipeline</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
             disabled={isLoading}
-            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
           >
             <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -136,14 +136,14 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
       <RiskHeatmap roles={criticalRoles} onCellClick={handleHeatmapClick} />
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[var(--border-subtle)]">
         <nav className="flex gap-4">
           <button
             onClick={() => setActiveTab('roles')}
             className={`pb-3 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'roles'
                 ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             Critical Roles ({filteredRoles.length})
@@ -153,7 +153,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
             className={`pb-3 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'plans'
                 ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             Development Plans ({developmentPlans.length})
@@ -163,7 +163,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
             className={`pb-3 px-1 border-b-2 font-medium text-sm flex items-center gap-1 ${
               activeTab === 'matrix'
                 ? 'border-indigo-600 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
@@ -178,11 +178,11 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
           {/* Filters */}
           <div className="flex flex-wrap gap-3 mb-4">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-400" />
+              <Filter className="w-4 h-4 text-[var(--fg-tertiary)]" />
               <select
                 value={criticalityFilter}
                 onChange={(e) => setCriticalityFilter(e.target.value as RoleCriticalityLevel | '')}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5"
+                className="text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5"
               >
                 <option value="">All Criticality</option>
                 <option value={ROLE_CRITICALITY_LEVELS.MISSION_CRITICAL}>Mission Critical</option>
@@ -193,7 +193,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
               <select
                 value={riskFilter}
                 onChange={(e) => setRiskFilter(e.target.value as SuccessionRiskLevel | '')}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5"
+                className="text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5"
               >
                 <option value="">All Risk Levels</option>
                 <option value={SUCCESSION_RISK_LEVELS.CRITICAL}>Critical Risk</option>
@@ -207,7 +207,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
                     setCriticalityFilter('');
                     setRiskFilter('');
                   }}
-                  className="text-sm text-gray-500 hover:text-gray-700 underline"
+                  className="text-sm text-muted-foreground hover:text-muted-foreground underline"
                 >
                   Clear filters
                 </button>
@@ -219,7 +219,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3].map(i => (
-                <div key={i} className="bg-gray-100 rounded-lg h-64 animate-pulse" />
+                <div key={i} className="bg-[var(--bg-sunken)] rounded-lg h-64 animate-pulse" />
               ))}
             </div>
           ) : filteredRoles.length > 0 ? (
@@ -234,10 +234,10 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium">No critical roles found</p>
-              <p className="text-sm text-gray-500 mt-1">
+            <div className="text-center py-12 bg-[var(--bg-sunken)] rounded-lg">
+              <Users className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <p className="text-muted-foreground font-medium">No critical roles found</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 {criticalityFilter || riskFilter
                   ? 'Try adjusting your filters'
                   : 'Add your first critical role to get started'}
@@ -271,10 +271,10 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium">No development plans yet</p>
-              <p className="text-sm text-gray-500 mt-1">
+            <div className="text-center py-12 bg-[var(--bg-sunken)] rounded-lg">
+              <Target className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <p className="text-muted-foreground font-medium">No development plans yet</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 Create development plans for your succession candidates
               </p>
             </div>

@@ -146,8 +146,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <CardContent className="p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="text-base font-semibold text-gray-900">Attendance Matrix</h2>
-              <p className="text-xs text-gray-500">
+              <h2 className="text-base font-semibold text-foreground">Attendance Matrix</h2>
+              <p className="text-xs text-muted-foreground">
                 {format(new Date(period + '-01'), 'MMMM yyyy')} — click a cell to set its status,
                 click a date or employee header to bulk-set.
               </p>

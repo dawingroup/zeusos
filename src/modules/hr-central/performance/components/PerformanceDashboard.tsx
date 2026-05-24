@@ -87,7 +87,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Performance Management</h1>
+        <h1 className="text-2xl font-bold text-foreground">Performance Management</h1>
         <div className="flex gap-2">
           {isManager && (
             <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm">
@@ -95,7 +95,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               New Review
             </button>
           )}
-          <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium text-sm">
+          <button className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--border-default)] text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)] font-medium text-sm">
             <Target className="w-4 h-4" />
             Add Goal
           </button>
@@ -119,7 +119,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       </KPIGrid>
       
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[var(--border-subtle)]">
         <nav className="flex gap-4">
           {tabs.map(tab => {
             if (tab.managerOnly && !isManager) return null;
@@ -130,7 +130,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
                 className={`inline-flex items-center gap-2 px-4 py-3 border-b-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
                 {tab.icon}
@@ -159,10 +159,10 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             />
           ))}
           {reviews.length === 0 && (
-            <div className="col-span-full bg-white rounded-lg border border-gray-200 p-8 text-center">
-              <ClipboardList className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900">No Reviews Found</h3>
-              <p className="text-gray-500">Performance reviews will appear here</p>
+            <div className="col-span-full bg-card rounded-lg border border-[var(--border-subtle)] p-8 text-center">
+              <ClipboardList className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-foreground">No Reviews Found</h3>
+              <p className="text-muted-foreground">Performance reviews will appear here</p>
             </div>
           )}
         </div>
@@ -175,10 +175,10 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             <GoalCard key={goal.id} goal={goal} />
           ))}
           {goals.length === 0 && (
-            <div className="col-span-full bg-white rounded-lg border border-gray-200 p-8 text-center">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900">No Goals Set</h3>
-              <p className="text-gray-500 mb-4">Create goals to track your progress</p>
+            <div className="col-span-full bg-card rounded-lg border border-[var(--border-subtle)] p-8 text-center">
+              <Target className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-foreground">No Goals Set</h3>
+              <p className="text-muted-foreground mb-4">Create goals to track your progress</p>
               <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm">
                 <Plus className="w-4 h-4" />
                 Add Goal
@@ -190,24 +190,24 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       
       {/* Feedback Tab */}
       {activeTab === 'feedback' && !isLoading && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
           {feedback.length > 0 ? (
             <div className="space-y-4">
               {feedback.map(fb => (
                 <div
                   key={fb.id}
-                  className="p-4 border border-gray-200 rounded-lg"
+                  className="p-4 border border-[var(--border-subtle)] rounded-lg"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       {fb.isAnonymous ? 'Anonymous' : fb.sourceEmployeeName}
                     </span>
-                    <span className="px-2 py-1 text-xs font-medium border border-gray-300 rounded-full text-gray-700">
+                    <span className="px-2 py-1 text-xs font-medium border border-[var(--border-default)] rounded-full text-muted-foreground">
                       {fb.feedbackType}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">{fb.comments}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-muted-foreground mb-2">{fb.comments}</p>
+                  <p className="text-xs text-muted-foreground">
                     {fb.submittedAt?.toDate?.()?.toLocaleDateString() || ''}
                   </p>
                 </div>
@@ -215,9 +215,9 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             </div>
           ) : (
             <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900">No Feedback Yet</h3>
-              <p className="text-gray-500">Feedback from peers and managers will appear here</p>
+              <MessageSquare className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-foreground">No Feedback Yet</h3>
+              <p className="text-muted-foreground">Feedback from peers and managers will appear here</p>
             </div>
           )}
         </div>
@@ -226,27 +226,27 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       {/* Analytics Tab */}
       {activeTab === 'analytics' && !isLoading && analytics && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Rating Distribution</h3>
+          <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Rating Distribution</h3>
             {Object.entries(analytics.ratingDistribution).map(([rating, count]) => (
               <div key={rating} className="flex items-center gap-3 mb-2">
-                <span className="text-sm text-gray-600 w-16">{rating} Star</span>
-                <div className="flex-1 h-5 bg-gray-100 rounded overflow-hidden">
+                <span className="text-sm text-muted-foreground w-16">{rating} Star</span>
+                <div className="flex-1 h-5 bg-[var(--bg-sunken)] rounded overflow-hidden">
                   <div
                     className="h-full bg-indigo-600 rounded"
                     style={{ width: `${analytics.totalReviews > 0 ? ((count as number) / analytics.totalReviews) * 100 : 0}%` }}
                   />
                 </div>
-                <span className="text-sm text-gray-700 w-8 text-right">{count as number}</span>
+                <span className="text-sm text-muted-foreground w-8 text-right">{count as number}</span>
               </div>
             ))}
           </div>
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Averages</h3>
+          <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Department Averages</h3>
             {Object.entries(analytics.departmentAverages).map(([dept, avg]) => (
-              <div key={dept} className="flex justify-between py-2 border-b border-gray-100 last:border-0">
-                <span className="text-sm text-gray-700">{dept}</span>
-                <span className="text-sm font-semibold text-gray-900">{(avg as number).toFixed(1)}</span>
+              <div key={dept} className="flex justify-between py-2 border-b border-[var(--border-subtle)] last:border-0">
+                <span className="text-sm text-muted-foreground">{dept}</span>
+                <span className="text-sm font-semibold text-foreground">{(avg as number).toFixed(1)}</span>
               </div>
             ))}
           </div>

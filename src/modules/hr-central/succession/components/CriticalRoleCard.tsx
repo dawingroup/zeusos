@@ -49,17 +49,17 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
 
   return (
     <div
-      className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm hover:shadow-md transition-shadow cursor-pointer"
       onClick={() => onSelect?.(role)}
     >
       <div className="p-4">
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 text-lg">
+            <h3 className="font-semibold text-foreground text-lg">
               {role.positionTitle}
             </h3>
-            <p className="text-sm text-gray-500">{role.departmentName}</p>
+            <p className="text-sm text-muted-foreground">{role.departmentName}</p>
           </div>
           <span
             className="px-2 py-1 text-xs font-medium rounded-full border"
@@ -71,30 +71,30 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
 
         {/* Incumbent */}
         {role.incumbentName && (
-          <div className="flex items-center gap-2 mb-3 p-2 bg-gray-50 rounded-md">
+          <div className="flex items-center gap-2 mb-3 p-2 bg-[var(--bg-sunken)] rounded-md">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
               <Users className="w-4 h-4 text-indigo-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">{role.incumbentName}</p>
-              <p className="text-xs text-gray-500">Current Incumbent</p>
+              <p className="text-sm font-medium text-foreground">{role.incumbentName}</p>
+              <p className="text-xs text-muted-foreground">Current Incumbent</p>
             </div>
           </div>
         )}
 
         {/* Metrics Row */}
         <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-lg font-bold text-gray-900">{role.criticalityScore}</p>
-            <p className="text-xs text-gray-500">Score</p>
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-lg font-bold text-foreground">{role.criticalityScore}</p>
+            <p className="text-xs text-muted-foreground">Score</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-lg font-bold text-gray-900">{role.successors.length}</p>
-            <p className="text-xs text-gray-500">Successors</p>
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-lg font-bold text-foreground">{role.successors.length}</p>
+            <p className="text-xs text-muted-foreground">Successors</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-lg font-bold text-gray-900">{role.benchStrength}</p>
-            <p className="text-xs text-gray-500">Ready Now</p>
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-lg font-bold text-foreground">{role.benchStrength}</p>
+            <p className="text-xs text-muted-foreground">Ready Now</p>
           </div>
         </div>
 
@@ -114,18 +114,18 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
 
         {/* Primary Successor */}
         {primarySuccessor ? (
-          <div className="border-t border-gray-100 pt-3">
-            <p className="text-xs text-gray-500 mb-2">Primary Successor</p>
+          <div className="border-t border-[var(--border-subtle)] pt-3">
+            <p className="text-xs text-muted-foreground mb-2">Primary Successor</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <TrendingUp className="w-4 h-4 text-green-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-foreground">
                     {primarySuccessor.employeeName}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {primarySuccessor.currentPosition}
                   </p>
                 </div>
@@ -142,7 +142,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
             </div>
           </div>
         ) : (
-          <div className="border-t border-gray-100 pt-3">
+          <div className="border-t border-[var(--border-subtle)] pt-3">
             <div className="flex items-center gap-2 text-amber-600">
               <Shield className="w-4 h-4" />
               <p className="text-sm">No successor identified</p>
@@ -152,7 +152,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
 
         {/* Expected Vacancy */}
         {role.expectedVacancyDate && (
-          <div className="flex items-center gap-2 mt-3 text-sm text-gray-600">
+          <div className="flex items-center gap-2 mt-3 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
             <span>
               Expected vacancy:{' '}
@@ -163,7 +163,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
       </div>
 
       {/* Action Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex justify-between items-center">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -173,7 +173,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
         >
           Manage Successors
         </button>
-        <ChevronRight className="w-4 h-4 text-gray-400" />
+        <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
       </div>
     </div>
   );

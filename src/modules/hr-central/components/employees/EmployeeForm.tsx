@@ -518,7 +518,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                   key={step.id}
                   className={cn(
                     'flex-1 h-2 rounded-full transition-all cursor-pointer hover:opacity-80',
-                    isCompleted ? 'bg-green-500' : isCurrent ? 'bg-blue-500' : 'bg-gray-200'
+                    isCompleted ? 'bg-green-500' : isCurrent ? 'bg-blue-500' : 'bg-[var(--bg-sunken)]'
                   )}
                   style={isCurrent ? { backgroundColor: HR_COLOR } : {}}
                   title={step.title}
@@ -546,7 +546,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     ? 'bg-green-100 text-green-700'
                     : index === activeStep
                     ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-500'
+                    : 'bg-[var(--bg-sunken)] text-muted-foreground'
                 )}
                 style={index === activeStep ? { backgroundColor: `${HR_COLOR}20`, color: HR_COLOR } : {}}
                 >
@@ -640,7 +640,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                   <SelectContent>
                     <SelectItem value="group">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-gray-800" />
+                        <div className="w-2 h-2 rounded-full bg-foreground" />
                         Zeus Group (Shared Roles)
                       </div>
                     </SelectItem>
@@ -968,12 +968,12 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                       onClick={() => setSalaryMode(salaryMode === 'net' ? 'gross' : 'net')}
                       className={cn(
                         'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                        salaryMode === 'gross' ? 'bg-green-600' : 'bg-gray-300'
+                        salaryMode === 'gross' ? 'bg-green-600' : 'bg-[var(--bg-sunken)]'
                       )}
                     >
                       <span
                         className={cn(
-                          'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                          'inline-block h-4 w-4 transform rounded-full bg-card transition-transform',
                           salaryMode === 'gross' ? 'translate-x-6' : 'translate-x-1'
                         )}
                       />
@@ -986,7 +986,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
 
                 {/* Net-to-Gross Calculator Mode */}
                 {salaryMode === 'net' && (
-                  <div className="mb-6 p-4 bg-white dark:bg-gray-900 rounded-lg border border-green-300">
+                  <div className="mb-6 p-4 bg-card rounded-lg border border-green-300">
                     <Label className="text-sm font-medium text-green-800 dark:text-green-300 mb-2 block">
                       Desired Net Salary (Take-home pay) <span className="text-red-500">*</span>
                     </Label>
@@ -1028,7 +1028,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     
                     {/* Deduction Breakdown */}
                     {parseInt(salaryData.basicSalary) > 0 && (
-                      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
+                      <div className="mt-4 p-3 bg-[var(--bg-sunken)] rounded-md">
                         <p className="text-xs font-medium text-muted-foreground mb-2">Estimated Monthly Deductions:</p>
                         <div className="grid grid-cols-4 gap-4 text-sm">
                           <div>

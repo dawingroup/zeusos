@@ -149,7 +149,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
           <CardTitle className="text-lg flex items-center gap-2">
             <Building2 className="h-5 w-5 text-blue-600" /> Subsidiary Allocations
           </CardTitle>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             How this employee's pay is attributed across companies for cost reporting and payroll batches.
           </p>
         </div>
@@ -163,7 +163,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
         {!isEditing ? (
           // Read-only summary
           rows.length === 0 ? (
-            <p className="text-sm text-gray-500 italic">No allocation set.</p>
+            <p className="text-sm text-muted-foreground italic">No allocation set.</p>
           ) : (
             <div className="space-y-1.5">
               {rows.map((r, i) => (
@@ -173,7 +173,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
                 </div>
               ))}
               {rows.length === 1 && rows[0].allocationPercent === 100 && (
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-[var(--fg-tertiary)] mt-2">
                   Single-subsidiary employee — full pay goes to {subsidiaryNameById[rows[0].subsidiaryId] || rows[0].subsidiaryId}.
                 </p>
               )}
@@ -206,7 +206,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
                     onChange={(e) => updateRow(idx, { allocationPercent: parseFloat(e.target.value) || 0 })}
                     className="h-9 pr-7 text-right font-mono"
                   />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[var(--fg-tertiary)]">%</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -216,7 +216,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
                   disabled={rows.length <= 1}
                   title="Remove"
                 >
-                  <Trash2 className="h-4 w-4 text-gray-500" />
+                  <Trash2 className="h-4 w-4 text-muted-foreground" />
                 </Button>
               </div>
             ))}
