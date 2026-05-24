@@ -47,11 +47,13 @@ export { TalentTypeBadge } from './components/TalentTypeBadge';
 export { ContractStatusBadge } from './components/ContractStatusBadge';
 export { TalentCard } from './components/TalentCard';
 export { TalentInvoiceForm } from './components/TalentInvoiceForm';
+export { FreelancerContractForm } from './components/FreelancerContractForm';
 export { InvoiceApprovalPanel } from './components/InvoiceApprovalPanel';
 export { InfluencerPanel } from './components/InfluencerPanel';
 export { ModelPanel } from './components/ModelPanel';
 
 export { default as TalentRosterPage } from './pages/TalentRosterPage';
+export { default as TalentCreatePage } from './pages/TalentCreatePage';
 export { default as TalentProfilePage } from './pages/TalentProfilePage';
 export { default as FreelancerContractsPage } from './pages/FreelancerContractsPage';
 export { default as TalentInvoicesPage } from './pages/TalentInvoicesPage';
