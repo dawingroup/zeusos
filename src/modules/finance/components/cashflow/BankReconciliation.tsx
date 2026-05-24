@@ -74,21 +74,21 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       case 'in_progress':
         return 'bg-blue-100 text-blue-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-[var(--bg-sunken)] text-foreground';
     }
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-6 py-4 border-b border-[var(--border-subtle)]">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="font-semibold text-foreground flex items-center gap-2">
               <Building2 className="w-5 h-5 text-[#872E5C]" />
               Bank Reconciliation
             </h3>
-            <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               {reconciliation.bankAccountName} • Statement Date: {reconciliation.statementDate.toLocaleDateString()}
             </p>
@@ -100,7 +100,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       </div>
 
       {/* Stepper */}
-      <div className="px-6 py-4 border-b border-gray-100">
+      <div className="px-6 py-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-center">
           {steps.map((step, index) => (
             <React.Fragment key={step}>
@@ -110,18 +110,18 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
                     ? 'bg-green-500 text-white'
                     : index === activeStep
                     ? 'bg-[#872E5C] text-white'
-                    : 'bg-gray-200 text-gray-600'
+                    : 'bg-[var(--bg-sunken)] text-muted-foreground'
                 }`}>
                   {index < activeStep ? <Check className="w-4 h-4" /> : index + 1}
                 </div>
                 <span className={`ml-2 text-sm ${
-                  index <= activeStep ? 'text-gray-900 font-medium' : 'text-gray-500'
+                  index <= activeStep ? 'text-foreground font-medium' : 'text-muted-foreground'
                 }`}>
                   {step}
                 </span>
               </div>
               {index < steps.length - 1 && (
-                <ArrowRight className="w-4 h-4 text-gray-300 mx-4" />
+                <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] mx-4" />
               )}
             </React.Fragment>
           ))}
@@ -131,24 +131,24 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       {/* Balance Summary */}
       <div className="px-6 py-4 grid grid-cols-2 gap-6">
         {/* Bank Statement */}
-        <div className="p-4 border border-gray-200 rounded-lg">
-          <h4 className="text-sm font-medium text-gray-500 mb-3">Bank Statement</h4>
+        <div className="p-4 border border-[var(--border-subtle)] rounded-lg">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">Bank Statement</h4>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Opening Balance</span>
+              <span className="text-sm text-muted-foreground">Opening Balance</span>
               <span className="text-sm font-mono">
                 {formatCurrency(reconciliation.statementOpeningBalance, currency)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Closing Balance</span>
+              <span className="text-sm text-muted-foreground">Closing Balance</span>
               <span className="text-sm font-mono font-semibold">
                 {formatCurrency(reconciliation.statementClosingBalance, currency)}
               </span>
             </div>
-            <div className="border-t border-gray-100 pt-2 mt-2">
+            <div className="border-t border-[var(--border-subtle)] pt-2 mt-2">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Adjusted Balance</span>
+                <span className="text-sm text-muted-foreground">Adjusted Balance</span>
                 <span className="text-sm font-mono font-bold text-[#872E5C]">
                   {formatCurrency(reconciliation.adjustedBankBalance, currency)}
                 </span>
@@ -158,24 +158,24 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
         </div>
 
         {/* Book Balance */}
-        <div className="p-4 border border-gray-200 rounded-lg">
-          <h4 className="text-sm font-medium text-gray-500 mb-3">Book Balance</h4>
+        <div className="p-4 border border-[var(--border-subtle)] rounded-lg">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">Book Balance</h4>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Opening Balance</span>
+              <span className="text-sm text-muted-foreground">Opening Balance</span>
               <span className="text-sm font-mono">
                 {formatCurrency(reconciliation.bookOpeningBalance, currency)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Closing Balance</span>
+              <span className="text-sm text-muted-foreground">Closing Balance</span>
               <span className="text-sm font-mono font-semibold">
                 {formatCurrency(reconciliation.bookClosingBalance, currency)}
               </span>
             </div>
-            <div className="border-t border-gray-100 pt-2 mt-2">
+            <div className="border-t border-[var(--border-subtle)] pt-2 mt-2">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Adjusted Balance</span>
+                <span className="text-sm text-muted-foreground">Adjusted Balance</span>
                 <span className="text-sm font-mono font-bold text-[#872E5C]">
                   {formatCurrency(reconciliation.adjustedBookBalance, currency)}
                 </span>
@@ -212,7 +212,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       {unmatchedTransactions.length > 0 && (
         <div className="px-6 pb-4">
           <div className="flex justify-between items-center mb-3">
-            <h4 className="text-sm font-medium text-gray-900">
+            <h4 className="text-sm font-medium text-foreground">
               Unmatched Book Transactions ({unmatchedTransactions.length})
             </h4>
             <button
@@ -224,9 +224,9 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
             </button>
           </div>
 
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--bg-sunken)]">
                 <tr>
                   <th className="w-10 px-4 py-2">
                     <input
@@ -239,31 +239,31 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
                           setSelectedTransactions(new Set());
                         }
                       }}
-                      className="rounded border-gray-300"
+                      className="rounded border-[var(--border-default)]"
                     />
                   </th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Date</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Description</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Reference</th>
-                  <th className="px-4 py-2 text-right font-medium text-gray-700">Amount</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Date</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Description</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Reference</th>
+                  <th className="px-4 py-2 text-right font-medium text-muted-foreground">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {unmatchedTransactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-gray-50">
+                  <tr key={tx.id} className="hover:bg-[var(--bg-sunken)]">
                     <td className="px-4 py-2">
                       <input
                         type="checkbox"
                         checked={selectedTransactions.has(tx.id)}
                         onChange={() => handleToggleTransaction(tx.id)}
-                        className="rounded border-gray-300"
+                        className="rounded border-[var(--border-default)]"
                       />
                     </td>
-                    <td className="px-4 py-2 text-gray-900">
+                    <td className="px-4 py-2 text-foreground">
                       {tx.date.toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-2 text-gray-900">{tx.description}</td>
-                    <td className="px-4 py-2 text-gray-600">{tx.reference || '-'}</td>
+                    <td className="px-4 py-2 text-foreground">{tx.description}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{tx.reference || '-'}</td>
                     <td className="px-4 py-2 text-right">
                       <span className={tx.type === 'inflow' ? 'text-green-600' : 'text-red-600'}>
                         {tx.type === 'inflow' ? '+' : '-'}
@@ -281,30 +281,30 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       {/* Reconciled Items */}
       {reconciliation.reconciledItems.length > 0 && (
         <div className="px-6 pb-4">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">
+          <h4 className="text-sm font-medium text-foreground mb-3">
             Reconciled Items ({reconciliation.reconciledItems.length})
           </h4>
 
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--bg-sunken)]">
                 <tr>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Date</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Description</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Book Ref</th>
-                  <th className="px-4 py-2 text-left font-medium text-gray-700">Bank Ref</th>
-                  <th className="px-4 py-2 text-right font-medium text-gray-700">Amount</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Date</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Description</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Book Ref</th>
+                  <th className="px-4 py-2 text-left font-medium text-muted-foreground">Bank Ref</th>
+                  <th className="px-4 py-2 text-right font-medium text-muted-foreground">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {reconciliation.reconciledItems.map((item, index) => (
                   <tr key={index} className="bg-green-50/50">
-                    <td className="px-4 py-2 text-gray-900">
+                    <td className="px-4 py-2 text-foreground">
                       {item.date.toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-2 text-gray-900">{item.description}</td>
-                    <td className="px-4 py-2 text-gray-600">{item.reference || '-'}</td>
-                    <td className="px-4 py-2 text-gray-600">{item.matchedBankReference || '-'}</td>
+                    <td className="px-4 py-2 text-foreground">{item.description}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{item.reference || '-'}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{item.matchedBankReference || '-'}</td>
                     <td className="px-4 py-2 text-right">
                       <span className={item.type === 'deposit' ? 'text-green-600' : 'text-red-600'}>
                         {item.type === 'deposit' ? '+' : '-'}
@@ -320,11 +320,11 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       )}
 
       {/* Actions */}
-      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between">
+      <div className="px-6 py-4 border-t border-[var(--border-subtle)] bg-[var(--bg-sunken)] flex justify-between">
         <button
           onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
           disabled={activeStep === 0}
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 border border-[var(--border-default)] text-muted-foreground rounded-lg hover:bg-card disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Back
         </button>

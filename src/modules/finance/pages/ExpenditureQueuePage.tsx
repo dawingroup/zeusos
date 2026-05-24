@@ -90,7 +90,7 @@ function ExpenditureRow({
 
   return (
     <TableRow
-      className={`cursor-pointer hover:bg-gray-50 ${isProjected ? 'opacity-70 border-l-2 border-l-amber-300' : ''}`}
+      className={`cursor-pointer hover:bg-[var(--bg-sunken)] ${isProjected ? 'opacity-70 border-l-2 border-l-amber-300' : ''}`}
       onClick={() => onSelect(item.id)}
     >
       <TableCell>
@@ -114,14 +114,14 @@ function ExpenditureRow({
       </TableCell>
       <TableCell>
         <div>
-          <p className="text-sm text-gray-900 truncate max-w-[250px]">{item.description}</p>
+          <p className="text-sm text-foreground truncate max-w-[250px]">{item.description}</p>
           {item.vendor && (
-            <p className="text-xs text-gray-400">{item.vendor}</p>
+            <p className="text-xs text-[var(--fg-tertiary)]">{item.vendor}</p>
           )}
         </div>
       </TableCell>
       <TableCell>
-        <span className="text-xs text-gray-600">
+        <span className="text-xs text-muted-foreground">
           {EXPENDITURE_CATEGORY_LABELS[item.category] || item.category}
         </span>
       </TableCell>
@@ -129,7 +129,7 @@ function ExpenditureRow({
         <span className="text-sm font-medium">{formatUGX(item.amountUGX)}</span>
       </TableCell>
       <TableCell>
-        <span className="text-xs text-gray-500">{formatDate(item.latestDate)}</span>
+        <span className="text-xs text-muted-foreground">{formatDate(item.latestDate)}</span>
       </TableCell>
       <TableCell>
         <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
@@ -144,7 +144,7 @@ function ExpenditureRow({
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs h-7 px-2 text-gray-500 hover:text-gray-700"
+            className="text-xs h-7 px-2 text-muted-foreground hover:text-muted-foreground"
             onClick={() => onDefer(item.id)}
           >
             Defer
@@ -203,28 +203,28 @@ function GroupedView({
           >
             {/* Group Header */}
             <button
-              className={`flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${isProjected ? 'bg-amber-50/50' : ''}`}
+              className={`flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-[var(--bg-sunken)] transition-colors ${isProjected ? 'bg-amber-50/50' : ''}`}
               onClick={() => toggleGroup(group.projectId)}
             >
               {isExpanded
-                ? <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                : <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                ? <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)] flex-shrink-0" />
+                : <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] flex-shrink-0" />
               }
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-900 truncate">
+                  <span className="text-sm font-semibold text-foreground truncate">
                     {group.projectName}
                   </span>
                   <CommitmentBadge level={group.commitmentLevel} />
                   <TierBadge tier={group.highestTier} />
                 </div>
                 {group.projectApprovalStatus && (
-                  <span className="text-xs text-gray-400">Status: {group.projectApprovalStatus}</span>
+                  <span className="text-xs text-[var(--fg-tertiary)]">Status: {group.projectApprovalStatus}</span>
                 )}
               </div>
               <div className="flex items-center gap-4 flex-shrink-0">
-                <span className="text-xs text-gray-500">{group.itemCount} items</span>
-                <span className="text-sm font-semibold text-gray-900">{formatUGX(group.totalAmount)}</span>
+                <span className="text-xs text-muted-foreground">{group.itemCount} items</span>
+                <span className="text-sm font-semibold text-foreground">{formatUGX(group.totalAmount)}</span>
               </div>
             </button>
 
@@ -241,7 +241,7 @@ function GroupedView({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs h-7 px-2.5 text-gray-500 hover:text-gray-700"
+                className="text-xs h-7 px-2.5 text-muted-foreground hover:text-muted-foreground"
                 onClick={() => onDeferAll(group.items)}
               >
                 Defer All
@@ -250,7 +250,7 @@ function GroupedView({
 
             {/* Group Items */}
             {isExpanded && (
-              <div className="border-t border-gray-100">
+              <div className="border-t border-[var(--border-subtle)]">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -282,7 +282,7 @@ function GroupedView({
       })}
 
       {groups.length === 0 && (
-        <Card className="p-8 text-center text-gray-400">
+        <Card className="p-8 text-center text-[var(--fg-tertiary)]">
           No expenditures match your filters
         </Card>
       )}
@@ -396,16 +396,16 @@ export function ExpenditureQueuePage() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <ListOrdered className="w-5 h-5 text-orange-600" />
-          <h2 className="text-xl font-bold text-gray-900">Expenditure Queue</h2>
-          <span className="text-sm text-gray-400">
+          <h2 className="text-xl font-bold text-foreground">Expenditure Queue</h2>
+          <span className="text-sm text-[var(--fg-tertiary)]">
             {filteredCount} of {totalCount} items
           </span>
         </div>
         <div className="flex gap-2">
           {/* View mode toggle */}
-          <div className="flex border border-gray-200 rounded-md overflow-hidden">
+          <div className="flex border border-[var(--border-subtle)] rounded-md overflow-hidden">
             <button
-              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs ${viewMode === 'grouped' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs ${viewMode === 'grouped' ? 'bg-[var(--bg-sunken)] text-foreground' : 'text-muted-foreground hover:text-muted-foreground'}`}
               onClick={() => setViewMode('grouped')}
               title="Group by project"
             >
@@ -413,7 +413,7 @@ export function ExpenditureQueuePage() {
               Grouped
             </button>
             <button
-              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs ${viewMode === 'flat' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs ${viewMode === 'flat' ? 'bg-[var(--bg-sunken)] text-foreground' : 'text-muted-foreground hover:text-muted-foreground'}`}
               onClick={() => setViewMode('flat')}
               title="Flat list"
             >
@@ -460,7 +460,7 @@ export function ExpenditureQueuePage() {
                 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all
                 ${isActive
                   ? 'border-current shadow-sm'
-                  : 'border-gray-200 hover:border-gray-300'}
+                  : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'}
               `}
               style={isActive ? { color: PRIORITY_TIER_COLORS[tier], borderColor: PRIORITY_TIER_COLORS[tier] } : {}}
             >
@@ -475,7 +475,7 @@ export function ExpenditureQueuePage() {
         {(filters.priorityTier || filters.category || filters.commitmentLevel || filters.searchTerm) && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-1 px-2 py-1.5 text-xs text-gray-500 hover:text-gray-700"
+            className="flex items-center gap-1 px-2 py-1.5 text-xs text-muted-foreground hover:text-muted-foreground"
           >
             <X className="w-3 h-3" />
             Clear
@@ -488,9 +488,9 @@ export function ExpenditureQueuePage() {
         <Card className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Search</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Search</label>
               <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
                 <Input
                   placeholder="Description, vendor..."
                   value={filters.searchTerm || ''}
@@ -500,11 +500,11 @@ export function ExpenditureQueuePage() {
               </div>
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Category</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Category</label>
               <select
                 value={filters.category || ''}
                 onChange={(e) => updateFilter('category', (e.target.value || undefined) as ExpenditureCategory | undefined)}
-                className="w-full h-9 px-3 border border-gray-200 rounded-md text-sm"
+                className="w-full h-9 px-3 border border-[var(--border-subtle)] rounded-md text-sm"
               >
                 <option value="">All Categories</option>
                 {CATEGORY_OPTIONS.map(cat => (
@@ -513,11 +513,11 @@ export function ExpenditureQueuePage() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Commitment</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Commitment</label>
               <select
                 value={filters.commitmentLevel || ''}
                 onChange={(e) => updateFilter('commitmentLevel', (e.target.value || undefined) as CommitmentLevel | undefined)}
-                className="w-full h-9 px-3 border border-gray-200 rounded-md text-sm"
+                className="w-full h-9 px-3 border border-[var(--border-subtle)] rounded-md text-sm"
               >
                 <option value="">All Levels</option>
                 <option value="committed">Committed</option>
@@ -525,7 +525,7 @@ export function ExpenditureQueuePage() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Min Amount (UGX)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Min Amount (UGX)</label>
               <Input
                 type="number"
                 placeholder="0"
@@ -535,7 +535,7 @@ export function ExpenditureQueuePage() {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Max Amount (UGX)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Max Amount (UGX)</label>
               <Input
                 type="number"
                 placeholder="∞"
@@ -619,7 +619,7 @@ export function ExpenditureQueuePage() {
                 ))}
                 {filteredItems.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-gray-400">
+                    <TableCell colSpan={7} className="text-center py-8 text-[var(--fg-tertiary)]">
                       No expenditures match your filters
                     </TableCell>
                   </TableRow>
@@ -630,7 +630,7 @@ export function ExpenditureQueuePage() {
 
           {/* Footer */}
           {filteredItems.length > 0 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-[var(--border-subtle)] text-xs text-muted-foreground">
               <span>{filteredCount} items</span>
               <span>Total: {formatUGX(totalAmount)}</span>
             </div>
@@ -640,7 +640,7 @@ export function ExpenditureQueuePage() {
 
       {/* Footer for grouped view */}
       {viewMode === 'grouped' && filteredItems.length > 0 && (
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>{groupedItems.length} projects / {filteredCount} items</span>
           <span>Total: {formatUGX(totalAmount)}</span>
         </div>
@@ -659,50 +659,50 @@ export function ExpenditureQueuePage() {
 
               {/* Cost Breakdown */}
               {selectedItem.costBreakdown && selectedItem.costBreakdown.totalPureCost > 0 && (
-                <div className="border border-gray-100 rounded-lg p-4">
+                <div className="border border-[var(--border-subtle)] rounded-lg p-4">
                   <CostBreakdownPanel breakdown={selectedItem.costBreakdown} />
                 </div>
               )}
 
               {/* Cross-Links */}
               {selectedItem.crossLinks && (
-                <div className="border border-gray-100 rounded-lg p-4">
+                <div className="border border-[var(--border-subtle)] rounded-lg p-4">
                   <CrossLinksPanel crossLinks={selectedItem.crossLinks} />
                 </div>
               )}
 
               {/* Metadata */}
               <div className="space-y-2">
-                <h5 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">Details</h5>
+                <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Details</h5>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Source</span>
+                  <span className="text-muted-foreground">Source</span>
                   <span className="font-medium">{selectedItem.sourceType}</span>
                 </div>
                 {selectedItem.projectName && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Project</span>
+                    <span className="text-muted-foreground">Project</span>
                     <span className="font-medium">{selectedItem.projectName}</span>
                   </div>
                 )}
                 {selectedItem.vendor && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Vendor</span>
+                    <span className="text-muted-foreground">Vendor</span>
                     <span className="font-medium">{selectedItem.vendor}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Status</span>
+                  <span className="text-muted-foreground">Status</span>
                   <span className="font-medium">{selectedItem.status}</span>
                 </div>
                 {selectedItem.commitmentLevel && (
                   <div className="flex justify-between text-sm items-center">
-                    <span className="text-gray-500">Commitment</span>
+                    <span className="text-muted-foreground">Commitment</span>
                     <CommitmentBadge level={selectedItem.commitmentLevel} />
                   </div>
                 )}
                 {selectedItem.isOutsourcedPO && (
                   <div className="flex justify-between text-sm items-center">
-                    <span className="text-gray-500">Outsourced PO</span>
+                    <span className="text-muted-foreground">Outsourced PO</span>
                     <span className="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded bg-violet-100 text-violet-700 border border-violet-200">
                       OPO
                     </span>
@@ -710,7 +710,7 @@ export function ExpenditureQueuePage() {
                 )}
                 {selectedItem.projectApprovalStatus && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Project Status</span>
+                    <span className="text-muted-foreground">Project Status</span>
                     <span className="font-medium capitalize">{selectedItem.projectApprovalStatus}</span>
                   </div>
                 )}
@@ -747,7 +747,7 @@ export function ExpenditureQueuePage() {
       {deferringId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="p-5 w-full max-w-md">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">
+            <h4 className="text-sm font-semibold text-foreground mb-3">
               {batchDeferIds.length > 1 ? `Defer ${batchDeferIds.length} Expenditures` : 'Defer Expenditure'}
             </h4>
             <Input

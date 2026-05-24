@@ -170,7 +170,7 @@ function ScaleHeader({
         const pct = ((tick - scaleMin) / range) * 100;
         return (
           <div key={tick} className="absolute top-0 bottom-0" style={{ left: `${pct}%` }}>
-            <div className="absolute -top-4 -translate-x-1/2 text-[10px] text-gray-300 whitespace-nowrap font-medium">
+            <div className="absolute -top-4 -translate-x-1/2 text-[10px] text-[var(--fg-tertiary)] whitespace-nowrap font-medium">
               {fmtScale(tick)}
             </div>
             <div
@@ -218,19 +218,19 @@ function WaterfallItemRow({
   const insideBar = barWidthPct > 10;
 
   return (
-    <div className="flex items-center py-0.5 hover:bg-gray-50/40 transition-colors">
+    <div className="flex items-center py-0.5 hover:bg-[var(--bg-sunken)]/40 transition-colors">
       {/* Label column */}
       <div className="w-[40%] shrink-0 flex items-center gap-2 pl-3 pr-2">
         <span
           className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded shrink-0 ${
             addLabel === 'ADD'
               ? 'text-green-700 bg-green-50'
-              : 'text-gray-400 bg-gray-50'
+              : 'text-[var(--fg-tertiary)] bg-[var(--bg-sunken)]'
           }`}
         >
           {addLabel}
         </span>
-        <span className="text-xs text-gray-700 truncate" title={label}>
+        <span className="text-xs text-muted-foreground truncate" title={label}>
           {label}
         </span>
       </div>
@@ -242,13 +242,13 @@ function WaterfallItemRow({
 
         {/* Connector dashed line at runAfter position */}
         <div
-          className="absolute -top-px -bottom-px border-l border-dashed border-gray-300/60"
+          className="absolute -top-px -bottom-px border-l border-dashed border-[var(--border-default)]/60"
           style={{ left: `${connPct}%` }}
         />
 
         {isZero ? (
           <div
-            className="absolute top-2 bottom-2 w-0.5 bg-gray-300 rounded"
+            className="absolute top-2 bottom-2 w-0.5 bg-[var(--bg-sunken)] rounded"
             style={{ left: `${toPct(runBefore)}%` }}
           />
         ) : (
@@ -272,7 +272,7 @@ function WaterfallItemRow({
         {/* Value label outside bar */}
         {!insideBar && !isZero && (
           <span
-            className="absolute top-0 bottom-0 flex items-center text-[10px] text-gray-600 whitespace-nowrap font-medium"
+            className="absolute top-0 bottom-0 flex items-center text-[10px] text-muted-foreground whitespace-nowrap font-medium"
             style={{
               left: isPositive
                 ? `${Math.min(barRightPct + 0.5, 97)}%`
@@ -286,7 +286,7 @@ function WaterfallItemRow({
 
         {isZero && (
           <span
-            className="absolute top-0 bottom-0 flex items-center text-[10px] text-gray-400 whitespace-nowrap"
+            className="absolute top-0 bottom-0 flex items-center text-[10px] text-[var(--fg-tertiary)] whitespace-nowrap"
             style={{ left: `${toPct(runBefore) + 0.5}%` }}
           >
             0
@@ -319,7 +319,7 @@ function WaterfallSummaryRow({
     <div className="flex items-center my-0.5">
       {/* Label in the left column — aligned with item row labels */}
       <div className="w-[40%] shrink-0 pl-3 pr-2">
-        <span className="text-[11px] font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">
+        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider whitespace-nowrap">
           {label}
         </span>
       </div>
@@ -331,7 +331,7 @@ function WaterfallSummaryRow({
 
         {/* Arrow shape from left edge to value position */}
         <div
-          className="absolute top-0 bottom-0 left-0 bg-gray-200/90"
+          className="absolute top-0 bottom-0 left-0 bg-[var(--bg-sunken)]/90"
           style={{
             width: `${Math.max(valPctInBar, 2)}%`,
             clipPath:
@@ -342,7 +342,7 @@ function WaterfallSummaryRow({
         {/* Amount right of arrow tip */}
         <span
           className={`absolute top-0 bottom-0 flex items-center text-base font-bold whitespace-nowrap pl-1 ${
-            value < 0 ? 'text-red-700' : 'text-gray-900'
+            value < 0 ? 'text-red-700' : 'text-foreground'
           }`}
           style={{ left: `${Math.max(valPctInBar, 2) + 0.5}%` }}
         >
@@ -471,21 +471,21 @@ export function CashFlowPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Cash Flow</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-xl font-bold text-foreground">Cash Flow</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Cash receipts and payments — synced from QuickBooks Online
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 border rounded-lg px-2 py-1 bg-white shadow-sm">
-            <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded">
-              <ChevronLeft className="h-4 w-4 text-gray-500" />
+          <div className="flex items-center gap-1 border rounded-lg px-2 py-1 bg-card shadow-sm">
+            <button onClick={prevMonth} className="p-1 hover:bg-[var(--bg-sunken)] rounded">
+              <ChevronLeft className="h-4 w-4 text-muted-foreground" />
             </button>
-            <span className="text-sm font-medium text-gray-800 min-w-[100px] text-center">
+            <span className="text-sm font-medium text-foreground min-w-[100px] text-center">
               {getMonthLabel(year, month)}
             </span>
-            <button onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded">
-              <ChevronRight className="h-4 w-4 text-gray-500" />
+            <button onClick={nextMonth} className="p-1 hover:bg-[var(--bg-sunken)] rounded">
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
           <Button variant="outline" size="sm" onClick={handleSync} disabled={syncing || loading}>
@@ -513,7 +513,7 @@ export function CashFlowPage() {
             ))}
           </div>
         ) : !hasData ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-[var(--fg-tertiary)]">
             <p className="font-medium">No cash flow data for {getMonthLabel(year, month)}</p>
             <p className="text-sm mt-1">Click "Sync from QBO" to pull data from QuickBooks.</p>
           </div>
@@ -521,15 +521,15 @@ export function CashFlowPage() {
           <div className="overflow-x-auto overflow-y-auto h-full">
             <div className="min-w-[700px]">
               {/* Legend + Scale Header */}
-              <div className="flex items-end border-b border-gray-100 pb-0.5">
+              <div className="flex items-end border-b border-[var(--border-subtle)] pb-0.5">
                 <div className="w-[40%] shrink-0 flex items-center gap-4 pl-3 pb-1.5">
                   <div className="flex items-center gap-1.5">
                     <div className="w-3.5 h-2.5 rounded-sm bg-green-500" />
-                    <span className="text-xs text-gray-400">Cash Received</span>
+                    <span className="text-xs text-[var(--fg-tertiary)]">Cash Received</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-3.5 h-2.5 rounded-sm bg-red-500" />
-                    <span className="text-xs text-gray-400">Cash Spent</span>
+                    <span className="text-xs text-[var(--fg-tertiary)]">Cash Spent</span>
                   </div>
                 </div>
                 <div className="flex-1 relative h-6 mr-3">
@@ -567,13 +567,13 @@ export function CashFlowPage() {
               })}
 
               {/* Footer reconciliation */}
-              <div className="border-t border-gray-100 px-3 py-2">
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+              <div className="border-t border-[var(--border-subtle)] px-3 py-2">
+                <p className="text-[10px] font-semibold text-[var(--fg-tertiary)] uppercase tracking-wider">
                   Net Cash Flow can also be calculated as:
                 </p>
-                <p className="text-xs text-gray-600 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Change in Cash on Hand{' '}
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-foreground">
                     {fmt(getValue('netCashFlow'))}
                   </span>
                 </p>

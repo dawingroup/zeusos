@@ -71,8 +71,8 @@ export function SettingsLandingPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Finance Settings</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Finance Settings</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Configuration, integrations & account management
         </p>
       </div>
@@ -85,20 +85,20 @@ export function SettingsLandingPage() {
             <button
               key={section.id}
               onClick={() => navigate(section.path)}
-              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-lg border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm text-left transition-all"
+              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-lg border border-[var(--border-subtle)] bg-card hover:border-[var(--border-default)] hover:shadow-sm text-left transition-all"
             >
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-50 shrink-0">
-                <Icon className="w-5 h-5 text-gray-500" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--bg-sunken)] shrink-0">
+                <Icon className="w-5 h-5 text-muted-foreground" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-foreground">
                   {section.label}
                 </h3>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {section.description}
                 </p>
               </div>
-              <ChevronRight className="w-4 h-4 text-gray-300 shrink-0" />
+              <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] shrink-0" />
             </button>
           );
         })}

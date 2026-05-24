@@ -93,17 +93,17 @@ function AnalysisNavCard({ card }: { card: AnalysisCard }) {
   return (
     <div
       onClick={() => navigate(card.path)}
-      className="bg-white border border-gray-200 rounded-xl p-5 hover:border-green-300 hover:shadow-md transition-all cursor-pointer group"
+      className="bg-card border border-[var(--border-subtle)] rounded-xl p-5 hover:border-green-300 hover:shadow-md transition-all cursor-pointer group"
     >
       <div className="flex items-start gap-4">
         <div className="shrink-0 w-10 h-10 rounded-full bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
           <Icon className="h-5 w-5 text-green-600" />
         </div>
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
+          <h3 className="text-sm font-semibold text-foreground group-hover:text-green-700 transition-colors">
             {card.label}
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
             {card.description}
           </p>
         </div>
@@ -119,8 +119,8 @@ export function AnalysisLandingPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Financial Analysis</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Financial Analysis</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Analyse financial performance, ratios, and trends
         </p>
       </div>

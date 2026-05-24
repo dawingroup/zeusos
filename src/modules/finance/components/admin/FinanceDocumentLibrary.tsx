@@ -98,7 +98,7 @@ export function FinanceDocumentLibrary({
       {/* Search & Filter Bar */}
       <div className="flex items-center gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)]" />
           <input
             type="text"
             value={search}
@@ -109,7 +109,7 @@ export function FinanceDocumentLibrary({
           {search && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fg-tertiary)] hover:text-muted-foreground"
             >
               <X className="w-4 h-4" />
             </button>
@@ -126,13 +126,13 @@ export function FinanceDocumentLibrary({
 
       {/* Category Filter Chips */}
       <div className="flex items-center gap-2 flex-wrap">
-        <Filter className="w-3.5 h-3.5 text-gray-400" />
+        <Filter className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
         <button
           onClick={() => onFilterCategory(null)}
           className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
             !activeCategory
               ? 'bg-green-100 text-green-700'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
           All ({totalCount})
@@ -147,7 +147,7 @@ export function FinanceDocumentLibrary({
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 activeCategory === key
                   ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {label} ({count})
@@ -160,18 +160,18 @@ export function FinanceDocumentLibrary({
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="animate-pulse h-14 bg-gray-100 rounded-lg" />
+            <div key={i} className="animate-pulse h-14 bg-[var(--bg-sunken)] rounded-lg" />
           ))}
         </div>
       ) : documents.length === 0 ? (
-        <div className="text-center py-10 text-gray-400">
+        <div className="text-center py-10 text-[var(--fg-tertiary)]">
           <FolderOpen className="w-10 h-10 mx-auto mb-2 opacity-50" />
           <p className="text-sm">
             {search ? 'No documents match your search' : 'No finance documents yet'}
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border divide-y">
+        <div className="bg-card rounded-lg border divide-y">
           {documents.map((doc) => {
             const Icon = CATEGORY_ICONS[doc.category] || File;
             const statusColor = FINANCE_DOCUMENT_STATUS_COLORS[doc.status] || 'gray';
@@ -179,15 +179,15 @@ export function FinanceDocumentLibrary({
             return (
               <div
                 key={doc.id}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--bg-sunken)] transition-colors"
               >
-                <div className="p-2 rounded-lg bg-gray-50">
-                  <Icon className="w-4 h-4 text-gray-500" />
+                <div className="p-2 rounded-lg bg-[var(--bg-sunken)]">
+                  <Icon className="w-4 h-4 text-muted-foreground" />
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h5 className="text-sm font-medium text-gray-900 truncate">
+                    <h5 className="text-sm font-medium text-foreground truncate">
                       {doc.name}
                     </h5>
                     <span
@@ -196,7 +196,7 @@ export function FinanceDocumentLibrary({
                       {FINANCE_DOCUMENT_STATUSES[doc.status] || doc.status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
                     <span>{FINANCE_DOCUMENT_CATEGORIES[doc.category]}</span>
                     {doc.fiscalYear && <span>FY {doc.fiscalYear}</span>}
                     <span>{formatDate(doc.uploadedAt)}</span>
@@ -207,13 +207,13 @@ export function FinanceDocumentLibrary({
                       {doc.tags.slice(0, 4).map((tag) => (
                         <span
                           key={tag}
-                          className="px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded text-[10px]"
+                          className="px-1.5 py-0.5 bg-[var(--bg-sunken)] text-muted-foreground rounded text-[10px]"
                         >
                           {tag}
                         </span>
                       ))}
                       {doc.tags.length > 4 && (
-                        <span className="text-[10px] text-gray-400">
+                        <span className="text-[10px] text-[var(--fg-tertiary)]">
                           +{doc.tags.length - 4}
                         </span>
                       )}
@@ -247,7 +247,7 @@ export function FinanceDocumentLibrary({
                       </button>
                       <button
                         onClick={() => setConfirmDeleteId(null)}
-                        className="px-2 py-1 text-xs bg-gray-200 rounded hover:bg-gray-300"
+                        className="px-2 py-1 text-xs bg-[var(--bg-sunken)] rounded hover:bg-[var(--bg-sunken)]"
                       >
                         Cancel
                       </button>
@@ -255,7 +255,7 @@ export function FinanceDocumentLibrary({
                   ) : (
                     <button
                       onClick={() => setConfirmDeleteId(doc.id)}
-                      className="p-1.5 rounded-md hover:bg-red-50 text-gray-400 hover:text-red-500"
+                      className="p-1.5 rounded-md hover:bg-red-50 text-[var(--fg-tertiary)] hover:text-red-500"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />

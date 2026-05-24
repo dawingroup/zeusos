@@ -54,8 +54,8 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-base font-semibold text-gray-900">Working Capital Drivers</h3>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h3 className="text-base font-semibold text-foreground">Working Capital Drivers</h3>
+        <p className="text-sm text-muted-foreground mt-0.5">
           These ratios determine how Balance Sheet accounts are derived from your P&L forecast.
           Changes trigger an automatic three-way recalculation.
         </p>
@@ -65,7 +65,7 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
         {FIELDS.map(f => (
           <div key={f.key} className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">{f.label}</label>
+              <label className="text-sm font-medium text-muted-foreground">{f.label}</label>
               <span className="text-sm font-semibold text-blue-600">
                 {displayValue(local[f.key], f.unit)}
               </span>
@@ -77,9 +77,9 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
               step={f.step}
               value={local[f.key]}
               onChange={e => set(f.key, e.target.value)}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="w-full h-2 bg-[var(--bg-sunken)] rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
-            <p className="text-xs text-gray-400">{f.description}</p>
+            <p className="text-xs text-[var(--fg-tertiary)]">{f.description}</p>
           </div>
         ))}
       </div>
@@ -87,7 +87,7 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
       <div className="flex items-center justify-between pt-2 border-t">
         <button
           onClick={reset}
-          className="text-xs text-gray-400 hover:text-gray-600 underline"
+          className="text-xs text-[var(--fg-tertiary)] hover:text-muted-foreground underline"
         >
           Reset to defaults
         </button>

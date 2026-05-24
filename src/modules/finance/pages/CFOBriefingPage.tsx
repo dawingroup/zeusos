@@ -74,7 +74,7 @@ export function CFOBriefingPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Brain className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-gray-900">AI CFO Briefing</h2>
+          <h2 className="text-xl font-bold text-foreground">AI CFO Briefing</h2>
         </div>
         <div className="flex gap-2">
           <Button
@@ -110,9 +110,9 @@ export function CFOBriefingPage() {
 
       {!briefing && (
         <Card className="p-8 text-center">
-          <Brain className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-sm text-gray-500 mb-1">No briefing available for today</p>
-          <p className="text-xs text-gray-400 mb-4">
+          <Brain className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground mb-1">No briefing available for today</p>
+          <p className="text-xs text-[var(--fg-tertiary)] mb-4">
             Generate an AI-powered financial briefing using Claude
           </p>
           <Button
@@ -132,10 +132,10 @@ export function CFOBriefingPage() {
           <Card className="p-5 border-l-4 border-l-indigo-500">
             <div className="flex items-center gap-2 mb-2">
               <Brain className="w-4 h-4 text-indigo-500" />
-              <h3 className="text-sm font-semibold text-gray-900">Executive Summary</h3>
-              <span className="text-xs text-gray-400 ml-auto">{formatDate(briefing.generatedAt)}</span>
+              <h3 className="text-sm font-semibold text-foreground">Executive Summary</h3>
+              <span className="text-xs text-[var(--fg-tertiary)] ml-auto">{formatDate(briefing.generatedAt)}</span>
             </div>
-            <p className="text-sm text-gray-700 leading-relaxed">{briefing.executiveSummary}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{briefing.executiveSummary}</p>
             {briefing.cashOutlookNarrative && (
               <p className="text-sm text-indigo-600 mt-2 italic">{briefing.cashOutlookNarrative}</p>
             )}
@@ -144,7 +144,7 @@ export function CFOBriefingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Key Decisions */}
             <Card className="p-5">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Lightbulb className="w-4 h-4 text-amber-500" />
                 Key Decisions
               </h3>
@@ -171,13 +171,13 @@ export function CFOBriefingPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-400">No key decisions today</p>
+                <p className="text-sm text-[var(--fg-tertiary)]">No key decisions today</p>
               )}
             </Card>
 
             {/* Risk Alerts */}
             <Card className="p-5">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-red-500" />
                 Risk Alerts
               </h3>
@@ -193,8 +193,8 @@ export function CFOBriefingPage() {
                               : 'text-blue-500'
                         }`} />
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{alert.message}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{alert.suggestedAction}</p>
+                          <p className="text-sm font-medium text-foreground">{alert.message}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{alert.suggestedAction}</p>
                         </div>
                       </div>
                     );
@@ -212,13 +212,13 @@ export function CFOBriefingPage() {
           {/* Recommendations */}
           {briefing.recommendations?.length > 0 && (
             <Card className="p-5">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
                 Recommendations
               </h3>
               <div className="space-y-2">
                 {briefing.recommendations.map((rec, idx) => (
-                  <div key={idx} className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+                  <div key={idx} className="flex items-start gap-3 py-2 border-b border-[var(--border-subtle)] last:border-0">
                     <span className={`text-xs font-medium px-1.5 py-0.5 rounded shrink-0 ${
                       rec.priority >= 3 ? 'bg-red-50 text-red-700'
                         : rec.priority >= 2 ? 'bg-amber-50 text-amber-700'
@@ -227,12 +227,12 @@ export function CFOBriefingPage() {
                       P{rec.priority}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-900">{rec.action}</p>
+                      <p className="text-sm text-foreground">{rec.action}</p>
                       {rec.expectedImpact && (
-                        <p className="text-xs text-gray-500 mt-0.5">{rec.expectedImpact}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{rec.expectedImpact}</p>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400 shrink-0">
+                    <span className="text-xs text-[var(--fg-tertiary)] shrink-0">
                       {rec.category}
                     </span>
                   </div>
@@ -244,15 +244,15 @@ export function CFOBriefingPage() {
           {/* Briefing History */}
           {briefingHistory.length > 1 && (
             <Card className="p-5">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Recent Briefings</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">Recent Briefings</h3>
               <div className="space-y-2">
                 {briefingHistory.slice(1).map(b => (
-                  <div key={b.id} className="flex items-center gap-3 py-1.5 border-b border-gray-50 last:border-0">
-                    <span className="text-xs text-gray-400">{formatDate(b.generatedAt)}</span>
-                    <p className="text-sm text-gray-600 truncate flex-1">
+                  <div key={b.id} className="flex items-center gap-3 py-1.5 border-b border-[var(--border-subtle)] last:border-0">
+                    <span className="text-xs text-[var(--fg-tertiary)]">{formatDate(b.generatedAt)}</span>
+                    <p className="text-sm text-muted-foreground truncate flex-1">
                       {b.executiveSummary?.slice(0, 100)}...
                     </p>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-[var(--fg-tertiary)]">
                       {b.keyDecisions?.length || 0} decisions
                     </span>
                   </div>

@@ -31,7 +31,7 @@ function varianceColor(variancePercent: number): string {
 }
 
 const SOURCE_BADGES: Record<string, { label: string; color: string }> = {
-  manual: { label: 'Manual', color: 'bg-gray-100 text-gray-500' },
+  manual: { label: 'Manual', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
   forecast: { label: 'Forecast', color: 'bg-blue-100 text-blue-600' },
   procurement: { label: 'Procure', color: 'bg-amber-100 text-amber-700' },
 };
@@ -45,31 +45,31 @@ interface HeaderProps {
 export function BudgetColumnHeaders({ months }: HeaderProps) {
   return (
     <tr>
-      <th className="sticky left-0 z-40 bg-gray-50 text-left px-4 py-2.5 font-semibold text-gray-500 uppercase tracking-wide text-[10px] border-b border-r border-gray-200 min-w-[220px] whitespace-nowrap">
+      <th className="sticky left-0 z-40 bg-[var(--bg-sunken)] text-left px-4 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px] border-b border-r border-[var(--border-subtle)] min-w-[220px] whitespace-nowrap">
         Account
       </th>
       {months.map((m, i) => (
         <th
           key={i}
-          className="px-3 py-2.5 text-center font-medium text-gray-500 text-[10px] border-b border-gray-200 bg-white min-w-[80px] whitespace-nowrap"
+          className="px-3 py-2.5 text-center font-medium text-muted-foreground text-[10px] border-b border-[var(--border-subtle)] bg-card min-w-[80px] whitespace-nowrap"
           title={m.fullLabel}
         >
           {m.label}
         </th>
       ))}
-      <th className="px-3 py-2.5 text-center font-semibold text-gray-600 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[88px] whitespace-nowrap">
+      <th className="px-3 py-2.5 text-center font-semibold text-muted-foreground text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[88px] whitespace-nowrap">
         ANNUAL
       </th>
-      <th className="px-3 py-2.5 text-center font-medium text-gray-400 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[80px] whitespace-nowrap">
+      <th className="px-3 py-2.5 text-center font-medium text-[var(--fg-tertiary)] text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[80px] whitespace-nowrap">
         ACTUAL
       </th>
-      <th className="px-3 py-2.5 text-center font-medium text-gray-400 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[80px] whitespace-nowrap">
+      <th className="px-3 py-2.5 text-center font-medium text-[var(--fg-tertiary)] text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[80px] whitespace-nowrap">
         COMMIT
       </th>
-      <th className="px-3 py-2.5 text-center font-medium text-gray-400 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[80px] whitespace-nowrap">
+      <th className="px-3 py-2.5 text-center font-medium text-[var(--fg-tertiary)] text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[80px] whitespace-nowrap">
         AVAIL
       </th>
-      <th className="px-3 py-2.5 text-center font-medium text-gray-400 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[70px] whitespace-nowrap">
+      <th className="px-3 py-2.5 text-center font-medium text-[var(--fg-tertiary)] text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[70px] whitespace-nowrap">
         VAR %
       </th>
     </tr>
@@ -97,7 +97,7 @@ function EditableCell({ value, onSave, locked }: EditableCellProps) {
   }, [editing]);
 
   if (locked) {
-    return <span className="tabular-nums text-gray-600">{fmt(value)}</span>;
+    return <span className="tabular-nums text-muted-foreground">{fmt(value)}</span>;
   }
 
   if (editing) {
@@ -130,7 +130,7 @@ function EditableCell({ value, onSave, locked }: EditableCellProps) {
 
   return (
     <span
-      className="tabular-nums text-gray-700 cursor-pointer hover:text-blue-600 hover:underline"
+      className="tabular-nums text-muted-foreground cursor-pointer hover:text-blue-600 hover:underline"
       onClick={() => {
         setDraft(String(value || ''));
         setEditing(true);
@@ -152,18 +152,18 @@ interface SectionRowProps {
 export function BudgetSectionRow({ group, isExpanded, onToggle }: SectionRowProps) {
   return (
     <tr
-      className="bg-gray-100 cursor-pointer hover:bg-gray-200/60 transition-colors"
+      className="bg-[var(--bg-sunken)] cursor-pointer hover:bg-[var(--bg-sunken)]/60 transition-colors"
       onClick={onToggle}
     >
-      <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-gray-200 bg-gray-100 whitespace-nowrap">
+      <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] whitespace-nowrap">
         <div className="flex items-center gap-1.5">
           {isExpanded
-            ? <ChevronDown className="h-3 w-3 text-gray-500 shrink-0" />
-            : <ChevronRight className="h-3 w-3 text-gray-500 shrink-0" />}
-          <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">
+            ? <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
+            : <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />}
+          <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
             {group.label}
           </span>
-          <span className="text-[9px] text-gray-400 ml-1">({group.lines.length})</span>
+          <span className="text-[9px] text-[var(--fg-tertiary)] ml-1">({group.lines.length})</span>
         </div>
       </td>
       {/* Period totals when collapsed */}
@@ -172,14 +172,14 @@ export function BudgetSectionRow({ group, isExpanded, onToggle }: SectionRowProp
       ) : (
         <>
           {group.totals.periods.map((_, i) => (
-            <td key={i} className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
+            <td key={i} className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
           ))}
           {/* Annual, Actual, Committed, Available, Var% */}
-          <td className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
-          <td className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
-          <td className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
-          <td className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
-          <td className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />
+          <td className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
+          <td className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
+          <td className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
+          <td className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
+          <td className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />
         </>
       )}
     </tr>
@@ -204,7 +204,7 @@ export function BudgetLineRow({ line, onCellEdit, onRowClick }: LineRowProps) {
       className="group cursor-pointer hover:bg-blue-50/40 transition-colors"
       onClick={() => onRowClick(line.id)}
     >
-      <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700">
+      <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
         <div className="flex items-center gap-2">
           <span className="truncate max-w-[140px]" title={line.accountName}>
             {line.accountName}
@@ -212,7 +212,7 @@ export function BudgetLineRow({ line, onCellEdit, onRowClick }: LineRowProps) {
           <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${badge.color}`}>
             {badge.label}
           </span>
-          <ChevronRight className="h-3 w-3 text-gray-300 opacity-0 group-hover:opacity-100 ml-auto shrink-0" />
+          <ChevronRight className="h-3 w-3 text-[var(--fg-tertiary)] opacity-0 group-hover:opacity-100 ml-auto shrink-0" />
         </div>
       </td>
       {/* Period cells (editable) */}
@@ -221,7 +221,7 @@ export function BudgetLineRow({ line, onCellEdit, onRowClick }: LineRowProps) {
         return (
           <td
             key={i}
-            className="px-2 py-2 text-right border-b border-gray-100 bg-white text-sm"
+            className="px-2 py-2 text-right border-b border-[var(--border-subtle)] bg-card text-sm"
             onClick={e => e.stopPropagation()}
           >
             <EditableCell
@@ -233,23 +233,23 @@ export function BudgetLineRow({ line, onCellEdit, onRowClick }: LineRowProps) {
         );
       })}
       {/* Annual */}
-      <td className="px-3 py-2 text-right border-b border-gray-100 bg-gray-50 text-sm font-semibold tabular-nums text-gray-800">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm font-semibold tabular-nums text-foreground">
         {fmt(line.annualBudget)}
       </td>
       {/* Actual */}
-      <td className="px-3 py-2 text-right border-b border-gray-100 bg-gray-50 text-sm tabular-nums text-gray-500">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(line.annualActual)}
       </td>
       {/* Committed */}
-      <td className="px-3 py-2 text-right border-b border-gray-100 bg-gray-50 text-sm tabular-nums text-gray-500">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(line.annualCommitted)}
       </td>
       {/* Available */}
-      <td className="px-3 py-2 text-right border-b border-gray-100 bg-gray-50 text-sm tabular-nums text-gray-600">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(line.annualAvailable)}
       </td>
       {/* Variance % */}
-      <td className="px-3 py-2 text-right border-b border-gray-100 bg-gray-50 text-sm tabular-nums font-medium" style={{ color: vpColor }}>
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums font-medium" style={{ color: vpColor }}>
         {line.annualBudget > 0 ? `${line.variancePercent.toFixed(0)}%` : '—'}
       </td>
     </tr>
@@ -264,7 +264,7 @@ interface SummaryValueCellsProps {
 }
 
 export function SummaryValueCells({ totals, bold }: SummaryValueCellsProps) {
-  const cls = bold ? 'font-semibold text-gray-700' : 'text-gray-500';
+  const cls = bold ? 'font-semibold text-muted-foreground' : 'text-muted-foreground';
   const vpColor = totals.annualBudget > 0
     ? varianceColor((totals.annualVariance / totals.annualBudget) * 100)
     : VARIANCE_THRESHOLD_COLORS.favorable;
@@ -272,23 +272,23 @@ export function SummaryValueCells({ totals, bold }: SummaryValueCellsProps) {
   return (
     <>
       {totals.periods.map((v, i) => (
-        <td key={i} className={`px-3 py-2 text-right border-b border-gray-200 bg-gray-50 text-sm tabular-nums ${cls}`}>
+        <td key={i} className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums ${cls}`}>
           {fmt(v)}
         </td>
       ))}
-      <td className={`px-3 py-2 text-right border-b border-gray-200 bg-gray-100 text-sm tabular-nums font-bold text-gray-800`}>
+      <td className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums font-bold text-foreground`}>
         {fmt(totals.annualBudget)}
       </td>
-      <td className="px-3 py-2 text-right border-b border-gray-200 bg-gray-100 text-sm tabular-nums text-gray-500">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(totals.annualActual)}
       </td>
-      <td className="px-3 py-2 text-right border-b border-gray-200 bg-gray-100 text-sm tabular-nums text-gray-500">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(totals.annualCommitted)}
       </td>
-      <td className="px-3 py-2 text-right border-b border-gray-200 bg-gray-100 text-sm tabular-nums text-gray-600">
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums text-muted-foreground">
         {fmt(totals.annualAvailable)}
       </td>
-      <td className="px-3 py-2 text-right border-b border-gray-200 bg-gray-100 text-sm tabular-nums font-medium" style={{ color: vpColor }}>
+      <td className="px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] text-sm tabular-nums font-medium" style={{ color: vpColor }}>
         {totals.annualBudget > 0
           ? `${((totals.annualVariance / totals.annualBudget) * 100).toFixed(0)}%`
           : '—'}
@@ -305,8 +305,8 @@ interface GrandTotalsRowProps {
 
 export function GrandTotalsRow({ totals }: GrandTotalsRowProps) {
   return (
-    <tr className="bg-gray-200 border-t-2 border-gray-300">
-      <td className="sticky left-0 z-20 px-4 py-2 bg-gray-200 font-bold text-xs uppercase tracking-widest text-gray-600 whitespace-nowrap">
+    <tr className="bg-[var(--bg-sunken)] border-t-2 border-[var(--border-default)]">
+      <td className="sticky left-0 z-20 px-4 py-2 bg-[var(--bg-sunken)] font-bold text-xs uppercase tracking-widest text-muted-foreground whitespace-nowrap">
         TOTAL
       </td>
       <SummaryValueCells totals={totals} bold />

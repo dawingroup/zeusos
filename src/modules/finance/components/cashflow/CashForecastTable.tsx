@@ -101,23 +101,23 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-6 py-4 border-b border-[var(--border-subtle)]">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="font-semibold text-foreground flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#872E5C]" />
               {forecast.name}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {forecast.startDate.toLocaleDateString()} - {forecast.endDate.toLocaleDateString()}
             </p>
           </div>
           <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
             forecast.status === 'active' ? 'bg-green-100 text-green-800' :
-            forecast.status === 'draft' ? 'bg-gray-100 text-gray-800' :
-            'bg-gray-100 text-gray-600'
+            forecast.status === 'draft' ? 'bg-[var(--bg-sunken)] text-foreground' :
+            'bg-[var(--bg-sunken)] text-muted-foreground'
           }`}>
             {forecast.status.charAt(0).toUpperCase() + forecast.status.slice(1)}
           </span>
@@ -143,42 +143,42 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm table-sticky-first-col">
-          <thead className="bg-gray-50">
+          <thead className="bg-[var(--bg-sunken)]">
             <tr>
               <th className="w-10 px-4 py-3" />
-              <th className="px-4 py-3 text-left font-medium text-gray-700">Period</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Opening</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Inflows</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Outflows</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Net Flow</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Closing</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Period</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Opening</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Inflows</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Outflows</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Net Flow</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Closing</th>
               {!readonly && <th className="w-20 px-4 py-3" />}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[var(--border-subtle)]">
             {forecast.periods.map((period) => (
               <React.Fragment key={period.periodIndex}>
                 {/* Main Row */}
-                <tr className={`hover:bg-gray-50 ${isLowBalance(period.closingBalance) ? 'bg-red-50' : ''}`}>
+                <tr className={`hover:bg-[var(--bg-sunken)] ${isLowBalance(period.closingBalance) ? 'bg-red-50' : ''}`}>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleExpand(period.periodIndex)}
-                      className="p-1 hover:bg-gray-100 rounded"
+                      className="p-1 hover:bg-[var(--bg-sunken)] rounded"
                     >
                       {expandedPeriod === period.periodIndex ? (
-                        <ChevronDown className="w-4 h-4 text-gray-500" />
+                        <ChevronDown className="w-4 h-4 text-muted-foreground" />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-gray-500" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
                       )}
                     </button>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">{period.periodLabel}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="font-medium text-foreground">{period.periodLabel}</div>
+                    <div className="text-xs text-muted-foreground">
                       {period.startDate.toLocaleDateString()} - {period.endDate.toLocaleDateString()}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-gray-600">
+                  <td className="px-4 py-3 text-right font-mono text-muted-foreground">
                     {formatCurrency(period.openingBalance, currency)}
                   </td>
                   <td className="px-4 py-3 text-right font-mono text-green-600">
@@ -197,7 +197,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                       {isLowBalance(period.closingBalance) && (
                         <AlertTriangle className="w-4 h-4 text-red-500" />
                       )}
-                      <span className="font-mono font-semibold text-gray-900">
+                      <span className="font-mono font-semibold text-foreground">
                         {formatCurrency(period.closingBalance, currency)}
                       </span>
                     </div>
@@ -214,7 +214,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                           </button>
                           <button
                             onClick={handleCancel}
-                            className="p-1 text-gray-500 hover:bg-gray-100 rounded"
+                            className="p-1 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -222,7 +222,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                       ) : (
                         <button
                           onClick={() => handleEdit(period.periodIndex, period)}
-                          className="p-1 text-gray-500 hover:bg-gray-100 rounded"
+                          className="p-1 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
@@ -233,7 +233,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
 
                 {/* Expanded Details */}
                 {expandedPeriod === period.periodIndex && (
-                  <tr className="bg-gray-50">
+                  <tr className="bg-[var(--bg-sunken)]">
                     <td colSpan={readonly ? 7 : 8} className="px-8 py-4">
                       <div className="grid grid-cols-2 gap-8">
                         {/* Inflows */}
@@ -245,10 +245,10 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                           <div className="space-y-2">
                             {period.inflows.map((item, i) => (
                               <div key={i} className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600">
+                                <span className="text-sm text-muted-foreground">
                                   {CASH_FLOW_CATEGORY_LABELS[item.category] || item.label}
                                   {item.isRecurring && (
-                                    <span className="ml-1 text-xs text-gray-400">(recurring)</span>
+                                    <span className="ml-1 text-xs text-[var(--fg-tertiary)]">(recurring)</span>
                                   )}
                                 </span>
                                 {editingPeriod === period.periodIndex ? (
@@ -259,7 +259,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                                       ...editValues,
                                       [`inflow_${i}`]: Number(e.target.value),
                                     })}
-                                    className="w-32 px-2 py-1 text-right text-sm border border-gray-300 rounded"
+                                    className="w-32 px-2 py-1 text-right text-sm border border-[var(--border-default)] rounded"
                                   />
                                 ) : (
                                   <span className="text-sm font-mono text-green-600">
@@ -269,7 +269,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                               </div>
                             ))}
                             {period.inflows.length === 0 && (
-                              <p className="text-sm text-gray-400">No inflows</p>
+                              <p className="text-sm text-[var(--fg-tertiary)]">No inflows</p>
                             )}
                           </div>
                         </div>
@@ -283,10 +283,10 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                           <div className="space-y-2">
                             {period.outflows.map((item, i) => (
                               <div key={i} className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600">
+                                <span className="text-sm text-muted-foreground">
                                   {CASH_FLOW_CATEGORY_LABELS[item.category] || item.label}
                                   {item.isRecurring && (
-                                    <span className="ml-1 text-xs text-gray-400">(recurring)</span>
+                                    <span className="ml-1 text-xs text-[var(--fg-tertiary)]">(recurring)</span>
                                   )}
                                 </span>
                                 {editingPeriod === period.periodIndex ? (
@@ -297,7 +297,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                                       ...editValues,
                                       [`outflow_${i}`]: Number(e.target.value),
                                     })}
-                                    className="w-32 px-2 py-1 text-right text-sm border border-gray-300 rounded"
+                                    className="w-32 px-2 py-1 text-right text-sm border border-[var(--border-default)] rounded"
                                   />
                                 ) : (
                                   <span className="text-sm font-mono text-red-600">
@@ -307,7 +307,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                               </div>
                             ))}
                             {period.outflows.length === 0 && (
-                              <p className="text-sm text-gray-400">No outflows</p>
+                              <p className="text-sm text-[var(--fg-tertiary)]">No outflows</p>
                             )}
                           </div>
                         </div>
@@ -322,28 +322,28 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
       </div>
 
       {/* Summary Footer */}
-      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+      <div className="px-6 py-4 border-t border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="grid grid-cols-4 gap-4 text-sm">
           <div>
-            <p className="text-gray-500">Min Balance</p>
-            <p className={`font-semibold ${isLowBalance(forecast.minimumCashBalance) ? 'text-red-600' : 'text-gray-900'}`}>
+            <p className="text-muted-foreground">Min Balance</p>
+            <p className={`font-semibold ${isLowBalance(forecast.minimumCashBalance) ? 'text-red-600' : 'text-foreground'}`}>
               {formatCurrency(forecast.minimumCashBalance, currency)}
             </p>
           </div>
           <div>
-            <p className="text-gray-500">Max Balance</p>
-            <p className="font-semibold text-gray-900">
+            <p className="text-muted-foreground">Max Balance</p>
+            <p className="font-semibold text-foreground">
               {formatCurrency(forecast.maximumCashBalance, currency)}
             </p>
           </div>
           <div>
-            <p className="text-gray-500">Avg Balance</p>
-            <p className="font-semibold text-gray-900">
+            <p className="text-muted-foreground">Avg Balance</p>
+            <p className="font-semibold text-foreground">
               {formatCurrency(forecast.averageCashBalance, currency)}
             </p>
           </div>
           <div>
-            <p className="text-gray-500">Cash Gaps</p>
+            <p className="text-muted-foreground">Cash Gaps</p>
             <p className={`font-semibold ${forecast.cashGapPeriods.length > 0 ? 'text-red-600' : 'text-green-600'}`}>
               {forecast.cashGapPeriods.length} periods
             </p>

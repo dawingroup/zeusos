@@ -90,7 +90,7 @@ export function QBOConnectionCard({
   const isConnected = connection?.connected;
 
   return (
-    <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+    <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50">
         <div className="flex items-center justify-between">
@@ -99,21 +99,21 @@ export function QBOConnectionCard({
               <span className="text-white font-bold text-sm">QB</span>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">QuickBooks Online</h3>
-              <p className="text-xs text-gray-500">Accounting & Financial Data</p>
+              <h3 className="font-semibold text-foreground">QuickBooks Online</h3>
+              <p className="text-xs text-muted-foreground">Accounting & Financial Data</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {connectionLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+              <Loader2 className="w-4 h-4 animate-spin text-[var(--fg-tertiary)]" />
             ) : isConnected ? (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
                 <CheckCircle2 className="w-3 h-3" />
                 Connected
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--bg-sunken)] text-muted-foreground">
                 <XCircle className="w-3 h-3" />
                 Not Connected
               </span>
@@ -126,7 +126,7 @@ export function QBOConnectionCard({
       <div className="p-5 space-y-4">
         {!isConnected ? (
           <div className="text-center py-4">
-            <p className="text-sm text-gray-500 mb-3">
+            <p className="text-sm text-muted-foreground mb-3">
               Connect QuickBooks Online to sync financial data, invoices, and bank transactions.
             </p>
             <button
@@ -141,7 +141,7 @@ export function QBOConnectionCard({
           <>
             {/* Connection Info */}
             {connection?.realmId && (
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 Company ID: {connection.realmId}
                 {connection.lastSyncAt && (
                   <span className="ml-3">
@@ -167,7 +167,7 @@ export function QBOConnectionCard({
               </button>
               <button
                 onClick={() => setShowCategories(!showCategories)}
-                className="px-3 py-2.5 border rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                className="px-3 py-2.5 border rounded-lg text-sm text-muted-foreground hover:bg-[var(--bg-sunken)]"
               >
                 {showCategories ? (
                   <ChevronUp className="w-4 h-4" />
@@ -188,9 +188,9 @@ export function QBOConnectionCard({
                         key={key}
                         onClick={() => onSyncCategory(key)}
                         disabled={syncing}
-                        className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] disabled:opacity-50 transition-colors"
                       >
-                        <Icon className="w-3.5 h-3.5 text-gray-400" />
+                        <Icon className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
                         {label}
                       </button>
                     );
@@ -201,40 +201,40 @@ export function QBOConnectionCard({
 
             {/* Data Summary */}
             <div className="grid grid-cols-3 gap-2">
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">{accountCount}</p>
-                <p className="text-[10px] text-gray-500">Accounts</p>
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">{accountCount}</p>
+                <p className="text-[10px] text-muted-foreground">Accounts</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">{invoiceCount}</p>
-                <p className="text-[10px] text-gray-500">Invoices</p>
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">{invoiceCount}</p>
+                <p className="text-[10px] text-muted-foreground">Invoices</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">{billCount}</p>
-                <p className="text-[10px] text-gray-500">Bills</p>
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">{billCount}</p>
+                <p className="text-[10px] text-muted-foreground">Bills</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">{transactionCount}</p>
-                <p className="text-[10px] text-gray-500">Transactions</p>
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">{transactionCount}</p>
+                <p className="text-[10px] text-muted-foreground">Transactions</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">
                   {hasProfitAndLoss ? '✓' : '—'}
                 </p>
-                <p className="text-[10px] text-gray-500">P&L</p>
+                <p className="text-[10px] text-muted-foreground">P&L</p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-2.5 text-center">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-2.5 text-center">
+                <p className="text-lg font-bold text-foreground">
                   {hasBalanceSheet ? '✓' : '—'}
                 </p>
-                <p className="text-[10px] text-gray-500">Balance Sheet</p>
+                <p className="text-[10px] text-muted-foreground">Balance Sheet</p>
               </div>
             </div>
 
             {/* View Data Button */}
             <button
               onClick={onViewData}
-              className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] transition-colors"
             >
               <BarChart3 className="w-4 h-4" />
               View Synced Data
@@ -244,7 +244,7 @@ export function QBOConnectionCard({
             <div>
               <button
                 onClick={() => setShowHistory(!showHistory)}
-                className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-muted-foreground"
               >
                 <Clock className="w-3 h-3" />
                 Sync History
@@ -255,7 +255,7 @@ export function QBOConnectionCard({
                   {syncJobs.slice(0, 5).map((job) => (
                     <div
                       key={job.id}
-                      className="flex items-center justify-between text-xs text-gray-500 py-1"
+                      className="flex items-center justify-between text-xs text-muted-foreground py-1"
                     >
                       <span>
                         {QBO_DATA_CATEGORIES[job.category] || job.category}

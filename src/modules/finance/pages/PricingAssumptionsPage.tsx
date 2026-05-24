@@ -26,15 +26,15 @@ export function PricingAssumptionsPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate('/finance/settings')}
-          className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-1.5 hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-500" />
+          <ChevronLeft className="w-5 h-5 text-muted-foreground" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-foreground">
             Pricing & Optimization Defaults
           </h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Organization-wide defaults for material optimization, costing buffers, and yield targets
           </p>
         </div>

@@ -104,7 +104,7 @@ export function ScenarioAnalysisPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <TrendingUp className="w-5 h-5 text-violet-600" />
-          <h2 className="text-xl font-bold text-gray-900">Scenario Analysis</h2>
+          <h2 className="text-xl font-bold text-foreground">Scenario Analysis</h2>
         </div>
       </div>
 
@@ -118,11 +118,11 @@ export function ScenarioAnalysisPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Scenario Builder */}
         <Card className="p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-4">Build Scenario</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-4">Build Scenario</h3>
 
           <div className="space-y-3">
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Scenario Name</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Scenario Name</label>
               <Input
                 placeholder="e.g. Delay Q2 supplier payments"
                 value={scenarioName}
@@ -130,7 +130,7 @@ export function ScenarioAnalysisPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 mb-1 block">Description (optional)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">Description (optional)</label>
               <Input
                 placeholder="What-if we delay payments by 2 weeks..."
                 value={scenarioDescription}
@@ -139,14 +139,14 @@ export function ScenarioAnalysisPage() {
             </div>
 
             <div className="pt-2">
-              <label className="text-xs text-gray-500 mb-2 block">Modifications</label>
+              <label className="text-xs text-muted-foreground mb-2 block">Modifications</label>
               <div className="space-y-2">
                 {modifications.map((mod) => (
                   <div key={mod.id} className="flex items-center gap-2">
                     <select
                       value={mod.type}
                       onChange={(e) => updateModification(mod.id, 'type', e.target.value)}
-                      className="h-9 px-2 border border-gray-200 rounded-md text-sm flex-shrink-0"
+                      className="h-9 px-2 border border-[var(--border-subtle)] rounded-md text-sm flex-shrink-0"
                     >
                       {MODIFICATION_TYPES.map(t => (
                         <option key={t.value} value={t.value}>{t.label}</option>
@@ -170,7 +170,7 @@ export function ScenarioAnalysisPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => removeModification(mod.id)}
-                        className="text-gray-400 hover:text-red-500"
+                        className="text-[var(--fg-tertiary)] hover:text-red-500"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
@@ -214,16 +214,16 @@ export function ScenarioAnalysisPage() {
                   : latestResult.analysis?.impact === 'negative' ? 'border-l-red-500'
                     : 'border-l-gray-300'
               }`}>
-                <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                <h3 className="text-sm font-semibold text-foreground mb-2">
                   Impact: {latestResult.analysis?.impact?.toUpperCase() || 'Unknown'}
                 </h3>
-                <p className="text-sm text-gray-700">{latestResult.analysis?.impactSummary}</p>
+                <p className="text-sm text-muted-foreground">{latestResult.analysis?.impactSummary}</p>
 
                 {/* Before/After */}
                 <div className="grid grid-cols-2 gap-3 mt-4">
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-500 mb-1">Baseline Cash</p>
-                    <p className="text-lg font-bold text-gray-900">
+                  <div className="p-3 bg-[var(--bg-sunken)] rounded-lg">
+                    <p className="text-xs text-muted-foreground mb-1">Baseline Cash</p>
+                    <p className="text-lg font-bold text-foreground">
                       {formatUGX(latestResult.baseline?.cashPosition || 0)}
                     </p>
                   </div>
@@ -231,7 +231,7 @@ export function ScenarioAnalysisPage() {
                     (latestResult.modified?.cashPosition || 0) > (latestResult.baseline?.cashPosition || 0)
                       ? 'bg-green-50' : 'bg-red-50'
                   }`}>
-                    <p className="text-xs text-gray-500 mb-1">Scenario Cash</p>
+                    <p className="text-xs text-muted-foreground mb-1">Scenario Cash</p>
                     <p className={`text-lg font-bold ${
                       (latestResult.modified?.cashPosition || 0) > (latestResult.baseline?.cashPosition || 0)
                         ? 'text-green-600' : 'text-red-600'
@@ -245,12 +245,12 @@ export function ScenarioAnalysisPage() {
               {/* AI Insights */}
               {(latestResult.analysis?.keyInsights?.length ?? 0) > 0 && (
                 <Card className="p-5">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-2">Key Insights</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Key Insights</h4>
                   <div className="space-y-1.5">
                     {latestResult.analysis!.keyInsights.map((insight: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-2 text-sm">
                         <ArrowRight className="w-3.5 h-3.5 mt-0.5 text-indigo-500 shrink-0" />
-                        <span className="text-gray-600">{insight}</span>
+                        <span className="text-muted-foreground">{insight}</span>
                       </div>
                     ))}
                   </div>
@@ -260,7 +260,7 @@ export function ScenarioAnalysisPage() {
               {/* Recommendations */}
               {(latestResult.analysis?.recommendations?.length ?? 0) > 0 && (
                 <Card className="p-5">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-2">Recommendations</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Recommendations</h4>
                   <div className="space-y-1.5">
                     {latestResult.analysis!.recommendations.map((rec: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-2 text-sm text-green-700">
@@ -275,7 +275,7 @@ export function ScenarioAnalysisPage() {
               {/* Tradeoffs */}
               {(latestResult.analysis?.tradeoffs?.length ?? 0) > 0 && (
                 <Card className="p-5">
-                  <h4 className="text-sm font-semibold text-gray-900 mb-2">Tradeoffs</h4>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">Tradeoffs</h4>
                   <div className="space-y-1.5">
                     {latestResult.analysis!.tradeoffs.map((t: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-2 text-sm text-amber-700">
@@ -289,9 +289,9 @@ export function ScenarioAnalysisPage() {
             </>
           ) : (
             <Card className="p-8 text-center">
-              <TrendingUp className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Build a scenario and run the analysis</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <TrendingUp className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Build a scenario and run the analysis</p>
+              <p className="text-xs text-[var(--fg-tertiary)] mt-1">
                 Claude will analyze the impact on your cash flow
               </p>
             </Card>
@@ -302,20 +302,20 @@ export function ScenarioAnalysisPage() {
       {/* Previous Scenarios */}
       {scenarioResults.length > 0 && (
         <Card className="p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Previous Scenarios</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-3">Previous Scenarios</h3>
           <div className="space-y-2">
             {scenarioResults.map((result, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 -mx-2 px-2 rounded"
+                className="flex items-center gap-3 py-2 border-b border-[var(--border-subtle)] last:border-0 cursor-pointer hover:bg-[var(--bg-sunken)] -mx-2 px-2 rounded"
                 onClick={() => setLatestResult(result)}
               >
                 <span className={`w-2 h-2 rounded-full shrink-0 ${
                   result.analysis?.impact === 'positive' ? 'bg-green-500'
                     : result.analysis?.impact === 'negative' ? 'bg-red-500'
-                      : 'bg-gray-300'
+                      : 'bg-[var(--bg-sunken)]'
                 }`} />
-                <span className="text-sm font-medium text-gray-900 flex-1 truncate">
+                <span className="text-sm font-medium text-foreground flex-1 truncate">
                   {result.scenarioName}
                 </span>
                 <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${

@@ -149,19 +149,19 @@ export default function QBOSyncDashboardPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">QuickBooks Sync Dashboard</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground mb-2">QuickBooks Sync Dashboard</h1>
+        <p className="text-muted-foreground">
           Monitor and manage all QuickBooks integrations across your organization
         </p>
       </div>
 
       {/* Connection Status Card */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Connection Status</h2>
+          <h2 className="text-lg font-semibold text-foreground">Connection Status</h2>
           <button
             onClick={loadDashboardData}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-md"
+            className="p-2 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-md"
             title="Refresh"
           >
             <RefreshCw className="h-4 w-4" />
@@ -174,12 +174,12 @@ export default function QBOSyncDashboardPage() {
               <CheckCircle className="h-6 w-6 text-green-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Connected to QuickBooks</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-foreground">Connected to QuickBooks</p>
+              <p className="text-sm text-muted-foreground">
                 Company: {connectionStatus?.companyName || 'Unknown'}
               </p>
               {connectionStatus?.lastSyncAt && (
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-[var(--fg-tertiary)]">
                   Last synced: {new Date(connectionStatus.lastSyncAt as any).toLocaleString()}
                 </p>
               )}
@@ -191,8 +191,8 @@ export default function QBOSyncDashboardPage() {
               <XCircle className="h-6 w-6 text-red-600" />
             </div>
             <div>
-              <p className="font-medium text-gray-900">Not Connected</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-foreground">Not Connected</p>
+              <p className="text-sm text-muted-foreground">
                 Please connect to QuickBooks in settings to enable sync features
               </p>
             </div>
@@ -203,15 +203,15 @@ export default function QBOSyncDashboardPage() {
       {/* Sync Statistics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* Suppliers */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <Package className="h-5 w-5 text-blue-600" />
-              <h3 className="font-medium text-gray-900">Suppliers</h3>
+              <h3 className="font-medium text-foreground">Suppliers</h3>
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mb-1">—</p>
-          <p className="text-sm text-gray-500">Total synced</p>
+          <p className="text-2xl font-bold text-foreground mb-1">—</p>
+          <p className="text-sm text-muted-foreground">Total synced</p>
           <button
             onClick={() => handleSyncAll('suppliers')}
             disabled={!isConnected || syncing === 'suppliers'}
@@ -222,17 +222,17 @@ export default function QBOSyncDashboardPage() {
         </div>
 
         {/* Purchase Orders */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <ShoppingCart className="h-5 w-5 text-purple-600" />
-              <h3 className="font-medium text-gray-900">Purchase Orders</h3>
+              <h3 className="font-medium text-foreground">Purchase Orders</h3>
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mb-1">
+          <p className="text-2xl font-bold text-foreground mb-1">
             {syncStats.pendingPOs + syncStats.failedPOs}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {syncStats.failedPOs > 0 && (
               <span className="text-red-600">{syncStats.failedPOs} failed</span>
             )}
@@ -248,17 +248,17 @@ export default function QBOSyncDashboardPage() {
         </div>
 
         {/* Quotes */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <FileText className="h-5 w-5 text-green-600" />
-              <h3 className="font-medium text-gray-900">Quotes</h3>
+              <h3 className="font-medium text-foreground">Quotes</h3>
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mb-1">
+          <p className="text-2xl font-bold text-foreground mb-1">
             {syncStats.pendingQuotes + syncStats.failedQuotes}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {syncStats.failedQuotes > 0 && (
               <span className="text-red-600">{syncStats.failedQuotes} failed</span>
             )}
@@ -274,17 +274,17 @@ export default function QBOSyncDashboardPage() {
         </div>
 
         {/* Manufacturing Orders */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <DollarSign className="h-5 w-5 text-orange-600" />
-              <h3 className="font-medium text-gray-900">Manufacturing</h3>
+              <h3 className="font-medium text-foreground">Manufacturing</h3>
             </div>
           </div>
-          <p className="text-2xl font-bold text-gray-900 mb-1">
+          <p className="text-2xl font-bold text-foreground mb-1">
             {syncStats.pendingMOs + syncStats.failedMOs}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {syncStats.failedMOs > 0 && (
               <span className="text-red-600">{syncStats.failedMOs} failed</span>
             )}
@@ -301,8 +301,8 @@ export default function QBOSyncDashboardPage() {
       </div>
 
       {/* Integration Workflows */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Active Integration Workflows</h2>
+      <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-6 mb-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">Active Integration Workflows</h2>
         <div className="space-y-3">
           <WorkflowItem
             title="Vendor Sync"
@@ -359,7 +359,7 @@ function WorkflowItem({
 }) {
   const statusConfig = {
     active: { icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100' },
-    disabled: { icon: Clock, color: 'text-gray-600', bg: 'bg-gray-100' },
+    disabled: { icon: Clock, color: 'text-muted-foreground', bg: 'bg-[var(--bg-sunken)]' },
     error: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-100' },
   };
 
@@ -367,14 +367,14 @@ function WorkflowItem({
   const Icon = config.icon;
 
   return (
-    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+    <div className="flex items-center justify-between p-3 bg-[var(--bg-sunken)] rounded-lg">
       <div className="flex items-center space-x-3">
         <div className={`flex items-center justify-center w-8 h-8 ${config.bg} rounded-full`}>
           <Icon className={`h-4 w-4 ${config.color}`} />
         </div>
         <div>
-          <p className="font-medium text-gray-900">{title}</p>
-          <p className="text-sm text-gray-500">{description}</p>
+          <p className="font-medium text-foreground">{title}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         </div>
       </div>
     </div>

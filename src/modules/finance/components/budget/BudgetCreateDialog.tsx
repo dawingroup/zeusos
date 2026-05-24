@@ -55,20 +55,20 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div className="bg-card rounded-xl shadow-2xl w-full max-w-md">
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="font-semibold text-gray-800">New Budget</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <h3 className="font-semibold text-foreground">New Budget</h3>
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-4 space-y-4">
           <div>
-            <label className="text-xs font-medium text-gray-600">Budget Name *</label>
+            <label className="text-xs font-medium text-muted-foreground">Budget Name *</label>
             <input
               type="text"
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               placeholder="e.g., FY2026 Operating Budget"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -77,9 +77,9 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600">Description</label>
+            <label className="text-xs font-medium text-muted-foreground">Description</label>
             <textarea
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
               placeholder="Optional description..."
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -88,9 +88,9 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium text-gray-600">Type</label>
+              <label className="text-xs font-medium text-muted-foreground">Type</label>
               <select
-                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 value={type}
                 onChange={e => setType(e.target.value as BudgetType)}
               >
@@ -101,9 +101,9 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-gray-600">Fiscal Year</label>
+              <label className="text-xs font-medium text-muted-foreground">Fiscal Year</label>
               <select
-                className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 value={fiscalYear}
                 onChange={e => setFiscalYear(parseInt(e.target.value))}
               >
@@ -115,9 +115,9 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-gray-600">Period</label>
+            <label className="text-xs font-medium text-muted-foreground">Period</label>
             <select
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={periodType}
               onChange={e => setPeriodType(e.target.value as BudgetPeriod)}
             >

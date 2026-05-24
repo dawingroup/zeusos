@@ -54,7 +54,7 @@ const CATEGORY_COLORS: Record<RefundCategory, string> = {
   service_issue: 'bg-orange-100 text-orange-700',
   billing_error: 'bg-red-100 text-red-700',
   duplicate_charge: 'bg-amber-100 text-amber-700',
-  other: 'bg-gray-100 text-gray-700',
+  other: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const CATEGORY_LABELS: Record<RefundCategory, string> = {
@@ -163,7 +163,7 @@ export function RefundsPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
             &larr; Operations
           </Link>
         </div>
@@ -184,7 +184,7 @@ export function RefundsPage() {
     <div className="space-y-6">
       {/* Back link */}
       <div className="flex items-center gap-3">
-        <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+        <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
           &larr; Operations
         </Link>
       </div>
@@ -192,8 +192,8 @@ export function RefundsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Refund Requests</h2>
-          <p className="text-sm text-gray-500 mt-1">Manage customer refund requests and processing</p>
+          <h2 className="text-xl font-bold text-foreground">Refund Requests</h2>
+          <p className="text-sm text-muted-foreground mt-1">Manage customer refund requests and processing</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -205,15 +205,15 @@ export function RefundsPage() {
       </div>
 
       {/* Status filter tabs */}
-      <div className="flex gap-1 p-1 bg-gray-100 rounded-lg overflow-x-auto">
+      <div className="flex gap-1 p-1 bg-[var(--bg-sunken)] rounded-lg overflow-x-auto">
         {STATUS_TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setStatusFilter(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
               statusFilter === tab.id
-                ? 'bg-white text-green-700 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-card text-green-700 shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {tab.label}
@@ -278,8 +278,8 @@ export function RefundsPage() {
       ) : filteredRequests.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <RotateCcw className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm text-gray-500">No refund requests found</p>
+            <RotateCcw className="w-10 h-10 mx-auto mb-3 text-[var(--fg-tertiary)]" />
+            <p className="text-sm text-muted-foreground">No refund requests found</p>
             <button
               onClick={() => setShowForm(true)}
               className="mt-3 text-sm text-green-600 hover:underline"
@@ -294,13 +294,13 @@ export function RefundsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-gray-50">
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Customer / Ref</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Category</th>
-                    <th className="text-right px-4 py-3 font-medium text-gray-700">Amount</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Requested By</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Date</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-700">Status</th>
+                  <tr className="border-b bg-[var(--bg-sunken)]">
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Customer / Ref</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Category</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Amount</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Requested By</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Date</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Status</th>
                     <th className="px-4 py-3"></th>
                   </tr>
                 </thead>
@@ -308,15 +308,15 @@ export function RefundsPage() {
                   {filteredRequests.map((request) => (
                     <tr
                       key={request.id}
-                      className="border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="border-b last:border-b-0 hover:bg-[var(--bg-sunken)] cursor-pointer transition-colors"
                       onClick={() => setSelectedRequest(request)}
                     >
                       <td className="px-4 py-3">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-foreground">
                           {request.customerName || 'N/A'}
                         </p>
                         {(request.invoiceRef || request.projectRef) && (
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground">
                             {request.invoiceRef || request.projectRef}
                           </p>
                         )}
@@ -330,11 +330,11 @@ export function RefundsPage() {
                           {CATEGORY_LABELS[request.category]}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-900 font-medium">
+                      <td className="px-4 py-3 text-right text-foreground font-medium">
                         {formatCurrency(request.amount, request.currency)}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{request.requestedByName}</td>
-                      <td className="px-4 py-3 text-gray-500">{formatDate(request.createdAt)}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{request.requestedByName}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{formatDate(request.createdAt)}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -345,7 +345,7 @@ export function RefundsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <button className="p-1 hover:bg-gray-100 rounded-md text-gray-400">
+                        <button className="p-1 hover:bg-[var(--bg-sunken)] rounded-md text-[var(--fg-tertiary)]">
                           <Eye className="w-4 h-4" />
                         </button>
                       </td>
@@ -432,16 +432,16 @@ function NewRefundFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">New Refund Request</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">New Refund Request</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Customer Name</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Customer Name</label>
             <input
               type="text"
               value={customerName}
@@ -451,7 +451,7 @@ function NewRefundFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               Invoice / Project Ref
             </label>
             <input
@@ -463,7 +463,7 @@ function NewRefundFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Amount</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Amount</label>
             <input
               type="number"
               value={amount}
@@ -476,7 +476,7 @@ function NewRefundFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as RefundCategory)}
@@ -490,7 +490,7 @@ function NewRefundFormModal({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Reason</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Reason</label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -504,7 +504,7 @@ function NewRefundFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>
@@ -577,13 +577,13 @@ function RefundDetailPanel({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={onClose}>
       <div
-        className="w-full max-w-lg bg-white shadow-xl h-full overflow-y-auto"
+        className="w-full max-w-lg bg-card shadow-xl h-full overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white z-10">
-          <h3 className="font-semibold text-gray-900">Refund Details</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+        <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-card z-10">
+          <h3 className="font-semibold text-foreground">Refund Details</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -592,7 +592,7 @@ function RefundDetailPanel({
           {/* Customer and Status */}
           <div>
             <div className="flex items-start justify-between gap-3">
-              <h4 className="text-lg font-semibold text-gray-900">
+              <h4 className="text-lg font-semibold text-foreground">
                 {request.customerName || 'Refund Request'}
               </h4>
               <span
@@ -604,18 +604,18 @@ function RefundDetailPanel({
               </span>
             </div>
             {(request.invoiceRef || request.projectRef) && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Ref: {request.invoiceRef || request.projectRef}
               </p>
             )}
           </div>
 
           {/* Amount and Category */}
-          <div className="p-4 bg-gray-50 rounded-lg">
+          <div className="p-4 bg-[var(--bg-sunken)] rounded-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-gray-500 mb-1">Refund Amount</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-xs text-muted-foreground mb-1">Refund Amount</p>
+                <p className="text-2xl font-bold text-foreground">
                   {formatCurrency(request.amount, request.currency)}
                 </p>
               </div>
@@ -631,26 +631,26 @@ function RefundDetailPanel({
 
           {/* Requested By */}
           <div>
-            <p className="text-xs font-medium text-gray-500 mb-1">Requested By</p>
-            <p className="text-sm text-gray-900">{request.requestedByName}</p>
-            <p className="text-xs text-gray-500">{formatDate(request.createdAt)}</p>
+            <p className="text-xs font-medium text-muted-foreground mb-1">Requested By</p>
+            <p className="text-sm text-foreground">{request.requestedByName}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(request.createdAt)}</p>
           </div>
 
           {/* Reason */}
           <div>
-            <p className="text-xs font-medium text-gray-500 mb-1">Reason</p>
-            <p className="text-sm text-gray-700 whitespace-pre-wrap">{request.reason}</p>
+            <p className="text-xs font-medium text-muted-foreground mb-1">Reason</p>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{request.reason}</p>
           </div>
 
           {/* Approval Notes (if approved/rejected) */}
           {request.approvedBy && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-xs font-medium text-gray-500 mb-1">Reviewed By</p>
-              <p className="text-sm text-gray-900">{request.approvedBy}</p>
+            <div className="p-4 bg-[var(--bg-sunken)] rounded-lg">
+              <p className="text-xs font-medium text-muted-foreground mb-1">Reviewed By</p>
+              <p className="text-sm text-foreground">{request.approvedBy}</p>
               {request.approvalNotes && (
                 <>
-                  <p className="text-xs font-medium text-gray-500 mt-2 mb-1">Notes</p>
-                  <p className="text-sm text-gray-700">{request.approvalNotes}</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-2 mb-1">Notes</p>
+                  <p className="text-sm text-muted-foreground">{request.approvalNotes}</p>
                 </>
               )}
             </div>
@@ -659,8 +659,8 @@ function RefundDetailPanel({
           {/* Processed Date */}
           {request.processedDate && (
             <div>
-              <p className="text-xs font-medium text-gray-500 mb-1">Processed Date</p>
-              <p className="text-sm text-gray-900">{formatDate(request.processedDate)}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">Processed Date</p>
+              <p className="text-sm text-foreground">{formatDate(request.processedDate)}</p>
             </div>
           )}
 
@@ -698,7 +698,7 @@ function RefundDetailPanel({
                   <div className="flex gap-2">
                     <button
                       onClick={() => setShowRejectForm(false)}
-                      className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                      className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                     >
                       Cancel
                     </button>

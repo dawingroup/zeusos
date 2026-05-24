@@ -110,14 +110,14 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
   const sourceType = line.sourceType || 'manual';
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl border-l border-gray-200 flex flex-col">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-card shadow-2xl border-l border-[var(--border-subtle)] flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)]">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-gray-900 truncate">{line.accountName}</h3>
-          <p className="text-xs text-gray-400 mt-0.5">{line.accountCode}</p>
+          <h3 className="text-sm font-semibold text-foreground truncate">{line.accountName}</h3>
+          <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">{line.accountCode}</p>
         </div>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+        <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground p-1">
           <X className="w-5 h-5" />
         </button>
       </div>
@@ -126,7 +126,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
       <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
         {/* Chart */}
         <div>
-          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">
+          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
             Monthly Breakdown
           </h4>
           <div className="h-48">
@@ -150,30 +150,30 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
 
         {/* Summary stats */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Budget</p>
-            <p className="text-lg font-bold text-gray-900 tabular-nums">{fmt(line.annualBudget)}</p>
+          <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Budget</p>
+            <p className="text-lg font-bold text-foreground tabular-nums">{fmt(line.annualBudget)}</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Actual</p>
+          <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Actual</p>
             <p className="text-lg font-bold text-emerald-600 tabular-nums">{fmt(line.annualActual)}</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Committed</p>
+          <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Committed</p>
             <p className="text-lg font-bold text-amber-600 tabular-nums">{fmt(line.annualCommitted)}</p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-[10px] font-medium text-gray-400 uppercase">Available</p>
-            <p className="text-lg font-bold text-gray-600 tabular-nums">{fmt(line.annualAvailable)}</p>
+          <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+            <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Available</p>
+            <p className="text-lg font-bold text-muted-foreground tabular-nums">{fmt(line.annualAvailable)}</p>
           </div>
         </div>
 
         {/* Annual budget */}
         <div>
-          <label className="text-xs font-medium text-gray-600">Annual Budget (UGX)</label>
+          <label className="text-xs font-medium text-muted-foreground">Annual Budget (UGX)</label>
           <input
             type="number"
-            className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
             value={annualBudget}
             onChange={e => setAnnualBudget(parseFloat(e.target.value) || 0)}
             disabled={line.isLocked}
@@ -182,9 +182,9 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
 
         {/* Allocation method */}
         <div>
-          <label className="text-xs font-medium text-gray-600">Allocation Method</label>
+          <label className="text-xs font-medium text-muted-foreground">Allocation Method</label>
           <select
-            className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             value={allocationMethod}
             onChange={e => setAllocationMethod(e.target.value as AllocationMethod)}
             disabled={line.isLocked}
@@ -198,14 +198,14 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
         {/* Custom period amounts */}
         {allocationMethod === 'custom' && (
           <div>
-            <label className="text-xs font-medium text-gray-600">Period Amounts</label>
+            <label className="text-xs font-medium text-muted-foreground">Period Amounts</label>
             <div className="mt-2 space-y-1.5">
               {FISCAL_MONTHS.map((fm, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500 w-8">{fm.name.slice(0, 3)}</span>
+                  <span className="text-xs text-muted-foreground w-8">{fm.name.slice(0, 3)}</span>
                   <input
                     type="number"
-                    className="flex-1 border border-gray-200 rounded px-2 py-1 text-sm tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-blue-300"
+                    className="flex-1 border border-[var(--border-subtle)] rounded px-2 py-1 text-sm tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-blue-300"
                     value={customAmounts[i] || 0}
                     onChange={e => {
                       const next = [...customAmounts];
@@ -223,9 +223,9 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
 
         {/* Notes */}
         <div>
-          <label className="text-xs font-medium text-gray-600">Notes</label>
+          <label className="text-xs font-medium text-muted-foreground">Notes</label>
           <textarea
-            className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
             value={notes}
             onChange={e => setNotes(e.target.value)}
             placeholder="Optional notes..."
@@ -233,9 +233,9 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
         </div>
 
         {/* Source info */}
-        <div className="bg-gray-50 rounded-lg p-3">
-          <p className="text-[10px] font-medium text-gray-400 uppercase mb-1">Source</p>
-          <p className="text-sm text-gray-700">{SOURCE_LABELS[sourceType]}</p>
+        <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
+          <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase mb-1">Source</p>
+          <p className="text-sm text-muted-foreground">{SOURCE_LABELS[sourceType]}</p>
           {sourceType === 'forecast' && line.sourceForecastId && (
             <p className="text-xs text-blue-500 mt-0.5">Forecast ID: {line.sourceForecastId}</p>
           )}
@@ -257,7 +257,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
       </div>
 
       {/* Footer actions */}
-      <div className="border-t border-gray-200 px-5 py-3 flex items-center gap-2">
+      <div className="border-t border-[var(--border-subtle)] px-5 py-3 flex items-center gap-2">
         {confirmDelete ? (
           <>
             <span className="text-xs text-red-600 flex-1">Are you sure?</span>

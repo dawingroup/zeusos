@@ -64,7 +64,7 @@ export function ReconciliationsPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
             &larr; Operations
           </Link>
         </div>
@@ -85,15 +85,15 @@ export function ReconciliationsPage() {
     <div className="space-y-6">
       {/* Back link */}
       <div className="flex items-center gap-3">
-        <Link to="/finance/operations" className="text-sm text-gray-500 hover:text-gray-700">
+        <Link to="/finance/operations" className="text-sm text-muted-foreground hover:text-muted-foreground">
           &larr; Operations
         </Link>
       </div>
 
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Account Reconciliations</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-xl font-bold text-foreground">Account Reconciliations</h2>
+        <p className="text-sm text-muted-foreground mt-1">
           Track and manage reconciliation schedules across all accounts
         </p>
       </div>
@@ -206,16 +206,16 @@ function NewScheduleFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between px-5 py-4 border-b">
-          <h3 className="font-semibold text-gray-900">New Reconciliation Schedule</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-md">
+          <h3 className="font-semibold text-foreground">New Reconciliation Schedule</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded-md">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Name</label>
             <input
               type="text"
               value={name}
@@ -227,7 +227,7 @@ function NewScheduleFormModal({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Type</label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as ReconciliationType)}
@@ -241,7 +241,7 @@ function NewScheduleFormModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Frequency</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Frequency</label>
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as ReconciliationFrequency)}
@@ -256,7 +256,7 @@ function NewScheduleFormModal({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Assignee</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Assignee</label>
             <input
               type="text"
               value={assigneeName}
@@ -267,7 +267,7 @@ function NewScheduleFormModal({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Next Due Date</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Next Due Date</label>
             <input
               type="date"
               value={nextDueDate}
@@ -280,7 +280,7 @@ function NewScheduleFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
             >
               Cancel
             </button>

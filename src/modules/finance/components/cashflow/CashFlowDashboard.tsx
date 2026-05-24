@@ -118,12 +118,12 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Cash Flow Management</h1>
+        <h1 className="text-2xl font-bold text-foreground">Cash Flow Management</h1>
         <div className="flex items-center gap-3">
           <select
             value={periodFilter}
             onChange={(e) => setPeriodFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C]"
+            className="px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C]"
           >
             <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
@@ -134,9 +134,9 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
           <button
             onClick={refreshCashFlow}
             disabled={isLoading}
-            className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            className="p-2 border border-[var(--border-default)] rounded-lg hover:bg-[var(--bg-sunken)] disabled:opacity-50"
           >
-            <RefreshCw className={`w-5 h-5 text-gray-600 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-5 h-5 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-[#872E5C] text-white rounded-lg hover:bg-[#6b2449]">
             <Plus className="w-4 h-4" />
@@ -154,7 +154,7 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[var(--border-subtle)]">
         <nav className="flex gap-6">
           {tabs.map((tab) => (
             <button
@@ -163,7 +163,7 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
               className={`flex items-center gap-2 pb-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'text-[#872E5C] border-[#872E5C]'
-                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                  : 'text-muted-foreground border-transparent hover:text-muted-foreground'
               }`}
             >
               <tab.icon className="w-4 h-4" />
@@ -198,8 +198,8 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
 
             {/* Quick Stats */}
             <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white p-4 rounded-xl border border-gray-200">
-                <p className="text-sm text-gray-500 mb-1">Total Inflows</p>
+              <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
+                <p className="text-sm text-muted-foreground mb-1">Total Inflows</p>
                 <p className="text-xl font-bold text-green-600 flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
                   {summary ? formatCurrency(
@@ -208,8 +208,8 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
                   ) : '-'}
                 </p>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-gray-200">
-                <p className="text-sm text-gray-500 mb-1">Total Outflows</p>
+              <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
+                <p className="text-sm text-muted-foreground mb-1">Total Outflows</p>
                 <p className="text-xl font-bold text-red-600 flex items-center gap-1">
                   <TrendingDown className="w-4 h-4" />
                   {summary ? formatCurrency(
@@ -218,16 +218,16 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
                   ) : '-'}
                 </p>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-gray-200">
-                <p className="text-sm text-gray-500 mb-1">Net Cash Flow</p>
+              <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
+                <p className="text-sm text-muted-foreground mb-1">Net Cash Flow</p>
                 <p className={`text-xl font-bold ${summary && summary.netChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {summary ? formatCurrency(summary.netChange, 'UGX' as CurrencyCode) : '-'}
                 </p>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-gray-200">
-                <p className="text-sm text-gray-500 mb-1">Runway</p>
-                <p className="text-xl font-bold text-gray-900 flex items-center gap-1">
-                  <Calendar className="w-4 h-4 text-gray-400" />
+              <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
+                <p className="text-sm text-muted-foreground mb-1">Runway</p>
+                <p className="text-xl font-bold text-foreground flex items-center gap-1">
+                  <Calendar className="w-4 h-4 text-[var(--fg-tertiary)]" />
                   {analysis ? `${analysis.runwayMonths.toFixed(1)} mo` : '-'}
                 </p>
               </div>
@@ -264,10 +264,10 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
               }
             />
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-              <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Forecast</h3>
-              <p className="text-gray-500 mb-4">
+            <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-12 text-center">
+              <TrendingUp className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No Active Forecast</h3>
+              <p className="text-muted-foreground mb-4">
                 Create a cash flow forecast to plan ahead
               </p>
               <button className="inline-flex items-center gap-2 px-4 py-2 bg-[#872E5C] text-white rounded-lg hover:bg-[#6b2449]">
@@ -281,10 +281,10 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
 
       {/* Reconciliation Tab */}
       {activeTab === 'reconciliation' && !isLoading && (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Bank Reconciliation</h3>
-          <p className="text-gray-500 mb-4">
+        <div className="bg-card rounded-xl border border-[var(--border-subtle)] p-12 text-center">
+          <Building2 className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Bank Reconciliation</h3>
+          <p className="text-muted-foreground mb-4">
             Match bank statements with your book records
           </p>
           <button className="inline-flex items-center gap-2 px-4 py-2 bg-[#872E5C] text-white rounded-lg hover:bg-[#6b2449]">

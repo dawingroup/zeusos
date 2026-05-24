@@ -145,9 +145,9 @@ function Modal({ title, children }: {
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b">
-          {title && <h3 className="font-semibold text-gray-800">{title}</h3>}
+          {title && <h3 className="font-semibold text-foreground">{title}</h3>}
         </div>
         <div className="p-4">{children}</div>
       </div>
@@ -163,20 +163,20 @@ function TableColumnHeaders({
 }: { historicalPeriods: string[]; forecastMonths: string[] }) {
   return (
     <tr>
-      <th className="sticky left-0 z-40 bg-gray-50 text-left px-4 py-2.5 font-semibold text-gray-500 uppercase tracking-wide text-[10px] border-b border-r border-gray-200 min-w-[240px] whitespace-nowrap">
+      <th className="sticky left-0 z-40 bg-[var(--bg-sunken)] text-left px-4 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px] border-b border-r border-[var(--border-subtle)] min-w-[240px] whitespace-nowrap">
         Account
       </th>
       {historicalPeriods.map(p => (
-        <th key={p} className="px-3 py-2.5 text-center font-medium text-gray-400 text-[10px] border-b border-gray-200 bg-gray-50 min-w-[88px] whitespace-nowrap">
+        <th key={p} className="px-3 py-2.5 text-center font-medium text-[var(--fg-tertiary)] text-[10px] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] min-w-[88px] whitespace-nowrap">
           {periodLabel(p)}
-          <div className="text-[8px] font-normal text-gray-300 mt-0.5">actual</div>
+          <div className="text-[8px] font-normal text-[var(--fg-tertiary)] mt-0.5">actual</div>
         </th>
       ))}
       {forecastMonths.map((p, i) => (
         <th
           key={p}
-          className={`px-3 py-2.5 text-center font-medium text-[10px] border-b border-gray-200 bg-white min-w-[88px] whitespace-nowrap ${
-            i === 0 ? 'border-l-2 border-l-blue-200 text-blue-500' : 'text-gray-500'
+          className={`px-3 py-2.5 text-center font-medium text-[10px] border-b border-[var(--border-subtle)] bg-card min-w-[88px] whitespace-nowrap ${
+            i === 0 ? 'border-l-2 border-l-blue-200 text-blue-500' : 'text-muted-foreground'
           }`}
         >
           {periodLabel(p)}
@@ -207,19 +207,19 @@ function ValueCells({
       {historicalPeriods.map(p => {
         const val = getHistorical(p);
         return (
-          <td key={p} className={`px-3 py-2 text-right border-b border-gray-100 bg-gray-50 tabular-nums ${
-            bold ? 'font-semibold text-gray-600' : 'text-gray-400'
+          <td key={p} className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] tabular-nums ${
+            bold ? 'font-semibold text-muted-foreground' : 'text-[var(--fg-tertiary)]'
           } ${val !== null && val !== undefined && val < 0 ? 'text-red-400' : ''}`}>
-            {val !== null && val !== undefined ? fmt(val) : <span className="text-gray-200">—</span>}
+            {val !== null && val !== undefined ? fmt(val) : <span className="text-[var(--fg-tertiary)]">—</span>}
           </td>
         );
       })}
       {forecastMonths.map((p, i) => {
         const val = getForecast(p);
         return (
-          <td key={p} className={`px-3 py-2 text-right border-b border-gray-100 tabular-nums bg-white ${
+          <td key={p} className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] tabular-nums bg-card ${
             i === 0 ? 'border-l-2 border-l-blue-100' : ''
-          } ${bold ? 'font-semibold text-gray-800' : 'text-gray-700'}
+          } ${bold ? 'font-semibold text-foreground' : 'text-muted-foreground'}
           ${val !== null && val !== undefined && val < 0 ? 'text-red-500' : ''}`}>
             {val !== null && val !== undefined ? fmt(val) : '—'}
           </td>
@@ -304,19 +304,19 @@ function PLForecastTable({
         className="group cursor-pointer hover:bg-blue-50/40 transition-colors"
         onClick={() => onRowClick(acct.id)}
       >
-        <td className={`sticky left-0 z-20 ${pl} pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700`}>
+        <td className={`sticky left-0 z-20 ${pl} pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground`}>
           <div className="flex items-center gap-2">
             <span className="truncate max-w-[180px]" title={acct.label}>{acct.label}</span>
             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
               hasCustomRule
                 ? 'bg-blue-100 text-blue-600'
-                : 'bg-gray-100 text-gray-400 opacity-0 group-hover:opacity-100'
+                : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] opacity-0 group-hover:opacity-100'
             }`}>
               {hasCustomRule
                 ? (rule.ruleType === 'smart_prediction' ? 'AI' : rule.ruleType.replace(/_/g, ' '))
                 : 'edit'}
             </span>
-            <ChevronRight className="h-3 w-3 text-gray-300 opacity-0 group-hover:opacity-100 ml-auto shrink-0" />
+            <ChevronRight className="h-3 w-3 text-[var(--fg-tertiary)] opacity-0 group-hover:opacity-100 ml-auto shrink-0" />
           </div>
         </td>
         <ValueCells
@@ -343,16 +343,16 @@ function PLForecastTable({
     rows.push(
       <tr
         key={`_h_${section}`}
-        className="bg-gray-100 cursor-pointer hover:bg-gray-200/60 transition-colors"
+        className="bg-[var(--bg-sunken)] cursor-pointer hover:bg-[var(--bg-sunken)]/60 transition-colors"
         onClick={() => onToggleGroup(sectionId)}
       >
-        <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-gray-200 bg-gray-100 whitespace-nowrap">
+        <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] whitespace-nowrap">
           <div className="flex items-center gap-1.5">
             {isSectionExpanded
-              ? <ChevronDown className="h-3 w-3 text-gray-500 shrink-0" />
-              : <ChevronRight className="h-3 w-3 text-gray-500 shrink-0" />}
-            <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">{headerLabel}</span>
-            <span className="text-[9px] text-gray-400 ml-1">({allAccounts.length})</span>
+              ? <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
+              : <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />}
+            <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">{headerLabel}</span>
+            <span className="text-[9px] text-[var(--fg-tertiary)] ml-1">({allAccounts.length})</span>
           </div>
         </td>
         {/* When collapsed, show section total inline */}
@@ -366,8 +366,8 @@ function PLForecastTable({
           />
         ) : (
           <>
-            {historicalPeriods.map(p => <td key={p} className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />)}
-            {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-1.5 border-b border-gray-200 bg-gray-100 ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
+            {historicalPeriods.map(p => <td key={p} className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />)}
+            {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
           </>
         )}
       </tr>
@@ -405,13 +405,13 @@ function PLForecastTable({
               className="cursor-pointer hover:bg-blue-50/30 transition-colors"
               onClick={() => onToggleGroup(groupId)}
             >
-              <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white">
+              <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card">
                 <div className="flex items-center gap-1.5">
                   {isExpanded
-                    ? <ChevronDown className="h-3 w-3 text-gray-400 shrink-0" />
-                    : <ChevronRight className="h-3 w-3 text-gray-400 shrink-0" />}
-                  <span className="font-medium text-gray-700 truncate max-w-[180px]" title={groupName}>{groupName}</span>
-                  <span className="text-[9px] text-gray-400 ml-1">({groupAccounts.length})</span>
+                    ? <ChevronDown className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />
+                    : <ChevronRight className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />}
+                  <span className="font-medium text-muted-foreground truncate max-w-[180px]" title={groupName}>{groupName}</span>
+                  <span className="text-[9px] text-[var(--fg-tertiary)] ml-1">({groupAccounts.length})</span>
                 </div>
               </td>
               {!isExpanded ? (
@@ -424,8 +424,8 @@ function PLForecastTable({
                 />
               ) : (
                 <>
-                  {historicalPeriods.map(p => <td key={p} className="px-3 py-2 border-b border-gray-100 bg-gray-50" />)}
-                  {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-2 border-b border-gray-100 bg-white ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
+                  {historicalPeriods.map(p => <td key={p} className="px-3 py-2 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />)}
+                  {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-2 border-b border-[var(--border-subtle)] bg-card ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
                 </>
               )}
             </tr>
@@ -434,8 +434,8 @@ function PLForecastTable({
           if (isExpanded) {
             groupAccounts.forEach(acct => rows.push(renderAccountRow(acct, 3)));
             rows.push(
-              <tr key={`${groupId}_total`} className="bg-gray-50/60">
-                <td className="sticky left-0 z-20 pl-10 pr-4 py-1.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-medium text-gray-600 text-[10px]">
+              <tr key={`${groupId}_total`} className="bg-[var(--bg-sunken)]/60">
+                <td className="sticky left-0 z-20 pl-10 pr-4 py-1.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-medium text-muted-foreground text-[10px]">
                   Total {groupName}
                 </td>
                 <ValueCells
@@ -453,8 +453,8 @@ function PLForecastTable({
 
       // Section total row (only when expanded)
       rows.push(
-        <tr key={`total_${section}`} className="bg-gray-50/80">
-          <td className="sticky left-0 z-20 px-4 py-2 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-semibold text-gray-700 text-[11px]">
+        <tr key={`total_${section}`} className="bg-[var(--bg-sunken)]/80">
+          <td className="sticky left-0 z-20 px-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-semibold text-muted-foreground text-[11px]">
             {totalLabel}
           </td>
           <ValueCells
@@ -473,8 +473,8 @@ function PLForecastTable({
 
   function computedRow(label: string, key: string, fn: (p: string, isForecast: boolean) => number) {
     return (
-      <tr key={key} className="bg-gray-50/80">
-        <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-bold text-gray-900 text-[11px]">
+      <tr key={key} className="bg-[var(--bg-sunken)]/80">
+        <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-bold text-foreground text-[11px]">
           {label}
         </td>
         <ValueCells
@@ -598,7 +598,7 @@ function BSForecastTable({
   function renderAccountRow(acct: BSAccountDetail) {
     return (
       <tr key={acct.id} className="hover:bg-blue-50/20 transition-colors">
-        <td className="sticky left-0 z-20 pl-14 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700">
+        <td className="sticky left-0 z-20 pl-14 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
           <span className="truncate max-w-[170px]" title={acct.label}>{acct.label}</span>
         </td>
         <ValueCells
@@ -620,10 +620,10 @@ function BSForecastTable({
 
     // Section header
     rows.push(
-      <tr key={`_h_${section}`} className="bg-gray-100">
+      <tr key={`_h_${section}`} className="bg-[var(--bg-sunken)]">
         <td
           colSpan={1 + historicalPeriods.length + forecastMonths.length}
-          className="sticky left-0 z-20 px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest text-gray-400 border-b border-gray-200 bg-gray-100"
+          className="sticky left-0 z-20 px-4 py-1.5 text-[9px] font-bold uppercase tracking-widest text-[var(--fg-tertiary)] border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]"
         >
           {BS_SECTION_LABELS[section]}
         </td>
@@ -639,7 +639,7 @@ function BSForecastTable({
         // Single account — show directly, no collapsible wrapper
         rows.push(
           <tr key={groupAccounts[0].id} className="hover:bg-blue-50/20 transition-colors">
-            <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700">
+            <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
               <span className="truncate max-w-[180px]" title={groupAccounts[0].label}>{groupAccounts[0].label}</span>
             </td>
             <ValueCells
@@ -658,13 +658,13 @@ function BSForecastTable({
             className="cursor-pointer hover:bg-blue-50/30 transition-colors"
             onClick={() => onToggleGroup(groupId)}
           >
-            <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white">
+            <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card">
               <div className="flex items-center gap-1.5">
                 {isExpanded
-                  ? <ChevronDown className="h-3 w-3 text-gray-400 shrink-0" />
-                  : <ChevronRight className="h-3 w-3 text-gray-400 shrink-0" />}
-                <span className="font-medium text-gray-700">{accountType}</span>
-                <span className="text-[9px] text-gray-400 ml-1">({groupAccounts.length})</span>
+                  ? <ChevronDown className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />
+                  : <ChevronRight className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />}
+                <span className="font-medium text-muted-foreground">{accountType}</span>
+                <span className="text-[9px] text-[var(--fg-tertiary)] ml-1">({groupAccounts.length})</span>
               </div>
             </td>
             {!isExpanded ? (
@@ -677,8 +677,8 @@ function BSForecastTable({
               />
             ) : (
               <>
-                {historicalPeriods.map(p => <td key={p} className="px-3 py-2 border-b border-gray-100 bg-gray-50" />)}
-                {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-2 border-b border-gray-100 bg-white ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
+                {historicalPeriods.map(p => <td key={p} className="px-3 py-2 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />)}
+                {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-2 border-b border-[var(--border-subtle)] bg-card ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
               </>
             )}
           </tr>
@@ -688,8 +688,8 @@ function BSForecastTable({
           groupAccounts.forEach(acct => rows.push(renderAccountRow(acct)));
           // Subtotal
           rows.push(
-            <tr key={`${groupId}_total`} className="bg-gray-50/60">
-              <td className="sticky left-0 z-20 pl-10 pr-4 py-1.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-medium text-gray-600 text-[10px]">
+            <tr key={`${groupId}_total`} className="bg-[var(--bg-sunken)]/60">
+              <td className="sticky left-0 z-20 pl-10 pr-4 py-1.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-medium text-muted-foreground text-[10px]">
                 Total {accountType}
               </td>
               <ValueCells
@@ -708,8 +708,8 @@ function BSForecastTable({
     // Section total from engine
     const totalDef = BS_SECTION_TOTALS[section];
     rows.push(
-      <tr key={`total_${section}`} className="bg-gray-50/80">
-        <td className="sticky left-0 z-20 px-4 py-2 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-semibold text-gray-700 text-[11px]">
+      <tr key={`total_${section}`} className="bg-[var(--bg-sunken)]/80">
+        <td className="sticky left-0 z-20 px-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-semibold text-muted-foreground text-[11px]">
           {totalDef.label}
         </td>
         <ValueCells
@@ -741,8 +741,8 @@ function BSForecastTable({
           {BS_SECTION_ORDER.map(section => renderSection(section))}
 
           {/* TOTAL ASSETS */}
-          <tr className="bg-gray-100">
-            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-100 font-bold text-gray-900 text-[11px]">
+          <tr className="bg-[var(--bg-sunken)]">
+            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-bold text-foreground text-[11px]">
               TOTAL ASSETS
             </td>
             <ValueCells
@@ -755,8 +755,8 @@ function BSForecastTable({
           </tr>
 
           {/* TOTAL LIABILITIES + EQUITY */}
-          <tr className="bg-gray-100">
-            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-100 font-bold text-gray-900 text-[11px]">
+          <tr className="bg-[var(--bg-sunken)]">
+            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-bold text-foreground text-[11px]">
               TOTAL LIABILITIES + EQUITY
             </td>
             <ValueCells
@@ -844,15 +844,15 @@ function CFSForecastTable({
     rows.push(
       <tr
         key={groupId}
-        className="cursor-pointer hover:bg-blue-50/30 transition-colors bg-gray-100"
+        className="cursor-pointer hover:bg-blue-50/30 transition-colors bg-[var(--bg-sunken)]"
         onClick={() => onToggleGroup(groupId)}
       >
-        <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-gray-200 bg-gray-100 whitespace-nowrap">
+        <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] whitespace-nowrap">
           <div className="flex items-center gap-1.5">
             {isExpanded
-              ? <ChevronDown className="h-3 w-3 text-gray-400 shrink-0" />
-              : <ChevronRight className="h-3 w-3 text-gray-400 shrink-0" />}
-            <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">{sectionLabel}</span>
+              ? <ChevronDown className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />
+              : <ChevronRight className="h-3 w-3 text-[var(--fg-tertiary)] shrink-0" />}
+            <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--fg-tertiary)]">{sectionLabel}</span>
           </div>
         </td>
         {!isExpanded ? (
@@ -868,8 +868,8 @@ function CFSForecastTable({
           />
         ) : (
           <>
-            {historicalPeriods.map(p => <td key={p} className="px-3 py-1.5 border-b border-gray-200 bg-gray-100" />)}
-            {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-1.5 border-b border-gray-200 bg-gray-100 ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
+            {historicalPeriods.map(p => <td key={p} className="px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]" />)}
+            {forecastMonths.map((p, i) => <td key={p} className={`px-3 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] ${i === 0 ? 'border-l-2 border-l-blue-100' : ''}`} />)}
           </>
         )}
       </tr>
@@ -880,7 +880,7 @@ function CFSForecastTable({
       for (const line of lines) {
         rows.push(
           <tr key={line.id} className="hover:bg-blue-50/20 transition-colors">
-            <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700">
+            <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
               <span className="truncate max-w-[180px]" title={line.label}>{line.label}</span>
             </td>
             <ValueCells
@@ -960,8 +960,8 @@ function CFSForecastTable({
 
       // Section subtotal
       rows.push(
-        <tr key={`${groupId}_total`} className="bg-gray-50/80">
-          <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-semibold text-gray-700 text-[11px]">
+        <tr key={`${groupId}_total`} className="bg-[var(--bg-sunken)]/80">
+          <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-semibold text-muted-foreground text-[11px]">
             {totalLabel}
           </td>
           <ValueCells
@@ -993,8 +993,8 @@ function CFSForecastTable({
           {renderCFSSection('financing', 'FINANCING ACTIVITIES', CFS_FINANCING_LINES, 'financing', 'Cash Flow from Financing Activities')}
 
           {/* Change in Cash & Equivalents */}
-          <tr className="bg-gray-50/80">
-            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-50 font-bold text-gray-900 text-[11px]">
+          <tr className="bg-[var(--bg-sunken)]/80">
+            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-bold text-foreground text-[11px]">
               Change in Cash & Equivalents
             </td>
             <ValueCells
@@ -1008,7 +1008,7 @@ function CFSForecastTable({
 
           {/* Cash & Equivalents, Opening Balance */}
           <tr>
-            <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-gray-100 whitespace-nowrap bg-white text-gray-700">
+            <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
               Cash & Equivalents, Opening Balance
             </td>
             <ValueCells
@@ -1020,8 +1020,8 @@ function CFSForecastTable({
           </tr>
 
           {/* Cash & Equivalents, Closing Balance */}
-          <tr className="bg-gray-100">
-            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-gray-200 whitespace-nowrap bg-gray-100 font-bold text-gray-900 text-[11px]">
+          <tr className="bg-[var(--bg-sunken)]">
+            <td className="sticky left-0 z-20 px-4 py-2.5 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-[var(--bg-sunken)] font-bold text-foreground text-[11px]">
               Cash & Equivalents, Closing Balance
             </td>
             <ValueCells
@@ -1047,7 +1047,7 @@ function TabPill({ active, onClick, children }: { active: boolean; onClick: () =
       className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
         active
           ? 'bg-blue-600 text-white'
-          : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+          : 'text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)]'
       }`}
     >
       {children}
@@ -1337,8 +1337,8 @@ export function ForecastPage() {
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Forecast</h2>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <h2 className="text-xl font-bold text-foreground">Forecast</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">
               {initialising ? 'Setting up your baseline forecast…' : 'Loading forecast…'}
             </p>
           </div>
@@ -1369,8 +1369,8 @@ export function ForecastPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Forecast</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-xl font-bold text-foreground">Forecast</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">
             Three-way integrated model · P&L → Balance Sheet → Cash Flow
           </p>
         </div>
@@ -1396,7 +1396,7 @@ export function ForecastPage() {
       )}
 
       {metadata && periods.length > 0 && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-[var(--fg-tertiary)]">
           {periodLabel(periods[0].period)} — {periodLabel(periods[periods.length - 1].period)}
           {' · '}{metadata.horizon} months · {metadata.currency}
           {accountCount > 0 && (
@@ -1408,7 +1408,7 @@ export function ForecastPage() {
       {/* ── Financial Statement Card ── */}
       <Card className="overflow-hidden">
         <div className="px-5 py-3 border-b flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-1 bg-gray-100 rounded-full p-1">
+          <div className="flex items-center gap-1 bg-[var(--bg-sunken)] rounded-full p-1">
             {(['pl', 'bs', 'cfs', 'micro', 'roadmap'] as ForecastTab[]).map(t => (
               <TabPill key={t} active={activeTab === t} onClick={() => setActiveTab(t)}>
                 {tabLabels[t]}
@@ -1416,13 +1416,13 @@ export function ForecastPage() {
             ))}
           </div>
           {(activeTab === 'pl' || activeTab === 'bs' || activeTab === 'cfs') && (
-            <div className="flex items-center gap-3 text-[10px] text-gray-400">
+            <div className="flex items-center gap-3 text-[10px] text-[var(--fg-tertiary)]">
               <span className="flex items-center gap-1.5">
-                <span className="inline-block w-3 h-2.5 rounded-sm bg-gray-100 border border-gray-200" />
+                <span className="inline-block w-3 h-2.5 rounded-sm bg-[var(--bg-sunken)] border border-[var(--border-subtle)]" />
                 Actuals
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block w-3 h-2.5 rounded-sm bg-white border border-blue-200" />
+                <span className="inline-block w-3 h-2.5 rounded-sm bg-card border border-blue-200" />
                 Forecast
               </span>
             </div>
@@ -1491,12 +1491,12 @@ export function ForecastPage() {
           metadata ? (
             <div className="p-5 space-y-4">
               <div>
-                <h3 className="text-sm font-semibold text-gray-900">Business Roadmap</h3>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <h3 className="text-sm font-semibold text-foreground">Business Roadmap</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Visual timeline of all planned financial events across the forecast horizon
                 </p>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+              <div className="bg-[var(--bg-sunken)] rounded-lg p-4 border border-[var(--border-subtle)]">
                 <RoadmapTimeline
                   micro={microForecasts}
                   firstForecastPeriod={metadata.firstForecastPeriod}

@@ -39,9 +39,9 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
   const renderSection = (section: ReportSection, indent = 0) => (
     <React.Fragment key={section.key}>
       {/* Section Header */}
-      <tr className="bg-gray-50">
+      <tr className="bg-[var(--bg-sunken)]">
         <td colSpan={showComparison ? 4 : 2} className="px-4 py-2">
-          <span className="font-medium text-gray-900" style={{ paddingLeft: indent }}>
+          <span className="font-medium text-foreground" style={{ paddingLeft: indent }}>
             {section.label}
           </span>
         </td>
@@ -49,21 +49,21 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
 
       {/* Section Lines */}
       {section.lines.map((line) => (
-        <tr key={line.id} className="hover:bg-gray-50/50">
+        <tr key={line.id} className="hover:bg-[var(--bg-sunken)]/50">
           <td className="px-4 py-1.5" style={{ paddingLeft: 24 + indent }}>
             {line.accountCode && (
-              <span className="text-gray-400 text-xs mr-2 font-mono">
+              <span className="text-[var(--fg-tertiary)] text-xs mr-2 font-mono">
                 {line.accountCode}
               </span>
             )}
-            <span className="text-gray-700">{line.accountName}</span>
+            <span className="text-muted-foreground">{line.accountName}</span>
           </td>
-          <td className="px-4 py-1.5 text-right font-mono text-gray-900">
+          <td className="px-4 py-1.5 text-right font-mono text-foreground">
             {formatCurrency(line.currentAmount, report.currency as CurrencyCode)}
           </td>
           {showComparison && report.comparison && (
             <>
-              <td className="px-4 py-1.5 text-right font-mono text-gray-600">
+              <td className="px-4 py-1.5 text-right font-mono text-muted-foreground">
                 {formatCurrency(line.comparisonAmount || 0, report.currency as CurrencyCode)}
               </td>
               {showVariance && (
@@ -83,16 +83,16 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
       ))}
 
       {/* Section Total */}
-      <tr className="border-t border-gray-200">
+      <tr className="border-t border-[var(--border-subtle)]">
         <td className="px-4 py-2" style={{ paddingLeft: 8 + indent }}>
-          <span className="font-medium text-gray-900">Total {section.label}</span>
+          <span className="font-medium text-foreground">Total {section.label}</span>
         </td>
-        <td className="px-4 py-2 text-right font-mono font-medium text-gray-900">
+        <td className="px-4 py-2 text-right font-mono font-medium text-foreground">
           {formatCurrency(section.total, report.currency as CurrencyCode)}
         </td>
         {showComparison && report.comparison && (
           <>
-            <td className="px-4 py-2 text-right font-mono font-medium text-gray-600">
+            <td className="px-4 py-2 text-right font-mono font-medium text-muted-foreground">
               {formatCurrency(section.comparisonTotal || 0, report.currency as CurrencyCode)}
             </td>
             {showVariance && (
@@ -120,18 +120,18 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
       style={{ backgroundColor: bgColor }}
     >
       <td className="px-4 py-3">
-        <span className={highlight ? 'text-lg text-gray-900' : 'text-gray-900'}>
+        <span className={highlight ? 'text-lg text-foreground' : 'text-foreground'}>
           {total.label}
         </span>
       </td>
-      <td className="px-4 py-3 text-right font-mono text-gray-900">
+      <td className="px-4 py-3 text-right font-mono text-foreground">
         <span className={highlight ? 'text-lg' : ''}>
           {formatCurrency(total.amount, report.currency as CurrencyCode)}
         </span>
       </td>
       {showComparison && report.comparison && (
         <>
-          <td className="px-4 py-3 text-right font-mono text-gray-600">
+          <td className="px-4 py-3 text-right font-mono text-muted-foreground">
             {formatCurrency(total.comparisonAmount || 0, report.currency as CurrencyCode)}
           </td>
           {showVariance && (
@@ -151,21 +151,21 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
+      <div className="px-6 py-4 border-b border-[var(--border-subtle)]">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
               <FileText className="w-5 h-5 text-[#872E5C]" />
               Income Statement
             </h2>
-            <p className="text-gray-600 mt-1">{report.periodLabel}</p>
+            <p className="text-muted-foreground mt-1">{report.periodLabel}</p>
           </div>
           {onExport && (
             <button
               onClick={onExport}
-              className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-[var(--border-default)] text-muted-foreground rounded-lg hover:bg-[var(--bg-sunken)]"
             >
               <Download className="w-4 h-4" />
               Export
@@ -190,10 +190,10 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
             Net {report.netProfit.amount >= 0 ? 'Profit' : 'Loss'}:{' '}
             {formatCurrency(Math.abs(report.netProfit.amount), report.currency as CurrencyCode)}
           </div>
-          <div className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm">
+          <div className="inline-flex items-center px-3 py-1.5 bg-[var(--bg-sunken)] text-muted-foreground rounded-full text-sm">
             Gross Margin: {report.grossProfitMargin.toFixed(1)}%
           </div>
-          <div className="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm">
+          <div className="inline-flex items-center px-3 py-1.5 bg-[var(--bg-sunken)] text-muted-foreground rounded-full text-sm">
             Net Margin: {report.netProfitMargin.toFixed(1)}%
           </div>
         </div>
@@ -202,23 +202,23 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
       {/* Report Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-100">
+          <thead className="bg-[var(--bg-sunken)]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-700">Account</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-700">Current Period</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Account</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Current Period</th>
               {showComparison && report.comparison && (
                 <>
-                  <th className="px-4 py-3 text-right font-medium text-gray-700">
+                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">
                     {report.comparison.periodLabel}
                   </th>
                   {showVariance && (
-                    <th className="px-4 py-3 text-right font-medium text-gray-700">Variance</th>
+                    <th className="px-4 py-3 text-right font-medium text-muted-foreground">Variance</th>
                   )}
                 </>
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[var(--border-subtle)]">
             {/* Revenue */}
             {renderSection(report.revenue)}
 
@@ -267,15 +267,15 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-        <span className="text-xs text-gray-500">
+      <div className="px-6 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex justify-between items-center">
+        <span className="text-xs text-muted-foreground">
           Generated: {report.generatedAt.toDate().toLocaleString()}
         </span>
         <span
           className={`text-xs px-2 py-1 rounded ${
             report.status === 'final'
               ? 'bg-green-100 text-green-800'
-              : 'bg-gray-100 text-gray-600'
+              : 'bg-[var(--bg-sunken)] text-muted-foreground'
           }`}
         >
           {report.status.toUpperCase()}

@@ -43,7 +43,7 @@ const CLASS_BADGE_COLORS: Record<string, string> = {
   opex: 'bg-orange-100 text-orange-700',
   depreciation: 'bg-purple-100 text-purple-700',
   interest: 'bg-blue-100 text-blue-700',
-  tax: 'bg-gray-100 text-gray-700',
+  tax: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const CLASS_SORT_ORDER: Record<string, number> = {
@@ -68,12 +68,12 @@ function TrendTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs space-y-1">
-      <p className="font-semibold text-gray-700 mb-1">{label}</p>
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg shadow-lg p-3 text-xs space-y-1">
+      <p className="font-semibold text-muted-foreground mb-1">{label}</p>
       {payload.map((p, i) => (
         <div key={i} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.stroke }} />
-          <span className="text-gray-500">{p.name}:</span>
+          <span className="text-muted-foreground">{p.name}:</span>
           <span className="font-semibold">{fmtCompact(p.value)}</span>
         </div>
       ))}
@@ -84,7 +84,7 @@ function TrendTooltip({
 // ── Mini Sparkline ───────────────────────────────────────────────────────────
 
 function MiniSparkline({ data, color }: { data: { value: number }[]; color: string }) {
-  if (data.length < 2) return <span className="text-gray-300 text-xs">--</span>;
+  if (data.length < 2) return <span className="text-[var(--fg-tertiary)] text-xs">--</span>;
 
   return (
     <div style={{ width: 80, height: 24 }}>
@@ -188,8 +188,8 @@ export function TrendPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">Trend Analysis</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">Trend Analysis</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Time-series trends across all P&L accounts
           {periods.length > 0 && (
             <span className="ml-1">
@@ -210,7 +210,7 @@ export function TrendPage() {
         <>
           {/* Main Multi-Line Chart */}
           <Card className="p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">
               Revenue, COGS, OpEx &amp; Net Profit
             </h3>
             <div style={{ height: 400 }}>
@@ -275,10 +275,10 @@ export function TrendPage() {
 
           {/* Sparkline Table */}
           <Card className="overflow-hidden">
-            <div className="px-5 py-3 border-b border-gray-200 bg-gray-50">
-              <h3 className="text-sm font-semibold text-gray-700">
+            <div className="px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
+              <h3 className="text-sm font-semibold text-muted-foreground">
                 Per-Account Trends
-                <span className="text-gray-400 font-normal ml-1">
+                <span className="text-[var(--fg-tertiary)] font-normal ml-1">
                   ({sparklineRows.length} accounts)
                 </span>
               </h3>
@@ -286,17 +286,17 @@ export function TrendPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50/50">
-                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <tr className="border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]/50">
+                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       Account
                     </th>
-                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       Classification
                     </th>
-                    <th className="py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">
+                    <th className="py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide text-center">
                       12-Month Trend
                     </th>
-                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       Total
                     </th>
                   </tr>
@@ -305,16 +305,16 @@ export function TrendPage() {
                   {sparklineRows.map((row) => (
                     <tr
                       key={row.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                      className="border-b border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] transition-colors"
                     >
-                      <td className="py-1.5 px-4 text-gray-700 truncate max-w-[240px]">
+                      <td className="py-1.5 px-4 text-muted-foreground truncate max-w-[240px]">
                         {row.label}
                       </td>
                       <td className="py-1.5 px-4">
                         <span
                           className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${
                             CLASS_BADGE_COLORS[row.classification] ??
-                            'bg-gray-100 text-gray-600'
+                            'bg-[var(--bg-sunken)] text-muted-foreground'
                           }`}
                         >
                           {row.classification}
@@ -323,14 +323,14 @@ export function TrendPage() {
                       <td className="py-1.5 px-4 flex justify-center">
                         <MiniSparkline data={row.sparkData} color={row.lineColor} />
                       </td>
-                      <td className="py-1.5 px-4 text-right font-medium text-gray-900">
+                      <td className="py-1.5 px-4 text-right font-medium text-foreground">
                         {fmtCurrency(row.total)}
                       </td>
                     </tr>
                   ))}
                   {sparklineRows.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="py-8 text-center text-gray-400">
+                      <td colSpan={4} className="py-8 text-center text-[var(--fg-tertiary)]">
                         No account data available.
                       </td>
                     </tr>
@@ -341,7 +341,7 @@ export function TrendPage() {
           </Card>
         </>
       ) : (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data available</p>
           <p className="text-sm mt-1">Sync QBO data from Finance &gt; Settings &gt; Integrations.</p>
         </Card>

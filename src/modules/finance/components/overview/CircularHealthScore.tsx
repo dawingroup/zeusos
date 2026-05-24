@@ -148,10 +148,10 @@ export function CircularHealthScore({ score, size = 120 }: CircularHealthScorePr
           <span className="text-2xl font-bold" style={{ color }}>
             {score}
           </span>
-          <span className="text-[10px] text-gray-400">/ 100</span>
+          <span className="text-[10px] text-[var(--fg-tertiary)]">/ 100</span>
         </div>
       </div>
-      <span className="text-xs font-medium text-gray-600">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
     </div>
   );
 }

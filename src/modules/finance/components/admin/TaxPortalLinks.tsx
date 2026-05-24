@@ -57,7 +57,7 @@ export function TaxPortalLinks({
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="animate-pulse h-28 bg-gray-100 rounded-lg" />
+          <div key={i} className="animate-pulse h-28 bg-[var(--bg-sunken)] rounded-lg" />
         ))}
       </div>
     );
@@ -67,7 +67,7 @@ export function TaxPortalLinks({
 
   if (categories.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400">
+      <div className="text-center py-8 text-[var(--fg-tertiary)]">
         <Globe className="w-10 h-10 mx-auto mb-2 opacity-50" />
         <p className="text-sm">No tax portal links configured</p>
         <button
@@ -88,7 +88,7 @@ export function TaxPortalLinks({
 
         return (
           <div key={category}>
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+            <h4 className="text-sm font-semibold text-muted-foreground mb-2">
               {TAX_PORTAL_CATEGORIES[category] || category}
             </h4>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -107,18 +107,18 @@ export function TaxPortalLinks({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block bg-white rounded-lg border p-4 hover:shadow-md hover:border-green-300 transition-all"
+                      className="block bg-card rounded-lg border p-4 hover:shadow-md hover:border-green-300 transition-all"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="p-2 rounded-lg bg-green-50">
                           <IconComponent className="w-5 h-5 text-green-600" />
                         </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-green-500 transition-colors" />
+                        <ExternalLink className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-green-500 transition-colors" />
                       </div>
-                      <h5 className="text-sm font-medium text-gray-900 mb-0.5 line-clamp-1">
+                      <h5 className="text-sm font-medium text-foreground mb-0.5 line-clamp-1">
                         {link.name}
                       </h5>
-                      <p className="text-xs text-gray-500 line-clamp-2">
+                      <p className="text-xs text-muted-foreground line-clamp-2">
                         {link.description}
                       </p>
                     </a>
@@ -146,7 +146,7 @@ export function TaxPortalLinks({
       {/* Add Custom Link */}
       <button
         onClick={onAddLink}
-        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-green-400 hover:text-green-600 transition-colors"
       >
         <Plus className="w-4 h-4" />
         Add Custom Portal Link

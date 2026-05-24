@@ -39,21 +39,21 @@ export function QBOSyncStatusBadge({
   if (!status) {
     if (compact) {
       return (
-        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
-          <span className="w-2 h-2 rounded-full bg-gray-400 mr-1.5"></span>
+        <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-[var(--bg-sunken)] text-muted-foreground text-xs font-medium">
+          <span className="w-2 h-2 rounded-full bg-[var(--bg-sunken)] mr-1.5"></span>
           Not Synced
         </div>
       );
     }
     return (
-      <div className="border border-gray-200 rounded-lg p-4 bg-white">
+      <div className="border border-[var(--border-subtle)] rounded-lg p-4 bg-card">
         <div className="flex items-start justify-between">
           <div>
-            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium mb-2">
-              <span className="w-2 h-2 rounded-full bg-gray-400 mr-1.5"></span>
+            <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-[var(--bg-sunken)] text-muted-foreground text-xs font-medium mb-2">
+              <span className="w-2 h-2 rounded-full bg-[var(--bg-sunken)] mr-1.5"></span>
               Not Synced
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {entityType} has not been synced to QuickBooks yet.
             </p>
           </div>
@@ -118,7 +118,7 @@ export function QBOSyncStatusBadge({
 
   // Full mode - badge with details
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white">
+    <div className="border border-[var(--border-subtle)] rounded-lg p-4 bg-card">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           {/* Status badge */}
@@ -128,7 +128,7 @@ export function QBOSyncStatusBadge({
               {config.label}
             </span>
             {status === 'synced' && qboDocNumber && (
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2 text-sm text-muted-foreground">
                 {entityType} #{qboDocNumber}
               </span>
             )}
@@ -136,7 +136,7 @@ export function QBOSyncStatusBadge({
 
           {/* Last synced time */}
           {lastSyncedAt && (
-            <p className="text-xs text-gray-500 mb-2">
+            <p className="text-xs text-muted-foreground mb-2">
               Last attempt: {new Date(lastSyncedAt.toDate()).toLocaleString()}
             </p>
           )}

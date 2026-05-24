@@ -53,12 +53,12 @@ function CustomTooltip({ active, payload, label }: {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm">
-      <p className="font-medium text-gray-900 mb-1">{label}</p>
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg shadow-lg p-3 text-sm">
+      <p className="font-medium text-foreground mb-1">{label}</p>
       {payload.map((entry, idx) => (
         <p key={idx} className="flex items-center gap-2" style={{ color: entry.color }}>
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-          <span className="text-gray-600">{entry.name}:</span>
+          <span className="text-muted-foreground">{entry.name}:</span>
           <span className="font-medium">{formatUGX(entry.value)}</span>
         </p>
       ))}
@@ -92,7 +92,7 @@ export function ProjectionChart({
 
   if (!chartData.length) {
     return (
-      <div className={`flex items-center justify-center text-gray-400 ${className}`} style={{ height }}>
+      <div className={`flex items-center justify-center text-[var(--fg-tertiary)] ${className}`} style={{ height }}>
         No projection data available
       </div>
     );

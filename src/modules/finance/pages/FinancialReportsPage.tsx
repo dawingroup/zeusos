@@ -21,9 +21,9 @@ function formatUSD(amount: number) {
 
 function ReportRow({ label, value, indent = false, bold = false }: { label: string; value: number; indent?: boolean; bold?: boolean }) {
   return (
-    <div className={`flex justify-between py-1.5 ${indent ? 'pl-4' : ''} ${bold ? 'font-semibold border-t border-gray-200 mt-1 pt-2' : 'text-sm'}`}>
-      <span className="text-gray-700">{label}</span>
-      <span className={value < 0 ? 'text-red-600' : 'text-gray-900'}>{formatUSD(value)}</span>
+    <div className={`flex justify-between py-1.5 ${indent ? 'pl-4' : ''} ${bold ? 'font-semibold border-t border-[var(--border-subtle)] mt-1 pt-2' : 'text-sm'}`}>
+      <span className="text-muted-foreground">{label}</span>
+      <span className={value < 0 ? 'text-red-600' : 'text-foreground'}>{formatUSD(value)}</span>
     </div>
   );
 }
@@ -93,11 +93,11 @@ export function FinancialReportsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-green-600" />
             Financial Reports
           </h2>
-          <p className="text-sm text-gray-500 mt-1">QuickBooks Online synced financial statements</p>
+          <p className="text-sm text-muted-foreground mt-1">QuickBooks Online synced financial statements</p>
         </div>
         <Button variant="outline" size="sm" onClick={handleSync} disabled={syncing || loading}>
           <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
@@ -112,7 +112,7 @@ export function FinancialReportsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200">
+      <div className="flex gap-1 border-b border-[var(--border-subtle)]">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -120,7 +120,7 @@ export function FinancialReportsPage() {
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               activeTab === tab.id
                 ? 'border-green-600 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             <tab.icon className="h-4 w-4" />
@@ -160,7 +160,7 @@ export function FinancialReportsPage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center justify-between">
                 Profit & Loss Statement
-                {pl && <span className="text-sm font-normal text-gray-500">{pl.startDate} – {pl.endDate}</span>}
+                {pl && <span className="text-sm font-normal text-muted-foreground">{pl.startDate} – {pl.endDate}</span>}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -173,17 +173,17 @@ export function FinancialReportsPage() {
                   <p className="text-sm mt-1">Click "Sync Reports" to pull your P&L from QuickBooks</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-[var(--border-subtle)]">
                   {/* Income */}
                   <div className="pb-3">
-                    <p className="font-semibold text-gray-800 mb-2">Income</p>
+                    <p className="font-semibold text-foreground mb-2">Income</p>
                     {pl.income.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
                   </div>
                   {/* COGS */}
                   <div className="py-3">
-                    <p className="font-semibold text-gray-800 mb-2">Cost of Goods Sold</p>
+                    <p className="font-semibold text-foreground mb-2">Cost of Goods Sold</p>
                     {pl.costOfGoodsSold.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
@@ -191,7 +191,7 @@ export function FinancialReportsPage() {
                   </div>
                   {/* Expenses */}
                   <div className="py-3">
-                    <p className="font-semibold text-gray-800 mb-2">Operating Expenses</p>
+                    <p className="font-semibold text-foreground mb-2">Operating Expenses</p>
                     {pl.expenses.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
@@ -238,7 +238,7 @@ export function FinancialReportsPage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center justify-between">
                 Balance Sheet
-                {bs && <span className="text-sm font-normal text-gray-500">As of {bs.asOfDate}</span>}
+                {bs && <span className="text-sm font-normal text-muted-foreground">As of {bs.asOfDate}</span>}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -251,23 +251,23 @@ export function FinancialReportsPage() {
                   <p className="text-sm mt-1">Click "Sync Reports" to pull your Balance Sheet from QuickBooks</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-[var(--border-subtle)]">
                   <div className="pb-3">
-                    <p className="font-semibold text-gray-800 mb-2">Assets</p>
+                    <p className="font-semibold text-foreground mb-2">Assets</p>
                     {bs.assets.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
                     <ReportRow label="Total Assets" value={bs.totalAssets} bold />
                   </div>
                   <div className="py-3">
-                    <p className="font-semibold text-gray-800 mb-2">Liabilities</p>
+                    <p className="font-semibold text-foreground mb-2">Liabilities</p>
                     {bs.liabilities.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
                     <ReportRow label="Total Liabilities" value={bs.totalLiabilities} bold />
                   </div>
                   <div className="pt-3">
-                    <p className="font-semibold text-gray-800 mb-2">Equity</p>
+                    <p className="font-semibold text-foreground mb-2">Equity</p>
                     {bs.equity.map((row, i) => (
                       <ReportRow key={i} label={row.label} value={row.value} indent />
                     ))}
@@ -298,25 +298,25 @@ export function FinancialReportsPage() {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="border-b bg-gray-50">
+                  <thead className="border-b bg-[var(--bg-sunken)]">
                     <tr>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Account Name</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Type</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Classification</th>
-                      <th className="text-right px-4 py-3 font-medium text-gray-600">Balance</th>
-                      <th className="text-left px-4 py-3 font-medium text-gray-600">Currency</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Account Name</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Type</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Classification</th>
+                      <th className="text-right px-4 py-3 font-medium text-muted-foreground">Balance</th>
+                      <th className="text-left px-4 py-3 font-medium text-muted-foreground">Currency</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[var(--border-subtle)]">
                     {accounts.map(acct => (
-                      <tr key={acct.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={acct.id} className="hover:bg-[var(--bg-sunken)] transition-colors">
                         <td className="px-4 py-3 font-medium">{acct.fullyQualifiedName || acct.name}</td>
-                        <td className="px-4 py-3 text-gray-500">{acct.accountType}</td>
-                        <td className="px-4 py-3 text-gray-500">{acct.classification}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{acct.accountType}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{acct.classification}</td>
                         <td className={`px-4 py-3 text-right font-medium ${acct.currentBalance < 0 ? 'text-red-600' : ''}`}>
                           {formatUSD(acct.currentBalance)}
                         </td>
-                        <td className="px-4 py-3 text-gray-500">{acct.currencyRef}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{acct.currencyRef}</td>
                       </tr>
                     ))}
                   </tbody>

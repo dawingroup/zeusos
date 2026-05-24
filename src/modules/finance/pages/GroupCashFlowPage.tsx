@@ -123,10 +123,10 @@ export default function GroupCashFlowPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-gray-500" />
+            <Building2 className="h-5 w-5 text-muted-foreground" />
             Group Cash Flow
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Cross-subsidiary expenditure queue overview
           </p>
         </div>
@@ -173,13 +173,13 @@ export default function GroupCashFlowPage() {
           <Card
             key={sub.id}
             className={`p-4 cursor-pointer transition-all border-2 ${
-              subsidiaryFilter === sub.id ? 'border-blue-500 bg-blue-50/30' : 'border-transparent hover:border-gray-200'
+              subsidiaryFilter === sub.id ? 'border-blue-500 bg-blue-50/30' : 'border-transparent hover:border-[var(--border-subtle)]'
             }`}
             onClick={() => setSubsidiaryFilter(subsidiaryFilter === sub.id ? '' : sub.id)}
           >
             <div className="font-medium text-sm">{sub.name}</div>
             <div className="text-lg font-bold mt-1">{formatUGX(sub.totalPending)}</div>
-            <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+            <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
               <span>{sub.pendingCount} items</span>
               {sub.criticalCount > 0 && (
                 <span className="text-red-600 font-medium">
@@ -199,7 +199,7 @@ export default function GroupCashFlowPage() {
               ? `${SUBSIDIARY_NAMES[subsidiaryFilter] || subsidiaryFilter} — Expenditure Queue`
               : 'All Subsidiaries — Combined Queue'}
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {filteredItems.length} items, sorted by composite score
           </p>
         </div>
@@ -221,7 +221,7 @@ export default function GroupCashFlowPage() {
                 <TableCell className="text-sm font-medium truncate max-w-[200px]">
                   {item.description}
                 </TableCell>
-                <TableCell className="text-xs text-gray-500">
+                <TableCell className="text-xs text-muted-foreground">
                   {SUBSIDIARY_NAMES[item.subsidiaryId] || item.subsidiaryId}
                 </TableCell>
                 <TableCell className="text-xs capitalize">{item.category}</TableCell>
@@ -243,7 +243,7 @@ export default function GroupCashFlowPage() {
             ))}
             {filteredItems.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-gray-400">
+                <TableCell colSpan={7} className="text-center py-8 text-[var(--fg-tertiary)]">
                   No pending expenditures found
                 </TableCell>
               </TableRow>

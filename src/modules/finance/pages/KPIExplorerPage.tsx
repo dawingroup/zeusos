@@ -311,7 +311,7 @@ function ChartTooltipContent({
   if (!active || !payload?.length) return null;
   const v = payload[0].value;
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-2 text-xs">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg shadow-lg p-2 text-xs">
       <span className="font-semibold">{isPercentage ? fmtPct(v) : fmtCurrency(v)}</span>
     </div>
   );
@@ -342,7 +342,7 @@ function AccountBreakdownPanel({
 
   if (filtered.length === 0) {
     return (
-      <p className="text-sm text-gray-400 py-4 text-center">
+      <p className="text-sm text-[var(--fg-tertiary)] py-4 text-center">
         No account detail for this period.
       </p>
     );
@@ -354,22 +354,22 @@ function AccountBreakdownPanel({
     opex: 'bg-orange-100 text-orange-700',
     depreciation: 'bg-purple-100 text-purple-700',
     interest: 'bg-blue-100 text-blue-700',
-    tax: 'bg-gray-100 text-gray-700',
+    tax: 'bg-[var(--bg-sunken)] text-muted-foreground',
   };
 
   return (
-    <div className="divide-y divide-gray-100 max-h-64 overflow-y-auto">
+    <div className="divide-y divide-[var(--border-subtle)] max-h-64 overflow-y-auto">
       {filtered.map((a, i) => (
         <div key={i} className="flex items-center justify-between py-1.5 px-2 text-xs">
           <div className="flex items-center gap-2 min-w-0">
             <span
-              className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium ${classColors[a.classification] ?? 'bg-gray-100 text-gray-600'}`}
+              className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium ${classColors[a.classification] ?? 'bg-[var(--bg-sunken)] text-muted-foreground'}`}
             >
               {a.classification}
             </span>
-            <span className="text-gray-700 truncate">{a.label}</span>
+            <span className="text-muted-foreground truncate">{a.label}</span>
           </div>
-          <span className="font-medium text-gray-900 whitespace-nowrap ml-2">
+          <span className="font-medium text-foreground whitespace-nowrap ml-2">
             {fmtCurrency(a.value)}
           </span>
         </div>
@@ -482,8 +482,8 @@ export function KPIExplorerPage() {
     <div className="space-y-5">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900">KPI Explorer</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+        <h2 className="text-xl font-bold text-foreground">KPI Explorer</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">
           Click a KPI tile to explore its trend and account breakdown
         </p>
       </div>
@@ -515,7 +515,7 @@ export function KPIExplorerPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Line Chart */}
             <Card className="lg:col-span-2 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-3">
                 {kpiDef.label} Over Time
               </h3>
               <div style={{ height: 260 }}>
@@ -555,10 +555,10 @@ export function KPIExplorerPage() {
 
             {/* Account Breakdown */}
             <Card className="p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-3">
                 Account Breakdown
                 {selectedRow && (
-                  <span className="text-gray-400 font-normal ml-1">
+                  <span className="text-[var(--fg-tertiary)] font-normal ml-1">
                     &mdash; {periodLabel(selectedRow)}
                   </span>
                 )}
@@ -570,7 +570,7 @@ export function KPIExplorerPage() {
                   classifications={kpiDef.relevantClassifications}
                 />
               ) : (
-                <p className="text-sm text-gray-400 py-8 text-center">
+                <p className="text-sm text-[var(--fg-tertiary)] py-8 text-center">
                   Click a row in the table to see the account-level breakdown.
                 </p>
               )}
@@ -582,17 +582,17 @@ export function KPIExplorerPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <tr className="border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
+                    <th className="text-left py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       Period
                     </th>
-                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       Value
                     </th>
-                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       MoM Change
                     </th>
-                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <th className="text-right py-2.5 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                       MoM %
                     </th>
                   </tr>
@@ -604,14 +604,14 @@ export function KPIExplorerPage() {
                       <tr
                         key={row.period}
                         onClick={() => setSelectedRow(isSelected ? null : row.period)}
-                        className={`border-b border-gray-100 cursor-pointer transition-colors ${
-                          isSelected ? 'bg-green-50' : 'hover:bg-gray-50'
+                        className={`border-b border-[var(--border-subtle)] cursor-pointer transition-colors ${
+                          isSelected ? 'bg-green-50' : 'hover:bg-[var(--bg-sunken)]'
                         }`}
                       >
-                        <td className="py-2 px-4 text-gray-700 font-medium">
+                        <td className="py-2 px-4 text-muted-foreground font-medium">
                           {periodLabel(row.period)}
                         </td>
-                        <td className="py-2 px-4 text-right font-semibold text-gray-900">
+                        <td className="py-2 px-4 text-right font-semibold text-foreground">
                           {kpiDef.isPercentage ? fmtPct(row.value) : fmtCurrency(row.value)}
                         </td>
                         <td className="py-2 px-4 text-right">
@@ -627,7 +627,7 @@ export function KPIExplorerPage() {
                                 : fmtCurrency(row.momChange)}
                             </span>
                           ) : (
-                            <span className="text-gray-300">&mdash;</span>
+                            <span className="text-[var(--fg-tertiary)]">&mdash;</span>
                           )}
                         </td>
                         <td className="py-2 px-4 text-right">
@@ -641,7 +641,7 @@ export function KPIExplorerPage() {
                               {(row.momPct * 100).toFixed(1)}%
                             </span>
                           ) : (
-                            <span className="text-gray-300">&mdash;</span>
+                            <span className="text-[var(--fg-tertiary)]">&mdash;</span>
                           )}
                         </td>
                       </tr>
@@ -653,7 +653,7 @@ export function KPIExplorerPage() {
           </Card>
         </>
       ) : (
-        <Card className="p-8 text-center text-gray-500">
+        <Card className="p-8 text-center text-muted-foreground">
           <p className="font-medium">No P&L data available</p>
           <p className="text-sm mt-1">
             Sync QBO data from Finance &gt; Settings &gt; Integrations.

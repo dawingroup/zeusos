@@ -113,11 +113,11 @@ export function BillsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <Receipt className="h-5 w-5 text-green-600" />
             Bills & Payables
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Accounts Payable — synced from QuickBooks Online. Convert approved Purchase Orders to Bills from the Manufacturing module.
           </p>
         </div>
@@ -228,24 +228,24 @@ export function BillsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm table-sticky-first-col">
-                <thead className="border-b bg-gray-50">
+                <thead className="border-b bg-[var(--bg-sunken)]">
                   <tr>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Bill #</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Vendor</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Bill Date</th>
-                    <th className="text-left px-4 py-3 font-medium text-gray-600">Due Date</th>
-                    <th className="text-right px-4 py-3 font-medium text-gray-600">Total</th>
-                    <th className="text-right px-4 py-3 font-medium text-gray-600">Balance Due</th>
-                    <th className="text-center px-4 py-3 font-medium text-gray-600">Status</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Bill #</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Vendor</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Bill Date</th>
+                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Due Date</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total</th>
+                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Balance Due</th>
+                    <th className="text-center px-4 py-3 font-medium text-muted-foreground">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {bills.map(bill => (
-                    <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={bill.id} className="hover:bg-[var(--bg-sunken)] transition-colors">
                       <td className="px-4 py-3 font-mono text-xs font-medium">{bill.docNumber || bill.qboId}</td>
                       <td className="px-4 py-3">{bill.vendorName || '—'}</td>
-                      <td className="px-4 py-3 text-gray-500">{bill.txnDate || '—'}</td>
-                      <td className="px-4 py-3 text-gray-500">{bill.dueDate || '—'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{bill.txnDate || '—'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{bill.dueDate || '—'}</td>
                       <td className="px-4 py-3 text-right font-medium">{formatUSD(bill.totalAmt)}</td>
                       <td className="px-4 py-3 text-right">{formatUSD(bill.balance)}</td>
                       <td className="px-4 py-3 text-center">{statusBadge(bill.status)}</td>

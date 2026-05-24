@@ -84,7 +84,7 @@ export function SavingsTrackerPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <PiggyBank className="w-5 h-5 text-cyan-600" />
-          <h2 className="text-xl font-bold text-gray-900">Savings Tracker</h2>
+          <h2 className="text-xl font-bold text-foreground">Savings Tracker</h2>
         </div>
         <div className="flex gap-2">
           <Button
@@ -130,7 +130,7 @@ export function SavingsTrackerPage() {
       {/* History Table */}
       <Card>
         <div className="px-4 pt-4 pb-2">
-          <h3 className="text-sm font-semibold text-gray-900">Savings History</h3>
+          <h3 className="text-sm font-semibold text-foreground">Savings History</h3>
         </div>
         <div className="overflow-x-auto">
           <Table>
@@ -152,12 +152,12 @@ export function SavingsTrackerPage() {
                     <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${
                       entry.type === 'allocation' ? 'bg-green-50 text-green-700'
                         : entry.type === 'withdrawal' ? 'bg-red-50 text-red-700'
-                          : 'bg-gray-50 text-gray-600'
+                          : 'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}>
                       {entry.type}
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600 max-w-[250px] truncate">
+                  <TableCell className="text-sm text-muted-foreground max-w-[250px] truncate">
                     {entry.note}
                   </TableCell>
                   <TableCell className={`text-right text-sm font-medium ${
@@ -182,14 +182,14 @@ export function SavingsTrackerPage() {
                         </Button>
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400">{entry.status || 'completed'}</span>
+                      <span className="text-xs text-[var(--fg-tertiary)]">{entry.status || 'completed'}</span>
                     )}
                   </TableCell>
                 </TableRow>
               ))}
               {history.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-400">
+                  <TableCell colSpan={6} className="text-center py-8 text-[var(--fg-tertiary)]">
                     No savings history yet
                   </TableCell>
                 </TableRow>
@@ -203,10 +203,10 @@ export function SavingsTrackerPage() {
       {showWithdraw && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="p-5 w-full max-w-md">
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">Request Withdrawal</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">Request Withdrawal</h4>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Amount (UGX)</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Amount (UGX)</label>
                 <Input
                   type="number"
                   placeholder="e.g. 5,000,000"
@@ -216,14 +216,14 @@ export function SavingsTrackerPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1 block">Reason</label>
+                <label className="text-xs text-muted-foreground mb-1 block">Reason</label>
                 <Input
                   placeholder="Reason for withdrawal..."
                   value={withdrawReason}
                   onChange={(e) => setWithdrawReason(e.target.value)}
                 />
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[var(--fg-tertiary)]">
                 Available: {formatUGX(position?.totalBalance || 0)}
               </p>
             </div>
