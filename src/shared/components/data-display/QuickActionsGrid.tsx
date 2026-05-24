@@ -30,8 +30,8 @@ export function QuickActionsGrid({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">{title}</h2>
+    <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
+      <h2 className="text-lg font-semibold text-foreground mb-4">{title}</h2>
       <div className={`grid ${gridCols[columns]} gap-3`}>
         {actions.map((action) => {
           const Icon = action.icon;
@@ -39,15 +39,15 @@ export function QuickActionsGrid({
             <button
               key={action.label}
               onClick={action.onClick}
-              className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-colors text-left group"
+              className="flex items-center gap-3 p-3 border border-[var(--border-subtle)] rounded-lg hover:bg-[var(--bg-sunken)] hover:border-[var(--border-default)] transition-colors text-left group"
             >
-              <div className="p-2 bg-gray-100 rounded-lg group-hover:bg-gray-200 transition-colors">
-                <Icon className="h-5 w-5 text-gray-600" />
+              <div className="p-2 bg-[var(--bg-sunken)] rounded-lg group-hover:bg-[var(--bg-sunken)] transition-colors">
+                <Icon className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-medium text-gray-900">{action.label}</div>
+                <div className="text-sm font-medium text-foreground">{action.label}</div>
                 {action.description && (
-                  <div className="text-xs text-gray-500 truncate">{action.description}</div>
+                  <div className="text-xs text-muted-foreground truncate">{action.description}</div>
                 )}
               </div>
             </button>

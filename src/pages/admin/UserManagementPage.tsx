@@ -217,7 +217,7 @@ export default function UserManagementPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-400">{stats.inactive}</div>
+              <div className="text-2xl font-bold text-[var(--fg-tertiary)]">{stats.inactive}</div>
             </CardContent>
           </Card>
           <Card>
@@ -355,7 +355,7 @@ export default function UserManagementPage() {
                               Active
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="bg-gray-50 text-gray-500 border-gray-200">
+                            <Badge variant="secondary" className="bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]">
                               Inactive
                             </Badge>
                           )}

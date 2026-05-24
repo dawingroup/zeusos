@@ -146,7 +146,7 @@ export function CompetencyDetailPage() {
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline">{competency.category}</Badge>
-              <Badge variant="outline" className={competency.isActive ? 'text-green-600' : 'text-gray-600'}>
+              <Badge variant="outline" className={competency.isActive ? 'text-green-600' : 'text-muted-foreground'}>
                 {competency.isActive ? 'Active' : 'Inactive'}
               </Badge>
             </div>

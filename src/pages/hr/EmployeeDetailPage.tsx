@@ -98,8 +98,8 @@ const statusColors: Record<string, string> = {
   suspended: 'bg-red-100 text-red-800',
   notice_period: 'bg-orange-100 text-orange-800',
   on_leave: 'bg-blue-100 text-blue-800',
-  terminated: 'bg-gray-100 text-gray-800',
-  resigned: 'bg-gray-100 text-gray-800',
+  terminated: 'bg-[var(--bg-sunken)] text-foreground',
+  resigned: 'bg-[var(--bg-sunken)] text-foreground',
   retired: 'bg-purple-100 text-purple-800',
 };
 

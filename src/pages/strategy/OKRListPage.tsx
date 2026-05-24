@@ -114,7 +114,7 @@ function getStatusColor(status: string): string {
     case 'on_track': return 'text-green-600';
     case 'at_risk': return 'text-amber-600';
     case 'behind': return 'text-red-600';
-    default: return 'text-gray-600';
+    default: return 'text-muted-foreground';
   }
 }
 

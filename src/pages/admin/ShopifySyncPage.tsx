@@ -115,7 +115,7 @@ export default function ShopifySyncPage() {
           <button
             onClick={refresh}
             disabled={loading}
-            className="inline-flex items-center gap-2 rounded-md border bg-white px-3 py-1.5 text-sm hover:bg-gray-50 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-md border bg-card px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)] disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -143,7 +143,7 @@ export default function ShopifySyncPage() {
                   <td className="px-2 py-2 text-right text-emerald-700">{c?.synced ?? '—'}</td>
                   <td className="px-2 py-2 text-right text-amber-700">{c?.pending ?? '—'}</td>
                   <td className="px-2 py-2 text-right text-red-700">{c?.error ?? '—'}</td>
-                  <td className="px-2 py-2 text-right text-gray-500">{c?.unpublished ?? '—'}</td>
+                  <td className="px-2 py-2 text-right text-muted-foreground">{c?.unpublished ?? '—'}</td>
                 </tr>
               );
             })}
@@ -190,7 +190,7 @@ export default function ShopifySyncPage() {
                               }
                             }}
                             disabled={busyKey === f.id}
-                            className="rounded border px-2 py-0.5 text-xs hover:bg-gray-50 disabled:opacity-50"
+                            className="rounded border px-2 py-0.5 text-xs hover:bg-[var(--bg-sunken)] disabled:opacity-50"
                           >
                             {busyKey === f.id ? 'Retrying…' : 'Retry'}
                           </button>
@@ -204,7 +204,7 @@ export default function ShopifySyncPage() {
           )}
         </div>
 
-        <div className="rounded-md border bg-gray-50 p-3 text-xs">
+        <div className="rounded-md border bg-[var(--bg-sunken)] p-3 text-xs">
           <strong>Daily reconciler:</strong> runs 23:00 UTC (02:00 EAT) via Cloud Scheduler. To run on
           demand, use the Firebase console or <code>gcloud scheduler jobs run firebase-schedule-shopifyDailyReconcile</code>.
         </div>

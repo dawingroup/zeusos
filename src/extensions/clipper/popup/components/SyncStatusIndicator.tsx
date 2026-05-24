@@ -59,7 +59,7 @@ export function SyncStatusIndicator({ status, onSync, compact = false }: SyncSta
       default:
         return status.pendingCount > 0 
           ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-          : 'bg-gray-50 text-gray-600 border-gray-200';
+          : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]';
     }
   };
 
@@ -91,7 +91,7 @@ export function SyncStatusIndicator({ status, onSync, compact = false }: SyncSta
       {status.status !== 'syncing' && status.pendingCount > 0 && (
         <button
           onClick={onSync}
-          className="flex items-center gap-1 px-2 py-1 bg-white rounded text-xs font-medium hover:bg-gray-50 transition-colors border border-current/20"
+          className="flex items-center gap-1 px-2 py-1 bg-card rounded text-xs font-medium hover:bg-[var(--bg-sunken)] transition-colors border border-current/20"
         >
           <RefreshCw className="w-3 h-3" />
           Sync now

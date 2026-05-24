@@ -36,13 +36,13 @@ interface ResponsiveTableProps<T> {
 
 const variantStyles = {
   default: {
-    header: 'bg-gray-50 border-gray-200',
-    headerText: 'text-gray-700',
-    row: 'hover:bg-gray-50',
+    header: 'bg-[var(--bg-sunken)] border-[var(--border-subtle)]',
+    headerText: 'text-muted-foreground',
+    row: 'hover:bg-[var(--bg-sunken)]',
     rowSelected: 'bg-primary/5',
-    border: 'border-gray-200',
-    divider: 'divide-gray-100',
-    cardBorder: 'border-gray-200',
+    border: 'border-[var(--border-subtle)]',
+    divider: 'divide-[var(--border-subtle)]',
+    cardBorder: 'border-[var(--border-subtle)]',
   },
   orange: {
     header: 'bg-orange-50 border-orange-200',
@@ -101,7 +101,7 @@ export function ResponsiveTable<T>({
     .slice(0, 4); // Show max 4 fields on mobile cards
 
   return (
-    <div className={cn('bg-white rounded-lg border overflow-hidden', styles.border, className)}>
+    <div className={cn('bg-card rounded-lg border overflow-hidden', styles.border, className)}>
       {/* Desktop Table View */}
       <div className="hidden sm:block overflow-x-auto">
         <table className={cn(
@@ -116,7 +116,7 @@ export function ResponsiveTable<T>({
                     type="checkbox"
                     checked={selectedKeys?.size === data.length && data.length > 0}
                     onChange={onSelectAll}
-                    className="rounded border-gray-300"
+                    className="rounded border-[var(--border-default)]"
                   />
                 </th>
               )}
@@ -152,7 +152,7 @@ export function ResponsiveTable<T>({
                           e.stopPropagation();
                           onSelect?.(key);
                         }}
-                        className="rounded border-gray-300"
+                        className="rounded border-[var(--border-default)]"
                       />
                     </td>
                   )}
@@ -169,7 +169,7 @@ export function ResponsiveTable<T>({
       </div>
 
       {/* Mobile Card View */}
-      <div className="sm:hidden divide-y divide-gray-100">
+      <div className="sm:hidden divide-y divide-[var(--border-subtle)]">
         {data.map((item, index) => {
           const key = keyExtractor(item, index);
           const isSelected = selectedKeys?.has(key);
@@ -189,7 +189,7 @@ export function ResponsiveTable<T>({
               onClick={() => onRowClick?.(item)}
               className={cn(
                 'p-3',
-                onRowClick && 'cursor-pointer active:bg-gray-50',
+                onRowClick && 'cursor-pointer active:bg-[var(--bg-sunken)]',
                 isSelected && styles.rowSelected
               )}
             >
@@ -203,13 +203,13 @@ export function ResponsiveTable<T>({
                       e.stopPropagation();
                       onSelect?.(key);
                     }}
-                    className="rounded border-gray-300 mt-1"
+                    className="rounded border-[var(--border-default)] mt-1"
                   />
                 )}
                 <div className="flex-1 min-w-0">
                   {/* Primary field (first column or priority 1) */}
                   {mobileColumns[0] && (
-                    <div className="font-medium text-gray-900 truncate">
+                    <div className="font-medium text-foreground truncate">
                       {mobileColumns[0].render
                         ? mobileColumns[0].render(item, index)
                         : (item as any)[mobileColumns[0].key]}
@@ -220,8 +220,8 @@ export function ResponsiveTable<T>({
                   <div className="mt-1 space-y-1">
                     {mobileColumns.slice(1).map((col) => (
                       <div key={col.key} className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500">{col.mobileLabel || col.header}:</span>
-                        <span className="text-gray-900 font-medium">
+                        <span className="text-muted-foreground">{col.mobileLabel || col.header}:</span>
+                        <span className="text-foreground font-medium">
                           {col.render ? col.render(item, index) : (item as any)[col.key]}
                         </span>
                       </div>

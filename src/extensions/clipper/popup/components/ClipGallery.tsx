@@ -103,16 +103,16 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
   return (
     <div className="flex flex-col h-full">
       {/* Search and Filters */}
-      <div className="p-3 border-b border-gray-200 space-y-2">
+      <div className="p-3 border-b border-[var(--border-subtle)] space-y-2">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)]" />
           <input
             type="text"
             placeholder="Search clips..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-[var(--border-subtle)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
 
@@ -123,7 +123,7 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
             <select
               value={filterTag || ''}
               onChange={(e) => setFilterTag(e.target.value || null)}
-              className="text-xs px-2 py-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+              className="text-xs px-2 py-1.5 border border-[var(--border-subtle)] rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="">All tags</option>
               {allTags.map((tag) => (
@@ -135,7 +135,7 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="text-xs px-2 py-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+              className="text-xs px-2 py-1.5 border border-[var(--border-subtle)] rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -145,16 +145,16 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
           </div>
 
           {/* View toggle */}
-          <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
+          <div className="flex items-center border border-[var(--border-subtle)] rounded-md overflow-hidden">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+              className={`p-1.5 ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'}`}
             >
               <Grid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 ${viewMode === 'list' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100'}`}
+              className={`p-1.5 ${viewMode === 'list' ? 'bg-primary text-white' : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'}`}
             >
               <List className="w-4 h-4" />
             </button>
@@ -168,26 +168,26 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
           <div className="flex items-center gap-2 text-sm">
             <span className="font-medium text-primary">{selectedIds.size} selected</span>
             <button onClick={selectAll} className="text-primary hover:underline">Select all</button>
-            <button onClick={clearSelection} className="text-gray-500 hover:underline">Clear</button>
+            <button onClick={clearSelection} className="text-muted-foreground hover:underline">Clear</button>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => onBulkAction('tag', Array.from(selectedIds))}
-              className="p-1.5 text-gray-600 hover:bg-white rounded"
+              className="p-1.5 text-muted-foreground hover:bg-card rounded"
               title="Add tags"
             >
               <Tag className="w-4 h-4" />
             </button>
             <button
               onClick={() => onBulkAction('project', Array.from(selectedIds))}
-              className="p-1.5 text-gray-600 hover:bg-white rounded"
+              className="p-1.5 text-muted-foreground hover:bg-card rounded"
               title="Add to project"
             >
               <FolderPlus className="w-4 h-4" />
             </button>
             <button
               onClick={() => onBulkAction('delete', Array.from(selectedIds))}
-              className="p-1.5 text-error hover:bg-white rounded"
+              className="p-1.5 text-error hover:bg-card rounded"
               title="Delete selected"
             >
               <Trash2 className="w-4 h-4" />
@@ -197,7 +197,7 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
       )}
 
       {/* Results count */}
-      <div className="px-3 py-1.5 text-xs text-gray-500 border-b border-gray-100">
+      <div className="px-3 py-1.5 text-xs text-muted-foreground border-b border-[var(--border-subtle)]">
         {filteredClips.length} clip{filteredClips.length !== 1 ? 's' : ''}
         {searchQuery && ` matching "${searchQuery}"`}
       </div>
@@ -205,7 +205,7 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
       {/* Clip Grid/List */}
       <div className="flex-1 overflow-y-auto p-3">
         {filteredClips.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400">
+          <div className="flex flex-col items-center justify-center h-full text-[var(--fg-tertiary)]">
             <Filter className="w-12 h-12 mb-2 opacity-50" />
             <p className="text-sm">No clips found</p>
             {searchQuery && (
@@ -223,7 +223,7 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
               <div
                 key={clip.id}
                 className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
-                  selectedIds.has(clip.id) ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-200'
+                  selectedIds.has(clip.id) ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-[var(--border-subtle)]'
                 }`}
                 onClick={() => isSelectionMode ? toggleSelection(clip.id) : onSelect(clip)}
                 onContextMenu={(e) => {
@@ -234,14 +234,14 @@ export function ClipGallery({ clips, onDelete, onSelect, onBulkAction }: ClipGal
                 {/* Selection checkbox */}
                 {isSelectionMode && (
                   <div className={`absolute top-2 left-2 z-10 w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    selectedIds.has(clip.id) ? 'bg-primary border-primary' : 'bg-white/80 border-gray-300'
+                    selectedIds.has(clip.id) ? 'bg-primary border-primary' : 'bg-card/80 border-[var(--border-default)]'
                   }`}>
                     {selectedIds.has(clip.id) && <Check className="w-3 h-3 text-white" />}
                   </div>
                 )}
                 
                 {/* Thumbnail */}
-                <div className="aspect-square bg-gray-100">
+                <div className="aspect-square bg-[var(--bg-sunken)]">
                   <img
                     src={clip.thumbnailDataUrl || clip.imageUrl}
                     alt={clip.title}

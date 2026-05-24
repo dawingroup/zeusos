@@ -71,8 +71,8 @@ export function DawinGroupLogo({
       {/* Optional text */}
       {showText && (
         <div className="flex flex-col leading-tight">
-          <span className="text-sm font-bold text-gray-900">Zeus Group</span>
-          <span className="text-[10px] text-gray-500">#TheZeusWay</span>
+          <span className="text-sm font-bold text-foreground">Zeus Group</span>
+          <span className="text-[10px] text-muted-foreground">#TheZeusWay</span>
         </div>
       )}
     </div>

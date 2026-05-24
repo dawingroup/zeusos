@@ -53,7 +53,7 @@ const PERFORMANCE_COLOR = '#FF5722';
 
 // Status options
 const GOAL_STATUSES = [
-  { value: 'not_started', label: 'Not Started', color: 'bg-gray-100 text-gray-800' },
+  { value: 'not_started', label: 'Not Started', color: 'bg-[var(--bg-sunken)] text-foreground' },
   { value: 'on_track', label: 'On Track', color: 'bg-blue-100 text-blue-800' },
   { value: 'at_risk', label: 'At Risk', color: 'bg-amber-100 text-amber-800' },
   { value: 'behind', label: 'Behind', color: 'bg-red-100 text-red-800' },
@@ -92,7 +92,7 @@ function mapGoalStatus(status: string): string {
 }
 
 function getStatusColor(status: string): string {
-  return GOAL_STATUSES.find(s => s.value === status)?.color || 'bg-gray-100 text-gray-800';
+  return GOAL_STATUSES.find(s => s.value === status)?.color || 'bg-[var(--bg-sunken)] text-foreground';
 }
 
 function getStatusLabel(status: string): string {

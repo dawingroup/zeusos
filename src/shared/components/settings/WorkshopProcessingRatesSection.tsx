@@ -122,20 +122,20 @@ export function WorkshopProcessingRatesSection({
   );
 
   return (
-    <div className="border-t border-gray-200 pt-6 mt-6">
+    <div className="border-t border-[var(--border-subtle)] pt-6 mt-6">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center gap-3 w-full text-left"
       >
         {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
         )}
-        <Wrench className="w-5 h-5 text-gray-500" />
+        <Wrench className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">Workshop Processing Rates</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-semibold text-foreground">Workshop Processing Rates</h3>
+          <p className="text-sm text-muted-foreground">
             Default rates for timber and panel processing steps used in material optimization
           </p>
         </div>
@@ -157,14 +157,14 @@ export function WorkshopProcessingRatesSection({
               <>
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset to Defaults
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   Cancel
                 </button>
@@ -187,7 +187,7 @@ export function WorkshopProcessingRatesSection({
           {/* Global Settings */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Planing Allowance (per side)
               </label>
               {isEditing ? (
@@ -199,23 +199,23 @@ export function WorkshopProcessingRatesSection({
                     step={0.5}
                     value={planingAllowance}
                     onChange={(e) => setPlaningAllowance(parseFloat(e.target.value) || 3)}
-                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                    className="w-24 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                   />
-                  <span className="text-sm text-gray-500">mm</span>
+                  <span className="text-sm text-muted-foreground">mm</span>
                 </div>
               ) : (
-                <p className="text-gray-900">{planingAllowance} mm</p>
+                <p className="text-foreground">{planingAllowance} mm</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Default Edge Band Material
               </label>
               {isEditing ? (
                 <select
                   value={edgeBandingMaterial}
                   onChange={(e) => setEdgeBandingMaterial(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                 >
                   <option value="PVC">PVC</option>
                   <option value="ABS">ABS</option>
@@ -223,11 +223,11 @@ export function WorkshopProcessingRatesSection({
                   <option value="Veneer">Veneer</option>
                 </select>
               ) : (
-                <p className="text-gray-900">{edgeBandingMaterial}</p>
+                <p className="text-foreground">{edgeBandingMaterial}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Edge Band Material Cost
               </label>
               {isEditing ? (
@@ -238,12 +238,12 @@ export function WorkshopProcessingRatesSection({
                     step={500}
                     value={edgeBandMaterialCost}
                     onChange={(e) => setEdgeBandMaterialCost(parseFloat(e.target.value) || 2000)}
-                    className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+                    className="w-28 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
                   />
-                  <span className="text-sm text-gray-500">UGX/m</span>
+                  <span className="text-sm text-muted-foreground">UGX/m</span>
                 </div>
               ) : (
-                <p className="text-gray-900">{edgeBandMaterialCost.toLocaleString()} UGX/m</p>
+                <p className="text-foreground">{edgeBandMaterialCost.toLocaleString()} UGX/m</p>
               )}
             </div>
           </div>
@@ -312,23 +312,23 @@ function RatesTable({
 }) {
   return (
     <div>
-      <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+      <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
         {title}
       </h4>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-gray-600">
+            <tr className="bg-[var(--bg-sunken)] text-muted-foreground">
               <th className="px-3 py-2 text-left font-medium">Step</th>
               <th className="px-3 py-2 text-right font-medium">Rate</th>
               <th className="px-3 py-2 text-right font-medium">Setup (min)</th>
               <th className="px-3 py-2 text-right font-medium">Time/Unit (min)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-[var(--border-subtle)]">
             {steps.map((step) => (
-              <tr key={step.stepId} className="hover:bg-gray-50">
-                <td className="px-3 py-2 text-gray-900">{step.label}</td>
+              <tr key={step.stepId} className="hover:bg-[var(--bg-sunken)]">
+                <td className="px-3 py-2 text-foreground">{step.label}</td>
                 <td className="px-3 py-2 text-right">
                   {isEditing ? (
                     <div className="flex items-center justify-end gap-1">
@@ -337,9 +337,9 @@ function RatesTable({
                         min={0}
                         value={step.ratePerUnit}
                         onChange={(e) => updateRate(step.stepId, 'ratePerUnit', parseFloat(e.target.value) || 0)}
-                        className="w-24 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                        className="w-24 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                       />
-                      <span className="text-gray-400 text-xs whitespace-nowrap">{unitLabel(step.costingMethod)}</span>
+                      <span className="text-[var(--fg-tertiary)] text-xs whitespace-nowrap">{unitLabel(step.costingMethod)}</span>
                     </div>
                   ) : (
                     <span>{step.ratePerUnit.toLocaleString()} {unitLabel(step.costingMethod)}</span>
@@ -353,7 +353,7 @@ function RatesTable({
                       step={1}
                       value={step.setupTimeMinutes}
                       onChange={(e) => updateRate(step.stepId, 'setupTimeMinutes', parseFloat(e.target.value) || 0)}
-                      className="w-16 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                      className="w-16 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                     />
                   ) : (
                     <span>{step.setupTimeMinutes}</span>
@@ -367,7 +367,7 @@ function RatesTable({
                       step={0.1}
                       value={step.timePerUnit}
                       onChange={(e) => updateRate(step.stepId, 'timePerUnit', parseFloat(e.target.value) || 0)}
-                      className="w-16 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                      className="w-16 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                     />
                   ) : (
                     <span>{step.timePerUnit}</span>

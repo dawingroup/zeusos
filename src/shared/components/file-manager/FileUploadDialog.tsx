@@ -250,9 +250,9 @@ export function FileUploadDialog({
         <div className="space-y-4">
           {/* ── Version intent (replace mode only) ── */}
           {replaceTarget && (
-            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
-              <p className="text-xs text-gray-500">
-                Current: <span className="font-medium text-gray-700">{replaceTarget.name}</span>
+            <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-2">
+              <p className="text-xs text-muted-foreground">
+                Current: <span className="font-medium text-muted-foreground">{replaceTarget.name}</span>
                 {' · '}
                 {formatVersion(replaceTarget.version)}
               </p>
@@ -264,7 +264,7 @@ export function FileUploadDialog({
                     value="new-version"
                     checked={replaceMode === 'new-version'}
                     onChange={() => setReplaceMode('new-version')}
-                    className="accent-gray-900"
+                    className="accent-[var(--accent)]"
                   />
                   <span className="text-sm">New version ({formatVersion(nextVersion)})</span>
                 </label>
@@ -275,7 +275,7 @@ export function FileUploadDialog({
                     value="overwrite"
                     checked={replaceMode === 'overwrite'}
                     onChange={() => setReplaceMode('overwrite')}
-                    className="accent-gray-900"
+                    className="accent-[var(--accent)]"
                   />
                   <span className="text-sm text-amber-700">Overwrite current</span>
                 </label>
@@ -286,11 +286,11 @@ export function FileUploadDialog({
                   so the escalation path is explicit rather than
                   hidden behind a cryptic "permission denied" error. */}
               {targetIsApproved && (
-                <div className="mt-2 border-t border-gray-200 pt-2">
+                <div className="mt-2 border-t border-[var(--border-subtle)] pt-2">
                   <p className="text-xs text-amber-700 font-medium">
                     This file is marked Approved.
                   </p>
-                  <p className="text-[11px] text-gray-500 mt-0.5">
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     Non-admins can&rsquo;t replace approved files. Mark it for review
                     first, or tick the override below if you have admin rights.
                   </p>
@@ -320,8 +320,8 @@ export function FileUploadDialog({
                   className={cn(
                     'px-3 py-1.5 text-xs rounded-full border transition-colors',
                     category === cat
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                      ? 'bg-gray-900 text-white border-[var(--border-strong)]'
+                      : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
                   )}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -333,7 +333,7 @@ export function FileUploadDialog({
           {/* ── Type code selector (deliverables) ── */}
           {showTypeSelector && (
             <div>
-              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Document Type</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Document Type</label>
               <div className="flex gap-1.5 flex-wrap">
                 {Object.entries(DELIVERABLE_CODES).map(([code, label]) => (
                   <button
@@ -343,14 +343,14 @@ export function FileUploadDialog({
                       'px-2.5 py-1 text-xs rounded border transition-colors',
                       typeCode === code
                         ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400'
+                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-blue-400'
                     )}
                     title={label}
                   >
                     {code}
                   </button>
                 ))}
-                <span className="text-gray-300 self-center mx-1">|</span>
+                <span className="text-[var(--fg-tertiary)] self-center mx-1">|</span>
                 {Object.entries(ITEM_CODES).map(([code, label]) => (
                   <button
                     key={code}
@@ -359,7 +359,7 @@ export function FileUploadDialog({
                       'px-2.5 py-1 text-xs rounded border transition-colors',
                       typeCode === code
                         ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400'
+                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-emerald-400'
                     )}
                     title={label}
                   >
@@ -368,21 +368,21 @@ export function FileUploadDialog({
                 ))}
               </div>
               {typeCode && (
-                <p className="text-xs text-gray-400 mt-1">{ALL_TYPE_CODES[typeCode]}</p>
+                <p className="text-xs text-[var(--fg-tertiary)] mt-1">{ALL_TYPE_CODES[typeCode]}</p>
               )}
             </div>
           )}
 
           {/* ── Description field ── */}
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">Description</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">Description</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               onBlur={() => setDescription(toKebab(description))}
               placeholder="e.g. kitchen-layout"
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="w-full px-3 py-2 text-sm border border-[var(--border-subtle)] rounded-lg focus:outline-none focus:ring-1 focus:ring-[var(--border-default)]"
             />
           </div>
 
@@ -392,9 +392,9 @@ export function FileUploadDialog({
               type="checkbox"
               checked={isFinal}
               onChange={(e) => setIsFinal(e.target.checked)}
-              className="accent-gray-900 rounded"
+              className="accent-[var(--accent)] rounded"
             />
-            <span className="text-sm text-gray-600">Mark as Final</span>
+            <span className="text-sm text-muted-foreground">Mark as Final</span>
           </label>
 
           {/* ── Policy name preview ── */}
@@ -416,11 +416,11 @@ export function FileUploadDialog({
             onClick={() => inputRef.current?.click()}
             className={cn(
               'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
-              dragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-gray-400'
+              dragOver ? 'border-blue-400 bg-blue-50' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
             )}
           >
-            <Upload className="h-6 w-6 mx-auto text-gray-400 mb-1.5" />
-            <p className="text-sm text-gray-600">
+            <Upload className="h-6 w-6 mx-auto text-[var(--fg-tertiary)] mb-1.5" />
+            <p className="text-sm text-muted-foreground">
               {replaceTarget ? 'Drop replacement file here' : 'Drop files here or click to browse'}
             </p>
             <input
@@ -436,15 +436,15 @@ export function FileUploadDialog({
           {files.length > 0 && (
             <div className="space-y-2 max-h-32 overflow-y-auto">
               {files.map((file, i) => (
-                <div key={i} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                  <FileText className="h-4 w-4 text-gray-400 shrink-0" />
+                <div key={i} className="flex items-center gap-2 p-2 bg-[var(--bg-sunken)] rounded-lg">
+                  <FileText className="h-4 w-4 text-[var(--fg-tertiary)] shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm truncate">{file.name}</p>
-                    <p className="text-xs text-gray-400">{formatFileSize(file.size)}</p>
+                    <p className="text-xs text-[var(--fg-tertiary)]">{formatFileSize(file.size)}</p>
                   </div>
                   {!uploading && (
-                    <button onClick={() => removeFile(i)} className="p-1 hover:bg-gray-200 rounded">
-                      <X className="h-3.5 w-3.5 text-gray-500" />
+                    <button onClick={() => removeFile(i)} className="p-1 hover:bg-[var(--bg-sunken)] rounded">
+                      <X className="h-3.5 w-3.5 text-muted-foreground" />
                     </button>
                   )}
                 </div>
@@ -454,7 +454,7 @@ export function FileUploadDialog({
 
           {/* ── Progress ── */}
           {uploading && (
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
               <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
@@ -470,7 +470,7 @@ export function FileUploadDialog({
             <button
               onClick={handleClose}
               disabled={uploading}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
+              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground"
             >
               Cancel
             </button>

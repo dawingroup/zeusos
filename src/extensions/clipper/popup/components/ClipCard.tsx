@@ -35,8 +35,8 @@ export function ClipCard({
 
   return (
     <div
-      className={`flex gap-3 p-2 bg-white rounded-lg border transition-all ${
-        isSelected ? 'ring-2 ring-blue-500 border-blue-200' : 'border-gray-200'
+      className={`flex gap-3 p-2 bg-card rounded-lg border transition-all ${
+        isSelected ? 'ring-2 ring-blue-500 border-blue-200' : 'border-[var(--border-subtle)]'
       }`}
     >
       {/* Checkbox */}
@@ -44,11 +44,11 @@ export function ClipCard({
         type="checkbox"
         checked={isSelected}
         onChange={onSelect}
-        className="mt-2 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        className="mt-2 w-4 h-4 rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
       />
 
       {/* Thumbnail */}
-      <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 bg-gray-100">
+      <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 bg-[var(--bg-sunken)]">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
@@ -57,20 +57,20 @@ export function ClipCard({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <ImageIcon className="w-6 h-6 text-gray-400" />
+            <ImageIcon className="w-6 h-6 text-[var(--fg-tertiary)]" />
           </div>
         )}
       </div>
 
       {/* Details */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 truncate">
+        <p className="text-sm font-medium text-foreground truncate">
           {clip.title || 'Untitled'}
         </p>
-        <p className="text-xs text-gray-500 truncate">{clip.sourceUrl}</p>
+        <p className="text-xs text-muted-foreground truncate">{clip.sourceUrl}</p>
         <div className="flex items-center gap-2 mt-1">
           <SyncBadge status={clip.syncStatus} />
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-[var(--fg-tertiary)]">
             {formatRelativeTime(clip.createdAt)}
           </span>
         </div>

@@ -255,7 +255,7 @@ export function SubsidiaryAccessEditor({ access, onChange, disabled }: Subsidiar
               checked={isChecked}
               onChange={onToggle}
               disabled={disabled}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-[var(--border-default)]"
             />
             <Label className="cursor-pointer font-normal text-sm">
               {MODULE_LABELS[moduleId] || moduleId}
@@ -296,7 +296,7 @@ export function SubsidiaryAccessEditor({ access, onChange, disabled }: Subsidiar
                     checked={isGranted}
                     onChange={() => featureToggle(feature.id)}
                     disabled={disabled}
-                    className="h-3.5 w-3.5 rounded border-gray-300"
+                    className="h-3.5 w-3.5 rounded border-[var(--border-default)]"
                   />
                   <span className="text-xs">{feature.label}</span>
                   <span className="text-[10px] text-muted-foreground flex-1">
@@ -348,7 +348,7 @@ export function SubsidiaryAccessEditor({ access, onChange, disabled }: Subsidiar
                     checked={hasAccess}
                     onChange={() => toggleSubsidiary(sub.id)}
                     disabled={disabled}
-                    className="h-4 w-4 rounded border-gray-300"
+                    className="h-4 w-4 rounded border-[var(--border-default)]"
                   />
                 </label>
               </div>

@@ -160,7 +160,7 @@ export function getRAGColorClass(status: RAGStatus): string {
       return 'bg-green-100 text-green-800 border-green-200';
     case 'grey':
     default:
-      return 'bg-gray-100 text-gray-600 border-gray-200';
+      return 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]';
   }
 }
 

@@ -348,7 +348,7 @@ export function EmployeeListPage() {
             )}
           </span>
           <Select value={bulkSubsidiaryId} onValueChange={setBulkSubsidiaryId}>
-            <SelectTrigger className="w-[200px] h-9 bg-white">
+            <SelectTrigger className="w-[200px] h-9 bg-card">
               <SelectValue placeholder="Choose company" />
             </SelectTrigger>
             <SelectContent>

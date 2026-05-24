@@ -31,18 +31,18 @@ export function ModuleDashboardHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <Icon className="h-6 w-6" style={{ color: iconColor }} />
           {title}
         </h1>
-        <p className="text-gray-500 mt-1">{subtitle}</p>
+        <p className="text-muted-foreground mt-1">{subtitle}</p>
       </div>
       {(primaryAction || secondaryAction) && (
         <div className="flex items-center gap-2">
           {secondaryAction && (
             <button
               onClick={secondaryAction.onClick}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-default)] rounded-lg hover:bg-[var(--bg-sunken)] transition-colors"
             >
               {secondaryAction.icon && <secondaryAction.icon className="h-4 w-4" />}
               {secondaryAction.label}

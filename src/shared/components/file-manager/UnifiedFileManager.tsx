@@ -200,7 +200,7 @@ export function UnifiedFileManager({
       case 'pdf': return <FileText className="h-5 w-5 text-red-500" />;
       case 'spreadsheet': return <FileSpreadsheet className="h-5 w-5 text-emerald-500" />;
       case 'model': return <Box className="h-5 w-5 text-blue-500" />;
-      default: return <FileIcon className="h-5 w-5 text-gray-400" />;
+      default: return <FileIcon className="h-5 w-5 text-[var(--fg-tertiary)]" />;
     }
   };
 
@@ -221,18 +221,18 @@ export function UnifiedFileManager({
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-gray-700">
+          <h3 className="text-sm font-semibold text-muted-foreground">
             Files
           </h3>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-[var(--fg-tertiary)]">
             {files.length} file{files.length !== 1 ? 's' : ''}
           </span>
           {/* Phase 3b — item-level revision summary (F-D1). Only shown
               when the manager is scoped to a single design item, since
               at project level the "max version" number isn't actionable. */}
           {itemRevisionSummary && itemRevisionSummary.fileCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-gray-100 text-gray-700 font-medium">
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[var(--bg-sunken)] text-muted-foreground font-medium">
                 v{itemRevisionSummary.currentRevision}
               </span>
               {itemRevisionSummary.lastRevisedAtMs && (
@@ -250,7 +250,7 @@ export function UnifiedFileManager({
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value as any)}
-            className="text-xs border border-gray-200 rounded-md px-2 py-1.5 bg-white"
+            className="text-xs border border-[var(--border-subtle)] rounded-md px-2 py-1.5 bg-card"
           >
             <option value="all">All Categories</option>
             {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
@@ -261,7 +261,7 @@ export function UnifiedFileManager({
           <select
             value={autoGenFilter}
             onChange={(e) => setAutoGenFilter(e.target.value as any)}
-            className="text-xs border border-gray-200 rounded-md px-2 py-1.5 bg-white"
+            className="text-xs border border-[var(--border-subtle)] rounded-md px-2 py-1.5 bg-card"
           >
             <option value="all">All Sources</option>
             <option value="auto">Auto-generated</option>
@@ -273,7 +273,7 @@ export function UnifiedFileManager({
               active-only projects (the vast majority of views). */}
           {(archivedHiddenCount > 0 || showArchived) && (
             <label
-              className="inline-flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer select-none"
               title={
                 showArchived
                   ? 'Hide files from archived projects'
@@ -284,7 +284,7 @@ export function UnifiedFileManager({
                 type="checkbox"
                 checked={showArchived}
                 onChange={(e) => setShowArchived(e.target.checked)}
-                className="accent-gray-900"
+                className="accent-[var(--accent)]"
               />
               <span>
                 {showArchived ? 'Archived shown' : `Show archived (${archivedHiddenCount})`}
@@ -293,16 +293,16 @@ export function UnifiedFileManager({
           )}
 
           {/* View toggle */}
-          <div className="flex border border-gray-200 rounded-md overflow-hidden">
+          <div className="flex border border-[var(--border-subtle)] rounded-md overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
-              className={cn('p-1.5', viewMode === 'list' ? 'bg-gray-100' : 'hover:bg-gray-50')}
+              className={cn('p-1.5', viewMode === 'list' ? 'bg-[var(--bg-sunken)]' : 'hover:bg-[var(--bg-sunken)]')}
             >
               <List className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={() => setViewMode('grid')}
-              className={cn('p-1.5', viewMode === 'grid' ? 'bg-gray-100' : 'hover:bg-gray-50')}
+              className={cn('p-1.5', viewMode === 'grid' ? 'bg-[var(--bg-sunken)]' : 'hover:bg-[var(--bg-sunken)]')}
             >
               <Grid className="h-3.5 w-3.5" />
             </button>
@@ -311,7 +311,7 @@ export function UnifiedFileManager({
           {!readOnly && (
             <button
               onClick={() => { setReplaceTarget(undefined); setUploadOpen(true); }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-white bg-gray-900 rounded-lg hover:bg-gray-800"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-background bg-foreground rounded-lg hover:bg-foreground/90"
             >
               <Upload className="h-3.5 w-3.5" />
               Upload
@@ -346,10 +346,10 @@ export function UnifiedFileManager({
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+          <Loader2 className="h-5 w-5 animate-spin text-[var(--fg-tertiary)]" />
         </div>
       ) : files.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-[var(--fg-tertiary)]">
           <FolderOpen className="h-10 w-10 mx-auto mb-2" />
           <p className="text-sm">No files yet</p>
           {!readOnly && (
@@ -363,9 +363,9 @@ export function UnifiedFileManager({
         </div>
       ) : viewMode === 'list' ? (
         /* List view */
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-[var(--bg-sunken)] border-b">
               <tr>
                 {showBulkActions && (
                   <th className="w-10 px-3 py-2">
@@ -375,21 +375,21 @@ export function UnifiedFileManager({
                     />
                   </th>
                 )}
-                <th className="text-left px-3 py-2 text-xs font-medium text-gray-500">File</th>
-                <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 hidden md:table-cell">Category</th>
-                <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 hidden lg:table-cell">Item</th>
-                <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 hidden sm:table-cell">Size</th>
-                <th className="text-right px-3 py-2 text-xs font-medium text-gray-500">Version</th>
-                <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 hidden sm:table-cell">Date</th>
+                <th className="text-left px-3 py-2 text-xs font-medium text-muted-foreground">File</th>
+                <th className="text-left px-3 py-2 text-xs font-medium text-muted-foreground hidden md:table-cell">Category</th>
+                <th className="text-left px-3 py-2 text-xs font-medium text-muted-foreground hidden lg:table-cell">Item</th>
+                <th className="text-right px-3 py-2 text-xs font-medium text-muted-foreground hidden sm:table-cell">Size</th>
+                <th className="text-right px-3 py-2 text-xs font-medium text-muted-foreground">Version</th>
+                <th className="text-right px-3 py-2 text-xs font-medium text-muted-foreground hidden sm:table-cell">Date</th>
                 <th className="w-10 px-3 py-2" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[var(--border-subtle)]">
               {files.map((file) => (
                 <tr
                   key={file.id}
                   className={cn(
-                    'hover:bg-gray-50 transition-colors',
+                    'hover:bg-[var(--bg-sunken)] transition-colors',
                     selectedIds.has(file.id) && 'bg-blue-50',
                     // Phase 4 — archived rows get a muted tint so they
                     // visibly separate from active files when the toggle
@@ -414,7 +414,7 @@ export function UnifiedFileManager({
                           download={file.name || file.fileName}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-medium text-gray-900 hover:text-blue-600 truncate block"
+                          className="text-sm font-medium text-foreground hover:text-blue-600 truncate block"
                         >
                           {file.name || file.fileName}
                         </a>
@@ -461,13 +461,13 @@ export function UnifiedFileManager({
                       </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-500 hidden md:table-cell">
+                  <td className="px-3 py-2 text-xs text-muted-foreground hidden md:table-cell">
                     {CATEGORY_LABELS[file.category] || file.category}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-500 truncate max-w-[120px] hidden lg:table-cell">
+                  <td className="px-3 py-2 text-xs text-muted-foreground truncate max-w-[120px] hidden lg:table-cell">
                     {file.itemName || '—'}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-500 text-right hidden sm:table-cell">
+                  <td className="px-3 py-2 text-xs text-muted-foreground text-right hidden sm:table-cell">
                     {formatFileSize(file.fileSize)}
                   </td>
                   <td className="px-3 py-2 text-right">
@@ -480,17 +480,17 @@ export function UnifiedFileManager({
                         <History className="h-3 w-3" />
                       </button>
                     ) : (
-                      <span className="text-xs text-gray-400">v1</span>
+                      <span className="text-xs text-[var(--fg-tertiary)]">v1</span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-xs text-gray-400 text-right hidden sm:table-cell">
+                  <td className="px-3 py-2 text-xs text-[var(--fg-tertiary)] text-right hidden sm:table-cell">
                     {formatDate(file.uploadedAt)}
                   </td>
                   <td className="px-3 py-2">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="p-1 hover:bg-gray-100 rounded">
-                          <MoreVertical className="h-4 w-4 text-gray-400" />
+                        <button className="p-1 hover:bg-[var(--bg-sunken)] rounded">
+                          <MoreVertical className="h-4 w-4 text-[var(--fg-tertiary)]" />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-44">
@@ -623,7 +623,7 @@ export function UnifiedFileManager({
               key={file.id}
               className={cn(
                 'border rounded-lg p-3 hover:shadow-sm transition-shadow cursor-pointer relative group',
-                selectedIds.has(file.id) ? 'border-blue-400 bg-blue-50' : 'border-gray-200'
+                selectedIds.has(file.id) ? 'border-blue-400 bg-blue-50' : 'border-[var(--border-subtle)]'
               )}
             >
               {showBulkActions && (
@@ -643,11 +643,11 @@ export function UnifiedFileManager({
                   download={file.name || file.fileName}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium text-gray-900 hover:text-blue-600 truncate w-full"
+                  className="text-xs font-medium text-foreground hover:text-blue-600 truncate w-full"
                 >
                   {file.name || file.fileName}
                 </a>
-                <span className="text-[10px] text-gray-400 mt-1">
+                <span className="text-[10px] text-[var(--fg-tertiary)] mt-1">
                   {formatFileSize(file.fileSize)}
                   {file.version > 1 && ` · v${file.version}`}
                 </span>

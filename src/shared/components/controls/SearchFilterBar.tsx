@@ -34,19 +34,19 @@ export function SearchFilterBar({
   className,
 }: SearchFilterBarProps) {
   return (
-    <div className={cn("bg-white rounded-lg shadow-sm border border-gray-200 p-4", className)}>
+    <div className={cn("bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4", className)}>
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         {/* Search and Filter Section */}
         <div className="flex-1 w-full sm:w-auto flex flex-wrap gap-2 items-center">
           {/* Search Input */}
           <div className="relative flex-1 sm:max-w-md min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--fg-tertiary)]" />
             <input
               type="text"
               placeholder={searchPlaceholder}
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full pl-9 pr-4 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             />
           </div>
 
@@ -54,7 +54,7 @@ export function SearchFilterBar({
           {showFilterButton && (
             <button
               onClick={onFilterClick}
-              className="hidden sm:inline-flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              className="hidden sm:inline-flex items-center gap-2 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] transition-colors"
             >
               <Filter className="h-4 w-4" />
               Filter
@@ -66,7 +66,7 @@ export function SearchFilterBar({
 
           {/* Results Count */}
           {resultsCount !== undefined && (
-            <span className="text-sm text-gray-500 hidden sm:inline">
+            <span className="text-sm text-muted-foreground hidden sm:inline">
               {resultsCount} {resultsLabel}
             </span>
           )}

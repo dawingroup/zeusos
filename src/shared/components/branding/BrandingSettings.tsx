@@ -82,8 +82,8 @@ export function BrandingSettings() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Branding Settings</h2>
-        <p className="text-sm text-gray-600 mt-1">
+        <h2 className="text-2xl font-bold text-foreground">Branding Settings</h2>
+        <p className="text-sm text-muted-foreground mt-1">
           Upload logo and favicon for {activeSubsidiaryName}
         </p>
       </div>
@@ -106,9 +106,9 @@ export function BrandingSettings() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Logo Upload */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+        <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Logo</h3>
+            <h3 className="text-lg font-semibold text-foreground">Logo</h3>
             {branding.logoUrl && (
               <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
                 Custom
@@ -117,7 +117,7 @@ export function BrandingSettings() {
           </div>
 
           {/* Logo Preview */}
-          <div className="aspect-square bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+          <div className="aspect-square bg-[var(--bg-sunken)] rounded-lg flex items-center justify-center border-2 border-dashed border-[var(--border-default)]">
             {branding.logoUrl ? (
               <img
                 src={branding.logoUrl}
@@ -126,8 +126,8 @@ export function BrandingSettings() {
               />
             ) : (
               <div className="text-center">
-                <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">Default Logo</p>
+                <ImageIcon className="h-16 w-16 text-[var(--fg-tertiary)] mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Default Logo</p>
               </div>
             )}
           </div>
@@ -150,16 +150,16 @@ export function BrandingSettings() {
               <Upload className="h-4 w-4" />
               {uploading ? 'Uploading...' : 'Upload Logo'}
             </button>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-muted-foreground text-center">
               PNG, JPG, SVG • Max 5MB
             </p>
           </div>
         </div>
 
         {/* Favicon Upload */}
-        <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+        <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Favicon</h3>
+            <h3 className="text-lg font-semibold text-foreground">Favicon</h3>
             {branding.faviconUrl && (
               <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
                 Custom
@@ -168,7 +168,7 @@ export function BrandingSettings() {
           </div>
 
           {/* Favicon Preview */}
-          <div className="aspect-square bg-gray-50 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+          <div className="aspect-square bg-[var(--bg-sunken)] rounded-lg flex items-center justify-center border-2 border-dashed border-[var(--border-default)]">
             {branding.faviconUrl ? (
               <img
                 src={branding.faviconUrl}
@@ -177,8 +177,8 @@ export function BrandingSettings() {
               />
             ) : (
               <div className="text-center">
-                <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">Default Favicon</p>
+                <ImageIcon className="h-16 w-16 text-[var(--fg-tertiary)] mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Default Favicon</p>
               </div>
             )}
           </div>
@@ -201,7 +201,7 @@ export function BrandingSettings() {
               <Upload className="h-4 w-4" />
               {uploading ? 'Uploading...' : 'Upload Favicon'}
             </button>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-muted-foreground text-center">
               PNG, ICO, SVG • Max 1MB
             </p>
           </div>
@@ -214,7 +214,7 @@ export function BrandingSettings() {
           <button
             onClick={handleReset}
             disabled={uploading}
-            className="flex items-center gap-2 px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-2 border border-[var(--border-default)] text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RefreshCw className="h-4 w-4" />
             Reset to Default Branding

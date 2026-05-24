@@ -22,7 +22,7 @@ export function BaseCard({ children, className, padding = 'md' }: BaseCardProps)
   return (
     <div
       className={cn(
-        "bg-white rounded-lg shadow-sm border border-gray-200",
+        "bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]",
         paddingClasses[padding],
         className
       )}

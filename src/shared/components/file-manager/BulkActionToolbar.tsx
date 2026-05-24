@@ -26,7 +26,7 @@ export function BulkActionToolbar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg shadow-lg">
+    <div className="flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-lg shadow-lg">
       <span className="text-sm font-medium mr-2">
         {selectedCount} selected
       </span>
@@ -36,7 +36,7 @@ export function BulkActionToolbar({
         disabled={downloading}
         className={cn(
           'flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md',
-          'bg-white/10 hover:bg-white/20 transition-colors',
+          'bg-card/10 hover:bg-card/20 transition-colors',
           downloading && 'opacity-50 cursor-not-allowed'
         )}
       >
@@ -59,7 +59,7 @@ export function BulkActionToolbar({
 
       <button
         onClick={onClearSelection}
-        className="ml-1 p-1 hover:bg-white/10 rounded transition-colors"
+        className="ml-1 p-1 hover:bg-card/10 rounded transition-colors"
       >
         <X className="h-4 w-4" />
       </button>

@@ -40,7 +40,7 @@ export function PlatformBrandingSettings() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--fg-tertiary)]" />
       </div>
     );
   }
@@ -86,8 +86,8 @@ export function PlatformBrandingSettings() {
       {/* Group Logos & Favicon */}
       <section className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Platform Identity</h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <h3 className="text-lg font-semibold text-foreground">Platform Identity</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             Group-level logos, favicon, and primary brand colors. These apply across the whole
             platform; per-subsidiary branding is managed under the Subsidiaries tab.
           </p>
@@ -102,7 +102,7 @@ export function PlatformBrandingSettings() {
               onChange={(e) => updateBranding({ groupLogo: e.target.value }, 'groupLogo')}
               placeholder="https://…/zeus-group-logo.svg"
             />
-            <p className="text-xs text-gray-500 mt-1">Used on light backgrounds (default theme).</p>
+            <p className="text-xs text-muted-foreground mt-1">Used on light backgrounds (default theme).</p>
           </div>
           <div>
             <Label htmlFor="group-logo-light">Group Logo URL (light variant)</Label>
@@ -114,7 +114,7 @@ export function PlatformBrandingSettings() {
               }
               placeholder="https://…/zeus-group-logo-light.svg"
             />
-            <p className="text-xs text-gray-500 mt-1">Used on dark backgrounds.</p>
+            <p className="text-xs text-muted-foreground mt-1">Used on dark backgrounds.</p>
           </div>
           <div>
             <Label htmlFor="group-favicon">Favicon URL</Label>
@@ -175,17 +175,17 @@ export function PlatformBrandingSettings() {
         </div>
 
         {savingField && (
-          <p className="text-xs text-gray-400 inline-flex items-center gap-1">
+          <p className="text-xs text-[var(--fg-tertiary)] inline-flex items-center gap-1">
             <Loader2 className="w-3 h-3 animate-spin" /> Saving {savingField}…
           </p>
         )}
       </section>
 
       {/* Platform UI Defaults */}
-      <section className="space-y-4 border-t border-gray-200 pt-8">
+      <section className="space-y-4 border-t border-[var(--border-subtle)] pt-8">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Platform UI Defaults</h3>
-          <p className="text-sm text-gray-500 mt-1">
+          <h3 className="text-lg font-semibold text-foreground">Platform UI Defaults</h3>
+          <p className="text-sm text-muted-foreground mt-1">
             Seed values applied to a user's Preferences (avatar menu) on first login. Existing
             users keep their own choices unless they hit "Reset to platform default".
           </p>
@@ -206,7 +206,7 @@ export function PlatformBrandingSettings() {
                     'px-3 py-1.5 text-sm rounded-md border transition-colors',
                     active
                       ? 'bg-[#872E5C] text-white border-[#872E5C]'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400',
+                      : 'bg-card text-muted-foreground border-[var(--border-default)] hover:border-[var(--border-strong)]',
                   )}
                 >
                   {t.label}
@@ -230,8 +230,8 @@ export function PlatformBrandingSettings() {
                   className={cn(
                     'inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border transition-colors',
                     active
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400',
+                      ? 'bg-gray-900 text-white border-[var(--border-strong)]'
+                      : 'bg-card text-muted-foreground border-[var(--border-default)] hover:border-[var(--border-strong)]',
                   )}
                 >
                   <span
@@ -261,7 +261,7 @@ export function PlatformBrandingSettings() {
                     'px-3 py-1.5 text-sm rounded-md border transition-colors',
                     active
                       ? 'bg-[#872E5C] text-white border-[#872E5C]'
-                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400',
+                      : 'bg-card text-muted-foreground border-[var(--border-default)] hover:border-[var(--border-strong)]',
                   )}
                 >
                   {d.label}
