@@ -6,10 +6,9 @@
  * channel for design-system violations without drowning in the broader
  * 6k-problem lint backlog.
  *
- * Both rules ship at 'warn' here for parity with the main config; the
- * lint:design script uses --max-warnings 0 so the focused run does fail
- * if violations creep in (per file the script is wired to). Phase U.6
- * will flip these to 'error' globally once U.2/U.3 sweeps land.
+ * Promoted to 'error' in Phase U.6 (PR #77) after lint:design hit 0/0
+ * codebase-wide. New violations now fail this focused channel + the main
+ * lint config. See docs/STYLING.md + UI_QA_REPORT.md.
  */
 
 import tsParser from '@typescript-eslint/parser';
@@ -51,8 +50,8 @@ export default [
       'design-system': designSystem,
     },
     rules: {
-      'design-system/no-raw-palette': 'warn',
-      'design-system/no-inline-style-literals': 'warn',
+      'design-system/no-raw-palette': 'error',
+      'design-system/no-inline-style-literals': 'error',
     },
   },
 ];

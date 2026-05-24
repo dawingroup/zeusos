@@ -46,11 +46,12 @@ export default [
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      // Design-system guard rails (Phase U.1). Warn-only until U.6 promotes
-      // to error after the U.2 module-by-module token sweep + U.3 hex
-      // eradication. See docs/STYLING.md.
-      'design-system/no-raw-palette': 'warn',
-      'design-system/no-inline-style-literals': 'warn',
+      // Design-system guard rails. Promoted to 'error' in U.6 (PR #77)
+      // after the U.2 module token sweeps + U.3 sentiment sweeps + U.3.f
+      // hex eradication brought lint:design to 0/0 codebase-wide. New
+      // violations now block CI. See docs/STYLING.md + UI_QA_REPORT.md.
+      'design-system/no-raw-palette': 'error',
+      'design-system/no-inline-style-literals': 'error',
     },
   },
 ];
