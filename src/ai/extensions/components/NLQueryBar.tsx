@@ -87,7 +87,7 @@ export const NLQueryBar: React.FC<NLQueryBarProps> = ({
               }, 200)
             }
             placeholder={placeholder}
-            className="w-full pl-10 pr-20 py-2.5 border border-[var(--border-subtle)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-[var(--bg-sunken)]"
+            className="w-full pl-10 pr-20 py-2.5 border border-[var(--border-subtle)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-transparent disabled:bg-[var(--bg-sunken)]"
             disabled={isProcessing}
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -102,7 +102,7 @@ export const NLQueryBar: React.FC<NLQueryBarProps> = ({
             {history.length > 0 && (
               <button
                 onClick={() => setShowHistory(!showHistory)}
-                className={`p-1 rounded ${showHistory ? 'text-blue-600 bg-blue-50' : 'text-[var(--fg-tertiary)] hover:text-muted-foreground'}`}
+                className={`p-1 rounded ${showHistory ? 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' : 'text-[var(--fg-tertiary)] hover:text-muted-foreground'}`}
               >
                 <Clock className="w-4 h-4" />
               </button>
@@ -113,7 +113,7 @@ export const NLQueryBar: React.FC<NLQueryBarProps> = ({
         <button
           onClick={onExecute}
           disabled={!query.trim() || isProcessing}
-          className="px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2.5 bg-[var(--rag-blue)] text-white rounded-xl hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isProcessing ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -195,7 +195,7 @@ export const NLQueryResults: React.FC<NLQueryResultsProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--rag-blue)]" />
         <span className="ml-2 text-muted-foreground">Processing query...</span>
       </div>
     );
@@ -282,7 +282,7 @@ export const NLQueryResults: React.FC<NLQueryResultsProps> = ({
                 {item.name || item.title || `Item ${i + 1}`}
               </h4>
               {item.status && (
-                <span className="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700">
+                <span className="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]">
                   {item.status}
                 </span>
               )}

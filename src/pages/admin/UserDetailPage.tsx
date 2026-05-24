@@ -204,14 +204,14 @@ export default function UserDetailPage() {
           </div>
           <div className="flex items-center gap-2">
             {saveSuccess && (
-              <span className="text-sm text-green-600">{saveSuccess}</span>
+              <span className="text-sm text-[var(--rag-green)]">{saveSuccess}</span>
             )}
             {saveError && (
-              <span className="text-sm text-red-600">{saveError}</span>
+              <span className="text-sm text-[var(--rag-red)]">{saveError}</span>
             )}
             <Badge
               variant={dawinUser.isActive ? 'secondary' : 'destructive'}
-              className={dawinUser.isActive ? 'bg-green-50 text-green-700 border-green-200' : ''}
+              className={dawinUser.isActive ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]' : ''}
             >
               {dawinUser.isActive ? 'Active' : 'Inactive'}
             </Badge>
@@ -333,7 +333,7 @@ export default function UserDetailPage() {
                         <Label className="text-muted-foreground text-xs">Employment Status</Label>
                         <Badge
                           variant={employee.employmentStatus === 'active' ? 'secondary' : 'outline'}
-                          className={employee.employmentStatus === 'active' ? 'bg-green-50 text-green-700 border-green-200' : ''}
+                          className={employee.employmentStatus === 'active' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]' : ''}
                         >
                           {STATUS_LABELS[employee.employmentStatus] || employee.employmentStatus}
                         </Badge>

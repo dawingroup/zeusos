@@ -277,7 +277,7 @@ export function FileUploadDialog({
                     onChange={() => setReplaceMode('overwrite')}
                     className="accent-[var(--accent)]"
                   />
-                  <span className="text-sm text-amber-700">Overwrite current</span>
+                  <span className="text-sm text-[var(--rag-amber)]">Overwrite current</span>
                 </label>
               </div>
               {/* Approval lock (Phase 1 F-E2) — when replacing an
@@ -287,7 +287,7 @@ export function FileUploadDialog({
                   hidden behind a cryptic "permission denied" error. */}
               {targetIsApproved && (
                 <div className="mt-2 border-t border-[var(--border-subtle)] pt-2">
-                  <p className="text-xs text-amber-700 font-medium">
+                  <p className="text-xs text-[var(--rag-amber)] font-medium">
                     This file is marked Approved.
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -299,9 +299,9 @@ export function FileUploadDialog({
                       type="checkbox"
                       checked={overrideApproved}
                       onChange={(e) => setOverrideApproved(e.target.checked)}
-                      className="accent-amber-600"
+                      className="accent-[var(--rag-amber)]"
                     />
-                    <span className="text-xs text-amber-800 font-medium">
+                    <span className="text-xs text-[var(--rag-amber)] font-medium">
                       Admin override — replace this approved file
                     </span>
                   </label>
@@ -342,8 +342,8 @@ export function FileUploadDialog({
                     className={cn(
                       'px-2.5 py-1 text-xs rounded border transition-colors',
                       typeCode === code
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-blue-400'
+                        ? 'bg-[var(--rag-blue)] text-white border-[var(--rag-blue)]'
+                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--rag-blue)]'
                     )}
                     title={label}
                   >
@@ -358,8 +358,8 @@ export function FileUploadDialog({
                     className={cn(
                       'px-2.5 py-1 text-xs rounded border transition-colors',
                       typeCode === code
-                        ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-emerald-400'
+                        ? 'bg-[var(--rag-green)] text-white border-[var(--rag-green)]'
+                        : 'bg-card text-muted-foreground border-[var(--border-subtle)] hover:border-[var(--rag-green)]'
                     )}
                     title={label}
                   >
@@ -399,11 +399,11 @@ export function FileUploadDialog({
 
           {/* ── Policy name preview ── */}
           {policyNamePreview && (
-            <div className="flex items-start gap-2 bg-blue-50 rounded-lg p-2.5">
-              <Info className="h-3.5 w-3.5 text-blue-500 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-2 bg-[var(--rag-blue-soft)] rounded-lg p-2.5">
+              <Info className="h-3.5 w-3.5 text-[var(--rag-blue)] mt-0.5 shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-blue-600 font-medium">File name (auto)</p>
-                <p className="text-xs text-blue-800 font-mono break-all">{policyNamePreview}</p>
+                <p className="text-xs text-[var(--rag-blue)] font-medium">File name (auto)</p>
+                <p className="text-xs text-[var(--rag-blue)] font-mono break-all">{policyNamePreview}</p>
               </div>
             </div>
           )}
@@ -416,7 +416,7 @@ export function FileUploadDialog({
             onClick={() => inputRef.current?.click()}
             className={cn(
               'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
-              dragOver ? 'border-blue-400 bg-blue-50' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
+              dragOver ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
             )}
           >
             <Upload className="h-6 w-6 mx-auto text-[var(--fg-tertiary)] mb-1.5" />
@@ -456,14 +456,14 @@ export function FileUploadDialog({
           {uploading && (
             <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
               <div
-                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                className="bg-[var(--rag-blue)] h-2 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
           )}
 
           {/* ── Error ── */}
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-[var(--rag-red)]">{error}</p>}
 
           {/* ── Actions ── */}
           <div className="flex justify-end gap-2 pt-2">
@@ -480,7 +480,7 @@ export function FileUploadDialog({
               className={cn(
                 'px-4 py-2 text-sm text-white rounded-lg transition-colors',
                 replaceMode === 'overwrite' && replaceTarget
-                  ? 'bg-amber-600 hover:bg-amber-700'
+                  ? 'bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)]'
                   : 'bg-gray-900 hover:bg-gray-800',
                 (uploading || files.length === 0) && 'opacity-50 cursor-not-allowed'
               )}

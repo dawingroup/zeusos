@@ -599,8 +599,8 @@ export default function OrgStructurePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <Building2 className="h-5 w-5 text-blue-500" />
+              <div className="p-2 bg-[var(--rag-blue)]/10 rounded-lg">
+                <Building2 className="h-5 w-5 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.departments}</p>
@@ -613,8 +613,8 @@ export default function OrgStructurePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-500/10 rounded-lg">
-                <User className="h-5 w-5 text-green-500" />
+              <div className="p-2 bg-[var(--rag-green)]/10 rounded-lg">
+                <User className="h-5 w-5 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.managers}</p>

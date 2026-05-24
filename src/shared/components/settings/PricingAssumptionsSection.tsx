@@ -418,7 +418,7 @@ export function PricingAssumptionsSection({
                                 delete updated[name];
                                 setDefaultSheetCosts(updated);
                               }}
-                              className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                              className="p-1 text-[var(--rag-red)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
                             >
                               <X className="w-3.5 h-3.5" />
                             </button>
@@ -460,7 +460,7 @@ export function PricingAssumptionsSection({
                             }
                           }}
                           disabled={!newSheetName.trim() || !newSheetCost}
-                          className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-30"
+                          className="p-1 text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)] rounded disabled:opacity-30"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -521,7 +521,7 @@ export function PricingAssumptionsSection({
                                 delete updated[thickness];
                                 setDefaultCostByThickness(updated);
                               }}
-                              className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                              className="p-1 text-[var(--rag-red)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
                             >
                               <X className="w-3.5 h-3.5" />
                             </button>
@@ -564,7 +564,7 @@ export function PricingAssumptionsSection({
                             }
                           }}
                           disabled={!newThickness || !newThicknessCost}
-                          className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-30"
+                          className="p-1 text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)] rounded disabled:opacity-30"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>

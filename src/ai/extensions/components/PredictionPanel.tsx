@@ -39,10 +39,10 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
 
   const probabilityColor =
     prediction.probability >= 0.7
-      ? 'text-green-600'
+      ? 'text-[var(--rag-green)]'
       : prediction.probability >= 0.4
-      ? 'text-yellow-600'
-      : 'text-red-600';
+      ? 'text-[var(--rag-amber)]'
+      : 'text-[var(--rag-red)]';
 
   return (
     <div className="bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm">
@@ -50,7 +50,7 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+            <div className="p-2 bg-[var(--rag-blue-soft)] rounded-lg text-[var(--rag-blue)]">
               <Target className="w-5 h-5" />
             </div>
             <div>
@@ -81,10 +81,10 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
             <div
               className={`h-full rounded-full transition-all ${
                 prediction.probability >= 0.7
-                  ? 'bg-green-500'
+                  ? 'bg-[var(--rag-green)]'
                   : prediction.probability >= 0.4
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
+                  ? 'bg-[var(--rag-amber)]'
+                  : 'bg-[var(--rag-red)]'
               }`}
               style={{ width: `${prediction.probability * 100}%` }}
             />
@@ -156,16 +156,16 @@ export const PredictionPanel: React.FC<PredictionPanelProps> = ({
                       key={i}
                       className="flex items-start gap-2 p-2 bg-[var(--bg-sunken)] rounded-lg"
                     >
-                      <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-muted-foreground">{rec.action}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <span
                             className={`text-xs px-1.5 py-0.5 rounded ${
                               rec.priority === 'critical'
-                                ? 'bg-red-100 text-red-700'
+                                ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                                 : rec.priority === 'high'
-                                ? 'bg-orange-100 text-orange-700'
+                                ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                                 : 'bg-[var(--bg-sunken)] text-muted-foreground'
                             }`}
                           >
@@ -202,13 +202,13 @@ const FactorItem: React.FC<{ factor: PredictionFactor; positive: boolean }> = ({
   positive,
 }) => (
   <div
-    className={`p-2 rounded-lg ${positive ? 'bg-green-50' : 'bg-red-50'}`}
+    className={`p-2 rounded-lg ${positive ? 'bg-[var(--rag-green-soft)]' : 'bg-[var(--rag-red-soft)]'}`}
   >
     <div className="flex items-center gap-2">
       {positive ? (
-        <TrendingUp className="w-3.5 h-3.5 text-green-600" />
+        <TrendingUp className="w-3.5 h-3.5 text-[var(--rag-green)]" />
       ) : (
-        <TrendingDown className="w-3.5 h-3.5 text-red-600" />
+        <TrendingDown className="w-3.5 h-3.5 text-[var(--rag-red)]" />
       )}
       <span className="text-sm font-medium text-muted-foreground">{factor.factor}</span>
     </div>
@@ -231,15 +231,15 @@ export const ProjectHealthPanel: React.FC<ProjectHealthPanelProps> = ({
   isRefreshing = false,
 }) => {
   const healthColors = {
-    healthy: 'text-green-600 bg-green-50',
-    at_risk: 'text-yellow-600 bg-yellow-50',
-    critical: 'text-red-600 bg-red-50',
+    healthy: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]',
+    at_risk: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
+    critical: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]',
   };
 
   const trendIcons = {
-    improving: <TrendingUp className="w-4 h-4 text-green-500" />,
+    improving: <TrendingUp className="w-4 h-4 text-[var(--rag-green)]" />,
     stable: <Minus className="w-4 h-4 text-[var(--fg-tertiary)]" />,
-    declining: <TrendingDown className="w-4 h-4 text-red-500" />,
+    declining: <TrendingDown className="w-4 h-4 text-[var(--rag-red)]" />,
   };
 
   return (
@@ -247,7 +247,7 @@ export const ProjectHealthPanel: React.FC<ProjectHealthPanelProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+          <div className="p-2 bg-[var(--rag-blue-soft)] rounded-lg text-[var(--rag-blue)]">
             <Activity className="w-5 h-5" />
           </div>
           <div>
@@ -283,10 +283,10 @@ export const ProjectHealthPanel: React.FC<ProjectHealthPanelProps> = ({
           <div
             className={`h-full rounded-full transition-all ${
               health.healthScore >= 70
-                ? 'bg-green-500'
+                ? 'bg-[var(--rag-green)]'
                 : health.healthScore >= 40
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+                ? 'bg-[var(--rag-amber)]'
+                : 'bg-[var(--rag-red)]'
             }`}
             style={{ width: `${health.healthScore}%` }}
           />
@@ -307,17 +307,17 @@ export const ProjectHealthPanel: React.FC<ProjectHealthPanelProps> = ({
           <h5 className="text-xs font-medium text-muted-foreground uppercase mb-2">Risk Factors</h5>
           <div className="space-y-2">
             {health.riskFactors.slice(0, 3).map((risk, i) => (
-              <div key={i} className="flex items-start gap-2 p-2 bg-red-50 rounded-lg">
-                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+              <div key={i} className="flex items-start gap-2 p-2 bg-[var(--rag-red-soft)] rounded-lg">
+                <AlertTriangle className="w-4 h-4 text-[var(--rag-red)] mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-muted-foreground">{risk.description}</p>
                   <span
                     className={`text-xs ${
                       risk.mitigationStatus === 'mitigated'
-                        ? 'text-green-600'
+                        ? 'text-[var(--rag-green)]'
                         : risk.mitigationStatus === 'in_progress'
-                        ? 'text-yellow-600'
-                        : 'text-red-600'
+                        ? 'text-[var(--rag-amber)]'
+                        : 'text-[var(--rag-red)]'
                     }`}
                   >
                     {risk.mitigationStatus.replace('_', ' ')}
@@ -336,7 +336,7 @@ export const ProjectHealthPanel: React.FC<ProjectHealthPanelProps> = ({
           <ul className="space-y-1">
             {health.recommendations.map((rec, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-4 h-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                 {rec}
               </li>
             ))}
@@ -355,15 +355,15 @@ const DimensionCard: React.FC<{ label: string; dimension: DimensionHealth }> = (
   dimension,
 }) => {
   const statusColors = {
-    green: 'bg-green-100 text-green-700',
-    yellow: 'bg-yellow-100 text-yellow-700',
-    red: 'bg-red-100 text-red-700',
+    green: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    yellow: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    red: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   };
 
   const trendIcons = {
-    up: <TrendingUp className="w-3 h-3 text-green-500" />,
+    up: <TrendingUp className="w-3 h-3 text-[var(--rag-green)]" />,
     stable: <Minus className="w-3 h-3 text-[var(--fg-tertiary)]" />,
-    down: <TrendingDown className="w-3 h-3 text-red-500" />,
+    down: <TrendingDown className="w-3 h-3 text-[var(--rag-red)]" />,
   };
 
   return (
@@ -392,10 +392,10 @@ interface DealScoringPanelProps {
 
 export const DealScoringPanel: React.FC<DealScoringPanelProps> = ({ scoring }) => {
   const recommendationColors = {
-    strong_proceed: 'text-green-700 bg-green-100',
-    proceed: 'text-blue-700 bg-blue-100',
-    conditional: 'text-yellow-700 bg-yellow-100',
-    decline: 'text-red-700 bg-red-100',
+    strong_proceed: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]',
+    proceed: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
+    conditional: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
+    decline: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]',
   };
 
   return (
@@ -427,7 +427,7 @@ export const DealScoringPanel: React.FC<DealScoringPanelProps> = ({ scoring }) =
             <div className="h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full ${
-                  value >= 70 ? 'bg-green-500' : value >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                  value >= 70 ? 'bg-[var(--rag-green)]' : value >= 50 ? 'bg-[var(--rag-amber)]' : 'bg-[var(--rag-red)]'
                 }`}
                 style={{ width: `${value}%` }}
               />
@@ -443,7 +443,7 @@ export const DealScoringPanel: React.FC<DealScoringPanelProps> = ({ scoring }) =
           <ul className="space-y-1">
             {scoring.keyStrengths.map((str, i) => (
               <li key={i} className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                <CheckCircle className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-3.5 h-3.5 text-[var(--rag-green)] mt-0.5 flex-shrink-0" />
                 {str}
               </li>
             ))}
@@ -454,7 +454,7 @@ export const DealScoringPanel: React.FC<DealScoringPanelProps> = ({ scoring }) =
           <ul className="space-y-1">
             {scoring.keyRisks.map((risk, i) => (
               <li key={i} className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                <AlertTriangle className="w-3.5 h-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="w-3.5 h-3.5 text-[var(--rag-red)] mt-0.5 flex-shrink-0" />
                 {risk}
               </li>
             ))}

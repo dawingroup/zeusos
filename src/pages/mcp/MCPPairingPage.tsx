@@ -125,11 +125,11 @@ export default function MCPPairingPage() {
           <CardHeader>
             <div className="flex items-center gap-3">
               {phase === 'success' ? (
-                <ShieldCheck className="h-7 w-7 text-emerald-600" />
+                <ShieldCheck className="h-7 w-7 text-[var(--rag-green)]" />
               ) : phase === 'error' ? (
-                <ShieldOff className="h-7 w-7 text-rose-600" />
+                <ShieldOff className="h-7 w-7 text-[var(--rag-red)]" />
               ) : (
-                <ShieldAlert className="h-7 w-7 text-amber-500" />
+                <ShieldAlert className="h-7 w-7 text-[var(--rag-amber)]" />
               )}
               <CardTitle>Pair ZeusOS MCP Proxy</CardTitle>
             </div>
@@ -153,9 +153,9 @@ export default function MCPPairingPage() {
                   <dt className="font-medium text-muted-foreground">Local port</dt>
                   <dd className="font-mono text-foreground">127.0.0.1:{port}</dd>
                 </dl>
-                <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-900">
+                <div className="rounded-md border border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] p-3 text-[var(--rag-amber)]">
                   <p className="font-medium">Only proceed if you started this from your own terminal.</p>
-                  <p className="mt-1 text-amber-800">
+                  <p className="mt-1 text-[var(--rag-amber)]">
                     Never authorize a pairing link that someone else sent you. Pairing grants the
                     listening process the ability to mint Firebase ID tokens for your account
                     indefinitely (until you sign out everywhere).
@@ -165,16 +165,16 @@ export default function MCPPairingPage() {
             )}
 
             {phase === 'success' && (
-              <p className="text-emerald-800">
+              <p className="text-[var(--rag-green)]">
                 ✅ Refresh token sent to <span className="font-mono">127.0.0.1:{port}</span>. You can close this tab.
               </p>
             )}
 
             {phase === 'error' && error && (
-              <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-rose-900">
+              <div className="rounded-md border border-[var(--rag-red)] bg-[var(--rag-red-soft)] p-3 text-[var(--rag-red)]">
                 <p className="font-medium">Pairing failed.</p>
                 <p className="mt-1 break-words font-mono text-xs">{error}</p>
-                <p className="mt-2 text-rose-800">
+                <p className="mt-2 text-[var(--rag-red)]">
                   Re-run <span className="font-mono">node setup.js login</span> in your terminal to try again.
                 </p>
               </div>

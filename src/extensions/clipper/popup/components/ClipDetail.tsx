@@ -290,16 +290,16 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               <p className="text-xs text-purple-400 mt-1">Results will appear here automatically</p>
             </div>
           ) : clip.analysisStatus === 'failed' ? (
-            <div className="p-3 bg-red-50 rounded-lg">
+            <div className="p-3 bg-[var(--rag-red-soft)] rounded-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-red-500" />
-                  <span className="text-sm font-medium text-red-700">Analysis failed</span>
+                  <AlertCircle className="w-4 h-4 text-[var(--rag-red)]" />
+                  <span className="text-sm font-medium text-[var(--rag-red)]">Analysis failed</span>
                 </div>
                 {onAnalyze && (
                   <button
                     onClick={() => onAnalyze(clip.id)}
-                    className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700"
+                    className="flex items-center gap-1 text-xs text-[var(--rag-red)] hover:text-[var(--rag-red)]"
                   >
                     <RefreshCw className="w-3 h-3" />
                     Retry
@@ -317,8 +317,8 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                 <div className="flex items-center gap-2">
                   {clip.aiAnalysis.confidence != null && (
                     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
-                      clip.aiAnalysis.confidence >= 0.8 ? 'bg-green-100 text-green-700' :
-                      clip.aiAnalysis.confidence >= 0.6 ? 'bg-yellow-100 text-yellow-700' :
+                      clip.aiAnalysis.confidence >= 0.8 ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                      clip.aiAnalysis.confidence >= 0.6 ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
                       'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}>
                       {Math.round(clip.aiAnalysis.confidence * 100)}% conf
@@ -359,17 +359,17 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                   </div>
                   <div className="flex items-center gap-2 text-xs">
                     {clip.aiAnalysis.millworkAssessment.isCustomCandidate ? (
-                      <span className="flex items-center gap-1 text-green-600">
+                      <span className="flex items-center gap-1 text-[var(--rag-green)]">
                         <CheckCircle className="w-3 h-3" /> Custom candidate
                       </span>
                     ) : (
                       <span className="text-muted-foreground">Not a custom candidate</span>
                     )}
                     <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
-                      clip.aiAnalysis.millworkAssessment.complexity === 'simple' ? 'bg-green-100 text-green-700' :
-                      clip.aiAnalysis.millworkAssessment.complexity === 'moderate' ? 'bg-yellow-100 text-yellow-700' :
-                      clip.aiAnalysis.millworkAssessment.complexity === 'complex' ? 'bg-orange-100 text-orange-700' :
-                      'bg-red-100 text-red-700'
+                      clip.aiAnalysis.millworkAssessment.complexity === 'simple' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                      clip.aiAnalysis.millworkAssessment.complexity === 'moderate' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+                      clip.aiAnalysis.millworkAssessment.complexity === 'complex' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+                      'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                     }`}>
                       {clip.aiAnalysis.millworkAssessment.complexity}
                     </span>
@@ -406,7 +406,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                   <span className="text-[10px] font-medium text-purple-500 uppercase tracking-wider">Detected Materials</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {clip.aiAnalysis.primaryMaterials.map((m) => (
-                      <span key={m} className="px-1.5 py-0.5 bg-amber-50 text-amber-700 text-xs rounded">
+                      <span key={m} className="px-1.5 py-0.5 bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] text-xs rounded">
                         {m}
                       </span>
                     ))}

@@ -35,11 +35,11 @@ export function ApprovalWorkflow({
   const getStepIcon = (status: ApprovalStep['status']) => {
     switch (status) {
       case 'approved':
-        return <Check className="h-4 w-4 text-green-600" />;
+        return <Check className="h-4 w-4 text-[var(--rag-green)]" />;
       case 'rejected':
-        return <X className="h-4 w-4 text-red-600" />;
+        return <X className="h-4 w-4 text-[var(--rag-red)]" />;
       case 'current':
-        return <Clock className="h-4 w-4 text-blue-600" />;
+        return <Clock className="h-4 w-4 text-[var(--rag-blue)]" />;
       default:
         return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
@@ -48,11 +48,11 @@ export function ApprovalWorkflow({
   const getStepStyles = (status: ApprovalStep['status']) => {
     switch (status) {
       case 'approved':
-        return 'border-green-200 bg-green-50';
+        return 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]';
       case 'rejected':
-        return 'border-red-200 bg-red-50';
+        return 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]';
       case 'current':
-        return 'border-blue-200 bg-blue-50';
+        return 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]';
       default:
         return 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]';
     }

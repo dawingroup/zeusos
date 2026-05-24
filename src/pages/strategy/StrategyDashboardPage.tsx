@@ -99,11 +99,11 @@ function MetricCard({ title, value, subtitle, icon, trend, onClick, color = STRA
             {trend && (
               <div className="flex items-center gap-1 mt-2">
                 {trend.isPositive ? (
-                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <TrendingUp className="h-4 w-4 text-[var(--rag-green)]" />
                 ) : (
-                  <TrendingDown className="h-4 w-4 text-red-500" />
+                  <TrendingDown className="h-4 w-4 text-[var(--rag-red)]" />
                 )}
-                <span className={cn('text-sm', trend.isPositive ? 'text-green-500' : 'text-red-500')}>
+                <span className={cn('text-sm', trend.isPositive ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]')}>
                   {Math.abs(trend.value)}%
                 </span>
               </div>
@@ -125,13 +125,13 @@ function getStatusColor(status: string): string {
   switch (status) {
     case 'on_track':
     case 'completed':
-      return 'text-green-600';
+      return 'text-[var(--rag-green)]';
     case 'at_risk':
     case 'warning':
-      return 'text-amber-600';
+      return 'text-[var(--rag-amber)]';
     case 'behind':
     case 'critical':
-      return 'text-red-600';
+      return 'text-[var(--rag-red)]';
     default:
       return 'text-muted-foreground';
   }
@@ -141,13 +141,13 @@ function getStatusBadge(status: string): string {
   switch (status) {
     case 'on_track':
     case 'completed':
-      return 'bg-green-100 text-green-800';
+      return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
     case 'at_risk':
     case 'warning':
-      return 'bg-amber-100 text-amber-800';
+      return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]';
     case 'behind':
     case 'critical':
-      return 'bg-red-100 text-red-800';
+      return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]';
     default:
       return 'bg-[var(--bg-sunken)] text-foreground';
   }
@@ -199,12 +199,12 @@ export function StrategyDashboardPage() {
 
       {/* Alerts Banner */}
       {mockAlerts.length > 0 && (
-        <Card className="border-amber-200 bg-amber-50">
+        <Card className="border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
-                <span className="font-medium text-amber-900">
+                <AlertTriangle className="h-5 w-5 text-[var(--rag-amber)]" />
+                <span className="font-medium text-[var(--rag-amber)]">
                   {mockAlerts.length} Strategic Alert{mockAlerts.length > 1 ? 's' : ''} Requiring Attention
                 </span>
               </div>
@@ -332,7 +332,7 @@ export function StrategyDashboardPage() {
           <CardContent>
             {mockKPIs.length === 0 ? (
               <div className="py-8 text-center">
-                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
+                <CheckCircle className="h-12 w-12 text-[var(--rag-green)] mx-auto mb-2" />
                 <p className="text-muted-foreground">All KPIs are healthy</p>
               </div>
             ) : (
@@ -346,9 +346,9 @@ export function StrategyDashboardPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {kpi.trend === 'up' ? (
-                          <TrendingUp className={cn('h-4 w-4', kpi.trendValue > 0 ? 'text-red-500' : 'text-green-500')} />
+                          <TrendingUp className={cn('h-4 w-4', kpi.trendValue > 0 ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]')} />
                         ) : (
-                          <TrendingDown className={cn('h-4 w-4', kpi.trendValue < 0 ? 'text-red-500' : 'text-green-500')} />
+                          <TrendingDown className={cn('h-4 w-4', kpi.trendValue < 0 ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]')} />
                         )}
                         <span className="font-medium text-sm">{kpi.name}</span>
                       </div>
@@ -393,8 +393,8 @@ export function StrategyDashboardPage() {
                   <Badge 
                     className={cn(
                       'text-[10px] ml-2 shrink-0',
-                      initiative.priority === 'critical' ? 'bg-red-100 text-red-800' :
-                      initiative.priority === 'high' ? 'bg-amber-100 text-amber-800' :
+                      initiative.priority === 'critical' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' :
+                      initiative.priority === 'high' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
                       'bg-[var(--bg-sunken)] text-foreground'
                     )}
                   >

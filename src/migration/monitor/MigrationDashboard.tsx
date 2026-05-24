@@ -29,11 +29,11 @@ import { rollbackManager } from '../utils/rollback-manager';
 
 const STATUS_COLORS: Record<MigrationStatus, string> = {
   pending: 'bg-[var(--bg-sunken)] text-muted-foreground',
-  in_progress: 'bg-blue-100 text-blue-700',
-  validating: 'bg-yellow-100 text-yellow-700',
-  completed: 'bg-green-100 text-green-700',
-  failed: 'bg-red-100 text-red-700',
-  rolled_back: 'bg-orange-100 text-orange-700',
+  in_progress: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  validating: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  failed: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  rolled_back: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
 };
 
 const STATUS_ICONS: Record<MigrationStatus, React.ReactNode> = {
@@ -186,7 +186,7 @@ export const MigrationDashboard: React.FC = () => {
                         <button
                           onClick={() => handleRollback(job.id)}
                           disabled={isRollingBack === job.id}
-                          className="p-2 text-[var(--fg-tertiary)] hover:text-orange-600 disabled:opacity-50"
+                          className="p-2 text-[var(--fg-tertiary)] hover:text-[var(--rag-amber)] disabled:opacity-50"
                           title="Rollback"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -204,8 +204,8 @@ export const MigrationDashboard: React.FC = () => {
                     <div className="h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          job.status === 'completed' ? 'bg-green-500' :
-                          job.status === 'failed' ? 'bg-red-500' : 'bg-blue-500'
+                          job.status === 'completed' ? 'bg-[var(--rag-green)]' :
+                          job.status === 'failed' ? 'bg-[var(--rag-red)]' : 'bg-[var(--rag-blue)]'
                         }`}
                         style={{ width: `${getProgress(job)}%` }}
                       />
@@ -219,7 +219,7 @@ export const MigrationDashboard: React.FC = () => {
                     {job.errors.length > 0 && (
                       <button
                         onClick={() => toggleErrors(job.id)}
-                        className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                        className="flex items-center gap-1 text-[var(--rag-red)] hover:text-[var(--rag-red)]"
                       >
                         <AlertTriangle className="w-3 h-3" />
                         {job.errors.length} errors
@@ -234,18 +234,18 @@ export const MigrationDashboard: React.FC = () => {
 
                   {/* Expanded Errors */}
                   {expandedErrors.has(job.id) && job.errors.length > 0 && (
-                    <div className="mt-3 p-3 bg-red-50 rounded-lg">
-                      <p className="text-xs font-medium text-red-700 mb-2">Errors:</p>
+                    <div className="mt-3 p-3 bg-[var(--rag-red-soft)] rounded-lg">
+                      <p className="text-xs font-medium text-[var(--rag-red)] mb-2">Errors:</p>
                       <div className="space-y-1 max-h-40 overflow-y-auto">
                         {job.errors.slice(0, 20).map((error, idx) => (
-                          <div key={idx} className="text-xs text-red-600">
+                          <div key={idx} className="text-xs text-[var(--rag-red)]">
                             <span className="font-mono">{error.documentId}</span>
-                            {error.field && <span className="text-red-400"> [{error.field}]</span>}
+                            {error.field && <span className="text-[var(--rag-red)]"> [{error.field}]</span>}
                             : {error.error}
                           </div>
                         ))}
                         {job.errors.length > 20 && (
-                          <p className="text-xs text-red-400">
+                          <p className="text-xs text-[var(--rag-red)]">
                             ... and {job.errors.length - 20} more errors
                           </p>
                         )}
@@ -268,9 +268,9 @@ const SummaryCard: React.FC<{
   value: number;
   color?: 'blue' | 'green' | 'red';
 }> = ({ label, value, color }) => {
-  const colorClass = color === 'blue' ? 'text-blue-600' :
-                     color === 'green' ? 'text-green-600' :
-                     color === 'red' ? 'text-red-600' : 'text-foreground';
+  const colorClass = color === 'blue' ? 'text-[var(--rag-blue)]' :
+                     color === 'green' ? 'text-[var(--rag-green)]' :
+                     color === 'red' ? 'text-[var(--rag-red)]' : 'text-foreground';
   return (
     <div className="bg-card rounded-xl border p-4">
       <p className="text-sm text-muted-foreground">{label}</p>

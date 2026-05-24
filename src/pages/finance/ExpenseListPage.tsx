@@ -74,10 +74,10 @@ const EXPENSE_CATEGORIES = [
 ];
 
 const statusColors: Record<string, string> = {
-  approved: 'bg-green-100 text-green-800',
-  pending: 'bg-amber-100 text-amber-800',
-  rejected: 'bg-red-100 text-red-800',
-  paid: 'bg-blue-100 text-blue-800',
+  approved: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  pending: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  rejected: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  paid: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   draft: 'bg-[var(--bg-sunken)] text-foreground',
 };
 
@@ -251,10 +251,10 @@ export function ExpenseListPage() {
 
       {/* Bulk Actions */}
       {selected.length > 0 && (
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-[var(--rag-green)] bg-[var(--rag-green-soft)]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <span className="font-medium text-green-900">
+              <span className="font-medium text-[var(--rag-green)]">
                 {selected.length} expense{selected.length > 1 ? 's' : ''} selected
               </span>
               <div className="flex gap-2">
@@ -440,11 +440,11 @@ export function ExpenseListPage() {
                           {expense.status === 'pending' && (
                             <>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => handleApprove(expense.id)} className="text-green-600">
+                              <DropdownMenuItem onClick={() => handleApprove(expense.id)} className="text-[var(--rag-green)]">
                                 <CheckCircle className="h-4 w-4 mr-2" />
                                 Approve
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setRejectDialog({ open: true, expenseId: expense.id })} className="text-red-600">
+                              <DropdownMenuItem onClick={() => setRejectDialog({ open: true, expenseId: expense.id })} className="text-[var(--rag-red)]">
                                 <XCircle className="h-4 w-4 mr-2" />
                                 Reject
                               </DropdownMenuItem>

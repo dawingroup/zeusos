@@ -142,25 +142,25 @@ export function FinancialReportsPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="text-center p-4">
-          <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-          <p className="text-xl font-bold text-green-600">{formatCurrencyUGX(mockReport.totalIncome)}</p>
+          <TrendingUp className="h-8 w-8 text-[var(--rag-green)] mx-auto mb-2" />
+          <p className="text-xl font-bold text-[var(--rag-green)]">{formatCurrencyUGX(mockReport.totalIncome)}</p>
           <p className="text-sm text-muted-foreground">Total Income</p>
         </Card>
         <Card className="text-center p-4">
-          <TrendingDown className="h-8 w-8 text-red-500 mx-auto mb-2" />
-          <p className="text-xl font-bold text-red-600">{formatCurrencyUGX(mockReport.totalExpenses)}</p>
+          <TrendingDown className="h-8 w-8 text-[var(--rag-red)] mx-auto mb-2" />
+          <p className="text-xl font-bold text-[var(--rag-red)]">{formatCurrencyUGX(mockReport.totalExpenses)}</p>
           <p className="text-sm text-muted-foreground">Total Expenses</p>
         </Card>
         <Card className="text-center p-4">
-          <Landmark className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-          <p className={cn("text-xl font-bold", mockReport.netIncome >= 0 ? "text-green-600" : "text-red-600")}>
+          <Landmark className="h-8 w-8 text-[var(--rag-blue)] mx-auto mb-2" />
+          <p className={cn("text-xl font-bold", mockReport.netIncome >= 0 ? "text-[var(--rag-green)]" : "text-[var(--rag-red)]")}>
             {formatCurrencyUGX(mockReport.netIncome)}
           </p>
           <p className="text-sm text-muted-foreground">Net Income</p>
         </Card>
         <Card className="text-center p-4">
-          <CreditCard className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-          <p className="text-xl font-bold text-amber-600">{formatCurrencyUGX(mockReport.taxLiability)}</p>
+          <CreditCard className="h-8 w-8 text-[var(--rag-amber)] mx-auto mb-2" />
+          <p className="text-xl font-bold text-[var(--rag-amber)]">{formatCurrencyUGX(mockReport.taxLiability)}</p>
           <p className="text-sm text-muted-foreground">Tax Liability</p>
         </Card>
       </div>
@@ -190,7 +190,7 @@ export function FinancialReportsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="bg-green-50">
+                  <tr className="bg-[var(--rag-green-soft)]">
                     <td colSpan={3} className="py-2 font-semibold">Revenue</td>
                   </tr>
                   {mockReport.incomeByCategory.map(item => (
@@ -206,7 +206,7 @@ export function FinancialReportsPage() {
                     <td className="py-2 text-right">100%</td>
                   </tr>
 
-                  <tr className="bg-red-50">
+                  <tr className="bg-[var(--rag-red-soft)]">
                     <td colSpan={3} className="py-2 font-semibold">Expenses</td>
                   </tr>
                   {mockReport.expensesByCategory.map(item => (
@@ -222,9 +222,9 @@ export function FinancialReportsPage() {
                     <td className="py-2 text-right">100%</td>
                   </tr>
 
-                  <tr className="bg-blue-50 font-bold">
+                  <tr className="bg-[var(--rag-blue-soft)] font-bold">
                     <td className="py-3">Net Income</td>
-                    <td className={cn("py-3 text-right", mockReport.netIncome >= 0 ? "text-green-600" : "text-red-600")}>
+                    <td className={cn("py-3 text-right", mockReport.netIncome >= 0 ? "text-[var(--rag-green)]" : "text-[var(--rag-red)]")}>
                       {formatCurrencyUGX(mockReport.netIncome)}
                     </td>
                     <td className="py-3 text-right">-</td>
@@ -256,7 +256,7 @@ export function FinancialReportsPage() {
                       <td className="py-2 text-right">
                         <Badge className={cn(
                           "text-xs",
-                          item.change <= 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          item.change <= 0 ? "bg-[var(--rag-green-soft)] text-[var(--rag-green)]" : "bg-[var(--rag-red-soft)] text-[var(--rag-red)]"
                         )}>
                           {item.change >= 0 ? '+' : ''}{item.change}%
                         </Badge>
@@ -288,14 +288,14 @@ export function FinancialReportsPage() {
                       <td className="py-2">{item.budgetName}</td>
                       <td className="py-2 text-right">{formatCurrencyUGX(item.allocated)}</td>
                       <td className="py-2 text-right">{formatCurrencyUGX(item.actual)}</td>
-                      <td className={cn("py-2 text-right", item.variance >= 0 ? "text-green-600" : "text-red-600")}>
+                      <td className={cn("py-2 text-right", item.variance >= 0 ? "text-[var(--rag-green)]" : "text-[var(--rag-red)]")}>
                         {formatCurrencyUGX(item.variance)}
                       </td>
                       <td className="py-2 text-right">
                         <Badge className={cn(
                           "text-xs",
-                          item.utilization >= 100 ? "bg-red-100 text-red-800" :
-                          item.utilization >= 90 ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-800"
+                          item.utilization >= 100 ? "bg-[var(--rag-red-soft)] text-[var(--rag-red)]" :
+                          item.utilization >= 90 ? "bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]" : "bg-[var(--rag-green-soft)] text-[var(--rag-green)]"
                         )}>
                           {item.utilization}%
                         </Badge>
@@ -329,7 +329,7 @@ export function FinancialReportsPage() {
                   <hr />
                   <div className="flex justify-between text-sm font-semibold">
                     <span>Net VAT Payable</span>
-                    <span className={mockReport.vatPayable >= 0 ? "text-red-600" : "text-green-600"}>
+                    <span className={mockReport.vatPayable >= 0 ? "text-[var(--rag-red)]" : "text-[var(--rag-green)]"}>
                       {formatCurrencyUGX(Math.abs(mockReport.vatPayable))}
                       {mockReport.vatPayable < 0 && ' (Refund)'}
                     </span>
@@ -354,7 +354,7 @@ export function FinancialReportsPage() {
                   <hr />
                   <div className="flex justify-between text-sm font-semibold">
                     <span>Total WHT</span>
-                    <span className="text-amber-600">{formatCurrencyUGX(mockReport.totalWht)}</span>
+                    <span className="text-[var(--rag-amber)]">{formatCurrencyUGX(mockReport.totalWht)}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -384,7 +384,7 @@ export function FinancialReportsPage() {
                   <hr />
                   <div className="flex justify-between text-sm font-semibold">
                     <span>Total Payroll Taxes</span>
-                    <span className="text-red-600">{formatCurrencyUGX(mockReport.totalPayrollTax)}</span>
+                    <span className="text-[var(--rag-red)]">{formatCurrencyUGX(mockReport.totalPayrollTax)}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -413,14 +413,14 @@ export function FinancialReportsPage() {
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span>Annual Return</span>
-                    <Badge className="bg-amber-100 text-amber-800">June 30th</Badge>
+                    <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]">June 30th</Badge>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Total Tax Liability */}
-            <Card className="mt-6 border-red-200 bg-red-50">
+            <Card className="mt-6 border-[var(--rag-red)] bg-[var(--rag-red-soft)]">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -429,7 +429,7 @@ export function FinancialReportsPage() {
                       Combined VAT, WHT, PAYE, NSSF, and LST obligations
                     </p>
                   </div>
-                  <p className="text-3xl font-bold text-red-600">
+                  <p className="text-3xl font-bold text-[var(--rag-red)]">
                     {formatCurrencyUGX(mockReport.taxLiability)}
                   </p>
                 </div>

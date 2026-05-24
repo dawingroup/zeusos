@@ -36,7 +36,7 @@ export function ClipCard({
   return (
     <div
       className={`flex gap-3 p-2 bg-card rounded-lg border transition-all ${
-        isSelected ? 'ring-2 ring-blue-500 border-blue-200' : 'border-[var(--border-subtle)]'
+        isSelected ? 'ring-2 ring-[var(--rag-blue)] border-[var(--rag-blue)]' : 'border-[var(--border-subtle)]'
       }`}
     >
       {/* Checkbox */}
@@ -44,7 +44,7 @@ export function ClipCard({
         type="checkbox"
         checked={isSelected}
         onChange={onSelect}
-        className="mt-2 w-4 h-4 rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
+        className="mt-2 w-4 h-4 rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
       />
 
       {/* Thumbnail */}
@@ -81,7 +81,7 @@ export function ClipCard({
         {clip.syncStatus === 'error' && onRetry && (
           <button
             onClick={onRetry}
-            className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+            className="p-1 text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] rounded"
             title="Retry sync"
           >
             <RefreshCw className="w-4 h-4" />
@@ -89,7 +89,7 @@ export function ClipCard({
         )}
         <button
           onClick={onDelete}
-          className="p-1 text-red-600 hover:bg-red-50 rounded"
+          className="p-1 text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
           title="Delete"
         >
           <Trash2 className="w-4 h-4" />

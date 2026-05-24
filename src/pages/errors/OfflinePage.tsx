@@ -28,8 +28,8 @@ export default function OfflinePage() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center max-w-md">
           <div className="flex justify-center mb-6">
-            <div className="rounded-full bg-yellow-500/10 p-4">
-              <WifiOff className="h-12 w-12 text-yellow-500" />
+            <div className="rounded-full bg-[var(--rag-amber)]/10 p-4">
+              <WifiOff className="h-12 w-12 text-[var(--rag-amber)]" />
             </div>
           </div>
 

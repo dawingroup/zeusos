@@ -39,14 +39,14 @@ const TYPE_CONFIG: Record<RecommendationType, {
   product: { 
     icon: Package, 
     label: 'Product', 
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50 border-blue-200',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
   },
   part: { 
     icon: Wrench, 
     label: 'Part', 
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-50 border-amber-200',
+    color: 'text-[var(--rag-amber)]',
+    bgColor: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]',
   },
   inspiration: { 
     icon: Image, 
@@ -311,7 +311,7 @@ function RecommendationCard({ item, onSelect, onDismiss }: RecommendationCardPro
         <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground truncate">{item.matchReason}</span>
-          <span className="text-xs text-green-600 font-medium">{item.relevanceScore}%</span>
+          <span className="text-xs text-[var(--rag-green)] font-medium">{item.relevanceScore}%</span>
         </div>
       </div>
 

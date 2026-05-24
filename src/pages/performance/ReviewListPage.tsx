@@ -48,11 +48,11 @@ const PERFORMANCE_COLOR = '#FF5722';
 // Review statuses
 const REVIEW_STATUSES = [
   { value: 'scheduled', label: 'Scheduled', color: 'bg-[var(--bg-sunken)] text-foreground' },
-  { value: 'self_assessment', label: 'Self Assessment', color: 'bg-blue-100 text-blue-800' },
-  { value: 'manager_review', label: 'Manager Review', color: 'bg-amber-100 text-amber-800' },
+  { value: 'self_assessment', label: 'Self Assessment', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  { value: 'manager_review', label: 'Manager Review', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
   { value: 'calibration', label: 'Calibration', color: 'bg-purple-100 text-purple-800' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-800' },
-  { value: 'acknowledged', label: 'Acknowledged', color: 'bg-green-100 text-green-800' },
+  { value: 'completed', label: 'Completed', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
+  { value: 'acknowledged', label: 'Acknowledged', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
 ];
 
 // Review types
@@ -79,7 +79,7 @@ function RatingDisplay({ rating }: { rating: number | null }) {
   if (rating === null) return <span className="text-muted-foreground text-sm">-</span>;
   return (
     <div className="flex items-center gap-1">
-      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+      <Star className="h-3 w-3 fill-[var(--rag-amber)] text-[var(--rag-amber)]" />
       <span className="text-sm font-medium">{rating.toFixed(1)}</span>
     </div>
   );
@@ -213,11 +213,11 @@ export function ReviewListPage() {
           <p className="text-xs text-muted-foreground">Scheduled</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
+          <p className="text-2xl font-bold text-[var(--rag-blue)]">{stats.inProgress}</p>
           <p className="text-xs text-muted-foreground">In Progress</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+          <p className="text-2xl font-bold text-[var(--rag-green)]">{stats.completed}</p>
           <p className="text-xs text-muted-foreground">Completed</p>
         </Card>
         <Card className="text-center p-3" style={{ backgroundColor: `${PERFORMANCE_COLOR}10` }}>
@@ -339,10 +339,10 @@ export function ReviewListPage() {
                         <Badge variant="outline" className="text-xs">{typeInfo?.label}</Badge>
                       </td>
                       <td className="p-3">
-                        <p className={cn(isOverdue && "text-red-600")}>
+                        <p className={cn(isOverdue && "text-[var(--rag-red)]")}>
                           {format(review.scheduledDate, 'MMM d, yyyy')}
                         </p>
-                        {isOverdue && <p className="text-xs text-red-600">Overdue</p>}
+                        {isOverdue && <p className="text-xs text-[var(--rag-red)]">Overdue</p>}
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">

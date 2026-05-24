@@ -37,8 +37,8 @@ export default function VerifyEmailPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="rounded-full bg-blue-100 p-4">
-                <Mail className="h-8 w-8 text-blue-600" />
+              <div className="rounded-full bg-[var(--rag-blue-soft)] p-4">
+                <Mail className="h-8 w-8 text-[var(--rag-blue)]" />
               </div>
             </div>
             <CardTitle className="text-2xl">Verify your email</CardTitle>

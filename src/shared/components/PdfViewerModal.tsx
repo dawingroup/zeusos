@@ -191,8 +191,8 @@ export function PdfViewerModal({
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)]">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <FileText className="w-5 h-5 text-red-600" />
+              <div className="p-2 bg-[var(--rag-red-soft)] rounded-lg">
+                <FileText className="w-5 h-5 text-[var(--rag-red)]" />
               </div>
               <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-foreground truncate">
@@ -307,7 +307,7 @@ export function PdfViewerModal({
 
             {/* Error message (shown alongside fallback) */}
             {error && viewerState === 'fallback' && isPdf && (
-              <div className="absolute top-2 left-2 right-2 flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+              <div className="absolute top-2 left-2 right-2 flex items-center gap-2 px-3 py-2 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg text-sm text-[var(--rag-amber)]">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>Adobe viewer unavailable. Using browser's PDF viewer.</span>
               </div>

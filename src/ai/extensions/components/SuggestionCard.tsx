@@ -38,10 +38,10 @@ const TYPE_ICONS: Record<SuggestionType, React.ReactNode> = {
 };
 
 const PRIORITY_STYLES: Record<SuggestionPriority, { bg: string; border: string; text: string }> = {
-  critical: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700' },
-  high: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700' },
-  medium: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700' },
-  low: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700' },
+  critical: { bg: 'bg-[var(--rag-red-soft)]', border: 'border-[var(--rag-red)]', text: 'text-[var(--rag-red)]' },
+  high: { bg: 'bg-[var(--rag-amber-soft)]', border: 'border-[var(--rag-amber)]', text: 'text-[var(--rag-amber)]' },
+  medium: { bg: 'bg-[var(--rag-amber-soft)]', border: 'border-[var(--rag-amber)]', text: 'text-[var(--rag-amber)]' },
+  low: { bg: 'bg-[var(--rag-blue-soft)]', border: 'border-[var(--rag-blue)]', text: 'text-[var(--rag-blue)]' },
   info: { bg: 'bg-[var(--bg-sunken)]', border: 'border-[var(--border-subtle)]', text: 'text-muted-foreground' },
 };
 
@@ -83,7 +83,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
         <div className="flex items-center gap-1">
           <button
             onClick={() => onApply(suggestion)}
-            className="px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded"
+            className="px-2 py-1 text-xs font-medium text-[var(--rag-blue)] hover:text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] rounded"
           >
             Apply
           </button>
@@ -146,7 +146,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => onApply(suggestion)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] rounded-lg transition-colors"
             >
               {suggestion.actionType === 'navigate' && <ExternalLink className="w-3.5 h-3.5" />}
               {suggestion.actionType === 'link' && <Link className="w-3.5 h-3.5" />}
@@ -243,7 +243,7 @@ export const SuggestionList: React.FC<SuggestionListProps> = ({
       {hasMore && !showAll && (
         <button
           onClick={() => setShowAll(true)}
-          className="w-full py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+          className="w-full py-2 text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] rounded-lg transition-colors"
         >
           Show {suggestions.length - maxVisible} more suggestions
         </button>

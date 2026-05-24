@@ -64,7 +64,7 @@ const TRAINING_TYPES: Array<{
     value: 'external_course',
     label: 'External Course',
     icon: ExternalLink,
-    color: 'text-blue-600',
+    color: 'text-[var(--rag-blue)]',
     description: 'Courses from platforms like Coursera, Udemy, LinkedIn Learning',
   },
   {
@@ -85,14 +85,14 @@ const TRAINING_TYPES: Array<{
     value: 'workshop',
     label: 'Workshop',
     icon: Users,
-    color: 'text-orange-600',
+    color: 'text-[var(--rag-amber)]',
     description: 'In-person or virtual workshops with external trainers',
   },
   {
     value: 'internal_course',
     label: 'Internal Course',
     icon: BookOpen,
-    color: 'text-green-600',
+    color: 'text-[var(--rag-green)]',
     description: 'Company-developed training materials',
   },
   {
@@ -306,7 +306,7 @@ export function TrainingCourseFormPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -466,7 +466,7 @@ export function TrainingCourseFormPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ExternalLink className="h-5 w-5 text-blue-600" />
+                <ExternalLink className="h-5 w-5 text-[var(--rag-blue)]" />
                 External Platform Details
               </CardTitle>
             </CardHeader>
@@ -554,7 +554,7 @@ export function TrainingCourseFormPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-orange-600" />
+                <Users className="h-5 w-5 text-[var(--rag-amber)]" />
                 Workshop Details
               </CardTitle>
             </CardHeader>
@@ -693,7 +693,7 @@ export function TrainingCourseFormPage() {
                       key={competency.id}
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                         selectedCompetencies.includes(competency.id)
-                          ? 'border-blue-600 bg-blue-50'
+                          ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
                           : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
                       }`}
                       onClick={() => handleToggleCompetency(competency.id)}

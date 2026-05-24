@@ -149,9 +149,9 @@ const mockKPIs = [
 
 function getStatusColor(status: string): string {
   switch (status) {
-    case 'on_target': return 'text-green-600';
-    case 'warning': return 'text-amber-600';
-    case 'critical': return 'text-red-600';
+    case 'on_target': return 'text-[var(--rag-green)]';
+    case 'warning': return 'text-[var(--rag-amber)]';
+    case 'critical': return 'text-[var(--rag-red)]';
     default: return 'text-muted-foreground';
   }
 }
@@ -228,14 +228,14 @@ function KPICard({ kpi, onEdit, onDelete }: KPICardProps) {
               <TrendIcon 
                 className={cn(
                   'h-4 w-4',
-                  kpi.trendDirection === 'positive' ? 'text-green-500' :
-                  kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-[var(--fg-tertiary)]'
+                  kpi.trendDirection === 'positive' ? 'text-[var(--rag-green)]' :
+                  kpi.trendDirection === 'negative' ? 'text-[var(--rag-red)]' : 'text-[var(--fg-tertiary)]'
                 )} 
               />
               <span className={cn(
                 'text-sm font-medium',
-                kpi.trendDirection === 'positive' ? 'text-green-500' :
-                kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-[var(--fg-tertiary)]'
+                kpi.trendDirection === 'positive' ? 'text-[var(--rag-green)]' :
+                kpi.trendDirection === 'negative' ? 'text-[var(--rag-red)]' : 'text-[var(--fg-tertiary)]'
               )}>
                 {kpi.trendValue > 0 ? '+' : ''}{kpi.trendValue}%
               </span>
@@ -344,16 +344,16 @@ export function KPIListPage() {
           <p className="text-3xl font-bold">{stats.total}</p>
           <p className="text-sm text-muted-foreground">Total KPIs</p>
         </Card>
-        <Card className="text-center p-4 bg-green-50">
-          <p className="text-3xl font-bold text-green-600">{stats.onTarget}</p>
+        <Card className="text-center p-4 bg-[var(--rag-green-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-green)]">{stats.onTarget}</p>
           <p className="text-sm text-muted-foreground">On Target</p>
         </Card>
-        <Card className="text-center p-4 bg-amber-50">
-          <p className="text-3xl font-bold text-amber-600">{stats.warning}</p>
+        <Card className="text-center p-4 bg-[var(--rag-amber-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-amber)]">{stats.warning}</p>
           <p className="text-sm text-muted-foreground">Warning</p>
         </Card>
-        <Card className="text-center p-4 bg-red-50">
-          <p className="text-3xl font-bold text-red-600">{stats.critical}</p>
+        <Card className="text-center p-4 bg-[var(--rag-red-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-red)]">{stats.critical}</p>
           <p className="text-sm text-muted-foreground">Critical</p>
         </Card>
       </div>

@@ -72,8 +72,8 @@ export function BrandingSettings() {
 
   if (!user) {
     return (
-      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <p className="text-sm text-yellow-800">Please sign in to manage branding settings.</p>
+      <div className="p-4 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg">
+        <p className="text-sm text-[var(--rag-amber)]">Please sign in to manage branding settings.</p>
       </div>
     );
   }
@@ -90,17 +90,17 @@ export function BrandingSettings() {
 
       {/* Success Message */}
       {successMessage && (
-        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <CheckCircle className="h-5 w-5 text-green-600" />
-          <p className="text-sm text-green-800">{successMessage}</p>
+        <div className="flex items-center gap-2 p-4 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-lg">
+          <CheckCircle className="h-5 w-5 text-[var(--rag-green)]" />
+          <p className="text-sm text-[var(--rag-green)]">{successMessage}</p>
         </div>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <AlertCircle className="h-5 w-5 text-red-600" />
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="flex items-center gap-2 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+          <AlertCircle className="h-5 w-5 text-[var(--rag-red)]" />
+          <p className="text-sm text-[var(--rag-red)]">{error}</p>
         </div>
       )}
 
@@ -110,7 +110,7 @@ export function BrandingSettings() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">Logo</h3>
             {branding.logoUrl && (
-              <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+              <span className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] px-2 py-1 rounded">
                 Custom
               </span>
             )}
@@ -161,7 +161,7 @@ export function BrandingSettings() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-foreground">Favicon</h3>
             {branding.faviconUrl && (
-              <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+              <span className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] px-2 py-1 rounded">
                 Custom
               </span>
             )}
@@ -223,9 +223,9 @@ export function BrandingSettings() {
       )}
 
       {/* Guidelines */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-        <h4 className="text-sm font-semibold text-blue-900 mb-2">Guidelines</h4>
-        <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+      <div className="bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg p-4 mt-6">
+        <h4 className="text-sm font-semibold text-[var(--rag-blue)] mb-2">Guidelines</h4>
+        <ul className="text-xs text-[var(--rag-blue)] space-y-1 list-disc list-inside">
           <li>Logo: Recommended size 200x200px or larger, square aspect ratio works best</li>
           <li>Favicon: Recommended size 32x32px or 64x64px for best compatibility</li>
           <li>Use PNG or SVG format for transparency support</li>

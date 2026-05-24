@@ -36,28 +36,28 @@ const TYPE_LABELS: Record<AnomalyType, string> = {
 
 const SEVERITY_STYLES: Record<string, { bg: string; border: string; icon: string; badge: string }> = {
   critical: {
-    bg: 'bg-red-50',
-    border: 'border-red-200',
-    icon: 'text-red-600',
-    badge: 'bg-red-100 text-red-700',
+    bg: 'bg-[var(--rag-red-soft)]',
+    border: 'border-[var(--rag-red)]',
+    icon: 'text-[var(--rag-red)]',
+    badge: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   },
   high: {
-    bg: 'bg-orange-50',
-    border: 'border-orange-200',
-    icon: 'text-orange-600',
-    badge: 'bg-orange-100 text-orange-700',
+    bg: 'bg-[var(--rag-amber-soft)]',
+    border: 'border-[var(--rag-amber)]',
+    icon: 'text-[var(--rag-amber)]',
+    badge: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   },
   medium: {
-    bg: 'bg-yellow-50',
-    border: 'border-yellow-200',
-    icon: 'text-yellow-600',
-    badge: 'bg-yellow-100 text-yellow-700',
+    bg: 'bg-[var(--rag-amber-soft)]',
+    border: 'border-[var(--rag-amber)]',
+    icon: 'text-[var(--rag-amber)]',
+    badge: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   },
   low: {
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    icon: 'text-blue-600',
-    badge: 'bg-blue-100 text-blue-700',
+    bg: 'bg-[var(--rag-blue-soft)]',
+    border: 'border-[var(--rag-blue)]',
+    icon: 'text-[var(--rag-blue)]',
+    badge: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   },
 };
 
@@ -154,7 +154,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
             {anomaly.actualValue !== undefined && (
               <div>
                 <span className="text-muted-foreground">Actual: </span>
-                <span className={`font-medium ${anomaly.deviation && anomaly.deviation > 0 ? 'text-red-600' : 'text-foreground'}`}>
+                <span className={`font-medium ${anomaly.deviation && anomaly.deviation > 0 ? 'text-[var(--rag-red)]' : 'text-foreground'}`}>
                   {typeof anomaly.actualValue === 'number'
                     ? anomaly.actualValue.toLocaleString()
                     : String(anomaly.actualValue)}
@@ -164,7 +164,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
             {anomaly.deviation !== undefined && (
               <div>
                 <span className="text-muted-foreground">Deviation: </span>
-                <span className="font-medium text-red-600">
+                <span className="font-medium text-[var(--rag-red)]">
                   {(anomaly.deviation * 100).toFixed(1)}%
                 </span>
               </div>
@@ -212,7 +212,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
                 <ul className="space-y-1">
                   {anomaly.suggestedActions.map((action, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                       {action}
                     </li>
                   ))}
@@ -228,7 +228,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowResolveForm(true)}
-                className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-sm font-medium text-white bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] rounded-lg transition-colors"
               >
                 Resolve
               </button>
@@ -246,14 +246,14 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
                 value={resolution}
                 onChange={(e) => setResolution(e.target.value)}
                 placeholder="Describe how this was resolved..."
-                className="w-full px-3 py-2 text-sm border border-[var(--border-subtle)] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-[var(--border-subtle)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 rows={2}
               />
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleResolve}
                   disabled={!resolution.trim()}
-                  className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:opacity-50 rounded-lg transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-[var(--rag-green)] hover:bg-[var(--rag-green)] disabled:opacity-50 rounded-lg transition-colors"
                 >
                   Mark Resolved
                 </button>
@@ -300,7 +300,7 @@ export const AnomalyList: React.FC<AnomalyListProps> = ({
   if (anomalies.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-500 opacity-50" />
+        <CheckCircle className="w-8 h-8 mx-auto mb-2 text-[var(--rag-green)] opacity-50" />
         <p className="text-sm">No anomalies detected</p>
       </div>
     );
@@ -368,7 +368,7 @@ export const AnomalyBadge: React.FC<AnomalyBadgeProps> = ({ count, severity }) =
   const colors = severity
     ? SEVERITY_STYLES[severity].badge
     : count > 0
-    ? 'bg-red-100 text-red-700'
+    ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
     : 'bg-[var(--bg-sunken)] text-muted-foreground';
 
   return (

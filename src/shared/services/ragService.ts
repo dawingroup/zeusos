@@ -153,11 +153,11 @@ export function getOverallOptimizationStatus(
 export function getRAGColorClass(status: RAGStatus): string {
   switch (status) {
     case 'red':
-      return 'bg-red-100 text-red-800 border-red-200';
+      return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]';
     case 'amber':
-      return 'bg-amber-100 text-amber-800 border-amber-200';
+      return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]';
     case 'green':
-      return 'bg-green-100 text-green-800 border-green-200';
+      return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]';
     case 'grey':
     default:
       return 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]';

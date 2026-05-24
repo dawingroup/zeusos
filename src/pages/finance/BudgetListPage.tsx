@@ -170,8 +170,8 @@ export function BudgetListPage() {
           <p className="text-xl font-bold">{formatCurrencyUGX(stats.totalSpent)}</p>
           <p className="text-xs text-muted-foreground">({overallUtilization}% utilized)</p>
         </Card>
-        <Card className="text-center p-4 bg-red-50">
-          <p className="text-3xl font-bold text-red-600">{stats.overBudgetCount}</p>
+        <Card className="text-center p-4 bg-[var(--rag-red-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-red)]">{stats.overBudgetCount}</p>
           <p className="text-sm text-muted-foreground">Over Budget</p>
         </Card>
       </div>
@@ -295,19 +295,19 @@ export function BudgetListPage() {
                     value={Math.min(budget.utilization, 100)} 
                     className={cn(
                       "h-2",
-                      budget.utilization >= 100 ? "[&>div]:bg-red-500" :
-                      budget.utilization >= 90 ? "[&>div]:bg-amber-500" : "[&>div]:bg-green-500"
+                      budget.utilization >= 100 ? "[&>div]:bg-[var(--rag-red)]" :
+                      budget.utilization >= 90 ? "[&>div]:bg-[var(--rag-amber)]" : "[&>div]:bg-[var(--rag-green)]"
                     )}
                   />
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-xs font-medium">{budget.utilization.toFixed(1)}% utilized</span>
                     {budget.utilization >= 100 ? (
-                      <Badge className="text-[10px] bg-red-100 text-red-800 gap-1">
+                      <Badge className="text-[10px] bg-[var(--rag-red-soft)] text-[var(--rag-red)] gap-1">
                         <AlertTriangle className="h-3 w-3" />
                         Over by {formatCurrencyUGX(Math.abs(budget.remaining))}
                       </Badge>
                     ) : (
-                      <span className="text-xs text-green-600">{formatCurrencyUGX(budget.remaining)} remaining</span>
+                      <span className="text-xs text-[var(--rag-green)]">{formatCurrencyUGX(budget.remaining)} remaining</span>
                     )}
                   </div>
                 </div>

@@ -140,9 +140,9 @@ export default function ShopifySyncPage() {
                 <tr key={e.key} className="border-b">
                   <td className="px-2 py-2 font-medium">{e.label}</td>
                   <td className="px-2 py-2 text-right">{c?.total ?? '—'}</td>
-                  <td className="px-2 py-2 text-right text-emerald-700">{c?.synced ?? '—'}</td>
-                  <td className="px-2 py-2 text-right text-amber-700">{c?.pending ?? '—'}</td>
-                  <td className="px-2 py-2 text-right text-red-700">{c?.error ?? '—'}</td>
+                  <td className="px-2 py-2 text-right text-[var(--rag-green)]">{c?.synced ?? '—'}</td>
+                  <td className="px-2 py-2 text-right text-[var(--rag-amber)]">{c?.pending ?? '—'}</td>
+                  <td className="px-2 py-2 text-right text-[var(--rag-red)]">{c?.error ?? '—'}</td>
                   <td className="px-2 py-2 text-right text-muted-foreground">{c?.unpublished ?? '—'}</td>
                 </tr>
               );
@@ -175,7 +175,7 @@ export default function ShopifySyncPage() {
                       </td>
                       <td className="px-2 py-2">{f.entity}</td>
                       <td className="px-2 py-2 font-mono text-xs">{f.docId}</td>
-                      <td className="px-2 py-2 text-xs text-red-700">{f.error?.slice(0, 200)}</td>
+                      <td className="px-2 py-2 text-xs text-[var(--rag-red)]">{f.error?.slice(0, 200)}</td>
                       <td className="px-2 py-2">
                         {cfg && (
                           <button

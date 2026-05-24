@@ -604,7 +604,7 @@ function CommandItemRow({
         onClick={onToggleFavorite}
         className={cn(
           'p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity',
-          isFavorite ? 'text-yellow-500 opacity-100' : 'text-muted-foreground hover:text-foreground'
+          isFavorite ? 'text-[var(--rag-amber)] opacity-100' : 'text-muted-foreground hover:text-foreground'
         )}
       >
         <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} />

@@ -207,7 +207,7 @@ export default function UserManagementPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+              <div className="text-2xl font-bold text-[var(--rag-green)]">{stats.active}</div>
             </CardContent>
           </Card>
           <Card>
@@ -227,7 +227,7 @@ export default function UserManagementPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-amber-500">{stats.pendingInvites}</div>
+              <div className="text-2xl font-bold text-[var(--rag-amber)]">{stats.pendingInvites}</div>
             </CardContent>
           </Card>
         </div>
@@ -351,7 +351,7 @@ export default function UserManagementPage() {
                         </TableCell>
                         <TableCell>
                           {u.isActive ? (
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                            <Badge variant="secondary" className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]">
                               Active
                             </Badge>
                           ) : (

@@ -661,7 +661,7 @@ export function LaborRateCostingSection({
                     </div>
                     <button
                       onClick={() => removePartialContributor(index)}
-                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-red-500 hover:bg-red-50 rounded"
+                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -694,8 +694,8 @@ export function LaborRateCostingSection({
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3">
+              <p className="text-sm text-[var(--rag-red)]">{error}</p>
             </div>
           )}
 
@@ -703,7 +703,7 @@ export function LaborRateCostingSection({
           {calculation && (
             <div>
               {calculation.usedOrgWideFallback && (
-                <div className="mb-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                <div className="mb-3 rounded-lg border border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] px-3 py-2 text-sm text-[var(--rag-amber)]">
                   <span className="font-medium">Heads up:</span> the configured production
                   department doesn't match any active employees, so the rate below averages
                   cost across <em>all</em> active staff (including back-office). Set a real

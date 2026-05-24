@@ -198,7 +198,7 @@ function SubsidiarySelector() {
                   <p className="text-xs text-muted-foreground">{subsidiary.description}</p>
                 </div>
                 {currentSubsidiary.id === subsidiary.id && (
-                  <Check className="w-5 h-5 text-green-500" />
+                  <Check className="w-5 h-5 text-[var(--rag-green)]" />
                 )}
               </button>
             ))}

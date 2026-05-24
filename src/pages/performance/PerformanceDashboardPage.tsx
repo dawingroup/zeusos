@@ -51,9 +51,9 @@ function RatingStars({ rating, size = 'md' }: { rating: number; size?: 'sm' | 'm
           key={i}
           className={cn(
             iconSize,
-            i <= fullStars ? 'fill-amber-400 text-amber-400' :
-            i === fullStars + 1 && hasHalfStar ? 'fill-amber-400/50 text-amber-400' :
-            'text-amber-400'
+            i <= fullStars ? 'fill-[var(--rag-amber)] text-[var(--rag-amber)]' :
+            i === fullStars + 1 && hasHalfStar ? 'fill-[var(--rag-amber)]/50 text-[var(--rag-amber)]' :
+            'text-[var(--rag-amber)]'
           )}
         />
       ))}
@@ -196,7 +196,7 @@ export function PerformanceDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-muted-foreground">Team Average Rating</p>
-              <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+              <Star className="h-5 w-5 fill-[var(--rag-amber)] text-[var(--rag-amber)]" />
             </div>
             <div className="flex items-baseline gap-1 mt-2">
               <span className="text-3xl font-bold">{mockMetrics.averageRating.toFixed(1)}</span>
@@ -235,11 +235,11 @@ export function PerformanceDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-muted-foreground">Pending Reviews</p>
-              <FileText className={cn("h-5 w-5", mockMetrics.overdueReviews > 0 ? "text-amber-500" : "text-muted-foreground")} />
+              <FileText className={cn("h-5 w-5", mockMetrics.overdueReviews > 0 ? "text-[var(--rag-amber)]" : "text-muted-foreground")} />
             </div>
             <p className="text-3xl font-bold mt-2">{mockMetrics.pendingReviews}</p>
             {mockMetrics.overdueReviews > 0 ? (
-              <Badge className="bg-amber-100 text-amber-800 mt-2">{mockMetrics.overdueReviews} overdue</Badge>
+              <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] mt-2">{mockMetrics.overdueReviews} overdue</Badge>
             ) : (
               <p className="text-xs text-muted-foreground mt-2">All on schedule</p>
             )}
@@ -251,10 +251,10 @@ export function PerformanceDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-muted-foreground">Development Progress</p>
-              <GraduationCap className="h-5 w-5 text-green-500" />
+              <GraduationCap className="h-5 w-5 text-[var(--rag-green)]" />
             </div>
             <p className="text-3xl font-bold mt-2">{mockMetrics.developmentPlansProgress}%</p>
-            <Progress value={mockMetrics.developmentPlansProgress} className="h-2 mt-2 [&>div]:bg-green-500" />
+            <Progress value={mockMetrics.developmentPlansProgress} className="h-2 mt-2 [&>div]:bg-[var(--rag-green)]" />
             <p className="text-xs text-muted-foreground mt-1">Average across all plans</p>
           </CardContent>
         </Card>
@@ -295,7 +295,7 @@ export function PerformanceDashboardPage() {
                       <p className="font-semibold text-sm">{goal.progress}%</p>
                       <p className={cn(
                         "text-xs",
-                        isPast(goal.dueDate) && goal.status !== 'completed' ? "text-red-600" : "text-muted-foreground"
+                        isPast(goal.dueDate) && goal.status !== 'completed' ? "text-[var(--rag-red)]" : "text-muted-foreground"
                       )}>
                         {getDaysRemaining(goal.dueDate, goal.status)}
                       </p>
@@ -305,9 +305,9 @@ export function PerformanceDashboardPage() {
                     value={goal.progress} 
                     className={cn(
                       "h-1.5 mt-2",
-                      goal.status === 'completed' ? "[&>div]:bg-green-500" :
-                      goal.status === 'behind' ? "[&>div]:bg-red-500" :
-                      goal.status === 'at_risk' ? "[&>div]:bg-amber-500" : ""
+                      goal.status === 'completed' ? "[&>div]:bg-[var(--rag-green)]" :
+                      goal.status === 'behind' ? "[&>div]:bg-[var(--rag-red)]" :
+                      goal.status === 'at_risk' ? "[&>div]:bg-[var(--rag-amber)]" : ""
                     )}
                   />
                   <div className="flex items-center gap-2 mt-2">
@@ -351,7 +351,7 @@ export function PerformanceDashboardPage() {
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">{format(review.scheduledDate, 'MMM d')}</p>
                       {review.status === 'overdue' && (
-                        <AlertTriangle className="h-3 w-3 text-amber-500" />
+                        <AlertTriangle className="h-3 w-3 text-[var(--rag-amber)]" />
                       )}
                     </div>
                   </div>
@@ -384,8 +384,8 @@ export function PerformanceDashboardPage() {
                           value={ratio * 100} 
                           className={cn(
                             "h-1.5 flex-1",
-                            ratio >= 0.8 ? "[&>div]:bg-green-500" :
-                            ratio >= 0.6 ? "[&>div]:bg-amber-500" : "[&>div]:bg-red-500"
+                            ratio >= 0.8 ? "[&>div]:bg-[var(--rag-green)]" :
+                            ratio >= 0.6 ? "[&>div]:bg-[var(--rag-amber)]" : "[&>div]:bg-[var(--rag-red)]"
                           )}
                         />
                         <span className="text-xs text-muted-foreground min-w-[50px] text-right">

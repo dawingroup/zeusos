@@ -683,13 +683,13 @@ export function PayrollPage() {
                   <TableHead className="font-semibold">Employee</TableHead>
                   <TableHead className="text-right font-semibold">Basic</TableHead>
                   <TableHead className="text-right font-semibold">Allowances</TableHead>
-                  <TableHead className="text-right font-semibold text-blue-600">Overtime</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-blue)]">Overtime</TableHead>
                   <TableHead className="text-right font-semibold">Gross</TableHead>
-                  <TableHead className="text-right font-semibold text-orange-600">PAYE</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-amber)]">PAYE</TableHead>
                   <TableHead className="text-right font-semibold text-cyan-600">NSSF</TableHead>
                   <TableHead className="text-right font-semibold text-violet-600">LST</TableHead>
-                  <TableHead className="text-right font-semibold text-amber-600">Advances</TableHead>
-                  <TableHead className="text-right font-semibold text-green-600">Net Pay</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-amber)]">Advances</TableHead>
+                  <TableHead className="text-right font-semibold text-[var(--rag-green)]">Net Pay</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -706,17 +706,17 @@ export function PayrollPage() {
                     </TableCell>
                     <TableCell className="text-right tabular-nums">{formatCurrency(item.basicSalary)}</TableCell>
                     <TableCell className="text-right tabular-nums text-muted-foreground">{formatCurrency(item.allowances)}</TableCell>
-                    <TableCell className="text-right tabular-nums text-blue-600">
+                    <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">
                       {item.overtime > 0 ? `+${formatCurrency(item.overtime)}` : '-'}
                     </TableCell>
                     <TableCell className="text-right tabular-nums font-medium">{formatCurrency(item.grossPay)}</TableCell>
-                    <TableCell className="text-right tabular-nums text-orange-600">-{formatCurrency(item.paye)}</TableCell>
+                    <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">-{formatCurrency(item.paye)}</TableCell>
                     <TableCell className="text-right tabular-nums text-cyan-600">-{formatCurrency(item.nssf)}</TableCell>
                     <TableCell className="text-right tabular-nums text-violet-600">-{formatCurrency(item.lst)}</TableCell>
-                    <TableCell className="text-right tabular-nums text-amber-600">
+                    <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">
                       {item.advanceDeduction > 0 ? `-${formatCurrency(item.advanceDeduction)}` : '-'}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums font-bold text-green-600">{formatCurrency(item.netPay)}</TableCell>
+                    <TableCell className="text-right tabular-nums font-bold text-[var(--rag-green)]">{formatCurrency(item.netPay)}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -744,7 +744,7 @@ export function PayrollPage() {
                 <TableRow className="bg-muted/70 font-semibold border-t-2">
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-[var(--rag-green)]" />
                       Total ({filteredPayrollItems.length} employees)
                     </div>
                   </TableCell>
@@ -754,17 +754,17 @@ export function PayrollPage() {
                   <TableCell className="text-right tabular-nums">
                     {formatCurrency(filteredPayrollItems.reduce((s, i) => s + i.allowances, 0))}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums text-blue-600">
+                  <TableCell className="text-right tabular-nums text-[var(--rag-blue)]">
                     +{formatCurrency(filteredPayrollItems.reduce((s, i) => s + i.overtime, 0))}
                   </TableCell>
                   <TableCell className="text-right tabular-nums">{formatCurrency(currentMonthTotals.totalGross)}</TableCell>
-                  <TableCell className="text-right tabular-nums text-orange-600">-{formatCurrency(currentMonthTotals.totalPAYE)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">-{formatCurrency(currentMonthTotals.totalPAYE)}</TableCell>
                   <TableCell className="text-right tabular-nums text-cyan-600">-{formatCurrency(currentMonthTotals.totalNSSF)}</TableCell>
                   <TableCell className="text-right tabular-nums text-violet-600">-{formatCurrency(currentMonthTotals.totalLST)}</TableCell>
-                  <TableCell className="text-right tabular-nums text-amber-600">
+                  <TableCell className="text-right tabular-nums text-[var(--rag-amber)]">
                     -{formatCurrency(filteredPayrollItems.reduce((s, i) => s + i.advanceDeduction, 0))}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums text-green-600 font-bold">{formatCurrency(currentMonthTotals.totalNet)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-[var(--rag-green)] font-bold">{formatCurrency(currentMonthTotals.totalNet)}</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </tfoot>
@@ -836,10 +836,10 @@ export function PayrollPage() {
               </Select>
             </div>
 
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]">
               <CardContent className="p-4">
-                <p className="text-sm text-blue-900 font-medium mb-2">Deductions Applied:</p>
-                <ul className="text-sm text-blue-700 space-y-1">
+                <p className="text-sm text-[var(--rag-blue)] font-medium mb-2">Deductions Applied:</p>
+                <ul className="text-sm text-[var(--rag-blue)] space-y-1">
                   <li>• PAYE (Pay As You Earn) - Progressive rate 0-40%</li>
                   <li>• NSSF - 5% employee contribution</li>
                   <li>• LST (Local Service Tax) - Annual amount pro-rated monthly</li>
@@ -855,7 +855,7 @@ export function PayrollPage() {
             )}
 
             {runError && !runDialog.processing && (
-              <div className="rounded border border-red-200 bg-red-50 text-red-800 px-3 py-2 text-xs">
+              <div className="rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] px-3 py-2 text-xs">
                 {runError}
               </div>
             )}

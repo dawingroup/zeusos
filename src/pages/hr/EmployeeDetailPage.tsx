@@ -93,11 +93,11 @@ function calculateTenure(joiningDate: any): string {
 
 // Status colors
 const statusColors: Record<string, string> = {
-  active: 'bg-green-100 text-green-800',
-  probation: 'bg-yellow-100 text-yellow-800',
-  suspended: 'bg-red-100 text-red-800',
-  notice_period: 'bg-orange-100 text-orange-800',
-  on_leave: 'bg-blue-100 text-blue-800',
+  active: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  probation: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  suspended: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  notice_period: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  on_leave: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   terminated: 'bg-[var(--bg-sunken)] text-foreground',
   resigned: 'bg-[var(--bg-sunken)] text-foreground',
   retired: 'bg-purple-100 text-purple-800',
@@ -263,8 +263,8 @@ export function EmployeeDetailPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+                <Clock className="h-5 w-5 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Tenure</p>
@@ -277,8 +277,8 @@ export function EmployeeDetailPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-100">
-                <Calendar className="h-5 w-5 text-green-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-green-soft)]">
+                <Calendar className="h-5 w-5 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Leave Balance</p>
@@ -305,8 +305,8 @@ export function EmployeeDetailPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-orange-100">
-                <Briefcase className="h-5 w-5 text-orange-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-amber-soft)]">
+                <Briefcase className="h-5 w-5 text-[var(--rag-amber)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Employment Type</p>
@@ -759,8 +759,8 @@ export function EmployeeDetailPage() {
               </CardHeader>
               <CardContent>
                 {createUserResult?.success && (
-                  <Alert className="mb-4 border-green-200 bg-green-50">
-                    <AlertDescription className="text-green-700">
+                  <Alert className="mb-4 border-[var(--rag-green)] bg-[var(--rag-green-soft)]">
+                    <AlertDescription className="text-[var(--rag-green)]">
                       {createUserResult.success}
                     </AlertDescription>
                   </Alert>
@@ -780,7 +780,7 @@ export function EmployeeDetailPage() {
                 ) : hasDawinUser ? (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                      <Badge variant="secondary" className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]">
                         User Account Active
                       </Badge>
                       {employee.systemAccess?.userId && (
