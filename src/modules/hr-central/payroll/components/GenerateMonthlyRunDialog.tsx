@@ -179,7 +179,7 @@ export function GenerateMonthlyRunDialog({ open, onOpenChange }: Props) {
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
+            <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-2">
               {error}
             </div>
           )}

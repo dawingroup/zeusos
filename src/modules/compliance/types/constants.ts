@@ -26,21 +26,21 @@ export const DOCUMENT_STATUS_LABELS: Record<ComplianceDocumentStatus, string> = 
 };
 
 export const DOCUMENT_STATUS_COLORS: Record<ComplianceDocumentStatus, string> = {
-  valid: 'bg-green-100 text-green-800 border-green-200',
-  expiring_soon: 'bg-amber-100 text-amber-800 border-amber-200',
-  expired: 'bg-red-100 text-red-800 border-red-200',
+  valid: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]',
+  expiring_soon: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  expired: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]',
   missing: 'bg-[var(--bg-sunken)] text-foreground border-[var(--border-subtle)]',
   not_applicable: 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]',
-  pending_verification: 'bg-blue-100 text-blue-800 border-blue-200',
+  pending_verification: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]',
 };
 
 export const DOCUMENT_STATUS_DOT_COLORS: Record<ComplianceDocumentStatus, string> = {
-  valid: 'bg-green-500',
-  expiring_soon: 'bg-amber-500',
-  expired: 'bg-red-500',
+  valid: 'bg-[var(--rag-green)]',
+  expiring_soon: 'bg-[var(--rag-amber)]',
+  expired: 'bg-[var(--rag-red)]',
   missing: 'bg-[var(--bg-sunken)]',
   not_applicable: 'bg-[var(--bg-sunken)]',
-  pending_verification: 'bg-blue-500',
+  pending_verification: 'bg-[var(--rag-blue)]',
 };
 
 // ── Category Labels ────────────────────────────────────────────────────────
@@ -102,9 +102,9 @@ export const OBLIGATION_PRIORITY_LABELS: Record<ObligationPriority, string> = {
 
 export const OBLIGATION_PRIORITY_COLORS: Record<ObligationPriority, string> = {
   low: 'bg-[var(--bg-sunken)] text-muted-foreground',
-  medium: 'bg-blue-100 text-blue-700',
-  high: 'bg-amber-100 text-amber-700',
-  critical: 'bg-red-100 text-red-700',
+  medium: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 // ── History Action Labels ──────────────────────────────────────────────────

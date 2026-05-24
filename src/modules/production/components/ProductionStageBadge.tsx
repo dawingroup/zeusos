@@ -2,13 +2,13 @@ import type { ProductionStage } from '../types/production-job.types';
 
 const STAGE_STYLES: Record<ProductionStage, string> = {
   BRIEF:            'bg-[var(--bg-sunken)] text-muted-foreground',
-  PRE_PRODUCTION:   'bg-yellow-100 text-yellow-700',
-  TALENT_BOOKING:   'bg-orange-100 text-orange-700',
-  LOCATION_LOCK:    'bg-amber-100 text-amber-700',
+  PRE_PRODUCTION:   'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  TALENT_BOOKING:   'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  LOCATION_LOCK:    'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   EQUIPMENT:        'bg-lime-100 text-lime-700',
-  SHOOT:            'bg-green-100 text-green-700',
+  SHOOT:            'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   POST_PRODUCTION:  'bg-teal-100 text-teal-700',
-  CLIENT_REVIEW:    'bg-blue-100 text-blue-700',
+  CLIENT_REVIEW:    'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   MASTER_DELIVERY:  'bg-indigo-100 text-indigo-700',
   COMPLETE:         'bg-purple-100 text-purple-700',
 };

@@ -108,7 +108,7 @@ export function DocumentRegistryPage() {
       {/* Loading */}
       {loading && documents.length === 0 && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--rag-green)]" />
         </div>
       )}
 
@@ -140,7 +140,7 @@ export function DocumentRegistryPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="text-sm font-medium line-clamp-1 flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <FileText className="h-4 w-4 text-[var(--rag-green)] shrink-0" />
                       {doc.name}
                     </CardTitle>
                     <span className={cn('text-[10px] px-2 py-0.5 rounded-full border font-medium whitespace-nowrap', DOCUMENT_STATUS_COLORS[doc.status])}>
@@ -169,7 +169,7 @@ export function DocumentRegistryPage() {
                         <div
                           className={cn(
                             'h-full rounded-full transition-all',
-                            progress === 100 ? 'bg-green-500' : progress >= 50 ? 'bg-emerald-500' : 'bg-amber-500'
+                            progress === 100 ? 'bg-[var(--rag-green)]' : progress >= 50 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-amber)]'
                           )}
                           style={{ width: `${progress}%` }}
                         />
@@ -178,7 +178,7 @@ export function DocumentRegistryPage() {
                   )}
 
                   {doc.fileUrl && (
-                    <div className="flex items-center gap-1 text-blue-600 pt-1">
+                    <div className="flex items-center gap-1 text-[var(--rag-blue)] pt-1">
                       <FileText className="h-3 w-3" />
                       <span>File attached</span>
                     </div>

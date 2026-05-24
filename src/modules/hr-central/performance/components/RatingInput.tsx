@@ -80,7 +80,7 @@ export const RatingInput: React.FC<RatingInputProps> = ({
               <Star
                 className={`${starSize} transition-colors ${
                   value && star <= value
-                    ? 'text-amber-500 fill-amber-500'
+                    ? 'text-[var(--rag-amber)] fill-[var(--rag-amber)]'
                     : 'text-[var(--fg-tertiary)]'
                 }`}
               />

@@ -117,7 +117,7 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
                 {!readOnly && (
                   <button
                     onClick={() => handleRemoveItem(quadrant, item.id)}
-                    className="text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100"
+                    className="text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] opacity-0 group-hover:opacity-100"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -139,12 +139,12 @@ export const SWOTAnalysisSection: React.FC<SWOTAnalysisSectionProps> = ({
               onChange={(e) => setNewItemText(prev => ({ ...prev, [quadrant]: e.target.value }))}
               onKeyDown={(e) => e.key === 'Enter' && handleAddItem(quadrant)}
               placeholder={`Add ${label.toLowerCase()}...`}
-              className="flex-1 text-sm border border-[var(--border-default)] rounded px-2.5 py-1.5 bg-card/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
+              className="flex-1 text-sm border border-[var(--border-default)] rounded px-2.5 py-1.5 bg-card/80 focus:ring-1 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
             />
             <button
               onClick={() => handleAddItem(quadrant)}
               disabled={!text.trim()}
-              className="p-1.5 text-muted-foreground hover:text-blue-600 disabled:opacity-30 bg-card/60 rounded"
+              className="p-1.5 text-muted-foreground hover:text-[var(--rag-blue)] disabled:opacity-30 bg-card/60 rounded"
             >
               <Plus className="w-4 h-4" />
             </button>

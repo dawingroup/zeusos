@@ -142,7 +142,7 @@ export function ObligationForm({ open, onOpenChange, onSave }: ObligationFormPro
           )}
 
           {selectedTemplate && (
-            <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-md px-3 py-2">
+            <div className="flex items-center justify-between bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-md px-3 py-2">
               <span className="text-sm">Template: <strong>{selectedTemplate.title}</strong></span>
               <Button variant="ghost" size="sm" onClick={resetForm}>Clear</Button>
             </div>

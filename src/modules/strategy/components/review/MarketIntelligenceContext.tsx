@@ -102,9 +102,9 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           )}
 
           {error && (
-            <div className="px-5 py-3 bg-red-50 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-500" />
-              <p className="text-xs text-red-700">{error}</p>
+            <div className="px-5 py-3 bg-[var(--rag-red-soft)] flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />
+              <p className="text-xs text-[var(--rag-red)]">{error}</p>
             </div>
           )}
 
@@ -131,8 +131,8 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
                       <span className="text-[10px] text-muted-foreground">{s.category}</span>
                     </div>
                     <span className={`px-1.5 py-0.5 text-[10px] font-medium rounded ${
-                      s.impact === 'critical' ? 'bg-red-100 text-red-700' :
-                      s.impact === 'high' ? 'bg-orange-100 text-orange-700' :
+                      s.impact === 'critical' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' :
+                      s.impact === 'high' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
                       'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}>{s.impact}</span>
                   </div>
@@ -173,7 +173,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
                 {data.regulatoryItems.slice(0, 3).map((r, i) => (
                   <div key={i} className="flex items-center justify-between p-2 bg-[var(--bg-sunken)] rounded-lg">
                     <p className="text-xs font-medium text-foreground truncate">{r.title}</p>
-                    <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">{r.status}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] rounded">{r.status}</span>
                   </div>
                 ))}
               </div>
@@ -197,7 +197,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
                         <p className="text-xs font-semibold text-foreground">{ind.value}</p>
                       </div>
                       <TrendIcon className={`w-3.5 h-3.5 flex-shrink-0 ${
-                        ind.trend === 'up' ? 'text-green-500' : ind.trend === 'down' ? 'text-red-500' : 'text-[var(--fg-tertiary)]'
+                        ind.trend === 'up' ? 'text-[var(--rag-green)]' : ind.trend === 'down' ? 'text-[var(--rag-red)]' : 'text-[var(--fg-tertiary)]'
                       }`} />
                     </div>
                   );

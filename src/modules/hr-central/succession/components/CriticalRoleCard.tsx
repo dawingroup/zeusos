@@ -118,8 +118,8 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
             <p className="text-xs text-muted-foreground mb-2">Primary Successor</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                <div className="w-8 h-8 rounded-full bg-[var(--rag-green-soft)] flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-[var(--rag-green)]" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">
@@ -143,7 +143,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
           </div>
         ) : (
           <div className="border-t border-[var(--border-subtle)] pt-3">
-            <div className="flex items-center gap-2 text-amber-600">
+            <div className="flex items-center gap-2 text-[var(--rag-amber)]">
               <Shield className="w-4 h-4" />
               <p className="text-sm">No successor identified</p>
             </div>

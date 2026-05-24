@@ -601,7 +601,7 @@ export const StrategyReviewPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-3" />
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--rag-blue)] mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">Loading strategy review...</p>
         </div>
       </div>
@@ -626,7 +626,7 @@ export const StrategyReviewPage: React.FC = () => {
                 {reviewData.status === 'draft' ? 'Draft' : reviewData.status === 'in_progress' ? 'In Progress' : 'Completed'}
                 {' — '}{completedSections}/{totalSections} sections • Score: {avgScore}/5
                 {lastSavedAt && (
-                  <span className="ml-2 text-green-600">• Saved {new Date(lastSavedAt).toLocaleTimeString()}</span>
+                  <span className="ml-2 text-[var(--rag-green)]">• Saved {new Date(lastSavedAt).toLocaleTimeString()}</span>
                 )}
               </p>
             </div>
@@ -638,7 +638,7 @@ export const StrategyReviewPage: React.FC = () => {
               <select
                 value={selectedSubsidiaryId}
                 onChange={(e) => setSelectedSubsidiaryId(e.target.value)}
-                className="text-xs border border-[var(--border-subtle)] rounded-md px-2 py-1 bg-card text-muted-foreground focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="text-xs border border-[var(--border-subtle)] rounded-md px-2 py-1 bg-card text-muted-foreground focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
               >
                 {subsidiaryOptions.map(s => (
                   <option key={s.id} value={s.id}>{s.name}</option>
@@ -650,7 +650,7 @@ export const StrategyReviewPage: React.FC = () => {
             <div className="hidden md:flex items-center gap-2">
               <div className="w-32 h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                  className="h-full bg-[var(--rag-blue)] rounded-full transition-all duration-500"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -694,7 +694,7 @@ export const StrategyReviewPage: React.FC = () => {
             <button
               onClick={() => save()}
               disabled={isSaving}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               {isSaving ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -741,20 +741,20 @@ export const StrategyReviewPage: React.FC = () => {
                     onClick={() => setActiveSection(sectionKey)}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg transition-all text-left ${
                       isActive
-                        ? 'bg-blue-50 text-blue-700 font-medium border border-blue-200'
+                        ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] font-medium border border-[var(--rag-blue)]'
                         : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-[var(--fg-tertiary)]'}`} />
+                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[var(--rag-blue)]' : 'text-[var(--fg-tertiary)]'}`} />
                     <span className="flex-1 truncate">{REVIEW_SECTION_LABELS[sectionKey]}</span>
                     {sectionReview?.score > 0 && (
                       <span className="text-xs text-[var(--fg-tertiary)]">{sectionReview.score}/5</span>
                     )}
                     {sectionReview?.status && sectionReview.status !== 'not_started' && (
                       <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                        sectionReview.status === 'approved' ? 'bg-green-500' :
-                        sectionReview.status === 'in_review' ? 'bg-blue-500' :
-                        sectionReview.status === 'needs_update' ? 'bg-amber-500' :
+                        sectionReview.status === 'approved' ? 'bg-[var(--rag-green)]' :
+                        sectionReview.status === 'in_review' ? 'bg-[var(--rag-blue)]' :
+                        sectionReview.status === 'needs_update' ? 'bg-[var(--rag-amber)]' :
                         'bg-[var(--bg-sunken)]'
                       }`} />
                     )}
@@ -771,7 +771,7 @@ export const StrategyReviewPage: React.FC = () => {
               <select
                 value={activeSection}
                 onChange={(e) => setActiveSection(e.target.value as ReviewSectionKey)}
-                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--rag-blue)]"
               >
                 {REVIEW_SECTION_ORDER.map(key => (
                   <option key={key} value={key}>{REVIEW_SECTION_LABELS[key]}</option>
@@ -806,15 +806,15 @@ export const StrategyReviewPage: React.FC = () => {
 
             {/* AI Error Banner */}
             {aiError && !isAnalyzingDocument && (
-              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <div className="mb-4 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-xl flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-[var(--rag-red)] flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-red-900">AI Analysis Error</p>
-                  <p className="text-xs text-red-700 mt-0.5">{aiError}</p>
+                  <p className="text-sm font-medium text-[var(--rag-red)]">AI Analysis Error</p>
+                  <p className="text-xs text-[var(--rag-red)] mt-0.5">{aiError}</p>
                 </div>
                 <button
                   onClick={() => setAIError(null)}
-                  className="text-red-400 hover:text-red-600 text-sm px-2"
+                  className="text-[var(--rag-red)] hover:text-[var(--rag-red)] text-sm px-2"
                 >
                   ✕
                 </button>
@@ -912,7 +912,7 @@ export const StrategyReviewPage: React.FC = () => {
                   }
                 }}
                 disabled={REVIEW_SECTION_ORDER.indexOf(activeSection) === REVIEW_SECTION_ORDER.length - 1}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--rag-blue)] hover:text-[var(--rag-blue)] disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 Next Section
                 <ChevronRight className="w-4 h-4" />

@@ -137,9 +137,9 @@ export default function JournalEntriesListPage() {
                   </td>
                   <td className="px-4 py-2 text-xs">
                     {isBalanced(je) ? (
-                      <span className="text-emerald-700">Balanced</span>
+                      <span className="text-[var(--rag-green)]">Balanced</span>
                     ) : (
-                      <span className="text-rose-700">UNBALANCED</span>
+                      <span className="text-[var(--rag-red)]">UNBALANCED</span>
                     )}
                   </td>
                   <td className="px-4 py-2 text-xs text-muted-foreground">

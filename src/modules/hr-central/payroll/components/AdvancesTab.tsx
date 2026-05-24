@@ -59,12 +59,12 @@ interface AdvancesTabProps {
 }
 
 const STATUS_CONFIG: Record<AdvanceStatus, { label: string; color: string; icon: React.ReactNode }> = {
-  pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-700', icon: <Clock className="h-3 w-3" /> },
-  approved: { label: 'Approved', color: 'bg-blue-100 text-blue-700', icon: <CheckCircle className="h-3 w-3" /> },
+  pending: { label: 'Pending', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]', icon: <Clock className="h-3 w-3" /> },
+  approved: { label: 'Approved', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]', icon: <CheckCircle className="h-3 w-3" /> },
   disbursed: { label: 'Disbursed', color: 'bg-purple-100 text-purple-700', icon: <ArrowDownCircle className="h-3 w-3" /> },
   partially_recovered: { label: 'Recovering', color: 'bg-cyan-100 text-cyan-700', icon: <Wallet className="h-3 w-3" /> },
-  fully_recovered: { label: 'Recovered', color: 'bg-green-100 text-green-700', icon: <CheckCircle className="h-3 w-3" /> },
-  rejected: { label: 'Rejected', color: 'bg-red-100 text-red-700', icon: <XCircle className="h-3 w-3" /> },
+  fully_recovered: { label: 'Recovered', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]', icon: <CheckCircle className="h-3 w-3" /> },
+  rejected: { label: 'Rejected', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]', icon: <XCircle className="h-3 w-3" /> },
   cancelled: { label: 'Cancelled', color: 'bg-[var(--bg-sunken)] text-muted-foreground', icon: <XCircle className="h-3 w-3" /> },
 };
 
@@ -198,8 +198,8 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-yellow-100">
-                <Clock className="h-4 w-4 text-yellow-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-amber-soft)]">
+                <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Pending Requests</p>
@@ -225,12 +225,12 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-red-100">
-                <Banknote className="h-4 w-4 text-red-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-red-soft)]">
+                <Banknote className="h-4 w-4 text-[var(--rag-red)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Outstanding</p>
-                <p className="text-lg font-bold text-red-600">{formatCurrency(summaryStats.totalOutstanding)}</p>
+                <p className="text-lg font-bold text-[var(--rag-red)]">{formatCurrency(summaryStats.totalOutstanding)}</p>
               </div>
             </div>
           </CardContent>
@@ -238,12 +238,12 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-green-100">
-                <ArrowDownCircle className="h-4 w-4 text-green-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-green-soft)]">
+                <ArrowDownCircle className="h-4 w-4 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Monthly Recovery</p>
-                <p className="text-lg font-bold text-green-600">{formatCurrency(summaryStats.monthlyRecovery)}</p>
+                <p className="text-lg font-bold text-[var(--rag-green)]">{formatCurrency(summaryStats.monthlyRecovery)}</p>
               </div>
             </div>
           </CardContent>
@@ -311,7 +311,7 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
                       </TableCell>
                       <TableCell className="font-medium">{formatCurrency(advance.amount)}</TableCell>
                       <TableCell>{formatCurrency(advance.monthlyDeduction)}</TableCell>
-                      <TableCell className="text-red-600">{formatCurrency(advance.balanceRemaining)}</TableCell>
+                      <TableCell className="text-[var(--rag-red)]">{formatCurrency(advance.balanceRemaining)}</TableCell>
                       <TableCell>
                         <div className="w-24">
                           <Progress value={recoveryProgress} className="h-2" />
@@ -354,7 +354,7 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
                               }}
                               title="Delete permanently (admin only)"
                             >
-                              <Trash2 className="h-3.5 w-3.5 text-red-700" />
+                              <Trash2 className="h-3.5 w-3.5 text-[var(--rag-red)]" />
                             </Button>
                           )}
                         </div>

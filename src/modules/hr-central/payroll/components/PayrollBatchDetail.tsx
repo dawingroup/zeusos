@@ -96,9 +96,9 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
   };
 
   const buttonColors = {
-    approve: 'bg-green-600 hover:bg-green-700',
-    reject: 'bg-red-600 hover:bg-red-700',
-    return: 'bg-yellow-600 hover:bg-yellow-700'
+    approve: 'bg-[var(--rag-green)] hover:bg-[var(--rag-green)]',
+    reject: 'bg-[var(--rag-red)] hover:bg-[var(--rag-red)]',
+    return: 'bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)]'
   };
 
   const handleConfirm = () => {
@@ -118,14 +118,14 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
         </div>
         <div className="p-4">
           <label className="block text-sm font-medium text-muted-foreground mb-2">
-            Comments {action !== 'approve' && <span className="text-red-500">*</span>}
+            Comments {action !== 'approve' && <span className="text-[var(--rag-red)]">*</span>}
           </label>
           <textarea
             value={comments}
             onChange={(e) => setComments(e.target.value)}
             placeholder={action === 'approve' ? 'Optional comments...' : 'Please provide a reason...'}
             rows={3}
-            className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
           />
         </div>
         <div className="flex justify-end gap-3 p-4 border-t">
@@ -162,23 +162,23 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
     : 0;
 
   return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+    <div className="mt-4 p-4 bg-[var(--rag-blue-soft)] rounded-lg">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-blue-700">
+        <span className="text-sm font-medium text-[var(--rag-blue)]">
           Calculating: {progress.currentEmployee || 'Starting...'}
         </span>
-        <span className="text-sm text-blue-600">{percentage}%</span>
+        <span className="text-sm text-[var(--rag-blue)]">{percentage}%</span>
       </div>
-      <div className="w-full bg-blue-200 rounded-full h-2">
+      <div className="w-full bg-[var(--rag-blue)] rounded-full h-2">
         <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          className="bg-[var(--rag-blue)] h-2 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="mt-2 text-xs text-blue-600">
+      <div className="mt-2 text-xs text-[var(--rag-blue)]">
         {progress.completed} of {progress.total} completed
         {progress.failed > 0 && (
-          <span className="text-red-600 ml-2">• {progress.failed} failed</span>
+          <span className="text-[var(--rag-red)] ml-2">• {progress.failed} failed</span>
         )}
       </div>
     </div>
@@ -262,7 +262,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               <button
                 onClick={onCalculate}
                 disabled={isCalculating}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <Play className="h-4 w-4" />
                 {isCalculating ? 'Calculating...' : 'Calculate'}
@@ -273,7 +273,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               <button
                 onClick={() => setConfirmRegenOpen(true)}
                 disabled={isCalculating}
-                className="flex items-center gap-2 px-4 py-2 border border-amber-300 bg-amber-50 text-amber-800 rounded-md hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-2 px-4 py-2 border border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] rounded-md hover:bg-[var(--rag-amber-soft)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 title="Recalculate all payslips with the latest salary, attendance, and overtime data. Resets approval state."
               >
                 <RotateCcw className="h-4 w-4" />
@@ -284,7 +284,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             {canSubmit && (
               <button
                 onClick={onSubmitForReview}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] transition-colors"
               >
                 <Send className="h-4 w-4" />
                 Submit for Review
@@ -295,21 +295,21 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               <>
                 <button
                   onClick={() => handleApprovalClick('approve')}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white rounded-md hover:bg-[var(--rag-green)] transition-colors"
                 >
                   <CheckCircle className="h-4 w-4" />
                   Approve
                 </button>
                 <button
                   onClick={() => handleApprovalClick('return')}
-                  className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-amber)] text-white rounded-md hover:bg-[var(--rag-amber)] transition-colors"
                 >
                   <RotateCcw className="h-4 w-4" />
                   Return
                 </button>
                 <button
                   onClick={() => handleApprovalClick('reject')}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-red)] text-white rounded-md hover:bg-[var(--rag-red)] transition-colors"
                 >
                   <XCircle className="h-4 w-4" />
                   Reject
@@ -320,7 +320,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             {canProcessPayment && (
               <button
                 onClick={onProcessPayment}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] transition-colors"
               >
                 <CreditCard className="h-4 w-4" />
                 Process Payment
@@ -349,7 +349,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             {canReverse && (
               <button
                 onClick={() => { setReverseReason(''); setConfirmReverseOpen(true); }}
-                className="flex items-center gap-2 px-4 py-2 border border-red-300 bg-red-50 text-red-700 rounded-md hover:bg-red-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-md hover:bg-[var(--rag-red-soft)] transition-colors"
                 title="Unwind this paid batch — restores loan / advance / installment balances. PAYE / NSSF already filed must be corrected separately."
               >
                 <RotateCcw className="h-4 w-4" />
@@ -366,19 +366,19 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
 
         {/* Errors Alert */}
         {batch.errorCount > 0 && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="mt-4 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-[var(--rag-red)] flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-red-800">
+              <p className="font-medium text-[var(--rag-red)]">
                 {batch.errorCount} employee(s) could not be processed
               </p>
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-[var(--rag-red)] mt-1">
                 Please review and fix the errors before submitting.
               </p>
               {batch.errors && batch.errors.length > 0 && (
-                <ul className="mt-3 space-y-1 max-h-60 overflow-y-auto text-xs text-red-700 font-mono">
+                <ul className="mt-3 space-y-1 max-h-60 overflow-y-auto text-xs text-[var(--rag-red)] font-mono">
                   {batch.errors.map((e, i) => (
-                    <li key={`${e.employeeId}-${i}`} className="border-l-2 border-red-300 pl-2">
+                    <li key={`${e.employeeId}-${i}`} className="border-l-2 border-[var(--rag-red)] pl-2">
                       <span className="font-sans font-medium">{e.employeeName || e.employeeId}</span>
                       {' — '}{e.error}
                     </li>
@@ -408,7 +408,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 onClick={() => setActiveTab(index)}
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === index
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                     : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
@@ -485,9 +485,9 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                               </p>
                               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                 pb.status === 'completed' 
-                                  ? 'bg-green-100 text-green-800'
+                                  ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                                   : pb.status === 'failed'
-                                  ? 'bg-red-100 text-red-800'
+                                  ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                                   : 'bg-[var(--bg-sunken)] text-foreground'
                               }`}>
                                 {pb.status}
@@ -529,17 +529,17 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   >
                     <div className={`p-2 rounded-full ${
                       record.action === 'approved' 
-                        ? 'bg-green-100' 
+                        ? 'bg-[var(--rag-green-soft)]' 
                         : record.action === 'rejected'
-                        ? 'bg-red-100'
-                        : 'bg-yellow-100'
+                        ? 'bg-[var(--rag-red-soft)]'
+                        : 'bg-[var(--rag-amber-soft)]'
                     }`}>
                       {record.action === 'approved' ? (
-                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <CheckCircle className="h-5 w-5 text-[var(--rag-green)]" />
                       ) : record.action === 'rejected' ? (
-                        <XCircle className="h-5 w-5 text-red-600" />
+                        <XCircle className="h-5 w-5 text-[var(--rag-red)]" />
                       ) : (
-                        <RotateCcw className="h-5 w-5 text-yellow-600" />
+                        <RotateCcw className="h-5 w-5 text-[var(--rag-amber)]" />
                       )}
                     </div>
                     <div className="flex-1">
@@ -579,8 +579,8 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-card rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-full bg-amber-100 flex-shrink-0">
-                <RotateCcw className="h-5 w-5 text-amber-700" />
+              <div className="p-2 rounded-full bg-[var(--rag-amber-soft)] flex-shrink-0">
+                <RotateCcw className="h-5 w-5 text-[var(--rag-amber)]" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-foreground">Regenerate this payroll?</h3>
@@ -602,7 +602,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   <div className="font-medium text-foreground">Attendance</div>
                   <div className="text-xs text-muted-foreground">Absences and unpaid leave reduce gross pay this period.</div>
                 </div>
-                <span className="text-xs text-blue-600 font-medium">Edit →</span>
+                <span className="text-xs text-[var(--rag-blue)] font-medium">Edit →</span>
               </a>
               <a
                 href="/hr/payroll?tab=advances"
@@ -614,7 +614,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   <div className="font-medium text-foreground">Salary advances</div>
                   <div className="text-xs text-muted-foreground">Active advances auto-deduct their monthly installment.</div>
                 </div>
-                <span className="text-xs text-blue-600 font-medium">Manage →</span>
+                <span className="text-xs text-[var(--rag-blue)] font-medium">Manage →</span>
               </a>
               <a
                 href="/hr/employees"
@@ -626,7 +626,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   <div className="font-medium text-foreground">Allowances &amp; salary</div>
                   <div className="text-xs text-muted-foreground">Open an employee → Compensation to add/update allowances.</div>
                 </div>
-                <span className="text-xs text-blue-600 font-medium">Open →</span>
+                <span className="text-xs text-[var(--rag-blue)] font-medium">Open →</span>
               </a>
               <a
                 href={`/hr/payroll?period=${batch.year}-${String(batch.month).padStart(2, '0')}&tab=overtime`}
@@ -638,7 +638,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   <div className="font-medium text-foreground">Overtime</div>
                   <div className="text-xs text-muted-foreground">Only approved overtime entries are picked up.</div>
                 </div>
-                <span className="text-xs text-blue-600 font-medium">Review →</span>
+                <span className="text-xs text-[var(--rag-blue)] font-medium">Review →</span>
               </a>
             </div>
 
@@ -666,7 +666,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   setConfirmRegenOpen(false);
                   onRecalculate();
                 }}
-                className="px-4 py-2 text-sm bg-amber-600 text-white rounded-md hover:bg-amber-700"
+                className="px-4 py-2 text-sm bg-[var(--rag-amber)] text-white rounded-md hover:bg-[var(--rag-amber)]"
               >
                 Yes, regenerate
               </button>
@@ -680,8 +680,8 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-card rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-full bg-red-100 flex-shrink-0">
-                <RotateCcw className="h-5 w-5 text-red-700" />
+              <div className="p-2 rounded-full bg-[var(--rag-red-soft)] flex-shrink-0">
+                <RotateCcw className="h-5 w-5 text-[var(--rag-red)]" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-foreground">Reverse this paid batch?</h3>
@@ -693,7 +693,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               </div>
             </div>
 
-            <div className="rounded-md bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
+            <div className="rounded-md bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] p-3 text-xs text-[var(--rag-amber)]">
               <p className="font-medium mb-1">Statutory remittances are NOT reversed.</p>
               <p>
                 PAYE / NSSF / LST already filed with URA and NSSF must be corrected through their
@@ -709,7 +709,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               <textarea
                 value={reverseReason}
                 onChange={(e) => setReverseReason(e.target.value)}
-                className="mt-1 block w-full text-sm border border-[var(--border-default)] rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                className="mt-1 block w-full text-sm border border-[var(--border-default)] rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-[var(--rag-red)] focus:border-[var(--rag-red)]"
                 rows={3}
                 placeholder="e.g. Overtime entries for John D. were missing; need a corrected batch."
               />
@@ -730,7 +730,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   setConfirmReverseOpen(false);
                   onReverse(reason);
                 }}
-                className="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm bg-[var(--rag-red)] text-white rounded-md hover:bg-[var(--rag-red)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Yes, reverse
               </button>

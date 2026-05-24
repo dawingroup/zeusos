@@ -114,7 +114,7 @@ export default function MSAEditorPage() {
           <button
             onClick={handleActivate}
             disabled={busy}
-            className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
           >
             Activate (DRAFT → ACTIVE)
           </button>
@@ -151,7 +151,7 @@ export default function MSAEditorPage() {
 
         {isDraft && (
           <div className="flex gap-2">
-            <button onClick={handleSave} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+            <button onClick={handleSave} disabled={busy} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
               {busy ? 'Saving…' : isExisting ? 'Save' : 'Create'}
             </button>
             <Link to={`/clients/${clientId}`} className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>

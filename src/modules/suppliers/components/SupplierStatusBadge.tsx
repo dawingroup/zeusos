@@ -1,9 +1,9 @@
 import type { SupplierStatus } from '../types/supplier.types';
 
 const STATUS_STYLES: Record<SupplierStatus, string> = {
-  ACTIVE:      'bg-emerald-100 text-emerald-800',
+  ACTIVE:      'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   INACTIVE:    'bg-[var(--bg-sunken)] text-muted-foreground',
-  BLACKLISTED: 'bg-rose-100 text-rose-700',
+  BLACKLISTED: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const STATUS_LABEL: Record<SupplierStatus, string> = {

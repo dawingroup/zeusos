@@ -1,10 +1,10 @@
 import type { PurchaseOrderStatus } from '../types/purchase-order.types';
 
 const STATUS_STYLES: Record<PurchaseOrderStatus, string> = {
-  OPEN:   'bg-amber-100 text-amber-800',
-  POSTED: 'bg-emerald-100 text-emerald-800',
+  OPEN:   'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  POSTED: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   CLOSED: 'bg-[var(--bg-sunken)] text-muted-foreground',
-  VOID:   'bg-rose-100 text-rose-700',
+  VOID:   'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const STATUS_LABEL: Record<PurchaseOrderStatus, string> = {

@@ -139,7 +139,7 @@ export default function SupplierDetailPage() {
               <button
                 onClick={handleBlacklist}
                 disabled={actionPending}
-                className="rounded border border-rose-300 px-3 py-1 text-sm text-rose-700 disabled:opacity-60"
+                className="rounded border border-[var(--rag-red)] px-3 py-1 text-sm text-[var(--rag-red)] disabled:opacity-60"
               >
                 Blacklist…
               </button>
@@ -148,7 +148,7 @@ export default function SupplierDetailPage() {
               <button
                 onClick={handleActivate}
                 disabled={actionPending}
-                className="rounded border border-rose-300 px-3 py-1 text-sm text-rose-700 disabled:opacity-60"
+                className="rounded border border-[var(--rag-red)] px-3 py-1 text-sm text-[var(--rag-red)] disabled:opacity-60"
               >
                 Lift blacklist
               </button>
@@ -243,10 +243,10 @@ export default function SupplierDetailPage() {
       )}
 
       {supplier.status === 'BLACKLISTED' && supplier.blacklistReason && (
-        <section className="rounded border border-rose-200 bg-rose-50 p-4">
-          <h2 className="mb-2 text-sm font-medium text-rose-800">Blacklisted</h2>
-          <p className="text-sm text-rose-900">{supplier.blacklistReason}</p>
-          <p className="mt-1 text-xs text-rose-700">
+        <section className="rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)] p-4">
+          <h2 className="mb-2 text-sm font-medium text-[var(--rag-red)]">Blacklisted</h2>
+          <p className="text-sm text-[var(--rag-red)]">{supplier.blacklistReason}</p>
+          <p className="mt-1 text-xs text-[var(--rag-red)]">
             on {formatDate(supplier.blacklistedAt)} by {supplier.blacklistedBy}
           </p>
         </section>

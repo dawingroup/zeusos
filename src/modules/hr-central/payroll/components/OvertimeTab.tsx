@@ -69,10 +69,10 @@ const MULTIPLIER_BY_TYPE: Record<OvertimeType, number> = {
 };
 
 const STATUS_CONFIG: Record<OvertimeStatus, { label: string; color: string }> = {
-  pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-700' },
-  approved: { label: 'Approved', color: 'bg-green-100 text-green-700' },
-  processed: { label: 'Processed', color: 'bg-blue-100 text-blue-700' },
-  rejected: { label: 'Rejected', color: 'bg-red-100 text-red-700' },
+  pending: { label: 'Pending', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
+  approved: { label: 'Approved', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
+  processed: { label: 'Processed', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  rejected: { label: 'Rejected', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
 };
 
 function formatCurrency(amount: number): string {
@@ -191,8 +191,8 @@ export function OvertimeTab({ period, employees }: OvertimeTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-yellow-100">
-                <Clock className="h-4 w-4 text-yellow-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-amber-soft)]">
+                <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Pending Approval</p>
@@ -204,8 +204,8 @@ export function OvertimeTab({ period, employees }: OvertimeTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-green-100">
-                <CheckCircle className="h-4 w-4 text-green-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-green-soft)]">
+                <CheckCircle className="h-4 w-4 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Approved</p>
@@ -217,8 +217,8 @@ export function OvertimeTab({ period, employees }: OvertimeTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-blue-100">
-                <Clock className="h-4 w-4 text-blue-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]">
+                <Clock className="h-4 w-4 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Hours</p>

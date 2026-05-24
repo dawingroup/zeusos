@@ -117,7 +117,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
                   key={s}
-                  className={`w-3.5 h-3.5 ${s <= review.score ? 'text-amber-400 fill-amber-400' : 'text-[var(--fg-tertiary)]'}`}
+                  className={`w-3.5 h-3.5 ${s <= review.score ? 'text-[var(--rag-amber)] fill-[var(--rag-amber)]' : 'text-[var(--fg-tertiary)]'}`}
                 />
               ))}
             </div>
@@ -168,7 +168,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                     className="flex items-center gap-1 text-xs text-[var(--fg-tertiary)] hover:text-muted-foreground"
                     title="Copy to clipboard"
                   >
-                    {copiedField === 'currentContent' ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                    {copiedField === 'currentContent' ? <Check className="w-3 h-3 text-[var(--rag-green)]" /> : <Copy className="w-3 h-3" />}
                   </button>
                 )}
               </div>
@@ -177,7 +177,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                 onChange={(e) => onChange({ ...review, currentContent: e.target.value })}
                 placeholder="Document the current state of this section..."
                 rows={6}
-                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-y focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
                 readOnly={readOnly}
               />
             </div>
@@ -205,7 +205,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                       className="flex items-center gap-1 text-xs text-[var(--fg-tertiary)] hover:text-muted-foreground"
                       title="Copy to clipboard"
                     >
-                      {copiedField === 'updatedContent' ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                      {copiedField === 'updatedContent' ? <Check className="w-3 h-3 text-[var(--rag-green)]" /> : <Copy className="w-3 h-3" />}
                     </button>
                   )}
                 </div>
@@ -215,7 +215,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                 onChange={(e) => onChange({ ...review, updatedContent: e.target.value })}
                 placeholder="Write your improved strategy content here. Use 'Apply AI Suggestions' to pre-fill from the analysis..."
                 rows={6}
-                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-y focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
                 readOnly={readOnly}
               />
             </div>
@@ -231,7 +231,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
               onChange={(e) => onChange({ ...review, reviewNotes: e.target.value })}
               placeholder="Add notes, observations, and commentary..."
               rows={3}
-              className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
               readOnly={readOnly}
             />
           </div>
@@ -251,7 +251,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                       title={REVIEW_SCORE_LABELS[s]}
                     >
                       <Star
-                        className={`w-5 h-5 ${s <= review.score ? 'text-amber-400 fill-amber-400' : 'text-[var(--fg-tertiary)] hover:text-amber-300'}`}
+                        className={`w-5 h-5 ${s <= review.score ? 'text-[var(--rag-amber)] fill-[var(--rag-amber)]' : 'text-[var(--fg-tertiary)] hover:text-[var(--rag-amber)]'}`}
                       />
                     </button>
                   ))}
@@ -269,7 +269,7 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                 <select
                   value={review.status}
                   onChange={(e) => handleStatusChange(e.target.value as ReviewSectionStatus)}
-                  className="text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
                 >
                   <option value="not_started">Not Started</option>
                   <option value="in_review">In Review</option>
@@ -287,13 +287,13 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
             </label>
             <div className="space-y-1.5 mb-2">
               {review.recommendations.map((rec, i) => (
-                <div key={i} className="group flex items-start gap-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-                  <span className="text-xs font-medium text-blue-600 mt-0.5">{i + 1}.</span>
-                  <span className="flex-1 text-sm text-blue-800">{rec}</span>
+                <div key={i} className="group flex items-start gap-2 p-2 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg">
+                  <span className="text-xs font-medium text-[var(--rag-blue)] mt-0.5">{i + 1}.</span>
+                  <span className="flex-1 text-sm text-[var(--rag-blue)]">{rec}</span>
                   {!readOnly && (
                     <button
                       onClick={() => handleRemoveRecommendation(i)}
-                      className="text-blue-300 hover:text-red-500 opacity-0 group-hover:opacity-100 flex-shrink-0"
+                      className="text-[var(--rag-blue)] hover:text-[var(--rag-red)] opacity-0 group-hover:opacity-100 flex-shrink-0"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -309,12 +309,12 @@ export const SectionReviewCard: React.FC<SectionReviewCardProps> = ({
                   onChange={(e) => setNewRecommendation(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAddRecommendation()}
                   placeholder="Add a recommendation..."
-                  className="flex-1 text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 text-sm border border-[var(--border-default)] rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
                 />
                 <button
                   onClick={handleAddRecommendation}
                   disabled={!newRecommendation.trim()}
-                  className="p-1.5 text-muted-foreground hover:text-blue-600 disabled:opacity-30"
+                  className="p-1.5 text-muted-foreground hover:text-[var(--rag-blue)] disabled:opacity-30"
                 >
                   <Plus className="w-4 h-4" />
                 </button>

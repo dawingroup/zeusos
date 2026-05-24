@@ -17,12 +17,12 @@ import type { IWOState } from '@/modules/assignment/constants/iwo-states';
 
 const STATE_TONE: Record<IWOState, string> = {
   DRAFT:                 'bg-[var(--bg-sunken)] text-muted-foreground',
-  ISSUED:                'bg-blue-100 text-blue-800',
+  ISSUED:                'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   ACCEPTED:              'bg-cyan-100 text-cyan-800',
-  REJECTED:              'bg-red-100 text-red-800',
+  REJECTED:              'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   IN_PROGRESS:           'bg-indigo-100 text-indigo-800',
-  DELIVERED:             'bg-amber-100 text-amber-900',
-  ACCEPTED_INTERNALLY:   'bg-emerald-100 text-emerald-800',
+  DELIVERED:             'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  ACCEPTED_INTERNALLY:   'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   CLOSED:                'bg-[var(--bg-sunken)] text-foreground',
   CANCELLED:             'bg-[var(--bg-sunken)] text-muted-foreground',
 };
@@ -34,7 +34,7 @@ export default function MasterJobDetailPage() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   if (loading && !rollup) return <div className="p-6">Loading master job…</div>;
-  if (!rollup || !masterJob) return <div className="p-6">Master job not found. <Link to="/master-jobs" className="text-blue-700">Back</Link></div>;
+  if (!rollup || !masterJob) return <div className="p-6">Master job not found. <Link to="/master-jobs" className="text-[var(--rag-blue)]">Back</Link></div>;
 
   const headroom = rollup.ceilingMinor - rollup.allocatedMinor;
   const changeOrderHref = `/clients/${masterJob.clientId}/master-jobs/${masterJob.id}/change-orders/new`;
@@ -53,7 +53,7 @@ export default function MasterJobDetailPage() {
           data-testid="issue-work-order"
           onClick={() => setIssueOpen(true)}
           disabled={rollup.status === 'CLOSED' || rollup.status === 'CANCELLED'}
-          className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+          className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
         >
           Issue Work Order
         </button>
@@ -98,7 +98,7 @@ export default function MasterJobDetailPage() {
                   <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.transferPriceMinor, wo.currency)}</td>
                   <td
                     data-testid={`mj-iwo-row-${wo.id}-burn`}
-                    className={`px-3 py-2 text-right tabular-nums ${wo.burnPct >= 100 ? 'text-red-700' : wo.burnPct >= 80 ? 'text-amber-700' : ''}`}>
+                    className={`px-3 py-2 text-right tabular-nums ${wo.burnPct >= 100 ? 'text-[var(--rag-red)]' : wo.burnPct >= 80 ? 'text-[var(--rag-amber)]' : ''}`}>
                     {wo.burnPct.toFixed(0)}%
                   </td>
                 </tr>

@@ -90,7 +90,7 @@ function SectionHeader({
 }) {
   const content = (
     <>
-      <Icon className="h-4 w-4 text-emerald-600 shrink-0" />
+      <Icon className="h-4 w-4 text-[var(--rag-green)] shrink-0" />
       <span className="text-sm font-medium flex-1">{title}</span>
       {count && (
         <span className="text-xs text-muted-foreground">{count}</span>
@@ -227,7 +227,7 @@ export function DocumentDetailDrawer({
         {/* Header */}
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center gap-2 text-lg">
-            <FileText className="h-5 w-5 text-emerald-600" />
+            <FileText className="h-5 w-5 text-[var(--rag-green)]" />
             {doc.name}
           </SheetTitle>
           <div className="flex items-center gap-2 mt-2">
@@ -254,7 +254,7 @@ export function DocumentDetailDrawer({
                 <div
                   className={cn(
                     'h-full rounded-full transition-all duration-300',
-                    progress === 100 ? 'bg-green-500' : progress >= 50 ? 'bg-emerald-500' : 'bg-amber-500'
+                    progress === 100 ? 'bg-[var(--rag-green)]' : progress >= 50 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-amber)]'
                   )}
                   style={{ width: `${progress}%` }}
                 />
@@ -287,7 +287,7 @@ export function DocumentDetailDrawer({
             {doc.fileUrl ? (
               <div className="flex items-center justify-between bg-card rounded-md border p-3">
                 <div className="flex items-center gap-2 min-w-0">
-                  <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                  <FileText className="h-4 w-4 text-[var(--rag-blue)] shrink-0" />
                   <span className="text-sm truncate">{doc.fileName || 'Document'}</span>
                   {doc.fileSize && (
                     <span className="text-xs text-muted-foreground whitespace-nowrap">
@@ -345,7 +345,7 @@ export function DocumentDetailDrawer({
                       key={item.id}
                       className={cn(
                         'flex items-start gap-3 p-2 rounded-md transition-colors',
-                        item.completed ? 'bg-green-50' : 'hover:bg-[var(--bg-sunken)]'
+                        item.completed ? 'bg-[var(--rag-green-soft)]' : 'hover:bg-[var(--bg-sunken)]'
                       )}
                     >
                       <input
@@ -353,7 +353,7 @@ export function DocumentDetailDrawer({
                         checked={item.completed}
                         onChange={() => handleToggleChecklist(item)}
                         disabled={togglingItem === item.id}
-                        className="mt-1 h-4 w-4 rounded border-[var(--border-default)] text-emerald-600 focus:ring-emerald-500 shrink-0"
+                        className="mt-1 h-4 w-4 rounded border-[var(--border-default)] text-[var(--rag-green)] focus:ring-[var(--rag-green)] shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <p className={cn(
@@ -362,7 +362,7 @@ export function DocumentDetailDrawer({
                         )}>
                           {item.title}
                           {item.isRequired && !item.completed && (
-                            <span className="text-red-500 ml-1">*</span>
+                            <span className="text-[var(--rag-red)] ml-1">*</span>
                           )}
                         </p>
                         {item.description && (
@@ -390,7 +390,7 @@ export function DocumentDetailDrawer({
               <ul className="space-y-1.5">
                 {doc.requirements.map((req, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-emerald-500 mt-1 shrink-0">&#8226;</span>
+                    <span className="text-[var(--rag-green)] mt-1 shrink-0">&#8226;</span>
                     {req}
                   </li>
                 ))}

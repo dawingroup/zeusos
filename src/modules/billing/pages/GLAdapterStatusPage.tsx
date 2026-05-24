@@ -87,7 +87,7 @@ export function GLAdapterStatusPage() {
                       {row.health.status}
                     </span>
                   ) : (
-                    <span className="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">
+                    <span className="rounded bg-[var(--rag-red-soft)] px-2 py-0.5 text-xs text-[var(--rag-red)]">
                       ERROR
                     </span>
                   )}
@@ -115,14 +115,14 @@ export function GLAdapterStatusPage() {
 function statusBadgeClass(status: GLConnectionHealth['status']): string {
   switch (status) {
     case 'CONNECTED':
-      return 'rounded bg-green-100 px-2 py-0.5 text-xs text-green-800';
+      return 'rounded bg-[var(--rag-green-soft)] px-2 py-0.5 text-xs text-[var(--rag-green)]';
     case 'NOT_CONFIGURED':
       return 'rounded bg-[var(--bg-sunken)] px-2 py-0.5 text-xs text-muted-foreground';
     case 'DISCONNECTED':
-      return 'rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800';
+      return 'rounded bg-[var(--rag-amber-soft)] px-2 py-0.5 text-xs text-[var(--rag-amber)]';
     case 'ERROR':
     default:
-      return 'rounded bg-red-100 px-2 py-0.5 text-xs text-red-800';
+      return 'rounded bg-[var(--rag-red-soft)] px-2 py-0.5 text-xs text-[var(--rag-red)]';
   }
 }
 

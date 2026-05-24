@@ -47,11 +47,11 @@ const PICKABLE_STATUSES: AttendanceStatus[] = [
 ];
 
 const STATUS_META: Record<AttendanceStatus, { letter: string; label: string; bg: string; text: string }> = {
-  present:  { letter: 'P',  label: 'Present',   bg: 'bg-green-100',  text: 'text-green-800' },
-  absent:   { letter: 'A',  label: 'Absent',    bg: 'bg-red-100',    text: 'text-red-800' },
-  late:     { letter: 'L',  label: 'Late',      bg: 'bg-yellow-100', text: 'text-yellow-800' },
-  half_day: { letter: 'H',  label: 'Half Day',  bg: 'bg-orange-100', text: 'text-orange-800' },
-  leave:    { letter: 'LV', label: 'Leave',     bg: 'bg-blue-100',   text: 'text-blue-800' },
+  present:  { letter: 'P',  label: 'Present',   bg: 'bg-[var(--rag-green-soft)]',  text: 'text-[var(--rag-green)]' },
+  absent:   { letter: 'A',  label: 'Absent',    bg: 'bg-[var(--rag-red-soft)]',    text: 'text-[var(--rag-red)]' },
+  late:     { letter: 'L',  label: 'Late',      bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
+  half_day: { letter: 'H',  label: 'Half Day',  bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
+  leave:    { letter: 'LV', label: 'Leave',     bg: 'bg-[var(--rag-blue-soft)]',   text: 'text-[var(--rag-blue)]' },
   sick:     { letter: 'S',  label: 'Sick',      bg: 'bg-pink-100',   text: 'text-pink-800' },
   holiday:  { letter: 'PH', label: 'Holiday',   bg: 'bg-purple-100', text: 'text-purple-800' },
   weekend:  { letter: '·',  label: 'Weekend',   bg: 'bg-[var(--bg-sunken)]',   text: 'text-[var(--fg-tertiary)]' },
@@ -227,7 +227,7 @@ export function AttendanceMatrix({
           {dirtyCount > 0 && (
             <>
               <span className="text-[var(--fg-tertiary)]">·</span>
-              <span className="text-amber-700 font-medium">{dirtyCount} unsaved</span>
+              <span className="text-[var(--rag-amber)] font-medium">{dirtyCount} unsaved</span>
             </>
           )}
         </div>
@@ -285,7 +285,7 @@ export function AttendanceMatrix({
                   >
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="w-full focus:outline-none focus:ring-1 focus:ring-blue-300 rounded">
+                        <button className="w-full focus:outline-none focus:ring-1 focus:ring-[var(--rag-blue)] rounded">
                           <div className="text-[10px] leading-none">{WEEKDAY_LETTERS[d.weekday]}</div>
                           <div className="text-[11px] font-mono leading-tight mt-0.5">{d.day}</div>
                         </button>
@@ -319,7 +319,7 @@ export function AttendanceMatrix({
                     <td className="sticky left-0 bg-inherit px-3 py-1.5 border-r border-[var(--border-subtle)] font-medium text-foreground">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="text-left hover:text-blue-600 focus:outline-none">
+                          <button className="text-left hover:text-[var(--rag-blue)] focus:outline-none">
                             {emp.fullName}
                             {emp.employeeNumber && (
                               <span className="ml-2 text-[var(--fg-tertiary)] font-mono text-[10px]">{emp.employeeNumber}</span>
@@ -355,7 +355,7 @@ export function AttendanceMatrix({
                               <button
                                 className={`w-7 h-6 text-[10px] font-mono font-bold rounded ${
                                   meta ? `${meta.bg} ${meta.text}` : 'bg-card border border-dashed border-[var(--border-default)] text-[var(--fg-tertiary)] hover:border-[var(--border-strong)]'
-                                } ${isDirty ? 'ring-2 ring-amber-400 ring-offset-0' : ''}`}
+                                } ${isDirty ? 'ring-2 ring-[var(--rag-amber)] ring-offset-0' : ''}`}
                                 title={meta ? `${meta.label}${isDirty ? ' (unsaved)' : ''}` : 'No record'}
                               >
                                 {meta ? meta.letter : '·'}
@@ -384,12 +384,12 @@ export function AttendanceMatrix({
                     })}
                     <td className="px-2 py-1 border-l border-[var(--border-subtle)] text-center text-[11px] text-muted-foreground">
                       <div className="flex items-center justify-center gap-2">
-                        <span title="Worked (P+L+½H)" className="text-green-700 font-medium">{sum.worked}</span>
+                        <span title="Worked (P+L+½H)" className="text-[var(--rag-green)] font-medium">{sum.worked}</span>
                         <span className="text-[var(--fg-tertiary)]">/</span>
-                        <span title="Absent" className="text-red-700">{sum.absent}</span>
-                        <span title="Leave/Sick" className="text-blue-700">{sum.leave + sum.sick}</span>
+                        <span title="Absent" className="text-[var(--rag-red)]">{sum.absent}</span>
+                        <span title="Leave/Sick" className="text-[var(--rag-blue)]">{sum.leave + sum.sick}</span>
                         {sum.unrecorded > 0 && (
-                          <span title="Unrecorded workdays" className="text-amber-600">·{sum.unrecorded}</span>
+                          <span title="Unrecorded workdays" className="text-[var(--rag-amber)]">·{sum.unrecorded}</span>
                         )}
                       </div>
                     </td>
@@ -403,7 +403,7 @@ export function AttendanceMatrix({
 
       {dirtyCount === 0 && records.length > 0 && !loading && (
         <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-[var(--rag-green)]" />
           All changes saved.
         </div>
       )}

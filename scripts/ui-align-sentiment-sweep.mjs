@@ -104,9 +104,10 @@ for (const [rag, families] of Object.entries(RAG_FAMILIES)) {
   });
 
   // Borders → solid RAG (use opacity arbitrary value at call-site if you
-  // want a softer border)
+  // want a softer border). Covers full shade range including 700-950 used
+  // for high-contrast emphasis borders.
   MAPPINGS.push({
-    from: new RegExp(`\\bborder-${F}-(?:200|300|400|500|600)\\b`, 'g'),
+    from: new RegExp(`\\bborder-${F}-(?:200|300|400|500|600|700|800|900|950)\\b`, 'g'),
     to: `border-[var(--rag-${rag})]`,
   });
 
@@ -116,10 +117,40 @@ for (const [rag, families] of Object.entries(RAG_FAMILIES)) {
     to: `ring-[var(--rag-${rag})]`,
   });
 
-  // Divide / placeholder / decoration — same family
+  // Divide
   MAPPINGS.push({
     from: new RegExp(`\\bdivide-${F}-\\d{2,3}\\b`, 'g'),
     to: `divide-[var(--rag-${rag})]`,
+  });
+
+  // SVG fill / stroke utilities — used for filled icons (e.g. rating stars)
+  MAPPINGS.push({
+    from: new RegExp(`\\bfill-${F}-\\d{2,3}\\b`, 'g'),
+    to: `fill-[var(--rag-${rag})]`,
+  });
+  MAPPINGS.push({
+    from: new RegExp(`\\bstroke-${F}-\\d{2,3}\\b`, 'g'),
+    to: `stroke-[var(--rag-${rag})]`,
+  });
+
+  // Low-shade text (text-X-100/200) — used for de-emphasized text on dark
+  // surfaces. Maps to the soft RAG variant.
+  MAPPINGS.push({
+    from: new RegExp(`\\btext-${F}-(?:100|200)\\b`, 'g'),
+    to: `text-[var(--rag-${rag}-soft)]`,
+  });
+
+  // Text 50 — even softer. Same target (the soft variant is the only token
+  // we have at this end of the scale).
+  MAPPINGS.push({
+    from: new RegExp(`\\btext-${F}-50\\b`, 'g'),
+    to: `text-[var(--rag-${rag}-soft)]`,
+  });
+
+  // bg-X-950 (deepest shade — added in Tailwind 3.4)
+  MAPPINGS.push({
+    from: new RegExp(`\\bbg-${F}-950\\b`, 'g'),
+    to: `bg-[var(--rag-${rag})]`,
   });
 }
 

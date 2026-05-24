@@ -179,17 +179,17 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
   };
 
   const PRIORITY_COLORS = {
-    critical: 'bg-red-100 text-red-700',
-    high: 'bg-orange-100 text-orange-700',
-    medium: 'bg-blue-100 text-blue-700',
+    critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+    high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    medium: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     low: 'bg-[var(--bg-sunken)] text-muted-foreground',
   };
 
   const CATEGORY_COLORS = {
-    financial: 'bg-emerald-100 text-emerald-700',
-    operational: 'bg-blue-100 text-blue-700',
+    financial: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    operational: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     customer: 'bg-pink-100 text-pink-700',
-    employee: 'bg-amber-100 text-amber-700',
+    employee: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     growth: 'bg-purple-100 text-purple-700',
   };
 
@@ -201,7 +201,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           onClick={() => setActiveTab('okrs')}
           className={`flex items-center gap-2 pb-2 px-1 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'okrs'
-              ? 'border-blue-600 text-blue-600'
+              ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
               : 'border-transparent text-muted-foreground hover:text-muted-foreground'
           }`}
         >
@@ -212,7 +212,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           onClick={() => setActiveTab('kpis')}
           className={`flex items-center gap-2 pb-2 px-1 text-sm font-medium border-b-2 transition-colors ${
             activeTab === 'kpis'
-              ? 'border-green-600 text-green-600'
+              ? 'border-[var(--rag-green)] text-[var(--rag-green)]'
               : 'border-transparent text-muted-foreground hover:text-muted-foreground'
           }`}
         >
@@ -222,7 +222,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        <div className="p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}
@@ -252,16 +252,16 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
             </div>
           ) : (
             okrs.map((okr) => (
-              <div key={okr.id} className={`border rounded-lg overflow-hidden ${okr.accepted ? 'border-green-300 bg-green-50/30' : 'border-[var(--border-subtle)]'}`}>
+              <div key={okr.id} className={`border rounded-lg overflow-hidden ${okr.accepted ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]/30' : 'border-[var(--border-subtle)]'}`}>
                 <div
                   className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--bg-sunken)]"
                   onClick={() => setExpandedOKR(expandedOKR === okr.id ? null : okr.id)}
                 >
                   <div className="flex items-center gap-2 flex-1">
                     {okr.accepted ? (
-                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[var(--rag-green)] flex-shrink-0" />
                     ) : (
-                      <Target className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      <Target className="w-4 h-4 text-[var(--rag-blue)] flex-shrink-0" />
                     )}
                     <span className="text-sm font-medium text-foreground">{okr.objective}</span>
                     <span className={`px-2 py-0.5 text-xs rounded-full ${PRIORITY_COLORS[okr.priority]}`}>
@@ -288,7 +288,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                         <h5 className="text-xs font-semibold text-muted-foreground uppercase">Key Results</h5>
                         {okr.keyResults.map((kr, i) => (
                           <div key={kr.id} className="flex items-center gap-3 p-2 bg-card rounded border border-[var(--border-subtle)]">
-                            <span className="text-xs font-medium text-blue-600 w-6">KR{i + 1}</span>
+                            <span className="text-xs font-medium text-[var(--rag-blue)] w-6">KR{i + 1}</span>
                             <span className="flex-1 text-sm text-muted-foreground">{kr.title}</span>
                             <span className="text-xs text-muted-foreground">
                               {kr.currentValue}/{kr.targetValue} {kr.unit}
@@ -303,7 +303,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                         {!okr.accepted && (
                           <button
                             onClick={() => handleAcceptOKR(okr.id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-green)] rounded-lg hover:bg-[var(--rag-green)]"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Accept OKR
@@ -311,7 +311,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                         )}
                         <button
                           onClick={() => handleRemoveOKR(okr.id)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-50"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[var(--rag-red)] border border-[var(--rag-red)] rounded-lg hover:bg-[var(--rag-red-soft)]"
                         >
                           <X className="w-3.5 h-3.5" />
                           Remove
@@ -352,10 +352,10 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {kpis.map((kpi) => (
-                <div key={kpi.id} className={`border rounded-lg p-4 ${kpi.accepted ? 'border-green-300 bg-green-50/30' : 'border-[var(--border-subtle)]'}`}>
+                <div key={kpi.id} className={`border rounded-lg p-4 ${kpi.accepted ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]/30' : 'border-[var(--border-subtle)]'}`}>
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      <BarChart3 className="w-4 h-4 text-[var(--rag-green)] flex-shrink-0" />
                       <h5 className="text-sm font-medium text-foreground">{kpi.name}</h5>
                     </div>
                     {kpi.aiGenerated && <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0" />}
@@ -378,20 +378,20 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                       {!kpi.accepted ? (
                         <button
                           onClick={() => handleAcceptKPI(kpi.id)}
-                          className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded hover:bg-green-200"
+                          className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-[var(--rag-green)] bg-[var(--rag-green-soft)] rounded hover:bg-[var(--rag-green)]"
                         >
                           <CheckCircle2 className="w-3 h-3" />
                           Accept
                         </button>
                       ) : (
-                        <span className="flex items-center gap-1 text-xs text-green-600">
+                        <span className="flex items-center gap-1 text-xs text-[var(--rag-green)]">
                           <CheckCircle2 className="w-3 h-3" />
                           Accepted
                         </span>
                       )}
                       <button
                         onClick={() => handleRemoveKPI(kpi.id)}
-                        className="flex items-center gap-1 px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded"
+                        className="flex items-center gap-1 px-2 py-1 text-xs text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
                       >
                         <X className="w-3 h-3" />
                       </button>

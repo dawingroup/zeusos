@@ -58,7 +58,7 @@ export default function JournalEntryDetailPage() {
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <h1 className="font-mono text-xl font-semibold" data-testid="je-id">{je.id}</h1>
           <span className={`rounded px-2 py-0.5 text-xs font-medium ${
-            balanced ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700'
+            balanced ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
           }`}>
             {balanced ? 'Balanced' : 'UNBALANCED'}
           </span>

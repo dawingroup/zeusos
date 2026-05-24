@@ -227,7 +227,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
         {/* Toolbar */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
           <div className="flex items-center gap-3">
-            <FileText className="w-5 h-5 text-blue-600" />
+            <FileText className="w-5 h-5 text-[var(--rag-blue)]" />
             <div>
               <h3 className="text-sm font-semibold text-foreground">Strategy Document</h3>
               <p className="text-xs text-muted-foreground">
@@ -240,7 +240,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
             <button
               onClick={() => setShowAnnotations(!showAnnotations)}
               className={`flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
-                showAnnotations ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-[var(--bg-sunken)] text-muted-foreground border border-[var(--border-subtle)]'
+                showAnnotations ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border border-[var(--rag-amber)]' : 'bg-[var(--bg-sunken)] text-muted-foreground border border-[var(--border-subtle)]'
               }`}
             >
               <Lightbulb className="w-3 h-3" />
@@ -261,7 +261,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
               disabled={isCreatingGoogleDoc}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${
                 reviewData.googleDocUrl
-                  ? 'text-green-700 bg-green-50 border border-green-200 hover:bg-green-100'
+                  ? 'text-[var(--rag-green)] bg-[var(--rag-green-soft)] border border-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]'
                   : 'text-muted-foreground bg-card border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)]'
               }`}
             >
@@ -277,7 +277,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
             <button
               onClick={handleExportDOCX}
               disabled={isExporting}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
             >
               {isExporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
               Export DOCX
@@ -287,20 +287,20 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
 
         {/* Google Doc Error / Link */}
         {googleDocError && (
-          <div className="px-5 py-2 bg-red-50 border-b border-red-200 text-xs text-red-700 flex items-center justify-between">
+          <div className="px-5 py-2 bg-[var(--rag-red-soft)] border-b border-[var(--rag-red)] text-xs text-[var(--rag-red)] flex items-center justify-between">
             <span>{googleDocError}</span>
-            <button onClick={() => setGoogleDocError(null)} className="text-red-400 hover:text-red-600 ml-2">&times;</button>
+            <button onClick={() => setGoogleDocError(null)} className="text-[var(--rag-red)] hover:text-[var(--rag-red)] ml-2">&times;</button>
           </div>
         )}
         {reviewData.googleDocUrl && !googleDocError && (
-          <div className="px-5 py-2 bg-green-50 border-b border-green-200 text-xs text-green-700 flex items-center gap-2">
+          <div className="px-5 py-2 bg-[var(--rag-green-soft)] border-b border-[var(--rag-green)] text-xs text-[var(--rag-green)] flex items-center gap-2">
             <ExternalLink className="w-3 h-3" />
             <span>Linked Google Doc:</span>
             <a
               href={reviewData.googleDocUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-green-900 font-medium truncate max-w-md"
+              className="underline hover:text-[var(--rag-green)] font-medium truncate max-w-md"
             >
               {reviewData.googleDocUrl}
             </a>
@@ -318,7 +318,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                 }).catch(e => setGoogleDocError(e.message)).finally(() => setIsCreatingGoogleDoc(false));
               }}
               disabled={isCreatingGoogleDoc}
-              className="ml-auto text-[10px] text-green-600 hover:text-green-800 underline whitespace-nowrap"
+              className="ml-auto text-[10px] text-[var(--rag-green)] hover:text-[var(--rag-green)] underline whitespace-nowrap"
             >
               Create New Version
             </button>
@@ -348,22 +348,22 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                     <div className="flex items-center gap-1.5">
                       {review.score > 0 && (
                         <span className={`flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ${
-                          review.score >= 4 ? 'bg-green-50 text-green-700' :
-                          review.score >= 3 ? 'bg-amber-50 text-amber-700' :
-                          'bg-red-50 text-red-700'
+                          review.score >= 4 ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                          review.score >= 3 ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+                          'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                         }`}>
                           <Star className="w-2.5 h-2.5" />
                           {review.score}/5
                         </span>
                       )}
                       {hasAI && showAnnotations && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-amber-50 text-amber-600 rounded flex items-center gap-0.5">
+                        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] rounded flex items-center gap-0.5">
                           <Lightbulb className="w-2.5 h-2.5" />
                           AI Insight
                         </span>
                       )}
                       {review.status === 'approved' && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-50 text-green-600 rounded flex items-center gap-0.5">
+                        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--rag-green-soft)] text-[var(--rag-green)] rounded flex items-center gap-0.5">
                           <CheckCircle2 className="w-2.5 h-2.5" />
                           Accepted
                         </span>
@@ -386,7 +386,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                               onClick={() => handleCopy(review.currentContent, `${sectionKey}-doc`)}
                               className="text-[var(--fg-tertiary)] hover:text-muted-foreground"
                             >
-                              {copiedField === `${sectionKey}-doc` ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+                              {copiedField === `${sectionKey}-doc` ? <Check className="w-3 h-3 text-[var(--rag-green)]" /> : <Copy className="w-3 h-3" />}
                             </button>
                           )}
                         </div>
@@ -395,7 +395,7 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                           onChange={(e) => onSectionChange(sectionKey, { ...review, currentContent: e.target.value })}
                           placeholder="Document content for this section will appear here after upload and AI analysis..."
                           rows={8}
-                          className="w-full border border-[var(--border-subtle)] rounded-lg px-4 py-3 text-sm resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[160px] leading-relaxed"
+                          className="w-full border border-[var(--border-subtle)] rounded-lg px-4 py-3 text-sm resize-y focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)] min-h-[160px] leading-relaxed"
                           readOnly={readOnly}
                         />
                       </div>
@@ -405,26 +405,26 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
                         <div className="space-y-3">
                           {/* AI Analysis Card */}
                           {review.updatedContent && (
-                            <div className="border border-amber-200 rounded-lg bg-amber-50/50 overflow-hidden">
+                            <div className="border border-[var(--rag-amber)] rounded-lg bg-[var(--rag-amber-soft)]/50 overflow-hidden">
                               <button
                                 onClick={() => toggleAnnotation(sectionKey)}
-                                className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100/50 transition-colors"
+                                className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]/50 transition-colors"
                               >
                                 <span className="flex items-center gap-1.5">
-                                  <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                                  <Lightbulb className="w-3.5 h-3.5 text-[var(--rag-amber)]" />
                                   AI Analysis
                                 </span>
                                 {isAnnotationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                               </button>
                               {isAnnotationOpen && (
-                                <div className="px-3 pb-3 border-t border-amber-200/50">
-                                  <div className="mt-2 text-xs text-amber-900 whitespace-pre-wrap max-h-[400px] overflow-y-auto leading-relaxed">
+                                <div className="px-3 pb-3 border-t border-[var(--rag-amber)]/50">
+                                  <div className="mt-2 text-xs text-[var(--rag-amber)] whitespace-pre-wrap max-h-[400px] overflow-y-auto leading-relaxed">
                                     {review.updatedContent}
                                   </div>
                                   {!readOnly && (
                                     <button
                                       onClick={() => handleAcceptAnnotation(sectionKey)}
-                                      className="mt-2 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700 transition-colors w-full justify-center"
+                                      className="mt-2 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-amber)] rounded-md hover:bg-[var(--rag-amber)] transition-colors w-full justify-center"
                                     >
                                       <CheckCircle2 className="w-3 h-3" />
                                       Accept AI Version
@@ -437,15 +437,15 @@ export const StrategyDocumentEditor: React.FC<StrategyDocumentEditorProps> = ({
 
                           {/* Recommendations Card */}
                           {review.recommendations.length > 0 && (
-                            <div className="border border-blue-200 rounded-lg bg-blue-50/50 px-3 py-2.5">
-                              <p className="text-xs font-semibold text-blue-800 mb-1.5 flex items-center gap-1.5">
-                                <Wand2 className="w-3.5 h-3.5 text-blue-600" />
+                            <div className="border border-[var(--rag-blue)] rounded-lg bg-[var(--rag-blue-soft)]/50 px-3 py-2.5">
+                              <p className="text-xs font-semibold text-[var(--rag-blue)] mb-1.5 flex items-center gap-1.5">
+                                <Wand2 className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                                 Recommendations
                               </p>
                               <ul className="space-y-1">
                                 {review.recommendations.map((rec, i) => (
-                                  <li key={i} className="text-xs text-blue-800 flex items-start gap-1.5">
-                                    <span className="font-medium text-blue-600 mt-0.5 flex-shrink-0">{i + 1}.</span>
+                                  <li key={i} className="text-xs text-[var(--rag-blue)] flex items-start gap-1.5">
+                                    <span className="font-medium text-[var(--rag-blue)] mt-0.5 flex-shrink-0">{i + 1}.</span>
                                     <span className="leading-relaxed">{rec}</span>
                                   </li>
                                 ))}

@@ -54,9 +54,9 @@ interface TileProps {
 
 function Tile({ label, value, sub, tone }: TileProps) {
   const toneClasses =
-    tone === 'red' ? 'border-red-200 bg-red-50' :
-    tone === 'amber' ? 'border-amber-200 bg-amber-50' :
-    tone === 'green' ? 'border-emerald-200 bg-emerald-50' :
+    tone === 'red' ? 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]' :
+    tone === 'amber' ? 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]' :
+    tone === 'green' ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]' :
     'border-[var(--border-subtle)] bg-card';
   return (
     <div className={`rounded border p-3 ${toneClasses}`}>

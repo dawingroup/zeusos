@@ -125,7 +125,7 @@ export function KPIOverviewPage() {
       <div className="flex flex-wrap gap-2 mb-8">
         <button
           onClick={() => navigate('/strategy/kpis/library')}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-blue)] transition-colors"
         >
           <BookOpen className="w-4 h-4" />
           Browse Library
@@ -170,8 +170,8 @@ export function KPIOverviewPage() {
             className="bg-card rounded-lg border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow group"
           >
             <div className="flex items-center gap-3 mb-3">
-              <div className="bg-green-50 rounded-lg p-2.5">
-                <DollarSign className="w-5 h-5 text-green-600" />
+              <div className="bg-[var(--rag-green-soft)] rounded-lg p-2.5">
+                <DollarSign className="w-5 h-5 text-[var(--rag-green)]" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">Finance Module KPIs</h3>

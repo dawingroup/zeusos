@@ -134,9 +134,9 @@ export default function DriveFolderSettingsPage() {
       </div>
 
       {/* Service-account hint */}
-      <div className="flex items-start gap-2 border border-blue-200 bg-blue-50 rounded-lg p-3">
-        <Info className="h-4 w-4 text-blue-500 mt-0.5 shrink-0" />
-        <div className="text-xs text-blue-900 leading-relaxed">
+      <div className="flex items-start gap-2 border border-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg p-3">
+        <Info className="h-4 w-4 text-[var(--rag-blue)] mt-0.5 shrink-0" />
+        <div className="text-xs text-[var(--rag-blue)] leading-relaxed">
           <p className="font-medium">Before pasting an ID</p>
           <p className="mt-1">
             Share the Drive folder with the Drive service account as{' '}
@@ -150,7 +150,7 @@ export default function DriveFolderSettingsPage() {
               </code>
             </p>
           ) : (
-            <p className="mt-1 italic text-blue-700">
+            <p className="mt-1 italic text-[var(--rag-blue)]">
               (Service account email not yet synced — click Verify on any slot
               to confirm it&apos;s reachable; the callable will surface the
               account email in its error message if sharing is the issue.)
@@ -215,9 +215,9 @@ export default function DriveFolderSettingsPage() {
                         className={
                           'text-[10px] font-medium px-1.5 py-0.5 rounded-full ' +
                           (mapped === descriptors.length
-                            ? 'bg-emerald-100 text-emerald-700'
+                            ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                             : mapped > 0
-                              ? 'bg-amber-100 text-amber-700'
+                              ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                               : 'bg-[var(--bg-sunken)] text-muted-foreground')
                         }
                       >

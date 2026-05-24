@@ -88,8 +88,8 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-50 rounded-lg p-2">
-              <BookOpen className="w-5 h-5 text-blue-600" />
+            <div className="bg-[var(--rag-blue-soft)] rounded-lg p-2">
+              <BookOpen className="w-5 h-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">Add KPI to Tracking</h2>
@@ -136,7 +136,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
           {/* Target value */}
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-1">
-              Target Value <span className="text-red-500">*</span>
+              Target Value <span className="text-[var(--rag-red)]">*</span>
             </label>
             <div className="flex items-center gap-2">
               <input
@@ -145,7 +145,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={targetValue}
                 onChange={(e) => setTargetValue(e.target.value)}
                 placeholder="Enter target value"
-                className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 required
               />
               {entry.unit && (
@@ -166,7 +166,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={stretchValue}
                 onChange={(e) => setStretchValue(e.target.value)}
                 placeholder="Aspirational"
-                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               />
               <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Ambitious goal</p>
             </div>
@@ -180,7 +180,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
                 value={minimumValue}
                 onChange={(e) => setMinimumValue(e.target.value)}
                 placeholder="Floor threshold"
-                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               />
               <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Below this = critical</p>
             </div>
@@ -192,7 +192,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
             <select
               value={scope}
               onChange={(e) => setScope(e.target.value as KPIScope)}
-              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             >
               {Object.entries(KPI_SCOPE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -210,13 +210,13 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
               value={ownerName}
               onChange={(e) => setOwnerName(e.target.value)}
               placeholder="Who is responsible for this KPI?"
-              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             />
           </div>
 
           {/* Error */}
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">{error}</p>
+            <p className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] rounded-md px-3 py-2">{error}</p>
           )}
 
           {/* Actions */}
@@ -231,7 +231,7 @@ export function AddFromLibraryDialog({ entry, isOpen, onClose, onAdd }: AddFromL
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               {saving ? 'Adding...' : 'Add to Tracking'}
             </button>

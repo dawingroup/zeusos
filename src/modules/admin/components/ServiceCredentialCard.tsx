@@ -105,14 +105,14 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
             </div>
             <div className="flex items-center gap-2 mt-0.5">
               {credential.configured ? (
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--rag-green)]">
                   <Check className="w-3 h-3" /> Configured
                   {credential.lastFour && (
                     <span className="text-muted-foreground font-mono">••••-{credential.lastFour}</span>
                   )}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700">
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--rag-amber)]">
                   <X className="w-3 h-3" /> Not set
                 </span>
               )}
@@ -158,8 +158,8 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
             className={cn(
               'mt-2 text-xs rounded px-2 py-1.5 flex items-start gap-1.5',
               testResult.ok
-                ? 'bg-emerald-50 text-emerald-700'
-                : 'bg-red-50 text-red-700',
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
+                : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
             )}
           >
             {testResult.ok ? (
@@ -194,7 +194,7 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
               onChange={(e) => setValue(e.target.value)}
               placeholder="Paste new secret value"
             />
-            {saveError && <p className="text-xs text-red-600">{saveError}</p>}
+            {saveError && <p className="text-xs text-[var(--rag-red)]">{saveError}</p>}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setOpen(false)} disabled={saving}>

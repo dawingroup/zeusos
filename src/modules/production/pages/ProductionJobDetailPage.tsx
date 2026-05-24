@@ -142,7 +142,7 @@ export default function ProductionJobDetailPage() {
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50"
+            className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50"
             data-testid="production-delete-btn"
           >
             {deleting ? 'Deleting…' : 'Delete'}

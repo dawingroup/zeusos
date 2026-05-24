@@ -65,7 +65,7 @@ export default function IntakeQueuePage() {
                 <td className="px-3 py-2 text-xs">
                   {r.iwoId && <div>IWO {r.iwoId}</div>}
                   {r.masterJobId && (
-                    <Link to={`/master-jobs/${r.masterJobId}`} className="font-mono text-blue-700 hover:underline">
+                    <Link to={`/master-jobs/${r.masterJobId}`} className="font-mono text-[var(--rag-blue)] hover:underline">
                       {r.masterJobId}
                     </Link>
                   )}
@@ -73,7 +73,7 @@ export default function IntakeQueuePage() {
                 <td className="px-3 py-2 text-xs">{r.requestText}</td>
                 <td className="px-3 py-2 text-xs">
                   {r.clientId && (
-                    <Link to={`/clients/${r.clientId}`} className="block text-blue-700 hover:underline">
+                    <Link to={`/clients/${r.clientId}`} className="block text-[var(--rag-blue)] hover:underline">
                       Open client →
                     </Link>
                   )}

@@ -67,19 +67,19 @@ export const StrategyOverview: React.FC = () => {
       icon: Upload,
       title: 'Upload & Analyze',
       description: 'Upload your current business strategy document and let AI analyze it comprehensively.',
-      color: 'bg-blue-500',
+      color: 'bg-[var(--rag-blue)]',
     },
     {
       icon: LayoutGrid,
       title: 'Business Model Canvas',
       description: 'Review and update all 9 blocks of the Business Model Canvas with AI suggestions.',
-      color: 'bg-emerald-500',
+      color: 'bg-[var(--rag-green)]',
     },
     {
       icon: Shield,
       title: 'SWOT & Risk Analysis',
       description: 'Conduct thorough SWOT analysis and strategic risk assessment with AI guidance.',
-      color: 'bg-amber-500',
+      color: 'bg-[var(--rag-amber)]',
     },
     {
       icon: Target,
@@ -117,7 +117,7 @@ export const StrategyOverview: React.FC = () => {
           </div>
           <button
             onClick={() => navigate('/strategy/plans/review/new')}
-            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] shadow-sm transition-colors"
           >
             <Plus className="w-4 h-4" />
             New Strategy Review
@@ -125,17 +125,17 @@ export const StrategyOverview: React.FC = () => {
         </div>
 
         {/* Hero CTA Card */}
-        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <div className="bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] to-purple-700 rounded-2xl p-8 mb-8 text-white shadow-lg">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-5 h-5 text-blue-200" />
-                <span className="text-sm font-medium text-blue-200">AI-Powered Strategy Review</span>
+                <Sparkles className="w-5 h-5 text-[var(--rag-blue-soft)]" />
+                <span className="text-sm font-medium text-[var(--rag-blue-soft)]">AI-Powered Strategy Review</span>
               </div>
               <h2 className="text-2xl font-bold mb-2">
                 Business Strategy Review Tool
               </h2>
-              <p className="text-blue-100 max-w-xl">
+              <p className="text-[var(--rag-blue-soft)] max-w-xl">
                 Upload your current business strategy and plan, then use our comprehensive guided review
                 to analyze every aspect — from Business Model Canvas to financial projections. Claude AI
                 assists with analysis, recommendations, and generates OKRs & KPIs to drive execution.
@@ -143,7 +143,7 @@ export const StrategyOverview: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/strategy/plans/review/new')}
-              className="flex items-center gap-2 px-6 py-3 text-base font-semibold text-blue-700 bg-card rounded-xl hover:bg-blue-50 shadow-md transition-colors whitespace-nowrap"
+              className="flex items-center gap-2 px-6 py-3 text-base font-semibold text-[var(--rag-blue)] bg-card rounded-xl hover:bg-[var(--rag-blue-soft)] shadow-md transition-colors whitespace-nowrap"
             >
               Start Strategy Review
               <ArrowRight className="w-5 h-5" />
@@ -176,7 +176,7 @@ export const StrategyOverview: React.FC = () => {
             <h3 className="text-lg font-semibold text-foreground">Your Strategy Reviews</h3>
             <button
               onClick={() => navigate('/strategy/plans/review/new')}
-              className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="flex items-center gap-1.5 text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
             >
               <Plus className="w-3.5 h-3.5" />
               New Review
@@ -184,7 +184,7 @@ export const StrategyOverview: React.FC = () => {
           </div>
 
           {reviewsError ? (
-            <div className="py-4 px-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="py-4 px-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-sm text-[var(--rag-red)]">
               {reviewsError}
             </div>
           ) : loadingReviews ? (
@@ -198,7 +198,7 @@ export const StrategyOverview: React.FC = () => {
               <p className="text-sm">No strategy reviews yet</p>
               <button
                 onClick={() => navigate('/strategy/plans/review/new')}
-                className="mt-2 text-sm text-blue-600 hover:underline"
+                className="mt-2 text-sm text-[var(--rag-blue)] hover:underline"
               >
                 Start your first review
               </button>
@@ -209,11 +209,11 @@ export const StrategyOverview: React.FC = () => {
                 <div
                   key={review.id}
                   onClick={() => navigate(`/strategy/plans/review/${review.id}`)}
-                  className="flex items-center justify-between p-4 rounded-lg border border-[var(--border-subtle)] hover:border-blue-200 hover:bg-blue-50/50 cursor-pointer transition-colors group"
+                  className="flex items-center justify-between p-4 rounded-lg border border-[var(--border-subtle)] hover:border-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]/50 cursor-pointer transition-colors group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-                      <FileText className="w-4 h-4 text-blue-600" />
+                    <div className="p-2 bg-[var(--rag-blue-soft)] rounded-lg flex-shrink-0">
+                      <FileText className="w-4 h-4 text-[var(--rag-blue)]" />
                     </div>
                     <div className="min-w-0">
                       <h4 className="text-sm font-medium text-foreground truncate">
@@ -225,11 +225,11 @@ export const StrategyOverview: React.FC = () => {
                           {review.updatedAt ? new Date(review.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Not saved'}
                         </span>
                         {review.overallScore > 0 && (
-                          <span className="font-medium text-blue-600">{review.overallScore}/5</span>
+                          <span className="font-medium text-[var(--rag-blue)]">{review.overallScore}/5</span>
                         )}
                         <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                          review.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          review.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                          review.status === 'completed' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                          review.status === 'in_progress' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
                           'bg-[var(--bg-sunken)] text-muted-foreground'
                         }`}>
                           {review.status === 'in_progress' ? 'In Progress' : review.status === 'completed' ? 'Completed' : 'Draft'}
@@ -241,12 +241,12 @@ export const StrategyOverview: React.FC = () => {
                     <button
                       onClick={(e) => handleDelete(review.id, e)}
                       disabled={deletingId === review.id}
-                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                      className="p-1.5 text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] opacity-0 group-hover:opacity-100 transition-all"
                       title="Delete review"
                     >
                       {deletingId === review.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                     </button>
-                    <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-blue-500 transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-[var(--rag-blue)] transition-colors" />
                   </div>
                 </div>
               ))}
@@ -266,8 +266,8 @@ export const StrategyOverview: React.FC = () => {
                 key={section.label}
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--bg-sunken)] transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold text-blue-700">{i + 1}</span>
+                <div className="w-8 h-8 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-[var(--rag-blue)]">{i + 1}</span>
                 </div>
                 <div>
                   <h4 className="text-sm font-medium text-foreground">{section.label}</h4>

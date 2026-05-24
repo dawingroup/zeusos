@@ -27,8 +27,8 @@ const STATUS_OPTIONS: PostPhaseStatus[] = ['PENDING', 'IN_PROGRESS', 'DONE'];
 
 const STATUS_STYLES: Record<PostPhaseStatus, string> = {
   PENDING:     'bg-[var(--bg-sunken)] text-muted-foreground',
-  IN_PROGRESS: 'bg-yellow-100 text-yellow-700',
-  DONE:        'bg-green-100 text-green-700',
+  IN_PROGRESS: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  DONE:        'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
 };
 
 interface Props {

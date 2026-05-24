@@ -52,15 +52,15 @@ interface PayrollBatchListProps {
 function StatusBadge({ status }: { status: PayrollBatchStatus }) {
   const colorMap: Record<string, string> = {
     gray: 'bg-[var(--bg-sunken)] text-foreground',
-    blue: 'bg-blue-100 text-blue-800',
+    blue: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     indigo: 'bg-indigo-100 text-indigo-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    orange: 'bg-orange-100 text-orange-800',
+    yellow: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    orange: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     cyan: 'bg-cyan-100 text-cyan-800',
     teal: 'bg-teal-100 text-teal-800',
     purple: 'bg-purple-100 text-purple-800',
-    green: 'bg-green-100 text-green-800',
-    red: 'bg-red-100 text-red-800',
+    green: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    red: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   };
 
   const color = BATCH_STATUS_COLORS[status] || 'gray';
@@ -277,7 +277,7 @@ export const PayrollBatchList: React.FC<PayrollBatchListProps> = ({
                   placeholder="Search batches..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-4 py-2 border border-[var(--border-default)] rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-[200px]"
+                  className="pl-9 pr-4 py-2 border border-[var(--border-default)] rounded-md text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)] w-[200px]"
                 />
                 {searchQuery && (
                   <button
@@ -293,7 +293,7 @@ export const PayrollBatchList: React.FC<PayrollBatchListProps> = ({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-[var(--border-default)] rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-3 py-2 border border-[var(--border-default)] rounded-md text-sm focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
               >
                 <option value="all">All Status</option>
                 <option value="draft">Draft</option>
@@ -316,7 +316,7 @@ export const PayrollBatchList: React.FC<PayrollBatchListProps> = ({
               {/* Create New */}
               <button
                 onClick={onCreateBatch}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] transition-colors text-sm font-medium"
               >
                 <Plus className="h-4 w-4" />
                 New Batch
@@ -359,7 +359,7 @@ export const PayrollBatchList: React.FC<PayrollBatchListProps> = ({
                     onClick={() => handleViewBatch(batch)}
                   >
                     <td className="px-4 py-3">
-                      <span className="font-medium text-blue-600 hover:text-blue-800">
+                      <span className="font-medium text-[var(--rag-blue)] hover:text-[var(--rag-blue)]">
                         {batch.batchNumber}
                       </span>
                     </td>

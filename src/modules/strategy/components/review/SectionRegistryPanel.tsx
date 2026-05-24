@@ -58,30 +58,30 @@ const SECTION_TYPE_ICONS: Record<SectionType, typeof BarChart3> = {
 };
 
 const SECTION_TYPE_COLORS: Record<SectionType, string> = {
-  financial: 'bg-blue-100 text-blue-700',
+  financial: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   market: 'bg-purple-100 text-purple-700',
-  operations: 'bg-amber-100 text-amber-700',
-  growth: 'bg-green-100 text-green-700',
-  risk: 'bg-red-100 text-red-700',
+  operations: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  growth: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  risk: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   people: 'bg-pink-100 text-pink-700',
   governance: 'bg-[var(--bg-sunken)] text-muted-foreground',
   general: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const SCORE_COLORS: Record<number, string> = {
-  5: 'bg-green-100 text-green-800 border-green-300',
+  5: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]',
   4: 'bg-lime-100 text-lime-800 border-lime-300',
-  3: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  2: 'bg-orange-100 text-orange-800 border-orange-300',
-  1: 'bg-red-100 text-red-800 border-red-300',
+  3: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  2: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  1: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]',
 };
 
 const REWRITE_STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   none: { label: 'No Changes', className: 'bg-[var(--bg-sunken)] text-muted-foreground' },
-  pending_review: { label: 'Pending Review', className: 'bg-yellow-100 text-yellow-700' },
-  approved: { label: 'Approved', className: 'bg-green-100 text-green-700' },
-  rejected: { label: 'Rejected', className: 'bg-red-100 text-red-700' },
-  applied: { label: 'Applied', className: 'bg-blue-100 text-blue-700' },
+  pending_review: { label: 'Pending Review', className: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
+  approved: { label: 'Approved', className: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
+  rejected: { label: 'Rejected', className: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
+  applied: { label: 'Applied', className: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
 };
 
 // ----------------------------------------------------------------------------
@@ -148,7 +148,7 @@ export function SectionRegistryPanel({
         <button
           onClick={onRunFullAssessment}
           disabled={isRunningCycle}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--rag-blue)] text-white hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isRunningCycle ? (
             <Loader2 className="h-3 w-3 animate-spin" />
@@ -175,7 +175,7 @@ export function SectionRegistryPanel({
             <div
               key={section.id}
               className={`border-b transition-colors ${
-                isSelected ? 'bg-blue-50 border-l-2 border-l-blue-500' : 'hover:bg-[var(--bg-sunken)]'
+                isSelected ? 'bg-[var(--rag-blue-soft)] border-l-2 border-l-blue-500' : 'hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {/* Section Row */}
@@ -252,13 +252,13 @@ export function SectionRegistryPanel({
                       <>
                         <button
                           onClick={() => onApproveRewrite(section.id)}
-                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-green-50 text-green-700 hover:bg-green-100"
+                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]"
                         >
                           <CheckCircle className="h-3 w-3" /> Approve
                         </button>
                         <button
                           onClick={() => onRejectRewrite(section.id)}
-                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-50 text-red-700 hover:bg-red-100"
+                          className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
                         >
                           <XCircle className="h-3 w-3" /> Reject
                         </button>

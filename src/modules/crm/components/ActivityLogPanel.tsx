@@ -24,11 +24,11 @@ const KIND_LABEL: Record<ActivityKind, string> = {
 };
 
 const KIND_BADGE: Record<ActivityKind, string> = {
-  CALL:         'bg-blue-100 text-blue-800',
+  CALL:         'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   EMAIL:        'bg-violet-100 text-violet-800',
-  MEETING:      'bg-amber-100 text-amber-800',
+  MEETING:      'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   NOTE:         'bg-[var(--bg-sunken)] text-muted-foreground',
-  STAGE_CHANGE: 'bg-emerald-100 text-emerald-800',
+  STAGE_CHANGE: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   TASK:         'bg-pink-100 text-pink-800',
 };
 

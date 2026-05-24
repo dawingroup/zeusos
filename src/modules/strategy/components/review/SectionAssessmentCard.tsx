@@ -35,11 +35,11 @@ function ScoreGauge({ score }: { score: number }) {
   const remaining = circumference - progress;
 
   const colors: Record<number, { stroke: string; text: string; bg: string }> = {
-    5: { stroke: '#16a34a', text: 'text-green-700', bg: 'bg-green-50' },
+    5: { stroke: '#16a34a', text: 'text-[var(--rag-green)]', bg: 'bg-[var(--rag-green-soft)]' },
     4: { stroke: '#65a30d', text: 'text-lime-700', bg: 'bg-lime-50' },
-    3: { stroke: '#ca8a04', text: 'text-yellow-700', bg: 'bg-yellow-50' },
-    2: { stroke: '#ea580c', text: 'text-orange-700', bg: 'bg-orange-50' },
-    1: { stroke: '#dc2626', text: 'text-red-700', bg: 'bg-red-50' },
+    3: { stroke: '#ca8a04', text: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+    2: { stroke: '#ea580c', text: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)]' },
+    1: { stroke: '#dc2626', text: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)]' },
   };
 
   const color = colors[score] || colors[3];
@@ -82,9 +82,9 @@ function ScoreGauge({ score }: { score: number }) {
 
 const RECOMMENDATION_CONFIG = {
   rewrite: { label: 'Rewrite Recommended', Icon: Wand2, className: 'bg-purple-100 text-purple-700' },
-  minor_update: { label: 'Minor Update', Icon: Pencil, className: 'bg-blue-100 text-blue-700' },
-  no_action: { label: 'No Action Needed', Icon: CheckCircle, className: 'bg-green-100 text-green-700' },
-  flag_for_ceo: { label: 'Flag for CEO', Icon: Flag, className: 'bg-red-100 text-red-700' },
+  minor_update: { label: 'Minor Update', Icon: Pencil, className: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  no_action: { label: 'No Action Needed', Icon: CheckCircle, className: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
+  flag_for_ceo: { label: 'Flag for CEO', Icon: Flag, className: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
 } as const;
 
 // ----------------------------------------------------------------------------
@@ -129,7 +129,7 @@ export function SectionAssessmentCard({
               <ul className="space-y-1">
                 {assessment.gaps.map((gap, i) => (
                   <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
-                    <AlertTriangle className="h-3 w-3 text-yellow-500 mt-0.5 flex-shrink-0" />
+                    <AlertTriangle className="h-3 w-3 text-[var(--rag-amber)] mt-0.5 flex-shrink-0" />
                     {gap}
                   </li>
                 ))}
@@ -146,7 +146,7 @@ export function SectionAssessmentCard({
               <ul className="space-y-1">
                 {assessment.outdatedClaims.map((claim, i) => (
                   <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground">
-                    <Minus className="h-3 w-3 text-red-400 mt-0.5 flex-shrink-0" />
+                    <Minus className="h-3 w-3 text-[var(--rag-red)] mt-0.5 flex-shrink-0" />
                     {claim}
                   </li>
                 ))}

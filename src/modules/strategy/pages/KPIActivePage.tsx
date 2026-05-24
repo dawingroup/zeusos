@@ -51,9 +51,9 @@ function PerformanceBadge({ performance }: { performance: string }) {
 function TrendIcon({ trend }: { trend?: 'up' | 'down' | 'stable' }) {
   switch (trend) {
     case 'up':
-      return <ArrowUp className="w-3.5 h-3.5 text-green-600" />;
+      return <ArrowUp className="w-3.5 h-3.5 text-[var(--rag-green)]" />;
     case 'down':
-      return <ArrowDown className="w-3.5 h-3.5 text-red-500" />;
+      return <ArrowDown className="w-3.5 h-3.5 text-[var(--rag-red)]" />;
     default:
       return <Minus className="w-3.5 h-3.5 text-[var(--fg-tertiary)]" />;
   }
@@ -76,12 +76,12 @@ function TargetCell({ kpi }: { kpi: KPIDefinition }) {
       {(t.stretchValue != null || t.minimumValue != null) && (
         <div className="flex items-center gap-1.5 justify-end mt-0.5">
           {t.minimumValue != null && (
-            <span className="text-[10px] text-orange-500" title="Minimum acceptable">
+            <span className="text-[10px] text-[var(--rag-amber)]" title="Minimum acceptable">
               Min {formatKPIValue(t.minimumValue, kpi.type, kpi.unit)}
             </span>
           )}
           {t.stretchValue != null && (
-            <span className="text-[10px] text-emerald-500" title="Stretch target">
+            <span className="text-[10px] text-[var(--rag-green)]" title="Stretch target">
               Stretch {formatKPIValue(t.stretchValue, kpi.type, kpi.unit)}
             </span>
           )}
@@ -132,7 +132,7 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
       </td>
       <td className="py-3 px-4 text-right">
         {variance != null ? (
-          <span className={`text-sm font-medium ${parseFloat(variance) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <span className={`text-sm font-medium ${parseFloat(variance) >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
             {parseFloat(variance) >= 0 ? '+' : ''}{variance}%
           </span>
         ) : (
@@ -149,21 +149,21 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
         <div className="flex items-center gap-1 justify-end">
           <button
             onClick={() => onSetTarget(kpi)}
-            className={`p-1 rounded ${hasTarget ? 'text-[var(--fg-tertiary)] hover:text-blue-600' : 'text-blue-500 hover:text-blue-700'}`}
+            className={`p-1 rounded ${hasTarget ? 'text-[var(--fg-tertiary)] hover:text-[var(--rag-blue)]' : 'text-[var(--rag-blue)] hover:text-[var(--rag-blue)]'}`}
             title={hasTarget ? 'Edit Target' : 'Set Target'}
           >
             <Target className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => onPause(kpi.id)}
-            className="p-1 text-[var(--fg-tertiary)] hover:text-amber-600 rounded"
+            className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-amber)] rounded"
             title="Pause"
           >
             <Pause className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => onArchive(kpi.id)}
-            className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 rounded"
+            className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] rounded"
             title="Archive"
           >
             <Archive className="w-3.5 h-3.5" />
@@ -239,7 +239,7 @@ export function KPIActivePage() {
           </button>
           <button
             onClick={() => navigate('/strategy/kpis/library')}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)]"
           >
             <BookOpen className="w-4 h-4" />
             Add from Library
@@ -256,7 +256,7 @@ export function KPIActivePage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search KPIs..."
-            className="w-full pl-10 pr-4 py-2 bg-card border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 bg-card border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
           />
         </div>
 
@@ -294,7 +294,7 @@ export function KPIActivePage() {
           <p className="text-muted-foreground text-sm mb-2">No active KPIs found.</p>
           <button
             onClick={() => navigate('/strategy/kpis/library')}
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
           >
             Browse the KPI Library to add some
           </button>

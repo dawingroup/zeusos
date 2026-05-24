@@ -83,7 +83,7 @@ export function ObligationDetailDrawer({
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <ClipboardCheck className="h-5 w-5 text-emerald-600" />
+            <ClipboardCheck className="h-5 w-5 text-[var(--rag-green)]" />
             {obligation.title}
           </SheetTitle>
         </SheetHeader>
@@ -98,7 +98,7 @@ export function ObligationDetailDrawer({
               {OBLIGATION_PRIORITY_LABELS[obligation.priority]}
             </span>
             {isOverdue && (
-              <span className="text-xs px-2.5 py-1 rounded-full bg-red-100 text-red-700 font-medium flex items-center gap-1">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--rag-red-soft)] text-[var(--rag-red)] font-medium flex items-center gap-1">
                 <AlertTriangle className="h-3 w-3" />
                 Overdue
               </span>

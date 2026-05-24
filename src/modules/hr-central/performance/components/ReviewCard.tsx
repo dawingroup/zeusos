@@ -37,12 +37,12 @@ interface ReviewCardProps {
 const getStatusColor = (status: ReviewStatus): string => {
   const colors: Record<ReviewStatus, string> = {
     draft: 'bg-[var(--bg-sunken)] text-foreground',
-    self_assessment: 'bg-blue-100 text-blue-800',
+    self_assessment: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     manager_review: 'bg-indigo-100 text-indigo-800',
     calibration: 'bg-purple-100 text-purple-800',
-    acknowledgement: 'bg-amber-100 text-amber-800',
-    completed: 'bg-green-100 text-green-800',
-    cancelled: 'bg-red-100 text-red-800',
+    acknowledgement: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    cancelled: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   };
   return colors[status] || 'bg-[var(--bg-sunken)] text-foreground';
 };
@@ -141,7 +141,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         {/* Rating (if completed) */}
         {review.finalRating && (
           <div className="flex items-center gap-2 mb-2">
-            <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+            <Star className="w-5 h-5 text-[var(--rag-amber)] fill-[var(--rag-amber)]" />
             <span className="font-medium text-foreground">
               {review.finalRating.toFixed(1)} - {getRatingLabel(review.finalRating)}
             </span>
@@ -149,7 +149,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         )}
         
         {/* Due Date */}
-        <p className={`text-xs ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
+        <p className={`text-xs ${isOverdue ? 'text-[var(--rag-red)]' : 'text-muted-foreground'}`}>
           Due: {formatDate(review.dueDate)}
         </p>
       </div>

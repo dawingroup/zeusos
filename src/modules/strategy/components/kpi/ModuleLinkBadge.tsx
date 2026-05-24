@@ -8,11 +8,11 @@ import { ExternalLink } from 'lucide-react';
 import type { ModuleLinkage } from '../../constants/kpiLibrary.constants';
 
 const MODULE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  finance: { label: 'Finance', color: 'text-green-700', bg: 'bg-green-50 border-green-200' },
+  finance: { label: 'Finance', color: 'text-[var(--rag-green)]', bg: 'bg-[var(--rag-green-soft)] border-[var(--rag-green)]' },
   hr: { label: 'HR', color: 'text-purple-700', bg: 'bg-purple-50 border-purple-200' },
-  manufacturing: { label: 'Manufacturing', color: 'text-orange-700', bg: 'bg-orange-50 border-orange-200' },
+  manufacturing: { label: 'Manufacturing', color: 'text-[var(--rag-amber)]', bg: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]' },
   sales: { label: 'Sales', color: 'text-pink-700', bg: 'bg-pink-50 border-pink-200' },
-  operations: { label: 'Operations', color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200' },
+  operations: { label: 'Operations', color: 'text-[var(--rag-blue)]', bg: 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]' },
 };
 
 interface ModuleLinkBadgeProps {

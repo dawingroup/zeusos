@@ -92,9 +92,9 @@ export const REVIEW_SECTION_STATUS_LABELS: Record<string, string> = {
 
 export const REVIEW_SECTION_STATUS_COLORS: Record<string, string> = {
   [REVIEW_SECTION_STATUS.NOT_STARTED]: 'bg-[var(--bg-sunken)] text-muted-foreground',
-  [REVIEW_SECTION_STATUS.IN_REVIEW]: 'bg-blue-100 text-blue-700',
-  [REVIEW_SECTION_STATUS.NEEDS_UPDATE]: 'bg-amber-100 text-amber-700',
-  [REVIEW_SECTION_STATUS.APPROVED]: 'bg-green-100 text-green-700',
+  [REVIEW_SECTION_STATUS.IN_REVIEW]: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  [REVIEW_SECTION_STATUS.NEEDS_UPDATE]: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  [REVIEW_SECTION_STATUS.APPROVED]: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
 };
 
 // ----------------------------------------------------------------------------
@@ -109,11 +109,11 @@ export const REVIEW_SCORE_LABELS: Record<number, string> = {
 };
 
 export const REVIEW_SCORE_COLORS: Record<number, string> = {
-  1: 'text-red-600 bg-red-50',
-  2: 'text-orange-600 bg-orange-50',
-  3: 'text-yellow-600 bg-yellow-50',
-  4: 'text-blue-600 bg-blue-50',
-  5: 'text-green-600 bg-green-50',
+  1: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]',
+  2: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
+  3: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
+  4: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
+  5: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]',
 };
 
 // ----------------------------------------------------------------------------
@@ -159,24 +159,24 @@ export const BMC_BLOCK_DESCRIPTIONS: Record<BMCBlockKey, string> = {
 
 export const BMC_BLOCK_COLORS: Record<BMCBlockKey, string> = {
   [BMC_BLOCKS.KEY_PARTNERS]: 'border-purple-300 bg-purple-50',
-  [BMC_BLOCKS.KEY_ACTIVITIES]: 'border-blue-300 bg-blue-50',
+  [BMC_BLOCKS.KEY_ACTIVITIES]: 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]',
   [BMC_BLOCKS.KEY_RESOURCES]: 'border-indigo-300 bg-indigo-50',
-  [BMC_BLOCKS.VALUE_PROPOSITIONS]: 'border-emerald-300 bg-emerald-50',
+  [BMC_BLOCKS.VALUE_PROPOSITIONS]: 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]',
   [BMC_BLOCKS.CUSTOMER_RELATIONSHIPS]: 'border-pink-300 bg-pink-50',
-  [BMC_BLOCKS.CHANNELS]: 'border-orange-300 bg-orange-50',
-  [BMC_BLOCKS.CUSTOMER_SEGMENTS]: 'border-red-300 bg-red-50',
+  [BMC_BLOCKS.CHANNELS]: 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
+  [BMC_BLOCKS.CUSTOMER_SEGMENTS]: 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]',
   [BMC_BLOCKS.COST_STRUCTURE]: 'border-[var(--border-default)] bg-[var(--bg-sunken)]',
-  [BMC_BLOCKS.REVENUE_STREAMS]: 'border-yellow-300 bg-yellow-50',
+  [BMC_BLOCKS.REVENUE_STREAMS]: 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]',
 };
 
 // ----------------------------------------------------------------------------
 // SWOT Quadrant Colors
 // ----------------------------------------------------------------------------
 export const SWOT_COLORS = {
-  strengths: 'border-green-300 bg-green-50 text-green-900',
-  weaknesses: 'border-red-300 bg-red-50 text-red-900',
-  opportunities: 'border-blue-300 bg-blue-50 text-blue-900',
-  threats: 'border-amber-300 bg-amber-50 text-amber-900',
+  strengths: 'border-[var(--rag-green)] bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  weaknesses: 'border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  opportunities: 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  threats: 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
 } as const;
 
 export const SWOT_LABELS = {

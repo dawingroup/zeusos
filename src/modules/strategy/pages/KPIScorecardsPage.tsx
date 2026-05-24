@@ -39,7 +39,7 @@ export function KPIScorecardsPage() {
         </div>
         <button
           onClick={() => navigate('/strategy/kpis/scorecards/new')}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-1.5 px-4 py-2 text-sm text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)]"
         >
           <Plus className="w-4 h-4" />
           New Scorecard
@@ -60,7 +60,7 @@ export function KPIScorecardsPage() {
           </p>
           <button
             onClick={() => navigate('/strategy/kpis/scorecards/new')}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)]"
           >
             <Plus className="w-4 h-4" />
             Create First Scorecard
@@ -75,8 +75,8 @@ export function KPIScorecardsPage() {
               onClick={() => navigate(`/strategy/kpis/scorecards/${sc.id}`)}
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="bg-blue-50 rounded-lg p-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                <div className="bg-[var(--rag-blue-soft)] rounded-lg p-2">
+                  <BarChart3 className="w-5 h-5 text-[var(--rag-blue)]" />
                 </div>
                 <span className="text-xs font-medium text-muted-foreground bg-[var(--bg-sunken)] rounded-full px-2 py-0.5">
                   {KPI_SCORECARD_TYPE_LABELS[sc.type as KPIScorecardType] || sc.type}

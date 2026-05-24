@@ -108,7 +108,7 @@ export function IntercompanyRechargeDialog({
             </div>
           )}
           {error && (
-            <div className="rounded bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+            <div className="rounded bg-[var(--rag-red-soft)] border border-[var(--rag-red)] p-3 text-sm text-[var(--rag-red)]">
               {error}
             </div>
           )}
@@ -119,7 +119,7 @@ export function IntercompanyRechargeDialog({
           )}
           {schedule && schedule.pairs.length > 0 && (
             <>
-              <div className="rounded bg-blue-50 border border-blue-200 p-3 text-sm text-blue-900">
+              <div className="rounded bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] p-3 text-sm text-[var(--rag-blue)]">
                 <strong>{schedule.pairs.length}</strong> host→recipient pair{schedule.pairs.length === 1 ? '' : 's'}.
                 Grand total to recharge: <strong>{formatUGX(schedule.grandTotal)}</strong>.
               </div>

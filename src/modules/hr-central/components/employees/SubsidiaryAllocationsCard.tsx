@@ -147,7 +147,7 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
       <CardHeader className="flex flex-row items-start justify-between space-y-0">
         <div>
           <CardTitle className="text-lg flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-blue-600" /> Subsidiary Allocations
+            <Building2 className="h-5 w-5 text-[var(--rag-blue)]" /> Subsidiary Allocations
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
             How this employee's pay is attributed across companies for cost reporting and payroll batches.
@@ -232,13 +232,13 @@ export function SubsidiaryAllocationsCard({ employee, onSaved }: Props) {
                   </Button>
                 )}
               </div>
-              <span className={`font-mono font-medium ${sumValid ? 'text-green-700' : 'text-amber-700'}`}>
+              <span className={`font-mono font-medium ${sumValid ? 'text-[var(--rag-green)]' : 'text-[var(--rag-amber)]'}`}>
                 Total: {total.toFixed(1)}%
               </span>
             </div>
 
             {error && (
-              <div className="flex items-start gap-1.5 text-xs text-red-700">
+              <div className="flex items-start gap-1.5 text-xs text-[var(--rag-red)]">
                 <AlertCircle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                 <span>{error}</span>
               </div>

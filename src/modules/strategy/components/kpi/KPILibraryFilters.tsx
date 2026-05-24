@@ -58,7 +58,7 @@ export function KPILibraryFilters({
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search KPIs by name, formula, or tag..."
-          className="w-full pl-10 pr-10 py-2.5 bg-card border border-[var(--border-subtle)] rounded-lg text-sm placeholder:text-[var(--fg-tertiary)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-10 pr-10 py-2.5 bg-card border border-[var(--border-subtle)] rounded-lg text-sm placeholder:text-[var(--fg-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-transparent"
         />
         {searchQuery && (
           <button
@@ -81,7 +81,7 @@ export function KPILibraryFilters({
             onCategoryChange(e.target.value);
             onSubCategoryChange('');
           }}
-          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
         >
           <option value="">All Categories</option>
           {KPI_LIBRARY_CATEGORIES.map((cat) => (
@@ -96,7 +96,7 @@ export function KPILibraryFilters({
           <select
             value={selectedSubCategory}
             onChange={(e) => onSubCategoryChange(e.target.value)}
-            className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
           >
             <option value="">All Sub-Categories</option>
             {activeCategory.subCategories.map((sc) => (
@@ -111,7 +111,7 @@ export function KPILibraryFilters({
         <select
           value={selectedModule}
           onChange={(e) => onModuleChange(e.target.value)}
-          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-sm border border-[var(--border-subtle)] rounded-md px-3 py-1.5 bg-card text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
         >
           {MODULE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -126,7 +126,7 @@ export function KPILibraryFilters({
             type="checkbox"
             checked={showTrackedOnly}
             onChange={(e) => onTrackedOnlyChange(e.target.checked)}
-            className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-500"
+            className="rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
           />
           Tracked only
         </label>
@@ -135,7 +135,7 @@ export function KPILibraryFilters({
         {hasFilters && (
           <button
             onClick={onClearFilters}
-            className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+            className="text-xs text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
           >
             Clear all
           </button>

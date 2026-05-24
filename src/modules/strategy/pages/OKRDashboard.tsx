@@ -43,9 +43,9 @@ const LEVEL_ICONS: Record<OKRLevel, React.ElementType> = {
 };
 
 const CONFIDENCE_COLOR: Record<string, string> = {
-  [CONFIDENCE_LEVEL.ON_TRACK]: 'bg-emerald-100 text-emerald-700',
-  [CONFIDENCE_LEVEL.AT_RISK]: 'bg-amber-100 text-amber-700',
-  [CONFIDENCE_LEVEL.OFF_TRACK]: 'bg-rose-100 text-rose-700',
+  [CONFIDENCE_LEVEL.ON_TRACK]: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  [CONFIDENCE_LEVEL.AT_RISK]: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  [CONFIDENCE_LEVEL.OFF_TRACK]: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 function getOverallConfidence(obj: OKRObjective): string {
@@ -128,9 +128,9 @@ export const OKRDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="p-6 border-rose-200 bg-rose-50">
-        <h2 className="text-sm font-semibold text-rose-800 mb-1">Failed to load OKRs</h2>
-        <p className="text-xs text-rose-700 mb-3">{error.message}</p>
+      <Card className="p-6 border-[var(--rag-red)] bg-[var(--rag-red-soft)]">
+        <h2 className="text-sm font-semibold text-[var(--rag-red)] mb-1">Failed to load OKRs</h2>
+        <p className="text-xs text-[var(--rag-red)] mb-3">{error.message}</p>
         <Button size="sm" variant="outline" onClick={refresh}>Retry</Button>
       </Card>
     );
@@ -292,14 +292,14 @@ export const OKRDashboard: React.FC = () => {
 
             {/* At-risk callout */}
             {atRiskObjectives.length > 0 && (
-              <Card className="p-5 border-amber-200 bg-amber-50/50">
+              <Card className="p-5 border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]/50">
                 <div className="flex items-start gap-2 mb-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                  <AlertTriangle className="w-4 h-4 text-[var(--rag-amber)] mt-0.5 shrink-0" />
                   <div>
-                    <h2 className="text-sm font-semibold text-amber-900">
+                    <h2 className="text-sm font-semibold text-[var(--rag-amber)]">
                       {atRiskObjectives.length} objective{atRiskObjectives.length === 1 ? '' : 's'} at risk
                     </h2>
-                    <p className="text-[11px] text-amber-700">
+                    <p className="text-[11px] text-[var(--rag-amber)]">
                       Check-in to recover confidence
                     </p>
                   </div>
@@ -309,7 +309,7 @@ export const OKRDashboard: React.FC = () => {
                     <li
                       key={o.id}
                       onClick={() => navigate(`/strategy/okrs/${o.id}`)}
-                      className="text-xs text-amber-900 truncate hover:underline cursor-pointer"
+                      className="text-xs text-[var(--rag-amber)] truncate hover:underline cursor-pointer"
                     >
                       · {o.title}
                     </li>

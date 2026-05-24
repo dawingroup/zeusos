@@ -119,7 +119,7 @@ export const ExecutiveDashboard: React.FC = () => {
               <h2 className="text-lg font-semibold text-foreground">OKR Progress</h2>
               <button
                 onClick={() => navigate('/strategy/okrs')}
-                className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] flex items-center gap-1"
               >
                 View All <ArrowRight className="h-3 w-3" />
               </button>
@@ -130,7 +130,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 <p className="text-sm">No active OKRs found</p>
                 <button
                   onClick={() => navigate('/strategy/okrs')}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
+                  className="mt-2 text-sm text-[var(--rag-blue)] hover:underline"
                 >
                   Create your first OKR
                 </button>
@@ -173,7 +173,7 @@ export const ExecutiveDashboard: React.FC = () => {
               <h2 className="text-lg font-semibold text-foreground">KPI Scorecard</h2>
               <button
                 onClick={() => navigate('/strategy/kpis')}
-                className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] flex items-center gap-1"
               >
                 View All <ArrowRight className="h-3 w-3" />
               </button>
@@ -184,7 +184,7 @@ export const ExecutiveDashboard: React.FC = () => {
                 <p className="text-sm">No active KPIs found</p>
                 <button
                   onClick={() => navigate('/strategy/kpis')}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
+                  className="mt-2 text-sm text-[var(--rag-blue)] hover:underline"
                 >
                   Set up KPIs
                 </button>
@@ -215,8 +215,8 @@ export const ExecutiveDashboard: React.FC = () => {
         <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-[var(--rag-blue-soft)] rounded-lg">
+                <FileText className="h-5 w-5 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <h3 className="font-medium text-foreground">Strategy Reviews</h3>
@@ -227,7 +227,7 @@ export const ExecutiveDashboard: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/strategy/plans')}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--rag-blue)] border border-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue-soft)] transition-colors"
             >
               Open
               <ArrowRight className="h-4 w-4" />
@@ -240,10 +240,10 @@ export const ExecutiveDashboard: React.FC = () => {
           <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-medium text-foreground flex items-center gap-2">
-                <Activity className="h-4 w-4 text-blue-600" />
+                <Activity className="h-4 w-4 text-[var(--rag-blue)]" />
                 Strategy Alignment
               </h3>
-              <span className="text-xs text-amber-600 font-medium">
+              <span className="text-xs text-[var(--rag-amber)] font-medium">
                 {String((metrics as Record<string, unknown>).sectionsNeedingRewrite)} sections need review
               </span>
             </div>

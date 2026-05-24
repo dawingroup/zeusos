@@ -130,7 +130,7 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
         )}
 
         {error && (
-          <div className="border border-red-200 bg-red-50 text-red-800 rounded p-3 text-sm flex items-start gap-2">
+          <div className="border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded p-3 text-sm flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <div>
               <div className="font-medium">Import failed</div>
@@ -154,23 +154,23 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
             </div>
 
             <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="border border-green-200 bg-green-50 rounded p-3">
-                <div className="text-2xl font-bold text-green-800">{result.rows.length}</div>
-                <div className="text-xs text-green-700">rows resolved</div>
+              <div className="border border-[var(--rag-green)] bg-[var(--rag-green-soft)] rounded p-3">
+                <div className="text-2xl font-bold text-[var(--rag-green)]">{result.rows.length}</div>
+                <div className="text-xs text-[var(--rag-green)]">rows resolved</div>
               </div>
-              <div className={`border rounded p-3 ${result.unmatchedEmployees.length > 0 ? 'border-amber-200 bg-amber-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
-                <div className={`text-2xl font-bold ${result.unmatchedEmployees.length > 0 ? 'text-amber-800' : 'text-muted-foreground'}`}>
+              <div className={`border rounded p-3 ${result.unmatchedEmployees.length > 0 ? 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
+                <div className={`text-2xl font-bold ${result.unmatchedEmployees.length > 0 ? 'text-[var(--rag-amber)]' : 'text-muted-foreground'}`}>
                   {result.unmatchedEmployees.length}
                 </div>
-                <div className={`text-xs ${result.unmatchedEmployees.length > 0 ? 'text-amber-700' : 'text-muted-foreground'}`}>
+                <div className={`text-xs ${result.unmatchedEmployees.length > 0 ? 'text-[var(--rag-amber)]' : 'text-muted-foreground'}`}>
                   unmatched employees
                 </div>
               </div>
-              <div className={`border rounded p-3 ${result.invalidRows.length > 0 ? 'border-red-200 bg-red-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
-                <div className={`text-2xl font-bold ${result.invalidRows.length > 0 ? 'text-red-800' : 'text-muted-foreground'}`}>
+              <div className={`border rounded p-3 ${result.invalidRows.length > 0 ? 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
+                <div className={`text-2xl font-bold ${result.invalidRows.length > 0 ? 'text-[var(--rag-red)]' : 'text-muted-foreground'}`}>
                   {result.invalidRows.length}
                 </div>
-                <div className={`text-xs ${result.invalidRows.length > 0 ? 'text-red-700' : 'text-muted-foreground'}`}>
+                <div className={`text-xs ${result.invalidRows.length > 0 ? 'text-[var(--rag-red)]' : 'text-muted-foreground'}`}>
                   invalid rows
                 </div>
               </div>
@@ -180,16 +180,16 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
               <div className="border border-[var(--border-subtle)] rounded max-h-40 overflow-auto text-xs">
                 {result.invalidRows.map((r, i) => (
                   <div key={`inv-${i}`} className="px-3 py-1.5 border-b border-[var(--border-subtle)] flex gap-2">
-                    <AlertTriangle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-[var(--rag-red)] flex-shrink-0 mt-0.5" />
                     <span className="text-muted-foreground font-mono">row {r.sourceRow}:</span>
-                    <span className="text-red-700">{r.reason}</span>
+                    <span className="text-[var(--rag-red)]">{r.reason}</span>
                   </div>
                 ))}
                 {result.unmatchedEmployees.map((r, i) => (
                   <div key={`unm-${i}`} className="px-3 py-1.5 border-b border-[var(--border-subtle)] flex gap-2">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-[var(--rag-amber)] flex-shrink-0 mt-0.5" />
                     <span className="text-muted-foreground font-mono">row {r.sourceRow}:</span>
-                    <span className="text-amber-700">No employee found for "{r.identifier}"</span>
+                    <span className="text-[var(--rag-amber)]">No employee found for "{r.identifier}"</span>
                   </div>
                 ))}
                 {result.warnings.map((r, i) => (
@@ -231,7 +231,7 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
             )}
 
             {result.rows.length > 0 && result.unmatchedEmployees.length === 0 && result.invalidRows.length === 0 && (
-              <div className="flex items-center gap-1.5 text-xs text-green-700">
+              <div className="flex items-center gap-1.5 text-xs text-[var(--rag-green)]">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Looks clean — ready to import.
               </div>
             )}

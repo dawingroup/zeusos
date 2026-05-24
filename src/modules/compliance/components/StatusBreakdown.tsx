@@ -28,7 +28,7 @@ export function StatusBreakdown({ breakdown, total }: StatusBreakdownProps) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
-          <BarChart3 className="h-4 w-4 text-blue-600" />
+          <BarChart3 className="h-4 w-4 text-[var(--rag-blue)]" />
           Status Breakdown
         </CardTitle>
       </CardHeader>

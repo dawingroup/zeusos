@@ -20,10 +20,10 @@ function getDaysUntil(date: Date): number {
 }
 
 function getUrgencyClass(days: number): string {
-  if (days <= 0) return 'border-l-red-500 bg-red-50';
-  if (days <= 7) return 'border-l-orange-500 bg-orange-50';
-  if (days <= 14) return 'border-l-amber-500 bg-amber-50';
-  return 'border-l-blue-500 bg-blue-50';
+  if (days <= 0) return 'border-l-red-500 bg-[var(--rag-red-soft)]';
+  if (days <= 7) return 'border-l-orange-500 bg-[var(--rag-amber-soft)]';
+  if (days <= 14) return 'border-l-amber-500 bg-[var(--rag-amber-soft)]';
+  return 'border-l-blue-500 bg-[var(--rag-blue-soft)]';
 }
 
 export function ExpiryTimeline({ documents }: ExpiryTimelineProps) {
@@ -32,7 +32,7 @@ export function ExpiryTimeline({ documents }: ExpiryTimelineProps) {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Clock className="h-4 w-4 text-amber-600" />
+            <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
             Upcoming Expirations
           </CardTitle>
         </CardHeader>
@@ -49,7 +49,7 @@ export function ExpiryTimeline({ documents }: ExpiryTimelineProps) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
-          <Clock className="h-4 w-4 text-amber-600" />
+          <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
           Upcoming Expirations
         </CardTitle>
       </CardHeader>
@@ -76,7 +76,7 @@ export function ExpiryTimeline({ documents }: ExpiryTimelineProps) {
                 </div>
                 <div className="flex items-center gap-1 text-xs">
                   {days <= 0 ? (
-                    <span className="flex items-center gap-1 text-red-700 font-medium">
+                    <span className="flex items-center gap-1 text-[var(--rag-red)] font-medium">
                       <AlertTriangle className="h-3 w-3" />
                       Expired
                     </span>

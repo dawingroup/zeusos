@@ -18,12 +18,12 @@ interface KPILibraryCardProps {
 function DirectionIcon({ direction }: { direction: string }) {
   switch (direction) {
     case KPI_DIRECTION.HIGHER_IS_BETTER:
-      return <ArrowUp className="w-3.5 h-3.5 text-green-600" />;
+      return <ArrowUp className="w-3.5 h-3.5 text-[var(--rag-green)]" />;
     case KPI_DIRECTION.LOWER_IS_BETTER:
-      return <ArrowDown className="w-3.5 h-3.5 text-red-500" />;
+      return <ArrowDown className="w-3.5 h-3.5 text-[var(--rag-red)]" />;
     case KPI_DIRECTION.TARGET_IS_BEST:
     case KPI_DIRECTION.RANGE_IS_BEST:
-      return <Target className="w-3.5 h-3.5 text-blue-500" />;
+      return <Target className="w-3.5 h-3.5 text-[var(--rag-blue)]" />;
     default:
       return null;
   }
@@ -63,14 +63,14 @@ export function KPILibraryCard({ entry, isTracked, onAddToTracking }: KPILibrary
 
         {/* Tracking button */}
         {isTracked ? (
-          <span className="flex items-center gap-1 text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-1 shrink-0">
+          <span className="flex items-center gap-1 text-xs font-medium text-[var(--rag-green)] bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-full px-2.5 py-1 shrink-0">
             <Check className="w-3 h-3" />
             Tracked
           </span>
         ) : (
           <button
             onClick={() => onAddToTracking(entry)}
-            className="flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors shrink-0"
+            className="flex items-center gap-1 text-xs font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-full px-2.5 py-1 hover:bg-[var(--rag-blue-soft)] transition-colors shrink-0"
           >
             <Plus className="w-3 h-3" />
             Track

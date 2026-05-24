@@ -105,7 +105,7 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
           const Icon = m.icon;
           return (
             <span key={m.name} className={`flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-full border ${
-              m.loaded ? 'bg-green-50 text-green-700 border-green-200' : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] border-[var(--border-subtle)]'
+              m.loaded ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]' : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] border-[var(--border-subtle)]'
             }`}>
               <Icon className="w-3 h-3" /> {m.name}
               {m.loaded ? <><CheckCircle className="w-2.5 h-2.5" /> {m.count}</> : <XCircle className="w-2.5 h-2.5" />}
@@ -120,12 +120,12 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
           {/* HR */}
           {ctx.hr.stats && (
             <div className="px-5 py-3">
-              <h4 className="text-xs font-semibold text-blue-600 mb-1.5 flex items-center gap-1"><Users className="w-3 h-3" /> HR Summary</h4>
+              <h4 className="text-xs font-semibold text-[var(--rag-blue)] mb-1.5 flex items-center gap-1"><Users className="w-3 h-3" /> HR Summary</h4>
               <div className="grid grid-cols-4 gap-2 text-xs">
-                <Stat label="Employees" value={String(ctx.hr.stats.totalEmployees)} bg="bg-blue-50" text="text-blue-800" />
-                <Stat label="Departments" value={String(Object.keys(ctx.hr.stats.byDepartment).length)} bg="bg-blue-50" text="text-blue-800" />
-                <Stat label="Turnover" value={`${(ctx.hr.stats.turnoverRate * 100).toFixed(1)}%`} bg="bg-blue-50" text="text-blue-800" />
-                <Stat label="Avg Tenure" value={`${ctx.hr.stats.avgTenureYears.toFixed(1)}yr`} bg="bg-blue-50" text="text-blue-800" />
+                <Stat label="Employees" value={String(ctx.hr.stats.totalEmployees)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Departments" value={String(Object.keys(ctx.hr.stats.byDepartment).length)} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Turnover" value={`${(ctx.hr.stats.turnoverRate * 100).toFixed(1)}%`} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
+                <Stat label="Avg Tenure" value={`${ctx.hr.stats.avgTenureYears.toFixed(1)}yr`} bg="bg-[var(--rag-blue-soft)]" text="text-[var(--rag-blue)]" />
               </div>
             </div>
           )}
@@ -136,21 +136,21 @@ export const CrossModuleContext: React.FC<CrossModuleContextProps> = ({ companyI
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <Stat label="Total" value={String(ctx.assets.totalAssets)} bg="bg-teal-50" text="text-teal-800" />
                 <Stat label="Utilization" value={ctx.assets.utilizationSummary} bg="bg-teal-50" text="text-teal-800" />
-                <Stat label="Maint. Overdue" value={String(ctx.assets.maintenanceOverdue)} bg={ctx.assets.maintenanceOverdue > 0 ? 'bg-red-50' : 'bg-teal-50'} text={ctx.assets.maintenanceOverdue > 0 ? 'text-red-800' : 'text-teal-800'} />
+                <Stat label="Maint. Overdue" value={String(ctx.assets.maintenanceOverdue)} bg={ctx.assets.maintenanceOverdue > 0 ? 'bg-[var(--rag-red-soft)]' : 'bg-teal-50'} text={ctx.assets.maintenanceOverdue > 0 ? 'text-[var(--rag-red)]' : 'text-teal-800'} />
               </div>
             </div>
           )}
           {/* Finance */}
           {ctx.finance.hasData && (
             <div className="px-5 py-3">
-              <h4 className="text-xs font-semibold text-green-600 mb-1.5 flex items-center gap-1"><DollarSign className="w-3 h-3" /> Finance Summary (QuickBooks)</h4>
+              <h4 className="text-xs font-semibold text-[var(--rag-green)] mb-1.5 flex items-center gap-1"><DollarSign className="w-3 h-3" /> Finance Summary (QuickBooks)</h4>
               <div className="space-y-1 text-xs">
                 {ctx.finance.revenueOverview && <p className="text-muted-foreground">{ctx.finance.revenueOverview}</p>}
                 {ctx.finance.expenseOverview && <p className="text-muted-foreground">{ctx.finance.expenseOverview}</p>}
                 {ctx.finance.keyMetrics && Object.keys(ctx.finance.keyMetrics).length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mt-1">
                     {Object.entries(ctx.finance.keyMetrics).map(([k, v]) => (
-                      <Stat key={k} label={k} value={v} bg="bg-green-50" text="text-green-800" />
+                      <Stat key={k} label={k} value={v} bg="bg-[var(--rag-green-soft)]" text="text-[var(--rag-green)]" />
                     ))}
                   </div>
                 )}

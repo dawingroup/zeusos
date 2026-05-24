@@ -167,21 +167,21 @@ export default function SOWEditorPage() {
           {sow?.status === 'DRAFT' && (
             <button onClick={handleSubmitForApproval} disabled={busy}
               data-testid="sow-submit-for-approval"
-              className="rounded border border-amber-500 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-900 hover:bg-amber-100 disabled:opacity-50">
+              className="rounded border border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] px-3 py-1.5 text-sm font-medium text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)] disabled:opacity-50">
               Submit for approval
             </button>
           )}
           {sow?.status === 'PENDING_APPROVAL' && (
             <button onClick={handleApprove} disabled={busy}
               data-testid="sow-approve"
-              className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50">
+              className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50">
               Approve (→ ACTIVE)
             </button>
           )}
           {sow && sow.status !== 'CLOSED' && sow.status !== 'CANCELLED' && (
             <button onClick={handleCancel} disabled={busy}
               data-testid="sow-cancel"
-              className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50">
+              className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50">
               Cancel SOW
             </button>
           )}
@@ -189,7 +189,7 @@ export default function SOWEditorPage() {
       </header>
 
       {msa && msa.status !== 'ACTIVE' && (
-        <div className="rounded border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+        <div className="rounded border border-[var(--rag-amber)] bg-[var(--rag-amber-soft)] p-3 text-xs text-[var(--rag-amber)]">
           Parent MSA is {msa.status}; SOWs cannot be submitted for approval until the MSA is ACTIVE.
         </div>
       )}
@@ -244,7 +244,7 @@ export default function SOWEditorPage() {
         {isDraft && (
           <div className="flex gap-2">
             <button onClick={handleSave} disabled={busy} data-testid="sow-save"
-              className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+              className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
               {busy ? 'Saving…' : isExisting ? 'Save' : 'Create'}
             </button>
             <Link to={`/clients/${clientId}`} className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>
@@ -253,10 +253,10 @@ export default function SOWEditorPage() {
       </fieldset>
 
       {sow && sow.status === 'ACTIVE' && (
-        <div className="rounded border bg-emerald-50 p-3 text-xs text-emerald-900">
+        <div className="rounded border bg-[var(--rag-green-soft)] p-3 text-xs text-[var(--rag-green)]">
           <strong>This SOW is ACTIVE.</strong> The ceiling of {formatMinor(sow.ceilingMinor, sow.currency)} is now a
           hard cap on all IWO allocations. To raise it, file a Change Order.{' '}
-          <Link to={`/clients/${clientId}/msas/${msaId}/sows/${sow.id}/change-orders/new`} className="text-emerald-800 underline">
+          <Link to={`/clients/${clientId}/msas/${msaId}/sows/${sow.id}/change-orders/new`} className="text-[var(--rag-green)] underline">
             New Change Order →
           </Link>
         </div>
