@@ -107,7 +107,7 @@ export function CompetencyDetailPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -146,7 +146,7 @@ export function CompetencyDetailPage() {
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline">{competency.category}</Badge>
-              <Badge variant="outline" className={competency.isActive ? 'text-green-600' : 'text-muted-foreground'}>
+              <Badge variant="outline" className={competency.isActive ? 'text-[var(--rag-green)]' : 'text-muted-foreground'}>
                 {competency.isActive ? 'Active' : 'Inactive'}
               </Badge>
             </div>
@@ -164,7 +164,7 @@ export function CompetencyDetailPage() {
             variant="outline"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="text-red-600 hover:bg-red-50"
+            className="text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             {isDeleting ? 'Deleting...' : 'Delete'}
@@ -228,7 +228,7 @@ export function CompetencyDetailPage() {
                         <ul className="space-y-1">
                           {levelDef.indicators.map((indicator, index) => (
                             <li key={index} className="flex items-start gap-2 text-sm">
-                              <CheckCircle className="h-3 w-3 text-green-600 mt-0.5 flex-shrink-0" />
+                              <CheckCircle className="h-3 w-3 text-[var(--rag-green)] mt-0.5 flex-shrink-0" />
                               <span>{indicator}</span>
                             </li>
                           ))}

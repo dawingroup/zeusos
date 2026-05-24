@@ -40,8 +40,8 @@ export default function SignInScreen({ onSignIn, isSigningIn = false, error }: S
       </div>
 
       {error && (
-        <div className="mb-4 px-4 py-2 bg-red-500/20 border border-red-400/30 rounded-lg">
-          <p className="text-xs text-red-200 text-center">{error}</p>
+        <div className="mb-4 px-4 py-2 bg-[var(--rag-red)]/20 border border-[var(--rag-red)]/30 rounded-lg">
+          <p className="text-xs text-[var(--rag-red-soft)] text-center">{error}</p>
         </div>
       )}
 

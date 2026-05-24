@@ -44,7 +44,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'Inspiration',
     description: 'General design inspiration',
     icon: Lightbulb,
-    color: 'text-yellow-500',
+    color: 'text-[var(--rag-amber)]',
     linkType: 'project',
   },
   {
@@ -52,7 +52,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'Design Reference',
     description: 'Reference for a specific design item',
     icon: Image,
-    color: 'text-blue-500',
+    color: 'text-[var(--rag-blue)]',
     linkType: 'design-item',
   },
   {
@@ -68,7 +68,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'Procurement Item',
     description: 'Item to procure for a project',
     icon: ShoppingCart,
-    color: 'text-green-500',
+    color: 'text-[var(--rag-green)]',
     linkType: 'design-item',
   },
   {
@@ -84,7 +84,7 @@ const CLIP_TYPE_OPTIONS: ClipTypeOption[] = [
     label: 'New Asset',
     description: 'Hardware or fitting for registry',
     icon: Wrench,
-    color: 'text-orange-500',
+    color: 'text-[var(--rag-amber)]',
     linkType: 'asset',
   },
   {

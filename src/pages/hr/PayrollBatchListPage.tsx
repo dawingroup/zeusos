@@ -242,7 +242,7 @@ function MonthlyRunCard({
                     </td>
                     <td className="px-4 py-2 text-right">
                       {sb.errorCount > 0
-                        ? <span className="text-red-600 font-medium">{sb.errorCount}</span>
+                        ? <span className="text-[var(--rag-red)] font-medium">{sb.errorCount}</span>
                         : <span className="text-[var(--fg-tertiary)]">0</span>}
                     </td>
                     <td className="px-4 py-2 text-right">

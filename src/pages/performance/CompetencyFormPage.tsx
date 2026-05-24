@@ -223,7 +223,7 @@ export function CompetencyFormPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -335,7 +335,7 @@ export function CompetencyFormPage() {
                       <button
                         type="button"
                         onClick={() => handleRemoveRole(role)}
-                        className="ml-1 hover:text-red-600"
+                        className="ml-1 hover:text-[var(--rag-red)]"
                       >
                         <X className="h-3 w-3" />
                       </button>

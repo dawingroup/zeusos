@@ -69,9 +69,9 @@ const MAPPINGS = [];
 for (const [rag, families] of Object.entries(RAG_FAMILIES)) {
   const F = `(?:${families.join('|')})`;
 
-  // Solid text colors → solid RAG token
+  // Solid text colors → solid RAG token (includes Tailwind 3.4 950 depth)
   MAPPINGS.push({
-    from: new RegExp(`\\btext-${F}-(?:300|400|500|600|700|800|900)\\b`, 'g'),
+    from: new RegExp(`\\btext-${F}-(?:300|400|500|600|700|800|900|950)\\b`, 'g'),
     to: `text-[var(--rag-${rag})]`,
   });
 

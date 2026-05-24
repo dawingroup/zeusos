@@ -514,7 +514,7 @@ export function AppShell({ children }: AppShellProps) {
           >
             <MessageSquare className="h-4 w-4" />
             {totalMessagingUnread > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-green-600 text-[10px] font-medium text-white flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
                 {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
               </span>
             )}
@@ -618,7 +618,7 @@ export function AppShell({ children }: AppShellProps) {
           >
             <MessageSquare className="h-5 w-5" />
             {totalMessagingUnread > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-green-600 text-[10px] font-medium text-white flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
                 {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
               </span>
             )}

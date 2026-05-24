@@ -294,7 +294,7 @@ export function MaterialPricingRulesSection({
                     {/* Timber-Specific Config */}
                     {type === 'TIMBER' && (
                       <div className="border-t pt-3 mt-3">
-                        <h5 className="text-xs font-semibold text-emerald-700 uppercase mb-3">Timber-Specific Settings</h5>
+                        <h5 className="text-xs font-semibold text-[var(--rag-green)] uppercase mb-3">Timber-Specific Settings</h5>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                           <div>
                             <label className="block text-xs font-medium text-muted-foreground mb-1">
@@ -349,7 +349,7 @@ export function MaterialPricingRulesSection({
                     {/* Panel-Specific Config */}
                     {(type === 'PANEL' || type === 'SOLID' || type === 'VENEER') && (
                       <div className="border-t pt-3 mt-3">
-                        <h5 className="text-xs font-semibold text-blue-700 uppercase mb-3">Panel Settings</h5>
+                        <h5 className="text-xs font-semibold text-[var(--rag-blue)] uppercase mb-3">Panel Settings</h5>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                           <div>
                             <label className="block text-xs font-medium text-muted-foreground mb-1">
@@ -391,7 +391,7 @@ export function MaterialPricingRulesSection({
                     {/* Glass-Specific Config */}
                     {type === 'GLASS' && (
                       <div className="border-t pt-3 mt-3">
-                        <h5 className="text-xs font-semibold text-sky-700 uppercase mb-3">Glass Settings</h5>
+                        <h5 className="text-xs font-semibold text-[var(--rag-blue)] uppercase mb-3">Glass Settings</h5>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label className="block text-xs font-medium text-muted-foreground mb-1">Safety Margin (mm)</label>
@@ -419,7 +419,7 @@ export function MaterialPricingRulesSection({
                     {/* Linear-Specific Config */}
                     {(type === 'METAL_BAR' || type === 'ALUMINIUM') && (
                       <div className="border-t pt-3 mt-3">
-                        <h5 className="text-xs font-semibold text-amber-700 uppercase mb-3">Linear Stock Settings</h5>
+                        <h5 className="text-xs font-semibold text-[var(--rag-amber)] uppercase mb-3">Linear Stock Settings</h5>
                         <div>
                           <label className="block text-xs font-medium text-muted-foreground mb-1">Default Stock Length (mm)</label>
                           <input type="number" value={DEFAULT_MATERIAL_PRICING_RULES[type].linearConfig?.defaultStockLengthMm ?? 6000} disabled className="w-full max-w-xs px-3 py-1.5 border border-[var(--border-subtle)] rounded text-sm bg-[var(--bg-sunken)] text-muted-foreground" />

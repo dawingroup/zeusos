@@ -49,11 +49,11 @@ const TYPE_ICONS: Record<TrainingType, any> = {
 };
 
 const TYPE_COLORS: Record<TrainingType, string> = {
-  external_course: 'text-blue-600 bg-blue-50 border-blue-200',
+  external_course: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
   e_learning: 'text-indigo-600 bg-indigo-50 border-indigo-200',
   mentorship: 'text-pink-600 bg-pink-50 border-pink-200',
-  workshop: 'text-orange-600 bg-orange-50 border-orange-200',
-  internal_course: 'text-green-600 bg-green-50 border-green-200',
+  workshop: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]',
+  internal_course: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)] border-[var(--rag-green)]',
   certification: 'text-purple-600 bg-purple-50 border-purple-200',
   on_the_job: 'text-teal-600 bg-teal-50 border-teal-200',
 };
@@ -141,7 +141,7 @@ export function TrainingCourseDetailPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -200,7 +200,7 @@ export function TrainingCourseDetailPage() {
             variant="outline"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="text-red-600 hover:bg-red-50"
+            className="text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             {isDeleting ? 'Deleting...' : 'Delete'}
@@ -210,12 +210,12 @@ export function TrainingCourseDetailPage() {
 
       {/* Enrollment Status */}
       {enrollment && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="font-semibold text-blue-900">You're enrolled in this course</p>
-                <p className="text-sm text-blue-700">
+                <p className="font-semibold text-[var(--rag-blue)]">You're enrolled in this course</p>
+                <p className="text-sm text-[var(--rag-blue)]">
                   Enrolled on {(enrollment.enrolledDate instanceof Date ? enrollment.enrolledDate : (enrollment.enrolledDate as any).toDate?.())?.toLocaleDateString() || 'N/A'}
                 </p>
               </div>
@@ -223,9 +223,9 @@ export function TrainingCourseDetailPage() {
                 variant="outline"
                 className={
                   enrollment.status === 'completed'
-                    ? 'bg-green-100 text-green-800 border-green-300'
+                    ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]'
                     : enrollment.status === 'in_progress'
-                    ? 'bg-blue-100 text-blue-800 border-blue-300'
+                    ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]'
                     : 'bg-[var(--bg-sunken)] text-foreground border-[var(--border-default)]'
                 }
               >
@@ -235,8 +235,8 @@ export function TrainingCourseDetailPage() {
             </div>
             <div>
               <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-blue-700">Progress</span>
-                <span className="font-medium text-blue-900">{enrollment.progress}%</span>
+                <span className="text-[var(--rag-blue)]">Progress</span>
+                <span className="font-medium text-[var(--rag-blue)]">{enrollment.progress}%</span>
               </div>
               <Progress value={enrollment.progress} className="h-2" />
             </div>
@@ -290,7 +290,7 @@ export function TrainingCourseDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ExternalLink className="h-5 w-5 text-blue-600" />
+                  <ExternalLink className="h-5 w-5 text-[var(--rag-blue)]" />
                   External Platform
                 </CardTitle>
               </CardHeader>
@@ -299,7 +299,7 @@ export function TrainingCourseDetailPage() {
                   href={course.externalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline flex items-center gap-2"
+                  className="text-[var(--rag-blue)] hover:underline flex items-center gap-2"
                 >
                   {course.externalUrl}
                   <ExternalLink className="h-4 w-4" />
@@ -321,7 +321,7 @@ export function TrainingCourseDetailPage() {
                   href={course.videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline flex items-center gap-2"
+                  className="text-[var(--rag-blue)] hover:underline flex items-center gap-2"
                 >
                   Access Video
                   <ExternalLink className="h-4 w-4" />
@@ -334,7 +334,7 @@ export function TrainingCourseDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-orange-600" />
+                  <Users className="h-5 w-5 text-[var(--rag-amber)]" />
                   Workshop Details
                 </CardTitle>
               </CardHeader>
@@ -395,7 +395,7 @@ export function TrainingCourseDetailPage() {
               <ul className="space-y-2">
                 {course.learningObjectives.map((objective, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[var(--rag-green)] mt-0.5 flex-shrink-0" />
                     <span className="text-sm">{objective}</span>
                   </li>
                 ))}
@@ -449,14 +449,14 @@ export function TrainingCourseDetailPage() {
                 </div>
               )}
               {course.certificateOffered && (
-                <div className="flex items-center gap-2 text-green-600">
+                <div className="flex items-center gap-2 text-[var(--rag-green)]">
                   <Award className="h-4 w-4" />
                   <span>Certificate offered upon completion</span>
                 </div>
               )}
               <div>
                 <p className="font-medium">Status</p>
-                <Badge variant="outline" className={course.isActive ? 'text-green-600' : 'text-muted-foreground'}>
+                <Badge variant="outline" className={course.isActive ? 'text-[var(--rag-green)]' : 'text-muted-foreground'}>
                   {course.isActive ? 'Active' : 'Inactive'}
                 </Badge>
               </div>

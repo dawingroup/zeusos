@@ -91,7 +91,7 @@ export function DevelopmentPlanListPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -127,15 +127,15 @@ export function DevelopmentPlanListPage() {
             <p className="text-xs text-muted-foreground">Total Plans</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-blue-600">{developmentPlanStats.totalGoals}</p>
+            <p className="text-2xl font-bold text-[var(--rag-blue)]">{developmentPlanStats.totalGoals}</p>
             <p className="text-xs text-muted-foreground">Total Goals</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-green-600">{developmentPlanStats.completedGoals}</p>
+            <p className="text-2xl font-bold text-[var(--rag-green)]">{developmentPlanStats.completedGoals}</p>
             <p className="text-xs text-muted-foreground">Completed</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-amber-600">{developmentPlanStats.highPriorityGaps}</p>
+            <p className="text-2xl font-bold text-[var(--rag-amber)]">{developmentPlanStats.highPriorityGaps}</p>
             <p className="text-xs text-muted-foreground">High Priority Gaps</p>
           </Card>
           <Card className="text-center p-3">
@@ -244,9 +244,9 @@ export function DevelopmentPlanListPage() {
 
                   {/* Stats */}
                   <div className="grid grid-cols-2 gap-2 mt-3">
-                    <div className="text-center p-2 bg-blue-50 rounded">
-                      <p className="text-lg font-bold text-blue-700">{plan.skillGaps.length}</p>
-                      <p className="text-xs text-blue-600">Skill Gaps</p>
+                    <div className="text-center p-2 bg-[var(--rag-blue-soft)] rounded">
+                      <p className="text-lg font-bold text-[var(--rag-blue)]">{plan.skillGaps.length}</p>
+                      <p className="text-xs text-[var(--rag-blue)]">Skill Gaps</p>
                     </div>
                     <div className="text-center p-2 bg-purple-50 rounded">
                       <p className="text-lg font-bold text-purple-700">{plan.strengths.length}</p>

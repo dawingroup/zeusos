@@ -60,7 +60,7 @@ export default function ClipQueue({ clips, onDelete }: ClipQueueProps) {
             onClick={() => setFilter(f.key)}
             className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
               filter === f.key
-                ? 'bg-blue-100 text-blue-700'
+                ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]'
                 : 'text-muted-foreground hover:bg-[var(--bg-sunken)]'
             }`}
           >
@@ -74,14 +74,14 @@ export default function ClipQueue({ clips, onDelete }: ClipQueueProps) {
 
       {/* Bulk actions bar */}
       {selectedIds.size > 0 && (
-        <div className="bg-blue-50 border-b px-4 py-2 flex items-center justify-between">
-          <span className="text-sm text-blue-700">
+        <div className="bg-[var(--rag-blue-soft)] border-b px-4 py-2 flex items-center justify-between">
+          <span className="text-sm text-[var(--rag-blue)]">
             {selectedIds.size} selected
           </span>
           <div className="flex gap-2">
             <button
               onClick={handleBulkDelete}
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm text-[var(--rag-red)] hover:text-[var(--rag-red)]"
             >
               Delete
             </button>

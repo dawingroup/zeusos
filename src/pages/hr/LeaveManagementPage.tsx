@@ -215,7 +215,7 @@ export function LeaveManagementPage() {
           <Button
             size="icon"
             variant="outline"
-            className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+            className="h-8 w-8 text-[var(--rag-green)] hover:text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]"
             onClick={() => setApprovalDialog({ open: true, request, action: 'approve' })}
           >
             <Check className="h-4 w-4" />
@@ -223,7 +223,7 @@ export function LeaveManagementPage() {
           <Button
             size="icon"
             variant="outline"
-            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="h-8 w-8 text-[var(--rag-red)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
             onClick={() => setApprovalDialog({ open: true, request, action: 'reject' })}
           >
             <X className="h-4 w-4" />
@@ -299,7 +299,7 @@ export function LeaveManagementPage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-500" />
+              <Clock className="h-5 w-5 text-[var(--rag-amber)]" />
               Pending Approvals
               <Badge variant="secondary">{pendingRequests.length}</Badge>
             </CardTitle>
@@ -465,7 +465,7 @@ export function LeaveManagementPage() {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-green-600"
+                          className="h-8 w-8 text-[var(--rag-green)]"
                           onClick={() => setApprovalDialog({ open: true, request, action: 'approve' })}
                         >
                           <Check className="h-4 w-4" />
@@ -473,7 +473,7 @@ export function LeaveManagementPage() {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8 text-red-600"
+                          className="h-8 w-8 text-[var(--rag-red)]"
                           onClick={() => setApprovalDialog({ open: true, request, action: 'reject' })}
                         >
                           <X className="h-4 w-4" />
@@ -524,7 +524,7 @@ export function LeaveManagementPage() {
             </Button>
             <Button
               onClick={handleApproval}
-              className={approvalDialog.action === 'approve' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+              className={approvalDialog.action === 'approve' ? 'bg-[var(--rag-green)] hover:bg-[var(--rag-green)]' : 'bg-[var(--rag-red)] hover:bg-[var(--rag-red)]'}
             >
               {approvalDialog.action === 'approve' ? 'Approve' : 'Reject'}
             </Button>

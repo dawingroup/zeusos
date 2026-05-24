@@ -46,10 +46,10 @@ export function CardShell({ selected, onSelect, iconName, children, accessory }:
 /** Small status pill helper — used by several cards. */
 export function StatusPill({ tone, children }: { tone?: 'success' | 'warning' | 'danger' | 'info' | 'neutral'; children: ReactNode }) {
   const cls = {
-    success: 'bg-green-100 text-green-700 border-green-200',
-    warning: 'bg-amber-100 text-amber-700 border-amber-200',
-    danger: 'bg-red-100 text-red-700 border-red-200',
-    info: 'bg-blue-100 text-blue-700 border-blue-200',
+    success: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]',
+    warning: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+    danger: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]',
+    info: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]',
     neutral: 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]',
   }[tone ?? 'neutral'];
   return (

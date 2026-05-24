@@ -125,11 +125,11 @@ export function AdobePdfTest() {
   const getStatusColor = () => {
     switch (result.status) {
       case 'loading':
-        return 'text-blue-600';
+        return 'text-[var(--rag-blue)]';
       case 'success':
-        return 'text-green-600';
+        return 'text-[var(--rag-green)]';
       case 'error':
-        return 'text-red-600';
+        return 'text-[var(--rag-red)]';
       default:
         return 'text-muted-foreground';
     }
@@ -150,20 +150,20 @@ export function AdobePdfTest() {
         <button
           onClick={testExtractPdf}
           disabled={result.status === 'loading'}
-          className="px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--rag-blue-soft)] hover:bg-[var(--rag-blue)] rounded disabled:opacity-50"
         >
           Test Extract PDF
         </button>
         <button
           onClick={testCompressPdf}
           disabled={result.status === 'loading'}
-          className="px-4 py-2 bg-green-100 hover:bg-green-200 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--rag-green-soft)] hover:bg-[var(--rag-green)] rounded disabled:opacity-50"
         >
           Test Compress PDF
         </button>
       </div>
 
-      <div className={`p-4 rounded ${result.status === 'loading' ? 'bg-blue-50' : result.status === 'success' ? 'bg-green-50' : result.status === 'error' ? 'bg-red-50' : 'bg-[var(--bg-sunken)]'}`}>
+      <div className={`p-4 rounded ${result.status === 'loading' ? 'bg-[var(--rag-blue-soft)]' : result.status === 'success' ? 'bg-[var(--rag-green-soft)]' : result.status === 'error' ? 'bg-[var(--rag-red-soft)]' : 'bg-[var(--bg-sunken)]'}`}>
         <p className={`font-medium ${getStatusColor()}`}>
           {result.status === 'loading' && '⏳ '}
           {result.status === 'success' && '✅ '}

@@ -53,14 +53,14 @@ export function FileVersionHistory({ file, open, onClose }: FileVersionHistoryPr
               <div
                 key={v.id}
                 className={`flex items-center justify-between p-3 rounded-lg border ${
-                  v.isLatest ? 'border-emerald-200 bg-emerald-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'
+                  v.isLatest ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'
                 }`}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">v{v.version}</span>
                     {v.isLatest && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded font-medium">
+                      <span className="text-[10px] px-1.5 py-0.5 bg-[var(--rag-green-soft)] text-[var(--rag-green)] rounded font-medium">
                         Current
                       </span>
                     )}

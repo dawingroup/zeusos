@@ -404,7 +404,7 @@ export function SubsidiaryAccessEditor({ access, onChange, disabled }: Subsidiar
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-gradient-to-r from-violet-500 to-blue-500" />
+            <div className="w-3 h-3 rounded-full bg-gradient-to-r from-violet-500 $1-[var(--rag-blue)]" />
             <CardTitle className="text-base">Corporate Modules</CardTitle>
             <Badge variant="outline" className="text-[10px]">
               Cross-Subsidiary

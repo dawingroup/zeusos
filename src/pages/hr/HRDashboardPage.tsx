@@ -55,11 +55,11 @@ function MetricCard({ title, value, subtitle, icon, trend, onClick }: MetricCard
             {trend && (
               <div className="flex items-center gap-1 mt-2">
                 {trend.isPositive ? (
-                  <TrendingUp className="h-4 w-4 text-green-500" />
+                  <TrendingUp className="h-4 w-4 text-[var(--rag-green)]" />
                 ) : (
-                  <TrendingDown className="h-4 w-4 text-red-500" />
+                  <TrendingDown className="h-4 w-4 text-[var(--rag-red)]" />
                 )}
-                <span className={cn('text-sm', trend.isPositive ? 'text-green-500' : 'text-red-500')}>
+                <span className={cn('text-sm', trend.isPositive ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]')}>
                   {Math.abs(trend.value)}%
                 </span>
               </div>
@@ -175,7 +175,7 @@ export function HRDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <AlertTriangle className="h-5 w-5 text-[var(--rag-amber)]" />
               Probations Ending Soon
             </CardTitle>
             <Badge variant="secondary">{expiringProbations.length}</Badge>
@@ -189,7 +189,7 @@ export function HRDashboardPage() {
               </div>
             ) : expiringProbations.length === 0 ? (
               <div className="py-8 text-center">
-                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
+                <CheckCircle className="h-12 w-12 text-[var(--rag-green)] mx-auto mb-2" />
                 <p className="text-muted-foreground">No probations ending soon</p>
               </div>
             ) : (

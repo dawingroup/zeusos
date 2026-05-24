@@ -49,7 +49,7 @@ export function BulkActionToolbar({
         disabled={deleting}
         className={cn(
           'flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md',
-          'bg-red-500/20 hover:bg-red-500/30 text-red-200 transition-colors',
+          'bg-[var(--rag-red)]/20 hover:bg-[var(--rag-red)]/30 text-[var(--rag-red-soft)] transition-colors',
           deleting && 'opacity-50 cursor-not-allowed'
         )}
       >

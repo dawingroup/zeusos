@@ -34,7 +34,7 @@ export default function DashboardPage() {
       description: 'Manage construction projects, IPCs, and requisitions',
       icon: Building2,
       href: '/delivery',
-      color: 'bg-blue-500',
+      color: 'bg-[var(--rag-blue)]',
     },
     {
       id: 'investment',
@@ -42,7 +42,7 @@ export default function DashboardPage() {
       description: 'Track deals, due diligence, and investment committee',
       icon: TrendingUp,
       href: '/investment',
-      color: 'bg-green-500',
+      color: 'bg-[var(--rag-green)]',
     },
     {
       id: 'advisory',
@@ -58,7 +58,7 @@ export default function DashboardPage() {
       description: 'BOQ management, materials, and procurement',
       icon: Package,
       href: '/matflow',
-      color: 'bg-orange-500',
+      color: 'bg-[var(--rag-amber)]',
     },
   ];
 

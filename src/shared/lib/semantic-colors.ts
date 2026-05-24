@@ -10,7 +10,7 @@
  * Use the helpers below instead of:
  *   ❌  style={{ color: value > 0 ? '#22C55E' : '#EF4444' }}
  *   ❌  <Bar fill="#1976d2" />
- *   ❌  <span className="bg-red-100 text-red-700 ...">Off track</span>
+ *   ❌  <span className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] ...">Off track</span>
  *
  *   ✅  <span style={{ color: ragToken(ragForDelta(value)) }}>{value}</span>
  *   ✅  <Bar fill={chartSeriesColor(idx)} />

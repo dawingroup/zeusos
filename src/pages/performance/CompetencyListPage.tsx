@@ -157,7 +157,7 @@ export function CompetencyListPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -180,7 +180,7 @@ export function CompetencyListPage() {
                 variant="outline"
                 onClick={handleSeedCompetencies}
                 disabled={isSeedingCompetencies}
-                className="border-green-600 text-green-700 hover:bg-green-50"
+                className="border-[var(--rag-green)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]"
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
                 {isSeedingCompetencies ? 'Seeding...' : 'Seed Standard Competencies'}
@@ -189,7 +189,7 @@ export function CompetencyListPage() {
                 variant="outline"
                 onClick={handleFixCompetencyData}
                 disabled={isFixingData}
-                className="border-blue-600 text-blue-700 hover:bg-blue-50"
+                className="border-[var(--rag-blue)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]"
               >
                 {isFixingData ? 'Fixing...' : 'Fix Existing Data'}
               </Button>
@@ -266,7 +266,7 @@ export function CompetencyListPage() {
               variant="outline"
               onClick={handleSeedCompetencies}
               disabled={isSeedingCompetencies}
-              className="border-green-600 text-green-700 hover:bg-green-50"
+              className="border-[var(--rag-green)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]"
             >
               <CheckCircle className="h-4 w-4 mr-2" />
               Seed Standard Competencies

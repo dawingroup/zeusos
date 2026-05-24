@@ -148,9 +148,9 @@ const mockInitiatives = [
 
 function getPriorityColor(priority: string): string {
   switch (priority) {
-    case 'critical': return 'bg-red-100 text-red-800';
-    case 'high': return 'bg-amber-100 text-amber-800';
-    case 'medium': return 'bg-blue-100 text-blue-800';
+    case 'critical': return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]';
+    case 'high': return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]';
+    case 'medium': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
     case 'low': return 'bg-[var(--bg-sunken)] text-foreground';
     default: return 'bg-[var(--bg-sunken)] text-foreground';
   }

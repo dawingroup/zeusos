@@ -47,15 +47,15 @@ const TRAINING_TYPE_CONFIG: Record<
   external_course: {
     label: 'External Course',
     icon: ExternalLink,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)]',
     description: 'Courses from platforms like Coursera, Udemy, LinkedIn Learning',
   },
   internal_course: {
     label: 'Internal Course',
     icon: BookOpen,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
+    color: 'text-[var(--rag-green)]',
+    bgColor: 'bg-[var(--rag-green-soft)]',
     description: 'Company-developed training materials and courses',
   },
   certification: {
@@ -68,8 +68,8 @@ const TRAINING_TYPE_CONFIG: Record<
   workshop: {
     label: 'Workshop',
     icon: Users,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-50',
+    color: 'text-[var(--rag-amber)]',
+    bgColor: 'bg-[var(--rag-amber-soft)]',
     description: 'In-person or virtual workshops with external trainers',
   },
   mentorship: {
@@ -224,7 +224,7 @@ export function TrainingCatalogPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -259,15 +259,15 @@ export function TrainingCatalogPage() {
             <p className="text-xs text-muted-foreground">Total Enrollments</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-green-600">{trainingStats.completed}</p>
+            <p className="text-2xl font-bold text-[var(--rag-green)]">{trainingStats.completed}</p>
             <p className="text-xs text-muted-foreground">Completed</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-blue-600">{trainingStats.inProgress}</p>
+            <p className="text-2xl font-bold text-[var(--rag-blue)]">{trainingStats.inProgress}</p>
             <p className="text-xs text-muted-foreground">In Progress</p>
           </Card>
           <Card className="text-center p-3">
-            <p className="text-2xl font-bold text-amber-600">{trainingStats.certificationsEarned}</p>
+            <p className="text-2xl font-bold text-[var(--rag-amber)]">{trainingStats.certificationsEarned}</p>
             <p className="text-xs text-muted-foreground">Certifications</p>
           </Card>
         </div>
@@ -407,7 +407,7 @@ export function TrainingCatalogPage() {
                               )}
                             </div>
                             {isEnrolled && (
-                              <Badge className="bg-green-100 text-green-800 text-xs shrink-0 ml-2">
+                              <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] text-xs shrink-0 ml-2">
                                 Enrolled
                               </Badge>
                             )}
@@ -461,7 +461,7 @@ export function TrainingCatalogPage() {
                                 </div>
                                 <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2 mt-1">
                                   <div
-                                    className="bg-blue-600 h-2 rounded-full"
+                                    className="bg-[var(--rag-blue)] h-2 rounded-full"
                                     style={{ width: `${enrollment.progress}%` }}
                                   />
                                 </div>

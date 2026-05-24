@@ -224,7 +224,7 @@ export function DevelopmentPlanFormPage() {
   if (error) {
     return (
       <Card className="p-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-[var(--rag-red)]">{error}</p>
       </Card>
     );
   }
@@ -335,7 +335,7 @@ export function DevelopmentPlanFormPage() {
                         size="sm"
                         onClick={() => handleRemoveGoal(goal.id)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-600" />
+                        <Trash2 className="h-4 w-4 text-[var(--rag-red)]" />
                       </Button>
                     )}
                   </div>
@@ -441,7 +441,7 @@ export function DevelopmentPlanFormPage() {
                       size="sm"
                       onClick={() => handleRemoveSkillGap(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-[var(--rag-red)]" />
                     </Button>
                   </div>
 

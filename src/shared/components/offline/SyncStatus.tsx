@@ -31,8 +31,8 @@ export function SyncStatus({
     if (!isOnline) return <CloudOff className="h-4 w-4" />;
     if (isSyncing) return <RefreshCw className="h-4 w-4 animate-spin" />;
     if (hasErrors) return <AlertCircle className="h-4 w-4 text-destructive" />;
-    if (pendingChanges > 0) return <Cloud className="h-4 w-4 text-yellow-500" />;
-    return <Check className="h-4 w-4 text-green-500" />;
+    if (pendingChanges > 0) return <Cloud className="h-4 w-4 text-[var(--rag-amber)]" />;
+    return <Check className="h-4 w-4 text-[var(--rag-green)]" />;
   };
 
   const getStatusText = () => {
@@ -63,7 +63,7 @@ export function SyncStatus({
               <span
                 className={cn(
                   'text-xs px-2 py-1 rounded-full',
-                  isOnline ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  isOnline ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                 )}
               >
                 {isOnline ? 'Online' : 'Offline'}

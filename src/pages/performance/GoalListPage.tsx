@@ -54,10 +54,10 @@ const PERFORMANCE_COLOR = '#FF5722';
 // Status options
 const GOAL_STATUSES = [
   { value: 'not_started', label: 'Not Started', color: 'bg-[var(--bg-sunken)] text-foreground' },
-  { value: 'on_track', label: 'On Track', color: 'bg-blue-100 text-blue-800' },
-  { value: 'at_risk', label: 'At Risk', color: 'bg-amber-100 text-amber-800' },
-  { value: 'behind', label: 'Behind', color: 'bg-red-100 text-red-800' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-800' },
+  { value: 'on_track', label: 'On Track', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  { value: 'at_risk', label: 'At Risk', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
+  { value: 'behind', label: 'Behind', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
+  { value: 'completed', label: 'Completed', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
 ];
 
 // Category options
@@ -226,19 +226,19 @@ export function GoalListPage() {
           <p className="text-xs text-muted-foreground">Total Goals</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+          <p className="text-2xl font-bold text-[var(--rag-green)]">{stats.completed}</p>
           <p className="text-xs text-muted-foreground">Completed</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-blue-600">{stats.onTrack}</p>
+          <p className="text-2xl font-bold text-[var(--rag-blue)]">{stats.onTrack}</p>
           <p className="text-xs text-muted-foreground">On Track</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-amber-600">{stats.atRisk}</p>
+          <p className="text-2xl font-bold text-[var(--rag-amber)]">{stats.atRisk}</p>
           <p className="text-xs text-muted-foreground">At Risk</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-red-600">{stats.behind}</p>
+          <p className="text-2xl font-bold text-[var(--rag-red)]">{stats.behind}</p>
           <p className="text-xs text-muted-foreground">Behind</p>
         </Card>
       </div>
@@ -416,9 +416,9 @@ export function GoalListPage() {
                       value={goal.progress}
                       className={cn(
                         "h-1.5",
-                        mappedStatus === 'completed' ? "[&>div]:bg-green-500" :
-                        mappedStatus === 'behind' ? "[&>div]:bg-red-500" :
-                        mappedStatus === 'at_risk' ? "[&>div]:bg-amber-500" : ""
+                        mappedStatus === 'completed' ? "[&>div]:bg-[var(--rag-green)]" :
+                        mappedStatus === 'behind' ? "[&>div]:bg-[var(--rag-red)]" :
+                        mappedStatus === 'at_risk' ? "[&>div]:bg-[var(--rag-amber)]" : ""
                       )}
                     />
                   </div>
@@ -433,7 +433,7 @@ export function GoalListPage() {
                     </div>
                     <span className={cn(
                       "text-xs",
-                      isPast(dueDate) && mappedStatus !== 'completed' ? "text-red-600 font-medium" : "text-muted-foreground"
+                      isPast(dueDate) && mappedStatus !== 'completed' ? "text-[var(--rag-red)] font-medium" : "text-muted-foreground"
                     )}>
                       {getDaysText(dueDate, mappedStatus)}
                     </span>

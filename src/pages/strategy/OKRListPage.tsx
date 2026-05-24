@@ -111,9 +111,9 @@ const mockOKRs = [
 
 function getStatusColor(status: string): string {
   switch (status) {
-    case 'on_track': return 'text-green-600';
-    case 'at_risk': return 'text-amber-600';
-    case 'behind': return 'text-red-600';
+    case 'on_track': return 'text-[var(--rag-green)]';
+    case 'at_risk': return 'text-[var(--rag-amber)]';
+    case 'behind': return 'text-[var(--rag-red)]';
     default: return 'text-muted-foreground';
   }
 }
@@ -316,16 +316,16 @@ export function OKRListPage() {
           <p className="text-3xl font-bold">{stats.total}</p>
           <p className="text-sm text-muted-foreground">Total OKRs</p>
         </Card>
-        <Card className="text-center p-4 bg-green-50">
-          <p className="text-3xl font-bold text-green-600">{stats.onTrack}</p>
+        <Card className="text-center p-4 bg-[var(--rag-green-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-green)]">{stats.onTrack}</p>
           <p className="text-sm text-muted-foreground">On Track</p>
         </Card>
-        <Card className="text-center p-4 bg-amber-50">
-          <p className="text-3xl font-bold text-amber-600">{stats.atRisk}</p>
+        <Card className="text-center p-4 bg-[var(--rag-amber-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-amber)]">{stats.atRisk}</p>
           <p className="text-sm text-muted-foreground">At Risk</p>
         </Card>
-        <Card className="text-center p-4 bg-red-50">
-          <p className="text-3xl font-bold text-red-600">{stats.behind}</p>
+        <Card className="text-center p-4 bg-[var(--rag-red-soft)]">
+          <p className="text-3xl font-bold text-[var(--rag-red)]">{stats.behind}</p>
           <p className="text-sm text-muted-foreground">Behind</p>
         </Card>
       </div>

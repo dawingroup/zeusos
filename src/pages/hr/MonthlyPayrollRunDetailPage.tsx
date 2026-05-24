@@ -93,7 +93,7 @@ export function MonthlyPayrollRunDetailPage() {
         <Button variant="ghost" size="sm" onClick={() => navigate('/hr/payroll/batches')}>
           <ArrowLeft className="w-4 h-4 mr-1" /> Back to batches
         </Button>
-        <div className="text-sm text-red-600">{error || 'Monthly run not found.'}</div>
+        <div className="text-sm text-[var(--rag-red)]">{error || 'Monthly run not found.'}</div>
       </div>
     );
   }
@@ -259,7 +259,7 @@ export function MonthlyPayrollRunDetailPage() {
               const reason = window.prompt('Reason for cancelling all sub-batches?');
               if (reason !== null) wrap('cancel', () => cancelAll(reason));
             }}
-            className="text-red-600 hover:text-red-700"
+            className="text-[var(--rag-red)] hover:text-[var(--rag-red)]"
           >
             {busy === 'cancel'
               ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
@@ -270,7 +270,7 @@ export function MonthlyPayrollRunDetailPage() {
       </Card>
 
       {actionError && (
-        <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-md p-3">
+        <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-3">
           {actionError}
         </div>
       )}
@@ -307,7 +307,7 @@ export function MonthlyPayrollRunDetailPage() {
                   <TableCell className="text-right">{formatUGX(sb.totalNetPay)}</TableCell>
                   <TableCell className="text-right">
                     {sb.errorCount > 0
-                      ? <span className="text-red-600 font-medium">{sb.errorCount}</span>
+                      ? <span className="text-[var(--rag-red)] font-medium">{sb.errorCount}</span>
                       : <span className="text-muted-foreground">0</span>}
                   </TableCell>
                   <TableCell>

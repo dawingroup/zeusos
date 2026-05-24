@@ -67,7 +67,7 @@ export function PayrollBatchDetailPage() {
 
   if (error) {
     return (
-      <div className="border border-red-200 bg-red-50 text-red-800 rounded p-4 text-sm flex items-start gap-2">
+      <div className="border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded p-4 text-sm flex items-start gap-2">
         <AlertCircle className="w-4 h-4 mt-0.5" />
         <div>
           <div className="font-medium">Couldn't load this batch</div>
@@ -109,7 +109,7 @@ export function PayrollBatchDetailPage() {
             >
               <ArrowLeft className="w-4 h-4 mr-1" /> Monthly run {parentPeriod}
             </Button>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
+            <Badge variant="outline" className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)] text-xs">
               <CalendarRange className="w-3 h-3 mr-1" />
               Sub-batch of monthly run
             </Badge>

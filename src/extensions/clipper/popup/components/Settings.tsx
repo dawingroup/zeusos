@@ -29,7 +29,7 @@ export default function Settings({ onBack }: SettingsProps) {
               <input
                 type="checkbox"
                 defaultChecked
-                className="w-4 h-4 rounded border-[var(--border-default)] text-blue-600"
+                className="w-4 h-4 rounded border-[var(--border-default)] text-[var(--rag-blue)]"
               />
             </label>
             <div>
@@ -55,7 +55,7 @@ export default function Settings({ onBack }: SettingsProps) {
             <input
               type="checkbox"
               defaultChecked
-              className="w-4 h-4 rounded border-[var(--border-default)] text-blue-600"
+              className="w-4 h-4 rounded border-[var(--border-default)] text-[var(--rag-blue)]"
             />
           </label>
         </section>
@@ -69,7 +69,7 @@ export default function Settings({ onBack }: SettingsProps) {
             <span className="text-sm text-muted-foreground">Sync on WiFi only</span>
             <input
               type="checkbox"
-              className="w-4 h-4 rounded border-[var(--border-default)] text-blue-600"
+              className="w-4 h-4 rounded border-[var(--border-default)] text-[var(--rag-blue)]"
             />
           </label>
         </section>

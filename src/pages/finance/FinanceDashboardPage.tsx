@@ -96,11 +96,11 @@ export function FinanceDashboardPage() {
 
       {/* Error Banner */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-[var(--rag-red)] bg-[var(--rag-red-soft)]">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-600" />
-              <span className="font-medium text-red-900">{error}</span>
+              <AlertTriangle className="h-5 w-5 text-[var(--rag-red)]" />
+              <span className="font-medium text-[var(--rag-red)]">{error}</span>
             </div>
           </CardContent>
         </Card>
@@ -137,8 +137,8 @@ export function FinanceDashboardPage() {
                   of {formatCurrencyUGX(metrics.totalBudget)} total
                 </p>
               </div>
-              <div className="p-2 rounded-lg bg-red-100">
-                <Receipt className="h-5 w-5 text-red-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-red-soft)]">
+                <Receipt className="h-5 w-5 text-[var(--rag-red)]" />
               </div>
             </div>
           </CardContent>
@@ -172,8 +172,8 @@ export function FinanceDashboardPage() {
                   Recent cash flow entries
                 </p>
               </div>
-              <div className="p-2 rounded-lg bg-blue-100">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+                <Clock className="h-5 w-5 text-[var(--rag-blue)]" />
               </div>
             </div>
           </CardContent>
@@ -228,15 +228,15 @@ export function FinanceDashboardPage() {
                       value={Math.min(budget.utilization, 100)} 
                       className={cn(
                         "h-2",
-                        budget.utilization >= 100 ? "[&>div]:bg-red-500" :
-                        budget.utilization >= 90 ? "[&>div]:bg-amber-500" : "[&>div]:bg-green-500"
+                        budget.utilization >= 100 ? "[&>div]:bg-[var(--rag-red)]" :
+                        budget.utilization >= 90 ? "[&>div]:bg-[var(--rag-amber)]" : "[&>div]:bg-[var(--rag-green)]"
                       )}
                     />
                     <div className="flex items-center justify-between mt-1">
                       <span className="text-xs text-muted-foreground">{budget.utilization.toFixed(1)}% utilized</span>
                       <span className={cn(
                         "text-xs font-medium",
-                        budget.remaining >= 0 ? "text-green-600" : "text-red-600"
+                        budget.remaining >= 0 ? "text-[var(--rag-green)]" : "text-[var(--rag-red)]"
                       )}>
                         {budget.remaining >= 0 ? 'Remaining: ' : 'Over by: '}
                         {formatCurrencyUGX(Math.abs(budget.remaining))}

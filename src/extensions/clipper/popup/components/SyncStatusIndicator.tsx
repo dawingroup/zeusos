@@ -13,14 +13,14 @@ export function SyncStatusIndicator({ status, onSync, compact = false }: SyncSta
       case 'syncing':
         return <Loader2 className="w-4 h-4 animate-spin text-primary" />;
       case 'success':
-        return <Check className="w-4 h-4 text-green-500" />;
+        return <Check className="w-4 h-4 text-[var(--rag-green)]" />;
       case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircle className="w-4 h-4 text-[var(--rag-red)]" />;
       case 'idle':
       default:
         return status.pendingCount > 0 
-          ? <CloudOff className="w-4 h-4 text-yellow-500" />
-          : <Cloud className="w-4 h-4 text-green-500" />;
+          ? <CloudOff className="w-4 h-4 text-[var(--rag-amber)]" />
+          : <Cloud className="w-4 h-4 text-[var(--rag-green)]" />;
     }
   };
 
@@ -52,13 +52,13 @@ export function SyncStatusIndicator({ status, onSync, compact = false }: SyncSta
       case 'syncing':
         return 'bg-primary/10 text-primary border-primary/20';
       case 'success':
-        return 'bg-green-50 text-green-700 border-green-200';
+        return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]';
       case 'error':
-        return 'bg-red-50 text-red-700 border-red-200';
+        return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]';
       case 'idle':
       default:
         return status.pendingCount > 0 
-          ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+          ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]'
           : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]';
     }
   };

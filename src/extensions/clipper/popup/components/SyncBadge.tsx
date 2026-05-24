@@ -9,22 +9,22 @@ export function SyncBadge({ status }: SyncBadgeProps) {
     pending: {
       icon: Clock,
       label: 'Pending',
-      className: 'bg-yellow-100 text-yellow-700',
+      className: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     },
     syncing: {
       icon: Loader2,
       label: 'Syncing',
-      className: 'bg-blue-100 text-blue-700',
+      className: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     },
     synced: {
       icon: Check,
       label: 'Synced',
-      className: 'bg-green-100 text-green-700',
+      className: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
     },
     error: {
       icon: AlertCircle,
       label: 'Error',
-      className: 'bg-red-100 text-red-700',
+      className: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
     },
   };
 

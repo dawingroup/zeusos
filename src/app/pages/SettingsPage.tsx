@@ -406,10 +406,10 @@ function UsersTab({ canManage }: { canManage: boolean }) {
   const getRoleBadgeColor = (role: GlobalRole) => {
     switch (role) {
       case 'owner': return 'bg-purple-100 text-purple-800';
-      case 'admin': return 'bg-blue-100 text-blue-800';
-      case 'manager': return 'bg-green-100 text-green-800';
+      case 'admin': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
+      case 'manager': return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
       case 'member': return 'bg-[var(--bg-sunken)] text-foreground';
-      case 'viewer': return 'bg-yellow-100 text-yellow-800';
+      case 'viewer': return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]';
       default: return 'bg-[var(--bg-sunken)] text-foreground';
     }
   };
@@ -425,12 +425,12 @@ function UsersTab({ canManage }: { canManage: boolean }) {
   return (
     <div className="p-6 space-y-6">
       {/* Firebase Auth Integration Notice */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+      <div className="bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <Shield className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+          <Shield className="w-5 h-5 text-[var(--rag-amber)] mt-0.5 flex-shrink-0" />
           <div className="flex-1">
-            <h4 className="font-medium text-amber-900">User Access Control</h4>
-            <p className="text-sm text-amber-700 mt-1">
+            <h4 className="font-medium text-[var(--rag-amber)]">User Access Control</h4>
+            <p className="text-sm text-[var(--rag-amber)] mt-1">
               New users must be pre-approved in Firebase Authentication before they can sign in to ZeusOS.
               Once approved, they will appear here after their first sign-in.
             </p>
@@ -438,7 +438,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
               href={firebaseAuthUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 text-sm font-medium"
+              className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-[var(--rag-amber)] text-white rounded-lg hover:bg-[var(--rag-amber)] text-sm font-medium"
             >
               <UserPlus className="w-4 h-4" />
               Manage Users in Firebase
@@ -487,7 +487,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
                     {u.globalRole}
                   </span>
                   {!u.isActive && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-800">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--rag-red-soft)] text-[var(--rag-red)]">
                       Inactive
                     </span>
                   )}
@@ -514,7 +514,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
                     <button
                       onClick={() => deactivateUser(u.id)}
                       disabled={isSubmitting}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      className="p-2 text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded-lg"
                       title="Deactivate"
                     >
                       <X className="w-4 h-4" />
@@ -523,7 +523,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
                     <button
                       onClick={() => reactivateUser(u.id)}
                       disabled={isSubmitting}
-                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                      className="p-2 text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)] rounded-lg"
                       title="Reactivate"
                     >
                       <Check className="w-4 h-4" />
@@ -672,9 +672,9 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
           {migrateMessage && (
             <div className={cn(
               'mt-3 p-3 rounded-lg text-sm',
-              migrateStatus === 'loading' && 'bg-blue-50 text-blue-700',
-              migrateStatus === 'success' && 'bg-green-50 text-green-700',
-              migrateStatus === 'error' && 'bg-red-50 text-red-700',
+              migrateStatus === 'loading' && 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+              migrateStatus === 'success' && 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+              migrateStatus === 'error' && 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
             )}>
               {migrateMessage}
             </div>
@@ -739,13 +739,13 @@ function AccessControlTab({ canManage }: { canManage: boolean }) {
                   {isSelected && draftAccess && (
                     <div className="p-4 border-t border-[var(--border-subtle)] space-y-4">
                       {saveError && (
-                        <div className="px-3 py-2 rounded bg-red-50 text-red-700 text-sm flex items-start gap-2">
+                        <div className="px-3 py-2 rounded bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-sm flex items-start gap-2">
                           <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                           <span>{saveError}</span>
                         </div>
                       )}
                       {saveSuccess && (
-                        <div className="px-3 py-2 rounded bg-emerald-50 text-emerald-700 text-sm flex items-start gap-2">
+                        <div className="px-3 py-2 rounded bg-[var(--rag-green-soft)] text-[var(--rag-green)] text-sm flex items-start gap-2">
                           <Check className="w-4 h-4 mt-0.5 shrink-0" />
                           <span>{saveSuccess}</span>
                         </div>
@@ -850,26 +850,26 @@ function UnprovisionedEmployeesSection({ canManage }: { canManage: boolean }) {
   };
 
   return (
-    <div className="border border-amber-200 rounded-lg overflow-hidden">
-      <div className="px-4 py-3 bg-amber-50 border-b border-amber-200">
+    <div className="border border-[var(--rag-amber)] rounded-lg overflow-hidden">
+      <div className="px-4 py-3 bg-[var(--rag-amber-soft)] border-b border-[var(--rag-amber)]">
         <div className="flex items-center gap-2">
-          <UserPlus className="w-4 h-4 text-amber-700" />
-          <h4 className="font-medium text-amber-900">
+          <UserPlus className="w-4 h-4 text-[var(--rag-amber)]" />
+          <h4 className="font-medium text-[var(--rag-amber)]">
             Employees without platform accounts ({unprovisioned.length})
           </h4>
         </div>
-        <p className="text-xs text-amber-800 mt-1">
+        <p className="text-xs text-[var(--rag-amber)] mt-1">
           These active HR employees don&apos;t have a ZeusOS login yet. Click to provision an
           account — you can configure module access for them right below once created.
         </p>
       </div>
       {error && (
-        <div className="px-4 py-2 bg-red-50 text-red-700 text-sm border-b border-red-200">
+        <div className="px-4 py-2 bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-sm border-b border-[var(--rag-red)]">
           {error}
         </div>
       )}
       {success && (
-        <div className="px-4 py-2 bg-emerald-50 text-emerald-700 text-sm border-b border-emerald-200">
+        <div className="px-4 py-2 bg-[var(--rag-green-soft)] text-[var(--rag-green)] text-sm border-b border-[var(--rag-green)]">
           {success}
         </div>
       )}
@@ -931,7 +931,7 @@ function IntegrationsTab() {
       <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
         <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[var(--rag-blue)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">GD</span>
             </div>
             <div className="flex-1">
@@ -942,7 +942,7 @@ function IntegrationsTab() {
             </div>
             <Link
               to="/admin/drive-folders"
-              className="text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="text-sm font-medium text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
             >
               Configure →
             </Link>
@@ -954,7 +954,7 @@ function IntegrationsTab() {
       <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
         <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[var(--rag-green)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">Sh</span>
             </div>
             <div className="flex-1">
@@ -965,7 +965,7 @@ function IntegrationsTab() {
             </div>
             <Link
               to="/admin/shopify-sync"
-              className="text-sm font-medium text-emerald-600 hover:text-emerald-700"
+              className="text-sm font-medium text-[var(--rag-green)] hover:text-[var(--rag-green)]"
             >
               Configure →
             </Link>
@@ -1000,7 +1000,7 @@ function IntegrationsTab() {
       <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
         <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[var(--rag-red)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">Ai</span>
             </div>
             <div>
@@ -1018,7 +1018,7 @@ function IntegrationsTab() {
       <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
         <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[var(--rag-red)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">PDF</span>
             </div>
             <div>
@@ -1078,7 +1078,7 @@ function ModulesTab() {
       description: 'Chart of accounts, QBO integration, sync, account mappings, pricing assumptions.',
       href: '/finance/settings',
       badgeText: 'Fi',
-      badgeBg: 'bg-green-700',
+      badgeBg: 'bg-[var(--rag-green)]',
       icon: DollarSign,
     },
     {
@@ -1086,7 +1086,7 @@ function ModulesTab() {
       description: 'Provider status, allowed roles, template images, message defaults.',
       href: '/whatsapp/settings',
       badgeText: 'Wa',
-      badgeBg: 'bg-emerald-500',
+      badgeBg: 'bg-[var(--rag-green)]',
       icon: MessagesSquare,
     },
   ];
@@ -1267,14 +1267,14 @@ function AdobePdfTestPanel() {
         <button
           onClick={testExtractPdf}
           disabled={status === 'loading'}
-          className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--rag-blue-soft)] hover:bg-[var(--rag-blue)] text-[var(--rag-blue)] rounded-lg text-sm font-medium disabled:opacity-50"
         >
           Test Extract PDF
         </button>
         <button
           onClick={testCompressPdf}
           disabled={status === 'loading'}
-          className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg text-sm font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--rag-green-soft)] hover:bg-[var(--rag-green)] text-[var(--rag-green)] rounded-lg text-sm font-medium disabled:opacity-50"
         >
           Test Compress PDF
         </button>
@@ -1282,16 +1282,16 @@ function AdobePdfTestPanel() {
 
       <div className={cn(
         'p-4 rounded-lg',
-        status === 'loading' && 'bg-blue-50',
-        status === 'success' && 'bg-green-50',
-        status === 'error' && 'bg-red-50',
+        status === 'loading' && 'bg-[var(--rag-blue-soft)]',
+        status === 'success' && 'bg-[var(--rag-green-soft)]',
+        status === 'error' && 'bg-[var(--rag-red-soft)]',
         status === 'idle' && 'bg-[var(--bg-sunken)]'
       )}>
         <p className={cn(
           'font-medium text-sm',
-          status === 'loading' && 'text-blue-600',
-          status === 'success' && 'text-green-600',
-          status === 'error' && 'text-red-600',
+          status === 'loading' && 'text-[var(--rag-blue)]',
+          status === 'success' && 'text-[var(--rag-green)]',
+          status === 'error' && 'text-[var(--rag-red)]',
           status === 'idle' && 'text-muted-foreground'
         )}>
           {status === 'loading' && <Loader2 className="w-4 h-4 inline mr-2 animate-spin" />}
@@ -1415,7 +1415,7 @@ function AdobePdfEmbedTestPanel() {
         <button
           onClick={loadPdfViewer}
           disabled={viewerState === 'loading'}
-          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--rag-red-soft)] hover:bg-[var(--rag-red)] text-[var(--rag-red)] rounded-lg text-sm font-medium disabled:opacity-50"
         >
           {viewerState === 'loading' ? 'Loading...' : viewerState === 'ready' ? 'Reload PDF Viewer' : 'Test PDF Embed'}
         </button>
@@ -1430,14 +1430,14 @@ function AdobePdfEmbedTestPanel() {
       </div>
 
       {!clientId && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm">
+        <div className="p-3 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg text-[var(--rag-amber)] text-sm">
           <AlertCircle className="w-4 h-4 inline mr-2" />
           VITE_ADOBE_CLIENT_ID not configured. Add your Adobe Client ID to the .env file.
         </div>
       )}
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-[var(--rag-red)] text-sm">
           <X className="w-4 h-4 inline mr-2" />
           {error}
         </div>

@@ -208,7 +208,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           onDrop={handleDrop}
           className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
             isDragging
-              ? 'border-blue-500 bg-blue-50'
+              ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
               : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
           }`}
         >
@@ -218,7 +218,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             onChange={handleFileInput}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
-          <Upload className={`w-10 h-10 mx-auto mb-3 ${isDragging ? 'text-blue-500' : 'text-[var(--fg-tertiary)]'}`} />
+          <Upload className={`w-10 h-10 mx-auto mb-3 ${isDragging ? 'text-[var(--rag-blue)]' : 'text-[var(--fg-tertiary)]'}`} />
           <p className="text-sm font-medium text-muted-foreground">
             Drop a document here or click to upload
           </p>
@@ -230,10 +230,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-[var(--rag-red)]">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span className="text-sm">{error}</span>
-          <button onClick={() => setError(null)} className="ml-auto p-1 hover:bg-red-100 rounded">
+          <button onClick={() => setError(null)} className="ml-auto p-1 hover:bg-[var(--rag-red-soft)] rounded">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -272,7 +272,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           {/* Analysis Status */}
           {isAnalyzing && (
             <div className="p-4 flex items-center gap-3">
-              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+              <Loader2 className="w-5 h-5 animate-spin text-[var(--rag-blue)]" />
               <div>
                 <p className="text-sm font-medium text-foreground">Analyzing document...</p>
                 <p className="text-xs text-muted-foreground">Extracting data and classifying content</p>
@@ -285,7 +285,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             <div className="p-4 space-y-4">
               {/* Document Type */}
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-50 rounded-lg text-green-600">
+                <div className="p-2 bg-[var(--rag-green-soft)] rounded-lg text-[var(--rag-green)]">
                   {DOCUMENT_TYPE_ICONS[analysis.documentType]}
                 </div>
                 <div>
@@ -293,7 +293,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
                     <p className="font-medium text-foreground capitalize">
                       {analysis.documentType.replace('_', ' ')}
                     </p>
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <CheckCircle className="w-4 h-4 text-[var(--rag-green)]" />
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {Math.round(analysis.confidence * 100)}% confidence
@@ -343,7 +343,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               <div className="pt-3 border-t border-[var(--border-subtle)]">
                 <p className="text-xs text-muted-foreground mb-2">Suggested destination</p>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                  <span className="px-2 py-1 text-xs font-medium bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] rounded">
                     {analysis.suggestedModule}
                   </span>
                   <span className="text-xs text-[var(--fg-tertiary)]">→</span>
@@ -365,10 +365,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
                         key={i}
                         className={`flex items-center gap-2 text-sm ${
                           result.status === 'error'
-                            ? 'text-red-600'
+                            ? 'text-[var(--rag-red)]'
                             : result.status === 'warning'
-                            ? 'text-yellow-600'
-                            : 'text-green-600'
+                            ? 'text-[var(--rag-amber)]'
+                            : 'text-[var(--rag-green)]'
                         }`}
                       >
                         {result.status === 'valid' ? (
@@ -385,7 +385,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
 
               {/* Actions */}
               <div className="flex items-center gap-2 pt-3 border-t border-[var(--border-subtle)]">
-                <button className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                <button className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] rounded-lg transition-colors">
                   <CheckCircle className="w-4 h-4" />
                   Use Extracted Data
                 </button>
