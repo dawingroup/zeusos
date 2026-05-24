@@ -111,15 +111,15 @@ export function DriveFolderSlotCard({
   return (
     <div
       className={cn(
-        'border border-gray-200 rounded-lg p-4 bg-white',
+        'border border-[var(--border-subtle)] rounded-lg p-4 bg-card',
         descriptor.parentSlot && 'ml-6 border-l-2 border-l-gray-100',
       )}
     >
       <div className="flex items-start gap-2 mb-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-sm font-semibold text-gray-800">{descriptor.label}</h3>
-            <span className="text-[10px] uppercase tracking-wide bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
+            <h3 className="text-sm font-semibold text-foreground">{descriptor.label}</h3>
+            <span className="text-[10px] uppercase tracking-wide bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded">
               Phase {descriptor.phase}
             </span>
             {descriptor.pendingPolicyAmendment && (
@@ -137,8 +137,8 @@ export function DriveFolderSlotCard({
               <AlertCircle className="h-4 w-4 text-red-500" />
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-0.5">{descriptor.hint}</p>
-          <p className="text-[11px] font-mono text-gray-400 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">{descriptor.hint}</p>
+          <p className="text-[11px] font-mono text-[var(--fg-tertiary)] mt-0.5">
             {descriptor.policyPath}
           </p>
         </div>
@@ -236,8 +236,8 @@ export function DriveFolderSlotCard({
           </div>
         )}
         {!lastVerify && !binding?.lastVerifyError && binding?.folderName && verifiedAt && (
-          <p className="text-[11px] text-gray-500">
-            Resolved to <span className="font-medium text-gray-700">{binding.folderName}</span>{' '}
+          <p className="text-[11px] text-muted-foreground">
+            Resolved to <span className="font-medium text-muted-foreground">{binding.folderName}</span>{' '}
             · verified {verifiedAt}
           </p>
         )}

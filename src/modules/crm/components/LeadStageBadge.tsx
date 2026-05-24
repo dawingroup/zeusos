@@ -1,7 +1,7 @@
 import type { LeadStage } from '../types/lead.types';
 
 const STAGE_STYLES: Record<LeadStage, string> = {
-  PROSPECT:  'bg-slate-100 text-slate-700',
+  PROSPECT:  'bg-[var(--bg-sunken)] text-muted-foreground',
   QUALIFIED: 'bg-amber-100 text-amber-800',
   PITCH:     'bg-sky-100 text-sky-800',
   WON:       'bg-emerald-100 text-emerald-800',

@@ -2,7 +2,7 @@ import type { SupplierStatus } from '../types/supplier.types';
 
 const STATUS_STYLES: Record<SupplierStatus, string> = {
   ACTIVE:      'bg-emerald-100 text-emerald-800',
-  INACTIVE:    'bg-slate-100 text-slate-600',
+  INACTIVE:    'bg-[var(--bg-sunken)] text-muted-foreground',
   BLACKLISTED: 'bg-rose-100 text-rose-700',
 };
 

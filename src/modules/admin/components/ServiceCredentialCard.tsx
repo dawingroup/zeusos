@@ -79,16 +79,16 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <div className="px-4 py-3 bg-white">
+    <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
+      <div className="px-4 py-3 bg-card">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
-            <KeyRound className="w-4 h-4 text-slate-600" />
+          <div className="w-10 h-10 bg-[var(--bg-sunken)] rounded-lg flex items-center justify-center shrink-0">
+            <KeyRound className="w-4 h-4 text-muted-foreground" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium text-gray-900 truncate">{credential.label}</h4>
-              <code className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-mono">
+              <h4 className="font-medium text-foreground truncate">{credential.label}</h4>
+              <code className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-sunken)] text-muted-foreground font-mono">
                 {credential.id}
               </code>
               {credential.helpUrl && (
@@ -96,7 +96,7 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
                   href={credential.helpUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[var(--fg-tertiary)] hover:text-muted-foreground"
                   aria-label="Open documentation"
                 >
                   <ExternalLink className="w-3 h-3" />
@@ -108,7 +108,7 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
                 <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
                   <Check className="w-3 h-3" /> Configured
                   {credential.lastFour && (
-                    <span className="text-gray-500 font-mono">••••-{credential.lastFour}</span>
+                    <span className="text-muted-foreground font-mono">••••-{credential.lastFour}</span>
                   )}
                 </span>
               ) : (
@@ -117,7 +117,7 @@ export function ServiceCredentialCard({ credential, canEdit, onSaved }: Props) {
                 </span>
               )}
               {credential.description && (
-                <span className="text-xs text-gray-500 truncate">{credential.description}</span>
+                <span className="text-xs text-muted-foreground truncate">{credential.description}</span>
               )}
             </div>
           </div>

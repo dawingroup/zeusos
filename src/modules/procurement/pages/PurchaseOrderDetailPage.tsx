@@ -144,7 +144,7 @@ export default function PurchaseOrderDetailPage() {
                 <button
                   type="button"
                   onClick={() => { setDraft(po); setEditing(true); }}
-                  className="rounded border px-3 py-1.5 text-sm hover:bg-slate-50"
+                  className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]"
                   data-testid="po-edit-btn"
                 >
                   Edit
@@ -167,7 +167,7 @@ export default function PurchaseOrderDetailPage() {
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       {editing && isManualVendor && (
-        <section className="rounded border bg-slate-50 p-4">
+        <section className="rounded border bg-[var(--bg-sunken)] p-4">
           <h2 className="mb-3 text-sm font-semibold">Edit PO</h2>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <label className="block">
@@ -245,7 +245,7 @@ export default function PurchaseOrderDetailPage() {
             </button>
             <button
               onClick={() => setEditing(false)}
-              className="rounded border px-3 py-1.5 text-sm hover:bg-white"
+              className="rounded border px-3 py-1.5 text-sm hover:bg-card"
             >
               Cancel
             </button>

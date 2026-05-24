@@ -6,7 +6,7 @@ const KIND_STYLES: Record<SupplierKind, string> = {
   PRODUCTION_HOUSE:'bg-amber-100 text-amber-800',
   PRINT_SHOP:      'bg-emerald-100 text-emerald-800',
   TECH_VENDOR:     'bg-indigo-100 text-indigo-800',
-  VENDOR_OTHER:    'bg-stone-100 text-stone-700',
+  VENDOR_OTHER:    'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
 const KIND_LABEL: Record<SupplierKind, string> = {

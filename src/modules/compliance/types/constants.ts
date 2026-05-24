@@ -29,8 +29,8 @@ export const DOCUMENT_STATUS_COLORS: Record<ComplianceDocumentStatus, string> = 
   valid: 'bg-green-100 text-green-800 border-green-200',
   expiring_soon: 'bg-amber-100 text-amber-800 border-amber-200',
   expired: 'bg-red-100 text-red-800 border-red-200',
-  missing: 'bg-gray-100 text-gray-800 border-gray-200',
-  not_applicable: 'bg-slate-100 text-slate-600 border-slate-200',
+  missing: 'bg-[var(--bg-sunken)] text-foreground border-[var(--border-subtle)]',
+  not_applicable: 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-subtle)]',
   pending_verification: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
@@ -38,8 +38,8 @@ export const DOCUMENT_STATUS_DOT_COLORS: Record<ComplianceDocumentStatus, string
   valid: 'bg-green-500',
   expiring_soon: 'bg-amber-500',
   expired: 'bg-red-500',
-  missing: 'bg-gray-400',
-  not_applicable: 'bg-slate-400',
+  missing: 'bg-[var(--bg-sunken)]',
+  not_applicable: 'bg-[var(--bg-sunken)]',
   pending_verification: 'bg-blue-500',
 };
 
@@ -101,7 +101,7 @@ export const OBLIGATION_PRIORITY_LABELS: Record<ObligationPriority, string> = {
 };
 
 export const OBLIGATION_PRIORITY_COLORS: Record<ObligationPriority, string> = {
-  low: 'bg-slate-100 text-slate-700',
+  low: 'bg-[var(--bg-sunken)] text-muted-foreground',
   medium: 'bg-blue-100 text-blue-700',
   high: 'bg-amber-100 text-amber-700',
   critical: 'bg-red-100 text-red-700',

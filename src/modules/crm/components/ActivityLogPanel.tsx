@@ -27,7 +27,7 @@ const KIND_BADGE: Record<ActivityKind, string> = {
   CALL:         'bg-blue-100 text-blue-800',
   EMAIL:        'bg-violet-100 text-violet-800',
   MEETING:      'bg-amber-100 text-amber-800',
-  NOTE:         'bg-stone-100 text-stone-700',
+  NOTE:         'bg-[var(--bg-sunken)] text-muted-foreground',
   STAGE_CHANGE: 'bg-emerald-100 text-emerald-800',
   TASK:         'bg-pink-100 text-pink-800',
 };
