@@ -66,6 +66,11 @@ const DOMAIN_EVENT_TYPES = new Set([
   'MediaSupplierInvoicePaid',
   'PurchaseOrderRaised',
   'JournalEntryPosted',
+  // Phase 6.B — Brand routing (Addendum v1.1 §8 + v1.2 §6.1).
+  // Traffic / the Routing Agent (ZA-001) proposes a serving brand;
+  // a human in Traffic confirms or overrides before issueWorkOrder
+  // runs. Payload carries the rejected candidates + reasons for audit.
+  'RoutingBrandProposed',
 ]);
 
 /**

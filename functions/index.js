@@ -4744,6 +4744,9 @@ exports.cancelWorkOrder = assignment.cancelWorkOrder;
 // Phase 3.E — spec §7.4 Layer 3 routing.
 exports.routeDirectClientRequest = assignment.routeDirectClientRequest;
 
+// Phase 6.B — brand routing recommendation (Addendum v1.1 §8).
+exports.routeBrand = assignment.routeBrand;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');

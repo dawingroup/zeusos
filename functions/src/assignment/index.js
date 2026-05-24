@@ -21,6 +21,8 @@ const { cancelWorkOrder } = require('./cancelWorkOrder');
 const { openMasterJobOnQuoteAccepted } = require('./openMasterJobOnQuoteAccepted');
 const { signAcceptanceCriterion } = require('./signAcceptanceCriterion');
 const { routeDirectClientRequest } = require('./routeDirectClientRequest');
+// Phase 6.B — brand routing recommendation surface (Addendum v1.1 §8).
+const { routeBrand } = require('./routeBrand');
 
 module.exports = {
   issueWorkOrder,
@@ -37,4 +39,5 @@ module.exports = {
   openMasterJobOnQuoteAccepted,
   signAcceptanceCriterion,
   routeDirectClientRequest,
+  routeBrand,
 };

@@ -37,6 +37,7 @@ const {
   validateHandoffPacket,
   assertHandoffPacketValid,
 } = require('./services/handoff-packet.validator');
+const { resolveSlaHours } = require('./services/employee-assignment.service');
 
 /**
  * Pure-ish runner — extracted from the onCall wrapper so unit tests can
@@ -60,6 +61,8 @@ async function runIssueWorkOrder({ db, auth, data }) {
       handoffPacket,
       idempotencyKey,
       code,
+      tier: inputTier,
+      priority: inputPriority,
     } = iwoInput;
     if (!subsidiaryOrgId) {
       throw new HttpsError('invalid-argument', 'iwoInput.subsidiaryOrgId required.');
@@ -94,6 +97,28 @@ async function runIssueWorkOrder({ db, auth, data }) {
       assertHandoffPacketValid(packetCheck);
     } catch (err) {
       throw toHttpsError(err);
+    }
+
+    // Phase 6.B — Tier-derived SLA clock (Addendum v1.1 §5).
+    // Effective tier: explicit iwoInput.tier wins; else inherit from
+    // MasterJob.tier. If neither is set (pre-6.B MasterJobs), skip —
+    // slaDueAt stays unset.
+    const effectiveTier = inputTier || masterJob0.tier || null;
+    let slaDueAtIso = null;
+    if (effectiveTier) {
+      try {
+        const slaHours = await resolveSlaHours({
+          db,
+          tier: effectiveTier,
+          priority: inputPriority || 'medium',
+        });
+        if (slaHours != null) {
+          slaDueAtIso = new Date(Date.now() + slaHours * 60 * 60 * 1000).toISOString();
+        }
+      } catch (_err) {
+        // engine_config not seeded yet — leave slaDueAt unset. Operationally
+        // fine: the seedTierAndEngineConfig CFn will be run once per env.
+      }
     }
 
     try {
@@ -178,6 +203,10 @@ async function runIssueWorkOrder({ db, auth, data }) {
               quoteSnap.data().pinnedRateCardIdsBySubsidiary[subsidiaryOrgId]) || null,
             issuedByUserId: uid,
             idempotencyKey: idempotencyKey || null,
+            // Phase 6.B — Tier + SLA-due clock. Both optional during the
+            // rollout window; null when tier wasn't supplied at issue time.
+            tier: effectiveTier,
+            slaDueAt: slaDueAtIso,
             createdAt: FieldValue.serverTimestamp(),
             updatedAt: FieldValue.serverTimestamp(),
           });
