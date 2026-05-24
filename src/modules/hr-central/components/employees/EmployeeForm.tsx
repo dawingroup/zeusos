@@ -518,7 +518,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                   key={step.id}
                   className={cn(
                     'flex-1 h-2 rounded-full transition-all cursor-pointer hover:opacity-80',
-                    isCompleted ? 'bg-green-500' : isCurrent ? 'bg-blue-500' : 'bg-[var(--bg-sunken)]'
+                    isCompleted ? 'bg-[var(--rag-green)]' : isCurrent ? 'bg-[var(--rag-blue)]' : 'bg-[var(--bg-sunken)]'
                   )}
                   style={isCurrent ? { backgroundColor: HR_COLOR } : {}}
                   title={step.title}
@@ -533,9 +533,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 className={cn(
                   'flex items-center gap-1.5 text-xs transition-colors',
                   index < activeStep
-                    ? 'text-green-600'
+                    ? 'text-[var(--rag-green)]'
                     : index === activeStep
-                    ? 'text-blue-600 font-medium'
+                    ? 'text-[var(--rag-blue)] font-medium'
                     : 'text-muted-foreground'
                 )}
                 style={index === activeStep ? { color: HR_COLOR } : {}}
@@ -543,9 +543,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 <div className={cn(
                   'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium',
                   index < activeStep
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                     : index === activeStep
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]'
                     : 'bg-[var(--bg-sunken)] text-muted-foreground'
                 )}
                 style={index === activeStep ? { backgroundColor: `${HR_COLOR}20`, color: HR_COLOR } : {}}
@@ -589,11 +589,11 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
               {/* Photo upload - Enhanced */}
               <div className="flex items-start gap-6 p-4 bg-muted/30 rounded-lg">
                 <div className="relative">
-                  <div className="w-28 h-28 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                  <div className="w-28 h-28 rounded-xl bg-gradient-to-br $1-[var(--rag-blue-soft)] to-indigo-100 flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                     {photoPreview ? (
                       <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-3xl font-semibold text-blue-400">
+                      <span className="text-3xl font-semibold text-[var(--rag-blue)]">
                         {formData.firstName?.[0] || '?'}{formData.lastName?.[0] || ''}
                       </span>
                     )}
@@ -601,7 +601,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                   {photoPreview && (
                     <button
                       onClick={() => { setPhotoPreview(null); setFormData(prev => ({ ...prev, photoUrl: undefined })); }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-[var(--rag-red)] text-white rounded-full flex items-center justify-center hover:bg-[var(--rag-red)] transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -631,7 +631,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-muted-foreground" />
-                  Subsidiary <span className="text-red-500">*</span>
+                  Subsidiary <span className="text-[var(--rag-red)]">*</span>
                 </Label>
                 <Select value={formData.subsidiaryId || ''} onValueChange={handleSelectChange('subsidiaryId')}>
                   <SelectTrigger className="h-11">
@@ -646,13 +646,13 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     </SelectItem>
                     <SelectItem value="finishes">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--rag-amber)]" />
                         Zeus Group
                       </div>
                     </SelectItem>
                     <SelectItem value="advisory">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--rag-blue)]" />
                         Zeus Group
                       </div>
                     </SelectItem>
@@ -664,7 +664,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     </SelectItem>
                     <SelectItem value="capital">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--rag-green)]" />
                         Zeus Capital
                       </div>
                     </SelectItem>
@@ -676,7 +676,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    First Name <span className="text-red-500">*</span>
+                    First Name <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Input
                     value={formData.firstName || ''}
@@ -696,7 +696,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    Last Name <span className="text-red-500">*</span>
+                    Last Name <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Input
                     value={formData.lastName || ''}
@@ -723,7 +723,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    Gender <span className="text-red-500">*</span>
+                    Gender <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Select value={formData.gender || ''} onValueChange={handleSelectChange('gender')}>
                     <SelectTrigger className="h-11">
@@ -771,7 +771,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    Work Email <span className="text-red-500">*</span>
+                    Work Email <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Input
                     type="email"
@@ -789,7 +789,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    Phone Number <span className="text-red-500">*</span>
+                    Phone Number <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Input
                     type="tel"
@@ -819,8 +819,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 </div>
               </div>
 
-              <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-900">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+              <div className="p-4 bg-[var(--rag-blue-soft)] dark:bg-[var(--rag-blue)]/20 rounded-lg border border-[var(--rag-blue)] dark:border-[var(--rag-blue)]">
+                <p className="text-sm text-[var(--rag-blue)] dark:text-[var(--rag-blue)]">
                   <strong>Note:</strong> Additional phone numbers, emergency contacts, and addresses can be added after creating the employee profile.
                 </p>
               </div>
@@ -835,7 +835,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Briefcase className="h-4 w-4 text-muted-foreground" />
-                    Job Title <span className="text-red-500">*</span>
+                    Job Title <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Input
                     value={formData.position?.title || ''}
@@ -849,7 +849,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-muted-foreground" />
-                    Department <span className="text-red-500">*</span>
+                    Department <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Select 
                     value={formData.position?.departmentId || ''} 
@@ -878,7 +878,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 {/* Employment Type */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">
-                    Employment Type <span className="text-red-500">*</span>
+                    Employment Type <span className="text-[var(--rag-red)]">*</span>
                   </Label>
                   <Select value={formData.employmentType || ''} onValueChange={handleSelectChange('employmentType')}>
                     <SelectTrigger className="h-11">
@@ -952,15 +952,15 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
               </div>
 
               {/* Salary & Compensation Section */}
-              <div className="mt-6 p-4 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-900">
+              <div className="mt-6 p-4 bg-[var(--rag-green-soft)] dark:bg-[var(--rag-green)]/20 rounded-lg border border-[var(--rag-green)] dark:border-[var(--rag-green)]">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-medium text-green-800 dark:text-green-300 flex items-center gap-2">
+                  <h4 className="font-medium text-[var(--rag-green)] dark:text-[var(--rag-green)] flex items-center gap-2">
                     <DollarSign className="h-4 w-4" />
                     Salary & Compensation
                   </h4>
                   {/* Mode Toggle */}
                   <div className="flex items-center gap-2 text-sm">
-                    <span className={salaryMode === 'net' ? 'text-green-700 font-medium' : 'text-muted-foreground'}>
+                    <span className={salaryMode === 'net' ? 'text-[var(--rag-green)] font-medium' : 'text-muted-foreground'}>
                       Enter Net Pay
                     </span>
                     <button
@@ -968,7 +968,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                       onClick={() => setSalaryMode(salaryMode === 'net' ? 'gross' : 'net')}
                       className={cn(
                         'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                        salaryMode === 'gross' ? 'bg-green-600' : 'bg-[var(--bg-sunken)]'
+                        salaryMode === 'gross' ? 'bg-[var(--rag-green)]' : 'bg-[var(--bg-sunken)]'
                       )}
                     >
                       <span
@@ -978,7 +978,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                         )}
                       />
                     </button>
-                    <span className={salaryMode === 'gross' ? 'text-green-700 font-medium' : 'text-muted-foreground'}>
+                    <span className={salaryMode === 'gross' ? 'text-[var(--rag-green)] font-medium' : 'text-muted-foreground'}>
                       Enter Gross Pay
                     </span>
                   </div>
@@ -986,9 +986,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
 
                 {/* Net-to-Gross Calculator Mode */}
                 {salaryMode === 'net' && (
-                  <div className="mb-6 p-4 bg-card rounded-lg border border-green-300">
-                    <Label className="text-sm font-medium text-green-800 dark:text-green-300 mb-2 block">
-                      Desired Net Salary (Take-home pay) <span className="text-red-500">*</span>
+                  <div className="mb-6 p-4 bg-card rounded-lg border border-[var(--rag-green)]">
+                    <Label className="text-sm font-medium text-[var(--rag-green)] dark:text-[var(--rag-green)] mb-2 block">
+                      Desired Net Salary (Take-home pay) <span className="text-[var(--rag-red)]">*</span>
                     </Label>
                     <div className="flex gap-4 items-start">
                       <div className="flex-1">
@@ -1014,9 +1014,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                         <div className="text-2xl text-muted-foreground">→</div>
                       </div>
                       <div className="flex-1">
-                        <div className="h-12 px-4 rounded-md border-2 border-green-500 bg-green-50 dark:bg-green-950 flex items-center justify-between">
+                        <div className="h-12 px-4 rounded-md border-2 border-[var(--rag-green)] bg-[var(--rag-green-soft)] dark:bg-[var(--rag-green)] flex items-center justify-between">
                           <span className="text-sm text-muted-foreground">Required Gross:</span>
-                          <span className="text-lg font-bold text-green-700 dark:text-green-400">
+                          <span className="text-lg font-bold text-[var(--rag-green)] dark:text-[var(--rag-green)]">
                             UGX {(parseInt(salaryData.basicSalary) || 0).toLocaleString()}
                           </span>
                         </div>
@@ -1033,25 +1033,25 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                         <div className="grid grid-cols-4 gap-4 text-sm">
                           <div>
                             <p className="text-muted-foreground">PAYE</p>
-                            <p className="font-medium text-red-600">
+                            <p className="font-medium text-[var(--rag-red)]">
                               -UGX {calculateDeductions(parseInt(salaryData.basicSalary)).paye.toLocaleString()}
                             </p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">NSSF (5%)</p>
-                            <p className="font-medium text-red-600">
+                            <p className="font-medium text-[var(--rag-red)]">
                               -UGX {calculateDeductions(parseInt(salaryData.basicSalary)).nssf.toLocaleString()}
                             </p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">LST</p>
-                            <p className="font-medium text-red-600">
+                            <p className="font-medium text-[var(--rag-red)]">
                               -UGX {calculateDeductions(parseInt(salaryData.basicSalary)).lst.toLocaleString()}
                             </p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">Net Pay</p>
-                            <p className="font-bold text-green-600">
+                            <p className="font-bold text-[var(--rag-green)]">
                               UGX {calculateDeductions(parseInt(salaryData.basicSalary)).net.toLocaleString()}
                             </p>
                           </div>
@@ -1067,7 +1067,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     {/* Basic Salary */}
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">
-                        Basic/Gross Salary (UGX) <span className="text-red-500">*</span>
+                        Basic/Gross Salary (UGX) <span className="text-[var(--rag-red)]">*</span>
                       </Label>
                       <Input
                         type="number"
@@ -1129,7 +1129,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     {/* Calculated Net Pay */}
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">Net Pay (Calculated)</Label>
-                      <div className="h-11 px-3 rounded-md border bg-muted flex items-center font-medium text-green-700 dark:text-green-400">
+                      <div className="h-11 px-3 rounded-md border bg-muted flex items-center font-medium text-[var(--rag-green)] dark:text-[var(--rag-green)]">
                         UGX {calculateDeductions(
                           (parseInt(salaryData.basicSalary) || 0) +
                           (parseInt(salaryData.housingAllowance) || 0) +
@@ -1142,7 +1142,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                   </div>
                 )}
 
-                <p className="text-xs text-green-700 dark:text-green-400 mt-3">
+                <p className="text-xs text-[var(--rag-green)] dark:text-[var(--rag-green)] mt-3">
                   Tax deductions (PAYE, NSSF, LST) calculated using Uganda tax rates. NSSF employer contribution (10%) is separate.
                 </p>
               </div>
@@ -1233,8 +1233,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                         className="flex items-center justify-between p-3 bg-card border rounded-lg"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                            <FileText className="h-5 w-5 text-blue-600" />
+                          <div className="w-10 h-10 rounded-lg bg-[var(--rag-blue-soft)] dark:bg-[var(--rag-blue)]/30 flex items-center justify-center">
+                            <FileText className="h-5 w-5 text-[var(--rag-blue)]" />
                           </div>
                           <div>
                             <p className="font-medium">{doc.name}</p>
@@ -1246,7 +1246,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                                 <span>Expires: {new Date(doc.expiryDate).toLocaleDateString()}</span>
                               )}
                               {doc.file && (
-                                <span className="text-green-600">File attached</span>
+                                <span className="text-[var(--rag-green)]">File attached</span>
                               )}
                             </div>
                           </div>
@@ -1255,7 +1255,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleRemoveDocument(doc.id)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                          className="text-[var(--rag-red)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -1271,8 +1271,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 </div>
               )}
 
-              <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-900">
-                <p className="text-sm text-amber-700 dark:text-amber-300">
+              <div className="p-4 bg-[var(--rag-amber-soft)] dark:bg-[var(--rag-amber)]/20 rounded-lg border border-[var(--rag-amber)] dark:border-[var(--rag-amber)]">
+                <p className="text-sm text-[var(--rag-amber)] dark:text-[var(--rag-amber)]">
                   <strong>Tip:</strong> You can skip this step and add documents later from the employee profile. Common documents include employment contracts, national ID copies, academic certificates, and professional qualifications.
                 </p>
               </div>
@@ -1361,7 +1361,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     <div className="space-y-1">
                       {documents.map(doc => (
                         <div key={doc.id} className="flex items-center gap-2 text-sm">
-                          <Check className="h-4 w-4 text-green-500" />
+                          <Check className="h-4 w-4 text-[var(--rag-green)]" />
                           <span>{doc.name}</span>
                         </div>
                       ))}
@@ -1372,8 +1372,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                 </div>
               </div>
 
-              <div className="p-4 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-900">
-                <p className="text-sm text-green-700 dark:text-green-300">
+              <div className="p-4 bg-[var(--rag-green-soft)] dark:bg-[var(--rag-green)]/20 rounded-lg border border-[var(--rag-green)] dark:border-[var(--rag-green)]">
+                <p className="text-sm text-[var(--rag-green)] dark:text-[var(--rag-green)]">
                   <strong>Ready to submit!</strong> Please review the information above. Once submitted, you can make additional updates from the employee profile page.
                 </p>
               </div>

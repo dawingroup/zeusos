@@ -48,18 +48,18 @@ interface AssetGapAnalysisProps {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  critical: 'bg-red-100 text-red-700 border-red-200',
-  high: 'bg-orange-100 text-orange-700 border-orange-200',
-  medium: 'bg-amber-100 text-amber-700 border-amber-200',
-  low: 'bg-blue-100 text-blue-700 border-blue-200',
+  critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]',
+  high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  medium: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  low: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]',
 };
 
 const CATEGORY_CONFIG: Record<string, { label: string; icon: React.FC<{ className?: string }>; color: string }> = {
-  missing_asset: { label: 'Missing Asset', icon: ShoppingCart, color: 'text-red-600' },
-  underutilized: { label: 'Underutilized', icon: TrendingUp, color: 'text-amber-600' },
-  maintenance_risk: { label: 'Maintenance Risk', icon: Wrench, color: 'text-orange-600' },
+  missing_asset: { label: 'Missing Asset', icon: ShoppingCart, color: 'text-[var(--rag-red)]' },
+  underutilized: { label: 'Underutilized', icon: TrendingUp, color: 'text-[var(--rag-amber)]' },
+  maintenance_risk: { label: 'Maintenance Risk', icon: Wrench, color: 'text-[var(--rag-amber)]' },
   capacity_gap: { label: 'Capacity Gap', icon: Package, color: 'text-purple-600' },
-  technology_upgrade: { label: 'Tech Upgrade', icon: TrendingUp, color: 'text-blue-600' },
+  technology_upgrade: { label: 'Tech Upgrade', icon: TrendingUp, color: 'text-[var(--rag-blue)]' },
 };
 
 // ----------------------------------------------------------------------------
@@ -199,7 +199,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
         </div>
         <div className="flex items-center gap-2">
           {assetData && assetData.totalAssets > 0 && (
-            <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] px-2 py-0.5 rounded-full flex items-center gap-1">
               <CheckCircle className="w-3 h-3" />
               {assetData.totalAssets} assets loaded
             </span>
@@ -222,12 +222,12 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
             <span><strong>{assetData.totalAssets}</strong> total assets</span>
             <span>Utilization: <strong>{assetData.utilizationSummary}</strong></span>
             {assetData.maintenanceOverdue > 0 && (
-              <span className="text-red-600 flex items-center gap-1">
+              <span className="text-[var(--rag-red)] flex items-center gap-1">
                 <XCircle className="w-3 h-3" />
                 <strong>{assetData.maintenanceOverdue}</strong> maintenance overdue
               </span>
             )}
-            <button onClick={loadAssetData} disabled={isLoadingData} className="text-blue-600 hover:text-blue-700 ml-auto">
+            <button onClick={loadAssetData} disabled={isLoadingData} className="text-[var(--rag-blue)] hover:text-[var(--rag-blue)] ml-auto">
               <RefreshCw className={`w-3 h-3 ${isLoadingData ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -236,9 +236,9 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
 
       {/* Error */}
       {error && (
-        <div className="px-5 py-3 bg-red-50 border-b border-red-200 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-red-500" />
-          <p className="text-xs text-red-700">{error}</p>
+        <div className="px-5 py-3 bg-[var(--rag-red-soft)] border-b border-[var(--rag-red)] flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />
+          <p className="text-xs text-[var(--rag-red)]">{error}</p>
         </div>
       )}
 
@@ -310,13 +310,13 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
                   <div className="px-5 pb-4 space-y-2">
                     <p className="text-sm text-muted-foreground">{gap.description}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="p-2.5 bg-red-50 rounded-lg">
-                        <p className="text-[10px] font-medium text-red-600 uppercase tracking-wider mb-1">Business Impact</p>
-                        <p className="text-xs text-red-800">{gap.businessImpact}</p>
+                      <div className="p-2.5 bg-[var(--rag-red-soft)] rounded-lg">
+                        <p className="text-[10px] font-medium text-[var(--rag-red)] uppercase tracking-wider mb-1">Business Impact</p>
+                        <p className="text-xs text-[var(--rag-red)]">{gap.businessImpact}</p>
                       </div>
-                      <div className="p-2.5 bg-blue-50 rounded-lg">
-                        <p className="text-[10px] font-medium text-blue-600 uppercase tracking-wider mb-1">Recommendation</p>
-                        <p className="text-xs text-blue-800">{gap.recommendation}</p>
+                      <div className="p-2.5 bg-[var(--rag-blue-soft)] rounded-lg">
+                        <p className="text-[10px] font-medium text-[var(--rag-blue)] uppercase tracking-wider mb-1">Recommendation</p>
+                        <p className="text-xs text-[var(--rag-blue)]">{gap.recommendation}</p>
                       </div>
                     </div>
                   </div>

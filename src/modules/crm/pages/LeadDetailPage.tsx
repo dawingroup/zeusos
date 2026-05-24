@@ -129,8 +129,8 @@ export default function LeadDetailPage() {
                 onClick={() => handleStageChange(s)}
                 disabled={pendingStage !== null}
                 className={`rounded px-3 py-1 text-sm disabled:opacity-60 ${
-                  s === 'WON'  ? 'bg-emerald-600 text-white' :
-                  s === 'LOST' ? 'border border-rose-300 text-rose-700' :
+                  s === 'WON'  ? 'bg-[var(--rag-green)] text-white' :
+                  s === 'LOST' ? 'border border-[var(--rag-red)] text-[var(--rag-red)]' :
                   'border'
                 }`}
                 data-stage={s}
@@ -205,7 +205,7 @@ export default function LeadDetailPage() {
           {lead.lostReason && (
             <div className="col-span-2 md:col-span-3">
               <dt className="text-xs text-muted-foreground">Lost reason</dt>
-              <dd className="text-rose-800">{lead.lostReason}</dd>
+              <dd className="text-[var(--rag-red)]">{lead.lostReason}</dd>
             </div>
           )}
         </dl>

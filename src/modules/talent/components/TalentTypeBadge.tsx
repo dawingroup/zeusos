@@ -1,8 +1,8 @@
 import type { TalentType } from '../types/talent-profile.types';
 
 const TYPE_STYLES: Record<TalentType, string> = {
-  STAFF:      'bg-blue-100 text-blue-700',
-  FREELANCER: 'bg-orange-100 text-orange-700',
+  STAFF:      'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  FREELANCER: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   INFLUENCER: 'bg-pink-100 text-pink-700',
   MODEL:      'bg-purple-100 text-purple-700',
 };

@@ -83,7 +83,7 @@ export default function MasterJobsPage() {
                 return (
                   <tr key={j.id} className="border-t hover:bg-[var(--bg-sunken)]">
                     <td className="px-3 py-2">
-                      <Link to={`/master-jobs/${j.id}`} className="font-mono text-xs text-blue-700 hover:underline">{j.code}</Link>
+                      <Link to={`/master-jobs/${j.id}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">{j.code}</Link>
                     </td>
                     <td className="px-3 py-2 font-mono text-xs">{j.sowId}</td>
                     <td className="px-3 py-2">{j.status}</td>

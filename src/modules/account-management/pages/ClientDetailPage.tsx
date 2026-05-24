@@ -104,7 +104,7 @@ export default function ClientDetailPage() {
   };
 
   if (loading) return <div className="p-6">Loading…</div>;
-  if (!client) return <div className="p-6">Client not found. <Link to="/clients" className="text-blue-700">Back</Link></div>;
+  if (!client) return <div className="p-6">Client not found. <Link to="/clients" className="text-[var(--rag-blue)]">Back</Link></div>;
 
   return (
     <div className="space-y-6 p-6">
@@ -130,7 +130,7 @@ export default function ClientDetailPage() {
                 type="button"
                 onClick={handleArchive}
                 disabled={archiving}
-                className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50"
+                className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50"
                 data-testid="client-archive-btn"
               >
                 {archiving ? 'Archiving…' : 'Archive'}
@@ -139,7 +139,7 @@ export default function ClientDetailPage() {
           )}
           <Link
             to={`/clients/${client.id}/msas/new`}
-            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)]"
           >
             + New MSA
           </Link>
@@ -205,7 +205,7 @@ export default function ClientDetailPage() {
             </label>
           </div>
           <div className="mt-3 flex gap-2">
-            <button onClick={handleSave} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+            <button onClick={handleSave} disabled={busy} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
               {busy ? 'Saving…' : 'Save'}
             </button>
             <button onClick={() => setEditing(false)} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Cancel</button>
@@ -224,7 +224,7 @@ export default function ClientDetailPage() {
               <div key={msa.id} className="rounded border bg-card">
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
                   <div>
-                    <Link to={`/clients/${client.id}/msas/${msa.id}`} className="font-medium text-blue-700 hover:underline">
+                    <Link to={`/clients/${client.id}/msas/${msa.id}`} className="font-medium text-[var(--rag-blue)] hover:underline">
                       {msa.code || msa.title}
                     </Link>
                     <div className="text-xs text-muted-foreground">{msa.title} · {msa.status}</div>
@@ -249,7 +249,7 @@ export default function ClientDetailPage() {
                     {(sowsByMsa[msa.id] || []).map(sow => (
                       <tr key={sow.id} className="border-t hover:bg-[var(--bg-sunken)]">
                         <td className="px-3 py-2">
-                          <Link to={`/clients/${client.id}/msas/${msa.id}/sows/${sow.id}`} className="font-mono text-xs text-blue-700 hover:underline">
+                          <Link to={`/clients/${client.id}/msas/${msa.id}/sows/${sow.id}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">
                             {sow.code || sow.id}
                           </Link>
                           <div className="text-xs text-muted-foreground">{sow.title}</div>

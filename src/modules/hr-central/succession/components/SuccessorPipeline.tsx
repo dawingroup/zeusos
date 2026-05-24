@@ -40,9 +40,9 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
 
   const getFlightRiskColor = (risk: 'low' | 'medium' | 'high') => {
     switch (risk) {
-      case 'low': return 'text-green-600 bg-green-50';
-      case 'medium': return 'text-amber-600 bg-amber-50';
-      case 'high': return 'text-red-600 bg-red-50';
+      case 'low': return 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]';
+      case 'medium': return 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]';
+      case 'high': return 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]';
     }
   };
 
@@ -145,7 +145,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onRemove && (
                 <button
                   onClick={() => onRemove(successor.id)}
-                  className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 hover:bg-red-50 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] rounded"
                   title="Remove"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -159,7 +159,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
             <div>
               <p className="text-xs text-muted-foreground">Performance</p>
               <div className="flex items-center gap-1 mt-1">
-                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <Star className="w-4 h-4 text-[var(--rag-amber)] fill-[var(--rag-amber)]" />
                 <span className="font-medium">{successor.performanceRating.toFixed(1)}</span>
               </div>
             </div>
@@ -200,9 +200,9 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
                     key={i}
                     className={`px-2 py-0.5 text-xs rounded ${
                       gap.priority === 'critical'
-                        ? 'bg-red-100 text-red-700'
+                        ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                         : gap.priority === 'high'
-                        ? 'bg-orange-100 text-orange-700'
+                        ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                         : 'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}
                   >
@@ -220,11 +220,11 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
 
           {/* Interest Indicator */}
           <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[var(--border-subtle)] text-xs text-muted-foreground">
-            <span className={successor.interestedInRole ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+            <span className={successor.interestedInRole ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
               {successor.interestedInRole ? '✓ Interested in role' : '○ Interest not confirmed'}
             </span>
             {successor.willingToRelocate !== undefined && (
-              <span className={successor.willingToRelocate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
+              <span className={successor.willingToRelocate ? 'text-[var(--rag-green)]' : 'text-[var(--fg-tertiary)]'}>
                 {successor.willingToRelocate ? '✓ Willing to relocate' : '○ Location bound'}
               </span>
             )}

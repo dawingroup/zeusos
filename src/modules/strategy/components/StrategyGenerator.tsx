@@ -162,7 +162,7 @@ export function StrategyGenerator({
                 </div>
 
                 {error && (
-                  <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+                  <div className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] p-3 rounded-md text-sm">
                     {error}
                   </div>
                 )}
@@ -171,15 +171,15 @@ export function StrategyGenerator({
               // Report Preview
               <div className="space-y-6">
                 {/* Success Banner */}
-                <div className="bg-green-50 rounded-lg p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-[var(--rag-green-soft)] rounded-lg p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[var(--rag-green-soft)] rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[var(--rag-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-medium text-green-900">Strategy Report Generated</h3>
-                    <p className="text-sm text-green-700">
+                    <h3 className="font-medium text-[var(--rag-green)]">Strategy Report Generated</h3>
+                    <p className="text-sm text-[var(--rag-green)]">
                       {report.trends.length} trends analyzed, {report.recommendations.length} recommendations
                     </p>
                   </div>
@@ -196,9 +196,9 @@ export function StrategyGenerator({
                   <h4 className="font-semibold text-foreground mb-2">Key Trends</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {report.trends.slice(0, 4).map((trend, i) => (
-                      <div key={i} className="bg-blue-50 rounded-lg p-3">
-                        <p className="font-medium text-blue-900">{trend.name}</p>
-                        <p className="text-sm text-blue-700 mt-1">{trend.description.slice(0, 100)}...</p>
+                      <div key={i} className="bg-[var(--rag-blue-soft)] rounded-lg p-3">
+                        <p className="font-medium text-[var(--rag-blue)]">{trend.name}</p>
+                        <p className="text-sm text-[var(--rag-blue)] mt-1">{trend.description.slice(0, 100)}...</p>
                       </div>
                     ))}
                   </div>

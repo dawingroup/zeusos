@@ -109,9 +109,9 @@ export default function ServiceCredentialsPage() {
 
       {/* Permission banner */}
       {!canEdit && (
-        <div className="mb-4 px-4 py-3 rounded-lg bg-amber-50 border border-amber-200 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-          <div className="text-sm text-amber-800">
+        <div className="mb-4 px-4 py-3 rounded-lg bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-[var(--rag-amber)] mt-0.5 shrink-0" />
+          <div className="text-sm text-[var(--rag-amber)]">
             You can view and test credentials, but only an <strong>owner</strong> account can
             rotate them.
           </div>
@@ -127,15 +127,15 @@ export default function ServiceCredentialsPage() {
 
       {/* Error banner */}
       {error && (
-        <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
-          <div className="text-sm text-red-800">
+        <div className="mb-4 px-4 py-3 rounded-lg bg-[var(--rag-red-soft)] border border-[var(--rag-red)] flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-[var(--rag-red)] mt-0.5 shrink-0" />
+          <div className="text-sm text-[var(--rag-red)]">
             <div className="font-medium">Couldn't load credentials</div>
             <div className="text-xs mt-1">{error}</div>
             <div className="text-xs mt-1">
               If this is the first time you're using the API Keys page, deploy the admin secrets
               functions:
-              <code className="block mt-1 px-2 py-1 bg-card border border-red-200 rounded font-mono text-[11px]">
+              <code className="block mt-1 px-2 py-1 bg-card border border-[var(--rag-red)] rounded font-mono text-[11px]">
                 firebase deploy --only
                 functions:adminListServiceCredentials,functions:adminSetServiceCredential,functions:adminTestServiceCredential
               </code>

@@ -78,8 +78,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-green-100">
-                <CheckCircle className="h-4 w-4 text-green-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-green-soft)]">
+                <CheckCircle className="h-4 w-4 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Present</p>
@@ -91,8 +91,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-red-100">
-                <XCircle className="h-4 w-4 text-red-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-red-soft)]">
+                <XCircle className="h-4 w-4 text-[var(--rag-red)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Absent</p>
@@ -104,8 +104,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-yellow-100">
-                <Clock className="h-4 w-4 text-yellow-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-amber-soft)]">
+                <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Late</p>
@@ -117,8 +117,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-blue-100">
-                <Calendar className="h-4 w-4 text-blue-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]">
+                <Calendar className="h-4 w-4 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">On Leave</p>
@@ -130,8 +130,8 @@ export function AttendanceTab({ period, employees }: AttendanceTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-emerald-100">
-                <Percent className="h-4 w-4 text-emerald-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-green-soft)]">
+                <Percent className="h-4 w-4 text-[var(--rag-green)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Attendance Rate</p>

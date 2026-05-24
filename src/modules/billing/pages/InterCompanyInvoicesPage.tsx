@@ -109,11 +109,11 @@ export function InterCompanyInvoicesPage() {
                 </td>
                 <td className="py-2">
                   {inv.postedToGL ? (
-                    <span className="rounded bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                    <span className="rounded bg-[var(--rag-green-soft)] px-2 py-0.5 text-xs text-[var(--rag-green)]">
                       Posted
                     </span>
                   ) : (
-                    <span className="rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
+                    <span className="rounded bg-[var(--rag-amber-soft)] px-2 py-0.5 text-xs text-[var(--rag-amber)]">
                       Pending
                     </span>
                   )}

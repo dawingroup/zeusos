@@ -63,7 +63,7 @@ export default function ClientCreatePage() {
       </div>
 
       <div className="flex gap-2">
-        <button onClick={handleCreate} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+        <button onClick={handleCreate} disabled={busy} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
           {busy ? 'Creating…' : 'Create'}
         </button>
         <Link to="/clients" className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]">Cancel</Link>

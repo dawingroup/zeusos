@@ -311,8 +311,8 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
             key={item.id}
             className={`group flex items-start gap-1.5 p-1.5 rounded text-xs ${
               item.aiSuggested ? 'bg-purple-100/50 border border-purple-200' :
-              item.isNew ? 'bg-green-100/50 border border-green-200' :
-              item.isModified ? 'bg-amber-100/50 border border-amber-200' :
+              item.isNew ? 'bg-[var(--rag-green-soft)]/50 border border-[var(--rag-green)]' :
+              item.isModified ? 'bg-[var(--rag-amber-soft)]/50 border border-[var(--rag-amber)]' :
               'bg-card/60'
             }`}
           >
@@ -332,12 +332,12 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
               <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0 mt-0.5" />
             )}
             {item.priority === 'high' && (
-              <Star className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
+              <Star className="w-3 h-3 text-[var(--rag-amber)] flex-shrink-0 mt-0.5" />
             )}
             {!readOnly && (
               <button
                 onClick={() => onRemoveItem(item.id)}
-                className="text-[var(--fg-tertiary)] hover:text-red-500 opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5"
+                className="text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] opacity-0 group-hover:opacity-100 flex-shrink-0 mt-0.5"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -358,12 +358,12 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
             onChange={(e) => onNewItemTextChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onAddItem()}
             placeholder="Add item..."
-            className="flex-1 text-xs border border-[var(--border-default)] rounded px-2 py-1 bg-card/80 focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
+            className="flex-1 text-xs border border-[var(--border-default)] rounded px-2 py-1 bg-card/80 focus:ring-1 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
           />
           <button
             onClick={onAddItem}
             disabled={!newItemText.trim()}
-            className="p-1 text-muted-foreground hover:text-blue-600 disabled:opacity-30"
+            className="p-1 text-muted-foreground hover:text-[var(--rag-blue)] disabled:opacity-30"
           >
             <Plus className="w-4 h-4" />
           </button>

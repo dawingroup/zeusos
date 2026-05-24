@@ -46,11 +46,11 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
     const isCriticalRole = criticalityLevel === ROLE_CRITICALITY_LEVELS.MISSION_CRITICAL;
     const isHighRisk = riskLevel === SUCCESSION_RISK_LEVELS.CRITICAL || riskLevel === SUCCESSION_RISK_LEVELS.HIGH;
 
-    if (isCriticalRole && isHighRisk) return 'bg-red-500 text-white';
-    if (isCriticalRole) return 'bg-orange-400 text-white';
-    if (isHighRisk) return 'bg-red-300 text-red-900';
-    if (riskLevel === SUCCESSION_RISK_LEVELS.MEDIUM) return 'bg-amber-200 text-amber-900';
-    return 'bg-green-200 text-green-900';
+    if (isCriticalRole && isHighRisk) return 'bg-[var(--rag-red)] text-white';
+    if (isCriticalRole) return 'bg-[var(--rag-amber)] text-white';
+    if (isHighRisk) return 'bg-[var(--rag-red)] text-[var(--rag-red)]';
+    if (riskLevel === SUCCESSION_RISK_LEVELS.MEDIUM) return 'bg-[var(--rag-amber)] text-[var(--rag-amber)]';
+    return 'bg-[var(--rag-green)] text-[var(--rag-green)]';
   };
 
   const getRiskIcon = (riskLevel: SuccessionRiskLevel) => {
@@ -95,23 +95,23 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
 
       {/* Summary Stats */}
       <div className="grid grid-cols-4 gap-2 mb-6">
-        <div className="text-center p-3 rounded-lg bg-red-50">
-          <p className="text-2xl font-bold text-red-600">{criticalRiskRoles}</p>
-          <p className="text-xs text-red-600">Critical Risk</p>
+        <div className="text-center p-3 rounded-lg bg-[var(--rag-red-soft)]">
+          <p className="text-2xl font-bold text-[var(--rag-red)]">{criticalRiskRoles}</p>
+          <p className="text-xs text-[var(--rag-red)]">Critical Risk</p>
         </div>
-        <div className="text-center p-3 rounded-lg bg-orange-50">
-          <p className="text-2xl font-bold text-orange-600">{highRiskRoles}</p>
-          <p className="text-xs text-orange-600">High Risk</p>
+        <div className="text-center p-3 rounded-lg bg-[var(--rag-amber-soft)]">
+          <p className="text-2xl font-bold text-[var(--rag-amber)]">{highRiskRoles}</p>
+          <p className="text-xs text-[var(--rag-amber)]">High Risk</p>
         </div>
-        <div className="text-center p-3 rounded-lg bg-amber-50">
-          <p className="text-2xl font-bold text-amber-600">
+        <div className="text-center p-3 rounded-lg bg-[var(--rag-amber-soft)]">
+          <p className="text-2xl font-bold text-[var(--rag-amber)]">
             {roles.filter(r => r.successionRisk === SUCCESSION_RISK_LEVELS.MEDIUM).length}
           </p>
-          <p className="text-xs text-amber-600">Medium Risk</p>
+          <p className="text-xs text-[var(--rag-amber)]">Medium Risk</p>
         </div>
-        <div className="text-center p-3 rounded-lg bg-green-50">
-          <p className="text-2xl font-bold text-green-600">{lowRiskRoles}</p>
-          <p className="text-xs text-green-600">Low Risk</p>
+        <div className="text-center p-3 rounded-lg bg-[var(--rag-green-soft)]">
+          <p className="text-2xl font-bold text-[var(--rag-green)]">{lowRiskRoles}</p>
+          <p className="text-xs text-[var(--rag-green)]">Low Risk</p>
         </div>
       </div>
 
@@ -171,19 +171,19 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({
         <p className="text-xs text-muted-foreground mb-2">Priority Action:</p>
         <div className="flex flex-wrap gap-2 text-xs">
           <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded bg-red-500" />
+            <div className="w-4 h-4 rounded bg-[var(--rag-red)]" />
             <span>Immediate action required</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded bg-orange-400" />
+            <div className="w-4 h-4 rounded bg-[var(--rag-amber)]" />
             <span>Address within 30 days</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded bg-amber-200" />
+            <div className="w-4 h-4 rounded bg-[var(--rag-amber)]" />
             <span>Monitor closely</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded bg-green-200" />
+            <div className="w-4 h-4 rounded bg-[var(--rag-green)]" />
             <span>Well covered</span>
           </div>
         </div>

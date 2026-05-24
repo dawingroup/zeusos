@@ -52,7 +52,7 @@ export default function MediaPlanActualsPage() {
       <h1 className="text-xl font-semibold">Post Actuals — {plan.title}</h1>
 
       {saved && (
-        <div className="rounded bg-green-50 px-3 py-2 text-sm text-green-700">
+        <div className="rounded bg-[var(--rag-green-soft)] px-3 py-2 text-sm text-[var(--rag-green)]">
           {saved}
         </div>
       )}

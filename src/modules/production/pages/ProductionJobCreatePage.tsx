@@ -65,7 +65,7 @@ export default function ProductionJobCreatePage() {
       <Link to="/production" className="text-xs text-muted-foreground">← Production</Link>
       <h1 className="text-xl font-semibold">New production job</h1>
 
-      {error && <p className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+      {error && <p className="rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)] px-3 py-2 text-sm text-[var(--rag-red)]">{error}</p>}
 
       <div className="grid grid-cols-2 gap-3 text-sm">
         <label className="col-span-2 block">

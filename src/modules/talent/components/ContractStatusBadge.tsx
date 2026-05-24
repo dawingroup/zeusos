@@ -2,8 +2,8 @@ import type { ContractStatus } from '../types/freelancer-contract.types';
 
 const STATUS_STYLES: Record<ContractStatus, string> = {
   DRAFT:   'bg-[var(--bg-sunken)] text-muted-foreground',
-  SIGNED:  'bg-green-100 text-green-700',
-  EXPIRED: 'bg-red-100 text-red-600',
+  SIGNED:  'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  EXPIRED: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 interface Props {

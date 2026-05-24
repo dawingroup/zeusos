@@ -46,9 +46,9 @@ const PIVOT_CATEGORIES: { value: PivotCategory; label: string; icon: React.FC<{ 
 
 const PIVOT_STATUSES: { value: PivotStatus; label: string; color: string }[] = [
   { value: 'planned', label: 'Planned', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-700' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-700' },
-  { value: 'abandoned', label: 'Abandoned', color: 'bg-red-100 text-red-700' },
+  { value: 'in_progress', label: 'In Progress', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  { value: 'completed', label: 'Completed', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
+  { value: 'abandoned', label: 'Abandoned', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
 ];
 
 const CATEGORY_COLORS: Record<PivotCategory, string> = {
@@ -142,7 +142,7 @@ export const BusinessPivotsSection: React.FC<Props> = ({ companyId, userId, read
   if (isLoading) {
     return (
       <div className="bg-card border border-[var(--border-subtle)] rounded-xl p-8 text-center">
-        <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto mb-2" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--rag-blue)] mx-auto mb-2" />
         <p className="text-sm text-muted-foreground">Loading business pivots...</p>
       </div>
     );
@@ -344,8 +344,8 @@ const PivotCard: React.FC<PivotCardProps> = ({ pivot, isExpanded, onToggle, onEd
           )}
           {!readOnly && (
             <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-              <button onClick={onEdit} className="p-1 text-[var(--fg-tertiary)] hover:text-blue-600 rounded"><Edit3 className="w-3.5 h-3.5" /></button>
-              <button onClick={onDelete} disabled={isDeleting} className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 rounded">
+              <button onClick={onEdit} className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-blue)] rounded"><Edit3 className="w-3.5 h-3.5" /></button>
+              <button onClick={onDelete} disabled={isDeleting} className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] rounded">
                 {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
               </button>
             </div>

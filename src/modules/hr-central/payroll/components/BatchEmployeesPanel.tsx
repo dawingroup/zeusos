@@ -126,7 +126,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
               {filtered.length} of {payrolls.length} {payrolls.length === 1 ? 'payslip' : 'payslips'} ·
               {' '}Net {formatCurrency(totals.net)}
               {batchSubsidiaryId && hasSplitRows && (
-                <> · <span className="text-amber-700">split employees scaled to this subsidiary's share</span></>
+                <> · <span className="text-[var(--rag-amber)]">split employees scaled to this subsidiary's share</span></>
               )}
             </p>
           </div>
@@ -178,8 +178,8 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                             <span
                               className={`inline-flex items-center text-[10px] font-medium px-1.5 py-0.5 rounded ${
                                 r.isHost
-                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                  : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border border-[var(--rag-blue)]'
+                                  : 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border border-[var(--rag-amber)]'
                               }`}
                               title={r.isHost
                                 ? 'Host subsidiary — runs full payroll & statutory filings'
@@ -193,9 +193,9 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                       </td>
                       <td className="px-4 py-2 text-muted-foreground">{p.departmentName || '—'}</td>
                       <td className="px-4 py-2 text-right font-mono">{formatCurrency(r.grossPay)}</td>
-                      <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.payeNet)}</td>
-                      <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.nssfEmployee)}</td>
-                      <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.totalDeductions)}</td>
+                      <td className="px-4 py-2 text-right font-mono text-[var(--rag-red)]">{formatCurrency(r.payeNet)}</td>
+                      <td className="px-4 py-2 text-right font-mono text-[var(--rag-red)]">{formatCurrency(r.nssfEmployee)}</td>
+                      <td className="px-4 py-2 text-right font-mono text-[var(--rag-red)]">{formatCurrency(r.totalDeductions)}</td>
                       <td className="px-4 py-2 text-right font-mono font-semibold text-foreground">{formatCurrency(r.netPay)}</td>
                       <td className="px-4 py-2 text-xs text-muted-foreground capitalize">
                         {p.paymentMethod.replace('_', ' ')}
@@ -206,7 +206,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                         <td></td>
                         <td colSpan={8} className="px-4 py-3">
                           {showSplitChip && !r.isHost && (
-                            <div className="mb-3 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
+                            <div className="mb-3 text-[11px] text-[var(--rag-amber)] bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded px-2 py-1.5">
                               Recipient view — figures show this subsidiary's <strong>{(r.factor * 100).toFixed(0)}%</strong>
                               {' '}cost share. Statutory items (PAYE / NSSF / LST) are filed by the host subsidiary
                               and shown as 0 here. See the full payslip for the host figures.
@@ -267,7 +267,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                 <td colSpan={3} className="px-4 py-2 font-medium text-muted-foreground">Totals ({filtered.length})</td>
                 <td className="px-4 py-2 text-right font-mono">{formatCurrency(totals.gross)}</td>
                 <td colSpan={2}></td>
-                <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(totals.deductions)}</td>
+                <td className="px-4 py-2 text-right font-mono text-[var(--rag-red)]">{formatCurrency(totals.deductions)}</td>
                 <td className="px-4 py-2 text-right font-mono font-semibold">{formatCurrency(totals.net)}</td>
                 <td></td>
               </tr>
@@ -283,7 +283,7 @@ function Row({ label, value, bold, large, negative }: { label: string; value: nu
   return (
     <div className={`flex justify-between ${large ? 'text-sm' : ''}`}>
       <span className={`${bold ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>{label}</span>
-      <span className={`font-mono ${bold ? 'font-semibold' : ''} ${negative ? 'text-red-700' : 'text-foreground'}`}>
+      <span className={`font-mono ${bold ? 'font-semibold' : ''} ${negative ? 'text-[var(--rag-red)]' : 'text-foreground'}`}>
         {formatCurrency(value)}
       </span>
     </div>

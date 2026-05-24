@@ -155,7 +155,7 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
               const active = n === step;
               const done = n < step;
               return (
-                <li key={label} className={`${active ? 'font-semibold text-blue-700' : done ? 'text-muted-foreground' : 'text-[var(--fg-tertiary)]'}`}>
+                <li key={label} className={`${active ? 'font-semibold text-[var(--rag-blue)]' : done ? 'text-muted-foreground' : 'text-[var(--fg-tertiary)]'}`}>
                   {label}
                 </li>
               );
@@ -210,7 +210,7 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
                 </label>
               </div>
               {wouldExceedCeiling && budgetMinor > 0 && (
-                <div className="rounded border border-red-300 bg-red-50 p-3 text-xs text-red-900">
+                <div className="rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)] p-3 text-xs text-[var(--rag-red)]">
                   Allocating <strong>{formatMinor(budgetMinor, masterJob.currency)}</strong> would push allocation to{' '}
                   <strong>{formatMinor(projectedAllocated, masterJob.currency)}</strong> — past the ceiling of{' '}
                   <strong>{formatMinor(masterJob.ceilingMinor, masterJob.currency)}</strong>. File a Change Order to raise the ceiling first.
@@ -266,12 +266,12 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
                       className="rounded border px-2 py-1 text-sm"
                     />
                     {milestones.length > 1 && (
-                      <button onClick={() => setMilestones(ms => ms.filter((_, j) => j !== i))} className="text-red-600">✕</button>
+                      <button onClick={() => setMilestones(ms => ms.filter((_, j) => j !== i))} className="text-[var(--rag-red)]">✕</button>
                     )}
                   </div>
                 ))}
                 <button onClick={() => setMilestones(ms => [...ms, { id: `m${ms.length + 1}`, name: '', dueDate: '' }])}
-                  className="text-xs text-blue-700 hover:underline">+ Add milestone</button>
+                  className="text-xs text-[var(--rag-blue)] hover:underline">+ Add milestone</button>
               </div>
 
               <div>
@@ -290,24 +290,24 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
                       required
                     </label>
                     {criteria.length > 1 && (
-                      <button onClick={() => setCriteria(cs => cs.filter((_, j) => j !== i))} className="text-red-600">✕</button>
+                      <button onClick={() => setCriteria(cs => cs.filter((_, j) => j !== i))} className="text-[var(--rag-red)]">✕</button>
                     )}
                   </div>
                 ))}
                 <button onClick={() => setCriteria(cs => [...cs, { id: `c${cs.length + 1}`, description: '', required: true }])}
-                  className="text-xs text-blue-700 hover:underline">+ Add criterion</button>
+                  className="text-xs text-[var(--rag-blue)] hover:underline">+ Add criterion</button>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-900">
+            <div className="rounded border border-[var(--rag-red)] bg-[var(--rag-red-soft)] p-3 text-sm text-[var(--rag-red)]">
               <div className="font-medium">{error.code ?? 'Error'}</div>
               <div className="mt-1 text-xs">{error.message}</div>
               {error.code === 'CEILING_EXCEEDED' && changeOrderHref && (
                 <button
                   onClick={() => navigate(changeOrderHref)}
-                  className="mt-2 rounded bg-amber-600 px-3 py-1 text-xs font-medium text-white hover:bg-amber-700"
+                  className="mt-2 rounded bg-[var(--rag-amber)] px-3 py-1 text-xs font-medium text-white hover:bg-[var(--rag-amber)]"
                 >
                   Request change order →
                 </button>
@@ -320,10 +320,10 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
           <button onClick={onClose} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Cancel</button>
           <div className="flex gap-2">
             {step > 1 && <button onClick={() => setStep((s) => (s - 1) as 1 | 2 | 3)} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Back</button>}
-            {step === 1 && <button onClick={() => setStep(2)} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">Next →</button>}
-            {step === 2 && <button onClick={handleNextFromStep2} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">Next →</button>}
+            {step === 1 && <button onClick={() => setStep(2)} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)]">Next →</button>}
+            {step === 2 && <button onClick={handleNextFromStep2} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)]">Next →</button>}
             {step === 3 && (
-              <button onClick={handleSubmit} disabled={busy} className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50">
+              <button onClick={handleSubmit} disabled={busy} className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50">
                 {busy ? 'Issuing…' : 'Issue IWO'}
               </button>
             )}

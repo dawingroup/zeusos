@@ -11,9 +11,9 @@ interface Props {
 }
 
 const STATUS_DOT: Record<string, string> = {
-  ACTIVE:      'bg-green-500',
+  ACTIVE:      'bg-[var(--rag-green)]',
   INACTIVE:    'bg-[var(--bg-sunken)]',
-  BLACKLISTED: 'bg-red-500',
+  BLACKLISTED: 'bg-[var(--rag-red)]',
 };
 
 export function TalentCard({ profile }: Props) {

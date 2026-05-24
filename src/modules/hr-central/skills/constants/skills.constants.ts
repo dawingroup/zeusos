@@ -99,11 +99,11 @@ export const TRAINING_STATUS_LABELS: Record<TrainingStatus, string> = {
 
 export const TRAINING_STATUS_COLORS: Record<TrainingStatus, string> = {
   planned: 'bg-[var(--bg-sunken)] text-foreground',
-  enrolled: 'bg-blue-100 text-blue-800',
+  enrolled: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   in_progress: 'bg-indigo-100 text-indigo-800',
-  completed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-  failed: 'bg-amber-100 text-amber-800',
+  completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  cancelled: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  failed: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
 };
 
 // Certification Status
@@ -127,10 +127,10 @@ export const CERTIFICATION_STATUS_LABELS: Record<CertificationStatus, string> = 
 
 export const CERTIFICATION_STATUS_COLORS: Record<CertificationStatus, string> = {
   pending: 'bg-[var(--bg-sunken)] text-foreground',
-  active: 'bg-green-100 text-green-800',
-  expiring_soon: 'bg-amber-100 text-amber-800',
-  expired: 'bg-red-100 text-red-800',
-  revoked: 'bg-red-100 text-red-800',
+  active: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  expiring_soon: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  expired: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  revoked: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 // Uganda-specific Professional Bodies
@@ -164,9 +164,9 @@ export const GAP_PRIORITY_LABELS: Record<GapPriority, string> = {
 };
 
 export const GAP_PRIORITY_COLORS: Record<GapPriority, string> = {
-  critical: 'bg-red-100 text-red-800',
-  high: 'bg-amber-100 text-amber-800',
-  medium: 'bg-blue-100 text-blue-800',
+  critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  medium: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   low: 'bg-[var(--bg-sunken)] text-foreground',
 };
 

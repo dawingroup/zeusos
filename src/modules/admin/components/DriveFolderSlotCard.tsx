@@ -124,17 +124,17 @@ export function DriveFolderSlotCard({
             </span>
             {descriptor.pendingPolicyAmendment && (
               <span
-                className="text-[10px] uppercase tracking-wide bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded"
+                className="text-[10px] uppercase tracking-wide bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] px-1.5 py-0.5 rounded"
                 title="This folder is not in v3 yet — requires a formal v3.1 §3 amendment before it's created. Bindings here are permitted but the policy doc should catch up."
               >
                 Policy pending
               </span>
             )}
             {binding?.folderId && !binding.lastVerifyError && (
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <CheckCircle2 className="h-4 w-4 text-[var(--rag-green)]" />
             )}
             {binding?.lastVerifyError && (
-              <AlertCircle className="h-4 w-4 text-red-500" />
+              <AlertCircle className="h-4 w-4 text-[var(--rag-red)]" />
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">{descriptor.hint}</p>
@@ -147,7 +147,7 @@ export function DriveFolderSlotCard({
             href={`https://drive.google.com/drive/folders/${binding.folderId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 shrink-0"
+            className="text-xs text-[var(--rag-blue)] hover:underline inline-flex items-center gap-1 shrink-0"
             title="Open in Drive"
           >
             Open <ExternalLink className="h-3 w-3" />
@@ -200,7 +200,7 @@ export function DriveFolderSlotCard({
         </div>
 
         {hasUnsavedChanges && draftParsed && !verifying && (
-          <p className="text-xs text-amber-600">
+          <p className="text-xs text-[var(--rag-amber)]">
             Unsaved change — click Verify &amp; Save to apply.
           </p>
         )}
@@ -208,29 +208,29 @@ export function DriveFolderSlotCard({
         {/* Last verify result — either from this session's Verify click
             or from a prior session (via binding.lastVerifyError). */}
         {lastVerify?.ok && (
-          <div className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md p-2">
+          <div className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-md p-2">
             <div className="flex items-center gap-1 font-medium">
               <CheckCircle2 className="h-3.5 w-3.5" /> {lastVerify.name}
             </div>
-            <p className="text-emerald-600 mt-0.5">
+            <p className="text-[var(--rag-green)] mt-0.5">
               {lastVerify.itemCount} item{lastVerify.itemCount === 1 ? '' : 's'} at verify time.
             </p>
           </div>
         )}
         {lastVerify && !lastVerify.ok && (
-          <div className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-md p-2">
+          <div className="text-xs text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-2">
             <div className="flex items-center gap-1 font-medium">
               <AlertCircle className="h-3.5 w-3.5" /> Verification failed
             </div>
-            <p className="text-red-600 mt-0.5 whitespace-pre-wrap">{lastVerify.error}</p>
+            <p className="text-[var(--rag-red)] mt-0.5 whitespace-pre-wrap">{lastVerify.error}</p>
           </div>
         )}
         {!lastVerify && binding?.lastVerifyError && (
-          <div className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-md p-2">
+          <div className="text-xs text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-2">
             <div className="flex items-center gap-1 font-medium">
               <AlertCircle className="h-3.5 w-3.5" /> Last verify failed
             </div>
-            <p className="text-red-600 mt-0.5 whitespace-pre-wrap">
+            <p className="text-[var(--rag-red)] mt-0.5 whitespace-pre-wrap">
               {binding.lastVerifyError}
             </p>
           </div>

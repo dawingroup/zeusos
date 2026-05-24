@@ -151,7 +151,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
   return (
     <div className="fixed bottom-0 right-0 w-full md:w-[420px] h-[600px] bg-card border-l border-t border-[var(--border-subtle)] shadow-2xl rounded-tl-xl flex flex-col z-50">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-tl-xl">
+      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-600 $1-[var(--rag-blue)] text-white rounded-tl-xl">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5" />
           <div>
@@ -210,7 +210,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
               <div
                 className={`px-3 py-2 rounded-lg text-sm ${
                   msg.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-sm'
+                    ? 'bg-[var(--rag-blue)] text-white rounded-br-sm'
                     : 'bg-[var(--bg-sunken)] text-foreground rounded-bl-sm'
                 }`}
               >
@@ -257,7 +257,7 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
                               </button>
                             )}
                             {suggestion.applied && (
-                              <span className="flex items-center gap-1 text-xs text-green-600">
+                              <span className="flex items-center gap-1 text-xs text-[var(--rag-green)]">
                                 <CheckCircle2 className="w-3 h-3" />
                                 Applied
                               </span>
@@ -282,8 +282,8 @@ export const AIStrategyAssistant: React.FC<AIStrategyAssistantProps> = ({
               </p>
             </div>
             {msg.role === 'user' && (
-              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <User className="w-4 h-4 text-blue-600" />
+              <div className="w-7 h-7 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <User className="w-4 h-4 text-[var(--rag-blue)]" />
               </div>
             )}
           </div>

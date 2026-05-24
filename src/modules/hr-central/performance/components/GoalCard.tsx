@@ -38,21 +38,21 @@ interface GoalCardProps {
 const getStatusColor = (status: GoalStatus): string => {
   const colors: Record<GoalStatus, string> = {
     not_started: 'bg-[var(--bg-sunken)] text-foreground',
-    in_progress: 'bg-blue-100 text-blue-800',
+    in_progress: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     on_track: 'bg-indigo-100 text-indigo-800',
-    at_risk: 'bg-amber-100 text-amber-800',
-    completed: 'bg-green-100 text-green-800',
-    exceeded: 'bg-emerald-100 text-emerald-800',
-    cancelled: 'bg-red-100 text-red-800',
+    at_risk: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    exceeded: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    cancelled: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   };
   return colors[status] || 'bg-[var(--bg-sunken)] text-foreground';
 };
 
 const getPriorityColor = (priority: string): string => {
   const colors: Record<string, string> = {
-    critical: 'bg-red-100 text-red-800',
-    high: 'bg-amber-100 text-amber-800',
-    medium: 'bg-blue-100 text-blue-800',
+    critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+    high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+    medium: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     low: 'bg-[var(--bg-sunken)] text-foreground',
   };
   return colors[priority] || 'bg-[var(--bg-sunken)] text-foreground';
@@ -90,7 +90,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
   const isOverdue = goal.dueDate && new Date(goal.dueDate) < new Date() && 
     goal.status !== 'completed' && goal.status !== 'exceeded';
   
-  const progressColor = goal.progress >= 100 ? 'bg-green-500' : 'bg-indigo-600';
+  const progressColor = goal.progress >= 100 ? 'bg-[var(--rag-green)]' : 'bg-indigo-600';
   
   return (
     <div className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm h-full flex flex-col">
@@ -141,7 +141,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
                 </button>
                 <button
                   onClick={() => { onDelete?.(); setMenuOpen(false); }}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2 text-red-600"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2 text-[var(--rag-red)]"
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete
@@ -187,7 +187,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
           <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(goal.status)}`}>
             {GOAL_STATUS_LABELS[goal.status]}
           </span>
-          <span className={`text-xs ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
+          <span className={`text-xs ${isOverdue ? 'text-[var(--rag-red)]' : 'text-muted-foreground'}`}>
             Due: {formatDate(goal.dueDate)}
           </span>
         </div>

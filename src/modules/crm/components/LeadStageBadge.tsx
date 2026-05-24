@@ -2,10 +2,10 @@ import type { LeadStage } from '../types/lead.types';
 
 const STAGE_STYLES: Record<LeadStage, string> = {
   PROSPECT:  'bg-[var(--bg-sunken)] text-muted-foreground',
-  QUALIFIED: 'bg-amber-100 text-amber-800',
-  PITCH:     'bg-sky-100 text-sky-800',
-  WON:       'bg-emerald-100 text-emerald-800',
-  LOST:      'bg-rose-100 text-rose-700',
+  QUALIFIED: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  PITCH:     'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  WON:       'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  LOST:      'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const STAGE_LABEL: Record<LeadStage, string> = {

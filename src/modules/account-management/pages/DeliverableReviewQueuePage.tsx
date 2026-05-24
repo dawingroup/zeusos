@@ -123,7 +123,7 @@ export default function DeliverableReviewQueuePage() {
           <article key={iwo.id} className="rounded border bg-card p-4 shadow-sm">
             <header className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <Link to={`/master-jobs/${iwo.masterJobId}`} className="font-mono text-xs text-blue-700 hover:underline">{iwo.code}</Link>
+                <Link to={`/master-jobs/${iwo.masterJobId}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">{iwo.code}</Link>
                 <div className="text-sm font-medium">{iwo.subsidiaryOrgId}</div>
                 <div className="text-xs text-muted-foreground">
                   Budget {formatMinor(iwo.budgetMinor, iwo.currency)} ·
@@ -134,7 +134,7 @@ export default function DeliverableReviewQueuePage() {
                 <button
                   onClick={() => handleRequestRevision(iwo.id, unsignedRequired.map(c => c.id))}
                   disabled={busyIwo === iwo.id || unsignedRequired.length === 0}
-                  className="rounded border border-amber-400 px-3 py-1.5 text-xs font-medium text-amber-800 hover:bg-amber-50 disabled:opacity-50"
+                  className="rounded border border-[var(--rag-amber)] px-3 py-1.5 text-xs font-medium text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)] disabled:opacity-50"
                   title={unsignedRequired.length === 0 ? 'Sign criteria first to use this' : ''}
                 >
                   Request revision
@@ -142,7 +142,7 @@ export default function DeliverableReviewQueuePage() {
                 <button
                   onClick={() => handleAcceptInternal(iwo.id)}
                   disabled={busyIwo === iwo.id || !canAccept}
-                  className="rounded bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-xs font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
                   title={!canAccept ? 'All required criteria must be signed' : ''}
                 >
                   Accept internal
@@ -159,7 +159,7 @@ export default function DeliverableReviewQueuePage() {
 
             <h3 className="mt-3 text-xs font-semibold uppercase text-muted-foreground">Acceptance criteria</h3>
             {criteria.length === 0 && (
-              <p className="text-xs text-red-700">⚠ Handoff packet missing criteria — cannot accept.</p>
+              <p className="text-xs text-[var(--rag-red)]">⚠ Handoff packet missing criteria — cannot accept.</p>
             )}
             <ul className="mt-1 space-y-1 text-sm">
               {criteria.map(c => {
@@ -175,7 +175,7 @@ export default function DeliverableReviewQueuePage() {
                     />
                     <span className={signed ? 'line-through text-muted-foreground' : ''}>
                       {c.description}
-                      {c.required && <span className="ml-1 text-xs text-red-700">required</span>}
+                      {c.required && <span className="ml-1 text-xs text-[var(--rag-red)]">required</span>}
                     </span>
                   </li>
                 );

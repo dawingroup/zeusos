@@ -46,10 +46,10 @@ interface OperationalGapAnalysisProps {
 }
 
 const SEVERITY_COLORS: Record<string, string> = {
-  critical: 'bg-red-100 text-red-700 border-red-200',
-  high: 'bg-orange-100 text-orange-700 border-orange-200',
-  medium: 'bg-amber-100 text-amber-700 border-amber-200',
-  low: 'bg-blue-100 text-blue-700 border-blue-200',
+  critical: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]',
+  high: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  medium: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]',
+  low: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]',
 };
 
 const AREA_ICONS: Record<string, React.FC<{ className?: string }>> = {
@@ -197,7 +197,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
-          <Users className="w-5 h-5 text-orange-600" />
+          <Users className="w-5 h-5 text-[var(--rag-amber)]" />
           <div>
             <h3 className="text-sm font-semibold text-foreground">Operational Gap Analysis</h3>
             <p className="text-xs text-muted-foreground">
@@ -209,7 +209,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
         </div>
         <div className="flex items-center gap-2">
           {hrData && (
-            <span className="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] px-2 py-0.5 rounded-full flex items-center gap-1">
               <CheckCircle className="w-3 h-3" />
               HR Data Loaded
             </span>
@@ -217,7 +217,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
           <button
             onClick={runAnalysis}
             disabled={isAnalyzing}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-amber)] rounded-lg hover:bg-[var(--rag-amber)] disabled:opacity-50 transition-colors"
           >
             {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
             {isAnalyzing ? 'Analyzing...' : gaps.length > 0 ? 'Re-analyze' : 'Run Analysis'}
@@ -233,7 +233,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
             <span><strong>{Object.keys(hrData.stats.byDepartment).length}</strong> departments</span>
             <span>Turnover: <strong>{(hrData.stats.turnoverRate * 100).toFixed(1)}%</strong></span>
             <span>Avg tenure: <strong>{hrData.stats.avgTenureYears.toFixed(1)}yr</strong></span>
-            <button onClick={loadHRData} disabled={isLoadingData} className="text-blue-600 hover:text-blue-700 ml-auto">
+            <button onClick={loadHRData} disabled={isLoadingData} className="text-[var(--rag-blue)] hover:text-[var(--rag-blue)] ml-auto">
               <RefreshCw className={`w-3 h-3 ${isLoadingData ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -242,19 +242,19 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
 
       {/* Error */}
       {error && (
-        <div className="px-5 py-3 bg-red-50 border-b border-red-200 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-red-500" />
-          <p className="text-xs text-red-700">{error}</p>
+        <div className="px-5 py-3 bg-[var(--rag-red-soft)] border-b border-[var(--rag-red)] flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />
+          <p className="text-xs text-[var(--rag-red)]">{error}</p>
         </div>
       )}
 
       {/* Analyzing Banner */}
       {isAnalyzing && (
-        <div className="px-5 py-4 bg-orange-50 border-b border-orange-200 flex items-center gap-3">
-          <Loader2 className="w-5 h-5 text-orange-600 animate-spin" />
+        <div className="px-5 py-4 bg-[var(--rag-amber-soft)] border-b border-[var(--rag-amber)] flex items-center gap-3">
+          <Loader2 className="w-5 h-5 text-[var(--rag-amber)] animate-spin" />
           <div>
-            <p className="text-sm font-medium text-orange-900">Analyzing operational structure...</p>
-            <p className="text-xs text-orange-700">AI is reviewing HR data, org structure, and processes to identify gaps.</p>
+            <p className="text-sm font-medium text-[var(--rag-amber)]">Analyzing operational structure...</p>
+            <p className="text-xs text-[var(--rag-amber)]">AI is reviewing HR data, org structure, and processes to identify gaps.</p>
           </div>
         </div>
       )}
@@ -324,18 +324,18 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief executi
                   <div className="px-5 pb-4 space-y-2">
                     <p className="text-sm text-muted-foreground">{gap.description}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="p-2.5 bg-red-50 rounded-lg">
-                        <p className="text-[10px] font-medium text-red-600 uppercase tracking-wider mb-1">Current State</p>
-                        <p className="text-xs text-red-800">{gap.currentState}</p>
+                      <div className="p-2.5 bg-[var(--rag-red-soft)] rounded-lg">
+                        <p className="text-[10px] font-medium text-[var(--rag-red)] uppercase tracking-wider mb-1">Current State</p>
+                        <p className="text-xs text-[var(--rag-red)]">{gap.currentState}</p>
                       </div>
-                      <div className="p-2.5 bg-green-50 rounded-lg">
-                        <p className="text-[10px] font-medium text-green-600 uppercase tracking-wider mb-1">Desired State</p>
-                        <p className="text-xs text-green-800">{gap.desiredState}</p>
+                      <div className="p-2.5 bg-[var(--rag-green-soft)] rounded-lg">
+                        <p className="text-[10px] font-medium text-[var(--rag-green)] uppercase tracking-wider mb-1">Desired State</p>
+                        <p className="text-xs text-[var(--rag-green)]">{gap.desiredState}</p>
                       </div>
                     </div>
-                    <div className="p-2.5 bg-blue-50 rounded-lg">
-                      <p className="text-[10px] font-medium text-blue-600 uppercase tracking-wider mb-1">Recommendation</p>
-                      <p className="text-xs text-blue-800">{gap.recommendation}</p>
+                    <div className="p-2.5 bg-[var(--rag-blue-soft)] rounded-lg">
+                      <p className="text-[10px] font-medium text-[var(--rag-blue)] uppercase tracking-wider mb-1">Recommendation</p>
+                      <p className="text-xs text-[var(--rag-blue)]">{gap.recommendation}</p>
                     </div>
                   </div>
                 )}

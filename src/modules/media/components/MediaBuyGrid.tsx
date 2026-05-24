@@ -21,7 +21,7 @@ function fmtMinor(minor: number, currency: string): string {
 function VarianceCell({ planned, actual }: { planned: number; actual: number }) {
   const pct = computeVariancePct(planned, actual);
   if (planned === 0) return <td className="px-3 py-2 text-sm text-muted-foreground">—</td>;
-  const color = pct > 10 ? 'text-destructive' : pct < -10 ? 'text-green-600' : 'text-foreground';
+  const color = pct > 10 ? 'text-destructive' : pct < -10 ? 'text-[var(--rag-green)]' : 'text-foreground';
   return (
     <td className={`px-3 py-2 text-right text-sm font-mono ${color}`}>
       {pct > 0 ? '+' : ''}{pct.toFixed(1)}%

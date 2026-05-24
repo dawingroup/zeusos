@@ -128,7 +128,7 @@ export function RewriteApprovalDialog({
               <textarea
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
-                className="w-full h-64 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                className="w-full h-64 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)] resize-y"
               />
             </div>
           )}
@@ -143,7 +143,7 @@ export function RewriteApprovalDialog({
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="Explain why this rewrite was rejected..."
-                className="w-full h-32 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-y"
+                className="w-full h-32 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-[var(--rag-red)] focus:border-[var(--rag-red)] resize-y"
               />
             </div>
           )}
@@ -170,7 +170,7 @@ export function RewriteApprovalDialog({
                 <button
                   onClick={() => setMode('reject')}
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md border border-red-300 text-red-700 hover:bg-red-50 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md border border-[var(--rag-red)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50"
                 >
                   <XCircle className="h-4 w-4" />
                   Reject
@@ -182,7 +182,7 @@ export function RewriteApprovalDialog({
                       setMode('edit');
                     }}
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md border border-blue-300 text-blue-700 hover:bg-blue-50 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md border border-[var(--rag-blue)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] disabled:opacity-50"
                   >
                     <Pencil className="h-4 w-4" />
                     Edit
@@ -191,7 +191,7 @@ export function RewriteApprovalDialog({
                 <button
                   onClick={handleApprove}
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-[var(--rag-green)] text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -207,7 +207,7 @@ export function RewriteApprovalDialog({
               <button
                 onClick={handleEditApprove}
                 disabled={isSubmitting || !editedContent.trim()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-[var(--rag-green)] text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -222,7 +222,7 @@ export function RewriteApprovalDialog({
               <button
                 onClick={handleReject}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-[var(--rag-red)] text-white hover:bg-[var(--rag-red)] disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

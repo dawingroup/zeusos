@@ -20,11 +20,11 @@ interface AlignmentHeatmapProps {
 // ----------------------------------------------------------------------------
 
 const SCORE_BG: Record<number, string> = {
-  5: 'bg-green-500',
+  5: 'bg-[var(--rag-green)]',
   4: 'bg-lime-400',
-  3: 'bg-yellow-400',
-  2: 'bg-orange-400',
-  1: 'bg-red-500',
+  3: 'bg-[var(--rag-amber)]',
+  2: 'bg-[var(--rag-amber)]',
+  1: 'bg-[var(--rag-red)]',
   0: 'bg-[var(--bg-sunken)]',
 };
 

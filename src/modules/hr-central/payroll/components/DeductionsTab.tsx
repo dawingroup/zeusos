@@ -392,28 +392,28 @@ export function DeductionsTab({ employees }: Props) {
         </Card>
         <Card>
           <CardContent className="p-4 flex items-center gap-2">
-            <div className="p-2 rounded-full bg-orange-100"><Repeat className="h-4 w-4 text-orange-600" /></div>
+            <div className="p-2 rounded-full bg-[var(--rag-amber-soft)]"><Repeat className="h-4 w-4 text-[var(--rag-amber)]" /></div>
             <div>
               <p className="text-xs text-muted-foreground">Monthly impact</p>
-              <p className="text-lg font-bold text-orange-700">{formatCurrency(summary.monthlyImpact)}</p>
+              <p className="text-lg font-bold text-[var(--rag-amber)]">{formatCurrency(summary.monthlyImpact)}</p>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 flex items-center gap-2">
-            <div className="p-2 rounded-full bg-amber-100"><Coins className="h-4 w-4 text-amber-700" /></div>
+            <div className="p-2 rounded-full bg-[var(--rag-amber-soft)]"><Coins className="h-4 w-4 text-[var(--rag-amber)]" /></div>
             <div>
               <p className="text-xs text-muted-foreground">Installment balance</p>
-              <p className="text-lg font-bold text-amber-700">{formatCurrency(summary.outstandingInstallments)}</p>
+              <p className="text-lg font-bold text-[var(--rag-amber)]">{formatCurrency(summary.outstandingInstallments)}</p>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 flex items-center gap-2">
-            <div className="p-2 rounded-full bg-blue-100"><Calendar className="h-4 w-4 text-blue-600" /></div>
+            <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]"><Calendar className="h-4 w-4 text-[var(--rag-blue)]" /></div>
             <div>
               <p className="text-xs text-muted-foreground">One-time this month</p>
-              <p className="text-lg font-bold text-blue-700">{formatCurrency(summary.oneTimeThisMonth)}</p>
+              <p className="text-lg font-bold text-[var(--rag-blue)]">{formatCurrency(summary.oneTimeThisMonth)}</p>
             </div>
           </CardContent>
         </Card>
@@ -500,7 +500,7 @@ export function DeductionsTab({ employees }: Props) {
                               onClick={() => activateDeduction(d.id)}
                               title="Activate — payroll will pick this up on the next run"
                             >
-                              <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-green-600" />
+                              <CheckCircle2 className="h-3.5 w-3.5 mr-1 text-[var(--rag-green)]" />
                               Activate
                             </Button>
                           )}
@@ -518,7 +518,7 @@ export function DeductionsTab({ employees }: Props) {
                               }}
                               title="Cancel"
                             >
-                              <Ban className="h-3.5 w-3.5 text-red-600" />
+                              <Ban className="h-3.5 w-3.5 text-[var(--rag-red)]" />
                             </Button>
                           )}
                           {isAdmin && (
@@ -534,7 +534,7 @@ export function DeductionsTab({ employees }: Props) {
                               }}
                               title="Delete permanently (admin only)"
                             >
-                              <Trash2 className="h-3.5 w-3.5 text-red-700" />
+                              <Trash2 className="h-3.5 w-3.5 text-[var(--rag-red)]" />
                             </Button>
                           )}
                         </div>

@@ -49,7 +49,7 @@ export function KPILayout() {
                 className={`
                   flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all
                   ${active
-                    ? 'bg-card text-blue-700 shadow-sm'
+                    ? 'bg-card text-[var(--rag-blue)] shadow-sm'
                     : 'text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)]'
                   }
                 `}

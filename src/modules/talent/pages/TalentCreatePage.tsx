@@ -407,7 +407,7 @@ export default function TalentCreatePage() {
                     <button
                       type="button"
                       onClick={() => removeSocial(idx)}
-                      className="col-span-1 text-xs text-rose-700 hover:underline"
+                      className="col-span-1 text-xs text-[var(--rag-red)] hover:underline"
                     >
                       ✕
                     </button>

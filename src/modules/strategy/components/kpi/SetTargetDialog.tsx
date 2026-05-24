@@ -151,8 +151,8 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-50 rounded-lg p-2">
-              <Target className="w-5 h-5 text-blue-600" />
+            <div className="bg-[var(--rag-blue-soft)] rounded-lg p-2">
+              <Target className="w-5 h-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">
@@ -194,7 +194,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
           {isRange ? (
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-1">
-                Target Range <span className="text-red-500">*</span>
+                Target Range <span className="text-[var(--rag-red)]">*</span>
               </label>
               <p className="text-xs text-muted-foreground mb-2">
                 Performance is optimal within this range.
@@ -207,7 +207,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={rangeMin}
                     onChange={(e) => setRangeMin(e.target.value)}
                     placeholder="Min"
-                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                     required
                   />
                 </div>
@@ -219,7 +219,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={rangeMax}
                     onChange={(e) => setRangeMax(e.target.value)}
                     placeholder="Max"
-                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                     required
                   />
                 </div>
@@ -232,7 +232,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
             /* Standard target value */
             <div>
               <label className="block text-sm font-medium text-muted-foreground mb-1">
-                Target Value <span className="text-red-500">*</span>
+                Target Value <span className="text-[var(--rag-red)]">*</span>
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -241,7 +241,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                   value={targetValue}
                   onChange={(e) => setTargetValue(e.target.value)}
                   placeholder="Enter target value"
-                  className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   required
                 />
                 {kpi.unit && (
@@ -263,7 +263,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                 value={stretchValue}
                 onChange={(e) => setStretchValue(e.target.value)}
                 placeholder="Aspirational"
-                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               />
               <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Ambitious goal</p>
             </div>
@@ -277,7 +277,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                 value={minimumValue}
                 onChange={(e) => setMinimumValue(e.target.value)}
                 placeholder="Floor threshold"
-                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               />
               <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">Below this = critical</p>
             </div>
@@ -310,7 +310,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={fiscalYear}
                     onChange={(e) => setFiscalYear(e.target.value)}
                     placeholder={String(currentFiscalYear())}
-                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   />
                 </div>
                 <div>
@@ -320,7 +320,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                   <select
                     value={quarter}
                     onChange={(e) => setQuarter(e.target.value)}
-                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   >
                     <option value="">Full Year</option>
                     <option value="1">Q1</option>
@@ -343,7 +343,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
                     value={baselineValue}
                     onChange={(e) => setBaselineValue(e.target.value)}
                     placeholder="Starting measurement"
-                    className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border border-[var(--border-subtle)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   />
                   {kpi.unit && (
                     <span className="text-sm text-muted-foreground font-medium">{kpi.unit}</span>
@@ -358,7 +358,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
 
           {/* Error */}
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">{error}</p>
+            <p className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] rounded-md px-3 py-2">{error}</p>
           )}
 
           {/* Actions */}
@@ -373,7 +373,7 @@ export function SetTargetDialog({ kpi, isOpen, onClose, onSave }: SetTargetDialo
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               {saving ? 'Saving...' : hasExistingTarget ? 'Update Target' : 'Set Target'}
             </button>

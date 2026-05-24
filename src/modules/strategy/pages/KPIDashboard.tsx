@@ -38,16 +38,16 @@ export const KPIDashboard: React.FC = () => {
         </div>
 
         {/* Info Alert */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <BarChart3 className="h-5 w-5 text-blue-400" />
+              <BarChart3 className="h-5 w-5 text-[var(--rag-blue)]" />
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
+              <h3 className="text-sm font-medium text-[var(--rag-blue)]">
                 KPI Features
               </h3>
-              <div className="mt-2 text-sm text-blue-700">
+              <div className="mt-2 text-sm text-[var(--rag-blue)]">
                 <p>
                   This page will include KPI definition, target setting, trend analysis,
                   and balanced scorecard management.

@@ -34,11 +34,11 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
 }) => {
   const getStatusColor = () => {
     switch (plan.status) {
-      case 'active': return 'text-green-600 bg-green-50';
+      case 'active': return 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]';
       case 'draft': return 'text-muted-foreground bg-[var(--bg-sunken)]';
-      case 'on_hold': return 'text-amber-600 bg-amber-50';
-      case 'completed': return 'text-blue-600 bg-blue-50';
-      case 'cancelled': return 'text-red-600 bg-red-50';
+      case 'on_hold': return 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]';
+      case 'completed': return 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]';
+      case 'cancelled': return 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]';
       default: return 'text-muted-foreground bg-[var(--bg-sunken)]';
     }
   };
@@ -48,9 +48,9 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
   const totalActions = plan.actions.length;
 
   const getProgressColor = () => {
-    if (plan.overallProgress >= 70) return 'bg-green-500';
-    if (plan.overallProgress >= 40) return 'bg-amber-500';
-    return 'bg-red-500';
+    if (plan.overallProgress >= 70) return 'bg-[var(--rag-green)]';
+    if (plan.overallProgress >= 40) return 'bg-[var(--rag-amber)]';
+    return 'bg-[var(--rag-red)]';
   };
 
   const isOverdue = plan.targetDate.toDate() < new Date() && plan.status === 'active';
@@ -114,14 +114,14 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
         <div className="grid grid-cols-3 gap-2 mb-4">
           <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
             <div className="flex items-center justify-center gap-1">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-[var(--rag-green)]" />
               <span className="font-bold text-foreground">{completedActions}</span>
             </div>
             <p className="text-xs text-muted-foreground">Done</p>
           </div>
           <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
             <div className="flex items-center justify-center gap-1">
-              <Clock className="w-4 h-4 text-amber-500" />
+              <Clock className="w-4 h-4 text-[var(--rag-amber)]" />
               <span className="font-bold text-foreground">{inProgressActions}</span>
             </div>
             <p className="text-xs text-muted-foreground">Active</p>
@@ -142,9 +142,9 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
               key={action.id}
               className={`px-2 py-0.5 text-xs rounded ${
                 action.status === 'completed'
-                  ? 'bg-green-100 text-green-700'
+                  ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                   : action.status === 'in_progress'
-                  ? 'bg-amber-100 text-amber-700'
+                  ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                   : 'bg-[var(--bg-sunken)] text-muted-foreground'
               }`}
             >
@@ -159,7 +159,7 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
         </div>
 
         {/* Target Date */}
-        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
+        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-[var(--rag-red)]' : 'text-muted-foreground'}`}>
           <Calendar className="w-4 h-4" />
           <span>
             Target: {plan.targetDate.toDate().toLocaleDateString()}

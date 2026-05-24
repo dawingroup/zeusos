@@ -335,12 +335,12 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
   if (existingDocument && !selectedFile) {
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+        <div className="flex items-center justify-between p-4 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-lg">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-green-600" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--rag-green)]" />
             <div>
-              <p className="font-medium text-green-900">{existingDocument.fileName}</p>
-              <p className="text-sm text-green-700">
+              <p className="font-medium text-[var(--rag-green)]">{existingDocument.fileName}</p>
+              <p className="text-sm text-[var(--rag-green)]">
                 {formatFileSize(existingDocument.fileSize)} — Uploaded {new Date(existingDocument.uploadedAt).toLocaleDateString()}
               </p>
             </div>
@@ -383,7 +383,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
         onClick={() => !isParsing && fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
           isDragging
-            ? 'border-blue-500 bg-blue-50'
+            ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
             : isParsing
               ? 'border-[var(--border-subtle)] bg-[var(--bg-sunken)] cursor-wait'
               : 'border-[var(--border-default)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-sunken)]'
@@ -391,7 +391,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
       >
         {isParsing ? (
           <>
-            <Loader2 className="w-12 h-12 mx-auto mb-4 text-blue-500 animate-spin" />
+            <Loader2 className="w-12 h-12 mx-auto mb-4 text-[var(--rag-blue)] animate-spin" />
             <p className="text-sm font-medium text-foreground mb-1">
               Parsing document content...
             </p>
@@ -401,7 +401,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
           </>
         ) : (
           <>
-            <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-blue-500' : 'text-[var(--fg-tertiary)]'}`} />
+            <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-[var(--rag-blue)]' : 'text-[var(--fg-tertiary)]'}`} />
             <p className="text-sm font-medium text-foreground mb-1">
               Upload your current Business Strategy & Plan
             </p>
@@ -424,7 +424,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-sm text-[var(--rag-red)]">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {error}
         </div>
@@ -432,7 +432,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
 
       {/* Truncation Warning */}
       {truncationWarning && extractedText && (
-        <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+        <div className="flex items-start gap-2 p-3 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg text-sm text-[var(--rag-amber)]">
           <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium">Large document detected</p>
@@ -449,16 +449,16 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {selectedFile.type === 'application/pdf' ? (
-                <FileText className="w-8 h-8 text-red-500" />
+                <FileText className="w-8 h-8 text-[var(--rag-red)]" />
               ) : (
-                <File className="w-8 h-8 text-blue-500" />
+                <File className="w-8 h-8 text-[var(--rag-blue)]" />
               )}
               <div>
                 <p className="font-medium text-foreground">{selectedFile.name}</p>
                 <p className="text-sm text-muted-foreground">
                   {formatFileSize(selectedFile.size)}
                   {extractedText && (
-                    <span className="ml-2 text-green-600">
+                    <span className="ml-2 text-[var(--rag-green)]">
                       — {extractedText.length.toLocaleString()} chars extracted
                     </span>
                   )}
@@ -481,7 +481,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
               <button
                 onClick={handleUpload}
                 disabled={isUploading}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
               >
                 {isUploading ? (
                   <>
@@ -515,7 +515,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                 }}
                 placeholder="Paste the text content of your strategy document here..."
                 rows={6}
-                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
               />
             </div>
           )}
@@ -528,7 +528,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
           <p className="text-sm text-muted-foreground mb-2">or</p>
           <button
             onClick={() => setIsManualEntry(true)}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
           >
             Paste strategy content manually
           </button>
@@ -549,10 +549,10 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
             }}
             placeholder="Paste the full text content of your business strategy and plan here for AI analysis..."
             rows={10}
-            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2 text-sm resize-none focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
           />
           {extractedText && (
-            <p className={`text-xs mt-1 ${extractedText.length > AI_CONTENT_CHAR_LIMIT ? 'text-amber-600' : 'text-[var(--fg-tertiary)]'}`}>
+            <p className={`text-xs mt-1 ${extractedText.length > AI_CONTENT_CHAR_LIMIT ? 'text-[var(--rag-amber)]' : 'text-[var(--fg-tertiary)]'}`}>
               {extractedText.length.toLocaleString()} characters
               {extractedText.length > AI_CONTENT_CHAR_LIMIT && ` (AI will analyze first ${AI_CONTENT_CHAR_LIMIT.toLocaleString()})`}
             </p>
@@ -576,7 +576,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
                 setIsManualEntry(false);
               }}
               disabled={!extractedText.trim()}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
             >
               <Upload className="w-4 h-4" />
               Start Review

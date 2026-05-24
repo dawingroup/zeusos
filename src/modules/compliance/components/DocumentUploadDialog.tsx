@@ -150,7 +150,7 @@ export function DocumentUploadDialog({ open, onOpenChange, onSave }: DocumentUpl
           )}
 
           {selectedTemplate && (
-            <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-md px-3 py-2">
+            <div className="flex items-center justify-between bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-md px-3 py-2">
               <span className="text-sm">
                 Template: <strong>{selectedTemplate.name}</strong>
               </span>
@@ -224,7 +224,7 @@ export function DocumentUploadDialog({ open, onOpenChange, onSave }: DocumentUpl
             >
               {file ? (
                 <div className="flex items-center justify-center gap-2">
-                  <FileText className="h-5 w-5 text-emerald-600" />
+                  <FileText className="h-5 w-5 text-[var(--rag-green)]" />
                   <span className="text-sm font-medium">{file.name}</span>
                   <span className="text-xs text-muted-foreground">
                     ({(file.size / 1024).toFixed(0)} KB)

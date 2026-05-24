@@ -103,7 +103,7 @@ export function SectionDiffViewer({ original, rewrite, heading }: SectionDiffVie
             {diff.left.map((seg, i) => (
               <span
                 key={i}
-                className={seg.type === 'removed' ? 'bg-red-100 text-red-800 line-through' : ''}
+                className={seg.type === 'removed' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] line-through' : ''}
               >
                 {seg.text}
               </span>
@@ -120,7 +120,7 @@ export function SectionDiffViewer({ original, rewrite, heading }: SectionDiffVie
             {diff.right.map((seg, i) => (
               <span
                 key={i}
-                className={seg.type === 'added' ? 'bg-green-100 text-green-800' : ''}
+                className={seg.type === 'added' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' : ''}
               >
                 {seg.text}
               </span>

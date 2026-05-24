@@ -82,7 +82,7 @@ export default function ClientsPage() {
           </label>
           <Link
             to="/clients/new"
-            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)]"
           >
             + New client
           </Link>
@@ -118,7 +118,7 @@ export default function ClientsPage() {
                 className={`border-b hover:bg-[var(--bg-sunken)] ${client.status === 'BLOCKED' ? 'opacity-50' : ''}`}
               >
                 <td className="px-3 py-2">
-                  <Link to={`/clients/${client.id}`} className="font-medium text-blue-700 hover:underline">
+                  <Link to={`/clients/${client.id}`} className="font-medium text-[var(--rag-blue)] hover:underline">
                     {client.name}
                   </Link>
                   {client.code && <span className="ml-2 text-xs text-muted-foreground">{client.code}</span>}

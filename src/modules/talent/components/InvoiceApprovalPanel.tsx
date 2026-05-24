@@ -15,10 +15,10 @@ interface Props {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  SUBMITTED: 'bg-yellow-100 text-yellow-700',
-  APPROVED:  'bg-green-100 text-green-700',
-  PAID:      'bg-blue-100 text-blue-700',
-  REJECTED:  'bg-red-100 text-red-600',
+  SUBMITTED: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  APPROVED:  'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  PAID:      'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  REJECTED:  'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
@@ -77,14 +77,14 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
           <button
             onClick={handleApprove}
             disabled={loading}
-            className="rounded bg-green-600 px-3 py-1.5 text-sm text-white disabled:opacity-60"
+            className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm text-white disabled:opacity-60"
           >
             Approve
           </button>
           <button
             onClick={() => setShowRejectForm(true)}
             disabled={loading}
-            className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-600 disabled:opacity-60"
+            className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] disabled:opacity-60"
           >
             Reject
           </button>
@@ -104,7 +104,7 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
             <button
               onClick={handleReject}
               disabled={loading || !rejectionReason.trim()}
-              className="rounded bg-red-600 px-3 py-1.5 text-sm text-white disabled:opacity-60"
+              className="rounded bg-[var(--rag-red)] px-3 py-1.5 text-sm text-white disabled:opacity-60"
             >
               Confirm Reject
             </button>
@@ -119,7 +119,7 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
       )}
 
       {invoice.status === 'REJECTED' && invoice.rejectionReason && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-[var(--rag-red)]">
           Rejected: {invoice.rejectionReason}
         </p>
       )}

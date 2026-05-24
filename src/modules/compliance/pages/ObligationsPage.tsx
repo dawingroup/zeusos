@@ -122,7 +122,7 @@ export function ObligationsPage() {
       {/* Loading */}
       {loading && obligations.length === 0 && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--rag-green)]" />
         </div>
       )}
 
@@ -158,7 +158,7 @@ export function ObligationsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <ClipboardCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <ClipboardCheck className="h-4 w-4 text-[var(--rag-green)] shrink-0" />
                         <p className="text-sm font-medium">{o.title}</p>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
@@ -176,14 +176,14 @@ export function ObligationsPage() {
 
                   <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                     {nextDue && (
-                      <span className={cn('flex items-center gap-1', isOverdue ? 'text-red-600 font-medium' : '')}>
+                      <span className={cn('flex items-center gap-1', isOverdue ? 'text-[var(--rag-red)] font-medium' : '')}>
                         {isOverdue ? <AlertTriangle className="h-3 w-3" /> : <Calendar className="h-3 w-3" />}
                         {isOverdue ? 'Overdue' : 'Next due'}: {nextDue.toLocaleDateString()}
                       </span>
                     )}
                     {lastCompleted && (
                       <span className="flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3 text-green-600" />
+                        <CheckCircle className="h-3 w-3 text-[var(--rag-green)]" />
                         Last: {lastCompleted.toLocaleDateString()}
                       </span>
                     )}

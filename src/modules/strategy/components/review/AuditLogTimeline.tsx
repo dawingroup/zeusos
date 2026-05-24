@@ -34,11 +34,11 @@ interface AuditLogTimelineProps {
 
 const CHANGE_TYPE_CONFIG: Record<ChangeType, { label: string; Icon: typeof Clock; color: string }> = {
   rewrite: { label: 'Rewrite Applied', Icon: Wand2, color: 'text-purple-500 bg-purple-50' },
-  minor_edit: { label: 'Minor Edit', Icon: Pencil, color: 'text-blue-500 bg-blue-50' },
+  minor_edit: { label: 'Minor Edit', Icon: Pencil, color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' },
   assessment_only: { label: 'Assessment', Icon: Eye, color: 'text-indigo-500 bg-indigo-50' },
   manual_edit: { label: 'Manual Edit', Icon: Pencil, color: 'text-muted-foreground bg-[var(--bg-sunken)]' },
-  new_section: { label: 'Section Added', Icon: Plus, color: 'text-green-500 bg-green-50' },
-  removed: { label: 'Section Removed', Icon: Trash2, color: 'text-red-500 bg-red-50' },
+  new_section: { label: 'Section Added', Icon: Plus, color: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]' },
+  removed: { label: 'Section Removed', Icon: Trash2, color: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]' },
 };
 
 function formatTimestamp(ts: { seconds: number } | Date | null): string {
@@ -133,8 +133,8 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                       <span
                         className={
                           (entry.alignmentScoreAfter || 0) > (entry.alignmentScoreBefore || 0)
-                            ? 'text-green-600 font-medium'
-                            : 'text-red-600 font-medium'
+                            ? 'text-[var(--rag-green)] font-medium'
+                            : 'text-[var(--rag-red)] font-medium'
                         }
                       >
                         {entry.alignmentScoreAfter}
@@ -143,9 +143,9 @@ export function AuditLogTimeline({ entries, isLoading }: AuditLogTimelineProps) 
                   )}
 
                   {entry.changeType === 'rewrite' ? (
-                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-[var(--rag-green)] flex-shrink-0" />
                   ) : entry.changeType === 'removed' ? (
-                    <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                    <XCircle className="h-4 w-4 text-[var(--rag-red)] flex-shrink-0" />
                   ) : null}
 
                   {isExpanded ? (

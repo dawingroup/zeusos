@@ -84,7 +84,7 @@ export function KPILibraryPage() {
           <p className="text-muted-foreground text-sm">No KPIs match your filters.</p>
           <button
             onClick={library.clearFilters}
-            className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+            className="mt-2 text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
           >
             Clear all filters
           </button>

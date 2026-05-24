@@ -32,18 +32,18 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
   showLabels = true,
 }) => {
   const getBarColor = (value: number): string => {
-    if (value >= 80) return 'bg-green-500';
-    if (value >= 60) return 'bg-emerald-400';
-    if (value >= 40) return 'bg-amber-400';
-    if (value >= 20) return 'bg-orange-400';
-    return 'bg-red-400';
+    if (value >= 80) return 'bg-[var(--rag-green)]';
+    if (value >= 60) return 'bg-[var(--rag-green)]';
+    if (value >= 40) return 'bg-[var(--rag-amber)]';
+    if (value >= 20) return 'bg-[var(--rag-amber)]';
+    return 'bg-[var(--rag-red)]';
   };
 
   const getOverallColor = (value: number): string => {
-    if (value >= 80) return 'text-green-600';
-    if (value >= 60) return 'text-emerald-600';
-    if (value >= 40) return 'text-amber-600';
-    return 'text-red-600';
+    if (value >= 80) return 'text-[var(--rag-green)]';
+    if (value >= 60) return 'text-[var(--rag-green)]';
+    if (value >= 40) return 'text-[var(--rag-amber)]';
+    return 'text-[var(--rag-red)]';
   };
 
   return (
@@ -114,19 +114,19 @@ export const ReadinessAssessment: React.FC<ReadinessAssessmentProps> = ({
       <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
         <div className="flex flex-wrap gap-3 text-xs">
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-green-500" />
+            <div className="w-3 h-3 rounded bg-[var(--rag-green)]" />
             <span className="text-muted-foreground">Excellent (80+)</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-emerald-400" />
+            <div className="w-3 h-3 rounded bg-[var(--rag-green)]" />
             <span className="text-muted-foreground">Good (60-79)</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-amber-400" />
+            <div className="w-3 h-3 rounded bg-[var(--rag-amber)]" />
             <span className="text-muted-foreground">Developing (40-59)</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-red-400" />
+            <div className="w-3 h-3 rounded bg-[var(--rag-red)]" />
             <span className="text-muted-foreground">Needs Work (&lt;40)</span>
           </div>
         </div>

@@ -13,10 +13,10 @@ interface ComplianceScoreCardProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return 'text-green-600';
-  if (score >= 60) return 'text-amber-600';
-  if (score >= 40) return 'text-orange-600';
-  return 'text-red-600';
+  if (score >= 80) return 'text-[var(--rag-green)]';
+  if (score >= 60) return 'text-[var(--rag-amber)]';
+  if (score >= 40) return 'text-[var(--rag-amber)]';
+  return 'text-[var(--rag-red)]';
 }
 
 function getScoreRingColor(score: number): string {
@@ -42,7 +42,7 @@ export function ComplianceScoreCard({ score, totalDocuments }: ComplianceScoreCa
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
-          <Shield className="h-4 w-4 text-emerald-600" />
+          <Shield className="h-4 w-4 text-[var(--rag-green)]" />
           Compliance Score
         </CardTitle>
       </CardHeader>

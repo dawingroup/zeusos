@@ -131,11 +131,11 @@ export default function ChangeOrderPage() {
           {co?.status === 'DRAFT' && (
             <>
               <button onClick={handleApprove} disabled={busy}
-                className="rounded bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50">
+                className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50">
                 Approve
               </button>
               <button onClick={handleReject} disabled={busy}
-                className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50 disabled:opacity-50">
+                className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50">
                 Reject
               </button>
             </>
@@ -163,14 +163,14 @@ export default function ChangeOrderPage() {
         </div>
 
         {isDraft && (
-          <button onClick={handleSave} disabled={busy} className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+          <button onClick={handleSave} disabled={busy} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
             {busy ? 'Saving…' : isExisting ? 'Save' : 'Draft Change Order'}
           </button>
         )}
       </fieldset>
 
       {co?.status === 'APPROVED' && (
-        <div className="rounded border bg-emerald-50 p-3 text-xs text-emerald-900">
+        <div className="rounded border bg-[var(--rag-green-soft)] p-3 text-xs text-[var(--rag-green)]">
           Approved {new Date((co as any).approvedAt?._seconds ? (co as any).approvedAt._seconds * 1000 : Date.now()).toLocaleString()} by {co.approvedByUserId}.
         </div>
       )}
@@ -191,7 +191,7 @@ export default function ChangeOrderPage() {
               {history.map(h => (
                 <tr key={h.id} className="border-t">
                   <td className="px-3 py-2">
-                    <Link to={`/clients/${clientId}/msas/${msaId}/sows/${sowId}/change-orders/${h.id}`} className="font-mono text-xs text-blue-700 hover:underline">{h.code || h.id}</Link>
+                    <Link to={`/clients/${clientId}/msas/${msaId}/sows/${sowId}/change-orders/${h.id}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">{h.code || h.id}</Link>
                   </td>
                   <td className="px-3 py-2 text-right tabular-nums">{formatMinor(h.deltaMinor, h.currency)}</td>
                   <td className="px-3 py-2">{h.status}</td>
