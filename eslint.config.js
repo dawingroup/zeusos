@@ -4,6 +4,7 @@ import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import designSystem from './.eslint/index.js';
 
 export default [
   {
@@ -34,6 +35,7 @@ export default [
       '@typescript-eslint': tsPlugin,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'design-system': designSystem,
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
@@ -44,6 +46,11 @@ export default [
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      // Design-system guard rails (Phase U.1). Warn-only until U.6 promotes
+      // to error after the U.2 module-by-module token sweep + U.3 hex
+      // eradication. See docs/STYLING.md.
+      'design-system/no-raw-palette': 'warn',
+      'design-system/no-inline-style-literals': 'warn',
     },
   },
 ];

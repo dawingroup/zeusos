@@ -11,6 +11,7 @@
     "clean": "rm -rf dist",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:design": "eslint 'src/**/*.{ts,tsx,js,jsx}' --config eslint.config.design.js",
     "deploy": "bash scripts/firebase-safe.sh deploy",
     "deploy:hosting": "bash scripts/firebase-safe.sh deploy --only hosting",
     "deploy:preview": "bash scripts/firebase-safe.sh hosting:channel:deploy preview",
