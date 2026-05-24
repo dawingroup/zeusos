@@ -17,9 +17,9 @@
   --bg-app: #f6f5f2;
   --bg-surface: #ffffff;
   --bg-sunken: #efede8;
-  --bg-sidebar: #0a1f4a;            /* Zeus deep navy */
-  --bg-sidebar-hover: #112a5e;
-  --bg-sidebar-active: #1a3870;
+  --bg-sidebar: #1a1a1c;            /* Sleek near-black (DawinOS spec §2.1) */
+  --bg-sidebar-hover: #26262a;
+  --bg-sidebar-active: #2f2f33;
 
   /* ---- Foreground ---- */
   --fg-primary: #0a1f4a;             /* Zeus deep navy on light */
