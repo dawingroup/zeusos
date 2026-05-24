@@ -175,7 +175,7 @@ const TopicTrackingPage: React.FC = () => {
     switch (direction) {
       case 'rising': return <TrendingUp className="h-4 w-4 text-green-500" />;
       case 'declining': return <TrendingDown className="h-4 w-4 text-red-500" />;
-      default: return <Minus className="h-4 w-4 text-gray-400" />;
+      default: return <Minus className="h-4 w-4 text-[var(--fg-tertiary)]" />;
     }
   };
 

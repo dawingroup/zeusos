@@ -91,13 +91,13 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">PESTEL Analysis</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-xl font-bold text-foreground">PESTEL Analysis</h2>
+          <p className="text-sm text-muted-foreground">
             Macro-environment analysis across Political, Economic, Social, Technological, Environmental, and Legal dimensions
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+          <button className="px-3 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-default)] rounded-lg hover:bg-[var(--bg-sunken)] flex items-center gap-2">
             <Filter className="w-4 h-4" />
             Filter
           </button>
@@ -113,23 +113,23 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center gap-2 text-gray-500 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <FileText className="w-4 h-4" />
             <span className="text-xs font-medium">Analyses</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.totalAnalyses}</div>
+          <div className="text-2xl font-bold text-foreground">{stats.totalAnalyses}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center gap-2 text-gray-500 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <Target className="w-4 h-4" />
             <span className="text-xs font-medium">Total Factors</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.totalFactors}</div>
+          <div className="text-2xl font-bold text-foreground">{stats.totalFactors}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center gap-2 text-green-600 mb-2">
             <TrendingUp className="w-4 h-4" />
             <span className="text-xs font-medium">Opportunities</span>
@@ -137,7 +137,7 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
           <div className="text-2xl font-bold text-green-600">{stats.opportunities}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center gap-2 text-red-600 mb-2">
             <AlertTriangle className="w-4 h-4" />
             <span className="text-xs font-medium">Threats</span>
@@ -145,7 +145,7 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
           <div className="text-2xl font-bold text-red-600">{stats.threats}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center gap-2 text-orange-600 mb-2">
             <AlertTriangle className="w-4 h-4" />
             <span className="text-xs font-medium">High Risk</span>
@@ -153,12 +153,12 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
           <div className="text-2xl font-bold text-orange-600">{stats.highRiskCount}</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center gap-2 text-gray-500 mb-2">
+        <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
+          <div className="flex items-center gap-2 text-muted-foreground mb-2">
             <Clock className="w-4 h-4" />
             <span className="text-xs font-medium">Avg Risk Score</span>
           </div>
-          <div className="text-2xl font-bold text-gray-900">{stats.avgRiskScore.toFixed(1)}</div>
+          <div className="text-2xl font-bold text-foreground">{stats.avgRiskScore.toFixed(1)}</div>
         </div>
       </div>
 
@@ -166,14 +166,14 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Analyses List */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100">
-              <h3 className="font-semibold text-gray-900">Recent Analyses</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)]">
+              <h3 className="font-semibold text-foreground">Recent Analyses</h3>
             </div>
-            <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+            <div className="divide-y divide-[var(--border-subtle)] max-h-96 overflow-y-auto">
               {analyses.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
-                  <FileText className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                <div className="p-8 text-center text-muted-foreground">
+                  <FileText className="w-12 h-12 mx-auto text-[var(--fg-tertiary)] mb-3" />
                   <p>No analyses yet</p>
                   <button
                     onClick={onCreateAnalysis}
@@ -186,29 +186,29 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
                 analyses.slice(0, 10).map(analysis => (
                   <div
                     key={analysis.id}
-                    className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                    className={`p-4 cursor-pointer hover:bg-[var(--bg-sunken)] transition-colors ${
                       selectedAnalysis?.id === analysis.id ? 'bg-blue-50' : ''
                     }`}
                     onClick={() => onSelectAnalysis(analysis)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-gray-900 truncate">{analysis.title}</h4>
-                        <p className="text-sm text-gray-500 truncate">{analysis.description}</p>
+                        <h4 className="font-medium text-foreground truncate">{analysis.title}</h4>
+                        <p className="text-sm text-muted-foreground truncate">{analysis.description}</p>
                         <div className="flex items-center gap-2 mt-2">
                           <span className={`px-2 py-0.5 text-xs rounded-full ${
                             analysis.status === 'completed' ? 'bg-green-100 text-green-700' :
                             analysis.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
-                            'bg-gray-100 text-gray-700'
+                            'bg-[var(--bg-sunken)] text-muted-foreground'
                           }`}>
                             {analysis.status}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted-foreground">
                             {analysis.factors.length} factors
                           </span>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="w-5 h-5 text-[var(--fg-tertiary)]" />
                     </div>
                   </div>
                 ))
@@ -217,9 +217,9 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
           </div>
 
           {/* Dimension Distribution */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mt-4">
-            <div className="p-4 border-b border-gray-100">
-              <h3 className="font-semibold text-gray-900">Dimension Distribution</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] mt-4">
+            <div className="p-4 border-b border-[var(--border-subtle)]">
+              <h3 className="font-semibold text-foreground">Dimension Distribution</h3>
             </div>
             <div className="p-4 space-y-3">
               {Object.entries(PESTEL_DIMENSION_CONFIG).map(([key, config]) => {
@@ -231,10 +231,10 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
                 return (
                   <div key={key}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">{config.label}</span>
-                      <span className="text-sm font-medium text-gray-900">{count}</span>
+                      <span className="text-sm text-muted-foreground">{config.label}</span>
+                      <span className="text-sm font-medium text-foreground">{count}</span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all"
                         style={{
@@ -263,14 +263,14 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
           {/* Top Threats & Opportunities */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Top Threats */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-100 flex items-center gap-2">
+            <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+              <div className="p-4 border-b border-[var(--border-subtle)] flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-red-600" />
-                <h3 className="font-semibold text-gray-900">Top Threats</h3>
+                <h3 className="font-semibold text-foreground">Top Threats</h3>
               </div>
               <div className="p-4 space-y-3">
                 {topThreats.length === 0 ? (
-                  <p className="text-sm text-gray-500 text-center py-4">No threats identified</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">No threats identified</p>
                 ) : (
                   topThreats.map(factor => (
                     <FactorCard
@@ -285,14 +285,14 @@ export const PESTELDashboard: React.FC<PESTELDashboardProps> = ({
             </div>
 
             {/* Top Opportunities */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-100 flex items-center gap-2">
+            <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+              <div className="p-4 border-b border-[var(--border-subtle)] flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-green-600" />
-                <h3 className="font-semibold text-gray-900">Top Opportunities</h3>
+                <h3 className="font-semibold text-foreground">Top Opportunities</h3>
               </div>
               <div className="p-4 space-y-3">
                 {topOpportunities.length === 0 ? (
-                  <p className="text-sm text-gray-500 text-center py-4">No opportunities identified</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">No opportunities identified</p>
                 ) : (
                   topOpportunities.map(factor => (
                     <FactorCard

@@ -74,10 +74,10 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+    <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Risk Radar</h3>
-        <span className="text-sm text-gray-500">
+        <h3 className="font-semibold text-foreground">Risk Radar</h3>
+        <span className="text-sm text-muted-foreground">
           {activeAlerts.length} active alert{activeAlerts.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -168,10 +168,10 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
         </svg>
 
         {/* Ring Labels */}
-        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">
+        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-xs text-[var(--fg-tertiary)]">
           Critical
         </div>
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">
+        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-[var(--fg-tertiary)]">
           Info
         </div>
       </div>
@@ -195,7 +195,7 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
               <div className="text-lg font-bold" style={{ color: config.color }}>
                 {count}
               </div>
-              <div className="text-xs text-gray-500">{config.label}</div>
+              <div className="text-xs text-muted-foreground">{config.label}</div>
             </div>
           );
         })}

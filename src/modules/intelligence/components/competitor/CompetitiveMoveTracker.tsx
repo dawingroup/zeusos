@@ -68,7 +68,7 @@ const getImpactColor = (significance: ImpactSignificance): string => {
   if (score >= 4) return 'bg-orange-500';
   if (score >= 3) return 'bg-amber-500';
   if (score >= 2) return 'bg-yellow-500';
-  return 'bg-gray-400';
+  return 'bg-[var(--bg-sunken)]';
 };
 
 const getStatusColor = (status: CompetitiveMove['status']) => {
@@ -77,8 +77,8 @@ const getStatusColor = (status: CompetitiveMove['status']) => {
     case 'analyzing': return 'bg-purple-100 text-purple-700';
     case 'responded': return 'bg-green-100 text-green-700';
     case 'monitoring': return 'bg-amber-100 text-amber-700';
-    case 'closed': return 'bg-gray-100 text-gray-700';
-    default: return 'bg-gray-100 text-gray-700';
+    case 'closed': return 'bg-[var(--bg-sunken)] text-muted-foreground';
+    default: return 'bg-[var(--bg-sunken)] text-muted-foreground';
   }
 };
 
@@ -112,11 +112,11 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
 
   if (moves.length === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
         <div className="text-center py-8">
-          <Rocket className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-600 font-medium">No competitive moves tracked</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <Rocket className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-muted-foreground font-medium">No competitive moves tracked</p>
+          <p className="text-sm text-muted-foreground mt-1">
             Start tracking competitor activities
           </p>
           {onAddMove && (
@@ -133,11 +133,11 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)]">
+      <div className="p-4 border-b border-[var(--border-subtle)] flex justify-between items-center">
         <div>
-          <h3 className="font-semibold text-gray-900">Competitive Moves</h3>
-          <p className="text-sm text-gray-500">{moves.length} moves tracked</p>
+          <h3 className="font-semibold text-foreground">Competitive Moves</h3>
+          <p className="text-sm text-muted-foreground">{moves.length} moves tracked</p>
         </div>
         {onAddMove && (
           <button
@@ -149,11 +149,11 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
         )}
       </div>
 
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-[var(--border-subtle)]">
         {displayMoves.map((move, index) => (
           <div
             key={move.id}
-            className="p-4 hover:bg-gray-50 cursor-pointer"
+            className="p-4 hover:bg-[var(--bg-sunken)] cursor-pointer"
             onClick={() => onViewMove?.(move)}
           >
             <div className="flex items-start gap-3">
@@ -165,7 +165,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
                   {getMoveIcon(move.moveType)}
                 </div>
                 {index < displayMoves.length - 1 && (
-                  <div className="w-0.5 flex-1 bg-gray-200 mt-2" />
+                  <div className="w-0.5 flex-1 bg-[var(--bg-sunken)] mt-2" />
                 )}
               </div>
 
@@ -173,8 +173,8 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h4 className="font-medium text-gray-900">{move.title}</h4>
-                    <p className="text-sm text-gray-500">
+                    <h4 className="font-medium text-foreground">{move.title}</h4>
+                    <p className="text-sm text-muted-foreground">
                       {move.competitorName} • {COMPETITIVE_MOVE_TYPE_LABELS[move.moveType]}
                     </p>
                   </div>
@@ -182,16 +182,16 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getStatusColor(move.status)}`}>
                       {move.status.charAt(0).toUpperCase() + move.status.slice(1)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
                   {move.description}
                 </p>
 
                 {/* Impact & Date */}
-                <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
                     <span>{IMPACT_SIGNIFICANCE_LABELS[move.impactSignificance]}</span>
@@ -221,7 +221,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
       </div>
 
       {maxItems && moves.length > maxItems && (
-        <div className="p-3 border-t border-gray-200 text-center">
+        <div className="p-3 border-t border-[var(--border-subtle)] text-center">
           <button className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
             View all {moves.length} moves
           </button>

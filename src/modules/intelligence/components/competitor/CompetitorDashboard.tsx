@@ -119,14 +119,14 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Competitor Analysis</h1>
-          <p className="text-gray-500">Track and analyze competitive landscape</p>
+          <h1 className="text-2xl font-bold text-foreground">Competitor Analysis</h1>
+          <p className="text-muted-foreground">Track and analyze competitive landscape</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
             disabled={isLoading}
-            className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
           >
             <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -153,7 +153,7 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-[var(--border-subtle)]">
         <nav className="flex gap-4">
           {[
             { id: 'competitors', label: 'Competitors', count: competitors.length },
@@ -166,11 +166,11 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'text-indigo-600 border-indigo-600'
-                  : 'text-gray-500 border-transparent hover:text-gray-700'
+                  : 'text-muted-foreground border-transparent hover:text-muted-foreground'
               }`}
             >
               {tab.label}
-              <span className="ml-2 px-2 py-0.5 text-xs bg-gray-100 rounded-full">
+              <span className="ml-2 px-2 py-0.5 text-xs bg-[var(--bg-sunken)] rounded-full">
                 {tab.count}
               </span>
             </button>
@@ -182,22 +182,22 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
       {activeTab === 'competitors' && (
         <>
           {/* Search and Filters */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)]" />
                 <input
                   type="text"
                   placeholder="Search competitors..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2 border rounded-lg ${
-                  showFilters ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-gray-300 text-gray-700'
+                  showFilters ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-[var(--border-default)] text-muted-foreground'
                 }`}
               >
                 <Filter className="w-4 h-4" />
@@ -211,13 +211,13 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
             </div>
 
             {showFilters && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-[var(--border-subtle)]">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Type</label>
                   <select
                     value={filters.type || ''}
                     onChange={(e) => handleFilterChange('type', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2"
                   >
                     <option value="">All Types</option>
                     {Object.values(COMPETITOR_TYPES).map((type) => (
@@ -229,11 +229,11 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Threat Level</label>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Threat Level</label>
                   <select
                     value={filters.threatLevel || ''}
                     onChange={(e) => handleFilterChange('threatLevel', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2"
                   >
                     <option value="">All Levels</option>
                     {Object.values(THREAT_LEVELS).map((level) => (
@@ -245,11 +245,11 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Industry</label>
                   <select
                     value={filters.industry || ''}
                     onChange={(e) => handleFilterChange('industry', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2"
                   >
                     <option value="">All Industries</option>
                     {Object.values(INDUSTRIES).map((ind) => (
@@ -261,11 +261,11 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Geography</label>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Geography</label>
                   <select
                     value={filters.geography || ''}
                     onChange={(e) => handleFilterChange('geography', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    className="w-full border border-[var(--border-default)] rounded-lg px-3 py-2"
                   >
                     <option value="">All Regions</option>
                     {Object.values(GEOGRAPHIES).map((geo) => (
@@ -283,7 +283,7 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
                         setFilters({});
                         loadCompetitors({});
                       }}
-                      className="text-sm text-gray-500 hover:text-gray-700 underline"
+                      className="text-sm text-muted-foreground hover:text-muted-foreground underline"
                     >
                       Clear all filters
                     </button>
@@ -297,7 +297,7 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-lg h-64 animate-pulse" />
+                <div key={i} className="bg-[var(--bg-sunken)] rounded-lg h-64 animate-pulse" />
               ))}
             </div>
           ) : filteredCompetitors.length > 0 ? (
@@ -312,10 +312,10 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 font-medium">No competitors found</p>
-              <p className="text-sm text-gray-500 mt-1">
+            <div className="text-center py-12 bg-[var(--bg-sunken)] rounded-lg">
+              <Users className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+              <p className="text-muted-foreground font-medium">No competitors found</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 {searchQuery || Object.keys(filters).length > 0
                   ? 'Try adjusting your search or filters'
                   : 'Add your first competitor to get started'}

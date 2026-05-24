@@ -64,7 +64,7 @@ function PriorityBadge({ priority }: { priority: string }) {
     case 'P2':
       return <Badge className="bg-blue-500 hover:bg-blue-500 text-white">Medium</Badge>;
     case 'P3':
-      return <Badge className="bg-gray-500 hover:bg-gray-500 text-white">Low</Badge>;
+      return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white">Low</Badge>;
     default:
       return <Badge variant="outline">{priority}</Badge>;
   }
@@ -106,7 +106,7 @@ function StatusBadge({ status }: { status: string }) {
       );
     case 'cancelled':
       return (
-        <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+        <Badge className="bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]">
           <XCircle className="h-3 w-3 mr-1" />
           Cancelled
         </Badge>
@@ -321,7 +321,7 @@ export function TaskDetailDialog({
                       type="checkbox"
                       checked={item.completed}
                       onChange={(e) => handleChecklistChange(item.id, e.target.checked)}
-                      className="h-4 w-4 mt-0.5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+                      className="h-4 w-4 mt-0.5 rounded border-[var(--border-default)] text-primary focus:ring-primary cursor-pointer"
                       disabled={task.status === 'completed' || task.status === 'cancelled'}
                     />
                     <div className="flex-1 min-w-0">

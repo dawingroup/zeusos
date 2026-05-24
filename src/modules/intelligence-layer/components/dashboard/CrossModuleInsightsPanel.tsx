@@ -93,7 +93,7 @@ export const CrossModuleInsightsPanel: React.FC<CrossModuleInsightsPanelProps> =
                 ? 'bg-green-100 text-green-700 border-green-300'
                 : dataPoint.trend === 'down'
                 ? 'bg-red-100 text-red-700 border-red-300'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-default)]'
             }`}
           >
             {dataPoint.trend === 'up' ? '↑' : dataPoint.trend === 'down' ? '↓' : '→'}

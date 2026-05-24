@@ -66,7 +66,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
   if (compact) {
     return (
       <div
-        className="p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-all"
+        className="p-3 bg-card rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:shadow-md transition-all"
         onClick={() => onSelect?.(regulation)}
       >
         <div className="flex items-start justify-between gap-2">
@@ -76,9 +76,9 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: categoryConfig?.color }}
               />
-              <span className="text-xs text-gray-500">{categoryConfig?.label}</span>
+              <span className="text-xs text-muted-foreground">{categoryConfig?.label}</span>
             </div>
-            <h4 className="font-medium text-sm text-gray-900 truncate">
+            <h4 className="font-medium text-sm text-foreground truncate">
               {regulation.title}
             </h4>
             <div className="flex items-center gap-2 mt-1">
@@ -113,9 +113,9 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] hover:shadow-md transition-all">
       {/* Header */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -141,8 +141,8 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
                 </span>
               )}
             </div>
-            <h4 className="font-semibold text-gray-900">{regulation.title}</h4>
-            <p className="text-sm text-gray-500 mt-0.5">{regulation.officialName}</p>
+            <h4 className="font-semibold text-foreground">{regulation.title}</h4>
+            <p className="text-sm text-muted-foreground mt-0.5">{regulation.officialName}</p>
           </div>
           <div className="flex items-center gap-1">
             <button
@@ -150,29 +150,29 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
                 e.stopPropagation();
                 onSelect?.(regulation);
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
             >
               <Eye className="w-4 h-4" />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <button className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded">
               <MoreVertical className="w-4 h-4" />
             </button>
           </div>
         </div>
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
           {regulation.description}
         </p>
       </div>
 
       {/* Dates & Authority */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1 text-gray-600">
+          <div className="flex items-center gap-1 text-muted-foreground">
             <FileText className="w-4 h-4" />
             <span>{regulation.issuingAuthority}</span>
           </div>
           {regulation.dates.effectiveDate && (
-            <div className="flex items-center gap-1 text-gray-600">
+            <div className="flex items-center gap-1 text-muted-foreground">
               <Calendar className="w-4 h-4" />
               <span>Effective: {formatDate(regulation.dates.effectiveDate)}</span>
             </div>
@@ -194,7 +194,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
       <div className="p-4 grid grid-cols-2 gap-4">
         {/* Impact */}
         <div>
-          <h5 className="text-xs font-medium text-gray-500 mb-2">Impact Level</h5>
+          <h5 className="text-xs font-medium text-muted-foreground mb-2">Impact Level</h5>
           <div className="flex items-center gap-2">
             <div
               className="px-2 py-1 text-sm font-medium rounded"
@@ -206,7 +206,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
               {impactConfig?.label}
             </div>
             {regulation.impact.financialImpact?.estimatedCost && (
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-muted-foreground">
                 Est. {regulation.impact.financialImpact.currency} {regulation.impact.financialImpact.estimatedCost.toLocaleString()}
               </span>
             )}
@@ -215,7 +215,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
 
         {/* Compliance Status */}
         <div>
-          <h5 className="text-xs font-medium text-gray-500 mb-2">Compliance Status</h5>
+          <h5 className="text-xs font-medium text-muted-foreground mb-2">Compliance Status</h5>
           <div className="flex items-center gap-2">
             {regulation.compliance.status === 'compliant' ? (
               <CheckCircle className="w-5 h-5 text-green-600" />
@@ -232,7 +232,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
             </span>
           </div>
           {regulation.compliance.requirements.length > 0 && (
-            <div className="mt-1 text-xs text-gray-500">
+            <div className="mt-1 text-xs text-muted-foreground">
               {regulation.compliance.requirements.filter(r => r.complianceStatus === 'compliant').length}/
               {regulation.compliance.requirements.length} requirements met
             </div>
@@ -241,18 +241,18 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex flex-wrap gap-1">
           {regulation.impact.affectedAreas.slice(0, 3).map((area) => (
             <span
               key={area}
-              className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded"
+              className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded"
             >
               {AFFECTED_BUSINESS_AREA_LABELS[area] || area}
             </span>
           ))}
           {regulation.impact.affectedAreas.length > 3 && (
-            <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded">
+            <span className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded">
               +{regulation.impact.affectedAreas.length - 3}
             </span>
           )}

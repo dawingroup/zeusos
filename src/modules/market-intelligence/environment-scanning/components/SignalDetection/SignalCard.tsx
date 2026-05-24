@@ -74,7 +74,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({
   if (compact) {
     return (
       <div
-        className="p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-all"
+        className="p-3 bg-card rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:shadow-md transition-all"
         onClick={() => onSelect?.(signal)}
       >
         <div className="flex items-start justify-between gap-2">
@@ -86,7 +86,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({
               <span style={{ color: typeConfig?.color }}>{getSignalIcon()}</span>
             </div>
             <div>
-              <h4 className="font-medium text-sm text-gray-900 line-clamp-1">
+              <h4 className="font-medium text-sm text-foreground line-clamp-1">
                 {signal.title}
               </h4>
               <div className="flex items-center gap-2 mt-0.5">
@@ -94,7 +94,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: dimensionConfig?.color }}
                 />
-                <span className="text-xs text-gray-500">{sourceConfig?.label}</span>
+                <span className="text-xs text-muted-foreground">{sourceConfig?.label}</span>
               </div>
             </div>
           </div>
@@ -113,9 +113,9 @@ export const SignalCard: React.FC<SignalCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] hover:shadow-md transition-all">
       {/* Header */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div
@@ -142,8 +142,8 @@ export const SignalCard: React.FC<SignalCardProps> = ({
                   {dimensionConfig?.label}
                 </span>
               </div>
-              <h4 className="font-semibold text-gray-900">{signal.title}</h4>
-              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              <h4 className="font-semibold text-foreground">{signal.title}</h4>
+              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                 {signal.description}
               </p>
             </div>
@@ -154,11 +154,11 @@ export const SignalCard: React.FC<SignalCardProps> = ({
                 e.stopPropagation();
                 onSelect?.(signal);
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
             >
               <Eye className="w-4 h-4" />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <button className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded">
               <MoreVertical className="w-4 h-4" />
             </button>
           </div>
@@ -166,11 +166,11 @@ export const SignalCard: React.FC<SignalCardProps> = ({
       </div>
 
       {/* Source Info */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">Source:</span>
-            <span className="text-sm font-medium text-gray-700">{signal.sourceDetails.name}</span>
+            <span className="text-xs text-muted-foreground">Source:</span>
+            <span className="text-sm font-medium text-muted-foreground">{signal.sourceDetails.name}</span>
             {signal.sourceDetails.url && (
               <a
                 href={signal.sourceDetails.url}
@@ -189,7 +189,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({
                 sourceConfig?.reliability === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
               }`}
             />
-            <span className="text-xs text-gray-500">{sourceConfig?.reliability} reliability</span>
+            <span className="text-xs text-muted-foreground">{sourceConfig?.reliability} reliability</span>
           </div>
         </div>
         <span
@@ -212,26 +212,26 @@ export const SignalCard: React.FC<SignalCardProps> = ({
           >
             {impactConfig?.label}
           </div>
-          <div className="text-xs text-gray-500">Impact</div>
+          <div className="text-xs text-muted-foreground">Impact</div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-bold text-gray-900">
+          <div className="text-lg font-bold text-foreground">
             {signal.assessment.strengthScore}/10
           </div>
-          <div className="text-xs text-gray-500">Strength</div>
+          <div className="text-xs text-muted-foreground">Strength</div>
         </div>
         <div className="text-center">
           <div className={`text-lg font-bold ${getConfidenceColor(signal.assessment.confidenceLevel)}`}>
             {signal.assessment.confidenceLevel}%
           </div>
-          <div className="text-xs text-gray-500">Confidence</div>
+          <div className="text-xs text-muted-foreground">Confidence</div>
         </div>
         <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-gray-700">
+          <div className="flex items-center justify-center gap-1 text-muted-foreground">
             <Clock className="w-4 h-4" />
             <span className="text-sm font-medium">{timeConfig?.label}</span>
           </div>
-          <div className="text-xs text-gray-500">Timeline</div>
+          <div className="text-xs text-muted-foreground">Timeline</div>
         </div>
       </div>
 
@@ -254,24 +254,24 @@ export const SignalCard: React.FC<SignalCardProps> = ({
       )}
 
       {/* Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex flex-wrap gap-1">
           {signal.affectedAreas.slice(0, 3).map((area) => (
             <span
               key={area}
-              className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded"
+              className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded"
             >
               {AFFECTED_BUSINESS_AREA_LABELS[area] || area}
             </span>
           ))}
           {signal.affectedAreas.length > 3 && (
-            <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded">
+            <span className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded">
               +{signal.affectedAreas.length - 3}
             </span>
           )}
         </div>
         {signal.actionItems.length > 0 && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {signal.actionItems.filter(a => a.status === 'pending').length} pending actions
           </span>
         )}

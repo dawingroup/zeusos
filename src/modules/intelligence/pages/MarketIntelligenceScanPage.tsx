@@ -90,10 +90,10 @@ function SectionCard({ title, icon: Icon, children, className = '' }: {
   className?: string;
 }) {
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 shadow-sm ${className}`}>
-      <div className="flex items-center gap-2 px-5 py-3 border-b border-gray-100">
-        <Icon className="w-4 h-4 text-gray-500" />
-        <h3 className="text-sm font-semibold text-gray-800">{title}</h3>
+    <div className={`bg-card rounded-xl border border-[var(--border-subtle)] shadow-sm ${className}`}>
+      <div className="flex items-center gap-2 px-5 py-3 border-b border-[var(--border-subtle)]">
+        <Icon className="w-4 h-4 text-muted-foreground" />
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
       <div className="p-5">{children}</div>
     </div>
@@ -136,7 +136,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
     <div className="space-y-6">
       {/* Subsidiary Selection */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Select Subsidiary</label>
+        <label className="block text-sm font-medium text-muted-foreground mb-2">Select Subsidiary</label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {SUBSIDIARY_OPTIONS.map(sub => (
             <button
@@ -145,13 +145,13 @@ function ScanConfigPanel({ onScan, isScanning }: {
               className={`p-3 rounded-lg border-2 text-left transition-all ${
                 subsidiaryId === sub.id
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                  : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
               }`}
             >
-              <p className={`text-sm font-semibold ${subsidiaryId === sub.id ? 'text-blue-700' : 'text-gray-800'}`}>
+              <p className={`text-sm font-semibold ${subsidiaryId === sub.id ? 'text-blue-700' : 'text-foreground'}`}>
                 {sub.name}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">{sub.description}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{sub.description}</p>
             </button>
           ))}
         </div>
@@ -159,7 +159,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
 
       {/* Time Horizon */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Time Horizon</label>
+        <label className="block text-sm font-medium text-muted-foreground mb-2">Time Horizon</label>
         <div className="flex flex-wrap gap-2">
           {TIME_HORIZON_OPTIONS.map(opt => (
             <button
@@ -168,7 +168,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 timeHorizon === opt.id
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {opt.label}
@@ -179,7 +179,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
 
       {/* Scan Depth */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Analysis Depth</label>
+        <label className="block text-sm font-medium text-muted-foreground mb-2">Analysis Depth</label>
         <div className="grid grid-cols-3 gap-2">
           {SCAN_DEPTH_OPTIONS.map(opt => (
             <button
@@ -188,13 +188,13 @@ function ScanConfigPanel({ onScan, isScanning }: {
               className={`p-3 rounded-lg border-2 text-center transition-all ${
                 depth === opt.id
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
               }`}
             >
-              <p className={`text-sm font-semibold ${depth === opt.id ? 'text-blue-700' : 'text-gray-700'}`}>
+              <p className={`text-sm font-semibold ${depth === opt.id ? 'text-blue-700' : 'text-muted-foreground'}`}>
                 {opt.label}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">{opt.description}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
             </button>
           ))}
         </div>
@@ -202,8 +202,8 @@ function ScanConfigPanel({ onScan, isScanning }: {
 
       {/* Focus Areas */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Focus Areas <span className="text-gray-400 font-normal">(optional - leave empty for all)</span>
+        <label className="block text-sm font-medium text-muted-foreground mb-2">
+          Focus Areas <span className="text-[var(--fg-tertiary)] font-normal">(optional - leave empty for all)</span>
         </label>
         <div className="flex flex-wrap gap-2">
           {FOCUS_AREA_OPTIONS.map(opt => (
@@ -213,7 +213,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 focusAreas.includes(opt.id)
                   ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
               {opt.label}
@@ -287,23 +287,23 @@ function ExecutiveSummarySection({ report }: { report: MarketIntelligenceReport 
             Overall Threat: {threatConfig.label}
           </span>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100">
+        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--bg-sunken)]">
           {report.marketSentiment === 'bullish' ? (
             <TrendingUp className="w-4 h-4 text-green-600" />
           ) : report.marketSentiment === 'bearish' ? (
             <TrendingDown className="w-4 h-4 text-red-600" />
           ) : (
-            <Activity className="w-4 h-4 text-gray-600" />
+            <Activity className="w-4 h-4 text-muted-foreground" />
           )}
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-medium text-muted-foreground">
             Market: {report.marketSentiment?.charAt(0).toUpperCase()}{report.marketSentiment?.slice(1)}
           </span>
         </div>
       </div>
 
       {/* Executive Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+      <div className="bg-[var(--bg-sunken)] rounded-lg p-4">
+        <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
           {report.executiveSummary}
         </p>
       </div>
@@ -327,11 +327,11 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
     : null;
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-[var(--border-subtle)] rounded-lg overflow-hidden">
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-[var(--bg-sunken)] transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -341,30 +341,30 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
           </div>
           <div className="text-left">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-900">{analysis.competitorName}</p>
+              <p className="text-sm font-semibold text-foreground">{analysis.competitorName}</p>
               {changeIcon}
             </div>
             <div className="flex items-center gap-2 mt-0.5">
               <Badge label={analysis.updatedThreatLevel || 'unknown'} color={threatColor.split(' ')[0]} bg={threatColor.split(' ')[1]} />
               <Badge label={analysis.activityLevel || 'unknown'} color="text-blue-700" bg="bg-blue-100" />
-              <span className="text-xs text-gray-400">{analysis.findings?.length || 0} findings</span>
+              <span className="text-xs text-[var(--fg-tertiary)]">{analysis.findings?.length || 0} findings</span>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {analysis.digitalPresenceScore != null && (
             <div className="text-right hidden sm:block">
-              <p className="text-xs text-gray-500">Digital Score</p>
-              <p className="text-sm font-bold text-gray-700">{analysis.digitalPresenceScore}/100</p>
+              <p className="text-xs text-muted-foreground">Digital Score</p>
+              <p className="text-sm font-bold text-muted-foreground">{analysis.digitalPresenceScore}/100</p>
             </div>
           )}
-          {expanded ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+          {expanded ? <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" /> : <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />}
         </div>
       </button>
 
       {/* Expanded Content */}
       {expanded && (
-        <div className="border-t border-gray-100 p-4 space-y-4">
+        <div className="border-t border-[var(--border-subtle)] p-4 space-y-4">
           {/* Assessment */}
           <div className="bg-blue-50 rounded-lg p-3">
             <p className="text-sm text-blue-800">{analysis.overallAssessment}</p>
@@ -373,7 +373,7 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
           {/* Findings */}
           {analysis.findings?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Key Findings</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Key Findings</p>
               <div className="space-y-2">
                 {analysis.findings.map((finding, idx) => (
                   <FindingCard key={idx} finding={finding} />
@@ -385,10 +385,10 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
           {/* Watch Items */}
           {analysis.watchItems?.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Watch Items</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Watch Items</p>
               <ul className="space-y-1">
                 {analysis.watchItems.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                  <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
                     <Eye className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
                     {item}
                   </li>
@@ -407,16 +407,16 @@ function FindingCard({ finding }: { finding: CompetitorFinding }) {
   const sigConfig = SIGNIFICANCE_CONFIG[finding.significance] || SIGNIFICANCE_CONFIG.moderate;
 
   return (
-    <div className="flex gap-3 p-3 bg-white border border-gray-100 rounded-lg">
+    <div className="flex gap-3 p-3 bg-card border border-[var(--border-subtle)] rounded-lg">
       <div className="mt-0.5">
-        <Icon className="w-4 h-4 text-gray-400" />
+        <Icon className="w-4 h-4 text-[var(--fg-tertiary)]" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-sm font-medium text-gray-800">{finding.title}</p>
+          <p className="text-sm font-medium text-foreground">{finding.title}</p>
           <Badge label={finding.significance} color={sigConfig.color} bg={sigConfig.bg} />
         </div>
-        <p className="text-xs text-gray-600 mt-1">{finding.description}</p>
+        <p className="text-xs text-muted-foreground mt-1">{finding.description}</p>
         {finding.implications && (
           <p className="text-xs text-blue-600 mt-1 flex items-start gap-1">
             <ArrowRight className="w-3 h-3 mt-0.5 shrink-0" />
@@ -425,10 +425,10 @@ function FindingCard({ finding }: { finding: CompetitorFinding }) {
         )}
         <div className="flex items-center gap-3 mt-1.5">
           {finding.confidence != null && (
-            <span className="text-xs text-gray-400">Confidence: {Math.round(finding.confidence * 100)}%</span>
+            <span className="text-xs text-[var(--fg-tertiary)]">Confidence: {Math.round(finding.confidence * 100)}%</span>
           )}
           {finding.dateObserved && (
-            <span className="text-xs text-gray-400">{finding.dateObserved}</span>
+            <span className="text-xs text-[var(--fg-tertiary)]">{finding.dateObserved}</span>
           )}
         </div>
       </div>
@@ -452,18 +452,18 @@ function TrendSection({ trends }: { trends: IndustryTrend[] }) {
         return (
           <div
             key={idx}
-            className={`bg-white border border-gray-100 border-l-4 ${relevanceColors[trend.relevance] || 'border-l-gray-300'} rounded-lg p-4`}
+            className={`bg-card border border-[var(--border-subtle)] border-l-4 ${relevanceColors[trend.relevance] || 'border-l-gray-300'} rounded-lg p-4`}
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-gray-800">{trend.trend}</p>
+              <p className="text-sm font-semibold text-foreground">{trend.trend}</p>
               <div className="flex gap-2">
                 <Badge label={trend.adoptionRate} color="text-purple-700" bg="bg-purple-100" />
-                <Badge label={`${trend.relevance} relevance`} color="text-gray-600" bg="bg-gray-100" />
+                <Badge label={`${trend.relevance} relevance`} color="text-muted-foreground" bg="bg-[var(--bg-sunken)]" />
               </div>
             </div>
-            <p className="text-xs text-gray-600 mt-1">{trend.description}</p>
+            <p className="text-xs text-muted-foreground mt-1">{trend.description}</p>
             {trend.competitorsRiding?.length > 0 && (
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 <span className="font-medium">Competitors riding this:</span> {trend.competitorsRiding.join(', ')}
               </p>
             )}
@@ -490,21 +490,21 @@ function RecommendationCard({ rec }: { rec: StrategicRecommendation }) {
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-lg p-4">
+    <div className="bg-card border border-[var(--border-subtle)] rounded-lg p-4">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <Badge label={rec.priority} color={prioConfig.color} bg={prioConfig.bg} />
-          <Badge label={categoryLabels[rec.category] || rec.category} color="text-gray-600" bg="bg-gray-100" />
+          <Badge label={categoryLabels[rec.category] || rec.category} color="text-muted-foreground" bg="bg-[var(--bg-sunken)]" />
         </div>
-        <span className="text-xs text-gray-400">{rec.estimatedTimeframe?.replace('_', ' ')}</span>
+        <span className="text-xs text-[var(--fg-tertiary)]">{rec.estimatedTimeframe?.replace('_', ' ')}</span>
       </div>
-      <p className="text-sm font-semibold text-gray-800">{rec.title}</p>
-      <p className="text-xs text-gray-600 mt-1">{rec.description}</p>
+      <p className="text-sm font-semibold text-foreground">{rec.title}</p>
+      <p className="text-xs text-muted-foreground mt-1">{rec.description}</p>
       {rec.rationale && (
         <p className="text-xs text-blue-600 mt-2 italic">{rec.rationale}</p>
       )}
       {rec.targetCompetitors?.length > 0 && (
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-muted-foreground mt-2">
           <span className="font-medium">Targets:</span> {rec.targetCompetitors.join(', ')}
         </p>
       )}
@@ -522,9 +522,9 @@ function RiskAlertCard({ alert }: { alert: RiskAlert }) {
         <Icon className={`w-5 h-5 ${config.color} mt-0.5 shrink-0`} />
         <div>
           <p className={`text-sm font-semibold ${config.color}`}>{alert.title}</p>
-          <p className="text-xs text-gray-600 mt-1">{alert.description}</p>
+          <p className="text-xs text-muted-foreground mt-1">{alert.description}</p>
           {alert.suggestedAction && (
-            <p className="text-xs font-medium text-gray-700 mt-2 flex items-start gap-1">
+            <p className="text-xs font-medium text-muted-foreground mt-2 flex items-start gap-1">
               <Zap className="w-3 h-3 mt-0.5 shrink-0" />
               {alert.suggestedAction}
             </p>
@@ -546,7 +546,7 @@ function ReportHistoryPanel({ reports, onSelect, isLoading }: {
 }) {
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8 text-gray-400">
+      <div className="flex items-center justify-center py-8 text-[var(--fg-tertiary)]">
         <Loader2 className="w-5 h-5 animate-spin mr-2" />
         Loading reports...
       </div>
@@ -555,7 +555,7 @@ function ReportHistoryPanel({ reports, onSelect, isLoading }: {
 
   if (!reports.length) {
     return (
-      <div className="text-center py-8 text-gray-400">
+      <div className="text-center py-8 text-[var(--fg-tertiary)]">
         <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
         <p className="text-sm">No previous reports found for this subsidiary.</p>
       </div>
@@ -570,25 +570,25 @@ function ReportHistoryPanel({ reports, onSelect, isLoading }: {
           <button
             key={report.id}
             onClick={() => onSelect(report)}
-            className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-left"
+            className="w-full flex items-center justify-between p-3 rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] transition-colors text-left"
           >
             <div>
-              <p className="text-sm font-medium text-gray-800">{report.reportTitle}</p>
+              <p className="text-sm font-medium text-foreground">{report.reportTitle}</p>
               <div className="flex items-center gap-2 mt-1">
                 <Badge label={threatConfig.label} color={threatConfig.color} bg={threatConfig.bg} />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-[var(--fg-tertiary)]">
                   {report.metadata?.competitorsAnalyzed || 0} competitors
                 </span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-[var(--fg-tertiary)]">
                   {report.metadata?.totalFindings || 0} findings
                 </span>
               </div>
             </div>
             <div className="text-right shrink-0 ml-3">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[var(--fg-tertiary)]">
                 {report.createdAt ? new Date(report.createdAt).toLocaleDateString() : 'Unknown'}
               </p>
-              <ChevronRight className="w-4 h-4 text-gray-300 ml-auto mt-1" />
+              <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] ml-auto mt-1" />
             </div>
           </button>
         );
@@ -627,8 +627,8 @@ function ReportViewer({ report, onBack }: {
             <ChevronRight className="w-3 h-3 rotate-180" />
             Back to scan config
           </button>
-          <h2 className="text-lg font-bold text-gray-900">{report.reportTitle}</h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <h2 className="text-lg font-bold text-foreground">{report.reportTitle}</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
             Generated {report.generatedAt ? new Date(report.generatedAt).toLocaleString() : 'just now'}
             {report.metadata?.analysisDepth && ` | ${report.metadata.analysisDepth} analysis`}
             {report.metadata?.searchGroundingUsed && ' | Web-grounded'}
@@ -637,7 +637,7 @@ function ReportViewer({ report, onBack }: {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 overflow-x-auto">
+      <div className="flex gap-1 border-b border-[var(--border-subtle)] overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
@@ -645,7 +645,7 @@ function ReportViewer({ report, onBack }: {
             className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             <tab.icon className="w-4 h-4" />
@@ -669,7 +669,7 @@ function ReportViewer({ report, onBack }: {
                 <CompetitorAnalysisCard key={idx} analysis={analysis} />
               ))
             ) : (
-              <p className="text-sm text-gray-400 text-center py-4">No competitor analyses available.</p>
+              <p className="text-sm text-[var(--fg-tertiary)] text-center py-4">No competitor analyses available.</p>
             )}
           </div>
         </SectionCard>
@@ -689,7 +689,7 @@ function ReportViewer({ report, onBack }: {
                       <p className="text-sm font-semibold text-purple-800">{pattern.pattern}</p>
                       <div className="flex gap-2">
                         <Badge label={`${pattern.signalStrength} signal`} color="text-purple-700" bg="bg-purple-100" />
-                        <Badge label={pattern.timeToImpact?.replace('_', ' ')} color="text-gray-600" bg="bg-gray-100" />
+                        <Badge label={pattern.timeToImpact?.replace('_', ' ')} color="text-muted-foreground" bg="bg-[var(--bg-sunken)]" />
                       </div>
                     </div>
                     <p className="text-xs text-purple-700">{pattern.description}</p>
@@ -712,7 +712,7 @@ function ReportViewer({ report, onBack }: {
                 })
                 .map((rec, idx) => <RecommendationCard key={idx} rec={rec} />)
             ) : (
-              <p className="text-sm text-gray-400 text-center py-4">No recommendations available.</p>
+              <p className="text-sm text-[var(--fg-tertiary)] text-center py-4">No recommendations available.</p>
             )}
           </div>
         </SectionCard>
@@ -808,13 +808,13 @@ export function MarketIntelligenceScanPage() {
             <Radar className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Market Intelligence</h1>
-            <p className="text-sm text-gray-500">AI-powered competitive landscape analysis</p>
+            <h1 className="text-xl font-bold text-foreground">Market Intelligence</h1>
+            <p className="text-sm text-muted-foreground">AI-powered competitive landscape analysis</p>
           </div>
         </div>
         <button
           onClick={() => setShowHistory(!showHistory)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border-subtle)] text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] transition-colors"
         >
           <History className="w-4 h-4" />
           {showHistory ? 'New Scan' : 'Past Reports'}
@@ -864,7 +864,7 @@ export function MarketIntelligenceScanPage() {
       {showHistory ? (
         <SectionCard title="Report History" icon={History}>
           <div className="mb-4">
-            <label className="block text-xs font-medium text-gray-500 mb-1">Subsidiary</label>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Subsidiary</label>
             <div className="flex gap-2 flex-wrap">
               {SUBSIDIARY_OPTIONS.map(sub => (
                 <button
@@ -873,7 +873,7 @@ export function MarketIntelligenceScanPage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     selectedSubsidiary === sub.id
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
                   }`}
                 >
                   {sub.name}
@@ -895,8 +895,8 @@ export function MarketIntelligenceScanPage() {
 
       {/* How it works */}
       {!showHistory && !activeReport && !isScanning && (
-        <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl border border-gray-200 p-5">
-          <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2 mb-3">
+        <div className="bg-gradient-to-br from-[var(--bg-sunken)] to-blue-50 rounded-xl border border-[var(--border-subtle)] p-5">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-3">
             <Zap className="w-4 h-4 text-blue-600" />
             How Market Intelligence Scan Works
           </h3>
@@ -912,8 +912,8 @@ export function MarketIntelligenceScanPage() {
                   {item.step}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{item.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                  <p className="text-sm font-medium text-foreground">{item.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
                 </div>
               </div>
             ))}

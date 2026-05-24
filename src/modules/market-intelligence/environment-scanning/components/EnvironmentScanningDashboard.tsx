@@ -125,15 +125,15 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Environment Scanning</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-foreground">Environment Scanning</h1>
+          <p className="text-sm text-muted-foreground">
             Monitor macro-environment factors, detect signals, track regulations, and plan for scenarios
           </p>
         </div>
         <button
           onClick={onRefresh}
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-default)] rounded-lg hover:bg-[var(--bg-sunken)] disabled:opacity-50 flex items-center gap-2"
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh
@@ -170,7 +170,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
           return (
             <div
               key={module.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-all group"
+              className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4 cursor-pointer hover:shadow-md transition-all group"
               onClick={() => onNavigate(module.id as any)}
             >
               <div className="flex items-start justify-between mb-3">
@@ -189,18 +189,18 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                   </span>
                 )}
               </div>
-              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-foreground group-hover:text-blue-600 transition-colors">
                 {module.title}
               </h3>
-              <p className="text-xs text-gray-500 mt-1">{module.description}</p>
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+              <p className="text-xs text-muted-foreground mt-1">{module.description}</p>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-subtle)]">
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl font-bold" style={{ color: module.color }}>
                     {module.count}
                   </span>
-                  <span className="text-xs text-gray-500">{module.label}</span>
+                  <span className="text-xs text-muted-foreground">{module.label}</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)] group-hover:text-blue-600 transition-colors" />
               </div>
             </div>
           );
@@ -215,25 +215,25 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
           <RiskRadar alerts={alerts} />
 
           {/* Key Indicators */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100">
-              <h3 className="font-semibold text-gray-900">Key Indicators</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)]">
+              <h3 className="font-semibold text-foreground">Key Indicators</h3>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-[var(--border-subtle)]">
               {indicators.slice(0, 5).map(indicator => (
                 <div key={indicator.id} className="p-4 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-foreground">
                       {indicator.indicator.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </p>
-                    <p className="text-xs text-gray-500">{indicator.source}</p>
+                    <p className="text-xs text-muted-foreground">{indicator.source}</p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-2">
                       <span className={`text-lg font-bold ${
                         indicator.alertStatus === 'critical' ? 'text-red-600' :
                         indicator.alertStatus === 'warning' ? 'text-yellow-600' :
-                        'text-gray-900'
+                        'text-foreground'
                       }`}>
                         {indicator.currentValue.toLocaleString()}
                       </span>
@@ -249,8 +249,8 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 </div>
               ))}
               {indicators.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <BarChart3 className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                <div className="p-8 text-center text-muted-foreground">
+                  <BarChart3 className="w-8 h-8 mx-auto text-[var(--fg-tertiary)] mb-2" />
                   <p className="text-sm">No indicators tracked yet</p>
                 </div>
               )}
@@ -261,9 +261,9 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
         {/* Middle Column - Recent Signals & PESTEL */}
         <div className="space-y-6">
           {/* Recent Signals */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">Recent Signals</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Recent Signals</h3>
               <button
                 onClick={() => onNavigate('signals')}
                 className="text-sm text-blue-600 hover:text-blue-700"
@@ -271,7 +271,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 View All
               </button>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-[var(--border-subtle)]">
               {signals.slice(0, 5).map(signal => {
                 const typeConfig = SIGNAL_TYPE_CONFIG[signal.signalType as SignalType];
                 return (
@@ -284,10 +284,10 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                         <Radio className="w-4 h-4" style={{ color: typeConfig?.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-gray-900 truncate">
+                        <h4 className="font-medium text-sm text-foreground truncate">
                           {signal.title}
                         </h4>
-                        <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
                           {signal.description}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
@@ -297,7 +297,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                           >
                             {typeConfig?.label}
                           </span>
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-[var(--fg-tertiary)]">
                             Strength: {signal.assessment.strengthScore}/10
                           </span>
                         </div>
@@ -307,8 +307,8 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 );
               })}
               {signals.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Radio className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                <div className="p-8 text-center text-muted-foreground">
+                  <Radio className="w-8 h-8 mx-auto text-[var(--fg-tertiary)] mb-2" />
                   <p className="text-sm">No signals detected yet</p>
                 </div>
               )}
@@ -316,9 +316,9 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
           </div>
 
           {/* PESTEL Summary */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">PESTEL Dimensions</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">PESTEL Dimensions</h3>
               <button
                 onClick={() => onNavigate('pestel')}
                 className="text-sm text-blue-600 hover:text-blue-700"
@@ -342,7 +342,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                       >
                         {count}
                       </div>
-                      <div className="text-xs text-gray-600">{config.label}</div>
+                      <div className="text-xs text-muted-foreground">{config.label}</div>
                     </div>
                   );
                 })}
@@ -354,9 +354,9 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
         {/* Right Column - Regulations & Scenarios */}
         <div className="space-y-6">
           {/* Upcoming Regulations */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">Upcoming Regulations</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Upcoming Regulations</h3>
               <button
                 onClick={() => onNavigate('regulatory')}
                 className="text-sm text-blue-600 hover:text-blue-700"
@@ -364,7 +364,7 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 View All
               </button>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-[var(--border-subtle)]">
               {upcomingRegulations.slice(0, 4).map(reg => {
                 const daysUntil = reg.dates.effectiveDate
                   ? Math.ceil((reg.dates.effectiveDate.seconds * 1000 - Date.now()) / (1000 * 60 * 60 * 24))
@@ -373,10 +373,10 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                   <div key={reg.id} className="p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-gray-900 truncate">
+                        <h4 className="font-medium text-sm text-foreground truncate">
                           {reg.title}
                         </h4>
-                        <p className="text-xs text-gray-500">{reg.issuingAuthority}</p>
+                        <p className="text-xs text-muted-foreground">{reg.issuingAuthority}</p>
                       </div>
                       {daysUntil && (
                         <span className={`px-2 py-0.5 text-xs font-medium rounded ${
@@ -392,8 +392,8 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 );
               })}
               {upcomingRegulations.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Scale className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                <div className="p-8 text-center text-muted-foreground">
+                  <Scale className="w-8 h-8 mx-auto text-[var(--fg-tertiary)] mb-2" />
                   <p className="text-sm">No upcoming deadlines</p>
                 </div>
               )}
@@ -401,9 +401,9 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
           </div>
 
           {/* Active Scenarios */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">Active Scenarios</h3>
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)]">
+            <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Active Scenarios</h3>
               <button
                 onClick={() => onNavigate('scenarios')}
                 className="text-sm text-blue-600 hover:text-blue-700"
@@ -411,14 +411,14 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 View All
               </button>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-[var(--border-subtle)]">
               {scenarios.filter(s => s.status === 'approved').slice(0, 4).map(scenario => {
                 const triggeredSignposts = scenario.signposts.filter(s => s.status === 'triggered').length;
                 return (
                   <div key={scenario.id} className="p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm text-gray-900 truncate">
+                        <h4 className="font-medium text-sm text-foreground truncate">
                           {scenario.title}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
@@ -437,8 +437,8 @@ export const EnvironmentScanningDashboard: React.FC<EnvironmentScanningDashboard
                 );
               })}
               {scenarios.filter(s => s.status === 'approved').length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Map className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+                <div className="p-8 text-center text-muted-foreground">
+                  <Map className="w-8 h-8 mx-auto text-[var(--fg-tertiary)] mb-2" />
                   <p className="text-sm">No approved scenarios</p>
                 </div>
               )}

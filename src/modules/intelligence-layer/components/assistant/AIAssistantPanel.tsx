@@ -315,7 +315,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
         className="p-4 flex items-center gap-3 text-white"
         style={{ backgroundColor: MODULE_COLOR }}
       >
-        <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+        <div className="h-10 w-10 rounded-full bg-card/20 flex items-center justify-center">
           <Bot className="h-5 w-5" />
         </div>
         <div className="flex-1">
@@ -324,7 +324,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
             <DropdownMenuTrigger asChild>
               <Badge
                 variant="secondary"
-                className="cursor-pointer bg-white/20 hover:bg-white/30 text-white border-0"
+                className="cursor-pointer bg-card/20 hover:bg-card/30 text-white border-0"
               >
                 {currentModeConfig?.label}
               </Badge>
@@ -350,7 +350,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant="secondary" className="bg-white/20 text-white border-0 gap-1 cursor-default">
+                <Badge variant="secondary" className="bg-card/20 text-white border-0 gap-1 cursor-default">
                   <Brain className="h-3 w-3" />
                   {memoryCount}
                 </Badge>
@@ -362,7 +362,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={handleNewConversation}>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={handleNewConversation}>
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -373,7 +373,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onMinimize}>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onMinimize}>
                   <Minimize2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -384,7 +384,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onClose}>
                 <X className="h-4 w-4" />
               </Button>
             </TooltipTrigger>

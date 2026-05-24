@@ -49,7 +49,7 @@ function PriorityBadge({ priority }: { priority: string }) {
     case 'P2':
       return <Badge className="bg-blue-500 hover:bg-blue-500 text-white">Medium</Badge>;
     case 'P3':
-      return <Badge className="bg-gray-500 hover:bg-gray-500 text-white">Low</Badge>;
+      return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white">Low</Badge>;
     default:
       return <Badge variant="outline">{priority}</Badge>;
   }
@@ -91,7 +91,7 @@ function StatusBadge({ status }: { status: string }) {
       );
     case 'cancelled':
       return (
-        <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+        <Badge className="bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]">
           <XCircle className="h-3 w-3 mr-1" />
           Cancelled
         </Badge>
@@ -135,7 +135,7 @@ export function TaskCard({ task, onStart, onComplete, onViewDetails }: TaskCardP
       ? 'bg-orange-500'
       : task.urgencyScore >= 50
       ? 'bg-blue-500'
-      : 'bg-gray-300';
+      : 'bg-[var(--bg-sunken)]';
 
   return (
     <Card

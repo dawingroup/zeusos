@@ -272,7 +272,7 @@ export const THREAT_LEVEL_CONFIG: Record<OverallThreatLevel, { color: string; bg
 };
 
 export const SIGNIFICANCE_CONFIG: Record<FindingSignificance, { color: string; bg: string }> = {
-  minor: { color: 'text-gray-600', bg: 'bg-gray-100' },
+  minor: { color: 'text-muted-foreground', bg: 'bg-[var(--bg-sunken)]' },
   moderate: { color: 'text-blue-700', bg: 'bg-blue-100' },
   significant: { color: 'text-yellow-700', bg: 'bg-yellow-100' },
   major: { color: 'text-orange-700', bg: 'bg-orange-100' },

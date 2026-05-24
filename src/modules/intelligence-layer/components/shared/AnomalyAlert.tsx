@@ -96,7 +96,7 @@ export const AnomalyAlert: React.FC<AnomalyAlertProps> = ({
 
             {/* Metric Details */}
             {anomaly.metric && (
-              <div className="mt-4 p-3 bg-white rounded-lg border">
+              <div className="mt-4 p-3 bg-card rounded-lg border">
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">Expected</p>

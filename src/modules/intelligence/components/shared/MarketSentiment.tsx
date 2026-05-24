@@ -70,7 +70,7 @@ export const MarketSentiment: React.FC<MarketSentimentProps> = ({
           }}
         >
           <div
-            className="absolute -top-1 w-4 h-4 rounded-full bg-white border-2 shadow"
+            className="absolute -top-1 w-4 h-4 rounded-full bg-card border-2 shadow"
             style={{
               left: `${normalizedScore * 100}%`,
               transform: 'translateX(-50%)',

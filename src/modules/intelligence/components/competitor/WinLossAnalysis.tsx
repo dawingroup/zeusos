@@ -90,11 +90,11 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
 
   if (records.length === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
         <div className="text-center py-8">
-          <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-600 font-medium">No win/loss data</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <BarChart3 className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+          <p className="text-muted-foreground font-medium">No win/loss data</p>
+          <p className="text-sm text-muted-foreground mt-1">
             Record competitive outcomes to see analysis
           </p>
         </div>
@@ -114,8 +114,8 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* By Reason */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="font-semibold text-gray-900 mb-4">Win/Loss by Reason</h3>
+        <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
+          <h3 className="font-semibold text-foreground mb-4">Win/Loss by Reason</h3>
           <div className="space-y-3">
             {Object.entries(reasonCounts)
               .sort((a, b) => (b[1].wins + b[1].losses) - (a[1].wins + a[1].losses))
@@ -126,14 +126,14 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                 return (
                   <div key={reason}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-700">
+                      <span className="text-muted-foreground">
                         {WIN_LOSS_REASON_LABELS[reason as WinLossReason]}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-muted-foreground">
                         {counts.wins}W / {counts.losses}L
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                       <div
                         className="h-2 rounded-full bg-gradient-to-r from-green-500 to-green-400"
                         style={{ width: `${winPct}%` }}
@@ -146,21 +146,21 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
         </div>
 
         {/* By Competitor */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <h3 className="font-semibold text-gray-900 mb-4">By Competitor</h3>
+        <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
+          <h3 className="font-semibold text-foreground mb-4">By Competitor</h3>
           <div className="space-y-3">
             {topCompetitors.map((comp) => (
               <div
                 key={comp.name}
-                className="flex items-center justify-between p-2 rounded hover:bg-gray-50"
+                className="flex items-center justify-between p-2 rounded hover:bg-[var(--bg-sunken)]"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                    <Users className="w-4 h-4 text-gray-500" />
+                  <div className="w-8 h-8 rounded-full bg-[var(--bg-sunken)] flex items-center justify-center">
+                    <Users className="w-4 h-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{comp.name}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="font-medium text-foreground">{comp.name}</p>
+                    <p className="text-xs text-muted-foreground">
                       {formatCurrency(comp.value)} total value
                     </p>
                   </div>
@@ -168,10 +168,10 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                 <div className="text-right">
                   <div className="flex items-center gap-2">
                     <span className="text-green-600 font-medium">{comp.wins}W</span>
-                    <span className="text-gray-400">/</span>
+                    <span className="text-[var(--fg-tertiary)]">/</span>
                     <span className="text-red-600 font-medium">{comp.losses}L</span>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {comp.winRate.toFixed(0)}% win rate
                   </p>
                 </div>
@@ -182,15 +182,15 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
       </div>
 
       {/* Recent Records */}
-      <div className="bg-white rounded-lg border border-gray-200">
-        <div className="p-4 border-b border-gray-200">
-          <h3 className="font-semibold text-gray-900">Recent Outcomes</h3>
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)]">
+        <div className="p-4 border-b border-[var(--border-subtle)]">
+          <h3 className="font-semibold text-foreground">Recent Outcomes</h3>
         </div>
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-[var(--border-subtle)]">
           {records.slice(0, 5).map((record) => (
             <div
               key={record.id}
-              className="p-4 hover:bg-gray-50 cursor-pointer"
+              className="p-4 hover:bg-[var(--bg-sunken)] cursor-pointer"
               onClick={() => onViewRecord?.(record)}
             >
               <div className="flex items-center justify-between">
@@ -214,8 +214,8 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{record.opportunityName}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium text-foreground">{record.opportunityName}</p>
+                    <p className="text-sm text-muted-foreground">
                       {record.clientName} • vs {record.competitorName}
                     </p>
                   </div>
@@ -230,7 +230,7 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                   >
                     {WIN_LOSS_OUTCOME_LABELS[record.outcome as WinLossOutcome]}
                   </span>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {formatCurrency(record.estimatedValue, record.currency)}
                   </p>
                 </div>

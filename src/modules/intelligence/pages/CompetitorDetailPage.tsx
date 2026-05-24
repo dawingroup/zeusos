@@ -239,9 +239,9 @@ const CompetitorDetailPage: React.FC = () => {
       partnership: <Link2 className="h-4 w-4 text-purple-500" />,
       hiring: <UserPlus className="h-4 w-4 text-blue-500" />,
       expansion: <TrendingUp className="h-4 w-4 text-orange-500" />,
-      news: <FileText className="h-4 w-4 text-gray-500" />,
+      news: <FileText className="h-4 w-4 text-muted-foreground" />,
       social: <Users className="h-4 w-4 text-blue-400" />,
-      other: <Calendar className="h-4 w-4 text-gray-400" />,
+      other: <Calendar className="h-4 w-4 text-[var(--fg-tertiary)]" />,
     };
     return icons[type] || icons.other;
   };
