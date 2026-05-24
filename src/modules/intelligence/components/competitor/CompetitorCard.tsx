@@ -63,8 +63,8 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
 
   return (
     <div
-      className={`bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
-        isHighThreat ? 'border-red-200' : 'border-gray-200'
+      className={`bg-card rounded-lg border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+        isHighThreat ? 'border-red-200' : 'border-[var(--border-subtle)]'
       }`}
       onClick={() => onSelect?.(competitor)}
     >
@@ -85,12 +85,12 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 className="w-10 h-10 rounded-lg object-cover"
               />
             ) : (
-              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-gray-500" />
+              <div className="w-10 h-10 rounded-lg bg-[var(--bg-sunken)] flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-muted-foreground" />
               </div>
             )}
             <div>
-              <h3 className="font-semibold text-gray-900">{competitor.name}</h3>
+              <h3 className="font-semibold text-foreground">{competitor.name}</h3>
               <div className="flex items-center gap-2 mt-0.5">
                 <span
                   className="px-1.5 py-0.5 text-xs font-medium rounded"
@@ -101,7 +101,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 >
                   {COMPETITOR_TYPE_LABELS[competitor.type as CompetitorType]}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {COMPETITOR_STATUS_LABELS[competitor.status as CompetitorStatus]}
                 </span>
               </div>
@@ -123,43 +123,43 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
 
         {/* Description */}
         {!compact && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
             {competitor.description}
           </p>
         )}
 
         {/* Location */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-          <MapPin className="w-4 h-4 text-gray-400" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+          <MapPin className="w-4 h-4 text-[var(--fg-tertiary)]" />
           <span>{competitor.headquarters.city}, {competitor.headquarters.country}</span>
         </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-sm font-semibold text-gray-900">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-sm font-semibold text-foreground">
               {formatCurrency(competitor.estimatedRevenue, competitor.revenueCurrency)}
             </p>
-            <p className="text-xs text-gray-500">Revenue</p>
+            <p className="text-xs text-muted-foreground">Revenue</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-sm font-semibold text-gray-900">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-sm font-semibold text-foreground">
               {competitor.employeeCount?.toLocaleString() || 'N/A'}
             </p>
-            <p className="text-xs text-gray-500">Employees</p>
+            <p className="text-xs text-muted-foreground">Employees</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
-            <p className="text-sm font-semibold text-gray-900">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
+            <p className="text-sm font-semibold text-foreground">
               {competitor.estimatedMarketShare ? `${competitor.estimatedMarketShare}%` : 'N/A'}
             </p>
-            <p className="text-xs text-gray-500">Market Share</p>
+            <p className="text-xs text-muted-foreground">Market Share</p>
           </div>
         </div>
 
         {/* Industries */}
         {!compact && competitor.industries.length > 0 && (
           <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-1">Industries</p>
+            <p className="text-xs text-muted-foreground mb-1">Industries</p>
             <div className="flex flex-wrap gap-1">
               {competitor.industries.slice(0, 3).map((ind) => (
                 <span
@@ -170,7 +170,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 </span>
               ))}
               {competitor.industries.length > 3 && (
-                <span className="px-1.5 py-0.5 text-xs text-gray-500">
+                <span className="px-1.5 py-0.5 text-xs text-muted-foreground">
                   +{competitor.industries.length - 3}
                 </span>
               )}
@@ -181,7 +181,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
         {/* Geographies */}
         {!compact && competitor.geographies.length > 0 && (
           <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-1">Markets</p>
+            <p className="text-xs text-muted-foreground mb-1">Markets</p>
             <div className="flex flex-wrap gap-1">
               {competitor.geographies.slice(0, 4).map((geo) => (
                 <span
@@ -192,7 +192,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 </span>
               ))}
               {competitor.geographies.length > 4 && (
-                <span className="px-1.5 py-0.5 text-xs text-gray-500">
+                <span className="px-1.5 py-0.5 text-xs text-muted-foreground">
                   +{competitor.geographies.length - 4}
                 </span>
               )}
@@ -202,7 +202,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
 
         {/* Competing Subsidiaries */}
         {competitor.subsidiariesCompeting.length > 0 && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">
             <span className="font-medium">Competes with: </span>
             {competitor.subsidiariesCompeting.join(', ')}
           </div>
@@ -210,8 +210,8 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 flex justify-between items-center rounded-b-lg">
-        <div className="flex items-center gap-3 text-xs text-gray-500">
+      <div className="px-4 py-2 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex justify-between items-center rounded-b-lg">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Users className="w-3 h-3" />
             <span>{competitor.keyExecutives.length} execs</span>
@@ -228,12 +228,12 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 e.stopPropagation();
                 onEdit(competitor);
               }}
-              className="p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded"
+              className="p-1 text-[var(--fg-tertiary)] hover:text-indigo-600 hover:bg-indigo-50 rounded"
             >
               <Edit className="w-4 h-4" />
             </button>
           )}
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
         </div>
       </div>
     </div>

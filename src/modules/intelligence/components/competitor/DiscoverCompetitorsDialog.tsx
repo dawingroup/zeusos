@@ -393,7 +393,7 @@ export const DiscoverCompetitorsDialog: React.FC<DiscoverCompetitorsDialogProps>
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => toggleSelect(candidate.id)}
-                            className="mt-1 h-4 w-4 rounded border-gray-300 accent-current cursor-pointer"
+                            className="mt-1 h-4 w-4 rounded border-[var(--border-default)] accent-current cursor-pointer"
                             style={{ accentColor: MODULE_COLOR }}
                           />
                           <div className="flex-1 min-w-0">

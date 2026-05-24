@@ -444,7 +444,7 @@ export default function ManagerDashboardPage() {
       case 'P2':
         return <Badge className="bg-blue-500 hover:bg-blue-500 text-white text-xs">P2</Badge>;
       case 'P3':
-        return <Badge className="bg-gray-500 hover:bg-gray-500 text-white text-xs">P3</Badge>;
+        return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white text-xs">P3</Badge>;
       default:
         return <Badge variant="outline" className="text-xs">{priority}</Badge>;
     }

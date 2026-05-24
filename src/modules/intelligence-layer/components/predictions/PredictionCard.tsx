@@ -69,7 +69,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
                   ? 'bg-green-500'
                   : factor.impact === 'negative'
                   ? 'bg-red-500'
-                  : 'bg-gray-400'
+                  : 'bg-[var(--bg-sunken)]'
               }`}
               style={{ width: `${factor.weight * 100}%` }}
             />
@@ -81,7 +81,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
                 ? 'bg-green-100 text-green-700 border-green-300'
                 : factor.impact === 'negative'
                 ? 'bg-red-100 text-red-700 border-red-300'
-                : 'bg-gray-100 text-gray-700 border-gray-300'
+                : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-default)]'
             }`}
           >
             {factor.impact === 'positive' ? '↑' : factor.impact === 'negative' ? '↓' : '→'}

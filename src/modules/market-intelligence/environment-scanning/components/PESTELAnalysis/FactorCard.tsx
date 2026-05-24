@@ -51,7 +51,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
       case 'threat':
         return <AlertTriangle className="w-4 h-4 text-red-600" />;
       default:
-        return <Minus className="w-4 h-4 text-gray-500" />;
+        return <Minus className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
@@ -62,7 +62,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
       case 'threat':
         return 'bg-red-50 border-red-200';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-[var(--bg-sunken)] border-[var(--border-subtle)]';
     }
   };
 
@@ -79,7 +79,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
               style={{ backgroundColor: dimensionConfig?.color || '#666' }}
             />
             {getTypeIcon()}
-            <span className="font-medium text-sm text-gray-900 line-clamp-1">
+            <span className="font-medium text-sm text-foreground line-clamp-1">
               {factor.title}
             </span>
           </div>
@@ -102,7 +102,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
       className={`rounded-lg border transition-all hover:shadow-md ${getTypeColor()}`}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -112,9 +112,9 @@ export const FactorCard: React.FC<FactorCardProps> = ({
               >
                 {dimensionConfig?.label || factor.dimension}
               </span>
-              <span className="text-xs text-gray-500">{factor.subFactor}</span>
+              <span className="text-xs text-muted-foreground">{factor.subFactor}</span>
             </div>
-            <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+            <h4 className="font-semibold text-foreground flex items-center gap-2">
               {getTypeIcon()}
               {factor.title}
             </h4>
@@ -125,7 +125,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
                 e.stopPropagation();
                 onSelect?.(factor);
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
             >
               <Eye className="w-4 h-4" />
             </button>
@@ -134,16 +134,16 @@ export const FactorCard: React.FC<FactorCardProps> = ({
                 e.stopPropagation();
                 onEdit?.(factor);
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
             >
               <Edit className="w-4 h-4" />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <button className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded">
               <MoreVertical className="w-4 h-4" />
             </button>
           </div>
         </div>
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
           {factor.description}
         </p>
       </div>
@@ -158,7 +158,7 @@ export const FactorCard: React.FC<FactorCardProps> = ({
           >
             {factor.impact.riskScore}
           </div>
-          <div className="text-xs text-gray-500">Risk Score</div>
+          <div className="text-xs text-muted-foreground">Risk Score</div>
         </div>
 
         {/* Impact Level */}
@@ -172,24 +172,24 @@ export const FactorCard: React.FC<FactorCardProps> = ({
           >
             {impactConfig?.label || factor.impact.level}
           </div>
-          <div className="text-xs text-gray-500 mt-1">Impact</div>
+          <div className="text-xs text-muted-foreground mt-1">Impact</div>
         </div>
 
         {/* Probability */}
         <div className="text-center">
-          <div className="text-sm font-medium text-gray-700">
+          <div className="text-sm font-medium text-muted-foreground">
             {probabilityConfig?.percentage || factor.impact.probability}
           </div>
-          <div className="text-xs text-gray-500">Probability</div>
+          <div className="text-xs text-muted-foreground">Probability</div>
         </div>
 
         {/* Time Horizon */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-sm text-gray-700">
+          <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
             <Clock className="w-3 h-3" />
             {timeConfig?.label || factor.impact.timeToImpact}
           </div>
-          <div className="text-xs text-gray-500">Timeline</div>
+          <div className="text-xs text-muted-foreground">Timeline</div>
         </div>
       </div>
 
@@ -199,13 +199,13 @@ export const FactorCard: React.FC<FactorCardProps> = ({
           {factor.affectedAreas.slice(0, 4).map((area) => (
             <span
               key={area}
-              className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded"
+              className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded"
             >
               {AFFECTED_BUSINESS_AREA_LABELS[area] || area}
             </span>
           ))}
           {factor.affectedAreas.length > 4 && (
-            <span className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">
+            <span className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded">
               +{factor.affectedAreas.length - 4}
             </span>
           )}
@@ -213,18 +213,18 @@ export const FactorCard: React.FC<FactorCardProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: priorityConfig?.color }}
           />
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {priorityConfig?.label} Priority
           </span>
         </div>
         {factor.evidence.length > 0 && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted-foreground">
             {factor.evidence.length} evidence items
           </span>
         )}

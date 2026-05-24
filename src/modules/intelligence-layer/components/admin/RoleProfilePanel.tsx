@@ -109,7 +109,7 @@ export function RoleProfilePanel() {
       case 'SENIOR':
         return <Badge className="bg-green-500 hover:bg-green-500">Senior</Badge>;
       case 'JUNIOR':
-        return <Badge className="bg-gray-500 hover:bg-gray-500">Junior</Badge>;
+        return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)]">Junior</Badge>;
       default:
         return <Badge variant="outline">{level || 'Unspecified'}</Badge>;
     }
@@ -366,16 +366,16 @@ export function RoleProfilePanel() {
                             ))}
                           </div>
                           <div className="flex items-center gap-4 text-xs">
-                            <span className={cap.canInitiate ? 'text-green-600' : 'text-gray-400'}>
+                            <span className={cap.canInitiate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canInitiate ? '✓' : '✗'} Initiate
                             </span>
-                            <span className={cap.canExecute ? 'text-green-600' : 'text-gray-400'}>
+                            <span className={cap.canExecute ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canExecute ? '✓' : '✗'} Execute
                             </span>
-                            <span className={cap.canApprove ? 'text-green-600' : 'text-gray-400'}>
+                            <span className={cap.canApprove ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canApprove ? '✓' : '✗'} Approve
                             </span>
-                            <span className={cap.canDelegate ? 'text-green-600' : 'text-gray-400'}>
+                            <span className={cap.canDelegate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
                               {cap.canDelegate ? '✓' : '✗'} Delegate
                             </span>
                           </div>

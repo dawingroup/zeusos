@@ -110,13 +110,13 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden">
+      <div className="bg-card rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">{getTitle()}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
+          <h2 className="text-xl font-semibold text-foreground">{getTitle()}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-[var(--fg-tertiary)] hover:text-muted-foreground"
           >
             <X className="w-5 h-5" />
           </button>
@@ -125,13 +125,13 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
         {/* Content */}
         <div className="p-6 space-y-4 overflow-y-auto max-h-[calc(90vh-180px)]">
           {/* Task Info */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm font-medium text-gray-900">{task.title}</p>
+          <div className="bg-[var(--bg-sunken)] p-4 rounded-lg">
+            <p className="text-sm font-medium text-foreground">{task.title}</p>
             {task.description && (
-              <p className="text-sm text-gray-600 mt-1">{task.description}</p>
+              <p className="text-sm text-muted-foreground mt-1">{task.description}</p>
             )}
             {task.assignedTo && mode !== 'assign' && (
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 Currently assigned to: {task.assignedTo}
               </p>
             )}
@@ -139,14 +139,14 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
 
           {/* Employee Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-muted-foreground mb-2">
               <User className="w-4 h-4 inline mr-1" />
               {mode === 'takeup' ? 'Assign to yourself or another employee' : 'Select Employee'}
             </label>
             <select
               value={selectedEmployee}
               onChange={(e) => setSelectedEmployee(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={loading}
             >
               <option value="">Select an employee...</option>
@@ -163,7 +163,7 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-muted-foreground mb-2">
               <MessageSquare className="w-4 h-4 inline mr-1" />
               Reason (optional)
             </label>
@@ -171,7 +171,7 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter reason for assignment..."
               disabled={loading}
             />
@@ -185,10 +185,10 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-[var(--border-subtle)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-800"
+            className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
             disabled={loading}
           >
             Cancel

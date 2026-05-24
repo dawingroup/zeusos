@@ -65,7 +65,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
   if (compact) {
     return (
       <div
-        className="p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:shadow-md transition-all"
+        className="p-3 bg-card rounded-lg border border-[var(--border-subtle)] cursor-pointer hover:shadow-md transition-all"
         onClick={() => onSelect?.(scenario)}
       >
         <div className="flex items-start justify-between gap-2">
@@ -77,11 +77,11 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
               <span style={{ color: typeConfig?.color }}>{getTypeIcon()}</span>
             </div>
             <div>
-              <h4 className="font-medium text-sm text-gray-900 line-clamp-1">
+              <h4 className="font-medium text-sm text-foreground line-clamp-1">
                 {scenario.title}
               </h4>
               <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-xs text-gray-500">{typeConfig?.label}</span>
+                <span className="text-xs text-muted-foreground">{typeConfig?.label}</span>
                 <span className="text-xs font-medium text-blue-600">
                   {scenario.probability}% likely
                 </span>
@@ -92,7 +92,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
             className={`px-1.5 py-0.5 text-xs font-medium rounded ${
               scenario.status === 'approved' ? 'bg-green-100 text-green-700' :
               scenario.status === 'under_review' ? 'bg-yellow-100 text-yellow-700' :
-              'bg-gray-100 text-gray-700'
+              'bg-[var(--bg-sunken)] text-muted-foreground'
             }`}
           >
             {scenario.status}
@@ -103,9 +103,9 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] hover:shadow-md transition-all">
       {/* Header */}
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div
@@ -126,14 +126,14 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
                   className={`px-2 py-0.5 text-xs font-medium rounded ${
                     scenario.status === 'approved' ? 'bg-green-100 text-green-700' :
                     scenario.status === 'under_review' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-gray-100 text-gray-700'
+                    'bg-[var(--bg-sunken)] text-muted-foreground'
                   }`}
                 >
                   {scenario.status}
                 </span>
               </div>
-              <h4 className="font-semibold text-gray-900">{scenario.title}</h4>
-              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              <h4 className="font-semibold text-foreground">{scenario.title}</h4>
+              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                 {scenario.description}
               </p>
             </div>
@@ -144,11 +144,11 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
                 e.stopPropagation();
                 onSelect?.(scenario);
               }}
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+              className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
             >
               <Eye className="w-4 h-4" />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded">
+            <button className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded">
               <MoreVertical className="w-4 h-4" />
             </button>
           </div>
@@ -156,18 +156,18 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
       </div>
 
       {/* Probability & Timeline */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div>
             <div className="text-2xl font-bold text-blue-600">{scenario.probability}%</div>
-            <div className="text-xs text-gray-500">Probability</div>
+            <div className="text-xs text-muted-foreground">Probability</div>
           </div>
-          <div className="h-8 w-px bg-gray-200" />
+          <div className="h-8 w-px bg-[var(--bg-sunken)]" />
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-gray-400" />
+            <Clock className="w-4 h-4 text-[var(--fg-tertiary)]" />
             <div>
-              <div className="text-sm font-medium text-gray-700">{timeConfig?.label}</div>
-              <div className="text-xs text-gray-500">Target: {scenario.scope.targetYear}</div>
+              <div className="text-sm font-medium text-muted-foreground">{timeConfig?.label}</div>
+              <div className="text-xs text-muted-foreground">Target: {scenario.scope.targetYear}</div>
             </div>
           </div>
         </div>
@@ -199,7 +199,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
             }`}>
               {formatImpact(scenario.businessImpact.revenueImpact)}
             </div>
-            <div className="text-xs text-gray-500">Revenue</div>
+            <div className="text-xs text-muted-foreground">Revenue</div>
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
@@ -207,7 +207,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
             }`}>
               {formatImpact(scenario.businessImpact.costImpact)}
             </div>
-            <div className="text-xs text-gray-500">Costs</div>
+            <div className="text-xs text-muted-foreground">Costs</div>
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
@@ -215,7 +215,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
             }`}>
               {formatImpact(scenario.businessImpact.marketShareImpact)}
             </div>
-            <div className="text-xs text-gray-500">Market Share</div>
+            <div className="text-xs text-muted-foreground">Market Share</div>
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
@@ -223,14 +223,14 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
             }`}>
               {formatImpact(scenario.businessImpact.employmentImpact)}
             </div>
-            <div className="text-xs text-gray-500">Employment</div>
+            <div className="text-xs text-muted-foreground">Employment</div>
           </div>
         </div>
       )}
 
       {/* Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex items-center justify-between">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span>{scenario.drivingForces.length} driving forces</span>
           <span>{scenario.assumptions.length} assumptions</span>
           <span>{scenario.strategicOptions.length} strategic options</span>

@@ -77,9 +77,9 @@ export const EnvironmentScanningPage: React.FC = () => {
       
       case 'regulatory':
         return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Regulatory Tracking</h2>
-            <p className="text-gray-500">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-8 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">Regulatory Tracking</h2>
+            <p className="text-muted-foreground">
               {regulations.length} regulations tracked
             </p>
           </div>
@@ -87,9 +87,9 @@ export const EnvironmentScanningPage: React.FC = () => {
       
       case 'scenarios':
         return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Scenario Planning</h2>
-            <p className="text-gray-500">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-8 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">Scenario Planning</h2>
+            <p className="text-muted-foreground">
               {scenarios.length} scenarios created
             </p>
           </div>
@@ -97,9 +97,9 @@ export const EnvironmentScanningPage: React.FC = () => {
       
       case 'alerts':
         return (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Early Warning System</h2>
-            <p className="text-gray-500">
+          <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-8 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">Early Warning System</h2>
+            <p className="text-muted-foreground">
               {alerts.filter(a => a.status === 'active').length} active alerts
             </p>
           </div>

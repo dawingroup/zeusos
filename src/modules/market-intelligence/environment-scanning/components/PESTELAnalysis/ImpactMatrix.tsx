@@ -74,13 +74,13 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="font-semibold text-gray-900 mb-4">Impact-Probability Matrix</h3>
+    <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
+      <h3 className="font-semibold text-foreground mb-4">Impact-Probability Matrix</h3>
       
       <div className="flex">
         {/* Y-axis label */}
         <div className="flex flex-col justify-center mr-2">
-          <div className="transform -rotate-90 whitespace-nowrap text-sm font-medium text-gray-600">
+          <div className="transform -rotate-90 whitespace-nowrap text-sm font-medium text-muted-foreground">
             Impact
           </div>
         </div>
@@ -116,7 +116,7 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
                           />
                         ))}
                         {cellFactors.length > 4 && (
-                          <div className="w-3 h-3 rounded-full bg-gray-400 border-2 border-white shadow-sm flex items-center justify-center">
+                          <div className="w-3 h-3 rounded-full bg-[var(--bg-sunken)] border-2 border-white shadow-sm flex items-center justify-center">
                             <span className="text-[6px] text-white font-bold">
                               +{cellFactors.length - 4}
                             </span>
@@ -124,15 +124,15 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
                         )}
                       </div>
                     ) : (
-                      <span className="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100">
+                      <span className="text-[10px] text-[var(--fg-tertiary)] opacity-0 group-hover:opacity-100">
                         {getQuadrantLabel(actualImpactIdx, probIdx)}
                       </span>
                     )}
 
                     {/* Tooltip on hover */}
                     {cellFactors.length > 0 && (
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 
-                        bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2
+                        bg-foreground text-background text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100
                         pointer-events-none z-10 whitespace-nowrap">
                         {cellFactors.length} factor{cellFactors.length > 1 ? 's' : ''}
                       </div>
@@ -147,7 +147,7 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
           <div className="grid grid-cols-5 gap-1 mt-2">
             {probabilityOrder.map(prob => (
               <div key={prob} className="text-center">
-                <span className="text-[10px] text-gray-500">
+                <span className="text-[10px] text-muted-foreground">
                   {PROBABILITY_LEVEL_CONFIG[prob]?.label}
                 </span>
               </div>
@@ -155,14 +155,14 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
           </div>
           
           <div className="text-center mt-1">
-            <span className="text-sm font-medium text-gray-600">Probability</span>
+            <span className="text-sm font-medium text-muted-foreground">Probability</span>
           </div>
         </div>
 
         {/* Y-axis labels */}
         <div className="flex flex-col justify-between ml-2 py-1">
           {impactOrder.slice().reverse().map(impact => (
-            <span key={impact} className="text-[10px] text-gray-500">
+            <span key={impact} className="text-[10px] text-muted-foreground">
               {IMPACT_LEVEL_CONFIG[impact]?.label}
             </span>
           ))}
@@ -171,17 +171,17 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
 
       {/* Legend */}
       {showLegend && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-gray-600">Dimensions:</span>
+              <span className="text-xs font-medium text-muted-foreground">Dimensions:</span>
               {Object.entries(PESTEL_DIMENSION_CONFIG).map(([key, config]) => (
                 <div key={key} className="flex items-center gap-1">
                   <div
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: config.color }}
                   />
-                  <span className="text-xs text-gray-500">{config.label}</span>
+                  <span className="text-xs text-muted-foreground">{config.label}</span>
                 </div>
               ))}
             </div>
@@ -189,19 +189,19 @@ export const ImpactMatrix: React.FC<ImpactMatrixProps> = ({
           <div className="flex gap-4 mt-2">
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 rounded bg-red-100" />
-              <span className="text-xs text-gray-500">Urgent (20-25)</span>
+              <span className="text-xs text-muted-foreground">Urgent (20-25)</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 rounded bg-orange-100" />
-              <span className="text-xs text-gray-500">Act (12-19)</span>
+              <span className="text-xs text-muted-foreground">Act (12-19)</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 rounded bg-yellow-100" />
-              <span className="text-xs text-gray-500">Prepare (6-11)</span>
+              <span className="text-xs text-muted-foreground">Prepare (6-11)</span>
             </div>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 rounded bg-green-100" />
-              <span className="text-xs text-gray-500">Monitor (1-5)</span>
+              <span className="text-xs text-muted-foreground">Monitor (1-5)</span>
             </div>
           </div>
         </div>

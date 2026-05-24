@@ -89,7 +89,7 @@ const NewsFeedPage: React.FC = () => {
       case 'negative':
         return <ThumbsDown className="h-4 w-4 text-red-500" />;
       default:
-        return <Meh className="h-4 w-4 text-gray-500" />;
+        return <Meh className="h-4 w-4 text-muted-foreground" />;
     }
   };
 

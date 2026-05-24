@@ -251,7 +251,7 @@ export function TaskManagementPanel() {
       case 'P2':
         return <Badge className="bg-blue-500 hover:bg-blue-500">Medium</Badge>;
       case 'P3':
-        return <Badge className="bg-gray-500 hover:bg-gray-500">Low</Badge>;
+        return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)]">Low</Badge>;
       default:
         return <Badge variant="outline">{priority}</Badge>;
     }
@@ -290,7 +290,7 @@ export function TaskManagementPanel() {
         );
       case 'cancelled':
         return (
-          <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+          <Badge className="bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]">
             <XCircle className="h-3 w-3 mr-1" />
             Cancelled
           </Badge>
@@ -669,7 +669,7 @@ export function TaskManagementPanel() {
                           onChange={(e) =>
                             updateChecklistItem(selectedTask.id, item.id, e.target.checked)
                           }
-                          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                          className="h-4 w-4 rounded border-[var(--border-default)] text-primary focus:ring-primary"
                         />
                         <div className="flex-1">
                           <p className={`text-sm ${item.isCompleted ? 'line-through text-muted-foreground' : ''}`}>

@@ -42,7 +42,7 @@ const getImpactBars = (impact: number) => {
     <div
       key={i}
       className={`w-2 h-4 rounded-sm ${
-        i < impact ? 'bg-current' : 'bg-gray-200'
+        i < impact ? 'bg-current' : 'bg-[var(--bg-sunken)]'
       }`}
     />
   ));
@@ -55,17 +55,17 @@ const FactorCard: React.FC<{ factor: SWOTFactor; category: SWOTCategory }> = ({
   const color = SWOT_CATEGORY_COLORS[category];
 
   return (
-    <div className="p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
+    <div className="p-3 bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm">
       <div className="flex items-start justify-between mb-2">
-        <span className="text-xs font-medium text-gray-500">
+        <span className="text-xs font-medium text-muted-foreground">
           {SWOT_FACTOR_TYPE_LABELS[factor.factorType as SWOTFactorType]}
         </span>
         <div className="flex items-center gap-0.5" style={{ color }}>
           {getImpactBars(factor.impact)}
         </div>
       </div>
-      <p className="text-sm text-gray-800 mb-2">{factor.description}</p>
-      <div className="flex items-center justify-between text-xs text-gray-500">
+      <p className="text-sm text-foreground mb-2">{factor.description}</p>
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>{getTimeframeLabel(factor.timeframe)}</span>
         <span>{factor.confidence}% confidence</span>
       </div>
@@ -107,7 +107,7 @@ const QuadrantSection: React.FC<{
             <FactorCard key={factor.id} factor={factor} category={category} />
           ))
         ) : (
-          <p className="text-sm text-gray-400 text-center py-8">
+          <p className="text-sm text-[var(--fg-tertiary)] text-center py-8">
             No {title.toLowerCase()} identified
           </p>
         )}
@@ -130,15 +130,15 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)]">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-[var(--border-subtle)]">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-foreground">
               SWOT Analysis: {analysis.competitorName}
             </h2>
-            <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+            <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 <span>{formatDate(analysis.analysisDate)}</span>
@@ -153,7 +153,7 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
                     ? 'bg-green-100 text-green-700'
                     : analysis.status === 'draft'
                     ? 'bg-yellow-100 text-yellow-700'
-                    : 'bg-gray-100 text-gray-700'
+                    : 'bg-[var(--bg-sunken)] text-muted-foreground'
                 }`}
               >
                 {analysis.status.charAt(0).toUpperCase() + analysis.status.slice(1)}
@@ -201,18 +201,18 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
       </div>
 
       {/* Assessment Section */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <h3 className="font-semibold text-gray-900 mb-2">Overall Assessment</h3>
-        <p className="text-sm text-gray-700 mb-4">{analysis.overallAssessment}</p>
+      <div className="p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
+        <h3 className="font-semibold text-foreground mb-2">Overall Assessment</h3>
+        <p className="text-sm text-muted-foreground mb-4">{analysis.overallAssessment}</p>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-muted-foreground mb-2">
               Strategic Implications
             </h4>
             <ul className="space-y-1">
               {analysis.strategicImplications.map((imp, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
                   {imp}
                 </li>
@@ -220,12 +220,12 @@ export const SWOTAnalysis: React.FC<SWOTAnalysisProps> = ({
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-muted-foreground mb-2">
               Recommended Actions
             </h4>
             <ul className="space-y-1">
               {analysis.recommendedActions.map((action, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
                   {action}
                 </li>

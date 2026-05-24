@@ -72,11 +72,11 @@ const IMPORTANCE_OPTIONS: { value: MemoryImportance; label: string; color: strin
   { value: 'critical', label: 'Critical', color: 'bg-red-100 text-red-800' },
   { value: 'high', label: 'High', color: 'bg-orange-100 text-orange-800' },
   { value: 'medium', label: 'Medium', color: 'bg-blue-100 text-blue-800' },
-  { value: 'low', label: 'Low', color: 'bg-gray-100 text-gray-700' },
+  { value: 'low', label: 'Low', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
 ];
 
 function importanceBadgeClass(importance: MemoryImportance): string {
-  return IMPORTANCE_OPTIONS.find(o => o.value === importance)?.color || 'bg-gray-100 text-gray-700';
+  return IMPORTANCE_OPTIONS.find(o => o.value === importance)?.color || 'bg-[var(--bg-sunken)] text-muted-foreground';
 }
 
 function categoryLabel(category: MemoryCategory): string {

@@ -104,7 +104,7 @@ export const ConfidenceIndicator: React.FC<ConfidenceIndicatorProps> = ({
                 )}
               </div>
             )}
-            <div className={`${heightClass} w-full bg-gray-200 rounded-full overflow-hidden`}>
+            <div className={`${heightClass} w-full bg-[var(--bg-sunken)] rounded-full overflow-hidden`}>
               <div
                 className={`${heightClass} rounded-full transition-all`}
                 style={{ width: `${percentage}%`, backgroundColor: config?.color }}
