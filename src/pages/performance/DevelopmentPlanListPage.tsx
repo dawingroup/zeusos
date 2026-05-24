@@ -248,9 +248,9 @@ export function DevelopmentPlanListPage() {
                       <p className="text-lg font-bold text-[var(--rag-blue)]">{plan.skillGaps.length}</p>
                       <p className="text-xs text-[var(--rag-blue)]">Skill Gaps</p>
                     </div>
-                    <div className="text-center p-2 bg-purple-50 rounded">
-                      <p className="text-lg font-bold text-purple-700">{plan.strengths.length}</p>
-                      <p className="text-xs text-purple-600">Strengths</p>
+                    <div className="text-center p-2 bg-[var(--rag-blue-soft)] rounded">
+                      <p className="text-lg font-bold text-[var(--rag-blue)]">{plan.strengths.length}</p>
+                      <p className="text-xs text-[var(--rag-blue)]">Strengths</p>
                     </div>
                   </div>
                 </CardContent>

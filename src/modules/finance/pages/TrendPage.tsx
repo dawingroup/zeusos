@@ -41,7 +41,7 @@ const CLASS_BADGE_COLORS: Record<string, string> = {
   revenue: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   cogs: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   opex: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
-  depreciation: 'bg-purple-100 text-purple-700',
+  depreciation: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   interest: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   tax: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };

@@ -52,7 +52,7 @@ const insightTypeIcons: Record<string, React.ReactNode> = {
   threat: <AlertTriangle className="h-4 w-4 text-[var(--rag-red)]" />,
   trend: <BarChart3 className="h-4 w-4 text-[var(--rag-blue)]" />,
   anomaly: <AlertCircle className="h-4 w-4 text-[var(--rag-amber)]" />,
-  recommendation: <CheckCircle className="h-4 w-4 text-purple-500" />,
+  recommendation: <CheckCircle className="h-4 w-4 text-[var(--rag-blue)]" />,
 };
 
 const InsightsPage: React.FC = () => {

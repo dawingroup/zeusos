@@ -383,7 +383,7 @@ export function DeductionsTab({ employees }: Props) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 flex items-center gap-2">
-            <div className="p-2 rounded-full bg-purple-100"><Receipt className="h-4 w-4 text-purple-600" /></div>
+            <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]"><Receipt className="h-4 w-4 text-[var(--rag-blue)]" /></div>
             <div>
               <p className="text-xs text-muted-foreground">Active deductions</p>
               <p className="text-xl font-bold">{summary.activeCount}</p>

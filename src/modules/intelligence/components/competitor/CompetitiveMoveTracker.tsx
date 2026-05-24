@@ -74,7 +74,7 @@ const getImpactColor = (significance: ImpactSignificance): string => {
 const getStatusColor = (status: CompetitiveMove['status']) => {
   switch (status) {
     case 'identified': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
-    case 'analyzing': return 'bg-purple-100 text-purple-700';
+    case 'analyzing': return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
     case 'responded': return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
     case 'monitoring': return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]';
     case 'closed': return 'bg-[var(--bg-sunken)] text-muted-foreground';
@@ -122,7 +122,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
           {onAddMove && (
             <button
               onClick={onAddMove}
-              className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700"
+              className="mt-4 px-4 py-2 bg-[var(--rag-blue)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-blue)]"
             >
               Track Move
             </button>
@@ -142,7 +142,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
         {onAddMove && (
           <button
             onClick={onAddMove}
-            className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="px-3 py-1.5 text-sm bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)]"
           >
             + Track Move
           </button>
@@ -222,7 +222,7 @@ export const CompetitiveMoveTracker: React.FC<CompetitiveMoveTrackerProps> = ({
 
       {maxItems && moves.length > maxItems && (
         <div className="p-3 border-t border-[var(--border-subtle)] text-center">
-          <button className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+          <button className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium">
             View all {moves.length} moves
           </button>
         </div>

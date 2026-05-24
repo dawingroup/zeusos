@@ -36,7 +36,7 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 const STATUS_COLORS: Record<RefundRequest['status'], string> = {
   pending: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   approved: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  processing: 'bg-indigo-100 text-indigo-700',
+  processing: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   rejected: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
@@ -50,7 +50,7 @@ const STATUS_LABELS: Record<RefundRequest['status'], string> = {
 };
 
 const CATEGORY_COLORS: Record<RefundCategory, string> = {
-  product_return: 'bg-purple-100 text-purple-700',
+  product_return: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   service_issue: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   billing_error: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   duplicate_charge: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',

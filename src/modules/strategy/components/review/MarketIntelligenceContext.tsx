@@ -70,7 +70,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-3">
-          <Globe className="w-5 h-5 text-violet-600" />
+          <Globe className="w-5 h-5 text-[var(--rag-blue)]" />
           <div>
             <h3 className="text-sm font-semibold text-foreground">Market Intelligence Context</h3>
             <p className="text-xs text-muted-foreground">
@@ -96,7 +96,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
         <div className="divide-y divide-[var(--border-subtle)]">
           {isLoading && !data && (
             <div className="px-5 py-6 text-center">
-              <Loader2 className="w-5 h-5 animate-spin text-violet-600 mx-auto mb-2" />
+              <Loader2 className="w-5 h-5 animate-spin text-[var(--rag-blue)] mx-auto mb-2" />
               <p className="text-xs text-muted-foreground">Loading market intelligence...</p>
             </div>
           )}
@@ -120,7 +120,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           {data && data.recentSignals.length > 0 && (
             <div className="px-5 py-3">
               <div className="flex items-center gap-2 mb-2">
-                <Radio className="w-3.5 h-3.5 text-violet-500" />
+                <Radio className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Environment Signals</h4>
               </div>
               <div className="space-y-1.5">
@@ -145,7 +145,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           {data && data.activeScenarios.length > 0 && (
             <div className="px-5 py-3">
               <div className="flex items-center gap-2 mb-2">
-                <Compass className="w-3.5 h-3.5 text-violet-500" />
+                <Compass className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Scenarios</h4>
               </div>
               <div className="space-y-1.5">
@@ -166,7 +166,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           {data && data.regulatoryItems.length > 0 && (
             <div className="px-5 py-3">
               <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-3.5 h-3.5 text-violet-500" />
+                <Shield className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Regulatory Tracking</h4>
               </div>
               <div className="space-y-1.5">
@@ -184,7 +184,7 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           {data && data.trackedIndicators.length > 0 && (
             <div className="px-5 py-3">
               <div className="flex items-center gap-2 mb-2">
-                <BarChart3 className="w-3.5 h-3.5 text-violet-500" />
+                <BarChart3 className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Economic Indicators</h4>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -210,12 +210,12 @@ export const MarketIntelligenceContext: React.FC<MarketIntelligenceContextProps>
           {data && data.pestelSummary.length > 0 && (
             <div className="px-5 py-3">
               <div className="flex items-center gap-2 mb-2">
-                <Globe className="w-3.5 h-3.5 text-violet-500" />
+                <Globe className="w-3.5 h-3.5 text-[var(--rag-blue)]" />
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">PESTEL Factors</h4>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {data.pestelSummary.map((p, i) => (
-                  <span key={i} className="px-2 py-0.5 text-[10px] bg-violet-50 text-violet-700 rounded-full">
+                  <span key={i} className="px-2 py-0.5 text-[10px] bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] rounded-full">
                     {p.category}: {p.factorCount}
                   </span>
                 ))}

@@ -50,7 +50,7 @@ export default function DashboardPage() {
       description: 'Manage portfolios, mandates, and client relationships',
       icon: Briefcase,
       href: '/advisory',
-      color: 'bg-purple-500',
+      color: 'bg-[var(--rag-blue)]',
     },
     {
       id: 'matflow',

@@ -570,8 +570,8 @@ export default function ManagerDashboardPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-100">
-              <TrendingUp className="h-5 w-5 text-purple-600" />
+            <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+              <TrendingUp className="h-5 w-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <div className="text-2xl font-bold">{teamStats.avgUtilization}%</div>
@@ -628,7 +628,7 @@ export default function ManagerDashboardPage() {
                         className="flex items-center gap-3 cursor-pointer hover:bg-muted/50 rounded-lg p-1 -m-1"
                         onClick={() => { drillDownMember(member); setActiveTab('team'); }}
                       >
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xs font-medium">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-xs font-medium">
                           {member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -721,7 +721,7 @@ export default function ManagerDashboardPage() {
                     <ChevronLeft className="h-4 w-4 mr-1" />
                     Back
                   </Button>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-sm font-medium">
                     {selectedMember.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                   </div>
                   <div>
@@ -857,7 +857,7 @@ export default function ManagerDashboardPage() {
                         className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
                         onClick={() => drillDownMember(member)}
                       >
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-sm font-medium">
                           {member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -1043,7 +1043,7 @@ export default function ManagerDashboardPage() {
                         <div key={member.id} className="space-y-1.5">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xs font-medium">
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-xs font-medium">
                                 {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                               </div>
                               <div>

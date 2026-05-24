@@ -212,7 +212,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
               onClick={() => toggleFocusArea(opt.id)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                 focusAreas.includes(opt.id)
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-[var(--rag-blue)] text-white'
                   : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
@@ -226,7 +226,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
       <button
         onClick={() => onScan({ subsidiaryId, focusAreas, timeHorizon, depth })}
         disabled={isScanning}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r $1-[var(--rag-blue)] to-indigo-600 text-white font-semibold text-sm shadow-lg hover:$1-[var(--rag-blue)] hover:to-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r $1-[var(--rag-blue)] $1-[var(--rag-blue)] text-white font-semibold text-sm shadow-lg hover:$1-[var(--rag-blue)] hover:$1-[var(--rag-blue)] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
       >
         {isScanning ? (
           <>
@@ -334,7 +334,7 @@ function CompetitorAnalysisCard({ analysis }: { analysis: CompetitorAnalysis }) 
         className="w-full flex items-center justify-between p-4 hover:bg-[var(--bg-sunken)] transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br $1-[var(--rag-blue)] to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">
               {analysis.competitorName?.charAt(0) || '?'}
             </span>
@@ -457,7 +457,7 @@ function TrendSection({ trends }: { trends: IndustryTrend[] }) {
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-foreground">{trend.trend}</p>
               <div className="flex gap-2">
-                <Badge label={trend.adoptionRate} color="text-purple-700" bg="bg-purple-100" />
+                <Badge label={trend.adoptionRate} color="text-[var(--rag-blue)]" bg="bg-[var(--rag-blue-soft)]" />
                 <Badge label={`${trend.relevance} relevance`} color="text-muted-foreground" bg="bg-[var(--bg-sunken)]" />
               </div>
             </div>
@@ -684,15 +684,15 @@ function ReportViewer({ report, onBack }: {
             <SectionCard title="Emerging Patterns" icon={Radar}>
               <div className="space-y-2">
                 {report.trendAnalysis.emergingPatterns.map((pattern, idx) => (
-                  <div key={idx} className="bg-purple-50 border border-purple-100 rounded-lg p-3">
+                  <div key={idx} className="bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-semibold text-purple-800">{pattern.pattern}</p>
+                      <p className="text-sm font-semibold text-[var(--rag-blue)]">{pattern.pattern}</p>
                       <div className="flex gap-2">
-                        <Badge label={`${pattern.signalStrength} signal`} color="text-purple-700" bg="bg-purple-100" />
+                        <Badge label={`${pattern.signalStrength} signal`} color="text-[var(--rag-blue)]" bg="bg-[var(--rag-blue-soft)]" />
                         <Badge label={pattern.timeToImpact?.replace('_', ' ')} color="text-muted-foreground" bg="bg-[var(--bg-sunken)]" />
                       </div>
                     </div>
-                    <p className="text-xs text-purple-700">{pattern.description}</p>
+                    <p className="text-xs text-[var(--rag-blue)]">{pattern.description}</p>
                   </div>
                 ))}
               </div>
@@ -804,7 +804,7 @@ export function MarketIntelligenceScanPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br $1-[var(--rag-blue)] to-indigo-700 rounded-xl shadow-lg">
+          <div className="p-2.5 bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] rounded-xl shadow-lg">
             <Radar className="w-6 h-6 text-white" />
           </div>
           <div>

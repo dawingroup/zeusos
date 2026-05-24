@@ -51,14 +51,14 @@ const TYPE_CONFIG: Record<RecommendationType, {
   inspiration: { 
     icon: Image, 
     label: 'Inspiration', 
-    color: 'text-pink-600',
-    bgColor: 'bg-pink-50 border-pink-200',
+    color: 'text-[var(--rag-red)]',
+    bgColor: 'bg-[var(--rag-red-soft)] border-[var(--rag-red)]',
   },
   feature: { 
     icon: Layers, 
     label: 'Feature', 
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50 border-purple-200',
+    color: 'text-[var(--rag-blue)]',
+    bgColor: 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]',
   },
 };
 
@@ -109,7 +109,7 @@ export function InlineRecommendations({
   if (compact) {
     return (
       <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-thin">
-        <Sparkles className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+        <Sparkles className="w-4 h-4 text-[var(--rag-blue)] flex-shrink-0" />
         {visibleItems.slice(0, maxVisible).map(item => {
           const config = TYPE_CONFIG[item.type];
           const Icon = config.icon;
@@ -145,7 +145,7 @@ export function InlineRecommendations({
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <Sparkles className="w-4 h-4 text-indigo-500" />
+        <Sparkles className="w-4 h-4 text-[var(--rag-blue)]" />
         <span className="text-sm font-medium text-muted-foreground">{title}</span>
         <span className="text-xs text-[var(--fg-tertiary)]">({visibleItems.length})</span>
       </div>
@@ -362,12 +362,12 @@ export function RecommendationBadge({ count, onClick, type }: RecommendationBadg
   if (count === 0) return null;
 
   const Icon = type ? TYPE_CONFIG[type].icon : Sparkles;
-  const color = type ? TYPE_CONFIG[type].color : 'text-indigo-600';
+  const color = type ? TYPE_CONFIG[type].color : 'text-[var(--rag-blue)]';
 
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1 px-2 py-1 bg-indigo-50 border border-indigo-200 rounded-full text-xs font-medium text-indigo-700 hover:bg-indigo-100 transition-colors"
+      className="flex items-center gap-1 px-2 py-1 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-full text-xs font-medium text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] transition-colors"
     >
       <Icon className={`w-3 h-3 ${color}`} />
       <span>{count} suggestion{count !== 1 ? 's' : ''}</span>

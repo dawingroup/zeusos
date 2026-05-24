@@ -132,7 +132,7 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
           </button>
           <button
             onClick={onAddCompetitor}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)]"
           >
             <Plus className="w-4 h-4" />
             Add Competitor
@@ -165,7 +165,7 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'text-indigo-600 border-indigo-600'
+                  ? 'text-[var(--rag-blue)] border-[var(--rag-blue)]'
                   : 'text-muted-foreground border-transparent hover:text-muted-foreground'
               }`}
             >
@@ -191,19 +191,19 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
                   placeholder="Search competitors..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-[var(--rag-blue)]"
                 />
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`flex items-center gap-2 px-4 py-2 border rounded-lg ${
-                  showFilters ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-[var(--border-default)] text-muted-foreground'
+                  showFilters ? 'border-[var(--rag-blue)] text-[var(--rag-blue)] bg-[var(--rag-blue-soft)]' : 'border-[var(--border-default)] text-muted-foreground'
                 }`}
               >
                 <Filter className="w-4 h-4" />
                 Filters
                 {Object.keys(filters).length > 0 && (
-                  <span className="px-1.5 py-0.5 text-xs bg-indigo-600 text-white rounded-full">
+                  <span className="px-1.5 py-0.5 text-xs bg-[var(--rag-blue)] text-white rounded-full">
                     {Object.keys(filters).length}
                   </span>
                 )}

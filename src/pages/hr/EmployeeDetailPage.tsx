@@ -100,7 +100,7 @@ const statusColors: Record<string, string> = {
   on_leave: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   terminated: 'bg-[var(--bg-sunken)] text-foreground',
   resigned: 'bg-[var(--bg-sunken)] text-foreground',
-  retired: 'bg-purple-100 text-purple-800',
+  retired: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
 };
 
 // Info row component
@@ -291,8 +291,8 @@ export function EmployeeDetailPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-100">
-                <UserCheck className="h-5 w-5 text-purple-600" />
+              <div className="p-2 rounded-lg bg-[var(--rag-blue-soft)]">
+                <UserCheck className="h-5 w-5 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Direct Reports</p>

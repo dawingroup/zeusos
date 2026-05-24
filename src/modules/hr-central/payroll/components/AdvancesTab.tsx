@@ -61,8 +61,8 @@ interface AdvancesTabProps {
 const STATUS_CONFIG: Record<AdvanceStatus, { label: string; color: string; icon: React.ReactNode }> = {
   pending: { label: 'Pending', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]', icon: <Clock className="h-3 w-3" /> },
   approved: { label: 'Approved', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]', icon: <CheckCircle className="h-3 w-3" /> },
-  disbursed: { label: 'Disbursed', color: 'bg-purple-100 text-purple-700', icon: <ArrowDownCircle className="h-3 w-3" /> },
-  partially_recovered: { label: 'Recovering', color: 'bg-cyan-100 text-cyan-700', icon: <Wallet className="h-3 w-3" /> },
+  disbursed: { label: 'Disbursed', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]', icon: <ArrowDownCircle className="h-3 w-3" /> },
+  partially_recovered: { label: 'Recovering', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]', icon: <Wallet className="h-3 w-3" /> },
   fully_recovered: { label: 'Recovered', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]', icon: <CheckCircle className="h-3 w-3" /> },
   rejected: { label: 'Rejected', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]', icon: <XCircle className="h-3 w-3" /> },
   cancelled: { label: 'Cancelled', color: 'bg-[var(--bg-sunken)] text-muted-foreground', icon: <XCircle className="h-3 w-3" /> },
@@ -212,8 +212,8 @@ export function AdvancesTab({ employees }: AdvancesTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-cyan-100">
-                <Wallet className="h-4 w-4 text-cyan-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]">
+                <Wallet className="h-4 w-4 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Active Advances</p>

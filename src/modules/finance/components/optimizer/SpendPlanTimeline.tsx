@@ -119,13 +119,13 @@ export function SpendPlanTimeline({
               ${entry.type === 'receipt'
                 ? 'bg-[var(--rag-green-soft)] border-[var(--rag-green)]'
                 : entry.type === 'savings'
-                  ? 'bg-purple-50 border-purple-300'
+                  ? 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]'
                   : 'bg-card border-[var(--border-subtle)]'}
             `}>
               {entry.type === 'receipt' ? (
                 <ArrowDown className="w-4 h-4 text-[var(--rag-green)]" />
               ) : entry.type === 'savings' ? (
-                <PiggyBank className="w-4 h-4 text-purple-600" />
+                <PiggyBank className="w-4 h-4 text-[var(--rag-blue)]" />
               ) : entry.status === 'approved' ? (
                 <CheckCircle className="w-4 h-4 text-[var(--rag-green)]" />
               ) : entry.status === 'deferred' ? (

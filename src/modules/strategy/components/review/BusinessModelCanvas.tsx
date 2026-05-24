@@ -88,7 +88,7 @@ export const BusinessModelCanvas: React.FC<BusinessModelCanvasProps> = ({
           <button
             onClick={() => onRequestAI('businessModelCanvas')}
             disabled={isAILoading}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
           >
             <Sparkles className="w-4 h-4" />
             {isAILoading ? 'Analyzing...' : 'AI Suggestions'}
@@ -310,7 +310,7 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
           <div
             key={item.id}
             className={`group flex items-start gap-1.5 p-1.5 rounded text-xs ${
-              item.aiSuggested ? 'bg-purple-100/50 border border-purple-200' :
+              item.aiSuggested ? 'bg-[var(--rag-blue-soft)]/50 border border-[var(--rag-blue)]' :
               item.isNew ? 'bg-[var(--rag-green-soft)]/50 border border-[var(--rag-green)]' :
               item.isModified ? 'bg-[var(--rag-amber-soft)]/50 border border-[var(--rag-amber)]' :
               'bg-card/60'
@@ -329,7 +329,7 @@ const CanvasBlock: React.FC<CanvasBlockProps> = ({
               <span className="flex-1 text-muted-foreground leading-tight">{item.text}</span>
             )}
             {item.aiSuggested && (
-              <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0 mt-0.5" />
+              <Sparkles className="w-3 h-3 text-[var(--rag-blue)] flex-shrink-0 mt-0.5" />
             )}
             {item.priority === 'high' && (
               <Star className="w-3 h-3 text-[var(--rag-amber)] flex-shrink-0 mt-0.5" />

@@ -76,7 +76,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Cameras, lighting, edit stations, vehicles — corporate fixed assets',
     icon: 'Wrench',
     href: '/assets',
-    color: 'bg-amber-500',
+    color: 'bg-[var(--rag-amber)]',
     hasRealData: true,
   },
   'market_intelligence': {
@@ -84,7 +84,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Competitor + market analysis for client briefs',
     icon: 'Globe',
     href: '/market-intel/competitors',
-    color: 'bg-cyan-700',
+    color: 'bg-[var(--rag-blue)]',
     hasRealData: false,
   },
   'strategy': {
@@ -92,7 +92,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Group OKRs, KPIs, Executive Dashboard',
     icon: 'Target',
     href: '/strategy',
-    color: 'bg-violet-600',
+    color: 'bg-[var(--rag-blue)]',
     hasRealData: true,
   },
   'hr': {
@@ -100,7 +100,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Staff, leave, payroll, performance, org structure',
     icon: 'Users',
     href: '/hr/employees',
-    color: 'bg-teal-600',
+    color: 'bg-[var(--rag-blue)]',
     hasRealData: true,
   },
   'finance': {
@@ -108,7 +108,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'CFO briefing, spend plan, cash forecast, expenditures',
     icon: 'DollarSign',
     href: '/finance',
-    color: 'bg-emerald-600',
+    color: 'bg-[var(--rag-green)]',
     hasRealData: false,
   },
   'compliance': {
@@ -116,7 +116,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Document register, obligations, UAA membership renewal',
     icon: 'Shield',
     href: '/compliance',
-    color: 'bg-emerald-600',
+    color: 'bg-[var(--rag-green)]',
     hasRealData: true,
   },
   'intelligence-layer': {
@@ -124,7 +124,7 @@ const MODULE_REGISTRY: Record<SubsidiaryModule, Omit<ModuleInfo, 'moduleId' | 'h
     description: 'Cross-module insights, Smart Tasks, manager dashboards',
     icon: 'Brain',
     href: '/intelligence',
-    color: 'bg-purple-700',
+    color: 'bg-[var(--rag-blue)]',
     hasRealData: true,
   },
 };

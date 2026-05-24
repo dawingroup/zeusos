@@ -167,7 +167,7 @@ export function MaterialPricingRulesSection({
           ) : (
             <ChevronRight className="w-5 h-5 text-[var(--fg-tertiary)]" />
           )}
-          <Layers className="w-5 h-5 text-indigo-500" />
+          <Layers className="w-5 h-5 text-[var(--rag-blue)]" />
           <div className="text-left">
             <h3 className="text-base font-semibold text-foreground">Material Pricing Rules</h3>
             <p className="text-sm text-muted-foreground">
@@ -178,7 +178,7 @@ export function MaterialPricingRulesSection({
         {canEdit && isExpanded && !isEditing && (
           <span
             onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
-            className="text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer"
+            className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] cursor-pointer"
           >
             Edit
           </span>
@@ -219,7 +219,7 @@ export function MaterialPricingRulesSection({
                     <span>Buffer: <strong className="text-muted-foreground">{Math.round((bufferVal - 1) * 100)}%</strong></span>
                     <span className="uppercase">{measurement?.replace('_', ' ')}</span>
                     {isOverridden && (
-                      <span className="text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded">Custom</span>
+                      <span className="text-xs bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] px-1.5 py-0.5 rounded">Custom</span>
                     )}
                   </div>
                 </button>
@@ -408,7 +408,7 @@ export function MaterialPricingRulesSection({
                     {/* Fabric-Specific Config */}
                     {type === 'FABRIC' && (
                       <div className="border-t pt-3 mt-3">
-                        <h5 className="text-xs font-semibold text-violet-700 uppercase mb-3">Fabric Settings</h5>
+                        <h5 className="text-xs font-semibold text-[var(--rag-blue)] uppercase mb-3">Fabric Settings</h5>
                         <div>
                           <label className="block text-xs font-medium text-muted-foreground mb-1">Default Roll Width (mm)</label>
                           <input type="number" value={DEFAULT_MATERIAL_PRICING_RULES.FABRIC.fabricConfig?.defaultRollWidthMm ?? 1400} disabled className="w-full max-w-xs px-3 py-1.5 border border-[var(--border-subtle)] rounded text-sm bg-[var(--bg-sunken)] text-muted-foreground" />
@@ -438,7 +438,7 @@ export function MaterialPricingRulesSection({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-lg text-sm hover:bg-[var(--rag-blue)] disabled:opacity-50"
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 {isSaving ? 'Saving...' : 'Save Rules'}

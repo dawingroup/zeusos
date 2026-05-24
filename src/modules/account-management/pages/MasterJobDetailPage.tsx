@@ -18,9 +18,9 @@ import type { IWOState } from '@/modules/assignment/constants/iwo-states';
 const STATE_TONE: Record<IWOState, string> = {
   DRAFT:                 'bg-[var(--bg-sunken)] text-muted-foreground',
   ISSUED:                'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  ACCEPTED:              'bg-cyan-100 text-cyan-800',
+  ACCEPTED:              'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   REJECTED:              'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
-  IN_PROGRESS:           'bg-indigo-100 text-indigo-800',
+  IN_PROGRESS:           'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   DELIVERED:             'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   ACCEPTED_INTERNALLY:   'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   CLOSED:                'bg-[var(--bg-sunken)] text-foreground',

@@ -79,10 +79,10 @@ export function StrategyGenerator({
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-card rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-indigo-600 to-purple-600">
+          <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r $1-[var(--rag-blue)] $1-[var(--rag-blue)]">
             <div>
               <h2 className="text-xl font-bold text-white">Generate Design Strategy</h2>
-              <p className="text-indigo-200 text-sm">{projectName} ({projectCode})</p>
+              <p className="text-[var(--rag-blue-soft)] text-sm">{projectName} ({projectCode})</p>
             </div>
             <button
               onClick={onClose}
@@ -99,9 +99,9 @@ export function StrategyGenerator({
             {!report ? (
               // Input Form
               <div className="space-y-6">
-                <div className="bg-indigo-50 rounded-lg p-4">
-                  <h3 className="font-medium text-indigo-900 mb-2">How it works</h3>
-                  <ol className="text-sm text-indigo-700 space-y-1 list-decimal list-inside">
+                <div className="bg-[var(--rag-blue-soft)] rounded-lg p-4">
+                  <h3 className="font-medium text-[var(--rag-blue)] mb-2">How it works</h3>
+                  <ol className="text-sm text-[var(--rag-blue)] space-y-1 list-decimal list-inside">
                     <li>AI searches for current design trends relevant to your project</li>
                     <li>Matches trends to your available manufacturing features</li>
                     <li>Generates recommendations based on what you can actually produce</li>
@@ -117,7 +117,7 @@ export function StrategyGenerator({
                     <select
                       value={projectType}
                       onChange={(e) => setProjectType(e.target.value)}
-                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-[var(--rag-blue)]"
                     >
                       <option>Custom Millwork</option>
                       <option>Kitchen Cabinetry</option>
@@ -136,7 +136,7 @@ export function StrategyGenerator({
                     <select
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-[var(--rag-blue)]"
                     >
                       <option>East Africa</option>
                       <option>Uganda</option>
@@ -156,7 +156,7 @@ export function StrategyGenerator({
                     value={clientBrief}
                     onChange={(e) => setClientBrief(e.target.value)}
                     rows={6}
-                    className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-[var(--rag-blue)]"
                     placeholder="Describe the project requirements, client preferences, style direction, functional needs, budget considerations, etc."
                   />
                 </div>
@@ -205,21 +205,21 @@ export function StrategyGenerator({
                 </div>
 
                 {/* Production Feasibility */}
-                <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-4">
+                <div className="bg-gradient-to-r $1-[var(--rag-blue-soft)] $1-[var(--rag-blue-soft)] rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="font-semibold text-teal-900">Production Feasibility</h4>
-                      <p className="text-sm text-teal-700">{report.productionFeasibility.notes}</p>
+                      <h4 className="font-semibold text-[var(--rag-blue)]">Production Feasibility</h4>
+                      <p className="text-sm text-[var(--rag-blue)]">{report.productionFeasibility.notes}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-3xl font-bold text-teal-600">
+                      <p className="text-3xl font-bold text-[var(--rag-blue)]">
                         {report.productionFeasibility.overallScore}%
                       </p>
-                      <p className="text-xs text-teal-600">Score</p>
+                      <p className="text-xs text-[var(--rag-blue)]">Score</p>
                     </div>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-teal-200">
-                    <p className="text-xs text-teal-700">
+                  <div className="mt-3 pt-3 border-t border-[var(--rag-blue)]">
+                    <p className="text-xs text-[var(--rag-blue)]">
                       <strong>{report.metadata.featuresProposed}</strong> features proposed from{' '}
                       <strong>{report.metadata.totalAvailableFeatures}</strong> available |{' '}
                       Est. <strong>{report.productionFeasibility.estimatedTotalDays}</strong> days
@@ -268,7 +268,7 @@ export function StrategyGenerator({
                 <button
                   onClick={handleGenerate}
                   disabled={isGenerating || !clientBrief}
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-6 py-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isGenerating ? (
                     <>
@@ -306,7 +306,7 @@ export function StrategyGenerator({
                   <PDFDownloadLink
                     document={<StrategyPDF report={report} />}
                     fileName={`${projectCode}-strategy-${new Date().toISOString().split('T')[0]}.pdf`}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                    className="px-6 py-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)] flex items-center gap-2"
                   >
                     {({ loading }) => (
                       loading ? (

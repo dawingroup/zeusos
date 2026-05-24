@@ -188,9 +188,9 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
   const CATEGORY_COLORS = {
     financial: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
     operational: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-    customer: 'bg-pink-100 text-pink-700',
+    customer: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
     employee: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
-    growth: 'bg-purple-100 text-purple-700',
+    growth: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   };
 
   return (
@@ -234,7 +234,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
             <button
               onClick={handleGenerateOKRs}
               disabled={isGeneratingOKRs}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
             >
               {isGeneratingOKRs ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -267,7 +267,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                     <span className={`px-2 py-0.5 text-xs rounded-full ${PRIORITY_COLORS[okr.priority]}`}>
                       {okr.priority}
                     </span>
-                    {okr.aiGenerated && <Sparkles className="w-3 h-3 text-purple-500" />}
+                    {okr.aiGenerated && <Sparkles className="w-3 h-3 text-[var(--rag-blue)]" />}
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground">{okr.keyResults.length} KRs</span>
@@ -333,7 +333,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
             <button
               onClick={handleGenerateKPIs}
               disabled={isGeneratingKPIs}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
             >
               {isGeneratingKPIs ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -358,7 +358,7 @@ export const OKRKPIOutputSection: React.FC<OKRKPIOutputSectionProps> = ({
                       <BarChart3 className="w-4 h-4 text-[var(--rag-green)] flex-shrink-0" />
                       <h5 className="text-sm font-medium text-foreground">{kpi.name}</h5>
                     </div>
-                    {kpi.aiGenerated && <Sparkles className="w-3 h-3 text-purple-500 flex-shrink-0" />}
+                    {kpi.aiGenerated && <Sparkles className="w-3 h-3 text-[var(--rag-blue)] flex-shrink-0" />}
                   </div>
                   <p className="text-xs text-muted-foreground mb-2">{kpi.description}</p>
                   <div className="flex flex-wrap gap-2 mb-3">

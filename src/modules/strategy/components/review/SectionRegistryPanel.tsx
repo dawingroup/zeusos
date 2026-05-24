@@ -59,11 +59,11 @@ const SECTION_TYPE_ICONS: Record<SectionType, typeof BarChart3> = {
 
 const SECTION_TYPE_COLORS: Record<SectionType, string> = {
   financial: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  market: 'bg-purple-100 text-purple-700',
+  market: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   operations: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   growth: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   risk: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
-  people: 'bg-pink-100 text-pink-700',
+  people: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   governance: 'bg-[var(--bg-sunken)] text-muted-foreground',
   general: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
@@ -237,14 +237,14 @@ export function SectionRegistryPanel({
                     <button
                       onClick={() => onAssessSection(section.id)}
                       disabled={isAssessing}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 disabled:opacity-50"
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] disabled:opacity-50"
                     >
                       <Eye className="h-3 w-3" /> Assess
                     </button>
                     <button
                       onClick={() => onRewriteSection(section.id)}
                       disabled={isAssessing}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-purple-50 text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] disabled:opacity-50"
                     >
                       <Wand2 className="h-3 w-3" /> Rewrite
                     </button>

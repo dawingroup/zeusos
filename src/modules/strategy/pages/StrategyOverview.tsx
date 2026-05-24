@@ -85,7 +85,7 @@ export const StrategyOverview: React.FC = () => {
       icon: Target,
       title: 'OKR & KPI Generation',
       description: 'Auto-generate strategic OKRs and KPIs aligned with your business objectives.',
-      color: 'bg-purple-500',
+      color: 'bg-[var(--rag-blue)]',
     },
   ];
 
@@ -125,7 +125,7 @@ export const StrategyOverview: React.FC = () => {
         </div>
 
         {/* Hero CTA Card */}
-        <div className="bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] to-purple-700 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <div className="bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] $1-[var(--rag-blue)] rounded-2xl p-8 mb-8 text-white shadow-lg">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
@@ -279,14 +279,14 @@ export const StrategyOverview: React.FC = () => {
         </div>
 
         {/* AI Info Banner */}
-        <div className="mt-6 bg-purple-50 border border-purple-200 rounded-xl p-4">
+        <div className="mt-6 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <Sparkles className="h-5 w-5 text-purple-500 flex-shrink-0 mt-0.5" />
+            <Sparkles className="h-5 w-5 text-[var(--rag-blue)] flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-semibold text-purple-900">
+              <h3 className="text-sm font-semibold text-[var(--rag-blue)]">
                 Claude AI Strategy Assistant
               </h3>
-              <p className="mt-1 text-sm text-purple-700">
+              <p className="mt-1 text-sm text-[var(--rag-blue)]">
                 Every section includes an AI assistant powered by Claude that can analyze your current strategy,
                 identify gaps, suggest improvements, and generate strategic outputs like OKRs and KPIs.
                 Simply click "AI Assist" on any section or open the chat panel for deeper analysis.

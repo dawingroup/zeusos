@@ -58,7 +58,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; icon: React.FC<{ classNam
   missing_asset: { label: 'Missing Asset', icon: ShoppingCart, color: 'text-[var(--rag-red)]' },
   underutilized: { label: 'Underutilized', icon: TrendingUp, color: 'text-[var(--rag-amber)]' },
   maintenance_risk: { label: 'Maintenance Risk', icon: Wrench, color: 'text-[var(--rag-amber)]' },
-  capacity_gap: { label: 'Capacity Gap', icon: Package, color: 'text-purple-600' },
+  capacity_gap: { label: 'Capacity Gap', icon: Package, color: 'text-[var(--rag-blue)]' },
   technology_upgrade: { label: 'Tech Upgrade', icon: TrendingUp, color: 'text-[var(--rag-blue)]' },
 };
 
@@ -187,7 +187,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)]">
         <div className="flex items-center gap-3">
-          <Package className="w-5 h-5 text-teal-600" />
+          <Package className="w-5 h-5 text-[var(--rag-blue)]" />
           <div>
             <h3 className="text-sm font-semibold text-foreground">Asset Gap Analysis</h3>
             <p className="text-xs text-muted-foreground">
@@ -207,7 +207,7 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
           <button
             onClick={runAnalysis}
             disabled={isAnalyzing}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
           >
             {isAnalyzing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
             {isAnalyzing ? 'Analyzing...' : gaps.length > 0 ? 'Re-analyze' : 'Run Analysis'}
@@ -244,11 +244,11 @@ Wrap the JSON in \`\`\`json code fences. After the JSON, provide a brief investm
 
       {/* Analyzing Banner */}
       {isAnalyzing && (
-        <div className="px-5 py-4 bg-teal-50 border-b border-teal-200 flex items-center gap-3">
-          <Loader2 className="w-5 h-5 text-teal-600 animate-spin" />
+        <div className="px-5 py-4 bg-[var(--rag-blue-soft)] border-b border-[var(--rag-blue)] flex items-center gap-3">
+          <Loader2 className="w-5 h-5 text-[var(--rag-blue)] animate-spin" />
           <div>
-            <p className="text-sm font-medium text-teal-900">Analyzing asset inventory...</p>
-            <p className="text-xs text-teal-700">AI is reviewing current assets and identifying gaps for growth.</p>
+            <p className="text-sm font-medium text-[var(--rag-blue)]">Analyzing asset inventory...</p>
+            <p className="text-xs text-[var(--rag-blue)]">AI is reviewing current assets and identifying gaps for growth.</p>
           </div>
         </div>
       )}

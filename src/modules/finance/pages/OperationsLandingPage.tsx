@@ -141,7 +141,7 @@ export function OperationsLandingPage() {
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
                       a.type === 'asset' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
                       a.type === 'liability' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' :
-                      a.type === 'equity' ? 'bg-purple-50 text-purple-700' :
+                      a.type === 'equity' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
                       a.type === 'revenue' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
                       'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                     }`}>

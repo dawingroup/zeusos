@@ -72,8 +72,8 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
         {/* Incumbent */}
         {role.incumbentName && (
           <div className="flex items-center gap-2 mb-3 p-2 bg-[var(--bg-sunken)] rounded-md">
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-              <Users className="w-4 h-4 text-indigo-600" />
+            <div className="w-8 h-8 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center">
+              <Users className="w-4 h-4 text-[var(--rag-blue)]" />
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">{role.incumbentName}</p>
@@ -169,7 +169,7 @@ export const CriticalRoleCard: React.FC<CriticalRoleCardProps> = ({
             e.stopPropagation();
             onManageSuccessors?.(role);
           }}
-          className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+          className="text-sm text-[var(--rag-blue)] hover:text-[var(--rag-blue)] font-medium"
         >
           Manage Successors
         </button>

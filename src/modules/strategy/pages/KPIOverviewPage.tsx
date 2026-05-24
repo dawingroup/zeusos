@@ -190,8 +190,8 @@ export function KPIOverviewPage() {
             className="bg-card rounded-lg border border-[var(--border-subtle)] p-5 hover:shadow-md transition-shadow group"
           >
             <div className="flex items-center gap-3 mb-3">
-              <div className="bg-purple-50 rounded-lg p-2.5">
-                <UserCheck className="w-5 h-5 text-purple-600" />
+              <div className="bg-[var(--rag-blue-soft)] rounded-lg p-2.5">
+                <UserCheck className="w-5 h-5 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">HR Module</h3>

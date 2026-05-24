@@ -72,9 +72,9 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
                   successor.rank === 1
-                    ? 'bg-indigo-600'
+                    ? 'bg-[var(--rag-blue)]'
                     : successor.rank === 2
-                    ? 'bg-indigo-400'
+                    ? 'bg-[var(--rag-blue)]'
                     : 'bg-[var(--bg-sunken)]'
                 }`}
               >
@@ -136,7 +136,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onEdit && (
                 <button
                   onClick={() => onEdit(successor)}
-                  className="p-1 text-[var(--fg-tertiary)] hover:text-indigo-600 hover:bg-indigo-50 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] rounded"
                   title="Edit"
                 >
                   <Edit className="w-4 h-4" />
@@ -172,7 +172,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
             <div>
               <p className="text-xs text-muted-foreground">Readiness</p>
               <div className="flex items-center gap-1 mt-1">
-                <TrendingUp className="w-4 h-4 text-indigo-500" />
+                <TrendingUp className="w-4 h-4 text-[var(--rag-blue)]" />
                 <span className="font-medium">{successor.readinessScore}%</span>
               </div>
             </div>

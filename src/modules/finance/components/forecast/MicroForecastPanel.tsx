@@ -55,7 +55,7 @@ const TAB_CONFIG: Array<{ id: MicroTab; label: string; icon: typeof Wrench; colo
   { id: 'capex',     label: 'CapEx',          icon: Wrench,       color: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]' },
   { id: 'loans',     label: 'Loans',          icon: Landmark,     color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]' },
   { id: 'capital',   label: 'Capital Events', icon: TrendingUp,   color: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)] border-[var(--rag-green)]' },
-  { id: 'dividends', label: 'Dividends',      icon: Coins,        color: 'text-purple-600 bg-purple-50 border-purple-200' },
+  { id: 'dividends', label: 'Dividends',      icon: Coins,        color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]' },
 ];
 
 // ── Roadmap Timeline ──────────────────────────────────────────────────────────
@@ -98,7 +98,7 @@ export function RoadmapTimeline({
   }
 
   const colorMap: Record<MicroTab, string> = {
-    capex: 'bg-[var(--rag-amber)]', loans: 'bg-[var(--rag-blue)]', capital: 'bg-[var(--rag-green)]', dividends: 'bg-purple-400',
+    capex: 'bg-[var(--rag-amber)]', loans: 'bg-[var(--rag-blue)]', capital: 'bg-[var(--rag-green)]', dividends: 'bg-[var(--rag-blue)]',
   };
 
   return (
@@ -680,7 +680,7 @@ export function MicroForecastContent({
                     sublabel={`From ${periodLabel(item.startPeriod)} · ${item.frequency}`}
                     amount={item.amount}
                     onDelete={() => onDeleteDividend(item.id)}
-                    color="bg-purple-50 border-purple-200 text-purple-800"
+                    color="bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]"
                   />
                 ))}
               </div>
@@ -870,7 +870,7 @@ export function MicroForecastPanel({
                         sublabel={`From ${periodLabel(item.startPeriod)} · ${item.frequency}`}
                         amount={item.amount}
                         onDelete={() => onDeleteDividend(item.id)}
-                        color="bg-purple-50 border-purple-200 text-purple-800"
+                        color="bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]"
                       />
                     ))}
                   </div>

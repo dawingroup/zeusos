@@ -85,7 +85,7 @@ export function LiabilityRegisterPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <Scale className="w-5 h-5 text-pink-600" />
+          <Scale className="w-5 h-5 text-[var(--rag-red)]" />
           <h2 className="text-xl font-bold text-foreground">Liability Register</h2>
         </div>
         <Button variant="outline" size="sm" onClick={() => refresh()} disabled={isLoading}>

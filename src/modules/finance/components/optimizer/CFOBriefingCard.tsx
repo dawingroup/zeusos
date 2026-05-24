@@ -32,7 +32,7 @@ export function CFOBriefingCard({
     return (
       <Card className={`p-5 ${className}`}>
         <div className="flex items-center gap-2 mb-3">
-          <Brain className="w-4 h-4 text-indigo-500" />
+          <Brain className="w-4 h-4 text-[var(--rag-blue)]" />
           <h3 className="text-sm font-semibold text-foreground">AI CFO Briefing</h3>
         </div>
         <p className="text-xs text-[var(--fg-tertiary)] mb-3">No briefing generated for today</p>
@@ -60,7 +60,7 @@ export function CFOBriefingCard({
     <Card className={`p-5 ${className}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Brain className="w-4 h-4 text-indigo-500" />
+          <Brain className="w-4 h-4 text-[var(--rag-blue)]" />
           <h3 className="text-sm font-semibold text-foreground">AI CFO Briefing</h3>
         </div>
         {onViewFull && (

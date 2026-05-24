@@ -230,8 +230,8 @@ export function OvertimeTab({ period, employees }: OvertimeTabProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-purple-100">
-                <Sun className="h-4 w-4 text-purple-600" />
+              <div className="p-2 rounded-full bg-[var(--rag-blue-soft)]">
+                <Sun className="h-4 w-4 text-[var(--rag-blue)]" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Total Amount</p>

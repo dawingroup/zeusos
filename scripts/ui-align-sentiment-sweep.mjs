@@ -58,10 +58,16 @@ if (patterns.length === 0) {
 
 // Tailwind palette family → RAG token color
 const RAG_FAMILIES = {
-  red: ['red', 'rose'],
+  red: ['red', 'rose', 'pink'],
   amber: ['amber', 'yellow', 'orange'],
   green: ['green', 'emerald'],
-  blue: ['blue', 'sky'],
+  // 'blue' is the catch-all for "info / category accent". Purple, indigo,
+  // violet, teal, cyan don't have direct Zeus brand equivalents — they all
+  // mean "this is a category indicator" or "this is info-adjacent" in the
+  // existing codebase. Consolidating to RAG-blue preserves semantic intent
+  // without inventing a separate category-color token system. If a call
+  // site needs a distinct hue, U.4 can introduce --cat-1..N tokens.
+  blue: ['blue', 'sky', 'purple', 'indigo', 'violet', 'teal', 'cyan'],
 };
 
 const MAPPINGS = [];
@@ -104,10 +110,10 @@ for (const [rag, families] of Object.entries(RAG_FAMILIES)) {
   });
 
   // Borders → solid RAG (use opacity arbitrary value at call-site if you
-  // want a softer border). Covers full shade range including 700-950 used
-  // for high-contrast emphasis borders.
+  // want a softer border). Full shade range including 100 (soft outlines on
+  // pill containers) and 950 (Tailwind 3.4 deep).
   MAPPINGS.push({
-    from: new RegExp(`\\bborder-${F}-(?:200|300|400|500|600|700|800|900|950)\\b`, 'g'),
+    from: new RegExp(`\\bborder-${F}-(?:100|200|300|400|500|600|700|800|900|950)\\b`, 'g'),
     to: `border-[var(--rag-${rag})]`,
   });
 

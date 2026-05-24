@@ -100,7 +100,7 @@ export const TRAINING_STATUS_LABELS: Record<TrainingStatus, string> = {
 export const TRAINING_STATUS_COLORS: Record<TrainingStatus, string> = {
   planned: 'bg-[var(--bg-sunken)] text-foreground',
   enrolled: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  in_progress: 'bg-indigo-100 text-indigo-800',
+  in_progress: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
   cancelled: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
   failed: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',

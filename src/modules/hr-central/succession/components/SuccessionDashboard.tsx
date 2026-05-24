@@ -111,7 +111,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
           </button>
           <button
             onClick={onAddCriticalRole}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)]"
           >
             <Plus className="w-4 h-4" />
             Add Critical Role
@@ -142,7 +142,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
             onClick={() => setActiveTab('roles')}
             className={`pb-3 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'roles'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -152,7 +152,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
             onClick={() => setActiveTab('plans')}
             className={`pb-3 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'plans'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -162,7 +162,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
             onClick={() => setActiveTab('matrix')}
             className={`pb-3 px-1 border-b-2 font-medium text-sm flex items-center gap-1 ${
               activeTab === 'matrix'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -252,7 +252,7 @@ export const SuccessionDashboard: React.FC<SuccessionDashboardProps> = ({
           <div className="flex justify-end mb-4">
             <button
               onClick={onAddDevelopmentPlan}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)]"
             >
               <Plus className="w-4 h-4" />
               New Development Plan

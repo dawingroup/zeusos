@@ -25,11 +25,11 @@ const KIND_LABEL: Record<ActivityKind, string> = {
 
 const KIND_BADGE: Record<ActivityKind, string> = {
   CALL:         'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  EMAIL:        'bg-violet-100 text-violet-800',
+  EMAIL:        'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   MEETING:      'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   NOTE:         'bg-[var(--bg-sunken)] text-muted-foreground',
   STAGE_CHANGE: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
-  TASK:         'bg-pink-100 text-pink-800',
+  TASK:         'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const LOGGABLE_KINDS: ActivityKind[] = ['CALL', 'EMAIL', 'MEETING', 'NOTE', 'TASK'];

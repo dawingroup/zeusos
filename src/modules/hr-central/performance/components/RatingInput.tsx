@@ -89,7 +89,7 @@ export const RatingInput: React.FC<RatingInputProps> = ({
         </div>
         {showLabels && value && (
           <span 
-            className="text-sm font-medium text-indigo-600"
+            className="text-sm font-medium text-[var(--rag-blue)]"
             title={getRatingDescription(value)}
           >
             {value} - {getRatingLabel(value)}

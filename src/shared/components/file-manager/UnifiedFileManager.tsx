@@ -196,7 +196,7 @@ export function UnifiedFileManager({
   }) => {
     const type = getFileIconType(mimeType, fileName);
     switch (type) {
-      case 'image': return <FileImage className="h-5 w-5 text-purple-500" />;
+      case 'image': return <FileImage className="h-5 w-5 text-[var(--rag-blue)]" />;
       case 'pdf': return <FileText className="h-5 w-5 text-[var(--rag-red)]" />;
       case 'spreadsheet': return <FileSpreadsheet className="h-5 w-5 text-[var(--rag-green)]" />;
       case 'model': return <Box className="h-5 w-5 text-[var(--rag-blue)]" />;

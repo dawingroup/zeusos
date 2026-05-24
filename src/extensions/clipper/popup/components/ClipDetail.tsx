@@ -280,14 +280,14 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
 
           {/* AI Analysis */}
           {clip.analysisStatus === 'pending' || clip.analysisStatus === 'analyzing' ? (
-            <div className="p-3 bg-purple-50 rounded-lg">
+            <div className="p-3 bg-[var(--rag-blue-soft)] rounded-lg">
               <div className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 text-purple-500 animate-spin" />
-                <span className="text-sm font-medium text-purple-700">
+                <Loader2 className="w-4 h-4 text-[var(--rag-blue)] animate-spin" />
+                <span className="text-sm font-medium text-[var(--rag-blue)]">
                   {clip.analysisStatus === 'pending' ? 'Waiting for analysis...' : 'Analyzing with AI...'}
                 </span>
               </div>
-              <p className="text-xs text-purple-400 mt-1">Results will appear here automatically</p>
+              <p className="text-xs text-[var(--rag-blue)] mt-1">Results will appear here automatically</p>
             </div>
           ) : clip.analysisStatus === 'failed' ? (
             <div className="p-3 bg-[var(--rag-red-soft)] rounded-lg">
@@ -308,11 +308,11 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               </div>
             </div>
           ) : clip.aiAnalysis ? (
-            <div className="p-3 bg-purple-50 rounded-lg space-y-3">
+            <div className="p-3 bg-[var(--rag-blue-soft)] rounded-lg space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-purple-500" />
-                  <span className="text-sm font-medium text-purple-700">AI Analysis</span>
+                  <Sparkles className="w-4 h-4 text-[var(--rag-blue)]" />
+                  <span className="text-sm font-medium text-[var(--rag-blue)]">AI Analysis</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {clip.aiAnalysis.confidence != null && (
@@ -327,7 +327,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                   {onAnalyze && (
                     <button
                       onClick={() => onAnalyze(clip.id)}
-                      className="p-1 text-purple-400 hover:text-purple-600 rounded"
+                      className="p-1 text-[var(--rag-blue)] hover:text-[var(--rag-blue)] rounded"
                       title="Re-analyze"
                     >
                       <RefreshCw className="w-3 h-3" />
@@ -339,12 +339,12 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               {/* Product Type & Style */}
               <div className="flex flex-wrap gap-2">
                 {clip.aiAnalysis.productType && (
-                  <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
+                  <span className="px-2 py-0.5 bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] text-xs rounded-full font-medium">
                     {clip.aiAnalysis.productType}
                   </span>
                 )}
                 {clip.aiAnalysis.style && (
-                  <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs rounded-full font-medium">
+                  <span className="px-2 py-0.5 bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] text-xs rounded-full font-medium">
                     {clip.aiAnalysis.style}
                   </span>
                 )}
@@ -352,10 +352,10 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
 
               {/* Millwork Assessment */}
               {clip.aiAnalysis.millworkAssessment && (
-                <div className="p-2 bg-card/60 rounded border border-purple-100">
+                <div className="p-2 bg-card/60 rounded border border-[var(--rag-blue)]">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <Hammer className="w-3 h-3 text-purple-500" />
-                    <span className="text-xs font-medium text-purple-700">Millwork Assessment</span>
+                    <Hammer className="w-3 h-3 text-[var(--rag-blue)]" />
+                    <span className="text-xs font-medium text-[var(--rag-blue)]">Millwork Assessment</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
                     {clip.aiAnalysis.millworkAssessment.isCustomCandidate ? (
@@ -377,7 +377,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                   {clip.aiAnalysis.millworkAssessment.keyFeatures && clip.aiAnalysis.millworkAssessment.keyFeatures.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {clip.aiAnalysis.millworkAssessment.keyFeatures.map((f) => (
-                        <span key={f} className="px-1.5 py-0.5 bg-purple-50 text-purple-600 text-[10px] rounded">
+                        <span key={f} className="px-1.5 py-0.5 bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] text-[10px] rounded">
                           {f}
                         </span>
                       ))}
@@ -389,10 +389,10 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               {/* Suggested Tags */}
               {clip.aiAnalysis.suggestedTags && clip.aiAnalysis.suggestedTags.length > 0 && (
                 <div>
-                  <span className="text-[10px] font-medium text-purple-500 uppercase tracking-wider">Suggested Tags</span>
+                  <span className="text-[10px] font-medium text-[var(--rag-blue)] uppercase tracking-wider">Suggested Tags</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {clip.aiAnalysis.suggestedTags.map((tag) => (
-                      <span key={tag} className="px-1.5 py-0.5 bg-purple-100/60 text-purple-600 text-xs rounded">
+                      <span key={tag} className="px-1.5 py-0.5 bg-[var(--rag-blue-soft)]/60 text-[var(--rag-blue)] text-xs rounded">
                         {tag}
                       </span>
                     ))}
@@ -403,7 +403,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               {/* AI-detected Materials & Colors */}
               {clip.aiAnalysis.primaryMaterials && clip.aiAnalysis.primaryMaterials.length > 0 && (
                 <div>
-                  <span className="text-[10px] font-medium text-purple-500 uppercase tracking-wider">Detected Materials</span>
+                  <span className="text-[10px] font-medium text-[var(--rag-blue)] uppercase tracking-wider">Detected Materials</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {clip.aiAnalysis.primaryMaterials.map((m) => (
                       <span key={m} className="px-1.5 py-0.5 bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] text-xs rounded">
@@ -415,7 +415,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               )}
               {clip.aiAnalysis.colors && clip.aiAnalysis.colors.length > 0 && (
                 <div>
-                  <span className="text-[10px] font-medium text-purple-500 uppercase tracking-wider">Detected Colors</span>
+                  <span className="text-[10px] font-medium text-[var(--rag-blue)] uppercase tracking-wider">Detected Colors</span>
                   <div className="flex items-center gap-1.5 mt-1">
                     {clip.aiAnalysis.colors.map((c) => (
                       <span
@@ -432,7 +432,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
           ) : onAnalyze && (
             <button
               onClick={() => onAnalyze(clip.id)}
-              className="w-full flex items-center justify-center gap-2 py-2 border border-purple-200 text-purple-600 rounded-lg hover:bg-purple-50"
+              className="w-full flex items-center justify-center gap-2 py-2 border border-[var(--rag-blue)] text-[var(--rag-blue)] rounded-lg hover:bg-[var(--rag-blue-soft)]"
             >
               <Sparkles className="w-4 h-4" />
               <span className="text-sm">Analyze with AI</span>

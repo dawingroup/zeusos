@@ -50,7 +50,7 @@ const REVIEW_STATUSES = [
   { value: 'scheduled', label: 'Scheduled', color: 'bg-[var(--bg-sunken)] text-foreground' },
   { value: 'self_assessment', label: 'Self Assessment', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
   { value: 'manager_review', label: 'Manager Review', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
-  { value: 'calibration', label: 'Calibration', color: 'bg-purple-100 text-purple-800' },
+  { value: 'calibration', label: 'Calibration', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
   { value: 'completed', label: 'Completed', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
   { value: 'acknowledged', label: 'Acknowledged', color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' },
 ];

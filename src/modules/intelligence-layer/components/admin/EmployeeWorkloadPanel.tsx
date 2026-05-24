@@ -347,7 +347,7 @@ export function EmployeeWorkloadPanel() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              <Users className="h-4 w-4 text-purple-500" />
+              <Users className="h-4 w-4 text-[var(--rag-blue)]" />
               Team Workload
             </CardTitle>
             <Badge variant="outline">{employees.length} employees</Badge>
@@ -377,7 +377,7 @@ export function EmployeeWorkloadPanel() {
                   }}
                 >
                   {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white font-medium">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white font-medium">
                     {employee.initials}
                   </div>
 
@@ -440,7 +440,7 @@ export function EmployeeWorkloadPanel() {
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <User className="h-5 w-5 text-purple-500" />
+              <User className="h-5 w-5 text-[var(--rag-blue)]" />
               Employee Workload Details
             </DialogTitle>
           </DialogHeader>
@@ -448,7 +448,7 @@ export function EmployeeWorkloadPanel() {
             <div className="space-y-6">
               {/* Employee Header */}
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-xl font-medium">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] $1-[var(--rag-blue)] flex items-center justify-center text-white text-xl font-medium">
                   {selectedEmployee.initials}
                 </div>
                 <div>

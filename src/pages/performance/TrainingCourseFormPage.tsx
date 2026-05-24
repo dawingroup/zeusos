@@ -71,14 +71,14 @@ const TRAINING_TYPES: Array<{
     value: 'e_learning',
     label: 'Video/E-Learning',
     icon: Video,
-    color: 'text-indigo-600',
+    color: 'text-[var(--rag-blue)]',
     description: 'Video content from Google Drive or other sources',
   },
   {
     value: 'mentorship',
     label: '1-on-1 Mentorship',
     icon: User,
-    color: 'text-pink-600',
+    color: 'text-[var(--rag-red)]',
     description: 'Personal mentorship sessions (e.g., with CEO)',
   },
   {
@@ -99,14 +99,14 @@ const TRAINING_TYPES: Array<{
     value: 'certification',
     label: 'Certification',
     icon: Award,
-    color: 'text-purple-600',
+    color: 'text-[var(--rag-blue)]',
     description: 'Professional certification programs',
   },
   {
     value: 'on_the_job',
     label: 'On-the-Job Training',
     icon: Briefcase,
-    color: 'text-teal-600',
+    color: 'text-[var(--rag-blue)]',
     description: 'Hands-on learning through work assignments',
   },
 ];
@@ -492,7 +492,7 @@ export function TrainingCourseFormPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Video className="h-5 w-5 text-indigo-600" />
+                <Video className="h-5 w-5 text-[var(--rag-blue)]" />
                 Video/E-Learning Details
               </CardTitle>
             </CardHeader>
@@ -518,7 +518,7 @@ export function TrainingCourseFormPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5 text-pink-600" />
+                <User className="h-5 w-5 text-[var(--rag-red)]" />
                 Mentorship Details
               </CardTitle>
             </CardHeader>

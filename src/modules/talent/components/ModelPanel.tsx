@@ -125,7 +125,7 @@ export function ModelPanel({ profile }: Props) {
                 <dt className="text-xs text-muted-foreground">Specialties</dt>
                 <dd className="mt-1 flex flex-wrap gap-1">
                   {m.specialties.map((s) => (
-                    <span key={s} className="rounded bg-purple-100 px-2 py-0.5 text-xs text-purple-800">
+                    <span key={s} className="rounded bg-[var(--rag-blue-soft)] px-2 py-0.5 text-xs text-[var(--rag-blue)]">
                       {s}
                     </span>
                   ))}

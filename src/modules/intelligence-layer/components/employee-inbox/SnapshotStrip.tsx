@@ -99,7 +99,7 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         subtitle={stats.burning.topTask}
         icon={<Flame className="h-5 w-5" />}
         accentColor="text-[var(--rag-red)]"
-        bgColor="bg-[var(--rag-red-soft)] dark:bg-red-950/30"
+        bgColor="bg-[var(--rag-red-soft)] dark:bg-[var(--rag-red)]/30"
         borderColor="ring-[var(--rag-red)]"
         isActive={activeFilter === 'burning'}
         onClick={() => handleClick('burning')}
@@ -110,7 +110,7 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         subtitle={stats.nextUp.nearestDue ? `Nearest: ${stats.nextUp.nearestDue}` : undefined}
         icon={<ArrowRight className="h-5 w-5" />}
         accentColor="text-[var(--rag-blue)]"
-        bgColor="bg-[var(--rag-blue-soft)] dark:bg-blue-950/30"
+        bgColor="bg-[var(--rag-blue-soft)] dark:bg-[var(--rag-blue)]/30"
         borderColor="ring-[var(--rag-blue)]"
         isActive={activeFilter === 'nextUp'}
         onClick={() => handleClick('nextUp')}
@@ -121,7 +121,7 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         subtitle={stats.stuck.oldestTask}
         icon={<PauseCircle className="h-5 w-5" />}
         accentColor="text-[var(--rag-amber)]"
-        bgColor="bg-[var(--rag-amber-soft)] dark:bg-amber-950/30"
+        bgColor="bg-[var(--rag-amber-soft)] dark:bg-[var(--rag-amber)]/30"
         borderColor="ring-[var(--rag-amber)]"
         isActive={activeFilter === 'stuck'}
         onClick={() => handleClick('stuck')}
@@ -132,7 +132,7 @@ export function SnapshotStrip({ stats, activeFilter, onFilterChange }: SnapshotS
         subtitle="Last 24 hours"
         icon={<Activity className="h-5 w-5" />}
         accentColor="text-[var(--rag-green)]"
-        bgColor="bg-[var(--rag-green-soft)] dark:bg-green-950/30"
+        bgColor="bg-[var(--rag-green-soft)] dark:bg-[var(--rag-green)]/30"
         borderColor="ring-[var(--rag-green)]"
         isActive={activeFilter === 'moved'}
         onClick={() => handleClick('moved')}

@@ -7,10 +7,10 @@ const STAGE_STYLES: Record<ProductionStage, string> = {
   LOCATION_LOCK:    'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   EQUIPMENT:        'bg-lime-100 text-lime-700',
   SHOOT:            'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
-  POST_PRODUCTION:  'bg-teal-100 text-teal-700',
+  POST_PRODUCTION:  'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   CLIENT_REVIEW:    'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
-  MASTER_DELIVERY:  'bg-indigo-100 text-indigo-700',
-  COMPLETE:         'bg-purple-100 text-purple-700',
+  MASTER_DELIVERY:  'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  COMPLETE:         'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
 };
 
 const STAGE_LABEL: Record<ProductionStage, string> = {

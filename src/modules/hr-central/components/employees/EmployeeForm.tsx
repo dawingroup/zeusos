@@ -589,7 +589,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
               {/* Photo upload - Enhanced */}
               <div className="flex items-start gap-6 p-4 bg-muted/30 rounded-lg">
                 <div className="relative">
-                  <div className="w-28 h-28 rounded-xl bg-gradient-to-br $1-[var(--rag-blue-soft)] to-indigo-100 flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                  <div className="w-28 h-28 rounded-xl bg-gradient-to-br $1-[var(--rag-blue-soft)] $1-[var(--rag-blue-soft)] flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                     {photoPreview ? (
                       <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
@@ -658,7 +658,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode }) => {
                     </SelectItem>
                     <SelectItem value="technology">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-purple-500" />
+                        <div className="w-2 h-2 rounded-full bg-[var(--rag-blue)]" />
                         Zeus Technology
                       </div>
                     </SelectItem>

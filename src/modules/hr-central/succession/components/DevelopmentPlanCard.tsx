@@ -64,8 +64,8 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-              <Target className="w-5 h-5 text-indigo-600" />
+            <div className="w-10 h-10 rounded-full bg-[var(--rag-blue-soft)] flex items-center justify-center">
+              <Target className="w-5 h-5 text-[var(--rag-blue)]" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">{plan.employeeName}</h3>
@@ -188,7 +188,7 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
               e.stopPropagation();
               onActivate(plan.id);
             }}
-            className="text-sm text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded font-medium"
+            className="text-sm text-white bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] px-3 py-1 rounded font-medium"
           >
             Activate Plan
           </button>

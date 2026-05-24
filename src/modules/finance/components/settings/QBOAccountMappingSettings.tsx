@@ -469,11 +469,11 @@ export function QBOAccountMappingSettings({
               </div>
               <div className="text-xs text-[var(--rag-blue)]">Fuzzy Matches</div>
             </div>
-            <div className="p-3 bg-purple-50 border border-purple-200 rounded-md text-center">
-              <div className="text-lg font-bold text-purple-800">
+            <div className="p-3 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-md text-center">
+              <div className="text-lg font-bold text-[var(--rag-blue)]">
                 {resolutionLog.filter(e => e.matchType === 'created').length}
               </div>
-              <div className="text-xs text-purple-700">Auto-Created</div>
+              <div className="text-xs text-[var(--rag-blue)]">Auto-Created</div>
             </div>
             <div className="p-3 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-md text-center">
               <div className="text-lg font-bold text-[var(--rag-amber)]">
@@ -517,7 +517,7 @@ export function QBOAccountMappingSettings({
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                         entry.matchType === 'exact' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
                         entry.matchType === 'fuzzy' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
-                        entry.matchType === 'created' ? 'bg-purple-100 text-purple-800' :
+                        entry.matchType === 'created' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
                         'bg-[var(--bg-sunken)] text-foreground'
                       }`}>
                         {entry.matchType}

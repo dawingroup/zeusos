@@ -228,7 +228,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
                 e.stopPropagation();
                 onEdit(competitor);
               }}
-              className="p-1 text-[var(--fg-tertiary)] hover:text-indigo-600 hover:bg-indigo-50 rounded"
+              className="p-1 text-[var(--fg-tertiary)] hover:text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)] rounded"
             >
               <Edit className="w-4 h-4" />
             </button>

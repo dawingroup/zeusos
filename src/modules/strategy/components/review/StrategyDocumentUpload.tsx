@@ -350,7 +350,7 @@ export const StrategyDocumentUpload: React.FC<StrategyDocumentUploadProps> = ({
               <button
                 onClick={() => onAnalyzeDocument(existingDocument.parsedContent!)}
                 disabled={isAnalyzing}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 disabled:opacity-50"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50"
               >
                 {isAnalyzing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

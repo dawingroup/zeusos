@@ -60,7 +60,7 @@ export function QBOSyncStatusBadge({
           {onSync && (
             <button
               onClick={onSync}
-              className="ml-4 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="ml-4 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-md hover:bg-[var(--rag-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             >
               Sync to QBO
             </button>

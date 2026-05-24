@@ -73,7 +73,7 @@ export function CFOBriefingPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <Brain className="w-5 h-5 text-indigo-600" />
+          <Brain className="w-5 h-5 text-[var(--rag-blue)]" />
           <h2 className="text-xl font-bold text-foreground">AI CFO Briefing</h2>
         </div>
         <div className="flex gap-2">
@@ -89,7 +89,7 @@ export function CFOBriefingPage() {
             size="sm"
             onClick={generateBriefing}
             disabled={isGenerating}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white"
           >
             {isGenerating ? (
               <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
@@ -118,7 +118,7 @@ export function CFOBriefingPage() {
           <Button
             onClick={generateBriefing}
             disabled={isGenerating}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white"
           >
             {isGenerating ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Brain className="w-4 h-4 mr-1.5" />}
             Generate Now
@@ -131,13 +131,13 @@ export function CFOBriefingPage() {
           {/* Executive Summary */}
           <Card className="p-5 border-l-4 border-l-indigo-500">
             <div className="flex items-center gap-2 mb-2">
-              <Brain className="w-4 h-4 text-indigo-500" />
+              <Brain className="w-4 h-4 text-[var(--rag-blue)]" />
               <h3 className="text-sm font-semibold text-foreground">Executive Summary</h3>
               <span className="text-xs text-[var(--fg-tertiary)] ml-auto">{formatDate(briefing.generatedAt)}</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">{briefing.executiveSummary}</p>
             {briefing.cashOutlookNarrative && (
-              <p className="text-sm text-indigo-600 mt-2 italic">{briefing.cashOutlookNarrative}</p>
+              <p className="text-sm text-[var(--rag-blue)] mt-2 italic">{briefing.cashOutlookNarrative}</p>
             )}
           </Card>
 

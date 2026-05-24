@@ -251,7 +251,7 @@ export function AIMemoryPanel() {
         <Card>
           <CardContent className="pt-4 pb-3 px-4">
             <div className="flex items-center gap-2">
-              <Brain className="h-4 w-4 text-purple-500" />
+              <Brain className="h-4 w-4 text-[var(--rag-blue)]" />
               <span className="text-sm text-muted-foreground">Total Memories</span>
             </div>
             <p className="text-2xl font-bold mt-1">{stats.total}</p>
