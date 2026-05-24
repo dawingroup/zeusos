@@ -19,6 +19,7 @@ const { withIdempotency, toHttpsError } = require('../platform/idempotency');
 const { appendDomainEvent } = require('../platform/outbox');
 const { nextState } = require('./lib/iwo-state-machine');
 const { ulid } = require('../platform/ulid');
+const { buildInitialChain } = require('./services/approval-ladder.service');
 
 async function runSubmitDeliverable({ db, auth, data }) {
     const { iwoId, assetIds, description, idempotencyKey } = data || {};
@@ -53,10 +54,25 @@ async function runSubmitDeliverable({ db, auth, data }) {
             createdAt: FieldValue.serverTimestamp(),
           });
 
+          // Phase 6.D: initialize the ECD approval ladder on DELIVERY.
+          // Per Addendum v1.1 §7 (change C5), the IWO cannot reach
+          // ACCEPTED_INTERNALLY until the ladder GRANTS. The depth is
+          // tier-driven (TIER_1 = 6 rungs, TIER_3 = 2). When the IWO
+          // already has an approvalChain (rare — e.g. resubmit after
+          // request_revision), preserve its history rather than wiping.
+          const approvalChainPatch = iwo.approvalChain
+            ? {}    // resubmit path — keep prior history; chain is reused
+            : { approvalChain: buildInitialChain({
+                tier: iwo.tier,
+                actorUserId: uid,
+                nowIso: new Date().toISOString(),
+              }) };
+
           tx.update(iwoRef, {
             state: to,
             deliveredAt: FieldValue.serverTimestamp(),
             updatedAt: FieldValue.serverTimestamp(),
+            ...approvalChainPatch,
           });
 
           appendDomainEvent({

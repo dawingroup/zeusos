@@ -23,6 +23,8 @@ const { signAcceptanceCriterion } = require('./signAcceptanceCriterion');
 const { routeDirectClientRequest } = require('./routeDirectClientRequest');
 // Phase 6.B — brand routing recommendation surface (Addendum v1.1 §8).
 const { routeBrand } = require('./routeBrand');
+// Phase 6.D — ECD approval ladder (Addendum v1.1 §7 / change C5).
+const { advanceApprovalRung, rejectApprovalRung } = require('./advanceRejectApprovalRung');
 
 module.exports = {
   issueWorkOrder,
@@ -40,4 +42,6 @@ module.exports = {
   signAcceptanceCriterion,
   routeDirectClientRequest,
   routeBrand,
+  advanceApprovalRung,
+  rejectApprovalRung,
 };

@@ -4747,6 +4747,15 @@ exports.routeDirectClientRequest = assignment.routeDirectClientRequest;
 // Phase 6.B — brand routing recommendation (Addendum v1.1 §8).
 exports.routeBrand = assignment.routeBrand;
 
+// Phase 6.D — ECD approval ladder (Addendum v1.1 §7 / change C5).
+exports.advanceApprovalRung = assignment.advanceApprovalRung;
+exports.rejectApprovalRung = assignment.rejectApprovalRung;
+
+// Phase 6.D — CES (Cost Estimate Sheet) lifecycle (Addendum v1.1 §8 / change C7).
+const { postCesLineItem, signOffCes } = require('./src/pricing/cesLifecycle');
+exports.postCesLineItem = postCesLineItem;
+exports.signOffCes = signOffCes;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');

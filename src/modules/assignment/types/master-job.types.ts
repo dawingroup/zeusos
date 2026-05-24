@@ -81,6 +81,16 @@ export interface MasterJob {
   /** Account-Management user owning this master job day-to-day. */
   accountManagerUserId?: string;
 
+  /**
+   * Cost Estimate Sheet — internal per-master-job cost-modelling
+   * artifact. When signed off, drives the floor priceQuote warns
+   * under (priceQuote ≥ ces.totalMinor × (1 + marginFloorPct/100)).
+   * Added in Phase 6.D per Addendum v1.1 §8 / change C7. Optional —
+   * legacy master jobs created pre-6.D have no CES (no floor check).
+   * Type imported separately to avoid circular type dependencies.
+   */
+  ces?: import('../../contracts/types/ces.types').CES;
+
   openedAt?: Timestamp | string;
   closedAt?: Timestamp | string;
   cancelledAt?: Timestamp | string;
