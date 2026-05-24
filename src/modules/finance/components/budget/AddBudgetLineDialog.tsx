@@ -346,7 +346,7 @@ export function AddBudgetLineDialog({
               key={t.id}
               className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors ${
                 tab === t.id
-                  ? 'border-blue-500 text-blue-600'
+                  ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                   : 'border-transparent text-muted-foreground hover:text-muted-foreground'
               }`}
               onClick={() => setTab(t.id)}
@@ -365,7 +365,7 @@ export function AddBudgetLineDialog({
                 <label className="text-xs font-medium text-muted-foreground">Account *</label>
                 <input
                   type="text"
-                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   placeholder="Search accounts..."
                   value={accountSearch}
                   onChange={e => setAccountSearch(e.target.value)}
@@ -380,8 +380,8 @@ export function AddBudgetLineDialog({
                       filteredAccounts.slice(0, 20).map(a => (
                         <button
                           key={a.id}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50 transition-colors ${
-                            accountId === a.id ? 'bg-blue-50 text-blue-700' : 'text-muted-foreground'
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-[var(--rag-blue-soft)] transition-colors ${
+                            accountId === a.id ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' : 'text-muted-foreground'
                           }`}
                           onClick={() => {
                             setAccountId(a.id);
@@ -406,7 +406,7 @@ export function AddBudgetLineDialog({
                 <label className="text-xs font-medium text-muted-foreground">Annual Budget (UGX) *</label>
                 <input
                   type="number"
-                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   value={annualBudget || ''}
                   onChange={e => setAnnualBudget(parseFloat(e.target.value) || 0)}
                   placeholder="0"
@@ -416,7 +416,7 @@ export function AddBudgetLineDialog({
               <div>
                 <label className="text-xs font-medium text-muted-foreground">Allocation Method</label>
                 <select
-                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   value={allocationMethod}
                   onChange={e => setAllocationMethod(e.target.value as AllocationMethod)}
                 >
@@ -430,7 +430,7 @@ export function AddBudgetLineDialog({
                 <label className="text-xs font-medium text-muted-foreground">Description</label>
                 <input
                   type="text"
-                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                   placeholder="Optional description..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
@@ -459,7 +459,7 @@ export function AddBudgetLineDialog({
             <div className="space-y-4">
               {forecastImportResult ? (
                 <div className="text-center py-8">
-                  <Check className="w-10 h-10 text-green-500 mx-auto mb-3" />
+                  <Check className="w-10 h-10 text-[var(--rag-green)] mx-auto mb-3" />
                   <h4 className="text-sm font-semibold text-foreground mb-1">
                     Imported {forecastImportResult.count} line{forecastImportResult.count !== 1 ? 's' : ''}
                   </h4>
@@ -472,7 +472,7 @@ export function AddBudgetLineDialog({
                 </div>
               ) : forecastsLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-5 h-5 animate-spin text-blue-400 mr-2" />
+                  <Loader2 className="w-5 h-5 animate-spin text-[var(--rag-blue)] mr-2" />
                   <span className="text-sm text-muted-foreground">Loading forecasts...</span>
                 </div>
               ) : forecasts.length === 0 ? (
@@ -488,7 +488,7 @@ export function AddBudgetLineDialog({
                   <div>
                     <label className="text-xs font-medium text-muted-foreground">Select Forecast</label>
                     <select
-                      className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                       value={selectedForecastId}
                       onChange={e => setSelectedForecastId(e.target.value)}
                     >
@@ -505,7 +505,7 @@ export function AddBudgetLineDialog({
                     </label>
                     <input
                       type="number"
-                      className="mt-1 w-32 border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="mt-1 w-32 border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                       value={adjustmentPct}
                       onChange={e => setAdjustmentPct(parseFloat(e.target.value) || 0)}
                     />
@@ -514,7 +514,7 @@ export function AddBudgetLineDialog({
                   {/* Account list */}
                   {forecastAccountsLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 className="w-4 h-4 animate-spin text-blue-400 mr-2" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[var(--rag-blue)] mr-2" />
                       <span className="text-xs text-muted-foreground">Loading forecast accounts...</span>
                     </div>
                   ) : forecastAccounts.length === 0 ? (
@@ -527,7 +527,7 @@ export function AddBudgetLineDialog({
                     <>
                       <div className="flex items-center justify-between">
                         <button
-                          className="text-xs text-blue-600 hover:text-blue-700"
+                          className="text-xs text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
                           onClick={toggleAllForecastAccounts}
                         >
                           {selectedForecastAccounts.size === forecastAccounts.length ? 'Deselect all' : 'Select all'}
@@ -541,13 +541,13 @@ export function AddBudgetLineDialog({
                         {forecastAccounts.map(row => (
                           <label
                             key={row.accountId}
-                            className={`flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50/40 transition-colors ${
-                              selectedForecastAccounts.has(row.accountId) ? 'bg-blue-50/60' : ''
+                            className={`flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-[var(--rag-blue-soft)]/40 transition-colors ${
+                              selectedForecastAccounts.has(row.accountId) ? 'bg-[var(--rag-blue-soft)]/60' : ''
                             }`}
                           >
                             <input
                               type="checkbox"
-                              className="rounded border-[var(--border-default)] text-blue-600 focus:ring-blue-300"
+                              className="rounded border-[var(--border-default)] text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
                               checked={selectedForecastAccounts.has(row.accountId)}
                               onChange={() => toggleForecastAccount(row.accountId)}
                             />
@@ -592,7 +592,7 @@ export function AddBudgetLineDialog({
             <div className="space-y-4">
               {procImportResult ? (
                 <div className="text-center py-8">
-                  <Check className="w-10 h-10 text-green-500 mx-auto mb-3" />
+                  <Check className="w-10 h-10 text-[var(--rag-green)] mx-auto mb-3" />
                   <h4 className="text-sm font-semibold text-foreground mb-1">
                     Imported {procImportResult.count} line{procImportResult.count !== 1 ? 's' : ''}
                   </h4>
@@ -605,7 +605,7 @@ export function AddBudgetLineDialog({
                 </div>
               ) : procurementLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-5 h-5 animate-spin text-amber-400 mr-2" />
+                  <Loader2 className="w-5 h-5 animate-spin text-[var(--rag-amber)] mr-2" />
                   <span className="text-sm text-muted-foreground">Loading procurement requirements...</span>
                 </div>
               ) : procurementItems.length === 0 ? (
@@ -622,7 +622,7 @@ export function AddBudgetLineDialog({
                 <>
                   <div className="flex items-center justify-between">
                     <button
-                      className="text-xs text-blue-600 hover:text-blue-700"
+                      className="text-xs text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
                       onClick={toggleAllProcItems}
                     >
                       {selectedProcItems.size === procurementItems.length ? 'Deselect all' : 'Select all'}
@@ -637,13 +637,13 @@ export function AddBudgetLineDialog({
                       <div
                         key={item.id}
                         className={`px-3 py-2.5 transition-colors ${
-                          selectedProcItems.has(item.id) ? 'bg-amber-50/60' : ''
+                          selectedProcItems.has(item.id) ? 'bg-[var(--rag-amber-soft)]/60' : ''
                         }`}
                       >
                         <div className="flex items-start gap-3">
                           <input
                             type="checkbox"
-                            className="mt-0.5 rounded border-[var(--border-default)] text-amber-600 focus:ring-amber-300"
+                            className="mt-0.5 rounded border-[var(--border-default)] text-[var(--rag-amber)] focus:ring-[var(--rag-amber)]"
                             checked={selectedProcItems.has(item.id)}
                             onChange={() => toggleProcItem(item.id)}
                           />
@@ -670,7 +670,7 @@ export function AddBudgetLineDialog({
                             {selectedProcItems.has(item.id) && (
                               <div className="mt-2">
                                 <select
-                                  className="w-full border border-[var(--border-subtle)] rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-amber-300"
+                                  className="w-full border border-[var(--border-subtle)] rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-[var(--rag-amber)]"
                                   value={procAccountMap[item.id] || ''}
                                   onChange={e => setProcAccountMap(prev => ({
                                     ...prev,

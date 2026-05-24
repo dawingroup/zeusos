@@ -115,7 +115,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
             </p>
           </div>
           <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-            forecast.status === 'active' ? 'bg-green-100 text-green-800' :
+            forecast.status === 'active' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
             forecast.status === 'draft' ? 'bg-[var(--bg-sunken)] text-foreground' :
             'bg-[var(--bg-sunken)] text-muted-foreground'
           }`}>
@@ -125,14 +125,14 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
 
         {/* Cash Gap Warning */}
         {forecast.cashGapPeriods.length > 0 && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center gap-2 text-red-800">
+          <div className="mt-4 p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+            <div className="flex items-center gap-2 text-[var(--rag-red)]">
               <AlertTriangle className="w-4 h-4" />
               <span className="font-medium text-sm">
                 Cash Shortfall Detected in {forecast.cashGapPeriods.length} Period(s)
               </span>
             </div>
-            <p className="text-sm text-red-700 mt-1">
+            <p className="text-sm text-[var(--rag-red)] mt-1">
               Minimum balance drops to {formatCurrency(forecast.minimumCashBalance, currency)} on{' '}
               {forecast.minimumBalanceDate.toLocaleDateString()}
             </p>
@@ -159,7 +159,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
             {forecast.periods.map((period) => (
               <React.Fragment key={period.periodIndex}>
                 {/* Main Row */}
-                <tr className={`hover:bg-[var(--bg-sunken)] ${isLowBalance(period.closingBalance) ? 'bg-red-50' : ''}`}>
+                <tr className={`hover:bg-[var(--bg-sunken)] ${isLowBalance(period.closingBalance) ? 'bg-[var(--rag-red-soft)]' : ''}`}>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleExpand(period.periodIndex)}
@@ -181,21 +181,21 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                   <td className="px-4 py-3 text-right font-mono text-muted-foreground">
                     {formatCurrency(period.openingBalance, currency)}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-green-600">
+                  <td className="px-4 py-3 text-right font-mono text-[var(--rag-green)]">
                     +{formatCurrency(period.totalInflows, currency)}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-red-600">
+                  <td className="px-4 py-3 text-right font-mono text-[var(--rag-red)]">
                     -{formatCurrency(period.totalOutflows, currency)}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`font-mono font-medium ${period.netCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`font-mono font-medium ${period.netCashFlow >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                       {period.netCashFlow >= 0 ? '+' : ''}{formatCurrency(period.netCashFlow, currency)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {isLowBalance(period.closingBalance) && (
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
+                        <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />
                       )}
                       <span className="font-mono font-semibold text-foreground">
                         {formatCurrency(period.closingBalance, currency)}
@@ -208,7 +208,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                         <div className="flex gap-1">
                           <button
                             onClick={() => handleSave(period.periodIndex)}
-                            className="p-1 text-green-600 hover:bg-green-50 rounded"
+                            className="p-1 text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)] rounded"
                           >
                             <Save className="w-4 h-4" />
                           </button>
@@ -238,7 +238,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                       <div className="grid grid-cols-2 gap-8">
                         {/* Inflows */}
                         <div>
-                          <h4 className="text-sm font-medium text-green-700 mb-3 flex items-center gap-2">
+                          <h4 className="text-sm font-medium text-[var(--rag-green)] mb-3 flex items-center gap-2">
                             <TrendingUp className="w-4 h-4" />
                             Inflows
                           </h4>
@@ -262,7 +262,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                                     className="w-32 px-2 py-1 text-right text-sm border border-[var(--border-default)] rounded"
                                   />
                                 ) : (
-                                  <span className="text-sm font-mono text-green-600">
+                                  <span className="text-sm font-mono text-[var(--rag-green)]">
                                     {formatCurrency(item.amount, currency)}
                                   </span>
                                 )}
@@ -276,7 +276,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
 
                         {/* Outflows */}
                         <div>
-                          <h4 className="text-sm font-medium text-red-700 mb-3 flex items-center gap-2">
+                          <h4 className="text-sm font-medium text-[var(--rag-red)] mb-3 flex items-center gap-2">
                             <TrendingDown className="w-4 h-4" />
                             Outflows
                           </h4>
@@ -300,7 +300,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
                                     className="w-32 px-2 py-1 text-right text-sm border border-[var(--border-default)] rounded"
                                   />
                                 ) : (
-                                  <span className="text-sm font-mono text-red-600">
+                                  <span className="text-sm font-mono text-[var(--rag-red)]">
                                     {formatCurrency(item.amount, currency)}
                                   </span>
                                 )}
@@ -326,7 +326,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
         <div className="grid grid-cols-4 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Min Balance</p>
-            <p className={`font-semibold ${isLowBalance(forecast.minimumCashBalance) ? 'text-red-600' : 'text-foreground'}`}>
+            <p className={`font-semibold ${isLowBalance(forecast.minimumCashBalance) ? 'text-[var(--rag-red)]' : 'text-foreground'}`}>
               {formatCurrency(forecast.minimumCashBalance, currency)}
             </p>
           </div>
@@ -344,7 +344,7 @@ export const CashForecastTable: React.FC<CashForecastTableProps> = ({
           </div>
           <div>
             <p className="text-muted-foreground">Cash Gaps</p>
-            <p className={`font-semibold ${forecast.cashGapPeriods.length > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            <p className={`font-semibold ${forecast.cashGapPeriods.length > 0 ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]'}`}>
               {forecast.cashGapPeriods.length} periods
             </p>
           </div>

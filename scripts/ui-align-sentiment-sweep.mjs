@@ -81,10 +81,26 @@ for (const [rag, families] of Object.entries(RAG_FAMILIES)) {
     to: `bg-[var(--rag-${rag}-soft)]`,
   });
 
-  // Stronger backgrounds → solid RAG (filled badges, alert headers)
+  // Mid + stronger backgrounds → solid RAG (status dots, filled badges, alert headers)
   MAPPINGS.push({
-    from: new RegExp(`\\bbg-${F}-(?:500|600|700|800|900)\\b`, 'g'),
+    from: new RegExp(`\\bbg-${F}-(?:200|300|400|500|600|700|800|900)\\b`, 'g'),
     to: `bg-[var(--rag-${rag})]`,
+  });
+
+  // Gradient direction stops (from-/via-/to-{family}-{shade})
+  MAPPINGS.push({
+    from: new RegExp(`\\b(from|via|to)-${F}-(?:50|100)\\b`, 'g'),
+    to: `$1-[var(--rag-${rag}-soft)]`,
+  });
+  MAPPINGS.push({
+    from: new RegExp(`\\b(from|via|to)-${F}-(?:200|300|400|500|600|700|800|900)\\b`, 'g'),
+    to: `$1-[var(--rag-${rag})]`,
+  });
+
+  // Native HTML form-control accent color
+  MAPPINGS.push({
+    from: new RegExp(`\\baccent-${F}-\\d{2,3}\\b`, 'g'),
+    to: `accent-[var(--rag-${rag})]`,
   });
 
   // Borders → solid RAG (use opacity arbitrary value at call-site if you

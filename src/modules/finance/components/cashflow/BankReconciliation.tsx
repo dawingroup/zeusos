@@ -68,11 +68,11 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
   const getStatusColor = () => {
     switch (reconciliation.status) {
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]';
       case 'variance':
-        return 'bg-red-100 text-red-800';
+        return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]';
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]';
       default:
         return 'bg-[var(--bg-sunken)] text-foreground';
     }
@@ -107,7 +107,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
               <div className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   index < activeStep
-                    ? 'bg-green-500 text-white'
+                    ? 'bg-[var(--rag-green)] text-white'
                     : index === activeStep
                     ? 'bg-[#872E5C] text-white'
                     : 'bg-[var(--bg-sunken)] text-muted-foreground'
@@ -187,8 +187,8 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
 
       {/* Difference Alert */}
       {reconciliation.difference !== 0 && (
-        <div className="mx-6 mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-          <div className="flex items-center gap-2 text-amber-800">
+        <div className="mx-6 mb-4 p-3 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg">
+          <div className="flex items-center gap-2 text-[var(--rag-amber)]">
             <AlertTriangle className="w-4 h-4" />
             <span className="font-medium text-sm">
               Difference of {formatCurrency(Math.abs(reconciliation.difference), currency)} between bank and book balances
@@ -198,8 +198,8 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
       )}
 
       {reconciliation.isReconciled && (
-        <div className="mx-6 mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <div className="flex items-center gap-2 text-green-800">
+        <div className="mx-6 mb-4 p-3 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-lg">
+          <div className="flex items-center gap-2 text-[var(--rag-green)]">
             <CheckCircle className="w-4 h-4" />
             <span className="font-medium text-sm">
               Reconciliation complete! Bank and book balances match.
@@ -265,7 +265,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
                     <td className="px-4 py-2 text-foreground">{tx.description}</td>
                     <td className="px-4 py-2 text-muted-foreground">{tx.reference || '-'}</td>
                     <td className="px-4 py-2 text-right">
-                      <span className={tx.type === 'inflow' ? 'text-green-600' : 'text-red-600'}>
+                      <span className={tx.type === 'inflow' ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}>
                         {tx.type === 'inflow' ? '+' : '-'}
                         {formatCurrency(tx.amount, tx.currency as CurrencyCode)}
                       </span>
@@ -298,7 +298,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
               </thead>
               <tbody className="divide-y divide-[var(--border-subtle)]">
                 {reconciliation.reconciledItems.map((item, index) => (
-                  <tr key={index} className="bg-green-50/50">
+                  <tr key={index} className="bg-[var(--rag-green-soft)]/50">
                     <td className="px-4 py-2 text-foreground">
                       {item.date.toLocaleDateString()}
                     </td>
@@ -306,7 +306,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
                     <td className="px-4 py-2 text-muted-foreground">{item.reference || '-'}</td>
                     <td className="px-4 py-2 text-muted-foreground">{item.matchedBankReference || '-'}</td>
                     <td className="px-4 py-2 text-right">
-                      <span className={item.type === 'deposit' ? 'text-green-600' : 'text-red-600'}>
+                      <span className={item.type === 'deposit' ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}>
                         {item.type === 'deposit' ? '+' : '-'}
                         {formatCurrency(item.amount, currency)}
                       </span>
@@ -340,7 +340,7 @@ export const BankReconciliation: React.FC<BankReconciliationProps> = ({
           <button
             onClick={onComplete}
             disabled={reconciliation.isReconciled || Math.abs(reconciliation.difference) >= 100}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Complete Reconciliation
           </button>

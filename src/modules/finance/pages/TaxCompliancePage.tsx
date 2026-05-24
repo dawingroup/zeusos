@@ -226,7 +226,7 @@ export function TaxCompliancePage() {
           ================================================================ */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <Globe className="w-5 h-5 text-green-600" />
+          <Globe className="w-5 h-5 text-[var(--rag-green)]" />
           <h3 className="text-lg font-semibold text-foreground">Tax Portal Links</h3>
         </div>
         <Card>
@@ -270,7 +270,7 @@ export function TaxCompliancePage() {
           ================================================================ */}
       <section>
         <div className="flex items-center gap-2 mb-4">
-          <Calendar className="w-5 h-5 text-green-600" />
+          <Calendar className="w-5 h-5 text-[var(--rag-green)]" />
           <h3 className="text-lg font-semibold text-foreground">Filing Calendar</h3>
         </div>
         <Card>
@@ -326,7 +326,7 @@ export function TaxCompliancePage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <FileCheck className="w-5 h-5 text-green-600" />
+            <FileCheck className="w-5 h-5 text-[var(--rag-green)]" />
             <h3 className="text-lg font-semibold text-foreground">Required Documents</h3>
           </div>
           <p className="text-sm text-muted-foreground">
@@ -347,7 +347,7 @@ export function TaxCompliancePage() {
                         key={docItem.id}
                         className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                           isChecked
-                            ? 'bg-green-50 border border-green-200'
+                            ? 'bg-[var(--rag-green-soft)] border border-[var(--rag-green)]'
                             : 'bg-[var(--bg-sunken)] border border-transparent hover:bg-[var(--bg-sunken)]'
                         }`}
                       >
@@ -355,12 +355,12 @@ export function TaxCompliancePage() {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleDoc(docItem.id)}
-                          className="mt-0.5 h-4 w-4 rounded border-[var(--border-default)] text-green-600 focus:ring-green-500"
+                          className="mt-0.5 h-4 w-4 rounded border-[var(--border-default)] text-[var(--rag-green)] focus:ring-[var(--rag-green)]"
                         />
                         <div className="flex-1 min-w-0">
                           <p
                             className={`text-sm font-medium ${
-                              isChecked ? 'text-green-800 line-through' : 'text-foreground'
+                              isChecked ? 'text-[var(--rag-green)] line-through' : 'text-foreground'
                             }`}
                           >
                             {docItem.name}
@@ -368,7 +368,7 @@ export function TaxCompliancePage() {
                           <p className="text-xs text-muted-foreground">{docItem.description}</p>
                         </div>
                         {isChecked && (
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-[var(--rag-green)] mt-0.5 flex-shrink-0" />
                         )}
                       </label>
                     );
@@ -427,7 +427,7 @@ function PortalLinkForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. URA Web Portal"
-          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
           required
         />
       </div>
@@ -438,7 +438,7 @@ function PortalLinkForm({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://..."
-          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
           required
         />
       </div>
@@ -449,7 +449,7 @@ function PortalLinkForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brief description..."
-          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
         />
       </div>
       <div className="flex justify-end gap-2 pt-2">
@@ -463,7 +463,7 @@ function PortalLinkForm({
         <button
           type="submit"
           disabled={submitting}
-          className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+          className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
         >
           {submitting ? 'Adding...' : 'Add Link'}
         </button>

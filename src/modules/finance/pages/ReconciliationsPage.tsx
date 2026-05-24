@@ -68,11 +68,11 @@ export function ReconciliationsPage() {
             &larr; Operations
           </Link>
         </div>
-        <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-center">
-          <p className="text-red-700">{reconciliation.error}</p>
+        <div className="p-6 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-center">
+          <p className="text-[var(--rag-red)]">{reconciliation.error}</p>
           <button
             onClick={reconciliation.refresh}
-            className="mt-3 text-sm text-red-600 hover:underline"
+            className="mt-3 text-sm text-[var(--rag-red)] hover:underline"
           >
             Try Again
           </button>
@@ -103,7 +103,7 @@ export function ReconciliationsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <Calendar className="w-3 h-3 text-blue-500" /> Total Accounts
+              <Calendar className="w-3 h-3 text-[var(--rag-blue)]" /> Total Accounts
             </span>
           }
           value={reconciliation.loading ? <Skeleton className="h-7 w-16" /> : summary.total}
@@ -111,7 +111,7 @@ export function ReconciliationsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-green-500" /> Reconciled This Month
+              <CheckCircle className="w-3 h-3 text-[var(--rag-green)]" /> Reconciled This Month
             </span>
           }
           value={reconciliation.loading ? <Skeleton className="h-7 w-16" /> : summary.reconciledThisMonth}
@@ -119,7 +119,7 @@ export function ReconciliationsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="w-3 h-3 text-amber-500" /> Pending
+              <Clock className="w-3 h-3 text-[var(--rag-amber)]" /> Pending
             </span>
           }
           value={reconciliation.loading ? <Skeleton className="h-7 w-16" /> : summary.pending}
@@ -127,7 +127,7 @@ export function ReconciliationsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <AlertTriangle className="w-3 h-3 text-red-500" /> Overdue
+              <AlertTriangle className="w-3 h-3 text-[var(--rag-red)]" /> Overdue
             </span>
           }
           value={reconciliation.loading ? <Skeleton className="h-7 w-16" /> : summary.overdue}
@@ -221,7 +221,7 @@ function NewScheduleFormModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Monthly Bank Reconciliation - Stanbic"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -231,7 +231,7 @@ function NewScheduleFormModal({
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as ReconciliationType)}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               >
                 {Object.entries(RECONCILIATION_TYPES).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -245,7 +245,7 @@ function NewScheduleFormModal({
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as ReconciliationFrequency)}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               >
                 {Object.entries(RECONCILIATION_FREQUENCIES).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -262,7 +262,7 @@ function NewScheduleFormModal({
               value={assigneeName}
               onChange={(e) => setAssigneeName(e.target.value)}
               placeholder="Who is responsible?"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -272,7 +272,7 @@ function NewScheduleFormModal({
               type="date"
               value={nextDueDate}
               onChange={(e) => setNextDueDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -287,7 +287,7 @@ function NewScheduleFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Creating...' : 'Create Schedule'}
             </button>

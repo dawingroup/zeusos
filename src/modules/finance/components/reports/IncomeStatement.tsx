@@ -70,7 +70,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
                 <td className="px-4 py-1.5 text-right">
                   <span
                     className={`font-mono ${
-                      (line.variancePercent || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                      (line.variancePercent || 0) >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                     }`}
                   >
                     {(line.variancePercent || 0).toFixed(1)}%
@@ -99,7 +99,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
               <td className="px-4 py-2 text-right">
                 <span
                   className={`font-mono font-medium ${
-                    (section.variancePercent || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                    (section.variancePercent || 0) >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                   }`}
                 >
                   {(section.variancePercent || 0).toFixed(1)}%
@@ -138,7 +138,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
             <td className="px-4 py-3 text-right">
               <span
                 className={`font-mono ${
-                  (total.variancePercent || 0) >= 0 ? 'text-green-600' : 'text-red-600'
+                  (total.variancePercent || 0) >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                 }`}
               >
                 {(total.variancePercent || 0).toFixed(1)}%
@@ -178,8 +178,8 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
           <div
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
               report.netProfit.amount >= 0
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
+                : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
             }`}
           >
             {report.netProfit.amount >= 0 ? (
@@ -274,7 +274,7 @@ export const IncomeStatement: React.FC<IncomeStatementProps> = ({
         <span
           className={`text-xs px-2 py-1 rounded ${
             report.status === 'final'
-              ? 'bg-green-100 text-green-800'
+              ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
               : 'bg-[var(--bg-sunken)] text-muted-foreground'
           }`}
         >

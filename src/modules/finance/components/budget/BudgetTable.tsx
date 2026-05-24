@@ -32,8 +32,8 @@ function varianceColor(variancePercent: number): string {
 
 const SOURCE_BADGES: Record<string, { label: string; color: string }> = {
   manual: { label: 'Manual', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
-  forecast: { label: 'Forecast', color: 'bg-blue-100 text-blue-600' },
-  procurement: { label: 'Procure', color: 'bg-amber-100 text-amber-700' },
+  forecast: { label: 'Forecast', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
+  procurement: { label: 'Procure', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
 };
 
 // ── Column Headers ──────────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ function EditableCell({ value, onSave, locked }: EditableCellProps) {
       <input
         ref={inputRef}
         type="number"
-        className="w-full bg-blue-50 border border-blue-300 rounded px-1 py-0.5 text-right text-sm tabular-nums focus:outline-none focus:ring-1 focus:ring-blue-400"
+        className="w-full bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded px-1 py-0.5 text-right text-sm tabular-nums focus:outline-none focus:ring-1 focus:ring-[var(--rag-blue)]"
         value={draft}
         onChange={e => setDraft(e.target.value)}
         onBlur={() => {
@@ -130,7 +130,7 @@ function EditableCell({ value, onSave, locked }: EditableCellProps) {
 
   return (
     <span
-      className="tabular-nums text-muted-foreground cursor-pointer hover:text-blue-600 hover:underline"
+      className="tabular-nums text-muted-foreground cursor-pointer hover:text-[var(--rag-blue)] hover:underline"
       onClick={() => {
         setDraft(String(value || ''));
         setEditing(true);
@@ -201,7 +201,7 @@ export function BudgetLineRow({ line, onCellEdit, onRowClick }: LineRowProps) {
 
   return (
     <tr
-      className="group cursor-pointer hover:bg-blue-50/40 transition-colors"
+      className="group cursor-pointer hover:bg-[var(--rag-blue-soft)]/40 transition-colors"
       onClick={() => onRowClick(line.id)}
     >
       <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">

@@ -148,7 +148,7 @@ export function BudgetSpreadsheetPage() {
         <div className="flex items-center gap-3">
           {/* Budget selector */}
           <select
-            className="border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm font-medium text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[280px]"
+            className="border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm font-medium text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)] max-w-[280px]"
             value={selectedBudgetId || ''}
             onChange={e => selectBudget(e.target.value)}
           >
@@ -203,7 +203,7 @@ export function BudgetSpreadsheetPage() {
               size="sm"
               onClick={() => approve()}
               disabled={saving}
-              className="text-green-600 border-green-300"
+              className="text-[var(--rag-green)] border-[var(--rag-green)]"
             >
               <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
               Approve
@@ -216,7 +216,7 @@ export function BudgetSpreadsheetPage() {
               size="sm"
               onClick={() => activate()}
               disabled={saving}
-              className="text-blue-600 border-blue-300"
+              className="text-[var(--rag-blue)] border-[var(--rag-blue)]"
             >
               <Lock className="w-3.5 h-3.5 mr-1.5" />
               Activate
@@ -247,7 +247,7 @@ export function BudgetSpreadsheetPage() {
 
       {/* Error */}
       {error && (
-        <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           {error.message}
         </div>
       )}
@@ -261,11 +261,11 @@ export function BudgetSpreadsheetPage() {
           </Card>
           <Card className="p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Actual</p>
-            <p className="text-lg font-bold text-emerald-600 tabular-nums">{formatCompact(budget.totalActual)}</p>
+            <p className="text-lg font-bold text-[var(--rag-green)] tabular-nums">{formatCompact(budget.totalActual)}</p>
           </Card>
           <Card className="p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Committed</p>
-            <p className="text-lg font-bold text-amber-600 tabular-nums">{formatCompact(budget.totalCommitted)}</p>
+            <p className="text-lg font-bold text-[var(--rag-amber)] tabular-nums">{formatCompact(budget.totalCommitted)}</p>
           </Card>
           <Card className="p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Available</p>
@@ -376,7 +376,7 @@ export function BudgetSpreadsheetPage() {
       {pushingToForecast && (
         <div className="fixed inset-0 z-40 bg-black/20 flex items-center justify-center">
           <div className="bg-card rounded-lg p-6 flex items-center gap-3 shadow-xl">
-            <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
+            <Loader2 className="w-5 h-5 animate-spin text-[var(--rag-blue)]" />
             <span className="text-sm text-muted-foreground">Pushing to forecast...</span>
           </div>
         </div>

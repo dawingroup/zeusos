@@ -68,7 +68,7 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
             <label className="text-xs font-medium text-muted-foreground">Budget Name *</label>
             <input
               type="text"
-              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               placeholder="e.g., FY2026 Operating Budget"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -79,7 +79,7 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
           <div>
             <label className="text-xs font-medium text-muted-foreground">Description</label>
             <textarea
-              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               placeholder="Optional description..."
               value={description}
               onChange={e => setDescription(e.target.value)}
@@ -90,7 +90,7 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
             <div>
               <label className="text-xs font-medium text-muted-foreground">Type</label>
               <select
-                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 value={type}
                 onChange={e => setType(e.target.value as BudgetType)}
               >
@@ -103,7 +103,7 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
             <div>
               <label className="text-xs font-medium text-muted-foreground">Fiscal Year</label>
               <select
-                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 value={fiscalYear}
                 onChange={e => setFiscalYear(parseInt(e.target.value))}
               >
@@ -117,7 +117,7 @@ export function BudgetCreateDialog({ open, onClose, onSubmit }: Props) {
           <div>
             <label className="text-xs font-medium text-muted-foreground">Period</label>
             <select
-              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
               value={periodType}
               onChange={e => setPeriodType(e.target.value as BudgetPeriod)}
             >

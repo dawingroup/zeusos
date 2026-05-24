@@ -78,7 +78,7 @@ function fmtChange(current: number, previous: number, isPercentage: boolean): { 
   const diff = current - previous;
   const pctChange = diff / Math.abs(previous);
   const sign = diff >= 0 ? '+' : '';
-  const color = diff >= 0 ? 'text-green-600' : 'text-red-600';
+  const color = diff >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]';
 
   if (isPercentage) {
     return { label: `${sign}${(diff * 100).toFixed(1)}pp`, color };
@@ -210,7 +210,7 @@ export function KPIsPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}

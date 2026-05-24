@@ -22,9 +22,9 @@ interface FinanceAlertsStripProps {
 }
 
 const SEVERITY_STYLES = {
-  critical: 'bg-red-50 border-red-200 text-red-800',
-  warning: 'bg-amber-50 border-amber-200 text-amber-800',
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
+  critical: 'bg-[var(--rag-red-soft)] border-[var(--rag-red)] text-[var(--rag-red)]',
+  warning: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)] text-[var(--rag-amber)]',
+  info: 'bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]',
 };
 
 function formatCompact(value: number): string {

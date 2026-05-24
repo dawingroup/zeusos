@@ -72,7 +72,7 @@ export function TaxPortalLinks({
         <p className="text-sm">No tax portal links configured</p>
         <button
           onClick={onAddLink}
-          className="mt-3 text-green-600 text-sm hover:underline"
+          className="mt-3 text-[var(--rag-green)] text-sm hover:underline"
         >
           Add a custom link
         </button>
@@ -107,13 +107,13 @@ export function TaxPortalLinks({
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block bg-card rounded-lg border p-4 hover:shadow-md hover:border-green-300 transition-all"
+                      className="block bg-card rounded-lg border p-4 hover:shadow-md hover:border-[var(--rag-green)] transition-all"
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <div className="p-2 rounded-lg bg-green-50">
-                          <IconComponent className="w-5 h-5 text-green-600" />
+                        <div className="p-2 rounded-lg bg-[var(--rag-green-soft)]">
+                          <IconComponent className="w-5 h-5 text-[var(--rag-green)]" />
                         </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-green-500 transition-colors" />
+                        <ExternalLink className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-[var(--rag-green)] transition-colors" />
                       </div>
                       <h5 className="text-sm font-medium text-foreground mb-0.5 line-clamp-1">
                         {link.name}
@@ -130,7 +130,7 @@ export function TaxPortalLinks({
                           e.stopPropagation();
                           onDeleteLink(link.id);
                         }}
-                        className="absolute top-2 right-2 p-1 rounded-full bg-red-100 text-red-500 hover:bg-red-200 transition-colors"
+                        className="absolute top-2 right-2 p-1 rounded-full bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red)] transition-colors"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -146,7 +146,7 @@ export function TaxPortalLinks({
       {/* Add Custom Link */}
       <button
         onClick={onAddLink}
-        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-green-400 hover:text-green-600 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-[var(--rag-green)] hover:text-[var(--rag-green)] transition-colors"
       >
         <Plus className="w-4 h-4" />
         Add Custom Portal Link

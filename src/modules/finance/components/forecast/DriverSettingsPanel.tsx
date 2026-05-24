@@ -66,7 +66,7 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
           <div key={f.key} className="space-y-1">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-muted-foreground">{f.label}</label>
-              <span className="text-sm font-semibold text-blue-600">
+              <span className="text-sm font-semibold text-[var(--rag-blue)]">
                 {displayValue(local[f.key], f.unit)}
               </span>
             </div>
@@ -77,7 +77,7 @@ export function DriverSettingsPanel({ drivers, onSave, onCancel, saving }: Props
               step={f.step}
               value={local[f.key]}
               onChange={e => set(f.key, e.target.value)}
-              className="w-full h-2 bg-[var(--bg-sunken)] rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="w-full h-2 bg-[var(--bg-sunken)] rounded-lg appearance-none cursor-pointer accent-[var(--rag-blue)]"
             />
             <p className="text-xs text-[var(--fg-tertiary)]">{f.description}</p>
           </div>

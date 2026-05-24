@@ -121,7 +121,7 @@ export function CashForecastLandingPage() {
             size="sm"
             onClick={handleRunOptimizer}
             disabled={isRunning}
-            className="bg-yellow-600 hover:bg-yellow-700 text-white"
+            className="bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)] text-white"
           >
             {isRunning ? (
               <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
@@ -134,7 +134,7 @@ export function CashForecastLandingPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -142,20 +142,20 @@ export function CashForecastLandingPage() {
 
       {/* Crisis Alert */}
       {criticalCount > 0 && (
-        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+        <div className="flex items-center gap-3 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+          <AlertTriangle className="w-5 h-5 text-[var(--rag-red)] shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-red-800">
+            <p className="text-sm font-semibold text-[var(--rag-red)]">
               {criticalCount} critical expenditure{criticalCount > 1 ? 's' : ''} require immediate attention
             </p>
-            <p className="text-xs text-red-600 mt-0.5">
+            <p className="text-xs text-[var(--rag-red)] mt-0.5">
               Total: {formatUGX(queueByTier['CRITICAL']?.reduce((s: number, i: any) => s + i.amountUGX, 0) || 0)}
             </p>
           </div>
           <Button
             variant="outline"
             size="sm"
-            className="ml-auto text-red-700 border-red-300 hover:bg-red-100"
+            className="ml-auto text-[var(--rag-red)] border-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
             onClick={() => navigate('/finance/cash/expenditures?tier=CRITICAL')}
           >
             View
@@ -314,28 +314,28 @@ export function CashForecastLandingPage() {
             onClick={() => navigate('/finance/operations/bills')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-red-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-red)]" />
             QBO Bills & Payables
           </button>
           <button
             onClick={() => navigate('/manufacturing/procurement')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-blue-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-blue)]" />
             Purchase Orders
           </button>
           <button
             onClick={() => navigate('/hr/payroll')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-amber-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-amber)]" />
             Salary & PAYE
           </button>
           <button
             onClick={() => navigate('/finance/operations/invoices')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-green)]" />
             Invoices & Receipts
           </button>
         </div>

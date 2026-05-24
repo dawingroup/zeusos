@@ -129,15 +129,15 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                 {/* Legend */}
                 <div className="flex justify-center gap-6 mb-6">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <div className="w-3 h-3 rounded-full bg-[var(--rag-green)]" />
                     <span className="text-sm text-muted-foreground">Inflows</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-[var(--rag-red)]" />
                     <span className="text-sm text-muted-foreground">Outflows</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-blue-500" />
+                    <div className="w-3 h-3 rounded-full bg-[var(--rag-blue)]" />
                     <span className="text-sm text-muted-foreground">Net Balance</span>
                   </div>
                 </div>
@@ -149,19 +149,19 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                       <div className="w-full h-48 flex items-end justify-center gap-1">
                         {/* Inflows Bar */}
                         <div
-                          className="w-1/3 bg-green-500 rounded-t transition-all duration-300 hover:bg-green-600"
+                          className="w-1/3 bg-[var(--rag-green)] rounded-t transition-all duration-300 hover:bg-[var(--rag-green)]"
                           style={{ height: getBarHeight(trend.inflows) }}
                           title={`Inflows: ${formatCurrency(trend.inflows, currencyCode)}`}
                         />
                         {/* Outflows Bar */}
                         <div
-                          className="w-1/3 bg-red-500 rounded-t transition-all duration-300 hover:bg-red-600"
+                          className="w-1/3 bg-[var(--rag-red)] rounded-t transition-all duration-300 hover:bg-[var(--rag-red)]"
                           style={{ height: getBarHeight(trend.outflows) }}
                           title={`Outflows: ${formatCurrency(trend.outflows, currencyCode)}`}
                         />
                         {/* Net Line Point */}
                         <div
-                          className="w-1/3 bg-blue-500 rounded-t transition-all duration-300 hover:bg-blue-600"
+                          className="w-1/3 bg-[var(--rag-blue)] rounded-t transition-all duration-300 hover:bg-[var(--rag-blue)]"
                           style={{ height: getBarHeight(Math.abs(trend.netCashFlow)) }}
                           title={`Net: ${formatCurrency(trend.netCashFlow, currencyCode)}`}
                         />
@@ -200,11 +200,11 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                 <div className="w-32 text-sm text-muted-foreground">Operating</div>
                 <div className="flex-1 h-8 bg-[var(--bg-sunken)] rounded relative">
                   <div
-                    className={`h-full rounded ${summary.operatingCashFlow >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
+                    className={`h-full rounded ${summary.operatingCashFlow >= 0 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-red)]'}`}
                     style={{ width: `${Math.min(Math.abs(summary.operatingCashFlow) / maxValue * 100, 100)}%` }}
                   />
                 </div>
-                <div className={`w-32 text-right font-medium ${summary.operatingCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`w-32 text-right font-medium ${summary.operatingCashFlow >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                   {summary.operatingCashFlow >= 0 ? '+' : ''}{formatCurrency(summary.operatingCashFlow, currencyCode)}
                 </div>
               </div>
@@ -214,11 +214,11 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                 <div className="w-32 text-sm text-muted-foreground">Investing</div>
                 <div className="flex-1 h-8 bg-[var(--bg-sunken)] rounded relative">
                   <div
-                    className={`h-full rounded ${summary.investingCashFlow >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
+                    className={`h-full rounded ${summary.investingCashFlow >= 0 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-red)]'}`}
                     style={{ width: `${Math.min(Math.abs(summary.investingCashFlow) / maxValue * 100, 100)}%` }}
                   />
                 </div>
-                <div className={`w-32 text-right font-medium ${summary.investingCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`w-32 text-right font-medium ${summary.investingCashFlow >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                   {summary.investingCashFlow >= 0 ? '+' : ''}{formatCurrency(summary.investingCashFlow, currencyCode)}
                 </div>
               </div>
@@ -228,11 +228,11 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                 <div className="w-32 text-sm text-muted-foreground">Financing</div>
                 <div className="flex-1 h-8 bg-[var(--bg-sunken)] rounded relative">
                   <div
-                    className={`h-full rounded ${summary.financingCashFlow >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
+                    className={`h-full rounded ${summary.financingCashFlow >= 0 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-red)]'}`}
                     style={{ width: `${Math.min(Math.abs(summary.financingCashFlow) / maxValue * 100, 100)}%` }}
                   />
                 </div>
-                <div className={`w-32 text-right font-medium ${summary.financingCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`w-32 text-right font-medium ${summary.financingCashFlow >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                   {summary.financingCashFlow >= 0 ? '+' : ''}{formatCurrency(summary.financingCashFlow, currencyCode)}
                 </div>
               </div>
@@ -263,7 +263,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
             {/* Inflows */}
             <div>
               <h4 className="text-sm font-medium text-foreground mb-4 flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4 text-green-600" />
+                <ArrowUpRight className="w-4 h-4 text-[var(--rag-green)]" />
                 Inflows by Category
               </h4>
               <div className="space-y-3">
@@ -271,13 +271,13 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                   <div key={index}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-muted-foreground">{cat.label}</span>
-                      <span className="font-medium text-green-600">
+                      <span className="font-medium text-[var(--rag-green)]">
                         {formatCurrency(cat.inflows, currencyCode)}
                       </span>
                     </div>
                     <div className="h-2 bg-[var(--bg-sunken)] rounded-full">
                       <div
-                        className="h-full bg-green-500 rounded-full"
+                        className="h-full bg-[var(--rag-green)] rounded-full"
                         style={{ width: `${(cat.inflows / (categoryBreakdown.inflows[0]?.inflows || 1)) * 100}%` }}
                       />
                     </div>
@@ -292,7 +292,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
             {/* Outflows */}
             <div>
               <h4 className="text-sm font-medium text-foreground mb-4 flex items-center gap-2">
-                <ArrowDownRight className="w-4 h-4 text-red-600" />
+                <ArrowDownRight className="w-4 h-4 text-[var(--rag-red)]" />
                 Outflows by Category
               </h4>
               <div className="space-y-3">
@@ -300,13 +300,13 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
                   <div key={index}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-muted-foreground">{cat.label}</span>
-                      <span className="font-medium text-red-600">
+                      <span className="font-medium text-[var(--rag-red)]">
                         {formatCurrency(cat.outflows, currencyCode)}
                       </span>
                     </div>
                     <div className="h-2 bg-[var(--bg-sunken)] rounded-full">
                       <div
-                        className="h-full bg-red-500 rounded-full"
+                        className="h-full bg-[var(--rag-red)] rounded-full"
                         style={{ width: `${(cat.outflows / (categoryBreakdown.outflows[0]?.outflows || 1)) * 100}%` }}
                       />
                     </div>
@@ -335,7 +335,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({
             {activityBreakdown.map((item) => (
               <div key={item.activity}>
                 <p className="text-xs text-muted-foreground">{item.label}</p>
-                <p className={`text-sm font-semibold ${item.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-sm font-semibold ${item.amount >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                   {item.amount >= 0 ? '+' : ''}{formatCurrency(item.amount, currencyCode)}
                 </p>
               </div>

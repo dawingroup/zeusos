@@ -58,10 +58,10 @@ function TierBadge({ tier }: { tier: ExpenditureItem['priorityTier'] }) {
 // ────────────────────────────────────────────────────────────────────────────
 
 const COMMITMENT_STYLES: Record<CommitmentLevel, { label: string; bg: string; text: string }> = {
-  committed: { label: 'Committed', bg: 'bg-green-50', text: 'text-green-700' },
-  probable: { label: 'Probable', bg: 'bg-amber-50', text: 'text-amber-700' },
-  projected: { label: 'Probable', bg: 'bg-amber-50', text: 'text-amber-700' }, // legacy → probable
-  approved: { label: 'Committed', bg: 'bg-green-50', text: 'text-green-700' }, // legacy → committed
+  committed: { label: 'Committed', bg: 'bg-[var(--rag-green-soft)]', text: 'text-[var(--rag-green)]' },
+  probable: { label: 'Probable', bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
+  projected: { label: 'Probable', bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' }, // legacy → probable
+  approved: { label: 'Committed', bg: 'bg-[var(--rag-green-soft)]', text: 'text-[var(--rag-green)]' }, // legacy → committed
 };
 
 function CommitmentBadge({ level }: { level: CommitmentLevel }) {
@@ -91,8 +91,8 @@ const COST_COMPONENTS: {
 
 const CONFIDENCE_STYLES: Record<string, { label: string; bg: string; text: string }> = {
   estimated: { label: 'Estimated', bg: 'bg-[var(--bg-sunken)]', text: 'text-muted-foreground' },
-  quoted: { label: 'Quoted', bg: 'bg-blue-100', text: 'text-blue-700' },
-  actual: { label: 'Actual', bg: 'bg-green-100', text: 'text-green-700' },
+  quoted: { label: 'Quoted', bg: 'bg-[var(--rag-blue-soft)]', text: 'text-[var(--rag-blue)]' },
+  actual: { label: 'Actual', bg: 'bg-[var(--rag-green-soft)]', text: 'text-[var(--rag-green)]' },
 };
 
 function CostBreakdownPanel({ breakdown }: { breakdown: ItemCostBreakdown }) {

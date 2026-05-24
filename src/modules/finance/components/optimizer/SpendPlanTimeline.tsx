@@ -102,9 +102,9 @@ export function SpendPlanTimeline({
   return (
     <Card className={`p-4 ${className}`}>
       {/* Opening Balance */}
-      <div className="flex items-center justify-between px-3 py-2 bg-blue-50 rounded-lg mb-4">
-        <span className="text-sm font-medium text-blue-700">Opening Balance</span>
-        <span className="text-sm font-bold text-blue-900">{formatUGX(plan.openingBankBalance)}</span>
+      <div className="flex items-center justify-between px-3 py-2 bg-[var(--rag-blue-soft)] rounded-lg mb-4">
+        <span className="text-sm font-medium text-[var(--rag-blue)]">Opening Balance</span>
+        <span className="text-sm font-bold text-[var(--rag-blue)]">{formatUGX(plan.openingBankBalance)}</span>
       </div>
 
       {/* Timeline */}
@@ -117,21 +117,21 @@ export function SpendPlanTimeline({
             <div className={`
               relative z-10 flex items-center justify-center w-10 h-10 rounded-full border-2
               ${entry.type === 'receipt'
-                ? 'bg-green-50 border-green-300'
+                ? 'bg-[var(--rag-green-soft)] border-[var(--rag-green)]'
                 : entry.type === 'savings'
                   ? 'bg-purple-50 border-purple-300'
                   : 'bg-card border-[var(--border-subtle)]'}
             `}>
               {entry.type === 'receipt' ? (
-                <ArrowDown className="w-4 h-4 text-green-600" />
+                <ArrowDown className="w-4 h-4 text-[var(--rag-green)]" />
               ) : entry.type === 'savings' ? (
                 <PiggyBank className="w-4 h-4 text-purple-600" />
               ) : entry.status === 'approved' ? (
-                <CheckCircle className="w-4 h-4 text-green-600" />
+                <CheckCircle className="w-4 h-4 text-[var(--rag-green)]" />
               ) : entry.status === 'deferred' ? (
                 <Pause className="w-4 h-4 text-[var(--fg-tertiary)]" />
               ) : entry.tier === 'CRITICAL' ? (
-                <AlertTriangle className="w-4 h-4 text-red-500" />
+                <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />
               ) : (
                 <ArrowUp className="w-4 h-4 text-muted-foreground" />
               )}
@@ -144,7 +144,7 @@ export function SpendPlanTimeline({
                   <p className="text-sm font-medium text-foreground truncate">
                     {entry.description}
                     {entry.isPartial && (
-                      <span className="ml-1 text-xs text-amber-600">(partial)</span>
+                      <span className="ml-1 text-xs text-[var(--rag-amber)]">(partial)</span>
                     )}
                   </p>
                   {entry.tier && (
@@ -161,7 +161,7 @@ export function SpendPlanTimeline({
                 </div>
                 <div className="text-right shrink-0">
                   <p className={`text-sm font-semibold ${
-                    entry.type === 'receipt' ? 'text-green-600' : 'text-foreground'
+                    entry.type === 'receipt' ? 'text-[var(--rag-green)]' : 'text-foreground'
                   }`}>
                     {entry.type === 'receipt' ? '+' : '-'}{formatUGX(entry.amount)}
                   </p>
@@ -177,7 +177,7 @@ export function SpendPlanTimeline({
                   {onApprove && (
                     <button
                       onClick={() => onApprove(entry.id)}
-                      className="text-xs text-green-600 hover:text-green-700 font-medium"
+                      className="text-xs text-[var(--rag-green)] hover:text-[var(--rag-green)] font-medium"
                     >
                       Approve
                     </button>
@@ -200,15 +200,15 @@ export function SpendPlanTimeline({
       {/* Closing Balance */}
       <div className={`
         flex items-center justify-between px-3 py-2 rounded-lg mt-4
-        ${plan.closingBalance < 0 ? 'bg-red-50' : 'bg-[var(--bg-sunken)]'}
+        ${plan.closingBalance < 0 ? 'bg-[var(--rag-red-soft)]' : 'bg-[var(--bg-sunken)]'}
       `}>
         <span className={`text-sm font-medium ${
-          plan.closingBalance < 0 ? 'text-red-700' : 'text-muted-foreground'
+          plan.closingBalance < 0 ? 'text-[var(--rag-red)]' : 'text-muted-foreground'
         }`}>
           Closing Balance
         </span>
         <span className={`text-sm font-bold ${
-          plan.closingBalance < 0 ? 'text-red-900' : 'text-foreground'
+          plan.closingBalance < 0 ? 'text-[var(--rag-red)]' : 'text-foreground'
         }`}>
           {formatUGX(plan.closingBalance)}
         </span>
@@ -219,9 +219,9 @@ export function SpendPlanTimeline({
         <div className="mt-3 space-y-1.5">
           {plan.riskFlags.map((flag, idx) => (
             <div key={idx} className={`flex items-start gap-2 text-xs p-2 rounded ${
-              flag.severity === 'critical' ? 'bg-red-50 text-red-700'
-                : flag.severity === 'warning' ? 'bg-amber-50 text-amber-700'
-                  : 'bg-blue-50 text-blue-700'
+              flag.severity === 'critical' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
+                : flag.severity === 'warning' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
+                  : 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]'
             }`}>
               <AlertTriangle className="w-3 h-3 mt-0.5 shrink-0" />
               <span>{flag.message}</span>

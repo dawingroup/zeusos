@@ -176,11 +176,11 @@ function TableColumnHeaders({
         <th
           key={p}
           className={`px-3 py-2.5 text-center font-medium text-[10px] border-b border-[var(--border-subtle)] bg-card min-w-[88px] whitespace-nowrap ${
-            i === 0 ? 'border-l-2 border-l-blue-200 text-blue-500' : 'text-muted-foreground'
+            i === 0 ? 'border-l-2 border-l-blue-200 text-[var(--rag-blue)]' : 'text-muted-foreground'
           }`}
         >
           {periodLabel(p)}
-          <div className="text-[8px] font-normal text-blue-300 mt-0.5">forecast</div>
+          <div className="text-[8px] font-normal text-[var(--rag-blue)] mt-0.5">forecast</div>
         </th>
       ))}
     </tr>
@@ -209,7 +209,7 @@ function ValueCells({
         return (
           <td key={p} className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] tabular-nums ${
             bold ? 'font-semibold text-muted-foreground' : 'text-[var(--fg-tertiary)]'
-          } ${val !== null && val !== undefined && val < 0 ? 'text-red-400' : ''}`}>
+          } ${val !== null && val !== undefined && val < 0 ? 'text-[var(--rag-red)]' : ''}`}>
             {val !== null && val !== undefined ? fmt(val) : <span className="text-[var(--fg-tertiary)]">—</span>}
           </td>
         );
@@ -220,7 +220,7 @@ function ValueCells({
           <td key={p} className={`px-3 py-2 text-right border-b border-[var(--border-subtle)] tabular-nums bg-card ${
             i === 0 ? 'border-l-2 border-l-blue-100' : ''
           } ${bold ? 'font-semibold text-foreground' : 'text-muted-foreground'}
-          ${val !== null && val !== undefined && val < 0 ? 'text-red-500' : ''}`}>
+          ${val !== null && val !== undefined && val < 0 ? 'text-[var(--rag-red)]' : ''}`}>
             {val !== null && val !== undefined ? fmt(val) : '—'}
           </td>
         );
@@ -301,7 +301,7 @@ function PLForecastTable({
     return (
       <tr
         key={acct.id}
-        className="group cursor-pointer hover:bg-blue-50/40 transition-colors"
+        className="group cursor-pointer hover:bg-[var(--rag-blue-soft)]/40 transition-colors"
         onClick={() => onRowClick(acct.id)}
       >
         <td className={`sticky left-0 z-20 ${pl} pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground`}>
@@ -309,7 +309,7 @@ function PLForecastTable({
             <span className="truncate max-w-[180px]" title={acct.label}>{acct.label}</span>
             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
               hasCustomRule
-                ? 'bg-blue-100 text-blue-600'
+                ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]'
                 : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] opacity-0 group-hover:opacity-100'
             }`}>
               {hasCustomRule
@@ -402,7 +402,7 @@ function PLForecastTable({
           rows.push(
             <tr
               key={groupId}
-              className="cursor-pointer hover:bg-blue-50/30 transition-colors"
+              className="cursor-pointer hover:bg-[var(--rag-blue-soft)]/30 transition-colors"
               onClick={() => onToggleGroup(groupId)}
             >
               <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card">
@@ -597,7 +597,7 @@ function BSForecastTable({
 
   function renderAccountRow(acct: BSAccountDetail) {
     return (
-      <tr key={acct.id} className="hover:bg-blue-50/20 transition-colors">
+      <tr key={acct.id} className="hover:bg-[var(--rag-blue-soft)]/20 transition-colors">
         <td className="sticky left-0 z-20 pl-14 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
           <span className="truncate max-w-[170px]" title={acct.label}>{acct.label}</span>
         </td>
@@ -638,7 +638,7 @@ function BSForecastTable({
       if (groupAccounts.length === 1) {
         // Single account — show directly, no collapsible wrapper
         rows.push(
-          <tr key={groupAccounts[0].id} className="hover:bg-blue-50/20 transition-colors">
+          <tr key={groupAccounts[0].id} className="hover:bg-[var(--rag-blue-soft)]/20 transition-colors">
             <td className="sticky left-0 z-20 pl-8 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
               <span className="truncate max-w-[180px]" title={groupAccounts[0].label}>{groupAccounts[0].label}</span>
             </td>
@@ -655,7 +655,7 @@ function BSForecastTable({
         rows.push(
           <tr
             key={groupId}
-            className="cursor-pointer hover:bg-blue-50/30 transition-colors"
+            className="cursor-pointer hover:bg-[var(--rag-blue-soft)]/30 transition-colors"
             onClick={() => onToggleGroup(groupId)}
           >
             <td className="sticky left-0 z-20 pl-6 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card">
@@ -844,7 +844,7 @@ function CFSForecastTable({
     rows.push(
       <tr
         key={groupId}
-        className="cursor-pointer hover:bg-blue-50/30 transition-colors bg-[var(--bg-sunken)]"
+        className="cursor-pointer hover:bg-[var(--rag-blue-soft)]/30 transition-colors bg-[var(--bg-sunken)]"
         onClick={() => onToggleGroup(groupId)}
       >
         <td className="sticky left-0 z-20 px-4 py-1.5 border-b border-[var(--border-subtle)] bg-[var(--bg-sunken)] whitespace-nowrap">
@@ -879,7 +879,7 @@ function CFSForecastTable({
     if (isExpanded) {
       for (const line of lines) {
         rows.push(
-          <tr key={line.id} className="hover:bg-blue-50/20 transition-colors">
+          <tr key={line.id} className="hover:bg-[var(--rag-blue-soft)]/20 transition-colors">
             <td className="sticky left-0 z-20 pl-10 pr-4 py-2 border-b border-r border-[var(--border-subtle)] whitespace-nowrap bg-card text-muted-foreground">
               <span className="truncate max-w-[180px]" title={line.label}>{line.label}</span>
             </td>
@@ -1046,7 +1046,7 @@ function TabPill({ active, onClick, children }: { active: boolean; onClick: () =
       onClick={onClick}
       className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
         active
-          ? 'bg-blue-600 text-white'
+          ? 'bg-[var(--rag-blue)] text-white'
           : 'text-muted-foreground hover:text-muted-foreground hover:bg-[var(--bg-sunken)]'
       }`}
     >
@@ -1392,7 +1392,7 @@ export function ForecastPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{error}</div>
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">{error}</div>
       )}
 
       {metadata && periods.length > 0 && (
@@ -1400,7 +1400,7 @@ export function ForecastPage() {
           {periodLabel(periods[0].period)} — {periodLabel(periods[periods.length - 1].period)}
           {' · '}{metadata.horizon} months · {metadata.currency}
           {accountCount > 0 && (
-            <span className="text-blue-400"> · {accountCount} QBO accounts · Click to expand groups</span>
+            <span className="text-[var(--rag-blue)]"> · {accountCount} QBO accounts · Click to expand groups</span>
           )}
         </p>
       )}
@@ -1422,7 +1422,7 @@ export function ForecastPage() {
                 Actuals
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="inline-block w-3 h-2.5 rounded-sm bg-card border border-blue-200" />
+                <span className="inline-block w-3 h-2.5 rounded-sm bg-card border border-[var(--rag-blue)]" />
                 Forecast
               </span>
             </div>
@@ -1505,9 +1505,9 @@ export function ForecastPage() {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { label: 'CapEx Items', count: microForecasts.capex.length, color: 'bg-orange-50 text-orange-700 border-orange-200' },
-                  { label: 'Loans', count: microForecasts.loans.length, color: 'bg-blue-50 text-blue-700 border-blue-200' },
-                  { label: 'Capital Events', count: microForecasts.capitalEvents.length, color: 'bg-green-50 text-green-700 border-green-200' },
+                  { label: 'CapEx Items', count: microForecasts.capex.length, color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]' },
+                  { label: 'Loans', count: microForecasts.loans.length, color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]' },
+                  { label: 'Capital Events', count: microForecasts.capitalEvents.length, color: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]' },
                   { label: 'Dividends', count: microForecasts.dividends.length, color: 'bg-purple-50 text-purple-700 border-purple-200' },
                 ].map(s => (
                   <div key={s.label} className={`rounded-lg border p-3 ${s.color}`}>

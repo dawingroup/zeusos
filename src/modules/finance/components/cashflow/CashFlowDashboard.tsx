@@ -147,9 +147,9 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-800">{error}</span>
+        <div className="p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-[var(--rag-red)]" />
+          <span className="text-[var(--rag-red)]">{error}</span>
         </div>
       )}
 
@@ -200,7 +200,7 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
             <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
                 <p className="text-sm text-muted-foreground mb-1">Total Inflows</p>
-                <p className="text-xl font-bold text-green-600 flex items-center gap-1">
+                <p className="text-xl font-bold text-[var(--rag-green)] flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
                   {summary ? formatCurrency(
                     summary.categoryBreakdown.reduce((sum, c) => sum + c.inflows, 0),
@@ -210,7 +210,7 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
               </div>
               <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
                 <p className="text-sm text-muted-foreground mb-1">Total Outflows</p>
-                <p className="text-xl font-bold text-red-600 flex items-center gap-1">
+                <p className="text-xl font-bold text-[var(--rag-red)] flex items-center gap-1">
                   <TrendingDown className="w-4 h-4" />
                   {summary ? formatCurrency(
                     summary.categoryBreakdown.reduce((sum, c) => sum + c.outflows, 0),
@@ -220,7 +220,7 @@ export const CashFlowDashboard: React.FC<CashFlowDashboardProps> = ({
               </div>
               <div className="bg-card p-4 rounded-xl border border-[var(--border-subtle)]">
                 <p className="text-sm text-muted-foreground mb-1">Net Cash Flow</p>
-                <p className={`text-xl font-bold ${summary && summary.netChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-xl font-bold ${summary && summary.netChange >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                   {summary ? formatCurrency(summary.netChange, 'UGX' as CurrencyCode) : '-'}
                 </p>
               </div>

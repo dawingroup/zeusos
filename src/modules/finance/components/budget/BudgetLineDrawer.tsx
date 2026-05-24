@@ -156,11 +156,11 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
           </div>
           <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Actual</p>
-            <p className="text-lg font-bold text-emerald-600 tabular-nums">{fmt(line.annualActual)}</p>
+            <p className="text-lg font-bold text-[var(--rag-green)] tabular-nums">{fmt(line.annualActual)}</p>
           </div>
           <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Committed</p>
-            <p className="text-lg font-bold text-amber-600 tabular-nums">{fmt(line.annualCommitted)}</p>
+            <p className="text-lg font-bold text-[var(--rag-amber)] tabular-nums">{fmt(line.annualCommitted)}</p>
           </div>
           <div className="bg-[var(--bg-sunken)] rounded-lg p-3">
             <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase">Available</p>
@@ -173,7 +173,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
           <label className="text-xs font-medium text-muted-foreground">Annual Budget (UGX)</label>
           <input
             type="number"
-            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             value={annualBudget}
             onChange={e => setAnnualBudget(parseFloat(e.target.value) || 0)}
             disabled={line.isLocked}
@@ -184,7 +184,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
         <div>
           <label className="text-xs font-medium text-muted-foreground">Allocation Method</label>
           <select
-            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             value={allocationMethod}
             onChange={e => setAllocationMethod(e.target.value as AllocationMethod)}
             disabled={line.isLocked}
@@ -205,7 +205,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
                   <span className="text-xs text-muted-foreground w-8">{fm.name.slice(0, 3)}</span>
                   <input
                     type="number"
-                    className="flex-1 border border-[var(--border-subtle)] rounded px-2 py-1 text-sm tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-blue-300"
+                    className="flex-1 border border-[var(--border-subtle)] rounded px-2 py-1 text-sm tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-[var(--rag-blue)]"
                     value={customAmounts[i] || 0}
                     onChange={e => {
                       const next = [...customAmounts];
@@ -225,7 +225,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
         <div>
           <label className="text-xs font-medium text-muted-foreground">Notes</label>
           <textarea
-            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="mt-1 w-full border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
             value={notes}
             onChange={e => setNotes(e.target.value)}
             placeholder="Optional notes..."
@@ -237,10 +237,10 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
           <p className="text-[10px] font-medium text-[var(--fg-tertiary)] uppercase mb-1">Source</p>
           <p className="text-sm text-muted-foreground">{SOURCE_LABELS[sourceType]}</p>
           {sourceType === 'forecast' && line.sourceForecastId && (
-            <p className="text-xs text-blue-500 mt-0.5">Forecast ID: {line.sourceForecastId}</p>
+            <p className="text-xs text-[var(--rag-blue)] mt-0.5">Forecast ID: {line.sourceForecastId}</p>
           )}
           {sourceType === 'procurement' && line.sourceProcurementReqId && (
-            <p className="text-xs text-amber-600 mt-0.5">Req ID: {line.sourceProcurementReqId}</p>
+            <p className="text-xs text-[var(--rag-amber)] mt-0.5">Req ID: {line.sourceProcurementReqId}</p>
           )}
         </div>
 
@@ -248,7 +248,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
         <Button
           variant="outline"
           size="sm"
-          className="w-full text-blue-600 border-blue-200 hover:bg-blue-50"
+          className="w-full text-[var(--rag-blue)] border-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]"
           onClick={() => onPushToForecast(line)}
         >
           <ArrowUpRight className="w-4 h-4 mr-1.5" />
@@ -260,7 +260,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
       <div className="border-t border-[var(--border-subtle)] px-5 py-3 flex items-center gap-2">
         {confirmDelete ? (
           <>
-            <span className="text-xs text-red-600 flex-1">Are you sure?</span>
+            <span className="text-xs text-[var(--rag-red)] flex-1">Are you sure?</span>
             <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)} disabled={saving}>
               Cancel
             </Button>
@@ -278,7 +278,7 @@ export function BudgetLineDrawer({ line, onSave, onDelete, onPushToForecast, onC
             <Button
               variant="ghost"
               size="sm"
-              className="text-red-500 hover:text-red-600"
+              className="text-[var(--rag-red)] hover:text-[var(--rag-red)]"
               onClick={() => setConfirmDelete(true)}
               disabled={line.isLocked || line.annualActual > 0}
             >

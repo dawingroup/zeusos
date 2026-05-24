@@ -43,13 +43,13 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
   const getStatusColor = () => {
     switch (position.cashCoverageStatus) {
       case 'critical':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]';
       case 'warning':
-        return 'bg-amber-100 text-amber-800 border-amber-200';
+        return 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] border-[var(--rag-amber)]';
       case 'healthy':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]';
       case 'excess':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] border-[var(--rag-blue)]';
       default:
         return 'bg-[var(--bg-sunken)] text-foreground border-[var(--border-subtle)]';
     }
@@ -138,8 +138,8 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
           {/* Cash on Hand */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                <Wallet className="w-4 h-4 text-green-600" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--rag-green-soft)] flex items-center justify-center">
+                <Wallet className="w-4 h-4 text-[var(--rag-green)]" />
               </div>
               <span className="text-sm text-muted-foreground">Cash on Hand</span>
             </div>
@@ -151,8 +151,8 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
           {/* Bank Balances */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Building2 className="w-4 h-4 text-blue-600" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--rag-blue-soft)] flex items-center justify-center">
+                <Building2 className="w-4 h-4 text-[var(--rag-blue)]" />
               </div>
               <span className="text-sm text-muted-foreground">Bank Accounts</span>
             </div>
@@ -164,8 +164,8 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
           {/* Mobile Money */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Smartphone className="w-4 h-4 text-amber-600" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--rag-amber-soft)] flex items-center justify-center">
+                <Smartphone className="w-4 h-4 text-[var(--rag-amber)]" />
               </div>
               <span className="text-sm text-muted-foreground">Mobile Money</span>
             </div>
@@ -182,21 +182,21 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
         <div className="grid grid-cols-3 gap-4">
           <div>
             <p className="text-xs text-muted-foreground">Inflows</p>
-            <p className="text-sm font-medium text-green-600 flex items-center gap-1">
+            <p className="text-sm font-medium text-[var(--rag-green)] flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               +{formatCurrency(position.periodInflows, currency)}
             </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Outflows</p>
-            <p className="text-sm font-medium text-red-600 flex items-center gap-1">
+            <p className="text-sm font-medium text-[var(--rag-red)] flex items-center gap-1">
               <TrendingDown className="w-3 h-3" />
               -{formatCurrency(position.periodOutflows, currency)}
             </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Net Flow</p>
-            <p className={`text-sm font-medium ${position.netCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`text-sm font-medium ${position.netCashFlow >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
               {position.netCashFlow >= 0 ? '+' : ''}
               {formatCurrency(position.netCashFlow, currency)}
             </p>
@@ -209,7 +209,7 @@ export const CashPositionCard: React.FC<CashPositionCardProps> = ({
         <div className="px-6 py-3 border-t border-[var(--border-subtle)]">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">vs Prior Period</span>
-            <span className={`font-medium ${(position.changePercent || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`font-medium ${(position.changePercent || 0) >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
               {(position.changePercent || 0) >= 0 ? '+' : ''}
               {(position.changePercent || 0).toFixed(1)}%
             </span>

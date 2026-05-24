@@ -146,18 +146,18 @@ export const CashTransactionList: React.FC<CashTransactionListProps> = ({
 
         {/* Summary */}
         <div className="flex gap-3 mt-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm border border-green-200">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--rag-green-soft)] text-[var(--rag-green)] rounded-full text-sm border border-[var(--rag-green)]">
             <TrendingUp className="w-3.5 h-3.5" />
             Inflows: {formatCurrency(totals.inflows, 'UGX' as CurrencyCode)}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-full text-sm border border-red-200">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-full text-sm border border-[var(--rag-red)]">
             <TrendingDown className="w-3.5 h-3.5" />
             Outflows: {formatCurrency(totals.outflows, 'UGX' as CurrencyCode)}
           </span>
           <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
             totals.inflows >= totals.outflows
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
+              ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
+              : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
           }`}>
             Net: {formatCurrency(totals.inflows - totals.outflows, 'UGX' as CurrencyCode)}
           </span>
@@ -204,7 +204,7 @@ export const CashTransactionList: React.FC<CashTransactionListProps> = ({
                 </td>
                 <td className="px-4 py-3 text-right">
                   <span className={`font-mono font-medium ${
-                    tx.type === 'inflow' ? 'text-green-600' : 'text-red-600'
+                    tx.type === 'inflow' ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                   }`}>
                     {tx.type === 'inflow' ? '+' : '-'}
                     {formatCurrency(tx.amount, tx.currency as CurrencyCode)}
@@ -212,7 +212,7 @@ export const CashTransactionList: React.FC<CashTransactionListProps> = ({
                 </td>
                 <td className="px-4 py-3 text-center">
                   {tx.isReconciled ? (
-                    <CheckCircle className="w-5 h-5 text-green-500 mx-auto" />
+                    <CheckCircle className="w-5 h-5 text-[var(--rag-green)] mx-auto" />
                   ) : (
                     <Circle className="w-5 h-5 text-[var(--fg-tertiary)] mx-auto" />
                   )}
@@ -245,7 +245,7 @@ export const CashTransactionList: React.FC<CashTransactionListProps> = ({
                       <button
                         onClick={() => { onDelete?.(tx); setMenuOpen(null); }}
                         disabled={tx.isReconciled}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Trash2 className="w-4 h-4" />
                         Delete

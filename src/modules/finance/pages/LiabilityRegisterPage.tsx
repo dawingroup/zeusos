@@ -94,7 +94,7 @@ export function LiabilityRegisterPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -123,13 +123,13 @@ export function LiabilityRegisterPage() {
 
       {/* Overdue Alert */}
       {overdue.length > 0 && (
-        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+        <div className="flex items-center gap-3 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+          <AlertTriangle className="w-5 h-5 text-[var(--rag-red)] shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-red-800">
+            <p className="text-sm font-semibold text-[var(--rag-red)]">
               {overdue.length} overdue liabilit{overdue.length > 1 ? 'ies' : 'y'}
             </p>
-            <p className="text-xs text-red-600 mt-0.5">
+            <p className="text-xs text-[var(--rag-red)] mt-0.5">
               {overdue.map(l => l.description).join(', ')}
             </p>
           </div>
@@ -147,8 +147,8 @@ export function LiabilityRegisterPage() {
             <div
               key={deadline.type}
               className={`p-3 rounded-lg border ${
-                deadline.daysUntilDue <= 3 ? 'border-red-200 bg-red-50'
-                  : deadline.daysUntilDue <= 7 ? 'border-amber-200 bg-amber-50'
+                deadline.daysUntilDue <= 3 ? 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]'
+                  : deadline.daysUntilDue <= 7 ? 'border-[var(--rag-amber)] bg-[var(--rag-amber-soft)]'
                     : 'border-[var(--border-subtle)]'
               }`}
             >
@@ -158,12 +158,12 @@ export function LiabilityRegisterPage() {
               </p>
               <div className="flex items-center gap-1 mt-1">
                 {deadline.daysUntilDue <= 0 ? (
-                  <span className="text-xs font-medium text-red-600">Overdue!</span>
+                  <span className="text-xs font-medium text-[var(--rag-red)]">Overdue!</span>
                 ) : (
                   <span className={`text-xs font-medium ${
-                    deadline.daysUntilDue <= 3 ? 'text-red-600'
-                      : deadline.daysUntilDue <= 7 ? 'text-amber-600'
-                        : 'text-green-600'
+                    deadline.daysUntilDue <= 3 ? 'text-[var(--rag-red)]'
+                      : deadline.daysUntilDue <= 7 ? 'text-[var(--rag-amber)]'
+                        : 'text-[var(--rag-green)]'
                   }`}>
                     {deadline.daysUntilDue} day{deadline.daysUntilDue !== 1 ? 's' : ''} left
                   </span>
@@ -206,7 +206,7 @@ export function LiabilityRegisterPage() {
                 const isOverdue = dueDate ? dueDate < new Date() : false;
 
                 return (
-                  <TableRow key={liability.id} className={isOverdue ? 'bg-red-50/30' : ''}>
+                  <TableRow key={liability.id} className={isOverdue ? 'bg-[var(--rag-red-soft)]/30' : ''}>
                     <TableCell>
                       <span className="text-xs bg-[var(--bg-sunken)] text-muted-foreground px-1.5 py-0.5 rounded">
                         {LIABILITY_TYPE_LABELS[liability.type] || liability.type}
@@ -219,17 +219,17 @@ export function LiabilityRegisterPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-right text-sm">{formatUGX(liability.totalAmount)}</TableCell>
-                    <TableCell className="text-right text-sm text-green-600">{formatUGX(liability.amountPaid || 0)}</TableCell>
+                    <TableCell className="text-right text-sm text-[var(--rag-green)]">{formatUGX(liability.amountPaid || 0)}</TableCell>
                     <TableCell className="text-right text-sm font-medium">{formatUGX(liability.amountRemaining || 0)}</TableCell>
                     <TableCell>
-                      <span className={`text-xs ${isOverdue ? 'text-red-600 font-medium' : 'text-muted-foreground'}`}>
+                      <span className={`text-xs ${isOverdue ? 'text-[var(--rag-red)] font-medium' : 'text-muted-foreground'}`}>
                         {formatDate(liability.nextDueDate)}
                       </span>
                     </TableCell>
                     <TableCell>
                       <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${
-                        liability.priority === 'statutory' ? 'bg-red-50 text-red-700'
-                          : liability.priority === 'contractual' ? 'bg-orange-50 text-orange-700'
+                        liability.priority === 'statutory' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
+                          : liability.priority === 'contractual' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
                             : 'bg-[var(--bg-sunken)] text-muted-foreground'
                       }`}>
                         {liability.priority || 'operational'}
@@ -239,7 +239,7 @@ export function LiabilityRegisterPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs h-7 px-2 text-green-600 hover:text-green-700"
+                        className="text-xs h-7 px-2 text-[var(--rag-green)] hover:text-[var(--rag-green)]"
                         onClick={() => {
                           setPayingId(liability.id);
                           setPayAmount(String(liability.amountRemaining || ''));

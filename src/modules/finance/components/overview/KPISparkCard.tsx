@@ -63,7 +63,7 @@ export function KPISparkCard({
             )}
             {change !== undefined && (
               <span
-                className={`text-xs font-medium ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                className={`text-xs font-medium ${change >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}
               >
                 {change >= 0 ? '+' : ''}{change.toFixed(1)}%
               </span>

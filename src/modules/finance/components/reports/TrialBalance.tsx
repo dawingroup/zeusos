@@ -65,8 +65,8 @@ export const TrialBalance: React.FC<TrialBalanceProps> = ({
           <div
             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
               report.isBalanced
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
+                : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
             }`}
           >
             {report.isBalanced ? (

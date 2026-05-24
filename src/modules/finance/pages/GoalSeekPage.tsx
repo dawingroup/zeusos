@@ -52,7 +52,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
   const reqPos = isInf ? -1 : Math.max(0, Math.min(100, ((reqPct - scaleMin) / range) * 100));
 
   // Color for the required marker
-  const markerColor = isInf ? 'bg-[var(--bg-sunken)]' : reqPct >= 0 ? 'bg-blue-500' : 'bg-blue-500';
+  const markerColor = isInf ? 'bg-[var(--bg-sunken)]' : reqPct >= 0 ? 'bg-[var(--rag-blue)]' : 'bg-[var(--rag-blue)]';
 
   return (
     <div className="py-3">
@@ -76,7 +76,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
           </div>
           <div className="text-right min-w-[60px]">
             <span className="text-muted-foreground">Change</span>
-            <span className="ml-2 font-bold text-blue-600">{changeLabel}</span>
+            <span className="ml-2 font-bold text-[var(--rag-blue)]">{changeLabel}</span>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
             const valPos = ((value - scaleMin) / range) * 100;
             const left = Math.min(zeroPos, valPos);
             const width = Math.abs(valPos - zeroPos);
-            const color = value >= 0 ? 'bg-blue-100' : 'bg-blue-100';
+            const color = value >= 0 ? 'bg-[var(--rag-blue-soft)]' : 'bg-[var(--rag-blue-soft)]';
             return (
               <div
                 className={`absolute top-0 bottom-0 ${color}`}
@@ -118,7 +118,7 @@ function LeverRow({ result, value, onChange, scaleMin, scaleMax }: LeverRowProps
 
           {/* Slider thumb circle */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border-2 border-blue-500 shadow-md cursor-grab z-10"
+            className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-card border-2 border-[var(--rag-blue)] shadow-md cursor-grab z-10"
             style={{ left: `calc(${((value - scaleMin) / range) * 100}% - 10px)` }}
           />
         </div>
@@ -315,7 +315,7 @@ export function GoalSeekPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{error}</div>
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">{error}</div>
       )}
 
       {actuals && (
@@ -342,7 +342,7 @@ export function GoalSeekPage() {
                   {' from '}
                   <span className="font-bold">{metricDef.isPercentage ? fmtPct(currentValue) : fmtCurrency(currentValue)}</span>
                   {' to '}
-                  <span className="font-bold text-blue-600">{metricDef.isPercentage ? `${targetInput}%` : targetInput}</span>
+                  <span className="font-bold text-[var(--rag-blue)]">{metricDef.isPercentage ? `${targetInput}%` : targetInput}</span>
                 </p>
               </div>
               <div>
@@ -354,7 +354,7 @@ export function GoalSeekPage() {
                   value={targetInput}
                   onChange={e => setTargetInput(e.target.value)}
                   step={metricDef.isPercentage ? '0.5' : '1000'}
-                  className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm font-bold text-blue-600"
+                  className="mt-1 w-full border border-[var(--border-default)] rounded-md px-3 py-2 text-sm font-bold text-[var(--rag-blue)]"
                 />
               </div>
             </div>
@@ -436,7 +436,7 @@ export function GoalSeekPage() {
               <span className="text-sm text-muted-foreground">Projected {metricDef.label} with adjustments:</span>
               <span className={`text-lg font-bold ${
                 (metricDef.isPercentage ? projectedValue >= targetValue : projectedValue >= targetValue)
-                  ? 'text-green-600'
+                  ? 'text-[var(--rag-green)]'
                   : 'text-foreground'
               }`}>
                 {metricDef.isPercentage ? fmtPct(projectedValue) : fmtCurrency(projectedValue)}
