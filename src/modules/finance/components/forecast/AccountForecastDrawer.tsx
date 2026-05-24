@@ -203,7 +203,7 @@ export function AccountForecastDrawer({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b shrink-0">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-blue-500" />
+            <TrendingUp className="h-4 w-4 text-[var(--rag-blue)]" />
             <div>
               <h3 className="font-semibold text-foreground text-sm leading-tight">{label}</h3>
               <p className="text-xs text-[var(--fg-tertiary)] font-mono">{accountId}</p>
@@ -278,7 +278,7 @@ export function AccountForecastDrawer({
             </div>
             <div className="flex items-center gap-4 mt-2 justify-center">
               <div className="flex items-center gap-1.5">
-                <div className="w-6 h-0.5 bg-blue-500 rounded" />
+                <div className="w-6 h-0.5 bg-[var(--rag-blue)] rounded" />
                 <span className="text-xs text-muted-foreground">Actuals</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -305,11 +305,11 @@ export function AccountForecastDrawer({
                   onClick={() => setRuleType(opt.value as ValueRuleType)}
                   className={`text-left border rounded-lg px-3 py-2.5 transition-colors ${
                     ruleType === opt.value
-                      ? 'border-blue-500 bg-blue-50'
+                      ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
                       : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
                   }`}
                 >
-                  <p className={`text-xs font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-muted-foreground'}`}>
+                  <p className={`text-xs font-medium ${ruleType === opt.value ? 'text-[var(--rag-blue)]' : 'text-muted-foreground'}`}>
                     {opt.label}
                   </p>
                   <p className="text-[10px] text-[var(--fg-tertiary)] mt-0.5 leading-snug">{opt.desc}</p>
@@ -329,7 +329,7 @@ export function AccountForecastDrawer({
                         onClick={() => setSpMethod(m)}
                         className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                           spMethod === m
-                            ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
+                            ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] font-medium'
                             : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                         }`}
                       >
@@ -407,7 +407,7 @@ export function AccountForecastDrawer({
             {ruleType === 'link_to_budget' && (
               <div className="bg-[var(--bg-sunken)] rounded-lg p-3 space-y-3">
                 {budgets.length === 0 ? (
-                  <p className="text-xs text-yellow-600">No budgets found. Create one in the Budgets tab first.</p>
+                  <p className="text-xs text-[var(--rag-amber)]">No budgets found. Create one in the Budgets tab first.</p>
                 ) : (
                   <div>
                     <label className="text-xs font-medium text-muted-foreground">Budget</label>
@@ -453,7 +453,7 @@ export function AccountForecastDrawer({
                   onClick={() => setLagMonths(lag)}
                   className={`text-center border rounded-lg py-2 transition-colors ${
                     lagMonths === lag
-                      ? 'border-green-500 bg-green-50 text-green-700'
+                      ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                       : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] text-muted-foreground'
                   }`}
                 >
@@ -475,7 +475,7 @@ export function AccountForecastDrawer({
           {currentRule ? (
             <button
               onClick={onDelete}
-              className="text-xs text-red-400 hover:text-red-600 underline"
+              className="text-xs text-[var(--rag-red)] hover:text-[var(--rag-red)] underline"
               disabled={saving}
             >
               Remove rule

@@ -311,7 +311,7 @@ export function ReportsLandingPage() {
       </div>
 
       {dataError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{dataError}</div>
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">{dataError}</div>
       )}
 
       {/* Template Cards — 2x2 Grid */}
@@ -329,22 +329,22 @@ export function ReportsLandingPage() {
               }}
               className={`text-left p-5 rounded-lg border-2 transition-all duration-150
                 ${isSelected
-                  ? 'border-green-500 bg-green-50/50 shadow-sm'
+                  ? 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]/50 shadow-sm'
                   : 'border-[var(--border-subtle)] bg-card hover:border-[var(--border-default)] hover:shadow-sm'
                 }`}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2.5 rounded-lg ${isSelected ? 'bg-green-100 text-green-700' : 'bg-[var(--bg-sunken)] text-muted-foreground'}`}>
+                <div className={`p-2.5 rounded-lg ${isSelected ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' : 'bg-[var(--bg-sunken)] text-muted-foreground'}`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`font-semibold ${isSelected ? 'text-green-800' : 'text-foreground'}`}>
+                  <p className={`font-semibold ${isSelected ? 'text-[var(--rag-green)]' : 'text-foreground'}`}>
                     {t.title}
                   </p>
                   <p className="text-sm text-muted-foreground mt-0.5">{t.description}</p>
                 </div>
                 {isSelected && (
-                  <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-[var(--rag-green)] flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-3 h-3 text-white" />
                   </div>
                 )}
@@ -398,7 +398,7 @@ export function ReportsLandingPage() {
           </div>
 
           {periodStart && periodEnd && periodStart > periodEnd && (
-            <p className="text-xs text-red-500">Start month must be before or equal to end month.</p>
+            <p className="text-xs text-[var(--rag-red)]">Start month must be before or equal to end month.</p>
           )}
 
           {/* Additional Context */}
@@ -421,7 +421,7 @@ export function ReportsLandingPage() {
             disabled={!canGenerate || dataLoading}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors
               ${canGenerate && !dataLoading
-                ? 'bg-green-600 text-white hover:bg-green-700 shadow-sm'
+                ? 'bg-[var(--rag-green)] text-white hover:bg-[var(--rag-green)] shadow-sm'
                 : 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)] cursor-not-allowed'
               }`}
           >
@@ -433,7 +433,7 @@ export function ReportsLandingPage() {
 
       {/* Generation Error */}
       {genError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{genError}</div>
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">{genError}</div>
       )}
 
       {/* Loading State */}
@@ -455,7 +455,7 @@ export function ReportsLandingPage() {
                 onClick={handleCopy}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--border-default)] text-xs font-medium text-muted-foreground bg-card hover:bg-[var(--bg-sunken)] transition-colors"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[var(--rag-green)]" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? 'Copied' : 'Copy to Clipboard'}
               </button>
               <button

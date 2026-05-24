@@ -349,11 +349,11 @@ function AccountBreakdownPanel({
   }
 
   const classColors: Record<string, string> = {
-    revenue: 'bg-green-100 text-green-700',
-    cogs: 'bg-red-100 text-red-700',
-    opex: 'bg-orange-100 text-orange-700',
+    revenue: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+    cogs: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+    opex: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
     depreciation: 'bg-purple-100 text-purple-700',
-    interest: 'bg-blue-100 text-blue-700',
+    interest: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
     tax: 'bg-[var(--bg-sunken)] text-muted-foreground',
   };
 
@@ -490,7 +490,7 @@ export function KPIExplorerPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}
@@ -605,7 +605,7 @@ export function KPIExplorerPage() {
                         key={row.period}
                         onClick={() => setSelectedRow(isSelected ? null : row.period)}
                         className={`border-b border-[var(--border-subtle)] cursor-pointer transition-colors ${
-                          isSelected ? 'bg-green-50' : 'hover:bg-[var(--bg-sunken)]'
+                          isSelected ? 'bg-[var(--rag-green-soft)]' : 'hover:bg-[var(--bg-sunken)]'
                         }`}
                       >
                         <td className="py-2 px-4 text-muted-foreground font-medium">
@@ -618,7 +618,7 @@ export function KPIExplorerPage() {
                           {row.momChange !== null ? (
                             <span
                               className={
-                                row.momChange >= 0 ? 'text-green-600' : 'text-red-600'
+                                row.momChange >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                               }
                             >
                               {row.momChange >= 0 ? '+' : ''}
@@ -634,7 +634,7 @@ export function KPIExplorerPage() {
                           {row.momPct !== null ? (
                             <span
                               className={
-                                row.momPct >= 0 ? 'text-green-600' : 'text-red-600'
+                                row.momPct >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                               }
                             >
                               {row.momPct >= 0 ? '+' : ''}

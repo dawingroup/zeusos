@@ -40,9 +40,9 @@ function formatCompact(value: number): string {
 }
 
 function confidenceBadge(score: number) {
-  if (score >= 80) return { label: 'High', color: 'text-green-700 bg-green-50' };
-  if (score >= 50) return { label: 'Medium', color: 'text-amber-700 bg-amber-50' };
-  return { label: 'Low', color: 'text-red-700 bg-red-50' };
+  if (score >= 80) return { label: 'High', color: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]' };
+  if (score >= 50) return { label: 'Medium', color: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)]' };
+  return { label: 'Low', color: 'text-[var(--rag-red)] bg-[var(--rag-red-soft)]' };
 }
 
 export function CashProjectionsPage() {
@@ -129,7 +129,7 @@ export function CashProjectionsPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -167,13 +167,13 @@ export function CashProjectionsPage() {
 
       {/* Crisis Days Warning */}
       {stats && stats.crisisDays > 0 && (
-        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <ShieldAlert className="w-5 h-5 text-red-600 shrink-0" />
+        <div className="flex items-center gap-3 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+          <ShieldAlert className="w-5 h-5 text-[var(--rag-red)] shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-red-800">
+            <p className="text-sm font-semibold text-[var(--rag-red)]">
               {stats.crisisDays} day{stats.crisisDays > 1 ? 's' : ''} below minimum cash buffer
             </p>
-            <p className="text-xs text-red-600 mt-0.5">
+            <p className="text-xs text-[var(--rag-red)] mt-0.5">
               Balance drops below {formatUGX(bufferAmount)} during the projection period
             </p>
           </div>
@@ -181,9 +181,9 @@ export function CashProjectionsPage() {
       )}
 
       {stats && stats.crisisDays === 0 && (
-        <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <ShieldCheck className="w-5 h-5 text-green-600 shrink-0" />
-          <p className="text-sm text-green-700">
+        <div className="flex items-center gap-3 p-3 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-lg">
+          <ShieldCheck className="w-5 h-5 text-[var(--rag-green)] shrink-0" />
+          <p className="text-sm text-[var(--rag-green)]">
             Cash position stays above the minimum buffer throughout the projection period
           </p>
         </div>
@@ -223,7 +223,7 @@ export function CashProjectionsPage() {
                   return (
                     <TableRow
                       key={snap.date}
-                      className={isCrisis ? 'bg-red-50/50' : ''}
+                      className={isCrisis ? 'bg-[var(--rag-red-soft)]/50' : ''}
                     >
                       <TableCell className="text-sm">
                         {new Date(snap.date).toLocaleDateString('en-UG', {
@@ -235,24 +235,24 @@ export function CashProjectionsPage() {
                       <TableCell className="text-right text-sm font-medium">
                         {formatCompact(snap.openingBalance)}
                       </TableCell>
-                      <TableCell className="text-right text-sm text-green-600">
+                      <TableCell className="text-right text-sm text-[var(--rag-green)]">
                         +{formatCompact(snap.totalProjectedInflow)}
                       </TableCell>
-                      <TableCell className="text-right text-sm text-red-600">
+                      <TableCell className="text-right text-sm text-[var(--rag-red)]">
                         -{formatCompact(snap.totalProjectedOutflow)}
                       </TableCell>
                       <TableCell className={`text-right text-sm font-semibold ${
-                        isCrisis ? 'text-red-600' : 'text-foreground'
+                        isCrisis ? 'text-[var(--rag-red)]' : 'text-foreground'
                       }`}>
                         {formatCompact(snap.closingBalance)}
                       </TableCell>
                       <TableCell>
                         {isCrisis ? (
-                          <span className="text-xs text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
+                          <span className="text-xs text-[var(--rag-red)] bg-[var(--rag-red-soft)] px-1.5 py-0.5 rounded">
                             Below buffer
                           </span>
                         ) : (
-                          <span className="text-xs text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                          <span className="text-xs text-[var(--rag-green)] bg-[var(--rag-green-soft)] px-1.5 py-0.5 rounded">
                             OK
                           </span>
                         )}

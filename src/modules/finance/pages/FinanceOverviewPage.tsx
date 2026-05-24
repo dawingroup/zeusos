@@ -244,7 +244,7 @@ export function FinanceOverviewPage() {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Net Profit</p>
-                      <p className={`text-sm font-bold ${healthData.metrics.netProfit >= 0 ? 'text-foreground' : 'text-red-600'}`}>
+                      <p className={`text-sm font-bold ${healthData.metrics.netProfit >= 0 ? 'text-foreground' : 'text-[var(--rag-red)]'}`}>
                         {formatCompact(healthData.metrics.netProfit)}
                       </p>
                     </div>
@@ -300,13 +300,13 @@ export function FinanceOverviewPage() {
                   <div key={b.id}>
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span className="text-muted-foreground truncate max-w-[60%]">{b.name}</span>
-                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-red-600' : b.utilization >= 85 ? 'text-amber-600' : 'text-muted-foreground'}`}>
+                      <span className={`text-xs font-medium ${b.utilization >= 100 ? 'text-[var(--rag-red)]' : b.utilization >= 85 ? 'text-[var(--rag-amber)]' : 'text-muted-foreground'}`}>
                         {b.utilization}%
                       </span>
                     </div>
                     <div className="h-1.5 bg-[var(--bg-sunken)] rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all ${b.utilization >= 100 ? 'bg-red-500' : b.utilization >= 85 ? 'bg-amber-500' : 'bg-green-500'}`}
+                        className={`h-full rounded-full transition-all ${b.utilization >= 100 ? 'bg-[var(--rag-red)]' : b.utilization >= 85 ? 'bg-[var(--rag-amber)]' : 'bg-[var(--rag-green)]'}`}
                         style={{ width: `${Math.min(b.utilization, 100)}%` }}
                       />
                     </div>
@@ -330,7 +330,7 @@ export function FinanceOverviewPage() {
             <p className="text-xs text-muted-foreground">
               6 core financial KPIs with 12-month trends
             </p>
-            <div className="flex items-center gap-1 mt-2 text-xs text-green-600 font-medium">
+            <div className="flex items-center gap-1 mt-2 text-xs text-[var(--rag-green)] font-medium">
               View KPIs <ArrowRight className="w-3 h-3" />
             </div>
           </Card>
@@ -345,7 +345,7 @@ export function FinanceOverviewPage() {
             onClick={() => navigate('/manufacturing/procurement')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-blue-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-blue)]" />
             Purchase Orders
           </button>
           <button
@@ -359,14 +359,14 @@ export function FinanceOverviewPage() {
             onClick={() => navigate('/hr/payroll')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-amber-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-amber)]" />
             Payroll / PAYE
           </button>
           <button
             onClick={() => navigate('/strategy')}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
           >
-            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--rag-green)]" />
             Strategy KPIs
           </button>
         </div>

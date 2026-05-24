@@ -73,30 +73,30 @@ export function QBOSyncStatusBadge({
   // Status configurations
   const statusConfig = {
     pending: {
-      bg: 'bg-yellow-100',
-      text: 'text-yellow-700',
-      dot: 'bg-yellow-500',
+      bg: 'bg-[var(--rag-amber-soft)]',
+      text: 'text-[var(--rag-amber)]',
+      dot: 'bg-[var(--rag-amber)]',
       label: 'Pending Sync',
       icon: '⏳',
     },
     synced: {
-      bg: 'bg-green-100',
-      text: 'text-green-700',
-      dot: 'bg-green-500',
+      bg: 'bg-[var(--rag-green-soft)]',
+      text: 'text-[var(--rag-green)]',
+      dot: 'bg-[var(--rag-green)]',
       label: 'Synced',
       icon: '✓',
     },
     error: {
-      bg: 'bg-red-100',
-      text: 'text-red-700',
-      dot: 'bg-red-500',
+      bg: 'bg-[var(--rag-red-soft)]',
+      text: 'text-[var(--rag-red)]',
+      dot: 'bg-[var(--rag-red)]',
       label: 'Sync Failed',
       icon: '✕',
     },
     'correction-pending': {
-      bg: 'bg-orange-100',
-      text: 'text-orange-700',
-      dot: 'bg-orange-500',
+      bg: 'bg-[var(--rag-amber-soft)]',
+      text: 'text-[var(--rag-amber)]',
+      dot: 'bg-[var(--rag-amber)]',
       label: 'Correction Pending',
       icon: '⟳',
     },
@@ -143,8 +143,8 @@ export function QBOSyncStatusBadge({
 
           {/* Error message */}
           {status === 'error' && error && (
-            <div className="mt-2 p-2 bg-red-50 rounded border border-red-200">
-              <p className="text-xs text-red-700">
+            <div className="mt-2 p-2 bg-[var(--rag-red-soft)] rounded border border-[var(--rag-red)]">
+              <p className="text-xs text-[var(--rag-red)]">
                 <strong>Error:</strong> {error}
               </p>
             </div>
@@ -156,7 +156,7 @@ export function QBOSyncStatusBadge({
               href={qboDocUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:text-blue-800 underline"
+              className="text-xs text-[var(--rag-blue)] hover:text-[var(--rag-blue)] underline"
             >
               View in QuickBooks →
             </a>
@@ -167,7 +167,7 @@ export function QBOSyncStatusBadge({
         {(status === 'error' || status === 'correction-pending') && onRetry && (
           <button
             onClick={onRetry}
-            className="ml-4 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="ml-4 px-3 py-1.5 text-xs font-medium text-white bg-[var(--rag-blue)] rounded-md hover:bg-[var(--rag-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
           >
             {status === 'correction-pending' ? 'Sync Correction' : 'Retry Sync'}
           </button>
@@ -197,10 +197,10 @@ export function QBOSyncIndicator({
   };
 
   const colors: Record<string, string> = {
-    pending: 'text-yellow-600',
-    synced: 'text-green-600',
-    error: 'text-red-600',
-    'correction-pending': 'text-orange-600',
+    pending: 'text-[var(--rag-amber)]',
+    synced: 'text-[var(--rag-green)]',
+    error: 'text-[var(--rag-red)]',
+    'correction-pending': 'text-[var(--rag-amber)]',
   };
 
   return (

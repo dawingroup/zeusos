@@ -100,7 +100,7 @@ export function SpendPlanPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-green-600" />
+          <Calendar className="w-5 h-5 text-[var(--rag-green)]" />
           <h2 className="text-xl font-bold text-foreground">Daily Spend Plan</h2>
         </div>
         <div className="flex items-center gap-2">
@@ -122,7 +122,7 @@ export function SpendPlanPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -158,7 +158,7 @@ export function SpendPlanPage() {
               <Button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="bg-green-600 hover:bg-green-700 text-white w-full"
+                className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)] text-white w-full"
               >
                 {isGenerating ? (
                   <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
@@ -215,7 +215,7 @@ export function SpendPlanPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Status</span>
                   <span className={`font-medium ${
-                    plan.status === 'active' ? 'text-green-600' : 'text-amber-600'
+                    plan.status === 'active' ? 'text-[var(--rag-green)]' : 'text-[var(--rag-amber)]'
                   }`}>
                     {plan.status}
                   </span>
@@ -226,11 +226,11 @@ export function SpendPlanPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Total Inflow</span>
-                  <span className="font-medium text-green-600">+{formatUGX(plan.totalInflow)}</span>
+                  <span className="font-medium text-[var(--rag-green)]">+{formatUGX(plan.totalInflow)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Total Outflow</span>
-                  <span className="font-medium text-red-600">-{formatUGX(plan.totalOutflow)}</span>
+                  <span className="font-medium text-[var(--rag-red)]">-{formatUGX(plan.totalOutflow)}</span>
                 </div>
                 {plan.savingsAllocation > 0 && (
                   <div className="flex justify-between text-sm">
@@ -241,7 +241,7 @@ export function SpendPlanPage() {
                 <hr className="border-[var(--border-subtle)]" />
                 <div className="flex justify-between text-sm">
                   <span className="font-medium text-muted-foreground">Closing Balance</span>
-                  <span className={`font-bold ${plan.closingBalance < 0 ? 'text-red-600' : 'text-foreground'}`}>
+                  <span className={`font-bold ${plan.closingBalance < 0 ? 'text-[var(--rag-red)]' : 'text-foreground'}`}>
                     {formatUGX(plan.closingBalance)}
                   </span>
                 </div>
@@ -255,7 +255,7 @@ export function SpendPlanPage() {
                 <div className="space-y-2">
                   {plan.actionItems.map((action: any, idx: number) => (
                     <div key={idx} className="flex items-start gap-2 text-xs">
-                      <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-blue-500 shrink-0" />
+                      <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-[var(--rag-blue)] shrink-0" />
                       <span className="text-muted-foreground">{action.action}</span>
                     </div>
                   ))}

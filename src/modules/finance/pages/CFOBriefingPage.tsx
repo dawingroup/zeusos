@@ -30,9 +30,9 @@ function formatDate(ts: unknown): string {
 }
 
 const URGENCY_STYLES: Record<string, string> = {
-  immediate: 'bg-red-50 border-red-200 text-red-800',
-  today: 'bg-orange-50 border-orange-200 text-orange-800',
-  this_week: 'bg-amber-50 border-amber-200 text-amber-800',
+  immediate: 'bg-[var(--rag-red-soft)] border-[var(--rag-red)] text-[var(--rag-red)]',
+  today: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)] text-[var(--rag-amber)]',
+  this_week: 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)] text-[var(--rag-amber)]',
 };
 
 const SEVERITY_ICONS: Record<string, typeof AlertTriangle> = {
@@ -102,7 +102,7 @@ export function CFOBriefingPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -145,7 +145,7 @@ export function CFOBriefingPage() {
             {/* Key Decisions */}
             <Card className="p-5">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-amber-500" />
+                <Lightbulb className="w-4 h-4 text-[var(--rag-amber)]" />
                 Key Decisions
               </h3>
               {briefing.keyDecisions?.length > 0 ? (
@@ -178,7 +178,7 @@ export function CFOBriefingPage() {
             {/* Risk Alerts */}
             <Card className="p-5">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Shield className="w-4 h-4 text-red-500" />
+                <Shield className="w-4 h-4 text-[var(--rag-red)]" />
                 Risk Alerts
               </h3>
               {briefing.riskAlerts?.length > 0 ? (
@@ -188,9 +188,9 @@ export function CFOBriefingPage() {
                     return (
                       <div key={idx} className="flex items-start gap-2">
                         <SeverityIcon className={`w-4 h-4 mt-0.5 shrink-0 ${
-                          alert.severity === 'critical' ? 'text-red-500'
-                            : alert.severity === 'warning' ? 'text-amber-500'
-                              : 'text-blue-500'
+                          alert.severity === 'critical' ? 'text-[var(--rag-red)]'
+                            : alert.severity === 'warning' ? 'text-[var(--rag-amber)]'
+                              : 'text-[var(--rag-blue)]'
                         }`} />
                         <div>
                           <p className="text-sm font-medium text-foreground">{alert.message}</p>
@@ -201,7 +201,7 @@ export function CFOBriefingPage() {
                   })}
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-sm text-green-600">
+                <div className="flex items-center gap-2 text-sm text-[var(--rag-green)]">
                   <CheckCircle className="w-4 h-4" />
                   No risk alerts today
                 </div>
@@ -213,16 +213,16 @@ export function CFOBriefingPage() {
           {briefing.recommendations?.length > 0 && (
             <Card className="p-5">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
+                <CheckCircle className="w-4 h-4 text-[var(--rag-green)]" />
                 Recommendations
               </h3>
               <div className="space-y-2">
                 {briefing.recommendations.map((rec, idx) => (
                   <div key={idx} className="flex items-start gap-3 py-2 border-b border-[var(--border-subtle)] last:border-0">
                     <span className={`text-xs font-medium px-1.5 py-0.5 rounded shrink-0 ${
-                      rec.priority >= 3 ? 'bg-red-50 text-red-700'
-                        : rec.priority >= 2 ? 'bg-amber-50 text-amber-700'
-                          : 'bg-blue-50 text-blue-700'
+                      rec.priority >= 3 ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
+                        : rec.priority >= 2 ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
+                          : 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]'
                     }`}>
                       P{rec.priority}
                     </span>

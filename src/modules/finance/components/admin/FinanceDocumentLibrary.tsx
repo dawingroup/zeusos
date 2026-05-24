@@ -104,7 +104,7 @@ export function FinanceDocumentLibrary({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search documents by name, tags..."
-            className="w-full pl-9 pr-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full pl-9 pr-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)] focus:border-transparent"
           />
           {search && (
             <button
@@ -117,7 +117,7 @@ export function FinanceDocumentLibrary({
         </div>
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white text-sm rounded-lg hover:bg-[var(--rag-green)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Document
@@ -131,7 +131,7 @@ export function FinanceDocumentLibrary({
           onClick={() => onFilterCategory(null)}
           className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
             !activeCategory
-              ? 'bg-green-100 text-green-700'
+              ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
               : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
           }`}
         >
@@ -146,7 +146,7 @@ export function FinanceDocumentLibrary({
               onClick={() => onFilterCategory(activeCategory === key ? null : key)}
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 activeCategory === key
-                  ? 'bg-green-100 text-green-700'
+                  ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                   : 'bg-[var(--bg-sunken)] text-muted-foreground hover:bg-[var(--bg-sunken)]'
               }`}
             >
@@ -227,7 +227,7 @@ export function FinanceDocumentLibrary({
                       href={doc.googleDriveUrl || doc.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-1.5 rounded-md hover:bg-blue-50 text-blue-500"
+                      className="p-1.5 rounded-md hover:bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]"
                       title="Open file"
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -241,7 +241,7 @@ export function FinanceDocumentLibrary({
                           onDelete(doc.id);
                           setConfirmDeleteId(null);
                         }}
-                        className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                        className="px-2 py-1 text-xs bg-[var(--rag-red)] text-white rounded hover:bg-[var(--rag-red)]"
                       >
                         Confirm
                       </button>
@@ -255,7 +255,7 @@ export function FinanceDocumentLibrary({
                   ) : (
                     <button
                       onClick={() => setConfirmDeleteId(doc.id)}
-                      className="p-1.5 rounded-md hover:bg-red-50 text-[var(--fg-tertiary)] hover:text-red-500"
+                      className="p-1.5 rounded-md hover:bg-[var(--rag-red-soft)] text-[var(--fg-tertiary)] hover:text-[var(--rag-red)]"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />

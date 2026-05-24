@@ -158,9 +158,9 @@ function getScoreColor(score: number): string {
 }
 
 function getScoreBgClass(score: number): string {
-  if (score > 70) return 'bg-green-50 border-green-200';
-  if (score >= 40) return 'bg-amber-50 border-amber-200';
-  return 'bg-red-50 border-red-200';
+  if (score > 70) return 'bg-[var(--rag-green-soft)] border-[var(--rag-green)]';
+  if (score >= 40) return 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]';
+  return 'bg-[var(--rag-red-soft)] border-[var(--rag-red)]';
 }
 
 function getScoreLabel(score: number): string {
@@ -175,9 +175,9 @@ function getScoreLabel(score: number): string {
 // ── Traffic Light Indicator ──────────────────────────────────────────────────
 
 const LIGHT_COLORS: Record<TrafficLight, string> = {
-  green: 'bg-green-500',
-  amber: 'bg-amber-500',
-  red: 'bg-red-500',
+  green: 'bg-[var(--rag-green)]',
+  amber: 'bg-[var(--rag-amber)]',
+  red: 'bg-[var(--rag-red)]',
 };
 
 // ── Formatters ───────────────────────────────────────────────────────────────
@@ -334,7 +334,7 @@ export function FinancialHealthPage() {
 
       {/* Error */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}
@@ -370,15 +370,15 @@ export function FinancialHealthPage() {
           {/* Legend */}
           <div className="flex items-center gap-6 text-xs text-[var(--fg-tertiary)] justify-center">
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="w-3 h-3 rounded-full bg-[var(--rag-green)]" />
               <span>Healthy</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-amber-500" />
+              <div className="w-3 h-3 rounded-full bg-[var(--rag-amber)]" />
               <span>Caution</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <div className="w-3 h-3 rounded-full bg-[var(--rag-red)]" />
               <span>Needs Attention</span>
             </div>
           </div>

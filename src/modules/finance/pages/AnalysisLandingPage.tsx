@@ -93,14 +93,14 @@ function AnalysisNavCard({ card }: { card: AnalysisCard }) {
   return (
     <div
       onClick={() => navigate(card.path)}
-      className="bg-card border border-[var(--border-subtle)] rounded-xl p-5 hover:border-green-300 hover:shadow-md transition-all cursor-pointer group"
+      className="bg-card border border-[var(--border-subtle)] rounded-xl p-5 hover:border-[var(--rag-green)] hover:shadow-md transition-all cursor-pointer group"
     >
       <div className="flex items-start gap-4">
-        <div className="shrink-0 w-10 h-10 rounded-full bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
-          <Icon className="h-5 w-5 text-green-600" />
+        <div className="shrink-0 w-10 h-10 rounded-full bg-[var(--rag-green-soft)] flex items-center justify-center group-hover:bg-[var(--rag-green-soft)] transition-colors">
+          <Icon className="h-5 w-5 text-[var(--rag-green)]" />
         </div>
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-foreground group-hover:text-green-700 transition-colors">
+          <h3 className="text-sm font-semibold text-foreground group-hover:text-[var(--rag-green)] transition-colors">
             {card.label}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">

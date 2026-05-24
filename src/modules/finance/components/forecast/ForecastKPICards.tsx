@@ -32,15 +32,15 @@ function KPICard({ label, value, loading }: KPICardProps) {
   const isNeg = value < 0;
   const Icon = isNeg ? TrendingDown : value === 0 ? Minus : TrendingUp;
   return (
-    <Card className={`border ${isNeg ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'}`}>
+    <Card className={`border ${isNeg ? 'border-[var(--rag-red)] bg-[var(--rag-red-soft)]' : 'border-[var(--rag-green)] bg-[var(--rag-green-soft)]'}`}>
       <CardContent className="p-5">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
         {loading ? (
           <Skeleton className="h-8 w-32" />
         ) : (
           <div className="flex items-center gap-2">
-            <Icon className={`h-5 w-5 shrink-0 ${isNeg ? 'text-red-500' : 'text-green-600'}`} />
-            <p className={`text-2xl font-bold ${isNeg ? 'text-red-600' : 'text-green-700'}`}>
+            <Icon className={`h-5 w-5 shrink-0 ${isNeg ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]'}`} />
+            <p className={`text-2xl font-bold ${isNeg ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]'}`}>
               {fmtFull(value)}
             </p>
           </div>

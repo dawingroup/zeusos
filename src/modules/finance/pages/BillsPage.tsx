@@ -114,7 +114,7 @@ export function BillsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <Receipt className="h-5 w-5 text-green-600" />
+            <Receipt className="h-5 w-5 text-[var(--rag-green)]" />
             Bills & Payables
           </h2>
           <p className="text-sm text-muted-foreground mt-1">

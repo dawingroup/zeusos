@@ -136,7 +136,7 @@ function ExpenditureRow({
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs h-7 px-2 text-green-600 hover:text-green-700"
+            className="text-xs h-7 px-2 text-[var(--rag-green)] hover:text-[var(--rag-green)]"
             onClick={() => onApprove(item.id)}
           >
             Approve
@@ -199,11 +199,11 @@ function GroupedView({
         return (
           <Card
             key={group.projectId}
-            className={`overflow-hidden ${isProjected ? 'border-dashed border-amber-300' : ''}`}
+            className={`overflow-hidden ${isProjected ? 'border-dashed border-[var(--rag-amber)]' : ''}`}
           >
             {/* Group Header */}
             <button
-              className={`flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-[var(--bg-sunken)] transition-colors ${isProjected ? 'bg-amber-50/50' : ''}`}
+              className={`flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-[var(--bg-sunken)] transition-colors ${isProjected ? 'bg-[var(--rag-amber-soft)]/50' : ''}`}
               onClick={() => toggleGroup(group.projectId)}
             >
               {isExpanded
@@ -233,7 +233,7 @@ function GroupedView({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs h-7 px-2.5 text-green-600 hover:text-green-700 hover:bg-green-50"
+                className="text-xs h-7 px-2.5 text-[var(--rag-green)] hover:text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]"
                 onClick={() => onApproveAll(group.items)}
               >
                 Approve All ({group.itemCount})
@@ -395,7 +395,7 @@ export function ExpenditureQueuePage() {
           <Button variant="ghost" size="sm" onClick={() => navigate('/finance/cash')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          <ListOrdered className="w-5 h-5 text-orange-600" />
+          <ListOrdered className="w-5 h-5 text-[var(--rag-amber)]" />
           <h2 className="text-xl font-bold text-foreground">Expenditure Queue</h2>
           <span className="text-sm text-[var(--fg-tertiary)]">
             {filteredCount} of {totalCount} items
@@ -441,7 +441,7 @@ export function ExpenditureQueuePage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -719,7 +719,7 @@ export function ExpenditureQueuePage() {
               {/* Actions */}
               <div className="flex gap-2">
                 <Button
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                  className="flex-1 bg-[var(--rag-green)] hover:bg-[var(--rag-green)] text-white"
                   onClick={() => {
                     approveItem(selectedItem.id);
                     selectItem(null);

@@ -34,11 +34,11 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<RefundRequest['status'], string> = {
-  pending: 'bg-amber-100 text-amber-700',
-  approved: 'bg-blue-100 text-blue-700',
+  pending: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  approved: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
   processing: 'bg-indigo-100 text-indigo-700',
-  completed: 'bg-green-100 text-green-700',
-  rejected: 'bg-red-100 text-red-700',
+  completed: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  rejected: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const STATUS_LABELS: Record<RefundRequest['status'], string> = {
@@ -51,9 +51,9 @@ const STATUS_LABELS: Record<RefundRequest['status'], string> = {
 
 const CATEGORY_COLORS: Record<RefundCategory, string> = {
   product_return: 'bg-purple-100 text-purple-700',
-  service_issue: 'bg-orange-100 text-orange-700',
-  billing_error: 'bg-red-100 text-red-700',
-  duplicate_charge: 'bg-amber-100 text-amber-700',
+  service_issue: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  billing_error: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
+  duplicate_charge: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
   other: 'bg-[var(--bg-sunken)] text-muted-foreground',
 };
 
@@ -167,11 +167,11 @@ export function RefundsPage() {
             &larr; Operations
           </Link>
         </div>
-        <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-center">
-          <p className="text-red-700">{error}</p>
+        <div className="p-6 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-center">
+          <p className="text-[var(--rag-red)]">{error}</p>
           <button
             onClick={refresh}
-            className="mt-3 text-sm text-red-600 hover:underline"
+            className="mt-3 text-sm text-[var(--rag-red)] hover:underline"
           >
             Try Again
           </button>
@@ -197,7 +197,7 @@ export function RefundsPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-green)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           New Request
@@ -212,7 +212,7 @@ export function RefundsPage() {
             onClick={() => setStatusFilter(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
               statusFilter === tab.id
-                ? 'bg-card text-green-700 shadow-sm'
+                ? 'bg-card text-[var(--rag-green)] shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -226,7 +226,7 @@ export function RefundsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <RotateCcw className="w-3 h-3 text-blue-500" /> Total Requests (This Month)
+              <RotateCcw className="w-3 h-3 text-[var(--rag-blue)]" /> Total Requests (This Month)
             </span>
           }
           value={loading ? <Skeleton className="h-7 w-16" /> : kpis.totalRequests}
@@ -234,7 +234,7 @@ export function RefundsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="w-3 h-3 text-amber-500" /> Pending
+              <Clock className="w-3 h-3 text-[var(--rag-amber)]" /> Pending
             </span>
           }
           value={loading ? <Skeleton className="h-7 w-16" /> : kpis.pending}
@@ -242,7 +242,7 @@ export function RefundsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-green-500" /> Approved Amount (This Month)
+              <CheckCircle className="w-3 h-3 text-[var(--rag-green)]" /> Approved Amount (This Month)
             </span>
           }
           value={loading ? <Skeleton className="h-7 w-24" /> : formatCurrency(kpis.approvedAmount)}
@@ -250,7 +250,7 @@ export function RefundsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <CheckCircle className="w-3 h-3 text-blue-500" /> Completed (This Month)
+              <CheckCircle className="w-3 h-3 text-[var(--rag-blue)]" /> Completed (This Month)
             </span>
           }
           value={loading ? <Skeleton className="h-7 w-16" /> : kpis.completedThisMonth}
@@ -282,7 +282,7 @@ export function RefundsPage() {
             <p className="text-sm text-muted-foreground">No refund requests found</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-3 text-sm text-green-600 hover:underline"
+              className="mt-3 text-sm text-[var(--rag-green)] hover:underline"
             >
               Create your first request
             </button>
@@ -447,7 +447,7 @@ function NewRefundFormModal({
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="e.g. John Doe"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             />
           </div>
           <div>
@@ -459,7 +459,7 @@ function NewRefundFormModal({
               value={invoiceRef}
               onChange={(e) => setInvoiceRef(e.target.value)}
               placeholder="e.g. INV-2026-001"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             />
           </div>
           <div>
@@ -471,7 +471,7 @@ function NewRefundFormModal({
               placeholder="0.00"
               min="0"
               step="0.01"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -480,7 +480,7 @@ function NewRefundFormModal({
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as RefundCategory)}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             >
               {REFUND_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -496,7 +496,7 @@ function NewRefundFormModal({
               onChange={(e) => setReason(e.target.value)}
               placeholder="Describe the reason for this refund..."
               rows={3}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)] resize-none"
               required
             />
           </div>
@@ -511,7 +511,7 @@ function NewRefundFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Request'}
             </button>
@@ -672,7 +672,7 @@ function RefundDetailPanel({
                   <button
                     onClick={handleApprove}
                     disabled={processing}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-green)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50 transition-colors"
                   >
                     <CheckCircle className="w-4 h-4" />
                     Approve
@@ -680,7 +680,7 @@ function RefundDetailPanel({
                   <button
                     onClick={() => setShowRejectForm(true)}
                     disabled={processing}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 text-sm font-medium rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-sm font-medium rounded-lg hover:bg-[var(--rag-red-soft)] disabled:opacity-50 transition-colors"
                   >
                     <XCircle className="w-4 h-4" />
                     Reject
@@ -693,7 +693,7 @@ function RefundDetailPanel({
                     onChange={(e) => setRejectNotes(e.target.value)}
                     placeholder="Reason for rejection (required)..."
                     rows={3}
-                    className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                    className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-red)] resize-none"
                   />
                   <div className="flex gap-2">
                     <button
@@ -705,7 +705,7 @@ function RefundDetailPanel({
                     <button
                       onClick={handleReject}
                       disabled={processing || !rejectNotes.trim()}
-                      className="flex-1 px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                      className="flex-1 px-4 py-2 text-sm bg-[var(--rag-red)] text-white rounded-lg hover:bg-[var(--rag-red)] disabled:opacity-50"
                     >
                       {processing ? 'Rejecting...' : 'Confirm Rejection'}
                     </button>
@@ -720,7 +720,7 @@ function RefundDetailPanel({
               <button
                 onClick={handleComplete}
                 disabled={processing}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-blue)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 transition-colors"
               >
                 <CheckCircle className="w-4 h-4" />
                 {processing ? 'Processing...' : 'Mark as Completed'}

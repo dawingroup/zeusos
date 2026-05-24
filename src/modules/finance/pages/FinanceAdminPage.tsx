@@ -88,7 +88,7 @@ export function FinanceAdminPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-card text-green-700 shadow-sm'
+                  ? 'bg-card text-[var(--rag-green)] shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -233,7 +233,7 @@ function ReconciliationFormModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Monthly Bank Reconciliation - Stanbic"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -243,7 +243,7 @@ function ReconciliationFormModal({
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as ReconciliationType)}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               >
                 {Object.entries(RECONCILIATION_TYPES).map(([k, v]) => (
                   <option key={k} value={k}>{v}</option>
@@ -255,7 +255,7 @@ function ReconciliationFormModal({
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as ReconciliationFrequency)}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               >
                 {Object.entries(RECONCILIATION_FREQUENCIES).map(([k, v]) => (
                   <option key={k} value={k}>{v}</option>
@@ -270,7 +270,7 @@ function ReconciliationFormModal({
               value={assigneeName}
               onChange={(e) => setAssigneeName(e.target.value)}
               placeholder="Who is responsible?"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -280,7 +280,7 @@ function ReconciliationFormModal({
               type="date"
               value={nextDueDate}
               onChange={(e) => setNextDueDate(e.target.value)}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -295,7 +295,7 @@ function ReconciliationFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Creating...' : 'Create Schedule'}
             </button>
@@ -355,7 +355,7 @@ function DocumentFormModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Q4 2024 VAT Return"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -365,7 +365,7 @@ function DocumentFormModal({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as FinanceDocumentCategory)}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               >
                 {Object.entries(FINANCE_DOCUMENT_CATEGORIES).map(([k, v]) => (
                   <option key={k} value={k}>{v}</option>
@@ -379,7 +379,7 @@ function DocumentFormModal({
                 value={fiscalYear}
                 onChange={(e) => setFiscalYear(e.target.value)}
                 placeholder="e.g. 2024/25"
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               />
             </div>
           </div>
@@ -392,7 +392,7 @@ function DocumentFormModal({
               value={googleDriveUrl}
               onChange={(e) => setGoogleDriveUrl(e.target.value)}
               placeholder="https://drive.google.com/file/d/..."
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             />
           </div>
           <div>
@@ -404,7 +404,7 @@ function DocumentFormModal({
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="e.g. vat, q4, 2024"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             />
           </div>
           <div className="flex justify-end gap-2 pt-2">
@@ -418,7 +418,7 @@ function DocumentFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Adding...' : 'Add Document'}
             </button>
@@ -477,7 +477,7 @@ function PortalLinkFormModal({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Stanbic Online Banking"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -488,7 +488,7 @@ function PortalLinkFormModal({
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://..."
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -499,7 +499,7 @@ function PortalLinkFormModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description..."
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             />
           </div>
           <div className="flex justify-end gap-2 pt-2">
@@ -513,7 +513,7 @@ function PortalLinkFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Adding...' : 'Add Link'}
             </button>

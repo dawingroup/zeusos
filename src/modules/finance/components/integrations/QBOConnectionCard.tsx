@@ -92,10 +92,10 @@ export function QBOConnectionCard({
   return (
     <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+      <div className="px-5 py-4 border-b bg-gradient-to-r $1-[var(--rag-green-soft)] $1-[var(--rag-green-soft)]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[var(--rag-green)] flex items-center justify-center">
               <span className="text-white font-bold text-sm">QB</span>
             </div>
             <div>
@@ -108,7 +108,7 @@ export function QBOConnectionCard({
             {connectionLoading ? (
               <Loader2 className="w-4 h-4 animate-spin text-[var(--fg-tertiary)]" />
             ) : isConnected ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--rag-green-soft)] text-[var(--rag-green)]">
                 <CheckCircle2 className="w-3 h-3" />
                 Connected
               </span>
@@ -131,7 +131,7 @@ export function QBOConnectionCard({
             </p>
             <button
               onClick={onConnect}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white text-sm rounded-lg hover:bg-[var(--rag-green)] transition-colors"
             >
               <Link2 className="w-4 h-4" />
               Connect QuickBooks
@@ -156,7 +156,7 @@ export function QBOConnectionCard({
               <button
                 onClick={onSyncAll}
                 disabled={syncing}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-green)] text-white text-sm rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -262,13 +262,13 @@ export function QBOConnectionCard({
                       </span>
                       <span className="flex items-center gap-1">
                         {job.status === 'success' && (
-                          <CheckCircle2 className="w-3 h-3 text-green-500" />
+                          <CheckCircle2 className="w-3 h-3 text-[var(--rag-green)]" />
                         )}
                         {job.status === 'error' && (
-                          <XCircle className="w-3 h-3 text-red-500" />
+                          <XCircle className="w-3 h-3 text-[var(--rag-red)]" />
                         )}
                         {job.status === 'syncing' && (
-                          <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
+                          <Loader2 className="w-3 h-3 animate-spin text-[var(--rag-blue)]" />
                         )}
                         {job.recordCount !== undefined && `${job.recordCount} records`}
                       </span>

@@ -137,7 +137,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               tab === t.id
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -205,7 +205,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
                         <button
                           onClick={() => onEditRule?.(row.accountId!, activeRule)}
                           title="Edit value rule"
-                          className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded border border-[var(--border-subtle)] hover:border-blue-400 hover:text-blue-600 text-[var(--fg-tertiary)] transition-colors"
+                          className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded border border-[var(--border-subtle)] hover:border-[var(--rag-blue)] hover:text-[var(--rag-blue)] text-[var(--fg-tertiary)] transition-colors"
                         >
                           <Settings2 className="h-3 w-3" />
                           {getRuleLabel(rules, row.accountId)}
@@ -234,7 +234,7 @@ export function ThreeWayTable({ periods, rules, loading, onEditRule }: Props) {
                             key={p.period}
                             className={`text-right px-3 py-1.5 tabular-nums ${
                               isHeader ? 'text-white' :
-                              isNeg ? 'text-red-500' : 'text-muted-foreground'
+                              isNeg ? 'text-[var(--rag-red)]' : 'text-muted-foreground'
                             } ${row.bold ? 'font-semibold' : ''}`}
                           >
                             {displayVal === null ? '' : fmtUSD(displayVal)}

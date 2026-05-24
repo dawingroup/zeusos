@@ -94,14 +94,14 @@ export function ReconciliationScheduleList({
           <p className="text-2xl font-bold text-foreground">{schedules.length}</p>
           <p className="text-xs text-muted-foreground">Total Schedules</p>
         </div>
-        <div className={`rounded-lg border p-3 text-center ${overdueCount > 0 ? 'bg-red-50 border-red-200' : 'bg-card'}`}>
-          <p className={`text-2xl font-bold ${overdueCount > 0 ? 'text-red-600' : 'text-foreground'}`}>
+        <div className={`rounded-lg border p-3 text-center ${overdueCount > 0 ? 'bg-[var(--rag-red-soft)] border-[var(--rag-red)]' : 'bg-card'}`}>
+          <p className={`text-2xl font-bold ${overdueCount > 0 ? 'text-[var(--rag-red)]' : 'text-foreground'}`}>
             {overdueCount}
           </p>
           <p className="text-xs text-muted-foreground">Overdue</p>
         </div>
-        <div className={`rounded-lg border p-3 text-center ${dueThisWeekCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-card'}`}>
-          <p className={`text-2xl font-bold ${dueThisWeekCount > 0 ? 'text-amber-600' : 'text-foreground'}`}>
+        <div className={`rounded-lg border p-3 text-center ${dueThisWeekCount > 0 ? 'bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]' : 'bg-card'}`}>
+          <p className={`text-2xl font-bold ${dueThisWeekCount > 0 ? 'text-[var(--rag-amber)]' : 'text-foreground'}`}>
             {dueThisWeekCount}
           </p>
           <p className="text-xs text-muted-foreground">Due This Week</p>
@@ -111,7 +111,7 @@ export function ReconciliationScheduleList({
       {/* Add Button */}
       <button
         onClick={onAdd}
-        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-green-400 hover:text-green-600 transition-colors"
+        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border-2 border-dashed border-[var(--border-default)] rounded-lg text-sm text-muted-foreground hover:border-[var(--rag-green)] hover:text-[var(--rag-green)] transition-colors"
       >
         <Plus className="w-4 h-4" />
         Add Reconciliation Schedule
@@ -166,7 +166,7 @@ export function ReconciliationScheduleList({
                       </span>
                     </div>
                     {schedule.lastCompletedDate && (
-                      <p className="text-xs text-green-600 mt-1">
+                      <p className="text-xs text-[var(--rag-green)] mt-1">
                         Last completed: {formatDate(schedule.lastCompletedDate)}
                       </p>
                     )}
@@ -175,7 +175,7 @@ export function ReconciliationScheduleList({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => onComplete(schedule.id)}
-                      className="p-1.5 rounded-md hover:bg-green-50 text-green-600"
+                      className="p-1.5 rounded-md hover:bg-[var(--rag-green-soft)] text-[var(--rag-green)]"
                       title="Mark as Completed"
                     >
                       <CheckCircle2 className="w-4 h-4" />
@@ -213,7 +213,7 @@ export function ReconciliationScheduleList({
                               onDelete(schedule.id);
                               setOpenMenuId(null);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+                            className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Delete
                           </button>

@@ -87,19 +87,19 @@ export function CFOBriefingCard({
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
         {briefing.keyDecisions?.length > 0 && (
           <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--rag-amber)]" />
             {briefing.keyDecisions.length} decisions
           </span>
         )}
         {briefing.riskAlerts?.length > 0 && (
           <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--rag-red)]" />
             {briefing.riskAlerts.length} risks
           </span>
         )}
         {briefing.recommendations?.length > 0 && (
           <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--rag-green)]" />
             {briefing.recommendations.length} recommendations
           </span>
         )}
@@ -108,8 +108,8 @@ export function CFOBriefingCard({
       {/* Top Risk Alert */}
       {briefing.riskAlerts?.length > 0 && (
         <div className={`mt-3 p-2 rounded text-xs flex items-start gap-1.5 ${
-          briefing.riskAlerts[0].severity === 'critical' ? 'bg-red-50 text-red-700'
-            : 'bg-amber-50 text-amber-700'
+          briefing.riskAlerts[0].severity === 'critical' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
+            : 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
         }`}>
           <AlertTriangle className="w-3 h-3 mt-0.5 shrink-0" />
           <span>{briefing.riskAlerts[0].message}: {briefing.riskAlerts[0].suggestedAction?.slice(0, 100)}</span>

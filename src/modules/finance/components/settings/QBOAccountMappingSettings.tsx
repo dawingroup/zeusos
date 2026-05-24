@@ -226,13 +226,13 @@ export function QBOAccountMappingSettings({
       <div className="mb-4">
         <label className="block text-sm font-medium text-muted-foreground mb-1">
           {ACCOUNT_MAPPING_LABELS[field]}
-          {isRequired && <span className="text-red-500 ml-1">*</span>}
+          {isRequired && <span className="text-[var(--rag-red)] ml-1">*</span>}
         </label>
         <p className="text-xs text-muted-foreground mb-2">{ACCOUNT_MAPPING_DESCRIPTIONS[field]}</p>
         <select
           value={currentValue}
           onChange={(e) => handleAccountChange(field, e.target.value)}
-          className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
           required={isRequired}
         >
           <option value="">-- Select Account --</option>
@@ -256,9 +256,9 @@ export function QBOAccountMappingSettings({
 
   if (!qboAccounts) {
     return (
-      <div className="p-8 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <h3 className="text-yellow-800 font-semibold mb-2">No QuickBooks Accounts Found</h3>
-        <p className="text-yellow-700 text-sm">
+      <div className="p-8 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg">
+        <h3 className="text-[var(--rag-amber)] font-semibold mb-2">No QuickBooks Accounts Found</h3>
+        <p className="text-[var(--rag-amber)] text-sm">
           Please sync your QuickBooks chart of accounts first before configuring account mappings.
         </p>
       </div>
@@ -278,9 +278,9 @@ export function QBOAccountMappingSettings({
 
       {/* First-time Setup Banner */}
       {isFirstTimeSetup && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="text-blue-800 font-semibold mb-2">First-Time Setup</h3>
-          <p className="text-blue-700 text-sm">
+        <div className="mb-6 p-4 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg">
+          <h3 className="text-[var(--rag-blue)] font-semibold mb-2">First-Time Setup</h3>
+          <p className="text-[var(--rag-blue)] text-sm">
             Map your QuickBooks accounts below, then click Save to activate the integration.
             All 5 required accounts must be mapped.
           </p>
@@ -289,9 +289,9 @@ export function QBOAccountMappingSettings({
 
       {/* Validation Status (only show after config exists) */}
       {!isFirstTimeSetup && validation && !validation.isValid && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-red-800 font-semibold mb-2">Configuration Incomplete</h3>
-          <ul className="list-disc list-inside text-red-700 text-sm">
+        <div className="mb-6 p-4 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+          <h3 className="text-[var(--rag-red)] font-semibold mb-2">Configuration Incomplete</h3>
+          <ul className="list-disc list-inside text-[var(--rag-red)] text-sm">
             {validation.errors.map((error, index) => (
               <li key={index}>{error}</li>
             ))}
@@ -301,9 +301,9 @@ export function QBOAccountMappingSettings({
 
       {/* Warnings */}
       {validation && validation.warnings.length > 0 && (
-        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <h3 className="text-yellow-800 font-semibold mb-2">Recommendations</h3>
-          <ul className="list-disc list-inside text-yellow-700 text-sm">
+        <div className="mb-6 p-4 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-lg">
+          <h3 className="text-[var(--rag-amber)] font-semibold mb-2">Recommendations</h3>
+          <ul className="list-disc list-inside text-[var(--rag-amber)] text-sm">
             {validation.warnings.map((warning, index) => (
               <li key={index}>{warning}</li>
             ))}
@@ -313,16 +313,16 @@ export function QBOAccountMappingSettings({
 
       {/* Suggestions Banner */}
       {showSuggestions && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+        <div className="mb-6 p-4 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg flex items-center justify-between">
           <div>
-            <h3 className="text-blue-800 font-semibold mb-1">Auto-Detect Mappings?</h3>
-            <p className="text-blue-700 text-sm">
+            <h3 className="text-[var(--rag-blue)] font-semibold mb-1">Auto-Detect Mappings?</h3>
+            <p className="text-[var(--rag-blue)] text-sm">
               We can suggest account mappings based on your QuickBooks account names.
             </p>
           </div>
           <button
             onClick={applySuggestions}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
           >
             Apply Suggestions
           </button>
@@ -457,17 +457,17 @@ export function QBOAccountMappingSettings({
         {/* Summary Stats */}
         {resolutionLog.length > 0 && (
           <div className="grid grid-cols-4 gap-3 mb-4">
-            <div className="p-3 bg-green-50 border border-green-200 rounded-md text-center">
-              <div className="text-lg font-bold text-green-800">
+            <div className="p-3 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-md text-center">
+              <div className="text-lg font-bold text-[var(--rag-green)]">
                 {resolutionLog.filter(e => e.matchType === 'exact' || e.matchType === 'linked').length}
               </div>
-              <div className="text-xs text-green-700">Exact Matches</div>
+              <div className="text-xs text-[var(--rag-green)]">Exact Matches</div>
             </div>
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-md text-center">
-              <div className="text-lg font-bold text-blue-800">
+            <div className="p-3 bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-md text-center">
+              <div className="text-lg font-bold text-[var(--rag-blue)]">
                 {resolutionLog.filter(e => e.matchType === 'fuzzy').length}
               </div>
-              <div className="text-xs text-blue-700">Fuzzy Matches</div>
+              <div className="text-xs text-[var(--rag-blue)]">Fuzzy Matches</div>
             </div>
             <div className="p-3 bg-purple-50 border border-purple-200 rounded-md text-center">
               <div className="text-lg font-bold text-purple-800">
@@ -475,11 +475,11 @@ export function QBOAccountMappingSettings({
               </div>
               <div className="text-xs text-purple-700">Auto-Created</div>
             </div>
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-md text-center">
-              <div className="text-lg font-bold text-amber-800">
+            <div className="p-3 bg-[var(--rag-amber-soft)] border border-[var(--rag-amber)] rounded-md text-center">
+              <div className="text-lg font-bold text-[var(--rag-amber)]">
                 {resolutionLog.filter(e => e.status === 'pending-review').length}
               </div>
-              <div className="text-xs text-amber-700">Pending Review</div>
+              <div className="text-xs text-[var(--rag-amber)]">Pending Review</div>
             </div>
           </div>
         )}
@@ -505,7 +505,7 @@ export function QBOAccountMappingSettings({
               </thead>
               <tbody className="bg-card divide-y divide-[var(--border-subtle)]">
                 {resolutionLog.map((entry) => (
-                  <tr key={entry.id} className={entry.status === 'pending-review' ? 'bg-amber-50' : ''}>
+                  <tr key={entry.id} className={entry.status === 'pending-review' ? 'bg-[var(--rag-amber-soft)]' : ''}>
                     <td className="px-3 py-2 text-sm text-foreground">
                       <div className="font-medium">{entry.dawinosName}</div>
                       {entry.dawinosSku && (
@@ -515,8 +515,8 @@ export function QBOAccountMappingSettings({
                     <td className="px-3 py-2 text-sm text-muted-foreground">{entry.qboItemName}</td>
                     <td className="px-3 py-2">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                        entry.matchType === 'exact' ? 'bg-green-100 text-green-800' :
-                        entry.matchType === 'fuzzy' ? 'bg-blue-100 text-blue-800' :
+                        entry.matchType === 'exact' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                        entry.matchType === 'fuzzy' ? 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' :
                         entry.matchType === 'created' ? 'bg-purple-100 text-purple-800' :
                         'bg-[var(--bg-sunken)] text-foreground'
                       }`}>
@@ -529,10 +529,10 @@ export function QBOAccountMappingSettings({
                     <td className="px-3 py-2">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                         entry.status === 'auto-approved' || entry.status === 'user-approved'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                           : entry.status === 'pending-review'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-red-100 text-red-800'
+                          ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
+                          : 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                       }`}>
                         {entry.status.replace('-', ' ')}
                       </span>
@@ -558,7 +558,7 @@ export function QBOAccountMappingSettings({
                               }
                             }}
                             disabled={resolutionLoading}
-                            className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                            className="px-2 py-1 text-xs bg-[var(--rag-green)] text-white rounded hover:bg-[var(--rag-green)] disabled:opacity-50"
                           >
                             Approve
                           </button>
@@ -580,7 +580,7 @@ export function QBOAccountMappingSettings({
                               }
                             }}
                             disabled={resolutionLoading}
-                            className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                            className="px-2 py-1 text-xs bg-[var(--rag-red)] text-white rounded hover:bg-[var(--rag-red)] disabled:opacity-50"
                           >
                             Reject
                           </button>
@@ -611,7 +611,7 @@ export function QBOAccountMappingSettings({
             value="capitalize"
             checked={landedCostMethod === 'capitalize'}
             onChange={() => setLandedCostMethod('capitalize')}
-            className="mt-1 h-4 w-4 border-[var(--border-default)] text-green-600 focus:ring-green-500"
+            className="mt-1 h-4 w-4 border-[var(--border-default)] text-[var(--rag-green)] focus:ring-[var(--rag-green)]"
           />
           <div>
             <span className="text-sm font-medium text-foreground">
@@ -631,7 +631,7 @@ export function QBOAccountMappingSettings({
             value="expense"
             checked={landedCostMethod === 'expense'}
             onChange={() => setLandedCostMethod('expense')}
-            className="mt-1 h-4 w-4 border-[var(--border-default)] text-green-600 focus:ring-green-500"
+            className="mt-1 h-4 w-4 border-[var(--border-default)] text-[var(--rag-green)] focus:ring-[var(--rag-green)]"
           />
           <div>
             <span className="text-sm font-medium text-foreground">
@@ -646,8 +646,8 @@ export function QBOAccountMappingSettings({
         </label>
 
         {landedCostMethod === 'capitalize' && (
-          <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-md mb-4">
-            <p className="text-xs text-green-800">
+          <div className="mt-2 p-3 bg-[var(--rag-green-soft)] border border-[var(--rag-green)] rounded-md mb-4">
+            <p className="text-xs text-[var(--rag-green)]">
               All landed cost line items on QBO bills will be posted to your Inventory Asset account.
               No separate expense account mapping is needed.
             </p>
@@ -674,13 +674,13 @@ export function QBOAccountMappingSettings({
           PO Traceability on Bills
         </h3>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-4">
-          <p className="text-sm text-blue-800 font-medium mb-3">
+        <div className="bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-md p-4 mb-4">
+          <p className="text-sm text-[var(--rag-blue)] font-medium mb-3">
             Every synced bill includes PO references for full traceability in QBO reports
           </p>
-          <div className="space-y-2.5 text-xs text-blue-700">
+          <div className="space-y-2.5 text-xs text-[var(--rag-blue)]">
             <div className="flex items-start gap-2">
-              <span className="mt-0.5 text-blue-500 font-bold">&#10003;</span>
+              <span className="mt-0.5 text-[var(--rag-blue)] font-bold">&#10003;</span>
               <div>
                 <span className="font-medium">Private Note / Memo</span> &mdash; Each bill includes
                 &quot;ZeusOS Purchase Order: PO-XXXX-XXX&quot;.
@@ -688,7 +688,7 @@ export function QBOAccountMappingSettings({
               </div>
             </div>
             <div className="flex items-start gap-2">
-              <span className="mt-0.5 text-blue-500 font-bold">&#10003;</span>
+              <span className="mt-0.5 text-[var(--rag-blue)] font-bold">&#10003;</span>
               <div>
                 <span className="font-medium">Line Descriptions</span> &mdash; Every line item is prefixed
                 with the PO number, e.g. &quot;[PO-2024-001] Oak Plywood 18mm (SKU: PLY-018)&quot;.
@@ -696,7 +696,7 @@ export function QBOAccountMappingSettings({
               </div>
             </div>
             <div className="flex items-start gap-2">
-              <span className="mt-0.5 text-blue-500 font-bold">&#10003;</span>
+              <span className="mt-0.5 text-[var(--rag-blue)] font-bold">&#10003;</span>
               <div>
                 <span className="font-medium">Doc Number</span> &mdash; The bill&apos;s DocNumber uses the
                 ZeusOS PO number for easy cross-referencing between systems.
@@ -730,7 +730,7 @@ export function QBOAccountMappingSettings({
                 setBatchUpdating(false);
               }
             }}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-white bg-[var(--rag-blue)] rounded-md hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {batchUpdating ? 'Updating...' : 'Sync Bill Numbers'}
           </button>
@@ -739,7 +739,7 @@ export function QBOAccountMappingSettings({
           </span>
         </div>
         {batchResult && (
-          <div className={`mt-2 text-sm rounded-md p-3 ${batchResult.startsWith('Error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+          <div className={`mt-2 text-sm rounded-md p-3 ${batchResult.startsWith('Error') ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' : 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'}`}>
             {batchResult}
           </div>
         )}
@@ -753,7 +753,7 @@ export function QBOAccountMappingSettings({
             type="checkbox"
             checked={autoCreateBills}
             onChange={(e) => setAutoCreateBills(e.target.checked)}
-            className="h-4 w-4 rounded border-[var(--border-default)] text-green-600 focus:ring-green-500"
+            className="h-4 w-4 rounded border-[var(--border-default)] text-[var(--rag-green)] focus:ring-[var(--rag-green)]"
           />
           <div>
             <span className="text-sm font-medium text-foreground">
@@ -790,7 +790,7 @@ export function QBOAccountMappingSettings({
                   value={opt.value}
                   checked={taxMode === opt.value}
                   onChange={() => setTaxMode(opt.value)}
-                  className="mt-0.5 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 text-[var(--rag-blue)] focus:ring-[var(--rag-blue)]"
                 />
                 <div>
                   <p className="text-sm font-medium text-foreground">{opt.label}</p>
@@ -816,7 +816,7 @@ export function QBOAccountMappingSettings({
                   value={taxCodeNoVat}
                   onChange={(e) => setTaxCodeNoVat(e.target.value)}
                   placeholder="e.g. NON or 7"
-                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 />
               </div>
               <div>
@@ -826,7 +826,7 @@ export function QBOAccountMappingSettings({
                   value={taxCodeStandardVat}
                   onChange={(e) => setTaxCodeStandardVat(e.target.value)}
                   placeholder="e.g. TAX or 5"
-                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 />
               </div>
               <div>
@@ -836,7 +836,7 @@ export function QBOAccountMappingSettings({
                   value={taxCodeZeroRated}
                   onChange={(e) => setTaxCodeZeroRated(e.target.value)}
                   placeholder="e.g. Z or 6"
-                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-blue)]"
                 />
               </div>
             </div>
@@ -858,7 +858,7 @@ export function QBOAccountMappingSettings({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2 bg-[var(--rag-green)] text-white rounded-md hover:bg-[var(--rag-green)] focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? 'Saving...' : 'Save Configuration'}
         </button>

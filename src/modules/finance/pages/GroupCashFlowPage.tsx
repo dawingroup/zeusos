@@ -149,7 +149,7 @@ export default function GroupCashFlowPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <AlertTriangle className="h-3 w-3 text-red-500" /> Critical Items
+              <AlertTriangle className="h-3 w-3 text-[var(--rag-red)]" /> Critical Items
             </span>
           }
           value={totalCritical}
@@ -159,7 +159,7 @@ export default function GroupCashFlowPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <TrendingUp className="h-3 w-3 text-blue-500" /> Subsidiaries Active
+              <TrendingUp className="h-3 w-3 text-[var(--rag-blue)]" /> Subsidiaries Active
             </span>
           }
           value={subsidiaries.length}
@@ -173,7 +173,7 @@ export default function GroupCashFlowPage() {
           <Card
             key={sub.id}
             className={`p-4 cursor-pointer transition-all border-2 ${
-              subsidiaryFilter === sub.id ? 'border-blue-500 bg-blue-50/30' : 'border-transparent hover:border-[var(--border-subtle)]'
+              subsidiaryFilter === sub.id ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]/30' : 'border-transparent hover:border-[var(--border-subtle)]'
             }`}
             onClick={() => setSubsidiaryFilter(subsidiaryFilter === sub.id ? '' : sub.id)}
           >
@@ -182,7 +182,7 @@ export default function GroupCashFlowPage() {
             <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
               <span>{sub.pendingCount} items</span>
               {sub.criticalCount > 0 && (
-                <span className="text-red-600 font-medium">
+                <span className="text-[var(--rag-red)] font-medium">
                   {sub.criticalCount} critical
                 </span>
               )}

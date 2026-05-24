@@ -109,7 +109,7 @@ export function ScenarioAnalysisPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -170,7 +170,7 @@ export function ScenarioAnalysisPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => removeModification(mod.id)}
-                        className="text-[var(--fg-tertiary)] hover:text-red-500"
+                        className="text-[var(--fg-tertiary)] hover:text-[var(--rag-red)]"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
@@ -229,12 +229,12 @@ export function ScenarioAnalysisPage() {
                   </div>
                   <div className={`p-3 rounded-lg ${
                     (latestResult.modified?.cashPosition || 0) > (latestResult.baseline?.cashPosition || 0)
-                      ? 'bg-green-50' : 'bg-red-50'
+                      ? 'bg-[var(--rag-green-soft)]' : 'bg-[var(--rag-red-soft)]'
                   }`}>
                     <p className="text-xs text-muted-foreground mb-1">Scenario Cash</p>
                     <p className={`text-lg font-bold ${
                       (latestResult.modified?.cashPosition || 0) > (latestResult.baseline?.cashPosition || 0)
-                        ? 'text-green-600' : 'text-red-600'
+                        ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                     }`}>
                       {formatUGX(latestResult.modified?.cashPosition || 0)}
                     </p>
@@ -263,7 +263,7 @@ export function ScenarioAnalysisPage() {
                   <h4 className="text-sm font-semibold text-foreground mb-2">Recommendations</h4>
                   <div className="space-y-1.5">
                     {latestResult.analysis!.recommendations.map((rec: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-2 text-sm text-green-700">
+                      <div key={idx} className="flex items-start gap-2 text-sm text-[var(--rag-green)]">
                         <span className="shrink-0">&#x2022;</span>
                         <span>{rec}</span>
                       </div>
@@ -278,7 +278,7 @@ export function ScenarioAnalysisPage() {
                   <h4 className="text-sm font-semibold text-foreground mb-2">Tradeoffs</h4>
                   <div className="space-y-1.5">
                     {latestResult.analysis!.tradeoffs.map((t: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-2 text-sm text-amber-700">
+                      <div key={idx} className="flex items-start gap-2 text-sm text-[var(--rag-amber)]">
                         <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                         <span>{t}</span>
                       </div>
@@ -311,18 +311,18 @@ export function ScenarioAnalysisPage() {
                 onClick={() => setLatestResult(result)}
               >
                 <span className={`w-2 h-2 rounded-full shrink-0 ${
-                  result.analysis?.impact === 'positive' ? 'bg-green-500'
-                    : result.analysis?.impact === 'negative' ? 'bg-red-500'
+                  result.analysis?.impact === 'positive' ? 'bg-[var(--rag-green)]'
+                    : result.analysis?.impact === 'negative' ? 'bg-[var(--rag-red)]'
                       : 'bg-[var(--bg-sunken)]'
                 }`} />
                 <span className="text-sm font-medium text-foreground flex-1 truncate">
                   {result.scenarioName}
                 </span>
                 <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${
-                  result.analysis?.riskAssessment === 'critical' ? 'bg-red-50 text-red-700'
-                    : result.analysis?.riskAssessment === 'high' ? 'bg-orange-50 text-orange-700'
-                      : result.analysis?.riskAssessment === 'medium' ? 'bg-amber-50 text-amber-700'
-                        : 'bg-green-50 text-green-700'
+                  result.analysis?.riskAssessment === 'critical' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
+                    : result.analysis?.riskAssessment === 'high' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
+                      : result.analysis?.riskAssessment === 'medium' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
+                        : 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
                 }`}>
                   {result.analysis?.riskAssessment || 'N/A'}
                 </span>

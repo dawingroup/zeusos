@@ -85,21 +85,21 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
       {/* Revenue */}
       <div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-green-400" />
+          <span className="w-3 h-3 rounded-full bg-[var(--rag-green)]" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">REVENUE</span>
         </div>
         <p className="text-xl font-bold text-foreground mt-1">{fmtFull(prof.revenue)}</p>
-        <TopAccountsList items={topRevenue} color="text-green-600" />
+        <TopAccountsList items={topRevenue} color="text-[var(--rag-green)]" />
       </div>
 
       {/* Total Costs */}
       <div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-red-400" />
+          <span className="w-3 h-3 rounded-full bg-[var(--rag-red)]" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">TOTAL COSTS</span>
         </div>
         <p className="text-xl font-bold text-foreground mt-1">{fmtFull(be.totalCosts)}</p>
-        <TopAccountsList items={topCosts} color="text-red-600" />
+        <TopAccountsList items={topCosts} color="text-[var(--rag-red)]" />
       </div>
 
       {/* Breakeven Point */}
@@ -115,7 +115,7 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
 
       <div className="border-t pt-4">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">MARGIN OF SAFETY</p>
-        <p className={`text-xl font-bold mt-1 ${isNegSafety ? 'text-red-600' : 'text-green-600'}`}>
+        <p className={`text-xl font-bold mt-1 ${isNegSafety ? 'text-[var(--rag-red)]' : 'text-[var(--rag-green)]'}`}>
           {isNegSafety ? '-' : ''}{fmtFull(Math.abs(be.marginOfSafety))}
         </p>
       </div>
@@ -123,7 +123,7 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
       <div className="border-t pt-4 space-y-4">
         <div>
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-400 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-[var(--rag-red)] inline-block" />
             VARIABLE COSTS
           </p>
           <p className="text-sm text-muted-foreground mt-1">
@@ -132,7 +132,7 @@ function BreakevenSummary({ be, prof, topRevenue, topCosts }: {
         </div>
         <div>
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-[var(--rag-amber)] inline-block" />
             FIXED COSTS
           </p>
           <p className="text-sm text-muted-foreground mt-1">
@@ -296,7 +296,7 @@ export function ProfitabilityPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">{error}</div>
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">{error}</div>
       )}
 
       {prof && be && (
@@ -430,10 +430,10 @@ export function ProfitabilityPage() {
               {/* Legend */}
               <div className="flex flex-wrap gap-4 mt-3 justify-center text-[10px]">
                 {[
-                  { color: 'bg-green-500', label: 'REVENUE' },
-                  { color: 'bg-red-500', label: 'TOTAL COSTS' },
-                  { color: 'bg-orange-500', label: 'VARIABLE COSTS' },
-                  { color: 'bg-amber-500', label: 'FIXED COSTS' },
+                  { color: 'bg-[var(--rag-green)]', label: 'REVENUE' },
+                  { color: 'bg-[var(--rag-red)]', label: 'TOTAL COSTS' },
+                  { color: 'bg-[var(--rag-amber)]', label: 'VARIABLE COSTS' },
+                  { color: 'bg-[var(--rag-amber)]', label: 'FIXED COSTS' },
                 ].map(l => (
                   <span key={l.label} className="flex items-center gap-1.5 text-muted-foreground">
                     <span className={`w-3 h-1.5 rounded-sm ${l.color}`} />

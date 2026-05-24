@@ -34,10 +34,10 @@ const STATUS_TABS: { id: StatusFilter; label: string }[] = [
 
 const STATUS_COLORS: Record<AccountabilityReport['status'], string> = {
   draft: 'bg-[var(--bg-sunken)] text-muted-foreground',
-  submitted: 'bg-blue-100 text-blue-700',
-  under_review: 'bg-amber-100 text-amber-700',
-  approved: 'bg-green-100 text-green-700',
-  rejected: 'bg-red-100 text-red-700',
+  submitted: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]',
+  under_review: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]',
+  approved: 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]',
+  rejected: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]',
 };
 
 const STATUS_LABELS: Record<AccountabilityReport['status'], string> = {
@@ -149,11 +149,11 @@ export function AccountabilityPage() {
             &larr; Operations
           </Link>
         </div>
-        <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-center">
-          <p className="text-red-700">{error}</p>
+        <div className="p-6 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg text-center">
+          <p className="text-[var(--rag-red)]">{error}</p>
           <button
             onClick={refresh}
-            className="mt-3 text-sm text-red-600 hover:underline"
+            className="mt-3 text-sm text-[var(--rag-red)] hover:underline"
           >
             Try Again
           </button>
@@ -179,7 +179,7 @@ export function AccountabilityPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--rag-green)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-green)] transition-colors"
         >
           <Plus className="w-4 h-4" />
           New Report
@@ -194,7 +194,7 @@ export function AccountabilityPage() {
             onClick={() => setStatusFilter(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
               statusFilter === tab.id
-                ? 'bg-card text-green-700 shadow-sm'
+                ? 'bg-card text-[var(--rag-green)] shadow-sm'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -251,7 +251,7 @@ export function AccountabilityPage() {
             <p className="text-sm text-muted-foreground">No accountability reports found</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-3 text-sm text-green-600 hover:underline"
+              className="mt-3 text-sm text-[var(--rag-green)] hover:underline"
             >
               Create your first report
             </button>
@@ -398,7 +398,7 @@ function NewReportFormModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Q1 Marketing Expenses"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -407,7 +407,7 @@ function NewReportFormModal({
             <select
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
             >
               {DEPARTMENTS.map((dept) => (
                 <option key={dept} value={dept}>
@@ -425,7 +425,7 @@ function NewReportFormModal({
               placeholder="0.00"
               min="0"
               step="0.01"
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)]"
               required
             />
           </div>
@@ -436,7 +436,7 @@ function NewReportFormModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the expenses and purpose..."
               rows={3}
-              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+              className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-green)] resize-none"
             />
           </div>
           <div className="flex justify-end gap-2 pt-2">
@@ -450,7 +450,7 @@ function NewReportFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[var(--rag-green)] text-white rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Report'}
             </button>
@@ -600,7 +600,7 @@ function ReportDetailPanel({
                   <button
                     onClick={handleApprove}
                     disabled={processing}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-green)] text-white text-sm font-medium rounded-lg hover:bg-[var(--rag-green)] disabled:opacity-50 transition-colors"
                   >
                     <CheckCircle className="w-4 h-4" />
                     Approve
@@ -608,7 +608,7 @@ function ReportDetailPanel({
                   <button
                     onClick={() => setShowRejectForm(true)}
                     disabled={processing}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-700 text-sm font-medium rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-sm font-medium rounded-lg hover:bg-[var(--rag-red-soft)] disabled:opacity-50 transition-colors"
                   >
                     <XCircle className="w-4 h-4" />
                     Reject
@@ -621,7 +621,7 @@ function ReportDetailPanel({
                     onChange={(e) => setRejectNotes(e.target.value)}
                     placeholder="Reason for rejection (required)..."
                     rows={3}
-                    className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                    className="w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--rag-red)] resize-none"
                   />
                   <div className="flex gap-2">
                     <button
@@ -633,7 +633,7 @@ function ReportDetailPanel({
                     <button
                       onClick={handleReject}
                       disabled={processing || !rejectNotes.trim()}
-                      className="flex-1 px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                      className="flex-1 px-4 py-2 text-sm bg-[var(--rag-red)] text-white rounded-lg hover:bg-[var(--rag-red)] disabled:opacity-50"
                     >
                       {processing ? 'Rejecting...' : 'Confirm Rejection'}
                     </button>

@@ -138,11 +138,11 @@ export function ValueRuleEditor({
               onClick={() => setRuleType(opt.value)}
               className={`text-left border rounded-lg px-3 py-2 transition-colors ${
                 ruleType === opt.value
-                  ? 'border-blue-500 bg-blue-50'
+                  ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)]'
                   : 'border-[var(--border-subtle)] hover:border-[var(--border-default)] bg-card'
               }`}
             >
-              <p className={`text-sm font-medium ${ruleType === opt.value ? 'text-blue-700' : 'text-muted-foreground'}`}>
+              <p className={`text-sm font-medium ${ruleType === opt.value ? 'text-[var(--rag-blue)]' : 'text-muted-foreground'}`}>
                 {opt.label}
               </p>
               <p className="text-xs text-[var(--fg-tertiary)] mt-0.5">{opt.description}</p>
@@ -166,7 +166,7 @@ export function ValueRuleEditor({
                     onClick={() => setSpMethod(m)}
                     className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                       spMethod === m
-                        ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
+                        ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] font-medium'
                         : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                     }`}
                   >
@@ -248,7 +248,7 @@ export function ValueRuleEditor({
             <div>
               <label className="text-sm font-medium text-muted-foreground">Budget</label>
               {budgets.length === 0 ? (
-                <p className="text-sm text-yellow-600 mt-1">No budgets available. Create a budget first in the Budgets tab.</p>
+                <p className="text-sm text-[var(--rag-amber)] mt-1">No budgets available. Create a budget first in the Budgets tab.</p>
               ) : (
                 <select
                   value={lbBudgetId}
@@ -282,7 +282,7 @@ export function ValueRuleEditor({
         {currentRule ? (
           <button
             onClick={onDelete}
-            className="text-xs text-red-400 hover:text-red-600 underline"
+            className="text-xs text-[var(--rag-red)] hover:text-[var(--rag-red)] underline"
             disabled={saving}
           >
             Remove rule

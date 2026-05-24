@@ -224,7 +224,7 @@ function WaterfallItemRow({
         <span
           className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded shrink-0 ${
             addLabel === 'ADD'
-              ? 'text-green-700 bg-green-50'
+              ? 'text-[var(--rag-green)] bg-[var(--rag-green-soft)]'
               : 'text-[var(--fg-tertiary)] bg-[var(--bg-sunken)]'
           }`}
         >
@@ -254,7 +254,7 @@ function WaterfallItemRow({
         ) : (
           <div
             className={`absolute top-0.5 bottom-0.5 rounded-sm ${
-              isPositive ? 'bg-green-500' : 'bg-red-500'
+              isPositive ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-red)]'
             }`}
             style={{
               left: `${barLeftPct}%`,
@@ -342,7 +342,7 @@ function WaterfallSummaryRow({
         {/* Amount right of arrow tip */}
         <span
           className={`absolute top-0 bottom-0 flex items-center text-base font-bold whitespace-nowrap pl-1 ${
-            value < 0 ? 'text-red-700' : 'text-foreground'
+            value < 0 ? 'text-[var(--rag-red)]' : 'text-foreground'
           }`}
           style={{ left: `${Math.max(valPctInBar, 2) + 0.5}%` }}
         >
@@ -496,7 +496,7 @@ export function CashFlowPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}
@@ -524,11 +524,11 @@ export function CashFlowPage() {
               <div className="flex items-end border-b border-[var(--border-subtle)] pb-0.5">
                 <div className="w-[40%] shrink-0 flex items-center gap-4 pl-3 pb-1.5">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3.5 h-2.5 rounded-sm bg-green-500" />
+                    <div className="w-3.5 h-2.5 rounded-sm bg-[var(--rag-green)]" />
                     <span className="text-xs text-[var(--fg-tertiary)]">Cash Received</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-3.5 h-2.5 rounded-sm bg-red-500" />
+                    <div className="w-3.5 h-2.5 rounded-sm bg-[var(--rag-red)]" />
                     <span className="text-xs text-[var(--fg-tertiary)]">Cash Spent</span>
                   </div>
                 </div>

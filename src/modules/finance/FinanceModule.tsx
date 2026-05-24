@@ -37,7 +37,7 @@ const QBOSyncDashboardPage = lazyWithRetry(() => import('./pages/QBOSyncDashboar
 const AccountMappingsPage = lazyWithRetry(() => import('./pages/AccountMappingsPage'));
 
 function Fallback() {
-  return <div className="flex items-center justify-center h-32"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600" /></div>;
+  return <div className="flex items-center justify-center h-32"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--rag-green)]" /></div>;
 }
 
 export function FinanceModule() {

@@ -52,9 +52,9 @@ function fmtK(v: number): string {
 }
 
 const TAB_CONFIG: Array<{ id: MicroTab; label: string; icon: typeof Wrench; color: string }> = [
-  { id: 'capex',     label: 'CapEx',          icon: Wrench,       color: 'text-orange-600 bg-orange-50 border-orange-200' },
-  { id: 'loans',     label: 'Loans',          icon: Landmark,     color: 'text-blue-600 bg-blue-50 border-blue-200' },
-  { id: 'capital',   label: 'Capital Events', icon: TrendingUp,   color: 'text-green-600 bg-green-50 border-green-200' },
+  { id: 'capex',     label: 'CapEx',          icon: Wrench,       color: 'text-[var(--rag-amber)] bg-[var(--rag-amber-soft)] border-[var(--rag-amber)]' },
+  { id: 'loans',     label: 'Loans',          icon: Landmark,     color: 'text-[var(--rag-blue)] bg-[var(--rag-blue-soft)] border-[var(--rag-blue)]' },
+  { id: 'capital',   label: 'Capital Events', icon: TrendingUp,   color: 'text-[var(--rag-green)] bg-[var(--rag-green-soft)] border-[var(--rag-green)]' },
   { id: 'dividends', label: 'Dividends',      icon: Coins,        color: 'text-purple-600 bg-purple-50 border-purple-200' },
 ];
 
@@ -98,7 +98,7 @@ export function RoadmapTimeline({
   }
 
   const colorMap: Record<MicroTab, string> = {
-    capex: 'bg-orange-400', loans: 'bg-blue-400', capital: 'bg-green-400', dividends: 'bg-purple-400',
+    capex: 'bg-[var(--rag-amber)]', loans: 'bg-[var(--rag-blue)]', capital: 'bg-[var(--rag-green)]', dividends: 'bg-purple-400',
   };
 
   return (
@@ -340,7 +340,7 @@ function LoanForm({
                 onClick={() => setPaymentType(pt)}
                 className={`flex-1 text-xs py-1.5 px-2 rounded border transition-colors ${
                   paymentType === pt
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
+                    ? 'border-[var(--rag-blue)] bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] font-medium'
                     : 'border-[var(--border-subtle)] text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
@@ -534,7 +534,7 @@ function ItemRow({
         <span className="font-semibold">{fmtK(amount)}</span>
         <button
           onClick={onDelete}
-          className="text-[var(--fg-tertiary)] hover:text-red-500 transition-colors p-0.5"
+          className="text-[var(--fg-tertiary)] hover:text-[var(--rag-red)] transition-colors p-0.5"
           title="Remove"
         >
           <Trash2 className="h-3 w-3" />
@@ -611,7 +611,7 @@ export function MicroForecastContent({
                     sublabel={`${periodLabel(item.period)} · ${item.usefulLifeMonths}mo life · ${item.depreciationMethod === 'straight_line' ? 'SL D&A' : 'No D&A'}`}
                     amount={item.amount}
                     onDelete={() => onDeleteCapEx(item.id)}
-                    color="bg-orange-50 border-orange-200 text-orange-800"
+                    color="bg-[var(--rag-amber-soft)] border-[var(--rag-amber)] text-[var(--rag-amber)]"
                   />
                 ))}
               </div>
@@ -634,7 +634,7 @@ export function MicroForecastContent({
                     sublabel={`${periodLabel(item.startPeriod)} · ${(item.annualRate * 100).toFixed(1)}% · ${item.termMonths}mo · ${item.paymentType}`}
                     amount={item.principal}
                     onDelete={() => onDeleteLoan(item.id)}
-                    color="bg-blue-50 border-blue-200 text-blue-800"
+                    color="bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]"
                   />
                 ))}
               </div>
@@ -657,7 +657,7 @@ export function MicroForecastContent({
                     sublabel={`${periodLabel(item.period)} · ${item.type === 'equity_raise' ? 'Raise' : 'Buyback'}`}
                     amount={item.amount}
                     onDelete={() => onDeleteCapitalEvent(item.id)}
-                    color="bg-green-50 border-green-200 text-green-800"
+                    color="bg-[var(--rag-green-soft)] border-[var(--rag-green)] text-[var(--rag-green)]"
                   />
                 ))}
               </div>
@@ -801,7 +801,7 @@ export function MicroForecastPanel({
                         sublabel={`${periodLabel(item.period)} · ${item.usefulLifeMonths}mo life · ${item.depreciationMethod === 'straight_line' ? 'SL D&A' : 'No D&A'}`}
                         amount={item.amount}
                         onDelete={() => onDeleteCapEx(item.id)}
-                        color="bg-orange-50 border-orange-200 text-orange-800"
+                        color="bg-[var(--rag-amber-soft)] border-[var(--rag-amber)] text-[var(--rag-amber)]"
                       />
                     ))}
                   </div>
@@ -824,7 +824,7 @@ export function MicroForecastPanel({
                         sublabel={`${periodLabel(item.startPeriod)} · ${(item.annualRate * 100).toFixed(1)}% · ${item.termMonths}mo · ${item.paymentType}`}
                         amount={item.principal}
                         onDelete={() => onDeleteLoan(item.id)}
-                        color="bg-blue-50 border-blue-200 text-blue-800"
+                        color="bg-[var(--rag-blue-soft)] border-[var(--rag-blue)] text-[var(--rag-blue)]"
                       />
                     ))}
                   </div>
@@ -847,7 +847,7 @@ export function MicroForecastPanel({
                         sublabel={`${periodLabel(item.period)} · ${item.type === 'equity_raise' ? 'Raise' : 'Buyback'}`}
                         amount={item.amount}
                         onDelete={() => onDeleteCapitalEvent(item.id)}
-                        color="bg-green-50 border-green-200 text-green-800"
+                        color="bg-[var(--rag-green-soft)] border-[var(--rag-green)] text-[var(--rag-green)]"
                       />
                     ))}
                   </div>

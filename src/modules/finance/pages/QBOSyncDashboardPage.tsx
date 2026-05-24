@@ -170,8 +170,8 @@ export default function QBOSyncDashboardPage() {
 
         {isConnected ? (
           <div className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+            <div className="flex items-center justify-center w-12 h-12 bg-[var(--rag-green-soft)] rounded-full">
+              <CheckCircle className="h-6 w-6 text-[var(--rag-green)]" />
             </div>
             <div>
               <p className="font-medium text-foreground">Connected to QuickBooks</p>
@@ -187,8 +187,8 @@ export default function QBOSyncDashboardPage() {
           </div>
         ) : (
           <div className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-              <XCircle className="h-6 w-6 text-red-600" />
+            <div className="flex items-center justify-center w-12 h-12 bg-[var(--rag-red-soft)] rounded-full">
+              <XCircle className="h-6 w-6 text-[var(--rag-red)]" />
             </div>
             <div>
               <p className="font-medium text-foreground">Not Connected</p>
@@ -206,7 +206,7 @@ export default function QBOSyncDashboardPage() {
         <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <Package className="h-5 w-5 text-blue-600" />
+              <Package className="h-5 w-5 text-[var(--rag-blue)]" />
               <h3 className="font-medium text-foreground">Suppliers</h3>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function QBOSyncDashboardPage() {
           <button
             onClick={() => handleSyncAll('suppliers')}
             disabled={!isConnected || syncing === 'suppliers'}
-            className="mt-3 w-full px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full px-3 py-1.5 text-sm bg-[var(--rag-blue)] text-white rounded-md hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {syncing === 'suppliers' ? 'Syncing...' : 'Sync All Suppliers'}
           </button>
@@ -234,7 +234,7 @@ export default function QBOSyncDashboardPage() {
           </p>
           <p className="text-sm text-muted-foreground">
             {syncStats.failedPOs > 0 && (
-              <span className="text-red-600">{syncStats.failedPOs} failed</span>
+              <span className="text-[var(--rag-red)]">{syncStats.failedPOs} failed</span>
             )}
             {syncStats.failedPOs === 0 && 'All synced'}
           </p>
@@ -251,7 +251,7 @@ export default function QBOSyncDashboardPage() {
         <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <FileText className="h-5 w-5 text-green-600" />
+              <FileText className="h-5 w-5 text-[var(--rag-green)]" />
               <h3 className="font-medium text-foreground">Quotes</h3>
             </div>
           </div>
@@ -260,14 +260,14 @@ export default function QBOSyncDashboardPage() {
           </p>
           <p className="text-sm text-muted-foreground">
             {syncStats.failedQuotes > 0 && (
-              <span className="text-red-600">{syncStats.failedQuotes} failed</span>
+              <span className="text-[var(--rag-red)]">{syncStats.failedQuotes} failed</span>
             )}
             {syncStats.failedQuotes === 0 && 'All synced'}
           </p>
           <button
             onClick={() => handleSyncAll('quotes')}
             disabled={!isConnected || syncing === 'quotes'}
-            className="mt-3 w-full px-3 py-1.5 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full px-3 py-1.5 text-sm bg-[var(--rag-green)] text-white rounded-md hover:bg-[var(--rag-green)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {syncing === 'quotes' ? 'Syncing...' : 'Retry Failed Quotes'}
           </button>
@@ -277,7 +277,7 @@ export default function QBOSyncDashboardPage() {
         <div className="bg-card rounded-lg shadow-sm border border-[var(--border-subtle)] p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <DollarSign className="h-5 w-5 text-orange-600" />
+              <DollarSign className="h-5 w-5 text-[var(--rag-amber)]" />
               <h3 className="font-medium text-foreground">Manufacturing</h3>
             </div>
           </div>
@@ -286,14 +286,14 @@ export default function QBOSyncDashboardPage() {
           </p>
           <p className="text-sm text-muted-foreground">
             {syncStats.failedMOs > 0 && (
-              <span className="text-red-600">{syncStats.failedMOs} failed</span>
+              <span className="text-[var(--rag-red)]">{syncStats.failedMOs} failed</span>
             )}
             {syncStats.failedMOs === 0 && 'All synced'}
           </p>
           <button
             onClick={() => handleSyncAll('mos')}
             disabled={!isConnected || syncing === 'mos'}
-            className="mt-3 w-full px-3 py-1.5 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full px-3 py-1.5 text-sm bg-[var(--rag-amber)] text-white rounded-md hover:bg-[var(--rag-amber)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {syncing === 'mos' ? 'Syncing...' : 'Retry Failed MOs'}
           </button>
@@ -333,9 +333,9 @@ export default function QBOSyncDashboardPage() {
       </div>
 
       {/* Help Section */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-blue-900 font-semibold mb-2">💡 Integration Tips</h3>
-        <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+      <div className="bg-[var(--rag-blue-soft)] border border-[var(--rag-blue)] rounded-lg p-6">
+        <h3 className="text-[var(--rag-blue)] font-semibold mb-2">💡 Integration Tips</h3>
+        <ul className="text-sm text-[var(--rag-blue)] space-y-1 list-disc list-inside">
           <li>All syncs happen automatically when documents reach the appropriate status</li>
           <li>Use manual sync buttons to retry failed operations</li>
           <li>Configure account mappings in Settings → QuickBooks Configuration</li>
@@ -358,9 +358,9 @@ function WorkflowItem({
   status: 'active' | 'disabled' | 'error';
 }) {
   const statusConfig = {
-    active: { icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-100' },
+    active: { icon: CheckCircle, color: 'text-[var(--rag-green)]', bg: 'bg-[var(--rag-green-soft)]' },
     disabled: { icon: Clock, color: 'text-muted-foreground', bg: 'bg-[var(--bg-sunken)]' },
-    error: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-100' },
+    error: { icon: AlertTriangle, color: 'text-[var(--rag-red)]', bg: 'bg-[var(--rag-red-soft)]' },
   };
 
   const config = statusConfig[status];

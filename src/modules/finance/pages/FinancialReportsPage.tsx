@@ -23,7 +23,7 @@ function ReportRow({ label, value, indent = false, bold = false }: { label: stri
   return (
     <div className={`flex justify-between py-1.5 ${indent ? 'pl-4' : ''} ${bold ? 'font-semibold border-t border-[var(--border-subtle)] mt-1 pt-2' : 'text-sm'}`}>
       <span className="text-muted-foreground">{label}</span>
-      <span className={value < 0 ? 'text-red-600' : 'text-foreground'}>{formatUSD(value)}</span>
+      <span className={value < 0 ? 'text-[var(--rag-red)]' : 'text-foreground'}>{formatUSD(value)}</span>
     </div>
   );
 }
@@ -94,7 +94,7 @@ export function FinancialReportsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 text-green-600" />
+            <BarChart3 className="h-5 w-5 text-[var(--rag-green)]" />
             Financial Reports
           </h2>
           <p className="text-sm text-muted-foreground mt-1">QuickBooks Online synced financial statements</p>
@@ -106,7 +106,7 @@ export function FinancialReportsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600">
+        <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3 text-sm text-[var(--rag-red)]">
           {error}
         </div>
       )}
@@ -119,7 +119,7 @@ export function FinancialReportsPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
               activeTab === tab.id
-                ? 'border-green-600 text-green-600'
+                ? 'border-[var(--rag-green)] text-[var(--rag-green)]'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground'
             }`}
           >
@@ -313,7 +313,7 @@ export function FinancialReportsPage() {
                         <td className="px-4 py-3 font-medium">{acct.fullyQualifiedName || acct.name}</td>
                         <td className="px-4 py-3 text-muted-foreground">{acct.accountType}</td>
                         <td className="px-4 py-3 text-muted-foreground">{acct.classification}</td>
-                        <td className={`px-4 py-3 text-right font-medium ${acct.currentBalance < 0 ? 'text-red-600' : ''}`}>
+                        <td className={`px-4 py-3 text-right font-medium ${acct.currentBalance < 0 ? 'text-[var(--rag-red)]' : ''}`}>
                           {formatUSD(acct.currentBalance)}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground">{acct.currencyRef}</td>

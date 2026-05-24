@@ -79,9 +79,9 @@ function getDaysUntilDue(receipt: ProjectedReceipt): number | null {
 // ────────────────────────────────────────────────────────────────────────────
 
 const CONFIDENCE_STYLES: Record<ConfidenceLevel, { label: string; bg: string; text: string }> = {
-  confirmed: { label: 'Confirmed', bg: 'bg-green-50', text: 'text-green-700' },
-  probable: { label: 'Probable', bg: 'bg-amber-50', text: 'text-amber-700' },
-  possible: { label: 'Possible', bg: 'bg-blue-50', text: 'text-blue-600' },
+  confirmed: { label: 'Confirmed', bg: 'bg-[var(--rag-green-soft)]', text: 'text-[var(--rag-green)]' },
+  probable: { label: 'Probable', bg: 'bg-[var(--rag-amber-soft)]', text: 'text-[var(--rag-amber)]' },
+  possible: { label: 'Possible', bg: 'bg-[var(--rag-blue-soft)]', text: 'text-[var(--rag-blue)]' },
 };
 
 function ConfidenceBadge({ level, score }: { level: ConfidenceLevel; score?: number }) {
@@ -96,9 +96,9 @@ function ConfidenceBadge({ level, score }: { level: ConfidenceLevel; score?: num
 
 const STATUS_STYLES: Record<string, { label: string; bg: string; text: string }> = {
   projected: { label: 'Projected', bg: 'bg-[var(--bg-sunken)]', text: 'text-muted-foreground' },
-  invoiced: { label: 'Invoiced', bg: 'bg-blue-50', text: 'text-blue-700' },
-  overdue: { label: 'Overdue', bg: 'bg-red-50', text: 'text-red-700' },
-  received: { label: 'Received', bg: 'bg-green-50', text: 'text-green-700' },
+  invoiced: { label: 'Invoiced', bg: 'bg-[var(--rag-blue-soft)]', text: 'text-[var(--rag-blue)]' },
+  overdue: { label: 'Overdue', bg: 'bg-[var(--rag-red-soft)]', text: 'text-[var(--rag-red)]' },
+  received: { label: 'Received', bg: 'bg-[var(--rag-green-soft)]', text: 'text-[var(--rag-green)]' },
   cancelled: { label: 'Cancelled', bg: 'bg-[var(--bg-sunken)]', text: 'text-[var(--fg-tertiary)]' },
 };
 
@@ -166,7 +166,7 @@ function ReceiptRow({
       <TableCell>
         {days !== null && (
           <span className={`text-xs font-medium ${
-            days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-muted-foreground'
+            days < 0 ? 'text-[var(--rag-red)]' : days <= 7 ? 'text-[var(--rag-amber)]' : 'text-muted-foreground'
           }`}>
             {days < 0 ? `${Math.abs(days)}d overdue` : days === 0 ? 'Today' : `${days}d`}
           </span>
@@ -287,7 +287,7 @@ export default function ProjectedReceiptsPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Landmark className="h-5 w-5 text-green-600" />
+          <Landmark className="h-5 w-5 text-[var(--rag-green)]" />
           <div>
             <h2 className="text-lg font-semibold">Projected Receipts</h2>
             <p className="text-xs text-[var(--fg-tertiary)]">
@@ -304,7 +304,7 @@ export default function ProjectedReceiptsPage() {
             <Filter className="h-4 w-4 mr-1" />
             Filters
             {hasActiveFilters && (
-              <span className="ml-1 bg-blue-500 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
+              <span className="ml-1 bg-[var(--rag-blue)] text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
                 !
               </span>
             )}
@@ -349,7 +349,7 @@ export default function ProjectedReceiptsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <CheckCircle2 className="h-3 w-3 text-green-500" /> Confirmed
+              <CheckCircle2 className="h-3 w-3 text-[var(--rag-green)]" /> Confirmed
             </span>
           }
           value={formatUGX(summary.confirmedAmount)}
@@ -359,7 +359,7 @@ export default function ProjectedReceiptsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-3 w-3 text-amber-500" /> Probable
+              <Clock className="h-3 w-3 text-[var(--rag-amber)]" /> Probable
             </span>
           }
           value={formatUGX(summary.probableAmount)}
@@ -368,7 +368,7 @@ export default function ProjectedReceiptsPage() {
         <KPICard
           label={
             <span className="inline-flex items-center gap-1.5">
-              <AlertTriangle className="h-3 w-3 text-red-500" /> Overdue
+              <AlertTriangle className="h-3 w-3 text-[var(--rag-red)]" /> Overdue
             </span>
           }
           value={summary.overdueCount}
@@ -547,7 +547,7 @@ export default function ProjectedReceiptsPage() {
                       if (days === null) return null;
                       return (
                         <p className={`text-xs font-medium ${
-                          days < 0 ? 'text-red-600' : days <= 7 ? 'text-amber-600' : 'text-muted-foreground'
+                          days < 0 ? 'text-[var(--rag-red)]' : days <= 7 ? 'text-[var(--rag-amber)]' : 'text-muted-foreground'
                         }`}>
                           {days < 0 ? `${Math.abs(days)} days overdue` : days === 0 ? 'Due today' : `In ${days} days`}
                         </p>
@@ -567,9 +567,9 @@ export default function ProjectedReceiptsPage() {
                 <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${
-                      selectedItem.confidenceScore >= 70 ? 'bg-green-500'
-                        : selectedItem.confidenceScore >= 40 ? 'bg-amber-500'
-                        : 'bg-blue-400'
+                      selectedItem.confidenceScore >= 70 ? 'bg-[var(--rag-green)]'
+                        : selectedItem.confidenceScore >= 40 ? 'bg-[var(--rag-amber)]'
+                        : 'bg-[var(--rag-blue)]'
                     }`}
                     style={{ width: `${selectedItem.confidenceScore}%` }}
                   />
@@ -600,7 +600,7 @@ export default function ProjectedReceiptsPage() {
                   <div className="flex flex-col gap-2">
                     <Button
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)] text-white"
                       onClick={() => openConfirmDialog(selectedItem)}
                     >
                       <DollarSign className="h-4 w-4 mr-1.5" />
@@ -619,7 +619,7 @@ export default function ProjectedReceiptsPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-[var(--rag-red)] hover:text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
                       onClick={() => handleCancelReceipt(selectedItem)}
                     >
                       <Ban className="h-4 w-4 mr-1.5" />
@@ -642,7 +642,7 @@ export default function ProjectedReceiptsPage() {
                       </div>
                       <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                         <div
-                          className="h-2 rounded-full bg-blue-500"
+                          className="h-2 rounded-full bg-[var(--rag-blue)]"
                           style={{ width: `${selectedItem.milestoneCompletionPercent}%` }}
                         />
                       </div>
@@ -701,7 +701,7 @@ export default function ProjectedReceiptsPage() {
                   placeholder="Enter amount received"
                 />
                 {Number(confirmAmount) !== confirmDialog.amount && Number(confirmAmount) > 0 && (
-                  <p className="text-xs text-amber-600">
+                  <p className="text-xs text-[var(--rag-amber)]">
                     {Number(confirmAmount) > confirmDialog.amount ? 'Over' : 'Under'} expected by{' '}
                     {formatUGX(Math.abs(Number(confirmAmount) - confirmDialog.amount))}
                   </p>
@@ -723,7 +723,7 @@ export default function ProjectedReceiptsPage() {
               Cancel
             </Button>
             <Button
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-[var(--rag-green)] hover:bg-[var(--rag-green)] text-white"
               onClick={handleConfirmReceipt}
               disabled={isSubmitting || !confirmAmount}
             >

@@ -29,7 +29,7 @@ export function SubNavPills({ pills }: SubNavPillsProps) {
             onClick={() => navigate(pill.path)}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
               isActive
-                ? 'bg-green-100 text-green-800 border border-green-300'
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border border-[var(--rag-green)]'
                 : 'bg-[var(--bg-sunken)] text-muted-foreground border border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] hover:text-foreground'
             }`}
           >

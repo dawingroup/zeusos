@@ -102,7 +102,7 @@ export function SavingsTrackerPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+        <div className="flex items-center gap-2 p-3 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded-lg text-sm">
           <AlertTriangle className="w-4 h-4" />
           {error}
         </div>
@@ -150,8 +150,8 @@ export function SavingsTrackerPage() {
                   <TableCell className="text-sm">{formatDate(entry.date)}</TableCell>
                   <TableCell>
                     <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${
-                      entry.type === 'allocation' ? 'bg-green-50 text-green-700'
-                        : entry.type === 'withdrawal' ? 'bg-red-50 text-red-700'
+                      entry.type === 'allocation' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]'
+                        : entry.type === 'withdrawal' ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                           : 'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}>
                       {entry.type}
@@ -161,7 +161,7 @@ export function SavingsTrackerPage() {
                     {entry.note}
                   </TableCell>
                   <TableCell className={`text-right text-sm font-medium ${
-                    entry.amount >= 0 ? 'text-green-600' : 'text-red-600'
+                    entry.amount >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
                   }`}>
                     {entry.amount >= 0 ? '+' : ''}{formatUGX(entry.amount)}
                   </TableCell>
@@ -171,11 +171,11 @@ export function SavingsTrackerPage() {
                   <TableCell>
                     {entry.status === 'pending_approval' ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-amber-600">Pending</span>
+                        <span className="text-xs text-[var(--rag-amber)]">Pending</span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-xs h-6 px-2 text-green-600"
+                          className="text-xs h-6 px-2 text-[var(--rag-green)]"
                           onClick={() => approveWithdrawal(entry.id)}
                         >
                           Approve
