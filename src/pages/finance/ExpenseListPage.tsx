@@ -78,7 +78,7 @@ const statusColors: Record<string, string> = {
   pending: 'bg-amber-100 text-amber-800',
   rejected: 'bg-red-100 text-red-800',
   paid: 'bg-blue-100 text-blue-800',
-  draft: 'bg-gray-100 text-gray-800',
+  draft: 'bg-[var(--bg-sunken)] text-foreground',
 };
 
 // Mock expense data
@@ -350,7 +350,7 @@ export function ExpenseListPage() {
                       type="checkbox"
                       checked={allPendingSelected}
                       onChange={handleSelectAll}
-                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      className="h-4 w-4 rounded border-[var(--border-default)] text-primary focus:ring-primary"
                     />
                   </th>
                   <th className="p-3 text-left">
@@ -391,7 +391,7 @@ export function ExpenseListPage() {
                           type="checkbox"
                           checked={selected.includes(expense.id)}
                           onChange={() => handleSelectOne(expense.id)}
-                          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                          className="h-4 w-4 rounded border-[var(--border-default)] text-primary focus:ring-primary"
                         />
                       )}
                     </td>

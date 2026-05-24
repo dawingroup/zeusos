@@ -10,7 +10,7 @@ export default function SignInScreen({ onSignIn, isSigningIn = false, error }: S
   return (
     <div className="w-[400px] h-[500px] bg-gradient-to-b from-[#872E5C] via-[#6B2549] to-[#4A1A33] flex flex-col items-center justify-center p-8">
       {/* Logo */}
-      <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mb-6 ring-4 ring-white/20 shadow-2xl">
+      <div className="w-20 h-20 bg-card/10 backdrop-blur-sm rounded-3xl flex items-center justify-center mb-6 ring-4 ring-white/20 shadow-2xl">
         <span className="text-white font-bold text-3xl">D</span>
       </div>
 
@@ -21,19 +21,19 @@ export default function SignInScreen({ onSignIn, isSigningIn = false, error }: S
 
       {/* Features */}
       <div className="grid grid-cols-2 gap-3 mb-8 w-full max-w-[300px]">
-        <div className="flex items-center gap-2 text-white/80 text-xs bg-white/10 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 text-white/80 text-xs bg-card/10 rounded-lg px-3 py-2">
           <Scissors className="w-4 h-4 text-white/60" />
           <span>One-click clip</span>
         </div>
-        <div className="flex items-center gap-2 text-white/80 text-xs bg-white/10 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 text-white/80 text-xs bg-card/10 rounded-lg px-3 py-2">
           <Cloud className="w-4 h-4 text-white/60" />
           <span>Cloud sync</span>
         </div>
-        <div className="flex items-center gap-2 text-white/80 text-xs bg-white/10 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 text-white/80 text-xs bg-card/10 rounded-lg px-3 py-2">
           <Sparkles className="w-4 h-4 text-white/60" />
           <span>AI analysis</span>
         </div>
-        <div className="flex items-center gap-2 text-white/80 text-xs bg-white/10 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 text-white/80 text-xs bg-card/10 rounded-lg px-3 py-2">
           <Image className="w-4 h-4 text-white/60" />
           <span>Price detection</span>
         </div>
@@ -48,10 +48,10 @@ export default function SignInScreen({ onSignIn, isSigningIn = false, error }: S
       <button
         onClick={onSignIn}
         disabled={isSigningIn}
-        className="flex items-center gap-3 bg-white rounded-xl px-6 py-3.5 hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="flex items-center gap-3 bg-card rounded-xl px-6 py-3.5 hover:bg-[var(--bg-sunken)] transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
         {isSigningIn ? (
-          <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+          <Loader2 className="w-5 h-5 text-[var(--fg-tertiary)] animate-spin" />
         ) : (
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -72,7 +72,7 @@ export default function SignInScreen({ onSignIn, isSigningIn = false, error }: S
             />
           </svg>
         )}
-        <span className="text-sm font-semibold text-gray-700">
+        <span className="text-sm font-semibold text-muted-foreground">
           {isSigningIn ? 'Signing in...' : 'Sign in with Google'}
         </span>
       </button>

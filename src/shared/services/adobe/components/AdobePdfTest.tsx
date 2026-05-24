@@ -131,19 +131,19 @@ export function AdobePdfTest() {
       case 'error':
         return 'text-red-600';
       default:
-        return 'text-gray-600';
+        return 'text-muted-foreground';
     }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-xl">
+    <div className="p-6 bg-card rounded-lg shadow-md max-w-xl">
       <h2 className="text-xl font-bold mb-4">Adobe PDF Services Test</h2>
 
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={testConnectivity}
           disabled={result.status === 'loading'}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--bg-sunken)] hover:bg-[var(--bg-sunken)] rounded disabled:opacity-50"
         >
           Test Connectivity
         </button>
@@ -163,7 +163,7 @@ export function AdobePdfTest() {
         </button>
       </div>
 
-      <div className={`p-4 rounded ${result.status === 'loading' ? 'bg-blue-50' : result.status === 'success' ? 'bg-green-50' : result.status === 'error' ? 'bg-red-50' : 'bg-gray-50'}`}>
+      <div className={`p-4 rounded ${result.status === 'loading' ? 'bg-blue-50' : result.status === 'success' ? 'bg-green-50' : result.status === 'error' ? 'bg-red-50' : 'bg-[var(--bg-sunken)]'}`}>
         <p className={`font-medium ${getStatusColor()}`}>
           {result.status === 'loading' && '⏳ '}
           {result.status === 'success' && '✅ '}
@@ -172,14 +172,14 @@ export function AdobePdfTest() {
         </p>
 
         {(result.data as any) && (
-          <pre className="mt-2 p-2 bg-white rounded text-xs overflow-auto max-h-48">
+          <pre className="mt-2 p-2 bg-card rounded text-xs overflow-auto max-h-48">
             {JSON.stringify(result.data, null, 2).slice(0, 1000)}
             {JSON.stringify(result.data, null, 2).length > 1000 && '...'}
           </pre>
         )}
       </div>
 
-      <p className="mt-4 text-sm text-gray-500">
+      <p className="mt-4 text-sm text-muted-foreground">
         Note: You must be logged in to test these functions.
       </p>
     </div>

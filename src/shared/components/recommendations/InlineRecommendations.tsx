@@ -94,9 +94,9 @@ export function InlineRecommendations({
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg animate-pulse">
-        <Sparkles className="w-4 h-4 text-gray-400" />
-        <span className="text-sm text-gray-400">Finding recommendations...</span>
+      <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-sunken)] rounded-lg animate-pulse">
+        <Sparkles className="w-4 h-4 text-[var(--fg-tertiary)]" />
+        <span className="text-sm text-[var(--fg-tertiary)]">Finding recommendations...</span>
       </div>
     );
   }
@@ -125,7 +125,7 @@ export function InlineRecommendations({
           );
         })}
         {visibleItems.length > maxVisible && (
-          <span className="text-xs text-gray-400 flex-shrink-0">
+          <span className="text-xs text-[var(--fg-tertiary)] flex-shrink-0">
             +{visibleItems.length - maxVisible} more
           </span>
         )}
@@ -146,8 +146,8 @@ export function InlineRecommendations({
       {/* Header */}
       <div className="flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-indigo-500" />
-        <span className="text-sm font-medium text-gray-700">{title}</span>
-        <span className="text-xs text-gray-400">({visibleItems.length})</span>
+        <span className="text-sm font-medium text-muted-foreground">{title}</span>
+        <span className="text-xs text-[var(--fg-tertiary)]">({visibleItems.length})</span>
       </div>
 
       {/* Grouped Sections */}
@@ -201,14 +201,14 @@ export function InlineRecommendations({
 
       {/* Suggested Actions */}
       {recommendations.suggestedActions && recommendations.suggestedActions.length > 0 && (
-        <div className="pt-2 border-t border-gray-100">
-          <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+        <div className="pt-2 border-t border-[var(--border-subtle)]">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
             <Lightbulb className="w-3 h-3" />
             <span>Suggestions</span>
           </div>
           <div className="space-y-1">
             {recommendations.suggestedActions.slice(0, 3).map((action, i) => (
-              <p key={i} className="text-xs text-gray-600 pl-4">• {action}</p>
+              <p key={i} className="text-xs text-muted-foreground pl-4">• {action}</p>
             ))}
           </div>
         </div>
@@ -255,7 +255,7 @@ function RecommendationGroup({
         {hasMore && (
           <button
             onClick={onToggleExpand}
-            className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-0.5"
+            className="text-xs text-muted-foreground hover:text-muted-foreground flex items-center gap-0.5"
           >
             {expanded ? 'Show less' : `+${items.length - maxVisible} more`}
             <ChevronRight className={`w-3 h-3 transition-transform ${expanded ? 'rotate-90' : ''}`} />
@@ -287,7 +287,7 @@ interface RecommendationCardProps {
 
 function RecommendationCard({ item, onSelect, onDismiss }: RecommendationCardProps) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-white rounded-md border border-gray-100 group">
+    <div className="flex items-center gap-2 p-2 bg-card rounded-md border border-[var(--border-subtle)] group">
       {/* Image Thumbnail */}
       {item.imageUrl ? (
         <img 
@@ -296,21 +296,21 @@ function RecommendationCard({ item, onSelect, onDismiss }: RecommendationCardPro
           className="w-10 h-10 rounded object-cover flex-shrink-0"
         />
       ) : (
-        <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded bg-[var(--bg-sunken)] flex items-center justify-center flex-shrink-0">
           {(() => {
             const config = TYPE_CONFIG[item.type];
             if (!config) return null;
             const IconComponent = config.icon;
-            return <IconComponent className="w-4 h-4 text-gray-400" />;
+            return <IconComponent className="w-4 h-4 text-[var(--fg-tertiary)]" />;
           })()}
         </div>
       )}
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
+        <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 truncate">{item.matchReason}</span>
+          <span className="text-xs text-muted-foreground truncate">{item.matchReason}</span>
           <span className="text-xs text-green-600 font-medium">{item.relevanceScore}%</span>
         </div>
       </div>
@@ -320,10 +320,10 @@ function RecommendationCard({ item, onSelect, onDismiss }: RecommendationCardPro
         {onSelect && (
           <button
             onClick={() => onSelect(item)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-[var(--bg-sunken)] rounded"
             title="Add"
           >
-            <Plus className="w-4 h-4 text-gray-600" />
+            <Plus className="w-4 h-4 text-muted-foreground" />
           </button>
         )}
         {typeof item.metadata?.sourceUrl === 'string' && (
@@ -331,19 +331,19 @@ function RecommendationCard({ item, onSelect, onDismiss }: RecommendationCardPro
             href={item.metadata.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-[var(--bg-sunken)] rounded"
             title="View source"
           >
-            <ExternalLink className="w-4 h-4 text-gray-600" />
+            <ExternalLink className="w-4 h-4 text-muted-foreground" />
           </a>
         )}
         {onDismiss && (
           <button
             onClick={() => onDismiss(item)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-[var(--bg-sunken)] rounded"
             title="Dismiss"
           >
-            <X className="w-4 h-4 text-gray-400" />
+            <X className="w-4 h-4 text-[var(--fg-tertiary)]" />
           </button>
         )}
       </div>

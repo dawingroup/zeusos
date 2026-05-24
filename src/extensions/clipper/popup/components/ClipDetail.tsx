@@ -75,10 +75,10 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-200">
+      <div className="flex items-center justify-between p-3 border-b border-[var(--border-subtle)]">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -89,7 +89,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
             <>
               <button
                 onClick={handleCancel}
-                className="p-1.5 text-gray-500 hover:bg-gray-100 rounded"
+                className="p-1.5 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -104,7 +104,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
             <>
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 text-gray-500 hover:bg-gray-100 rounded"
+                className="p-1.5 text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
               >
                 <Edit2 className="w-4 h-4" />
               </button>
@@ -122,7 +122,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Image */}
-        <div className="relative bg-gray-100">
+        <div className="relative bg-[var(--bg-sunken)]">
           <img
             src={imageUrl}
             alt={clip.title}
@@ -132,9 +132,9 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
             href={clip.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full shadow hover:bg-white"
+            className="absolute top-2 right-2 p-1.5 bg-card/90 rounded-full shadow hover:bg-card"
           >
-            <ExternalLink className="w-4 h-4 text-gray-600" />
+            <ExternalLink className="w-4 h-4 text-muted-foreground" />
           </a>
         </div>
 
@@ -146,7 +146,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               type="text"
               value={editedClip.title}
               onChange={(e) => setEditedClip({ ...editedClip, title: e.target.value })}
-              className="w-full text-lg font-semibold border-b border-gray-200 pb-1 focus:outline-none focus:border-primary"
+              className="w-full text-lg font-semibold border-b border-[var(--border-subtle)] pb-1 focus:outline-none focus:border-primary"
             />
           ) : (
             <h2 className="text-lg font-semibold">{clip.title || 'Untitled'}</h2>
@@ -154,7 +154,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
 
           {/* Brand */}
           {clip.brand && (
-            <p className="text-sm text-gray-500">{clip.brand}</p>
+            <p className="text-sm text-muted-foreground">{clip.brand}</p>
           )}
 
           {/* Price & Dimensions */}
@@ -166,7 +166,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
               </div>
             )}
             {clip.dimensions && (
-              <div className="flex items-center gap-1.5 text-sm text-gray-600">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Ruler className="w-4 h-4" />
                 <span>
                   {clip.dimensions.width}" × {clip.dimensions.height}"
@@ -179,12 +179,12 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
           {/* Materials */}
           {clip.materials && clip.materials.length > 0 && (
             <div className="flex items-start gap-2">
-              <Box className="w-4 h-4 text-gray-400 mt-0.5" />
+              <Box className="w-4 h-4 text-[var(--fg-tertiary)] mt-0.5" />
               <div className="flex flex-wrap gap-1">
                 {clip.materials.map((material) => (
                   <span
                     key={material}
-                    className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"
+                    className="px-2 py-0.5 bg-[var(--bg-sunken)] text-muted-foreground text-xs rounded"
                   >
                     {material}
                   </span>
@@ -196,12 +196,12 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
           {/* Colors */}
           {clip.colors && clip.colors.length > 0 && (
             <div className="flex items-start gap-2">
-              <Palette className="w-4 h-4 text-gray-400 mt-0.5" />
+              <Palette className="w-4 h-4 text-[var(--fg-tertiary)] mt-0.5" />
               <div className="flex flex-wrap gap-1">
                 {clip.colors.map((color) => (
                   <span
                     key={color}
-                    className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"
+                    className="px-2 py-0.5 bg-[var(--bg-sunken)] text-muted-foreground text-xs rounded"
                   >
                     {color}
                   </span>
@@ -213,7 +213,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
           {/* Tags */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Tag className="w-4 h-4 text-gray-400" />
+              <Tag className="w-4 h-4 text-[var(--fg-tertiary)]" />
               <span className="text-sm font-medium">Tags</span>
             </div>
             <div className="flex flex-wrap gap-1">
@@ -238,7 +238,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                     onChange={(e) => setNewTag(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addTag()}
                     placeholder="Add tag..."
-                    className="w-20 px-2 py-0.5 text-xs border border-gray-200 rounded focus:outline-none focus:border-primary"
+                    className="w-20 px-2 py-0.5 text-xs border border-[var(--border-subtle)] rounded focus:outline-none focus:border-primary"
                   />
                 </div>
               )}
@@ -253,11 +253,11 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                 <textarea
                   value={editedClip.description || ''}
                   onChange={(e) => setEditedClip({ ...editedClip, description: e.target.value })}
-                  className="w-full text-sm text-gray-600 border border-gray-200 rounded p-2 focus:outline-none focus:border-primary"
+                  className="w-full text-sm text-muted-foreground border border-[var(--border-subtle)] rounded p-2 focus:outline-none focus:border-primary"
                   rows={3}
                 />
               ) : (
-                <p className="text-sm text-gray-600">{clip.description}</p>
+                <p className="text-sm text-muted-foreground">{clip.description}</p>
               )}
             </div>
           )}
@@ -270,11 +270,11 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                 value={editedClip.notes || ''}
                 onChange={(e) => setEditedClip({ ...editedClip, notes: e.target.value })}
                 placeholder="Add your notes..."
-                className="w-full text-sm border border-gray-200 rounded p-2 focus:outline-none focus:border-primary"
+                className="w-full text-sm border border-[var(--border-subtle)] rounded p-2 focus:outline-none focus:border-primary"
                 rows={3}
               />
             ) : (
-              <p className="text-sm text-gray-600">{clip.notes || 'No notes yet'}</p>
+              <p className="text-sm text-muted-foreground">{clip.notes || 'No notes yet'}</p>
             )}
           </div>
 
@@ -319,7 +319,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
                       clip.aiAnalysis.confidence >= 0.8 ? 'bg-green-100 text-green-700' :
                       clip.aiAnalysis.confidence >= 0.6 ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-gray-100 text-gray-600'
+                      'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}>
                       {Math.round(clip.aiAnalysis.confidence * 100)}% conf
                     </span>
@@ -352,7 +352,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
 
               {/* Millwork Assessment */}
               {clip.aiAnalysis.millworkAssessment && (
-                <div className="p-2 bg-white/60 rounded border border-purple-100">
+                <div className="p-2 bg-card/60 rounded border border-purple-100">
                   <div className="flex items-center gap-1.5 mb-1">
                     <Hammer className="w-3 h-3 text-purple-500" />
                     <span className="text-xs font-medium text-purple-700">Millwork Assessment</span>
@@ -363,7 +363,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                         <CheckCircle className="w-3 h-3" /> Custom candidate
                       </span>
                     ) : (
-                      <span className="text-gray-500">Not a custom candidate</span>
+                      <span className="text-muted-foreground">Not a custom candidate</span>
                     )}
                     <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
                       clip.aiAnalysis.millworkAssessment.complexity === 'simple' ? 'bg-green-100 text-green-700' :
@@ -420,7 +420,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
                     {clip.aiAnalysis.colors.map((c) => (
                       <span
                         key={c}
-                        className="w-5 h-5 rounded-full border border-gray-200"
+                        className="w-5 h-5 rounded-full border border-[var(--border-subtle)]"
                         style={{ backgroundColor: c.startsWith('#') ? c : undefined }}
                         title={c}
                       />
@@ -440,7 +440,7 @@ export function ClipDetail({ clip, onBack, onUpdate, onDelete, onAnalyze }: Clip
           )}
 
           {/* Metadata */}
-          <div className="pt-3 border-t border-gray-100 text-xs text-gray-400 space-y-1">
+          <div className="pt-3 border-t border-[var(--border-subtle)] text-xs text-[var(--fg-tertiary)] space-y-1">
             <p>Clipped: {new Date(clip.createdAt).toLocaleString()}</p>
             {clip.sku && <p>SKU: {clip.sku}</p>}
             <p className="truncate">Source: {clip.sourceUrl}</p>

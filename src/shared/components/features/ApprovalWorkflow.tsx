@@ -54,7 +54,7 @@ export function ApprovalWorkflow({
       case 'current':
         return 'border-blue-200 bg-blue-50';
       default:
-        return 'border-gray-200 bg-gray-50';
+        return 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]';
     }
   };
 

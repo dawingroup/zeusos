@@ -42,18 +42,18 @@ export function FileVersionHistory({ file, open, onClose }: FileVersionHistoryPr
             <Clock className="h-4 w-4" />
             Version History
           </DialogTitle>
-          <p className="text-sm text-gray-500 mt-1">{file.name}</p>
+          <p className="text-sm text-muted-foreground mt-1">{file.name}</p>
         </DialogHeader>
 
         {loading ? (
-          <div className="py-8 text-center text-sm text-gray-400">Loading versions...</div>
+          <div className="py-8 text-center text-sm text-[var(--fg-tertiary)]">Loading versions...</div>
         ) : (
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {versions.map((v) => (
               <div
                 key={v.id}
                 className={`flex items-center justify-between p-3 rounded-lg border ${
-                  v.isLatest ? 'border-emerald-200 bg-emerald-50' : 'border-gray-100 bg-gray-50'
+                  v.isLatest ? 'border-emerald-200 bg-emerald-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'
                 }`}
               >
                 <div className="min-w-0 flex-1">
@@ -65,11 +65,11 @@ export function FileVersionHistory({ file, open, onClose }: FileVersionHistoryPr
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                     <span>{v.fileName}</span>
                     <span>{formatFileSize(v.fileSize)}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-gray-400 mt-0.5">
+                  <div className="flex items-center gap-1 text-xs text-[var(--fg-tertiary)] mt-0.5">
                     <User className="h-3 w-3" />
                     <span>{v.uploadedByName || v.uploadedBy || 'Unknown'}</span>
                     {v.uploadedAt?.toDate && (
@@ -86,15 +86,15 @@ export function FileVersionHistory({ file, open, onClose }: FileVersionHistoryPr
                   download={v.name || v.fileName}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                  className="p-1.5 hover:bg-[var(--bg-sunken)] rounded transition-colors"
                   title="Download this version"
                 >
-                  <Download className="h-4 w-4 text-gray-600" />
+                  <Download className="h-4 w-4 text-muted-foreground" />
                 </a>
               </div>
             ))}
             {versions.length === 0 && (
-              <p className="text-sm text-gray-400 text-center py-4">No version history</p>
+              <p className="text-sm text-[var(--fg-tertiary)] text-center py-4">No version history</p>
             )}
           </div>
         )}

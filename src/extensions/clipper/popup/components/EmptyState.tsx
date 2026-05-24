@@ -32,9 +32,9 @@ export default function EmptyState({ filter }: EmptyStateProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full py-8 text-center">
-      <Icon className="w-12 h-12 text-gray-300 mb-3" />
-      <p className="text-sm font-medium text-gray-600">{title}</p>
-      <p className="text-xs text-gray-400 mt-1">{description}</p>
+      <Icon className="w-12 h-12 text-[var(--fg-tertiary)] mb-3" />
+      <p className="text-sm font-medium text-muted-foreground">{title}</p>
+      <p className="text-xs text-[var(--fg-tertiary)] mt-1">{description}</p>
     </div>
   );
 }

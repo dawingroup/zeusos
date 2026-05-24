@@ -117,15 +117,15 @@ export default function LogoUpload({
           <div 
             className={cn(
               'w-48 h-32 border-2 border-dashed rounded-lg flex items-center justify-center overflow-hidden transition-colors',
-              uploading ? 'border-gray-300 bg-gray-50' : 'border-gray-300 hover:border-gray-400 bg-gray-100'
+              uploading ? 'border-[var(--border-default)] bg-[var(--bg-sunken)]' : 'border-[var(--border-default)] hover:border-[var(--border-strong)] bg-[var(--bg-sunken)]'
             )}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
           >
             {uploading ? (
               <div className="flex flex-col items-center gap-2">
-                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-                <span className="text-sm text-gray-600">Uploading...</span>
+                <Loader2 className="w-8 h-8 animate-spin text-[var(--fg-tertiary)]" />
+                <span className="text-sm text-muted-foreground">Uploading...</span>
               </div>
             ) : currentLogoUrl ? (
               <div className="relative w-full h-full">
@@ -139,14 +139,14 @@ export default function LogoUpload({
                     size="sm"
                     variant="secondary"
                     onClick={handleDelete}
-                    className="h-6 w-6 p-0 bg-white/90 hover:bg-white"
+                    className="h-6 w-6 p-0 bg-card/90 hover:bg-card"
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-2 text-gray-500">
+              <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Upload className="w-8 h-8" />
                 <span className="text-sm">Drop logo here or click to browse</span>
               </div>

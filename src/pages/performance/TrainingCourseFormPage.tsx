@@ -694,7 +694,7 @@ export function TrainingCourseFormPage() {
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                         selectedCompetencies.includes(competency.id)
                           ? 'border-blue-600 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
                       }`}
                       onClick={() => handleToggleCompetency(competency.id)}
                     >

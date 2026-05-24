@@ -152,7 +152,7 @@ function getStatusColor(status: string): string {
     case 'on_target': return 'text-green-600';
     case 'warning': return 'text-amber-600';
     case 'critical': return 'text-red-600';
-    default: return 'text-gray-600';
+    default: return 'text-muted-foreground';
   }
 }
 
@@ -229,13 +229,13 @@ function KPICard({ kpi, onEdit, onDelete }: KPICardProps) {
                 className={cn(
                   'h-4 w-4',
                   kpi.trendDirection === 'positive' ? 'text-green-500' :
-                  kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-gray-400'
+                  kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-[var(--fg-tertiary)]'
                 )} 
               />
               <span className={cn(
                 'text-sm font-medium',
                 kpi.trendDirection === 'positive' ? 'text-green-500' :
-                kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-gray-400'
+                kpi.trendDirection === 'negative' ? 'text-red-500' : 'text-[var(--fg-tertiary)]'
               )}>
                 {kpi.trendValue > 0 ? '+' : ''}{kpi.trendValue}%
               </span>

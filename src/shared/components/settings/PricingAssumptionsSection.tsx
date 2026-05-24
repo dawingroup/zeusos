@@ -128,22 +128,22 @@ export function PricingAssumptionsSection({
   const percentToBuffer = (pct: number) => 1 + pct / 100;
 
   return (
-    <div className="border-t border-gray-200 pt-6 mt-6">
+    <div className="border-t border-[var(--border-subtle)] pt-6 mt-6">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center gap-3 w-full text-left"
       >
         {isExpanded ? (
-          <ChevronDown className="w-4 h-4 text-gray-400" />
+          <ChevronDown className="w-4 h-4 text-[var(--fg-tertiary)]" />
         ) : (
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
         )}
-        <Calculator className="w-5 h-5 text-gray-500" />
+        <Calculator className="w-5 h-5 text-muted-foreground" />
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-foreground">
             Pricing &amp; Optimization Defaults
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Default kerf, cost buffers, yield targets, minimum offcuts, and fallback material costs
           </p>
         </div>
@@ -165,14 +165,14 @@ export function PricingAssumptionsSection({
               <>
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset to Defaults
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+                  className="px-3 py-1.5 text-sm text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
                 >
                   Cancel
                 </button>
@@ -374,24 +374,24 @@ export function PricingAssumptionsSection({
 
           {/* ── Default Sheet Costs ── */}
           <div>
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+            <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
               Default Sheet Material Costs (UGX)
             </h4>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50 text-gray-600">
+                  <tr className="bg-[var(--bg-sunken)] text-muted-foreground">
                     <th className="px-3 py-2 text-left font-medium">Material</th>
                     <th className="px-3 py-2 text-right font-medium">Cost per Sheet</th>
                     {isEditing && <th className="px-3 py-2 w-10" />}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {Object.entries(defaultSheetCosts)
                     .sort(([a], [b]) => a.localeCompare(b))
                     .map(([name, cost]) => (
-                      <tr key={name} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-gray-900">{name}</td>
+                      <tr key={name} className="hover:bg-[var(--bg-sunken)]">
+                        <td className="px-3 py-2 text-foreground">{name}</td>
                         <td className="px-3 py-2 text-right">
                           {isEditing ? (
                             <input
@@ -404,7 +404,7 @@ export function PricingAssumptionsSection({
                                   [name]: parseFloat(e.target.value) || 0,
                                 })
                               }
-                              className="w-28 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                              className="w-28 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                             />
                           ) : (
                             <span>{cost.toLocaleString()} UGX</span>
@@ -427,14 +427,14 @@ export function PricingAssumptionsSection({
                       </tr>
                     ))}
                   {isEditing && (
-                    <tr className="bg-gray-50/50">
+                    <tr className="bg-[var(--bg-sunken)]/50">
                       <td className="px-3 py-2">
                         <input
                           type="text"
                           placeholder="Material name"
                           value={newSheetName}
                           onChange={(e) => setNewSheetName(e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-[#872E5C]"
+                          className="w-full px-2 py-1 border border-[var(--border-default)] rounded text-sm focus:ring-1 focus:ring-[#872E5C]"
                         />
                       </td>
                       <td className="px-3 py-2 text-right">
@@ -444,7 +444,7 @@ export function PricingAssumptionsSection({
                           placeholder="Cost"
                           value={newSheetCost}
                           onChange={(e) => setNewSheetCost(e.target.value)}
-                          className="w-28 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                          className="w-28 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                         />
                       </td>
                       <td className="px-3 py-2 text-center">
@@ -474,27 +474,27 @@ export function PricingAssumptionsSection({
 
           {/* ── Default Costs by Thickness ── */}
           <div>
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+            <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
               Fallback Cost by Thickness (UGX)
             </h4>
-            <p className="text-xs text-gray-400 mb-2">
+            <p className="text-xs text-[var(--fg-tertiary)] mb-2">
               Used when a material has no inventory mapping and no named cost above
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50 text-gray-600">
+                  <tr className="bg-[var(--bg-sunken)] text-muted-foreground">
                     <th className="px-3 py-2 text-left font-medium">Thickness (mm)</th>
                     <th className="px-3 py-2 text-right font-medium">Cost per Sheet</th>
                     {isEditing && <th className="px-3 py-2 w-10" />}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {Object.entries(defaultCostByThickness)
                     .sort(([a], [b]) => Number(a) - Number(b))
                     .map(([thickness, cost]) => (
-                      <tr key={thickness} className="hover:bg-gray-50">
-                        <td className="px-3 py-2 text-gray-900">{thickness} mm</td>
+                      <tr key={thickness} className="hover:bg-[var(--bg-sunken)]">
+                        <td className="px-3 py-2 text-foreground">{thickness} mm</td>
                         <td className="px-3 py-2 text-right">
                           {isEditing ? (
                             <input
@@ -507,7 +507,7 @@ export function PricingAssumptionsSection({
                                   [thickness]: parseFloat(e.target.value) || 0,
                                 })
                               }
-                              className="w-28 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                              className="w-28 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                             />
                           ) : (
                             <span>{cost.toLocaleString()} UGX</span>
@@ -530,7 +530,7 @@ export function PricingAssumptionsSection({
                       </tr>
                     ))}
                   {isEditing && (
-                    <tr className="bg-gray-50/50">
+                    <tr className="bg-[var(--bg-sunken)]/50">
                       <td className="px-3 py-2">
                         <input
                           type="number"
@@ -538,7 +538,7 @@ export function PricingAssumptionsSection({
                           placeholder="Thickness"
                           value={newThickness}
                           onChange={(e) => setNewThickness(e.target.value)}
-                          className="w-24 px-2 py-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-[#872E5C]"
+                          className="w-24 px-2 py-1 border border-[var(--border-default)] rounded text-sm focus:ring-1 focus:ring-[#872E5C]"
                         />
                       </td>
                       <td className="px-3 py-2 text-right">
@@ -548,7 +548,7 @@ export function PricingAssumptionsSection({
                           placeholder="Cost"
                           value={newThicknessCost}
                           onChange={(e) => setNewThicknessCost(e.target.value)}
-                          className="w-28 px-2 py-1 border border-gray-300 rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
+                          className="w-28 px-2 py-1 border border-[var(--border-default)] rounded text-right text-sm focus:ring-1 focus:ring-[#872E5C]"
                         />
                       </td>
                       <td className="px-3 py-2 text-center">
@@ -606,7 +606,7 @@ function FieldGroup({
 }) {
   return (
     <div>
-      <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+      <h4 className="text-sm font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
         {title}
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{children}</div>
@@ -631,7 +631,7 @@ function NumField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-muted-foreground mb-1">{label}</label>
       {editing ? (
         <div className="flex items-center gap-2">
           <input
@@ -640,12 +640,12 @@ function NumField({
             step={step}
             value={value}
             onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-            className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
+            className="w-28 px-3 py-2 border border-[var(--border-default)] rounded-lg text-sm focus:ring-2 focus:ring-[#872E5C] focus:border-transparent"
           />
-          <span className="text-sm text-gray-500">{unit}</span>
+          <span className="text-sm text-muted-foreground">{unit}</span>
         </div>
       ) : (
-        <p className="text-gray-900">
+        <p className="text-foreground">
           {value.toLocaleString()} {unit}
         </p>
       )}

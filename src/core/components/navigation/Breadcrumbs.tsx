@@ -163,14 +163,14 @@ export function Breadcrumbs({ projectName, className, showHome = true }: Breadcr
         {breadcrumbs.map((crumb, index) => (
           <li key={crumb.path} className="flex items-center">
             {index > 0 && (
-              <ChevronRight className="h-4 w-4 text-gray-400 mx-1" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 text-[var(--fg-tertiary)] mx-1" aria-hidden="true" />
             )}
             {crumb.isActive ? (
-              <span className="font-medium text-gray-900">{crumb.label}</span>
+              <span className="font-medium text-foreground">{crumb.label}</span>
             ) : (
               <Link
                 to={crumb.path}
-                className="text-gray-500 hover:text-gray-700 transition-colors flex items-center gap-1"
+                className="text-muted-foreground hover:text-muted-foreground transition-colors flex items-center gap-1"
               >
                 {index === 0 && crumb.label === 'Home' && (
                   <Home className="h-4 w-4" />

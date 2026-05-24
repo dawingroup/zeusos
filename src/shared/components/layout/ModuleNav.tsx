@@ -75,7 +75,7 @@ export function ModuleNav({ collapsed = false }: ModuleNavProps) {
               'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
               isActive && !item.disabled
                 ? 'bg-[#872E5C] text-white'
-                : 'text-gray-700 hover:bg-gray-100',
+                : 'text-muted-foreground hover:bg-[var(--bg-sunken)]',
               item.disabled && 'opacity-50 cursor-not-allowed hover:bg-transparent'
             )
           }
@@ -86,7 +86,7 @@ export function ModuleNav({ collapsed = false }: ModuleNavProps) {
             <>
               <span className="flex-1">{item.label}</span>
               {item.badge && (
-                <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-600 rounded-full">
+                <span className="px-2 py-0.5 text-xs bg-[var(--bg-sunken)] text-muted-foreground rounded-full">
                   {item.badge}
                 </span>
               )}

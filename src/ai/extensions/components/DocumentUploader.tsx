@@ -209,7 +209,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
           className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
             isDragging
               ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-200 hover:border-gray-300'
+              : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
           }`}
         >
           <input
@@ -218,11 +218,11 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             onChange={handleFileInput}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
-          <Upload className={`w-10 h-10 mx-auto mb-3 ${isDragging ? 'text-blue-500' : 'text-gray-400'}`} />
-          <p className="text-sm font-medium text-gray-700">
+          <Upload className={`w-10 h-10 mx-auto mb-3 ${isDragging ? 'text-blue-500' : 'text-[var(--fg-tertiary)]'}`} />
+          <p className="text-sm font-medium text-muted-foreground">
             Drop a document here or click to upload
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Supports PDF, images, and spreadsheets (max {maxSizeMB}MB)
           </p>
         </div>
@@ -241,10 +241,10 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
 
       {/* Selected File */}
       {selectedFile && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-card border border-[var(--border-subtle)] rounded-xl overflow-hidden">
           {/* File Header */}
-          <div className="flex items-center gap-3 p-4 border-b border-gray-100">
-            <div className="p-2 bg-gray-100 rounded-lg text-gray-600">
+          <div className="flex items-center gap-3 p-4 border-b border-[var(--border-subtle)]">
+            <div className="p-2 bg-[var(--bg-sunken)] rounded-lg text-muted-foreground">
               {selectedFile.type.includes('image') ? (
                 <FileImage className="w-5 h-5" />
               ) : selectedFile.type.includes('spreadsheet') || selectedFile.name.endsWith('.xlsx') ? (
@@ -254,15 +254,15 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 truncate">{selectedFile.name}</p>
-              <p className="text-xs text-gray-500">
+              <p className="font-medium text-foreground truncate">{selectedFile.name}</p>
+              <p className="text-xs text-muted-foreground">
                 {(selectedFile.size / 1024).toFixed(1)} KB
               </p>
             </div>
             {!isAnalyzing && (
               <button
                 onClick={clearSelection}
-                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+                className="p-1.5 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded-lg"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -274,8 +274,8 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
             <div className="p-4 flex items-center gap-3">
               <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
               <div>
-                <p className="text-sm font-medium text-gray-900">Analyzing document...</p>
-                <p className="text-xs text-gray-500">Extracting data and classifying content</p>
+                <p className="text-sm font-medium text-foreground">Analyzing document...</p>
+                <p className="text-xs text-muted-foreground">Extracting data and classifying content</p>
               </div>
             </div>
           )}
@@ -290,12 +290,12 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-gray-900 capitalize">
+                    <p className="font-medium text-foreground capitalize">
                       {analysis.documentType.replace('_', ' ')}
                     </p>
                     <CheckCircle className="w-4 h-4 text-green-500" />
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     {Math.round(analysis.confidence * 100)}% confidence
                   </p>
                 </div>
@@ -304,14 +304,14 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               {/* Extracted Fields */}
               {analysis.extractedFields.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">
+                  <h4 className="text-xs font-medium text-muted-foreground uppercase mb-2">
                     Extracted Fields
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
                     {analysis.extractedFields.map((field, i) => (
-                      <div key={i} className="p-2 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500">{field.name}</p>
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                      <div key={i} className="p-2 bg-[var(--bg-sunken)] rounded-lg">
+                        <p className="text-xs text-muted-foreground">{field.name}</p>
+                        <p className="text-sm font-medium text-foreground truncate">
                           {String(field.value)}
                         </p>
                       </div>
@@ -323,14 +323,14 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               {/* Extracted Amounts */}
               {analysis.extractedAmounts.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">
+                  <h4 className="text-xs font-medium text-muted-foreground uppercase mb-2">
                     Extracted Amounts
                   </h4>
                   <div className="space-y-2">
                     {analysis.extractedAmounts.map((amount, i) => (
-                      <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                        <span className="text-sm text-gray-600 capitalize">{amount.label}</span>
-                        <span className="text-sm font-medium text-gray-900">
+                      <div key={i} className="flex items-center justify-between p-2 bg-[var(--bg-sunken)] rounded-lg">
+                        <span className="text-sm text-muted-foreground capitalize">{amount.label}</span>
+                        <span className="text-sm font-medium text-foreground">
                           {amount.currency} {amount.amount.toLocaleString()}
                         </span>
                       </div>
@@ -340,14 +340,14 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               )}
 
               {/* Suggested Module */}
-              <div className="pt-3 border-t border-gray-100">
-                <p className="text-xs text-gray-500 mb-2">Suggested destination</p>
+              <div className="pt-3 border-t border-[var(--border-subtle)]">
+                <p className="text-xs text-muted-foreground mb-2">Suggested destination</p>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded">
                     {analysis.suggestedModule}
                   </span>
-                  <span className="text-xs text-gray-400">→</span>
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+                  <span className="text-xs text-[var(--fg-tertiary)]">→</span>
+                  <span className="px-2 py-1 text-xs font-medium bg-[var(--bg-sunken)] text-muted-foreground rounded">
                     {analysis.suggestedEntityType}
                   </span>
                 </div>
@@ -356,7 +356,7 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               {/* Validation Results */}
               {analysis.validationResults.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">
+                  <h4 className="text-xs font-medium text-muted-foreground uppercase mb-2">
                     Validation
                   </h4>
                   <div className="space-y-1">
@@ -384,21 +384,21 @@ export const DocumentUploader: React.FC<DocumentUploaderProps> = ({
               )}
 
               {/* Actions */}
-              <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+              <div className="flex items-center gap-2 pt-3 border-t border-[var(--border-subtle)]">
                 <button className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
                   <CheckCircle className="w-4 h-4" />
                   Use Extracted Data
                 </button>
-                <button className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+                <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)] rounded-lg transition-colors">
                   <Eye className="w-4 h-4" />
                 </button>
-                <button className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+                <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)] rounded-lg transition-colors">
                   <Download className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Processing time */}
-              <p className="text-xs text-gray-400 text-center">
+              <p className="text-xs text-[var(--fg-tertiary)] text-center">
                 Processed in {analysis.processingTime}ms
               </p>
             </div>

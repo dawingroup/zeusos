@@ -47,7 +47,7 @@ const PERFORMANCE_COLOR = '#FF5722';
 
 // Review statuses
 const REVIEW_STATUSES = [
-  { value: 'scheduled', label: 'Scheduled', color: 'bg-gray-100 text-gray-800' },
+  { value: 'scheduled', label: 'Scheduled', color: 'bg-[var(--bg-sunken)] text-foreground' },
   { value: 'self_assessment', label: 'Self Assessment', color: 'bg-blue-100 text-blue-800' },
   { value: 'manager_review', label: 'Manager Review', color: 'bg-amber-100 text-amber-800' },
   { value: 'calibration', label: 'Calibration', color: 'bg-purple-100 text-purple-800' },
@@ -209,7 +209,7 @@ export function ReviewListPage() {
           <p className="text-xs text-muted-foreground">Total Reviews</p>
         </Card>
         <Card className="text-center p-3">
-          <p className="text-2xl font-bold text-gray-600">{stats.scheduled}</p>
+          <p className="text-2xl font-bold text-muted-foreground">{stats.scheduled}</p>
           <p className="text-xs text-muted-foreground">Scheduled</p>
         </Card>
         <Card className="text-center p-3">

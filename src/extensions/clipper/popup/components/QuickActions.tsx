@@ -7,7 +7,7 @@ interface QuickActionsProps {
 
 export default function QuickActions({ onStartClipping, onSyncNow }: QuickActionsProps) {
   return (
-    <div className="bg-white border-b px-4 py-3 space-y-2">
+    <div className="bg-card border-b px-4 py-3 space-y-2">
       <div className="flex gap-2">
         <button
           onClick={onStartClipping}
@@ -19,7 +19,7 @@ export default function QuickActions({ onStartClipping, onSyncNow }: QuickAction
         
         <button
           onClick={onSyncNow}
-          className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl font-medium text-sm hover:bg-gray-200 transition-colors"
+          className="flex items-center justify-center gap-2 bg-[var(--bg-sunken)] text-muted-foreground py-2.5 px-4 rounded-xl font-medium text-sm hover:bg-[var(--bg-sunken)] transition-colors"
           title="Sync now"
         >
           <RefreshCw className="w-4 h-4" />
@@ -27,9 +27,9 @@ export default function QuickActions({ onStartClipping, onSyncNow }: QuickAction
       </div>
       
       {/* Keyboard shortcut hint */}
-      <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-400">
+      <div className="flex items-center justify-center gap-1.5 text-[11px] text-[var(--fg-tertiary)]">
         <Keyboard className="w-3 h-3" />
-        <span>Quick clip: <kbd className="px-1 py-0.5 bg-gray-100 rounded text-gray-500 font-mono">Alt+C</kbd></span>
+        <span>Quick clip: <kbd className="px-1 py-0.5 bg-[var(--bg-sunken)] rounded text-muted-foreground font-mono">Alt+C</kbd></span>
       </div>
     </div>
   );

@@ -369,20 +369,20 @@ export function TrainingCatalogPage() {
 
             return (
               <div key={type}>
-                <div className={`${config.bgColor} px-4 py-3 rounded-t-lg border-b border-gray-200`}>
+                <div className={`${config.bgColor} px-4 py-3 rounded-t-lg border-b border-[var(--border-subtle)]`}>
                   <div className="flex items-center gap-3">
                     <Icon className={`w-5 h-5 ${config.color}`} />
                     <div className="flex-1">
                       <h2 className={`text-lg font-semibold ${config.color}`}>
                         {config.label}
                       </h2>
-                      <p className="text-sm text-gray-600">{config.description}</p>
+                      <p className="text-sm text-muted-foreground">{config.description}</p>
                     </div>
-                    <span className="text-sm text-gray-600">{typeCourses.length} course{typeCourses.length !== 1 ? 's' : ''}</span>
+                    <span className="text-sm text-muted-foreground">{typeCourses.length} course{typeCourses.length !== 1 ? 's' : ''}</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-white rounded-b-lg border border-t-0 border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-card rounded-b-lg border border-t-0 border-[var(--border-subtle)]">
                   {typeCourses.map(course => {
                     const isEnrolled = enrolledCourseIds.has(course.id);
                     const enrollment = employeeTraining.find(t => t.courseId === course.id);
@@ -439,13 +439,13 @@ export function TrainingCatalogPage() {
                           {/* Learning Objectives */}
                           {course.learningObjectives.length > 0 && (
                             <div className="mb-3">
-                              <p className="text-xs font-medium text-gray-700 mb-1">Learning Objectives:</p>
+                              <p className="text-xs font-medium text-muted-foreground mb-1">Learning Objectives:</p>
                               <ul className="text-xs text-muted-foreground space-y-1">
                                 {course.learningObjectives.slice(0, 2).map((obj, idx) => (
                                   <li key={idx} className="line-clamp-1">• {obj}</li>
                                 ))}
                                 {course.learningObjectives.length > 2 && (
-                                  <li className="text-gray-500">+ {course.learningObjectives.length - 2} more</li>
+                                  <li className="text-muted-foreground">+ {course.learningObjectives.length - 2} more</li>
                                 )}
                               </ul>
                             </div>
@@ -459,7 +459,7 @@ export function TrainingCatalogPage() {
                                   <span className="text-muted-foreground">Progress</span>
                                   <span className="font-medium">{enrollment.progress}%</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2 mt-1">
                                   <div
                                     className="bg-blue-600 h-2 rounded-full"
                                     style={{ width: `${enrollment.progress}%` }}

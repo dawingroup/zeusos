@@ -42,7 +42,7 @@ const PRIORITY_STYLES: Record<SuggestionPriority, { bg: string; border: string; 
   high: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700' },
   medium: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700' },
   low: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700' },
-  info: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700' },
+  info: { bg: 'bg-[var(--bg-sunken)]', border: 'border-[var(--border-subtle)]', text: 'text-muted-foreground' },
 };
 
 const PRIORITY_BORDER_LEFT: Record<SuggestionPriority, string> = {
@@ -78,7 +78,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           {TYPE_ICONS[suggestion.type]}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate">{suggestion.title}</p>
+          <p className="text-sm font-medium text-foreground truncate">{suggestion.title}</p>
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -89,7 +89,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           </button>
           <button
             onClick={() => handleDismiss()}
-            className="p-1 text-gray-400 hover:text-gray-600 rounded"
+            className="p-1 text-[var(--fg-tertiary)] hover:text-muted-foreground rounded"
           >
             <X className="w-3 h-3" />
           </button>
@@ -100,7 +100,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
 
   return (
     <div
-      className={`rounded-xl border border-l-4 ${priorityStyle.border} ${PRIORITY_BORDER_LEFT[suggestion.priority]} bg-white shadow-sm`}
+      className={`rounded-xl border border-l-4 ${priorityStyle.border} ${PRIORITY_BORDER_LEFT[suggestion.priority]} bg-card shadow-sm`}
     >
       <div className="p-4">
         {/* Header */}
@@ -110,8 +110,8 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
               {TYPE_ICONS[suggestion.type]}
             </div>
             <div>
-              <h4 className="font-medium text-gray-900">{suggestion.title}</h4>
-              <p className="text-sm text-gray-600 mt-0.5">{suggestion.description}</p>
+              <h4 className="font-medium text-foreground">{suggestion.title}</h4>
+              <p className="text-sm text-muted-foreground mt-0.5">{suggestion.description}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -120,7 +120,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
             >
               {suggestion.priority}
             </span>
-            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-[var(--bg-sunken)] text-muted-foreground">
               {Math.round(suggestion.confidence * 100)}%
             </span>
           </div>
@@ -129,20 +129,20 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
         {/* Expandable reasoning */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 mt-3 text-sm text-gray-500 hover:text-gray-700"
+          className="flex items-center gap-1 mt-3 text-sm text-muted-foreground hover:text-muted-foreground"
         >
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           Why this suggestion?
         </button>
 
         {expanded && (
-          <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+          <div className="mt-2 p-3 bg-[var(--bg-sunken)] rounded-lg text-sm text-muted-foreground">
             {suggestion.reasoning}
           </div>
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--border-subtle)]">
           <div className="flex gap-2">
             <button
               onClick={() => onApply(suggestion)}
@@ -156,7 +156,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
             {!showFeedback ? (
               <button
                 onClick={() => setShowFeedback(true)}
-                className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-[var(--bg-sunken)] rounded-lg transition-colors"
               >
                 Dismiss
               </button>
@@ -164,20 +164,20 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => handleDismiss('not_helpful')}
-                  className="inline-flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded"
+                  className="inline-flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                 >
                   <ThumbsDown className="w-3 h-3" />
                   Not helpful
                 </button>
                 <button
                   onClick={() => handleDismiss('incorrect')}
-                  className="px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded"
+                  className="px-2 py-1 text-xs text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                 >
                   Incorrect
                 </button>
                 <button
                   onClick={() => setShowFeedback(false)}
-                  className="p-1 text-gray-400 hover:text-gray-600 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-muted-foreground rounded"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -186,7 +186,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           </div>
 
           {suggestion.targetModule && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-[var(--fg-tertiary)]">
               → {suggestion.targetModule}/{suggestion.targetEntityType}
             </span>
           )}
@@ -221,7 +221,7 @@ export const SuggestionList: React.FC<SuggestionListProps> = ({
 
   if (suggestions.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         <Lightbulb className="w-8 h-8 mx-auto mb-2 opacity-50" />
         <p className="text-sm">No suggestions available</p>
       </div>

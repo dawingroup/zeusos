@@ -197,7 +197,7 @@ export default function App() {
   };
 
   return (
-    <div className="w-[400px] h-[500px] bg-gray-50 flex flex-col">
+    <div className="w-[400px] h-[500px] bg-[var(--bg-sunken)] flex flex-col">
       {currentView !== 'detail' && currentView !== 'clip-form' && (
         <>
           <Header

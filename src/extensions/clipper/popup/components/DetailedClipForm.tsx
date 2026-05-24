@@ -195,20 +195,20 @@ export function DetailedClipForm({
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-card">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b">
-        <h2 className="font-semibold text-gray-900">Save Clip</h2>
+        <h2 className="font-semibold text-foreground">Save Clip</h2>
         <button
           onClick={onCancel}
-          className="p-1 text-gray-400 hover:text-gray-600 rounded"
+          className="p-1 text-[var(--fg-tertiary)] hover:text-muted-foreground rounded"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Image Preview */}
-      <div className="p-3 border-b bg-gray-50">
+      <div className="p-3 border-b bg-[var(--bg-sunken)]">
         <div className="flex gap-3">
           <img
             src={imageUrl}
@@ -216,15 +216,15 @@ export function DetailedClipForm({
             className="w-20 h-20 object-cover rounded-lg border"
           />
           <div className="flex-1 min-w-0">
-            <p className="font-medium text-gray-900 text-sm truncate">{pageTitle}</p>
-            <p className="text-xs text-gray-500 truncate">{sourceUrl}</p>
+            <p className="font-medium text-foreground text-sm truncate">{pageTitle}</p>
+            <p className="text-xs text-muted-foreground truncate">{sourceUrl}</p>
           </div>
         </div>
       </div>
 
       {/* Clip Type Selection */}
       <div className="p-3 border-b">
-        <label className="block text-xs font-medium text-gray-700 mb-2">
+        <label className="block text-xs font-medium text-muted-foreground mb-2">
           What are you clipping this for?
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -242,12 +242,12 @@ export function DetailedClipForm({
                 className={`flex items-center gap-2 p-2 rounded-lg border text-left transition-colors ${
                   isSelected
                     ? 'border-primary bg-primary/5'
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-[var(--border-subtle)] hover:border-[var(--border-default)]'
                 }`}
               >
                 <Icon className={`w-4 h-4 ${option.color}`} />
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-medium ${isSelected ? 'text-primary' : 'text-gray-900'}`}>
+                  <p className={`text-xs font-medium ${isSelected ? 'text-primary' : 'text-foreground'}`}>
                     {option.label}
                   </p>
                 </div>
@@ -262,7 +262,7 @@ export function DetailedClipForm({
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {needsProject && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               <FolderOpen className="w-3 h-3 inline mr-1" />
               Link to Project
             </label>
@@ -273,7 +273,7 @@ export function DetailedClipForm({
                   setSelectedProject(e.target.value);
                   setSelectedDesignItem('');
                 }}
-                className="w-full px-3 py-2 text-sm border rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full px-3 py-2 text-sm border rounded-lg appearance-none bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 disabled={loadingProjects}
               >
                 <option value="">Select a project...</option>
@@ -283,14 +283,14 @@ export function DetailedClipForm({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)] pointer-events-none" />
             </div>
           </div>
         )}
 
         {needsDesignItem && selectedProject && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               <Package className="w-3 h-3 inline mr-1" />
               Link to Design Item
             </label>
@@ -298,7 +298,7 @@ export function DetailedClipForm({
               <select
                 value={selectedDesignItem}
                 onChange={(e) => setSelectedDesignItem(e.target.value)}
-                className="w-full px-3 py-2 text-sm border rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full px-3 py-2 text-sm border rounded-lg appearance-none bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 disabled={loadingItems}
               >
                 <option value="">Select a design item...</option>
@@ -308,14 +308,14 @@ export function DetailedClipForm({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-tertiary)] pointer-events-none" />
             </div>
           </div>
         )}
 
         {/* Notes */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
+          <label className="block text-xs font-medium text-muted-foreground mb-1">
             Notes (optional)
           </label>
           <textarea
@@ -329,11 +329,11 @@ export function DetailedClipForm({
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t bg-gray-50">
+      <div className="p-3 border-t bg-[var(--bg-sunken)]">
         <div className="flex gap-2">
           <button
             onClick={onCancel}
-            className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg hover:bg-gray-50"
+            className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground bg-card border rounded-lg hover:bg-[var(--bg-sunken)]"
             disabled={isSubmitting}
           >
             Cancel
