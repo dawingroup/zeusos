@@ -48,10 +48,10 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
 
   if (successors.length === 0) {
     return (
-      <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-        <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-600 font-medium">No successors identified</p>
-        <p className="text-sm text-gray-500 mt-1">
+      <div className="text-center py-8 bg-[var(--bg-sunken)] rounded-lg border border-dashed border-[var(--border-default)]">
+        <AlertCircle className="w-12 h-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+        <p className="text-muted-foreground font-medium">No successors identified</p>
+        <p className="text-sm text-muted-foreground mt-1">
           Add potential successors to build the talent pipeline
         </p>
       </div>
@@ -63,7 +63,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
       {sortedSuccessors.map((successor, index) => (
         <div
           key={successor.id}
-          className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+          className="bg-card rounded-lg border border-[var(--border-subtle)] p-4 hover:shadow-md transition-shadow"
         >
           <div className="flex items-start justify-between">
             {/* Left Section - Avatar and Info */}
@@ -75,17 +75,17 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
                     ? 'bg-indigo-600'
                     : successor.rank === 2
                     ? 'bg-indigo-400'
-                    : 'bg-gray-400'
+                    : 'bg-[var(--bg-sunken)]'
                 }`}
               >
                 {successor.rank}
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-900">
+                <h4 className="font-semibold text-foreground">
                   {successor.employeeName}
                 </h4>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {successor.currentPosition} • {successor.currentDepartment}
                 </p>
 
@@ -118,7 +118,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onReorder && index > 0 && (
                 <button
                   onClick={() => onReorder(successor.id, 'up')}
-                  className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                   title="Move up"
                 >
                   <ChevronUp className="w-4 h-4" />
@@ -127,7 +127,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onReorder && index < sortedSuccessors.length - 1 && (
                 <button
                   onClick={() => onReorder(successor.id, 'down')}
-                  className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-muted-foreground hover:bg-[var(--bg-sunken)] rounded"
                   title="Move down"
                 >
                   <ChevronDown className="w-4 h-4" />
@@ -136,7 +136,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onEdit && (
                 <button
                   onClick={() => onEdit(successor)}
-                  className="p-1 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-indigo-600 hover:bg-indigo-50 rounded"
                   title="Edit"
                 >
                   <Edit className="w-4 h-4" />
@@ -145,7 +145,7 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
               {onRemove && (
                 <button
                   onClick={() => onRemove(successor.id)}
-                  className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+                  className="p-1 text-[var(--fg-tertiary)] hover:text-red-600 hover:bg-red-50 rounded"
                   title="Remove"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -155,29 +155,29 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
           </div>
 
           {/* Metrics Row */}
-          <div className="grid grid-cols-4 gap-3 mt-4 pt-3 border-t border-gray-100">
+          <div className="grid grid-cols-4 gap-3 mt-4 pt-3 border-t border-[var(--border-subtle)]">
             <div>
-              <p className="text-xs text-gray-500">Performance</p>
+              <p className="text-xs text-muted-foreground">Performance</p>
               <div className="flex items-center gap-1 mt-1">
                 <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                 <span className="font-medium">{successor.performanceRating.toFixed(1)}</span>
               </div>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Potential</p>
-              <p className="text-sm font-medium text-gray-900 mt-1">
+              <p className="text-xs text-muted-foreground">Potential</p>
+              <p className="text-sm font-medium text-foreground mt-1">
                 {POTENTIAL_LABELS[successor.potentialRating]}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Readiness</p>
+              <p className="text-xs text-muted-foreground">Readiness</p>
               <div className="flex items-center gap-1 mt-1">
                 <TrendingUp className="w-4 h-4 text-indigo-500" />
                 <span className="font-medium">{successor.readinessScore}%</span>
               </div>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Flight Risk</p>
+              <p className="text-xs text-muted-foreground">Flight Risk</p>
               <span
                 className={`inline-block px-2 py-0.5 text-xs font-medium rounded mt-1 ${getFlightRiskColor(
                   successor.flightRisk
@@ -190,8 +190,8 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
 
           {/* Competency Gaps */}
           {successor.competencyGaps.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-gray-100">
-              <p className="text-xs text-gray-500 mb-2">
+            <div className="mt-3 pt-3 border-t border-[var(--border-subtle)]">
+              <p className="text-xs text-muted-foreground mb-2">
                 Key Development Areas ({successor.competencyGaps.length})
               </p>
               <div className="flex flex-wrap gap-1">
@@ -203,14 +203,14 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
                         ? 'bg-red-100 text-red-700'
                         : gap.priority === 'high'
                         ? 'bg-orange-100 text-orange-700'
-                        : 'bg-gray-100 text-gray-600'
+                        : 'bg-[var(--bg-sunken)] text-muted-foreground'
                     }`}
                   >
                     {gap.competency}
                   </span>
                 ))}
                 {successor.competencyGaps.length > 3 && (
-                  <span className="px-2 py-0.5 text-xs text-gray-500">
+                  <span className="px-2 py-0.5 text-xs text-muted-foreground">
                     +{successor.competencyGaps.length - 3} more
                   </span>
                 )}
@@ -219,12 +219,12 @@ export const SuccessorPipeline: React.FC<SuccessorPipelineProps> = ({
           )}
 
           {/* Interest Indicator */}
-          <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
-            <span className={successor.interestedInRole ? 'text-green-600' : 'text-gray-400'}>
+          <div className="flex items-center gap-4 mt-3 pt-3 border-t border-[var(--border-subtle)] text-xs text-muted-foreground">
+            <span className={successor.interestedInRole ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
               {successor.interestedInRole ? '✓ Interested in role' : '○ Interest not confirmed'}
             </span>
             {successor.willingToRelocate !== undefined && (
-              <span className={successor.willingToRelocate ? 'text-green-600' : 'text-gray-400'}>
+              <span className={successor.willingToRelocate ? 'text-green-600' : 'text-[var(--fg-tertiary)]'}>
                 {successor.willingToRelocate ? '✓ Willing to relocate' : '○ Location bound'}
               </span>
             )}

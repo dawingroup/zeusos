@@ -36,7 +36,7 @@ interface ReviewCardProps {
 
 const getStatusColor = (status: ReviewStatus): string => {
   const colors: Record<ReviewStatus, string> = {
-    draft: 'bg-gray-100 text-gray-800',
+    draft: 'bg-[var(--bg-sunken)] text-foreground',
     self_assessment: 'bg-blue-100 text-blue-800',
     manager_review: 'bg-indigo-100 text-indigo-800',
     calibration: 'bg-purple-100 text-purple-800',
@@ -44,7 +44,7 @@ const getStatusColor = (status: ReviewStatus): string => {
     completed: 'bg-green-100 text-green-800',
     cancelled: 'bg-red-100 text-red-800',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-[var(--bg-sunken)] text-foreground';
 };
 
 // ----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
   const isOverdue = review.dueDate && new Date(review.dueDate) < new Date();
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm overflow-hidden">
       <div className="p-4">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
@@ -100,8 +100,8 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
               <ClipboardList className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">{review.employeeName}</h3>
-              <p className="text-sm text-gray-500">{review.employeePosition}</p>
+              <h3 className="font-semibold text-foreground">{review.employeeName}</h3>
+              <p className="text-sm text-muted-foreground">{review.employeePosition}</p>
             </div>
           </div>
           <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(review.status)}`}>
@@ -111,26 +111,26 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         
         {/* Details */}
         <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Calendar className="w-4 h-4 text-[var(--fg-tertiary)]" />
             <span>{REVIEW_CYCLE_LABELS[review.reviewCycle]}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <User className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <User className="w-4 h-4 text-[var(--fg-tertiary)]" />
             <span>Manager: {review.managerName}</span>
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Period: {formatDate(review.periodStart)} - {formatDate(review.periodEnd)}
           </p>
         </div>
         
         {/* Progress */}
         <div className="mb-4">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
+          <div className="flex justify-between text-xs text-muted-foreground mb-1">
             <span>Progress</span>
             <span>{review.currentStep}/{review.totalSteps} steps</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-1.5">
+          <div className="w-full bg-[var(--bg-sunken)] rounded-full h-1.5">
             <div 
               className="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -142,20 +142,20 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         {review.finalRating && (
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-foreground">
               {review.finalRating.toFixed(1)} - {getRatingLabel(review.finalRating)}
             </span>
           </div>
         )}
         
         {/* Due Date */}
-        <p className={`text-xs ${isOverdue ? 'text-red-600' : 'text-gray-500'}`}>
+        <p className={`text-xs ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
           Due: {formatDate(review.dueDate)}
         </p>
       </div>
       
       {/* Actions */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex gap-2">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex gap-2">
         <button
           onClick={onView}
           className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"

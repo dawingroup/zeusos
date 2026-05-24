@@ -56,21 +56,21 @@ export const TalentPoolMatrix: React.FC<TalentPoolMatrixProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">9-Box Talent Matrix</h3>
-        <span className="text-sm text-gray-500">{members.length} members</span>
+        <h3 className="font-semibold text-foreground">9-Box Talent Matrix</h3>
+        <span className="text-sm text-muted-foreground">{members.length} members</span>
       </div>
 
       {/* Axis Labels */}
       <div className="relative">
         {/* Y-Axis Label */}
-        <div className="absolute -left-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-medium text-gray-500 whitespace-nowrap">
+        <div className="absolute -left-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-medium text-muted-foreground whitespace-nowrap">
           POTENTIAL →
         </div>
 
         {/* X-Axis Label */}
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium text-gray-500">
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-medium text-muted-foreground">
           PERFORMANCE →
         </div>
 
@@ -111,13 +111,13 @@ export const TalentPoolMatrix: React.FC<TalentPoolMatrixProps> = ({
                     <button
                       key={getMemberId(member)}
                       onClick={() => onMemberClick?.(getMemberId(member))}
-                      className="w-full text-left text-xs p-1 rounded bg-white hover:bg-gray-50 truncate shadow-sm"
+                      className="w-full text-left text-xs p-1 rounded bg-card hover:bg-[var(--bg-sunken)] truncate shadow-sm"
                     >
                       {getMemberName(member)}
                     </button>
                   ))}
                   {cellMembers.length > (compact ? 2 : 4) && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       +{cellMembers.length - (compact ? 2 : 4)} more
                     </span>
                   )}
@@ -129,8 +129,8 @@ export const TalentPoolMatrix: React.FC<TalentPoolMatrixProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="mt-8 pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500 mb-2">Action Guide:</p>
+      <div className="mt-8 pt-4 border-t border-[var(--border-subtle)]">
+        <p className="text-xs text-muted-foreground mb-2">Action Guide:</p>
         <div className="flex flex-wrap gap-2 text-xs">
           <span className="px-2 py-1 rounded" style={{ backgroundColor: `${NINE_BOX_COLORS.star}20`, color: NINE_BOX_COLORS.star }}>
             Stars: Promote

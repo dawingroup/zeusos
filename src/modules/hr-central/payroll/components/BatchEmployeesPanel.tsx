@@ -108,8 +108,8 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
   if (payrolls.length === 0) {
     return (
       <Card>
-        <CardContent className="py-12 text-center text-sm text-gray-500">
-          <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+        <CardContent className="py-12 text-center text-sm text-muted-foreground">
+          <Users className="w-8 h-8 text-[var(--fg-tertiary)] mx-auto mb-2" />
           No payslips have been calculated for this batch yet.
         </CardContent>
       </Card>
@@ -119,10 +119,10 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
   return (
     <Card>
       <CardContent className="p-0">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between gap-3">
+        <div className="px-4 py-3 border-b border-[var(--border-subtle)] flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-gray-900">Employees in this batch</h2>
-            <p className="text-xs text-gray-500">
+            <h2 className="text-base font-semibold text-foreground">Employees in this batch</h2>
+            <p className="text-xs text-muted-foreground">
               {filtered.length} of {payrolls.length} {payrolls.length === 1 ? 'payslip' : 'payslips'} ·
               {' '}Net {formatCurrency(totals.net)}
               {batchSubsidiaryId && hasSplitRows && (
@@ -131,7 +131,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
             </p>
           </div>
           <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--fg-tertiary)]" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -143,7 +143,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500">
+            <thead className="bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)] text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-2 text-left w-8"></th>
                 <th className="px-4 py-2 text-left">Employee</th>
@@ -165,14 +165,14 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                   <>
                     <tr
                       key={p.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                      className="border-b border-[var(--border-subtle)] hover:bg-[var(--bg-sunken)] cursor-pointer"
                       onClick={() => setExpandedId(isOpen ? null : p.id)}
                     >
-                      <td className="px-4 py-2 text-gray-400">
+                      <td className="px-4 py-2 text-[var(--fg-tertiary)]">
                         {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                       </td>
                       <td className="px-4 py-2">
-                        <div className="font-medium text-gray-900 flex items-center gap-1.5">
+                        <div className="font-medium text-foreground flex items-center gap-1.5">
                           {p.employeeName}
                           {showSplitChip && (
                             <span
@@ -189,20 +189,20 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-gray-400 font-mono">{p.employeeNumber}</div>
+                        <div className="text-[11px] text-[var(--fg-tertiary)] font-mono">{p.employeeNumber}</div>
                       </td>
-                      <td className="px-4 py-2 text-gray-700">{p.departmentName || '—'}</td>
+                      <td className="px-4 py-2 text-muted-foreground">{p.departmentName || '—'}</td>
                       <td className="px-4 py-2 text-right font-mono">{formatCurrency(r.grossPay)}</td>
                       <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.payeNet)}</td>
                       <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.nssfEmployee)}</td>
                       <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(r.totalDeductions)}</td>
-                      <td className="px-4 py-2 text-right font-mono font-semibold text-gray-900">{formatCurrency(r.netPay)}</td>
-                      <td className="px-4 py-2 text-xs text-gray-600 capitalize">
+                      <td className="px-4 py-2 text-right font-mono font-semibold text-foreground">{formatCurrency(r.netPay)}</td>
+                      <td className="px-4 py-2 text-xs text-muted-foreground capitalize">
                         {p.paymentMethod.replace('_', ' ')}
                       </td>
                     </tr>
                     {isOpen && (
-                      <tr key={`${p.id}-detail`} className="bg-gray-50 border-b border-gray-100">
+                      <tr key={`${p.id}-detail`} className="bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)]">
                         <td></td>
                         <td colSpan={8} className="px-4 py-3">
                           {showSplitChip && !r.isHost && (
@@ -214,7 +214,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                           )}
                           <div className="grid grid-cols-2 gap-6 text-xs">
                             <div>
-                              <div className="font-medium text-gray-700 mb-1.5">
+                              <div className="font-medium text-muted-foreground mb-1.5">
                                 Earnings{showSplitChip ? ` (× ${(r.factor * 100).toFixed(0)}%)` : ''}
                               </div>
                               <div className="space-y-0.5">
@@ -226,7 +226,7 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                               </div>
                             </div>
                             <div>
-                              <div className="font-medium text-gray-700 mb-1.5">Deductions</div>
+                              <div className="font-medium text-muted-foreground mb-1.5">Deductions</div>
                               <div className="space-y-0.5">
                                 <Row label="PAYE" value={r.payeNet} negative />
                                 <Row label="NSSF (employee)" value={r.nssfEmployee} negative />
@@ -236,13 +236,13 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                                 ))}
                                 <Row label="Total deductions" value={r.totalDeductions} bold negative />
                               </div>
-                              <div className="mt-2 pt-2 border-t border-gray-200">
+                              <div className="mt-2 pt-2 border-t border-[var(--border-subtle)]">
                                 <Row label="Net pay" value={r.netPay} bold large />
                               </div>
                             </div>
                           </div>
                           {(p.bankDetails || p.mobileMoneyDetails) && (
-                            <div className="mt-3 pt-2 border-t border-gray-200 text-[11px] text-gray-600">
+                            <div className="mt-3 pt-2 border-t border-[var(--border-subtle)] text-[11px] text-muted-foreground">
                               {p.bankDetails && (
                                 <>
                                   <span className="font-medium">Bank:</span> {p.bankDetails.bankName} · {p.bankDetails.accountNumber}
@@ -262,9 +262,9 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
                 );
               })}
             </tbody>
-            <tfoot className="bg-gray-50 border-t border-gray-200 text-xs">
+            <tfoot className="bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] text-xs">
               <tr>
-                <td colSpan={3} className="px-4 py-2 font-medium text-gray-700">Totals ({filtered.length})</td>
+                <td colSpan={3} className="px-4 py-2 font-medium text-muted-foreground">Totals ({filtered.length})</td>
                 <td className="px-4 py-2 text-right font-mono">{formatCurrency(totals.gross)}</td>
                 <td colSpan={2}></td>
                 <td className="px-4 py-2 text-right font-mono text-red-700">{formatCurrency(totals.deductions)}</td>
@@ -282,8 +282,8 @@ export function BatchEmployeesPanel({ payrolls, batchSubsidiaryId }: Props) {
 function Row({ label, value, bold, large, negative }: { label: string; value: number; bold?: boolean; large?: boolean; negative?: boolean }) {
   return (
     <div className={`flex justify-between ${large ? 'text-sm' : ''}`}>
-      <span className={`${bold ? 'font-medium text-gray-800' : 'text-gray-600'}`}>{label}</span>
-      <span className={`font-mono ${bold ? 'font-semibold' : ''} ${negative ? 'text-red-700' : 'text-gray-900'}`}>
+      <span className={`${bold ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>{label}</span>
+      <span className={`font-mono ${bold ? 'font-semibold' : ''} ${negative ? 'text-red-700' : 'text-foreground'}`}>
         {formatCurrency(value)}
       </span>
     </div>

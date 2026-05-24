@@ -54,7 +54,7 @@ const STATUS_META: Record<AttendanceStatus, { letter: string; label: string; bg:
   leave:    { letter: 'LV', label: 'Leave',     bg: 'bg-blue-100',   text: 'text-blue-800' },
   sick:     { letter: 'S',  label: 'Sick',      bg: 'bg-pink-100',   text: 'text-pink-800' },
   holiday:  { letter: 'PH', label: 'Holiday',   bg: 'bg-purple-100', text: 'text-purple-800' },
-  weekend:  { letter: '·',  label: 'Weekend',   bg: 'bg-gray-100',   text: 'text-gray-400' },
+  weekend:  { letter: '·',  label: 'Weekend',   bg: 'bg-[var(--bg-sunken)]',   text: 'text-[var(--fg-tertiary)]' },
 };
 
 function cellKey(employeeId: string, date: string): string {
@@ -217,16 +217,16 @@ export function AttendanceMatrix({
     <div className="space-y-3">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="w-4 h-4" />
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-foreground">
             {format(new Date(period + '-01'), 'MMMM yyyy')}
           </span>
-          <span className="text-gray-400">·</span>
+          <span className="text-[var(--fg-tertiary)]">·</span>
           <span>{sortedEmployees.length} employees</span>
           {dirtyCount > 0 && (
             <>
-              <span className="text-gray-400">·</span>
+              <span className="text-[var(--fg-tertiary)]">·</span>
               <span className="text-amber-700 font-medium">{dirtyCount} unsaved</span>
             </>
           )}
@@ -262,25 +262,25 @@ export function AttendanceMatrix({
 
       {/* Matrix */}
       {loading ? (
-        <div className="py-12 flex items-center justify-center text-gray-500">
+        <div className="py-12 flex items-center justify-center text-muted-foreground">
           <Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading attendance…
         </div>
       ) : sortedEmployees.length === 0 ? (
-        <div className="py-12 text-center text-gray-500 text-sm">
+        <div className="py-12 text-center text-muted-foreground text-sm">
           No active employees in the selected period.
         </div>
       ) : (
-        <div className="border border-gray-200 rounded-lg overflow-auto bg-white">
+        <div className="border border-[var(--border-subtle)] rounded-lg overflow-auto bg-card">
           <table className="text-xs border-collapse" style={{ minWidth: '100%' }}>
             <thead>
-              <tr className="bg-gray-50 sticky top-0 z-10">
-                <th className="sticky left-0 bg-gray-50 px-3 py-2 text-left font-medium text-gray-700 border-r border-gray-200 z-20" style={{ minWidth: 200 }}>
+              <tr className="bg-[var(--bg-sunken)] sticky top-0 z-10">
+                <th className="sticky left-0 bg-[var(--bg-sunken)] px-3 py-2 text-left font-medium text-muted-foreground border-r border-[var(--border-subtle)] z-20" style={{ minWidth: 200 }}>
                   Employee
                 </th>
                 {days.map(d => (
                   <th
                     key={d.date}
-                    className={`px-1 py-2 text-center font-medium border-r border-gray-100 ${d.isWeekend ? 'bg-gray-100 text-gray-400' : 'text-gray-700'}`}
+                    className={`px-1 py-2 text-center font-medium border-r border-[var(--border-subtle)] ${d.isWeekend ? 'bg-[var(--bg-sunken)] text-[var(--fg-tertiary)]' : 'text-muted-foreground'}`}
                     style={{ minWidth: 32 }}
                   >
                     <DropdownMenu>
@@ -291,7 +291,7 @@ export function AttendanceMatrix({
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="center" className="w-40">
-                        <div className="px-2 py-1 text-[10px] text-gray-500 uppercase tracking-wide">
+                        <div className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wide">
                           Set whole column
                         </div>
                         {PICKABLE_STATUSES.map(s => (
@@ -306,7 +306,7 @@ export function AttendanceMatrix({
                     </DropdownMenu>
                   </th>
                 ))}
-                <th className="px-2 py-2 text-center font-medium text-gray-700 border-l border-gray-200" style={{ minWidth: 130 }}>
+                <th className="px-2 py-2 text-center font-medium text-muted-foreground border-l border-[var(--border-subtle)]" style={{ minWidth: 130 }}>
                   Summary
                 </th>
               </tr>
@@ -315,19 +315,19 @@ export function AttendanceMatrix({
               {sortedEmployees.map((emp, i) => {
                 const sum = summaries.get(emp.id)!;
                 return (
-                  <tr key={emp.id} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                    <td className="sticky left-0 bg-inherit px-3 py-1.5 border-r border-gray-200 font-medium text-gray-900">
+                  <tr key={emp.id} className={i % 2 === 0 ? 'bg-card' : 'bg-[var(--bg-sunken)]/50'}>
+                    <td className="sticky left-0 bg-inherit px-3 py-1.5 border-r border-[var(--border-subtle)] font-medium text-foreground">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="text-left hover:text-blue-600 focus:outline-none">
                             {emp.fullName}
                             {emp.employeeNumber && (
-                              <span className="ml-2 text-gray-400 font-mono text-[10px]">{emp.employeeNumber}</span>
+                              <span className="ml-2 text-[var(--fg-tertiary)] font-mono text-[10px]">{emp.employeeNumber}</span>
                             )}
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-44">
-                          <div className="px-2 py-1 text-[10px] text-gray-500 uppercase tracking-wide">
+                          <div className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wide">
                             Set whole row (workdays)
                           </div>
                           {PICKABLE_STATUSES.map(s => (
@@ -348,13 +348,13 @@ export function AttendanceMatrix({
                       return (
                         <td
                           key={d.date}
-                          className={`p-0.5 border-r border-gray-100 text-center ${d.isWeekend ? 'bg-gray-50' : ''}`}
+                          className={`p-0.5 border-r border-[var(--border-subtle)] text-center ${d.isWeekend ? 'bg-[var(--bg-sunken)]' : ''}`}
                         >
                           <Popover>
                             <PopoverTrigger asChild>
                               <button
                                 className={`w-7 h-6 text-[10px] font-mono font-bold rounded ${
-                                  meta ? `${meta.bg} ${meta.text}` : 'bg-white border border-dashed border-gray-300 text-gray-300 hover:border-gray-400'
+                                  meta ? `${meta.bg} ${meta.text}` : 'bg-card border border-dashed border-[var(--border-default)] text-[var(--fg-tertiary)] hover:border-[var(--border-strong)]'
                                 } ${isDirty ? 'ring-2 ring-amber-400 ring-offset-0' : ''}`}
                                 title={meta ? `${meta.label}${isDirty ? ' (unsaved)' : ''}` : 'No record'}
                               >
@@ -362,14 +362,14 @@ export function AttendanceMatrix({
                               </button>
                             </PopoverTrigger>
                             <PopoverContent className="w-44 p-1" align="center">
-                              <div className="px-2 py-1 text-[10px] text-gray-500 uppercase tracking-wide">
+                              <div className="px-2 py-1 text-[10px] text-muted-foreground uppercase tracking-wide">
                                 {format(new Date(d.date), 'EEE, dd MMM')}
                               </div>
                               {PICKABLE_STATUSES.map(s => (
                                 <button
                                   key={s}
                                   onClick={() => setCell(emp.id, d.date, s)}
-                                  className="flex items-center w-full px-2 py-1 text-sm text-left rounded hover:bg-gray-100"
+                                  className="flex items-center w-full px-2 py-1 text-sm text-left rounded hover:bg-[var(--bg-sunken)]"
                                 >
                                   <span className={`inline-block w-5 text-center font-mono font-bold mr-2 rounded ${STATUS_META[s].bg} ${STATUS_META[s].text}`}>
                                     {STATUS_META[s].letter}
@@ -382,10 +382,10 @@ export function AttendanceMatrix({
                         </td>
                       );
                     })}
-                    <td className="px-2 py-1 border-l border-gray-200 text-center text-[11px] text-gray-700">
+                    <td className="px-2 py-1 border-l border-[var(--border-subtle)] text-center text-[11px] text-muted-foreground">
                       <div className="flex items-center justify-center gap-2">
                         <span title="Worked (P+L+½H)" className="text-green-700 font-medium">{sum.worked}</span>
-                        <span className="text-gray-300">/</span>
+                        <span className="text-[var(--fg-tertiary)]">/</span>
                         <span title="Absent" className="text-red-700">{sum.absent}</span>
                         <span title="Leave/Sick" className="text-blue-700">{sum.leave + sum.sick}</span>
                         {sum.unrecorded > 0 && (
@@ -402,7 +402,7 @@ export function AttendanceMatrix({
       )}
 
       {dirtyCount === 0 && records.length > 0 && !loading && (
-        <div className="text-xs text-gray-500 flex items-center gap-1.5">
+        <div className="text-xs text-muted-foreground flex items-center gap-1.5">
           <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
           All changes saved.
         </div>

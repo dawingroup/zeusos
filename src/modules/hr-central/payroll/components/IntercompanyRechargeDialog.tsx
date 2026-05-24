@@ -85,18 +85,18 @@ export function IntercompanyRechargeDialog({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-card rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
         <div className="flex items-start justify-between p-5 border-b">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-foreground">
               Intercompany recharge — {year}-{String(month).padStart(2, '0')}
             </h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Host → recipient cost allocations for split employees.
               Treatment: contra-expense at host (Model A).
             </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="text-[var(--fg-tertiary)] hover:text-muted-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -113,7 +113,7 @@ export function IntercompanyRechargeDialog({
             </div>
           )}
           {schedule && !loading && schedule.pairs.length === 0 && (
-            <div className="rounded bg-gray-50 border border-gray-200 p-4 text-sm text-gray-600">
+            <div className="rounded bg-[var(--bg-sunken)] border border-[var(--border-subtle)] p-4 text-sm text-muted-foreground">
               No split employees found for this period. Nothing to recharge.
             </div>
           )}
@@ -126,32 +126,32 @@ export function IntercompanyRechargeDialog({
               {schedule.pairs.map(pair => (
                 <div
                   key={`${pair.hostSubsidiaryId}__${pair.recipientSubsidiaryId}`}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-[var(--border-subtle)] rounded-lg overflow-hidden"
                 >
-                  <div className="bg-gray-50 px-4 py-3 border-b">
+                  <div className="bg-[var(--bg-sunken)] px-4 py-3 border-b">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">
+                        <p className="text-sm font-semibold text-foreground">
                           {pair.hostSubsidiaryName} → {pair.recipientSubsidiaryName}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           {pair.lineCount} employee{pair.lineCount === 1 ? '' : 's'}
                         </p>
                       </div>
-                      <p className="text-base font-semibold text-gray-900">
+                      <p className="text-base font-semibold text-foreground">
                         {formatUGX(pair.totalRecharge)}
                       </p>
                     </div>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
-                      <thead className="bg-white border-b">
+                      <thead className="bg-card border-b">
                         <tr>
-                          <th className="text-left px-3 py-2 font-medium text-gray-600">Employee</th>
-                          <th className="text-right px-3 py-2 font-medium text-gray-600">Alloc%</th>
-                          <th className="text-right px-3 py-2 font-medium text-gray-600">Gross</th>
-                          <th className="text-right px-3 py-2 font-medium text-gray-600">Empl. NSSF</th>
-                          <th className="text-right px-3 py-2 font-medium text-gray-600">Recharge</th>
+                          <th className="text-left px-3 py-2 font-medium text-muted-foreground">Employee</th>
+                          <th className="text-right px-3 py-2 font-medium text-muted-foreground">Alloc%</th>
+                          <th className="text-right px-3 py-2 font-medium text-muted-foreground">Gross</th>
+                          <th className="text-right px-3 py-2 font-medium text-muted-foreground">Empl. NSSF</th>
+                          <th className="text-right px-3 py-2 font-medium text-muted-foreground">Recharge</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -159,7 +159,7 @@ export function IntercompanyRechargeDialog({
                           <tr key={l.employeeId} className="border-t">
                             <td className="px-3 py-1.5">
                               <span className="font-medium">{l.employeeName}</span>
-                              <span className="text-gray-400 ml-1">({l.employeeNumber})</span>
+                              <span className="text-[var(--fg-tertiary)] ml-1">({l.employeeNumber})</span>
                             </td>
                             <td className="px-3 py-1.5 text-right">{l.allocationPercent.toFixed(1)}%</td>
                             <td className="px-3 py-1.5 text-right">{l.grossPay.toLocaleString()}</td>
@@ -170,11 +170,11 @@ export function IntercompanyRechargeDialog({
                       </tbody>
                     </table>
                   </div>
-                  <details className="border-t bg-gray-50">
-                    <summary className="px-4 py-2 text-xs text-gray-600 cursor-pointer hover:bg-gray-100">
+                  <details className="border-t bg-[var(--bg-sunken)]">
+                    <summary className="px-4 py-2 text-xs text-muted-foreground cursor-pointer hover:bg-[var(--bg-sunken)]">
                       Journal entry template
                     </summary>
-                    <pre className="px-4 py-3 text-xs font-mono whitespace-pre-wrap text-gray-800 bg-white">
+                    <pre className="px-4 py-3 text-xs font-mono whitespace-pre-wrap text-foreground bg-card">
 {rechargeJournalEntries(pair, schedule.period)}
                     </pre>
                   </details>
@@ -184,8 +184,8 @@ export function IntercompanyRechargeDialog({
           )}
         </div>
 
-        <div className="p-4 border-t bg-gray-50 flex items-center justify-between">
-          <p className="text-xs text-gray-500">
+        <div className="p-4 border-t bg-[var(--bg-sunken)] flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">
             {copyHint || 'Schedule supports the TP file alongside the intercompany services agreement.'}
           </p>
           <div className="flex gap-2">

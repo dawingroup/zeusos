@@ -57,11 +57,11 @@ export const RatingInput: React.FC<RatingInputProps> = ({
   
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-muted-foreground mb-1">
         {label}
       </label>
       {description && (
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="text-sm text-muted-foreground mb-2">
           {description}
         </p>
       )}
@@ -81,7 +81,7 @@ export const RatingInput: React.FC<RatingInputProps> = ({
                 className={`${starSize} transition-colors ${
                   value && star <= value
                     ? 'text-amber-500 fill-amber-500'
-                    : 'text-gray-300'
+                    : 'text-[var(--fg-tertiary)]'
                 }`}
               />
             </button>

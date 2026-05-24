@@ -65,7 +65,7 @@ const STATUS_CONFIG: Record<AdvanceStatus, { label: string; color: string; icon:
   partially_recovered: { label: 'Recovering', color: 'bg-cyan-100 text-cyan-700', icon: <Wallet className="h-3 w-3" /> },
   fully_recovered: { label: 'Recovered', color: 'bg-green-100 text-green-700', icon: <CheckCircle className="h-3 w-3" /> },
   rejected: { label: 'Rejected', color: 'bg-red-100 text-red-700', icon: <XCircle className="h-3 w-3" /> },
-  cancelled: { label: 'Cancelled', color: 'bg-gray-100 text-gray-700', icon: <XCircle className="h-3 w-3" /> },
+  cancelled: { label: 'Cancelled', color: 'bg-[var(--bg-sunken)] text-muted-foreground', icon: <XCircle className="h-3 w-3" /> },
 };
 
 function formatCurrency(amount: number): string {

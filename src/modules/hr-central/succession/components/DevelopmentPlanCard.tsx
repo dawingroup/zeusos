@@ -35,11 +35,11 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
   const getStatusColor = () => {
     switch (plan.status) {
       case 'active': return 'text-green-600 bg-green-50';
-      case 'draft': return 'text-gray-600 bg-gray-100';
+      case 'draft': return 'text-muted-foreground bg-[var(--bg-sunken)]';
       case 'on_hold': return 'text-amber-600 bg-amber-50';
       case 'completed': return 'text-blue-600 bg-blue-50';
       case 'cancelled': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-100';
+      default: return 'text-muted-foreground bg-[var(--bg-sunken)]';
     }
   };
 
@@ -57,7 +57,7 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
 
   return (
     <div
-      className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm hover:shadow-md transition-shadow cursor-pointer"
       onClick={() => onSelect?.(plan)}
     >
       <div className="p-4">
@@ -68,9 +68,9 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
               <Target className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">{plan.employeeName}</h3>
+              <h3 className="font-semibold text-foreground">{plan.employeeName}</h3>
               {plan.targetRoleTitle && (
-                <p className="text-sm text-gray-500">Target: {plan.targetRoleTitle}</p>
+                <p className="text-sm text-muted-foreground">Target: {plan.targetRoleTitle}</p>
               )}
             </div>
           </div>
@@ -80,11 +80,11 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
         </div>
 
         {/* Objective */}
-        <p className="text-sm text-gray-600 mb-4 line-clamp-2">{plan.objective}</p>
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{plan.objective}</p>
 
         {/* Target Readiness */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-sm text-gray-500">Target:</span>
+          <span className="text-sm text-muted-foreground">Target:</span>
           <span
             className="px-2 py-1 text-xs font-medium rounded"
             style={{
@@ -98,11 +98,11 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
 
         {/* Progress Bar */}
         <div className="mb-4">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
+          <div className="flex justify-between text-xs text-muted-foreground mb-1">
             <span>Overall Progress</span>
             <span>{plan.overallProgress}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
             <div
               className={`h-2 rounded-full transition-all duration-300 ${getProgressColor()}`}
               style={{ width: `${plan.overallProgress}%` }}
@@ -112,26 +112,26 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
 
         {/* Actions Summary */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="text-center p-2 bg-gray-50 rounded">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
             <div className="flex items-center justify-center gap-1">
               <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="font-bold text-gray-900">{completedActions}</span>
+              <span className="font-bold text-foreground">{completedActions}</span>
             </div>
-            <p className="text-xs text-gray-500">Done</p>
+            <p className="text-xs text-muted-foreground">Done</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
             <div className="flex items-center justify-center gap-1">
               <Clock className="w-4 h-4 text-amber-500" />
-              <span className="font-bold text-gray-900">{inProgressActions}</span>
+              <span className="font-bold text-foreground">{inProgressActions}</span>
             </div>
-            <p className="text-xs text-gray-500">Active</p>
+            <p className="text-xs text-muted-foreground">Active</p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded">
+          <div className="text-center p-2 bg-[var(--bg-sunken)] rounded">
             <div className="flex items-center justify-center gap-1">
-              <AlertCircle className="w-4 h-4 text-gray-400" />
-              <span className="font-bold text-gray-900">{totalActions - completedActions - inProgressActions}</span>
+              <AlertCircle className="w-4 h-4 text-[var(--fg-tertiary)]" />
+              <span className="font-bold text-foreground">{totalActions - completedActions - inProgressActions}</span>
             </div>
-            <p className="text-xs text-gray-500">Pending</p>
+            <p className="text-xs text-muted-foreground">Pending</p>
           </div>
         </div>
 
@@ -145,21 +145,21 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
                   ? 'bg-green-100 text-green-700'
                   : action.status === 'in_progress'
                   ? 'bg-amber-100 text-amber-700'
-                  : 'bg-gray-100 text-gray-600'
+                  : 'bg-[var(--bg-sunken)] text-muted-foreground'
               }`}
             >
               {DEVELOPMENT_ACTION_LABELS[action.type]}
             </span>
           ))}
           {plan.actions.length > 3 && (
-            <span className="px-2 py-0.5 text-xs text-gray-500">
+            <span className="px-2 py-0.5 text-xs text-muted-foreground">
               +{plan.actions.length - 3}
             </span>
           )}
         </div>
 
         {/* Target Date */}
-        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-red-600' : 'text-gray-600'}`}>
+        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
           <Calendar className="w-4 h-4" />
           <span>
             Target: {plan.targetDate.toDate().toLocaleDateString()}
@@ -169,7 +169,7 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
 
         {/* Mentor/Sponsor */}
         {(plan.mentorId || plan.sponsorId) && (
-          <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
             <User className="w-3 h-3" />
             <span>
               {plan.sponsorId && 'Sponsored'}
@@ -181,7 +181,7 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
       </div>
 
       {/* Action Footer */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+      <div className="px-4 py-3 bg-[var(--bg-sunken)] border-t border-[var(--border-subtle)] flex justify-between items-center">
         {plan.status === 'draft' && onActivate ? (
           <button
             onClick={(e) => {
@@ -193,11 +193,11 @@ export const DevelopmentPlanCard: React.FC<DevelopmentPlanCardProps> = ({
             Activate Plan
           </button>
         ) : (
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-muted-foreground">
             {plan.actions.filter(a => a.status === 'completed').length}/{plan.actions.length} actions completed
           </span>
         )}
-        <ChevronRight className="w-4 h-4 text-gray-400" />
+        <ChevronRight className="w-4 h-4 text-[var(--fg-tertiary)]" />
       </div>
     </div>
   );

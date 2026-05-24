@@ -37,7 +37,7 @@ interface GoalCardProps {
 
 const getStatusColor = (status: GoalStatus): string => {
   const colors: Record<GoalStatus, string> = {
-    not_started: 'bg-gray-100 text-gray-800',
+    not_started: 'bg-[var(--bg-sunken)] text-foreground',
     in_progress: 'bg-blue-100 text-blue-800',
     on_track: 'bg-indigo-100 text-indigo-800',
     at_risk: 'bg-amber-100 text-amber-800',
@@ -45,7 +45,7 @@ const getStatusColor = (status: GoalStatus): string => {
     exceeded: 'bg-emerald-100 text-emerald-800',
     cancelled: 'bg-red-100 text-red-800',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-[var(--bg-sunken)] text-foreground';
 };
 
 const getPriorityColor = (priority: string): string => {
@@ -53,9 +53,9 @@ const getPriorityColor = (priority: string): string => {
     critical: 'bg-red-100 text-red-800',
     high: 'bg-amber-100 text-amber-800',
     medium: 'bg-blue-100 text-blue-800',
-    low: 'bg-gray-100 text-gray-800',
+    low: 'bg-[var(--bg-sunken)] text-foreground',
   };
-  return colors[priority] || 'bg-gray-100 text-gray-800';
+  return colors[priority] || 'bg-[var(--bg-sunken)] text-foreground';
 };
 
 // ----------------------------------------------------------------------------
@@ -93,14 +93,14 @@ export const GoalCard: React.FC<GoalCardProps> = ({
   const progressColor = goal.progress >= 100 ? 'bg-green-500' : 'bg-indigo-600';
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm h-full flex flex-col">
+    <div className="bg-card rounded-lg border border-[var(--border-subtle)] shadow-sm h-full flex flex-col">
       <div className="p-4 flex-1">
         {/* Header */}
         <div className="flex justify-between items-start mb-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{goal.title}</h3>
+            <h3 className="font-semibold text-foreground truncate">{goal.title}</h3>
             <div className="flex gap-2 mt-1 flex-wrap">
-              <span className="px-2 py-0.5 text-xs font-medium rounded-full border border-gray-300 text-gray-700">
+              <span className="px-2 py-0.5 text-xs font-medium rounded-full border border-[var(--border-default)] text-muted-foreground">
                 {GOAL_TYPE_LABELS[goal.type]}
               </span>
               <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getPriorityColor(goal.priority)}`}>
@@ -111,22 +111,22 @@ export const GoalCard: React.FC<GoalCardProps> = ({
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1 hover:bg-gray-100 rounded-full"
+              className="p-1 hover:bg-[var(--bg-sunken)] rounded-full"
             >
-              <MoreVertical className="w-5 h-5 text-gray-500" />
+              <MoreVertical className="w-5 h-5 text-muted-foreground" />
             </button>
             {menuOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+              <div className="absolute right-0 mt-1 w-48 bg-card rounded-md shadow-lg border border-[var(--border-subtle)] z-10">
                 <button
                   onClick={() => { onUpdateProgress?.(); setMenuOpen(false); }}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2"
                 >
                   <TrendingUp className="w-4 h-4" />
                   Update Progress
                 </button>
                 <button
                   onClick={() => { onEdit?.(); setMenuOpen(false); }}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2"
                 >
                   <Edit className="w-4 h-4" />
                   Edit Goal
@@ -134,14 +134,14 @@ export const GoalCard: React.FC<GoalCardProps> = ({
                 <button
                   onClick={() => { onComplete?.(); setMenuOpen(false); }}
                   disabled={goal.status === 'completed' || goal.status === 'exceeded'}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CheckCircle className="w-4 h-4" />
                   Mark Complete
                 </button>
                 <button
                   onClick={() => { onDelete?.(); setMenuOpen(false); }}
-                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600"
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-sunken)] flex items-center gap-2 text-red-600"
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete
@@ -152,17 +152,17 @@ export const GoalCard: React.FC<GoalCardProps> = ({
         </div>
         
         {/* Description */}
-        <p className="text-sm text-gray-500 mb-4 line-clamp-2">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
           {goal.description}
         </p>
         
         {/* Progress */}
         <div className="mb-4">
           <div className="flex justify-between text-xs mb-1">
-            <span className="text-gray-500">Progress</span>
-            <span className="font-semibold text-gray-700">{goal.progress}%</span>
+            <span className="text-muted-foreground">Progress</span>
+            <span className="font-semibold text-muted-foreground">{goal.progress}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
             <div 
               className={`${progressColor} h-2 rounded-full transition-all duration-300`}
               style={{ width: `${Math.min(goal.progress, 100)}%` }}
@@ -173,10 +173,10 @@ export const GoalCard: React.FC<GoalCardProps> = ({
         {/* Target (if quantitative) */}
         {goal.measurementType === 'quantitative' && goal.targetValue && (
           <div className="flex justify-between text-sm mb-3">
-            <span className="text-gray-700">
+            <span className="text-muted-foreground">
               Current: {goal.currentValue?.toLocaleString() || 0} {goal.targetUnit}
             </span>
-            <span className="text-gray-500">
+            <span className="text-muted-foreground">
               Target: {goal.targetValue.toLocaleString()} {goal.targetUnit}
             </span>
           </div>
@@ -187,7 +187,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
           <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(goal.status)}`}>
             {GOAL_STATUS_LABELS[goal.status]}
           </span>
-          <span className={`text-xs ${isOverdue ? 'text-red-600' : 'text-gray-500'}`}>
+          <span className={`text-xs ${isOverdue ? 'text-red-600' : 'text-muted-foreground'}`}>
             Due: {formatDate(goal.dueDate)}
           </span>
         </div>

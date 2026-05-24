@@ -109,15 +109,15 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+      <div className="relative bg-card rounded-lg shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold text-gray-900">{titles[action]}</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
-            <X className="h-5 w-5 text-gray-500" />
+          <h3 className="text-lg font-semibold text-foreground">{titles[action]}</h3>
+          <button onClick={onClose} className="p-1 hover:bg-[var(--bg-sunken)] rounded">
+            <X className="h-5 w-5 text-muted-foreground" />
           </button>
         </div>
         <div className="p-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-muted-foreground mb-2">
             Comments {action !== 'approve' && <span className="text-red-500">*</span>}
           </label>
           <textarea
@@ -125,13 +125,13 @@ const ApprovalDialog: React.FC<ApprovalDialogProps> = ({
             onChange={(e) => setComments(e.target.value)}
             placeholder={action === 'approve' ? 'Optional comments...' : 'Please provide a reason...'}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-[var(--border-default)] rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
         <div className="flex justify-end gap-3 p-4 border-t">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-4 py-2 text-sm font-medium text-muted-foreground bg-card border border-[var(--border-default)] rounded-md hover:bg-[var(--bg-sunken)]"
           >
             Cancel
           </button>
@@ -248,11 +248,11 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)] p-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{batch.batchNumber}</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-2xl font-bold text-foreground">{batch.batchNumber}</h1>
+            <p className="text-muted-foreground mt-1">
               {batch.subsidiaryName} • {periodLabel}
             </p>
           </div>
@@ -331,14 +331,14 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
               <>
                 <button
                   onClick={onDownloadPayslips}
-                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 border border-[var(--border-default)] text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)] transition-colors"
                 >
                   <FileText className="h-4 w-4" />
                   Download Payslips
                 </button>
                 <button
                   onClick={onDownloadReport}
-                  className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 border border-[var(--border-default)] text-muted-foreground rounded-md hover:bg-[var(--bg-sunken)] transition-colors"
                 >
                   <Download className="h-4 w-4" />
                   Download Report
@@ -399,8 +399,8 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
       </KPIGrid>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg border border-gray-200">
-        <div className="border-b border-gray-200">
+      <div className="bg-card rounded-lg border border-[var(--border-subtle)]">
+        <div className="border-b border-[var(--border-subtle)]">
           <nav className="flex -mb-px">
             {['Summary', 'Employees', 'Approval History'].map((tab, index) => (
               <button
@@ -409,7 +409,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === index
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
                 }`}
               >
                 {tab}
@@ -424,22 +424,22 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             <div className="grid md:grid-cols-2 gap-6">
               {/* Statutory Deductions */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-4">Statutory Deductions</h3>
+                <h3 className="font-semibold text-foreground mb-4">Statutory Deductions</h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">PAYE</span>
+                  <div className="flex justify-between py-2 border-b border-[var(--border-subtle)]">
+                    <span className="text-muted-foreground">PAYE</span>
                     <span className="font-medium">{formatCurrency(batch.totalPAYE)}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">NSSF (Employee)</span>
+                  <div className="flex justify-between py-2 border-b border-[var(--border-subtle)]">
+                    <span className="text-muted-foreground">NSSF (Employee)</span>
                     <span className="font-medium">{formatCurrency(batch.totalNSSFEmployee)}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">NSSF (Employer)</span>
+                  <div className="flex justify-between py-2 border-b border-[var(--border-subtle)]">
+                    <span className="text-muted-foreground">NSSF (Employer)</span>
                     <span className="font-medium">{formatCurrency(batch.totalNSSFEmployer)}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600">LST</span>
+                  <div className="flex justify-between py-2 border-b border-[var(--border-subtle)]">
+                    <span className="text-muted-foreground">LST</span>
                     <span className="font-medium">{formatCurrency(batch.totalLST)}</span>
                   </div>
                 </div>
@@ -451,36 +451,36 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                   className="flex items-center justify-between cursor-pointer"
                   onClick={() => setShowPaymentDetails(!showPaymentDetails)}
                 >
-                  <h3 className="font-semibold text-gray-900">Payment Status</h3>
+                  <h3 className="font-semibold text-foreground">Payment Status</h3>
                   {showPaymentDetails ? (
-                    <ChevronUp className="h-5 w-5 text-gray-400" />
+                    <ChevronUp className="h-5 w-5 text-[var(--fg-tertiary)]" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                    <ChevronDown className="h-5 w-5 text-[var(--fg-tertiary)]" />
                   )}
                 </div>
                 
                 {showPaymentDetails && (
                   <div className="mt-4 space-y-3">
                     {batch.paymentBatches.length === 0 ? (
-                      <p className="text-gray-500 text-sm">No payment batches created yet.</p>
+                      <p className="text-muted-foreground text-sm">No payment batches created yet.</p>
                     ) : (
                       batch.paymentBatches.map((pb) => (
                         <div 
                           key={pb.id} 
-                          className="p-3 bg-gray-50 rounded-lg border border-gray-200"
+                          className="p-3 bg-[var(--bg-sunken)] rounded-lg border border-[var(--border-subtle)]"
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="font-medium text-gray-900">
+                              <p className="font-medium text-foreground">
                                 {pb.paymentMethod.replace('_', ' ').toUpperCase()}
                                 {pb.bankName && ` - ${pb.bankName}`}
                               </p>
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-muted-foreground">
                                 {pb.employeeCount} employees
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-medium text-gray-900">
+                              <p className="font-medium text-foreground">
                                 {formatCurrency(pb.totalAmount)}
                               </p>
                               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -488,7 +488,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                                   ? 'bg-green-100 text-green-800'
                                   : pb.status === 'failed'
                                   ? 'bg-red-100 text-red-800'
-                                  : 'bg-gray-100 text-gray-800'
+                                  : 'bg-[var(--bg-sunken)] text-foreground'
                               }`}>
                                 {pb.status}
                               </span>
@@ -505,7 +505,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
 
           {/* Employees Tab */}
           <TabPanel value={activeTab} index={1}>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Employee list will be loaded here with payroll details for each employee.
             </p>
           </TabPanel>
@@ -514,9 +514,9 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
           <TabPanel value={activeTab} index={2}>
             {batch.approvalRecords.length === 0 ? (
               <div className="text-center py-8">
-                <Clock className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No approval history yet</p>
-                <p className="text-sm text-gray-400 mt-1">
+                <Clock className="h-12 w-12 text-[var(--fg-tertiary)] mx-auto mb-3" />
+                <p className="text-muted-foreground">No approval history yet</p>
+                <p className="text-sm text-[var(--fg-tertiary)] mt-1">
                   Approval records will appear here once the batch is submitted for review.
                 </p>
               </div>
@@ -525,7 +525,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 {batch.approvalRecords.map((record) => (
                   <div 
                     key={record.id}
-                    className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg"
+                    className="flex items-start gap-4 p-4 bg-[var(--bg-sunken)] rounded-lg"
                   >
                     <div className={`p-2 rounded-full ${
                       record.action === 'approved' 
@@ -543,17 +543,17 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-foreground">
                         {record.level.toUpperCase()} {record.action}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {record.approverName} ({record.approverRole})
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-[var(--fg-tertiary)]">
                         {new Date(record.timestamp).toLocaleString()}
                       </p>
                       {record.comments && (
-                        <p className="mt-2 text-sm text-gray-600 italic">
+                        <p className="mt-2 text-sm text-muted-foreground italic">
                           "{record.comments}"
                         </p>
                       )}
@@ -577,30 +577,30 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
       {/* Regenerate confirmation */}
       {confirmRegenOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
+          <div className="bg-card rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-full bg-amber-100 flex-shrink-0">
                 <RotateCcw className="h-5 w-5 text-amber-700" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Regenerate this payroll?</h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <h3 className="text-lg font-semibold text-foreground">Regenerate this payroll?</h3>
+                <p className="text-sm text-muted-foreground mt-1">
                   Recalculation will pull the <em>latest</em> data from these sources.
                   If anything's missing, fix it first, then come back and confirm.
                 </p>
               </div>
             </div>
 
-            <div className="border border-gray-200 rounded-md divide-y divide-gray-100 text-sm">
+            <div className="border border-[var(--border-subtle)] rounded-md divide-y divide-[var(--border-subtle)] text-sm">
               <a
                 href={`/hr/payroll?period=${batch.year}-${String(batch.month).padStart(2, '0')}&tab=attendance`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
+                className="flex items-center justify-between px-3 py-2 hover:bg-[var(--bg-sunken)]"
               >
                 <div>
-                  <div className="font-medium text-gray-900">Attendance</div>
-                  <div className="text-xs text-gray-500">Absences and unpaid leave reduce gross pay this period.</div>
+                  <div className="font-medium text-foreground">Attendance</div>
+                  <div className="text-xs text-muted-foreground">Absences and unpaid leave reduce gross pay this period.</div>
                 </div>
                 <span className="text-xs text-blue-600 font-medium">Edit →</span>
               </a>
@@ -608,11 +608,11 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 href="/hr/payroll?tab=advances"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
+                className="flex items-center justify-between px-3 py-2 hover:bg-[var(--bg-sunken)]"
               >
                 <div>
-                  <div className="font-medium text-gray-900">Salary advances</div>
-                  <div className="text-xs text-gray-500">Active advances auto-deduct their monthly installment.</div>
+                  <div className="font-medium text-foreground">Salary advances</div>
+                  <div className="text-xs text-muted-foreground">Active advances auto-deduct their monthly installment.</div>
                 </div>
                 <span className="text-xs text-blue-600 font-medium">Manage →</span>
               </a>
@@ -620,11 +620,11 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 href="/hr/employees"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
+                className="flex items-center justify-between px-3 py-2 hover:bg-[var(--bg-sunken)]"
               >
                 <div>
-                  <div className="font-medium text-gray-900">Allowances &amp; salary</div>
-                  <div className="text-xs text-gray-500">Open an employee → Compensation to add/update allowances.</div>
+                  <div className="font-medium text-foreground">Allowances &amp; salary</div>
+                  <div className="text-xs text-muted-foreground">Open an employee → Compensation to add/update allowances.</div>
                 </div>
                 <span className="text-xs text-blue-600 font-medium">Open →</span>
               </a>
@@ -632,17 +632,17 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
                 href={`/hr/payroll?period=${batch.year}-${String(batch.month).padStart(2, '0')}&tab=overtime`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between px-3 py-2 hover:bg-gray-50"
+                className="flex items-center justify-between px-3 py-2 hover:bg-[var(--bg-sunken)]"
               >
                 <div>
-                  <div className="font-medium text-gray-900">Overtime</div>
-                  <div className="text-xs text-gray-500">Only approved overtime entries are picked up.</div>
+                  <div className="font-medium text-foreground">Overtime</div>
+                  <div className="text-xs text-muted-foreground">Only approved overtime entries are picked up.</div>
                 </div>
                 <span className="text-xs text-blue-600 font-medium">Review →</span>
               </a>
             </div>
 
-            <div className="text-xs text-gray-500 space-y-1">
+            <div className="text-xs text-muted-foreground space-y-1">
               <p>
                 Status will reset to <span className="font-medium">Calculated</span>
                 {batch.status !== 'calculated' && (
@@ -657,7 +657,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setConfirmRegenOpen(false)}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-[var(--border-default)] rounded-md hover:bg-[var(--bg-sunken)]"
               >
                 Cancel
               </button>
@@ -678,14 +678,14 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
       {/* Reverse confirmation */}
       {confirmReverseOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
+          <div className="bg-card rounded-lg shadow-xl max-w-lg w-full p-5 space-y-4">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-full bg-red-100 flex-shrink-0">
                 <RotateCcw className="h-5 w-5 text-red-700" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Reverse this paid batch?</h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <h3 className="text-lg font-semibold text-foreground">Reverse this paid batch?</h3>
+                <p className="text-sm text-muted-foreground mt-1">
                   This unwinds the batch and restores every loan, advance and installment-deduction
                   balance it touched. After reversal you can regenerate the batch to produce
                   corrected payslips.
@@ -703,13 +703,13 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-medium text-gray-700">
+              <label className="text-xs font-medium text-muted-foreground">
                 Reason (required, kept in status history)
               </label>
               <textarea
                 value={reverseReason}
                 onChange={(e) => setReverseReason(e.target.value)}
-                className="mt-1 block w-full text-sm border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                className="mt-1 block w-full text-sm border border-[var(--border-default)] rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500"
                 rows={3}
                 placeholder="e.g. Overtime entries for John D. were missing; need a corrected batch."
               />
@@ -718,7 +718,7 @@ export const PayrollBatchDetail: React.FC<PayrollBatchDetailProps> = ({
             <div className="flex justify-end gap-2 pt-2">
               <button
                 onClick={() => setConfirmReverseOpen(false)}
-                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+                className="px-4 py-2 text-sm border border-[var(--border-default)] rounded-md hover:bg-[var(--bg-sunken)]"
               >
                 Cancel
               </button>

@@ -97,9 +97,9 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
         </DialogHeader>
 
         {!result && !parsing && (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center">
-            <FileSpreadsheet className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-sm text-gray-600 mb-3">
+          <div className="border-2 border-dashed border-[var(--border-default)] rounded-lg p-10 text-center">
+            <FileSpreadsheet className="w-10 h-10 text-[var(--fg-tertiary)] mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground mb-3">
               Drop a file here or click to browse. Accepts <code className="text-xs">.xlsx</code>,
               {' '}<code className="text-xs">.xls</code>, <code className="text-xs">.csv</code>.
             </p>
@@ -116,7 +116,7 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
             <Button onClick={() => inputRef.current?.click()} variant="outline" size="sm">
               <Upload className="w-4 h-4 mr-2" /> Choose file
             </Button>
-            <p className="text-[11px] text-gray-400 mt-3">
+            <p className="text-[11px] text-[var(--fg-tertiary)] mt-3">
               Status values accepted: P / Present, A / Absent, L / Late, LV / Leave,
               {' '}S / Sick, HD / Half Day, PH / Holiday.
             </p>
@@ -124,7 +124,7 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
         )}
 
         {parsing && (
-          <div className="py-10 flex items-center justify-center text-gray-500">
+          <div className="py-10 flex items-center justify-center text-muted-foreground">
             <Loader2 className="w-5 h-5 animate-spin mr-2" /> Parsing {fileName}…
           </div>
         )}
@@ -143,10 +143,10 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4 text-gray-500" />
+                <FileSpreadsheet className="w-4 h-4 text-muted-foreground" />
                 <span className="font-medium">{fileName}</span>
-                <span className="text-gray-400">·</span>
-                <span className="text-gray-500">sheet: {result.sourceLabel}</span>
+                <span className="text-[var(--fg-tertiary)]">·</span>
+                <span className="text-muted-foreground">sheet: {result.sourceLabel}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={reset}>
                 <X className="w-3 h-3 mr-1" /> Choose different file
@@ -158,64 +158,64 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
                 <div className="text-2xl font-bold text-green-800">{result.rows.length}</div>
                 <div className="text-xs text-green-700">rows resolved</div>
               </div>
-              <div className={`border rounded p-3 ${result.unmatchedEmployees.length > 0 ? 'border-amber-200 bg-amber-50' : 'border-gray-200 bg-gray-50'}`}>
-                <div className={`text-2xl font-bold ${result.unmatchedEmployees.length > 0 ? 'text-amber-800' : 'text-gray-700'}`}>
+              <div className={`border rounded p-3 ${result.unmatchedEmployees.length > 0 ? 'border-amber-200 bg-amber-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
+                <div className={`text-2xl font-bold ${result.unmatchedEmployees.length > 0 ? 'text-amber-800' : 'text-muted-foreground'}`}>
                   {result.unmatchedEmployees.length}
                 </div>
-                <div className={`text-xs ${result.unmatchedEmployees.length > 0 ? 'text-amber-700' : 'text-gray-500'}`}>
+                <div className={`text-xs ${result.unmatchedEmployees.length > 0 ? 'text-amber-700' : 'text-muted-foreground'}`}>
                   unmatched employees
                 </div>
               </div>
-              <div className={`border rounded p-3 ${result.invalidRows.length > 0 ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
-                <div className={`text-2xl font-bold ${result.invalidRows.length > 0 ? 'text-red-800' : 'text-gray-700'}`}>
+              <div className={`border rounded p-3 ${result.invalidRows.length > 0 ? 'border-red-200 bg-red-50' : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]'}`}>
+                <div className={`text-2xl font-bold ${result.invalidRows.length > 0 ? 'text-red-800' : 'text-muted-foreground'}`}>
                   {result.invalidRows.length}
                 </div>
-                <div className={`text-xs ${result.invalidRows.length > 0 ? 'text-red-700' : 'text-gray-500'}`}>
+                <div className={`text-xs ${result.invalidRows.length > 0 ? 'text-red-700' : 'text-muted-foreground'}`}>
                   invalid rows
                 </div>
               </div>
             </div>
 
             {(result.unmatchedEmployees.length > 0 || result.invalidRows.length > 0 || result.warnings.length > 0) && (
-              <div className="border border-gray-200 rounded max-h-40 overflow-auto text-xs">
+              <div className="border border-[var(--border-subtle)] rounded max-h-40 overflow-auto text-xs">
                 {result.invalidRows.map((r, i) => (
-                  <div key={`inv-${i}`} className="px-3 py-1.5 border-b border-gray-100 flex gap-2">
+                  <div key={`inv-${i}`} className="px-3 py-1.5 border-b border-[var(--border-subtle)] flex gap-2">
                     <AlertTriangle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-500 font-mono">row {r.sourceRow}:</span>
+                    <span className="text-muted-foreground font-mono">row {r.sourceRow}:</span>
                     <span className="text-red-700">{r.reason}</span>
                   </div>
                 ))}
                 {result.unmatchedEmployees.map((r, i) => (
-                  <div key={`unm-${i}`} className="px-3 py-1.5 border-b border-gray-100 flex gap-2">
+                  <div key={`unm-${i}`} className="px-3 py-1.5 border-b border-[var(--border-subtle)] flex gap-2">
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-500 font-mono">row {r.sourceRow}:</span>
+                    <span className="text-muted-foreground font-mono">row {r.sourceRow}:</span>
                     <span className="text-amber-700">No employee found for "{r.identifier}"</span>
                   </div>
                 ))}
                 {result.warnings.map((r, i) => (
-                  <div key={`wrn-${i}`} className="px-3 py-1.5 border-b border-gray-100 flex gap-2">
-                    <AlertTriangle className="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-500 font-mono">row {r.sourceRow}:</span>
-                    <span className="text-gray-600">{r.message}</span>
+                  <div key={`wrn-${i}`} className="px-3 py-1.5 border-b border-[var(--border-subtle)] flex gap-2">
+                    <AlertTriangle className="w-3.5 h-3.5 text-[var(--fg-tertiary)] flex-shrink-0 mt-0.5" />
+                    <span className="text-muted-foreground font-mono">row {r.sourceRow}:</span>
+                    <span className="text-muted-foreground">{r.message}</span>
                   </div>
                 ))}
               </div>
             )}
 
             {result.rows.length > 0 && (
-              <div className="border border-gray-200 rounded max-h-48 overflow-auto">
+              <div className="border border-[var(--border-subtle)] rounded max-h-48 overflow-auto">
                 <table className="w-full text-xs">
-                  <thead className="bg-gray-50 sticky top-0">
+                  <thead className="bg-[var(--bg-sunken)] sticky top-0">
                     <tr>
-                      <th className="px-2 py-1.5 text-left font-medium text-gray-700">Employee</th>
-                      <th className="px-2 py-1.5 text-left font-medium text-gray-700">Date</th>
-                      <th className="px-2 py-1.5 text-left font-medium text-gray-700">Status</th>
-                      <th className="px-2 py-1.5 text-right font-medium text-gray-700">Hours</th>
+                      <th className="px-2 py-1.5 text-left font-medium text-muted-foreground">Employee</th>
+                      <th className="px-2 py-1.5 text-left font-medium text-muted-foreground">Date</th>
+                      <th className="px-2 py-1.5 text-left font-medium text-muted-foreground">Status</th>
+                      <th className="px-2 py-1.5 text-right font-medium text-muted-foreground">Hours</th>
                     </tr>
                   </thead>
                   <tbody>
                     {result.rows.slice(0, 50).map((r, i) => (
-                      <tr key={i} className="border-t border-gray-100">
+                      <tr key={i} className="border-t border-[var(--border-subtle)]">
                         <td className="px-2 py-1">{r.employeeName}</td>
                         <td className="px-2 py-1 font-mono">{r.date}</td>
                         <td className="px-2 py-1 capitalize">{r.status.replace('_', ' ')}</td>
@@ -223,7 +223,7 @@ export function AttendanceImportDialog({ open, onOpenChange, period, employees, 
                       </tr>
                     ))}
                     {result.rows.length > 50 && (
-                      <tr><td colSpan={4} className="px-2 py-1.5 text-center text-gray-500 italic">+{result.rows.length - 50} more rows…</td></tr>
+                      <tr><td colSpan={4} className="px-2 py-1.5 text-center text-muted-foreground italic">+{result.rows.length - 50} more rows…</td></tr>
                     )}
                   </tbody>
                 </table>
