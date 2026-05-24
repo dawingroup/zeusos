@@ -174,21 +174,21 @@ export function EventMonitoringPanel() {
     switch (status) {
       case 'processed':
         return (
-          <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+          <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]">
             <CheckCircle className="h-3 w-3 mr-1" />
             Processed
           </Badge>
         );
       case 'pending':
         return (
-          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+          <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]">
             <Clock className="h-3 w-3 mr-1" />
             Pending
           </Badge>
         );
       case 'failed':
         return (
-          <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+          <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]">
             <AlertCircle className="h-3 w-3 mr-1" />
             Failed
           </Badge>
@@ -283,7 +283,7 @@ export function EventMonitoringPanel() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base flex items-center gap-2">
-              <Zap className="h-4 w-4 text-blue-500" />
+              <Zap className="h-4 w-4 text-[var(--rag-blue)]" />
               Business Events
             </CardTitle>
             <Badge variant="outline">{events.length} events</Badge>
@@ -310,16 +310,16 @@ export function EventMonitoringPanel() {
                 >
                   {/* Status Icon */}
                   <div className={`p-2 rounded-lg ${
-                    event.status === 'processed' ? 'bg-green-100' :
-                    event.status === 'pending' ? 'bg-amber-100' :
-                    'bg-red-100'
+                    event.status === 'processed' ? 'bg-[var(--rag-green-soft)]' :
+                    event.status === 'pending' ? 'bg-[var(--rag-amber-soft)]' :
+                    'bg-[var(--rag-red-soft)]'
                   }`}>
                     {event.status === 'processed' ? (
-                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <CheckCircle className="h-4 w-4 text-[var(--rag-green)]" />
                     ) : event.status === 'pending' ? (
-                      <Clock className="h-4 w-4 text-amber-600" />
+                      <Clock className="h-4 w-4 text-[var(--rag-amber)]" />
                     ) : (
-                      <AlertCircle className="h-4 w-4 text-red-600" />
+                      <AlertCircle className="h-4 w-4 text-[var(--rag-red)]" />
                     )}
                   </div>
 
@@ -382,7 +382,7 @@ export function EventMonitoringPanel() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-blue-500" />
+              <Zap className="h-5 w-5 text-[var(--rag-blue)]" />
               Event Details
             </DialogTitle>
           </DialogHeader>
@@ -428,9 +428,9 @@ export function EventMonitoringPanel() {
 
               {/* Error Message */}
               {selectedEvent.errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <label className="text-sm text-red-600 font-medium">Error Message</label>
-                  <p className="text-sm text-red-700 mt-1">{selectedEvent.errorMessage}</p>
+                <div className="p-3 bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg">
+                  <label className="text-sm text-[var(--rag-red)] font-medium">Error Message</label>
+                  <p className="text-sm text-[var(--rag-red)] mt-1">{selectedEvent.errorMessage}</p>
                 </div>
               )}
 

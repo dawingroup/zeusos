@@ -47,9 +47,9 @@ export const FactorCard: React.FC<FactorCardProps> = ({
   const getTypeIcon = () => {
     switch (factor.type) {
       case 'opportunity':
-        return <TrendingUp className="w-4 h-4 text-green-600" />;
+        return <TrendingUp className="w-4 h-4 text-[var(--rag-green)]" />;
       case 'threat':
-        return <AlertTriangle className="w-4 h-4 text-red-600" />;
+        return <AlertTriangle className="w-4 h-4 text-[var(--rag-red)]" />;
       default:
         return <Minus className="w-4 h-4 text-muted-foreground" />;
     }
@@ -58,9 +58,9 @@ export const FactorCard: React.FC<FactorCardProps> = ({
   const getTypeColor = () => {
     switch (factor.type) {
       case 'opportunity':
-        return 'bg-green-50 border-green-200';
+        return 'bg-[var(--rag-green-soft)] border-[var(--rag-green)]';
       case 'threat':
-        return 'bg-red-50 border-red-200';
+        return 'bg-[var(--rag-red-soft)] border-[var(--rag-red)]';
       default:
         return 'bg-[var(--bg-sunken)] border-[var(--border-subtle)]';
     }

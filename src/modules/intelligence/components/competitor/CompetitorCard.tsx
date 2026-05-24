@@ -64,7 +64,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
   return (
     <div
       className={`bg-card rounded-lg border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
-        isHighThreat ? 'border-red-200' : 'border-[var(--border-subtle)]'
+        isHighThreat ? 'border-[var(--rag-red)]' : 'border-[var(--border-subtle)]'
       }`}
       onClick={() => onSelect?.(competitor)}
     >
@@ -164,7 +164,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
               {competitor.industries.slice(0, 3).map((ind) => (
                 <span
                   key={ind}
-                  className="px-1.5 py-0.5 text-xs bg-blue-50 text-blue-700 rounded"
+                  className="px-1.5 py-0.5 text-xs bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] rounded"
                 >
                   {INDUSTRY_LABELS[ind as Industry]}
                 </span>
@@ -186,7 +186,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
               {competitor.geographies.slice(0, 4).map((geo) => (
                 <span
                   key={geo}
-                  className="px-1.5 py-0.5 text-xs bg-green-50 text-green-700 rounded"
+                  className="px-1.5 py-0.5 text-xs bg-[var(--rag-green-soft)] text-[var(--rag-green)] rounded"
                 >
                   {GEOGRAPHY_LABELS[geo as Geography]}
                 </span>

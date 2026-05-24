@@ -135,7 +135,7 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                     </div>
                     <div className="w-full bg-[var(--bg-sunken)] rounded-full h-2">
                       <div
-                        className="h-2 rounded-full bg-gradient-to-r from-green-500 to-green-400"
+                        className="h-2 rounded-full bg-gradient-to-r $1-[var(--rag-green)] $1-[var(--rag-green)]"
                         style={{ width: `${winPct}%` }}
                       />
                     </div>
@@ -167,9 +167,9 @@ export const WinLossAnalysis: React.FC<WinLossAnalysisProps> = ({
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600 font-medium">{comp.wins}W</span>
+                    <span className="text-[var(--rag-green)] font-medium">{comp.wins}W</span>
                     <span className="text-[var(--fg-tertiary)]">/</span>
-                    <span className="text-red-600 font-medium">{comp.losses}L</span>
+                    <span className="text-[var(--rag-red)] font-medium">{comp.losses}L</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {comp.winRate.toFixed(0)}% win rate

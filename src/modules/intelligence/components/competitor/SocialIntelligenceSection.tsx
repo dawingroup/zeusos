@@ -148,7 +148,7 @@ const MetricsCards: React.FC<{ metrics: SocialMetrics[] }> = ({ metrics }) => {
             <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
               <span>{formatNumber(m.totalPosts)} posts</span>
               {m.engagementRate > 0 && (
-                <span className="text-green-600">{m.engagementRate.toFixed(1)}% eng.</span>
+                <span className="text-[var(--rag-green)]">{m.engagementRate.toFixed(1)}% eng.</span>
               )}
             </div>
           </CardContent>
@@ -298,7 +298,7 @@ const PostCard: React.FC<{
             {post.hashtags.length > 0 && expanded && (
               <div className="flex flex-wrap gap-1 mt-2">
                 {post.hashtags.slice(0, 8).map(h => (
-                  <span key={h} className="text-xs text-blue-600">{h}</span>
+                  <span key={h} className="text-xs text-[var(--rag-blue)]">{h}</span>
                 ))}
                 {post.hashtags.length > 8 && (
                   <span className="text-xs text-muted-foreground">+{post.hashtags.length - 8}</span>
@@ -430,7 +430,7 @@ export const SocialIntelligenceSection: React.FC<SocialIntelligenceSectionProps>
 
       {/* Error */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
+        <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-3">
           {error}
         </div>
       )}

@@ -69,9 +69,9 @@ const CATEGORY_OPTIONS: { value: MemoryCategory; label: string }[] = [
 ];
 
 const IMPORTANCE_OPTIONS: { value: MemoryImportance; label: string; color: string }[] = [
-  { value: 'critical', label: 'Critical', color: 'bg-red-100 text-red-800' },
-  { value: 'high', label: 'High', color: 'bg-orange-100 text-orange-800' },
-  { value: 'medium', label: 'Medium', color: 'bg-blue-100 text-blue-800' },
+  { value: 'critical', label: 'Critical', color: 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' },
+  { value: 'high', label: 'High', color: 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' },
+  { value: 'medium', label: 'Medium', color: 'bg-[var(--rag-blue-soft)] text-[var(--rag-blue)]' },
   { value: 'low', label: 'Low', color: 'bg-[var(--bg-sunken)] text-muted-foreground' },
 ];
 

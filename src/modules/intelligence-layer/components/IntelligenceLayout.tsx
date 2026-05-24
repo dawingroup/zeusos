@@ -82,12 +82,12 @@ export default function IntelligenceLayout() {
                     transition-colors
                     ${
                       active
-                        ? 'border-blue-500 text-blue-600'
+                        ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
                         : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
                     }
                   `}
                 >
-                  <Icon className={`w-5 h-5 ${active ? 'text-blue-600' : 'text-[var(--fg-tertiary)]'}`} />
+                  <Icon className={`w-5 h-5 ${active ? 'text-[var(--rag-blue)]' : 'text-[var(--fg-tertiary)]'}`} />
                   {tab.label}
                 </button>
               );

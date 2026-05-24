@@ -90,9 +90,9 @@ export const CrossModuleInsightsPanel: React.FC<CrossModuleInsightsPanelProps> =
             variant="outline"
             className={`text-xs h-5 ${
               dataPoint.trend === 'up'
-                ? 'bg-green-100 text-green-700 border-green-300'
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]'
                 : dataPoint.trend === 'down'
-                ? 'bg-red-100 text-red-700 border-red-300'
+                ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]'
                 : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-default)]'
             }`}
           >

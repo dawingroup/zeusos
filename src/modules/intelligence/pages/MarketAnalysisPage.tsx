@@ -156,7 +156,7 @@ const MarketAnalysisPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-[var(--rag-green)]" />
                   Key Opportunities
                 </CardTitle>
               </CardHeader>
@@ -164,7 +164,7 @@ const MarketAnalysisPage: React.FC = () => {
                 <ul className="space-y-3">
                   {opportunities.map((opp, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                      <CheckCircle className="h-4 w-4 text-[var(--rag-green)] mt-0.5 shrink-0" />
                       <span className="text-sm">{opp}</span>
                     </li>
                   ))}
@@ -176,7 +176,7 @@ const MarketAnalysisPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  <AlertTriangle className="h-5 w-5 text-[var(--rag-red)]" />
                   Key Threats
                 </CardTitle>
               </CardHeader>
@@ -184,7 +184,7 @@ const MarketAnalysisPage: React.FC = () => {
                 <ul className="space-y-3">
                   {threats.map((threat, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                      <AlertTriangle className="h-4 w-4 text-[var(--rag-red)] mt-0.5 shrink-0" />
                       <span className="text-sm">{threat}</span>
                     </li>
                   ))}
@@ -383,7 +383,7 @@ const MarketAnalysisPage: React.FC = () => {
                       <p className="text-xs text-muted-foreground">{indicator.unit}</p>
                     )}
                     {indicator.change !== undefined && (
-                      <div className={`flex items-center gap-1 mt-1 text-xs ${indicator.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <div className={`flex items-center gap-1 mt-1 text-xs ${indicator.change >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}`}>
                         {indicator.change >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                         {indicator.change >= 0 ? '+' : ''}{indicator.change}
                       </div>

@@ -102,11 +102,11 @@ export const CompetitorDashboard: React.FC<CompetitorDashboardProps> = ({
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">{error}</p>
+      <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-4">
+        <p className="text-[var(--rag-red)]">{error}</p>
         <button
           onClick={handleRefresh}
-          className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+          className="mt-2 text-sm text-[var(--rag-red)] hover:text-[var(--rag-red)] underline"
         >
           Try again
         </button>

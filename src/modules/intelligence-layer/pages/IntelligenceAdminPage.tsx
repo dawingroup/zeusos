@@ -215,7 +215,7 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
-              <Activity className="h-4 w-4 text-blue-500" />
+              <Activity className="h-4 w-4 text-[var(--rag-blue)]" />
               Event Processing
             </CardTitle>
           </CardHeader>
@@ -235,15 +235,15 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
             />
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <div className="w-2 h-2 rounded-full bg-[var(--rag-green)]" />
                 <span>{overview.eventStats.processed} Processed</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-amber-500" />
+                <div className="w-2 h-2 rounded-full bg-[var(--rag-amber)]" />
                 <span>{overview.eventStats.pending} Pending</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <div className="w-2 h-2 rounded-full bg-[var(--rag-red)]" />
                 <span>{overview.eventStats.failed} Failed</span>
               </div>
             </div>
@@ -254,7 +254,7 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
-              <ClipboardList className="h-4 w-4 text-green-500" />
+              <ClipboardList className="h-4 w-4 text-[var(--rag-green)]" />
               Task Generation
             </CardTitle>
           </CardHeader>
@@ -268,15 +268,15 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
             <Progress value={overview.taskStats.completionRate} className="h-2" />
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-amber-600">{overview.taskStats.pendingTasks}</div>
+                <div className="font-semibold text-[var(--rag-amber)]">{overview.taskStats.pendingTasks}</div>
                 <div className="text-xs text-muted-foreground">Pending</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-blue-600">{overview.taskStats.activeTasks}</div>
+                <div className="font-semibold text-[var(--rag-blue)]">{overview.taskStats.activeTasks}</div>
                 <div className="text-xs text-muted-foreground">Active</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-green-600">{overview.taskStats.completedToday}</div>
+                <div className="font-semibold text-[var(--rag-green)]">{overview.taskStats.completedToday}</div>
                 <div className="text-xs text-muted-foreground">Done Today</div>
               </div>
             </div>
@@ -301,15 +301,15 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
             <Progress value={overview.workloadStats.avgUtilization} className="h-2" />
             <div className="grid grid-cols-3 gap-2 text-sm">
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-green-600">{overview.workloadStats.underCapacity}</div>
+                <div className="font-semibold text-[var(--rag-green)]">{overview.workloadStats.underCapacity}</div>
                 <div className="text-xs text-muted-foreground">Available</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-blue-600">{overview.workloadStats.atCapacity}</div>
+                <div className="font-semibold text-[var(--rag-blue)]">{overview.workloadStats.atCapacity}</div>
                 <div className="text-xs text-muted-foreground">At Capacity</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded">
-                <div className="font-semibold text-red-600">{overview.workloadStats.overCapacity}</div>
+                <div className="font-semibold text-[var(--rag-red)]">{overview.workloadStats.overCapacity}</div>
                 <div className="text-xs text-muted-foreground">Overloaded</div>
               </div>
             </div>
@@ -340,9 +340,9 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50"
                   >
                     <div className={`p-1.5 rounded ${
-                      event.status === 'processed' ? 'bg-green-100 text-green-600' :
-                      event.status === 'pending' ? 'bg-amber-100 text-amber-600' :
-                      'bg-red-100 text-red-600'
+                      event.status === 'processed' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                      event.status === 'pending' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+                      'bg-[var(--rag-red-soft)] text-[var(--rag-red)]'
                     }`}>
                       {event.status === 'processed' ? (
                         <CheckCircle className="h-4 w-4" />
@@ -386,7 +386,7 @@ function OverviewTab({ overview, loading, onNavigate }: OverviewTabProps) {
                     key={employee.id}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br $1-[var(--rag-blue)] to-purple-500 flex items-center justify-center text-white text-sm font-medium">
                       {employee.initials}
                     </div>
                     <div className="flex-1 min-w-0">

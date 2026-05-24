@@ -195,7 +195,7 @@ const CompetitorNewsTab: React.FC<{
                   }
                 >
                   <Bookmark
-                    className={`h-4 w-4 ${article.isBookmarked ? 'fill-current text-yellow-500' : 'text-muted-foreground'}`}
+                    className={`h-4 w-4 ${article.isBookmarked ? 'fill-current text-[var(--rag-amber)]' : 'text-muted-foreground'}`}
                   />
                 </Button>
               </div>
@@ -234,13 +234,13 @@ const CompetitorDetailPage: React.FC = () => {
 
   const getActivityIcon = (type: CompetitorActivity['activityType']) => {
     const icons: Record<string, React.ReactNode> = {
-      product_launch: <Rocket className="h-4 w-4 text-blue-500" />,
-      funding: <DollarSign className="h-4 w-4 text-green-500" />,
+      product_launch: <Rocket className="h-4 w-4 text-[var(--rag-blue)]" />,
+      funding: <DollarSign className="h-4 w-4 text-[var(--rag-green)]" />,
       partnership: <Link2 className="h-4 w-4 text-purple-500" />,
-      hiring: <UserPlus className="h-4 w-4 text-blue-500" />,
-      expansion: <TrendingUp className="h-4 w-4 text-orange-500" />,
+      hiring: <UserPlus className="h-4 w-4 text-[var(--rag-blue)]" />,
+      expansion: <TrendingUp className="h-4 w-4 text-[var(--rag-amber)]" />,
       news: <FileText className="h-4 w-4 text-muted-foreground" />,
-      social: <Users className="h-4 w-4 text-blue-400" />,
+      social: <Users className="h-4 w-4 text-[var(--rag-blue)]" />,
       other: <Calendar className="h-4 w-4 text-[var(--fg-tertiary)]" />,
     };
     return icons[type] || icons.other;
@@ -361,12 +361,12 @@ const CompetitorDetailPage: React.FC = () => {
               )}
               {competitor.socialProfiles?.linkedin && (
                 <a href={competitor.socialProfiles.linkedin} target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="h-4 w-4 text-muted-foreground hover:text-blue-600" />
+                  <Linkedin className="h-4 w-4 text-muted-foreground hover:text-[var(--rag-blue)]" />
                 </a>
               )}
               {competitor.socialProfiles?.twitter && (
                 <a href={competitor.socialProfiles.twitter} target="_blank" rel="noopener noreferrer">
-                  <Twitter className="h-4 w-4 text-muted-foreground hover:text-blue-400" />
+                  <Twitter className="h-4 w-4 text-muted-foreground hover:text-[var(--rag-blue)]" />
                 </a>
               )}
               {competitor.industries?.length > 0 && (
@@ -414,7 +414,7 @@ const CompetitorDetailPage: React.FC = () => {
               variant="outline"
               size="sm"
               onClick={() => setShowDeleteDialog(true)}
-              className="text-red-600 border-red-200 hover:bg-red-50"
+              className="text-[var(--rag-red)] border-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete
@@ -478,7 +478,7 @@ const CompetitorDetailPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-green-500" />
+                  <TrendingUp className="h-5 w-5 text-[var(--rag-green)]" />
                   Key Strengths
                 </CardTitle>
               </CardHeader>
@@ -494,7 +494,7 @@ const CompetitorDetailPage: React.FC = () => {
                     <ul className="space-y-2">
                       {strengths.slice(0, 5).map((strength, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <TrendingUp className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                          <TrendingUp className="h-4 w-4 text-[var(--rag-green)] mt-0.5 shrink-0" />
                           <span>{strength}</span>
                         </li>
                       ))}
@@ -521,7 +521,7 @@ const CompetitorDetailPage: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <TrendingDown className="h-5 w-5 text-red-500" />
+                  <TrendingDown className="h-5 w-5 text-[var(--rag-red)]" />
                   Key Weaknesses
                 </CardTitle>
               </CardHeader>
@@ -537,7 +537,7 @@ const CompetitorDetailPage: React.FC = () => {
                     <ul className="space-y-2">
                       {weaknesses.slice(0, 5).map((weakness, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <TrendingDown className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                          <TrendingDown className="h-4 w-4 text-[var(--rag-red)] mt-0.5 shrink-0" />
                           <span>{weakness}</span>
                         </li>
                       ))}
@@ -713,7 +713,7 @@ const CompetitorDetailPage: React.FC = () => {
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-[var(--rag-red)] hover:bg-[var(--rag-red)]"
               disabled={deleting}
               onClick={async () => {
                 setDeleting(true);

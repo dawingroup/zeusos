@@ -210,7 +210,7 @@ export const NaturalLanguageSearch: React.FC<NaturalLanguageSearchProps> = ({
 
                 <div className="flex items-center gap-2 mb-3">
                   <Badge
-                    className={response.confidence > 0.7 ? 'bg-green-500' : 'bg-yellow-500'}
+                    className={response.confidence > 0.7 ? 'bg-[var(--rag-green)]' : 'bg-[var(--rag-amber)]'}
                   >
                     {Math.round(response.confidence * 100)}% confidence
                   </Badge>

@@ -48,10 +48,10 @@ import { MODULE_COLOR, INSIGHT_TYPES, INDUSTRY_SECTORS } from '../constants';
 import { Insight } from '../types';
 
 const insightTypeIcons: Record<string, React.ReactNode> = {
-  opportunity: <TrendingUp className="h-4 w-4 text-green-500" />,
-  threat: <AlertTriangle className="h-4 w-4 text-red-500" />,
-  trend: <BarChart3 className="h-4 w-4 text-blue-500" />,
-  anomaly: <AlertCircle className="h-4 w-4 text-orange-500" />,
+  opportunity: <TrendingUp className="h-4 w-4 text-[var(--rag-green)]" />,
+  threat: <AlertTriangle className="h-4 w-4 text-[var(--rag-red)]" />,
+  trend: <BarChart3 className="h-4 w-4 text-[var(--rag-blue)]" />,
+  anomaly: <AlertCircle className="h-4 w-4 text-[var(--rag-amber)]" />,
   recommendation: <CheckCircle className="h-4 w-4 text-purple-500" />,
 };
 
@@ -348,7 +348,7 @@ const InsightsPage: React.FC = () => {
           </TabsTrigger>
           <TabsTrigger value="actioned" className="gap-2">
             Actioned
-            <Badge variant="secondary" className="ml-1 bg-green-100 text-green-700">{counts.actioned}</Badge>
+            <Badge variant="secondary" className="ml-1 bg-[var(--rag-green-soft)] text-[var(--rag-green)]">{counts.actioned}</Badge>
           </TabsTrigger>
           <TabsTrigger value="generate" className="gap-2">
             <Sparkles className="h-4 w-4" />
@@ -403,7 +403,7 @@ const InsightsPage: React.FC = () => {
                     <ul className="space-y-1">
                       {selectedInsight.recommendations.map((rec, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                          <CheckCircle className="h-4 w-4 text-[var(--rag-green)] mt-0.5 shrink-0" />
                           {rec}
                         </li>
                       ))}

@@ -82,7 +82,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
               </h4>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs text-muted-foreground">{typeConfig?.label}</span>
-                <span className="text-xs font-medium text-blue-600">
+                <span className="text-xs font-medium text-[var(--rag-blue)]">
                   {scenario.probability}% likely
                 </span>
               </div>
@@ -90,8 +90,8 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
           </div>
           <span
             className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-              scenario.status === 'approved' ? 'bg-green-100 text-green-700' :
-              scenario.status === 'under_review' ? 'bg-yellow-100 text-yellow-700' :
+              scenario.status === 'approved' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+              scenario.status === 'under_review' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
               'bg-[var(--bg-sunken)] text-muted-foreground'
             }`}
           >
@@ -124,8 +124,8 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
                 </span>
                 <span
                   className={`px-2 py-0.5 text-xs font-medium rounded ${
-                    scenario.status === 'approved' ? 'bg-green-100 text-green-700' :
-                    scenario.status === 'under_review' ? 'bg-yellow-100 text-yellow-700' :
+                    scenario.status === 'approved' ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)]' :
+                    scenario.status === 'under_review' ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
                     'bg-[var(--bg-sunken)] text-muted-foreground'
                   }`}
                 >
@@ -159,7 +159,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
       <div className="px-4 py-3 bg-[var(--bg-sunken)] border-b border-[var(--border-subtle)] flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div>
-            <div className="text-2xl font-bold text-blue-600">{scenario.probability}%</div>
+            <div className="text-2xl font-bold text-[var(--rag-blue)]">{scenario.probability}%</div>
             <div className="text-xs text-muted-foreground">Probability</div>
           </div>
           <div className="h-8 w-px bg-[var(--bg-sunken)]" />
@@ -175,13 +175,13 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
         {scenario.signposts.length > 0 && (
           <div className="flex items-center gap-2">
             {triggeredSignposts > 0 && (
-              <span className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">
+              <span className="flex items-center gap-1 px-2 py-1 bg-[var(--rag-red-soft)] text-[var(--rag-red)] rounded text-xs font-medium">
                 <AlertTriangle className="w-3 h-3" />
                 {triggeredSignposts} triggered
               </span>
             )}
             {approachingSignposts > 0 && (
-              <span className="flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
+              <span className="flex items-center gap-1 px-2 py-1 bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] rounded text-xs font-medium">
                 <Target className="w-3 h-3" />
                 {approachingSignposts} approaching
               </span>
@@ -195,7 +195,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
         <div className="p-4 grid grid-cols-4 gap-4">
           <div className="text-center">
             <div className={`text-lg font-bold ${
-              scenario.businessImpact.revenueImpact >= 0 ? 'text-green-600' : 'text-red-600'
+              scenario.businessImpact.revenueImpact >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
             }`}>
               {formatImpact(scenario.businessImpact.revenueImpact)}
             </div>
@@ -203,7 +203,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
-              scenario.businessImpact.costImpact <= 0 ? 'text-green-600' : 'text-red-600'
+              scenario.businessImpact.costImpact <= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
             }`}>
               {formatImpact(scenario.businessImpact.costImpact)}
             </div>
@@ -211,7 +211,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
-              scenario.businessImpact.marketShareImpact >= 0 ? 'text-green-600' : 'text-red-600'
+              scenario.businessImpact.marketShareImpact >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
             }`}>
               {formatImpact(scenario.businessImpact.marketShareImpact)}
             </div>
@@ -219,7 +219,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
           </div>
           <div className="text-center">
             <div className={`text-lg font-bold ${
-              scenario.businessImpact.employmentImpact >= 0 ? 'text-green-600' : 'text-red-600'
+              scenario.businessImpact.employmentImpact >= 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'
             }`}>
               {formatImpact(scenario.businessImpact.employmentImpact)}
             </div>
@@ -236,7 +236,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({
           <span>{scenario.strategicOptions.length} strategic options</span>
         </div>
         {scenario.status === 'approved' && scenario.approvedBy && (
-          <div className="flex items-center gap-1 text-xs text-green-600">
+          <div className="flex items-center gap-1 text-xs text-[var(--rag-green)]">
             <CheckCircle className="w-3 h-3" />
             Approved
           </div>

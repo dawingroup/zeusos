@@ -146,7 +146,7 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
             <select
               value={selectedEmployee}
               onChange={(e) => setSelectedEmployee(e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-transparent"
               disabled={loading}
             >
               <option value="">Select an employee...</option>
@@ -171,15 +171,15 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-[var(--border-default)] rounded-lg focus:ring-2 focus:ring-[var(--rag-blue)] focus:border-transparent"
               placeholder="Enter reason for assignment..."
               disabled={loading}
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-lg p-3">
+              <p className="text-sm text-[var(--rag-red)]">{error}</p>
             </div>
           )}
         </div>
@@ -196,7 +196,7 @@ export function TaskAssignmentDialog({ task, mode, onClose, onSuccess }: TaskAss
           <button
             onClick={handleSubmit}
             disabled={loading || !selectedEmployee}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+            className="px-4 py-2 bg-[var(--rag-blue)] text-white rounded-lg hover:bg-[var(--rag-blue)] disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
           >
             {loading ? 'Assigning...' : getTitle()}
           </button>

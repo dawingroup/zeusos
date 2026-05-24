@@ -103,7 +103,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
             </div>
           </div>
           {daysUntil && daysUntil <= 90 && (
-            <span className={`text-xs font-medium ${daysUntil <= 30 ? 'text-red-600' : 'text-orange-600'}`}>
+            <span className={`text-xs font-medium ${daysUntil <= 30 ? 'text-[var(--rag-red)]' : 'text-[var(--rag-amber)]'}`}>
               {daysUntil}d
             </span>
           )}
@@ -135,7 +135,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
                 {statusConfig?.label}
               </span>
               {statusConfig?.requiresAction && (
-                <span className="flex items-center gap-1 text-xs text-orange-600">
+                <span className="flex items-center gap-1 text-xs text-[var(--rag-amber)]">
                   <AlertTriangle className="w-3 h-3" />
                   Action Required
                 </span>
@@ -180,9 +180,9 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
         </div>
         {daysUntil && (
           <span className={`px-2 py-1 text-xs font-medium rounded ${
-            daysUntil <= 30 ? 'bg-red-100 text-red-700' :
-            daysUntil <= 60 ? 'bg-orange-100 text-orange-700' :
-            'bg-yellow-100 text-yellow-700'
+            daysUntil <= 30 ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)]' :
+            daysUntil <= 60 ? 'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]' :
+            'bg-[var(--rag-amber-soft)] text-[var(--rag-amber)]'
           }`}>
             <Clock className="w-3 h-3 inline mr-1" />
             {daysUntil} days until effective
@@ -218,11 +218,11 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
           <h5 className="text-xs font-medium text-muted-foreground mb-2">Compliance Status</h5>
           <div className="flex items-center gap-2">
             {regulation.compliance.status === 'compliant' ? (
-              <CheckCircle className="w-5 h-5 text-green-600" />
+              <CheckCircle className="w-5 h-5 text-[var(--rag-green)]" />
             ) : regulation.compliance.status === 'non_compliant' ? (
-              <AlertTriangle className="w-5 h-5 text-red-600" />
+              <AlertTriangle className="w-5 h-5 text-[var(--rag-red)]" />
             ) : (
-              <Clock className="w-5 h-5 text-yellow-600" />
+              <Clock className="w-5 h-5 text-[var(--rag-amber)]" />
             )}
             <span
               className="text-sm font-medium"
@@ -258,7 +258,7 @@ export const RegulationCard: React.FC<RegulationCardProps> = ({
           )}
         </div>
         {regulation.documents.length > 0 && (
-          <div className="flex items-center gap-1 text-xs text-blue-600">
+          <div className="flex items-center gap-1 text-xs text-[var(--rag-blue)]">
             <FileText className="w-3 h-3" />
             {regulation.documents.length} documents
             <ExternalLink className="w-3 h-3" />

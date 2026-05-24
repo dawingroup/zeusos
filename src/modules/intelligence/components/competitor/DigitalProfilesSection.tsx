@@ -365,7 +365,7 @@ export const DigitalProfilesSection: React.FC<DigitalProfilesSectionProps> = ({
                         {PLATFORM_LABELS[profile.platform]}
                       </Badge>
                       {profile.verified && (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[var(--rag-blue)]" />
                       )}
                     </div>
                     <p className="text-sm font-medium truncate mt-1">
@@ -398,7 +398,7 @@ export const DigitalProfilesSection: React.FC<DigitalProfilesSectionProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-red-500"
+                      className="h-7 w-7 text-[var(--rag-red)]"
                       onClick={() => handleDeleteProfile(profile.id)}
                     >
                       <Trash2 className="h-3.5 w-3.5" />

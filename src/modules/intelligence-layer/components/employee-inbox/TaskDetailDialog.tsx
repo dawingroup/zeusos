@@ -58,11 +58,11 @@ interface TaskDetailDialogProps {
 function PriorityBadge({ priority }: { priority: string }) {
   switch (priority) {
     case 'P0':
-      return <Badge className="bg-red-500 hover:bg-red-500 text-white">Critical</Badge>;
+      return <Badge className="bg-[var(--rag-red)] hover:bg-[var(--rag-red)] text-white">Critical</Badge>;
     case 'P1':
-      return <Badge className="bg-orange-500 hover:bg-orange-500 text-white">High</Badge>;
+      return <Badge className="bg-[var(--rag-amber)] hover:bg-[var(--rag-amber)] text-white">High</Badge>;
     case 'P2':
-      return <Badge className="bg-blue-500 hover:bg-blue-500 text-white">Medium</Badge>;
+      return <Badge className="bg-[var(--rag-blue)] hover:bg-[var(--rag-blue)] text-white">Medium</Badge>;
     case 'P3':
       return <Badge className="bg-[var(--fg-tertiary)] hover:bg-[var(--fg-tertiary)] text-white">Low</Badge>;
     default:
@@ -78,28 +78,28 @@ function StatusBadge({ status }: { status: string }) {
   switch (status) {
     case 'completed':
       return (
-        <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+        <Badge className="bg-[var(--rag-green-soft)] text-[var(--rag-green)] hover:bg-[var(--rag-green-soft)]">
           <CheckCircle className="h-3 w-3 mr-1" />
           Completed
         </Badge>
       );
     case 'in_progress':
       return (
-        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+        <Badge className="bg-[var(--rag-blue-soft)] text-[var(--rag-blue)] hover:bg-[var(--rag-blue-soft)]">
           <Play className="h-3 w-3 mr-1" />
           In Progress
         </Badge>
       );
     case 'pending':
       return (
-        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+        <Badge className="bg-[var(--rag-amber-soft)] text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)]">
           <Clock className="h-3 w-3 mr-1" />
           Pending
         </Badge>
       );
     case 'blocked':
       return (
-        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+        <Badge className="bg-[var(--rag-red-soft)] text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]">
           <AlertCircle className="h-3 w-3 mr-1" />
           Blocked
         </Badge>
@@ -172,7 +172,7 @@ export function TaskDetailDialog({
       <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <ClipboardList className="h-5 w-5 text-blue-500" />
+            <ClipboardList className="h-5 w-5 text-[var(--rag-blue)]" />
             Task Details
           </SheetTitle>
         </SheetHeader>
@@ -187,7 +187,7 @@ export function TaskDetailDialog({
             <h3 className="text-lg font-semibold">{task.title}</h3>
             {task.aiUrgencyReason && (
               <div className="flex items-start gap-1.5 mt-1.5 text-xs text-muted-foreground/80">
-                <Zap className="h-3 w-3 mt-0.5 text-amber-500 flex-shrink-0" />
+                <Zap className="h-3 w-3 mt-0.5 text-[var(--rag-amber)] flex-shrink-0" />
                 <span>{task.aiUrgencyReason}</span>
               </div>
             )}
@@ -216,9 +216,9 @@ export function TaskDetailDialog({
               <p
                 className={`font-medium flex items-center gap-1.5 ${
                   dueDateStatus === 'overdue'
-                    ? 'text-red-600'
+                    ? 'text-[var(--rag-red)]'
                     : dueDateStatus === 'today'
-                    ? 'text-orange-600'
+                    ? 'text-[var(--rag-amber)]'
                     : ''
                 }`}
               >
@@ -254,7 +254,7 @@ export function TaskDetailDialog({
                 {projectRoute ? (
                   <button
                     onClick={() => { navigate(projectRoute); onOpenChange(false); }}
-                    className="font-medium text-blue-600 hover:underline flex items-center gap-1.5 cursor-pointer text-left"
+                    className="font-medium text-[var(--rag-blue)] hover:underline flex items-center gap-1.5 cursor-pointer text-left"
                   >
                     {task.projectName}
                     <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -271,7 +271,7 @@ export function TaskDetailDialog({
                 <label className="text-xs text-muted-foreground">Source Item</label>
                 <button
                   onClick={() => { navigate(entityRoute); onOpenChange(false); }}
-                  className="font-medium text-blue-600 hover:underline flex items-center gap-1.5 cursor-pointer text-left"
+                  className="font-medium text-[var(--rag-blue)] hover:underline flex items-center gap-1.5 cursor-pointer text-left"
                 >
                   {task.entityName || task.entityType?.replace(/-/g, ' ')}
                   <ExternalLink className="h-3 w-3 flex-shrink-0" />
@@ -331,7 +331,7 @@ export function TaskDetailDialog({
                         }`}
                       >
                         {item.title}
-                        {item.isRequired && <span className="text-red-500 ml-1">*</span>}
+                        {item.isRequired && <span className="text-[var(--rag-red)] ml-1">*</span>}
                       </p>
                       {item.description && (
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -360,7 +360,7 @@ export function TaskDetailDialog({
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <h4 className="font-medium flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  <Sparkles className="h-4 w-4 text-[var(--rag-amber)]" />
                   Suggested Steps
                 </h4>
                 <span className="text-xs text-muted-foreground/60">AI-generated</span>
@@ -369,15 +369,15 @@ export function TaskDetailDialog({
                 {task.aiChecklist.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start gap-3 p-3 border border-amber-200/50 bg-amber-50/30 dark:bg-amber-950/10 dark:border-amber-800/30 rounded-lg"
+                    className="flex items-start gap-3 p-3 border border-[var(--rag-amber)]/50 bg-[var(--rag-amber-soft)]/30 dark:bg-amber-950/10 dark:border-amber-800/30 rounded-lg"
                   >
-                    <span className="text-xs font-medium text-amber-600 mt-0.5 min-w-[18px]">
+                    <span className="text-xs font-medium text-[var(--rag-amber)] mt-0.5 min-w-[18px]">
                       {item.order}.
                     </span>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm">
                         {item.title}
-                        {item.isRequired && <span className="text-red-500 ml-1">*</span>}
+                        {item.isRequired && <span className="text-[var(--rag-red)] ml-1">*</span>}
                       </p>
                       {item.description && (
                         <p className="text-xs text-muted-foreground mt-0.5">
@@ -396,7 +396,7 @@ export function TaskDetailDialog({
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <h4 className="font-medium flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-blue-500" />
+                  <BookOpen className="h-4 w-4 text-[var(--rag-blue)]" />
                   Relevant References
                 </h4>
                 <span className="text-xs text-muted-foreground/60">AI-identified</span>
@@ -405,9 +405,9 @@ export function TaskDetailDialog({
                 {task.aiRelevantDocuments.map((doc, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-3 p-3 border border-blue-200/50 bg-blue-50/30 dark:bg-blue-950/10 dark:border-blue-800/30 rounded-lg"
+                    className="flex items-start gap-3 p-3 border border-[var(--rag-blue)]/50 bg-[var(--rag-blue-soft)]/30 dark:bg-blue-950/10 dark:border-blue-800/30 rounded-lg"
                   >
-                    <FileText className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                    <FileText className="h-4 w-4 text-[var(--rag-blue)] mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium">{doc.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{doc.reason}</p>

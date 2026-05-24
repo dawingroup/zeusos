@@ -226,7 +226,7 @@ const SocialIntelligencePage: React.FC = () => {
       </div>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">{error}</div>
+        <div className="text-sm text-[var(--rag-red)] bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded-md p-3">{error}</div>
       )}
 
       {/* Overview Stats */}
@@ -293,7 +293,7 @@ const SocialIntelligencePage: React.FC = () => {
                         <span>{formatNumber(entry.totalFollowers)} followers</span>
                         <span>{entry.avgEngagement.toFixed(1)}% eng.</span>
                         {entry.totalFollowersDelta !== 0 && (
-                          <span className={entry.totalFollowersDelta > 0 ? 'text-green-600' : 'text-red-600'}>
+                          <span className={entry.totalFollowersDelta > 0 ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}>
                             {entry.totalFollowersDelta > 0 ? '+' : ''}{formatNumber(entry.totalFollowersDelta)}
                           </span>
                         )}

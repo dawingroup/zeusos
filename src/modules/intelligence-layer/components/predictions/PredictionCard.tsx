@@ -66,9 +66,9 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
             <div
               className={`h-full rounded-full ${
                 factor.impact === 'positive'
-                  ? 'bg-green-500'
+                  ? 'bg-[var(--rag-green)]'
                   : factor.impact === 'negative'
-                  ? 'bg-red-500'
+                  ? 'bg-[var(--rag-red)]'
                   : 'bg-[var(--bg-sunken)]'
               }`}
               style={{ width: `${factor.weight * 100}%` }}
@@ -78,9 +78,9 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
             variant="outline"
             className={`text-xs h-5 ${
               factor.impact === 'positive'
-                ? 'bg-green-100 text-green-700 border-green-300'
+                ? 'bg-[var(--rag-green-soft)] text-[var(--rag-green)] border-[var(--rag-green)]'
                 : factor.impact === 'negative'
-                ? 'bg-red-100 text-red-700 border-red-300'
+                ? 'bg-[var(--rag-red-soft)] text-[var(--rag-red)] border-[var(--rag-red)]'
                 : 'bg-[var(--bg-sunken)] text-muted-foreground border-[var(--border-default)]'
             }`}
           >
@@ -212,13 +212,13 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 
         {/* Actual Value (if validated) */}
         {prediction.status === 'validated' && prediction.actualValue !== undefined && (
-          <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-            <p className="text-xs text-green-700">Actual Value</p>
+          <div className="p-3 bg-[var(--rag-green-soft)] rounded-lg border border-[var(--rag-green)]">
+            <p className="text-xs text-[var(--rag-green)]">Actual Value</p>
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold text-green-700">
+              <span className="text-2xl font-bold text-[var(--rag-green)]">
                 {formatValue(prediction.actualValue)}
               </span>
-              <Badge className="bg-green-500">
+              <Badge className="bg-[var(--rag-green)]">
                 {(
                   ((prediction.actualValue - prediction.predictedValue) /
                     prediction.predictedValue) *

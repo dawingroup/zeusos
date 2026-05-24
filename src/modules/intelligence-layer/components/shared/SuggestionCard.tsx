@@ -107,7 +107,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onAccept(suggestion)}>
-                        <Check className="h-4 w-4 text-green-500" />
+                        <Check className="h-4 w-4 text-[var(--rag-green)]" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Accept</TooltipContent>
@@ -119,7 +119,7 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onDismiss(suggestion)}>
-                        <X className="h-4 w-4 text-red-500" />
+                        <X className="h-4 w-4 text-[var(--rag-red)]" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Dismiss</TooltipContent>
@@ -194,13 +194,13 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
             </Button>
           )}
           {onAccept && (
-            <Button variant="outline" size="sm" className="text-green-600 border-green-600" onClick={() => onAccept(suggestion)}>
+            <Button variant="outline" size="sm" className="text-[var(--rag-green)] border-[var(--rag-green)]" onClick={() => onAccept(suggestion)}>
               <Check className="h-4 w-4 mr-2" />
               Accept
             </Button>
           )}
           {onDismiss && (
-            <Button variant="outline" size="sm" className="text-red-600 border-red-600" onClick={() => onDismiss(suggestion)}>
+            <Button variant="outline" size="sm" className="text-[var(--rag-red)] border-[var(--rag-red)]" onClick={() => onDismiss(suggestion)}>
               <X className="h-4 w-4 mr-2" />
               Dismiss
             </Button>

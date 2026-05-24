@@ -65,10 +65,10 @@ export const SignalCard: React.FC<SignalCardProps> = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return 'text-green-600';
-    if (confidence >= 60) return 'text-blue-600';
-    if (confidence >= 40) return 'text-yellow-600';
-    return 'text-red-600';
+    if (confidence >= 80) return 'text-[var(--rag-green)]';
+    if (confidence >= 60) return 'text-[var(--rag-blue)]';
+    if (confidence >= 40) return 'text-[var(--rag-amber)]';
+    return 'text-[var(--rag-red)]';
   };
 
   if (compact) {
@@ -176,7 +176,7 @@ export const SignalCard: React.FC<SignalCardProps> = ({
                 href={signal.sourceDetails.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700"
+                className="text-[var(--rag-blue)] hover:text-[var(--rag-blue)]"
               >
                 <ExternalLink className="w-3 h-3" />
               </a>
@@ -185,8 +185,8 @@ export const SignalCard: React.FC<SignalCardProps> = ({
           <div className="flex items-center gap-1">
             <span
               className={`w-2 h-2 rounded-full ${
-                sourceConfig?.reliability === 'high' ? 'bg-green-500' :
-                sourceConfig?.reliability === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
+                sourceConfig?.reliability === 'high' ? 'bg-[var(--rag-green)]' :
+                sourceConfig?.reliability === 'medium' ? 'bg-[var(--rag-amber)]' : 'bg-[var(--rag-red)]'
               }`}
             />
             <span className="text-xs text-muted-foreground">{sourceConfig?.reliability} reliability</span>
@@ -239,13 +239,13 @@ export const SignalCard: React.FC<SignalCardProps> = ({
       {(signal.implications.opportunities.length > 0 || signal.implications.threats.length > 0) && (
         <div className="px-4 pb-4 flex gap-4">
           {signal.implications.opportunities.length > 0 && (
-            <div className="flex items-center gap-1 text-green-600">
+            <div className="flex items-center gap-1 text-[var(--rag-green)]">
               <CheckCircle className="w-4 h-4" />
               <span className="text-xs">{signal.implications.opportunities.length} opportunities</span>
             </div>
           )}
           {signal.implications.threats.length > 0 && (
-            <div className="flex items-center gap-1 text-red-600">
+            <div className="flex items-center gap-1 text-[var(--rag-red)]">
               <AlertCircle className="w-4 h-4" />
               <span className="text-xs">{signal.implications.threats.length} threats</span>
             </div>
