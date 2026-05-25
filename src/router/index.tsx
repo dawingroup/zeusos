@@ -91,6 +91,7 @@ const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/Q
 import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
+const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Media Plan & Buying — Phase 4
@@ -437,6 +438,10 @@ export const router = createBrowserRouter([
       { path: 'delivery',           element: <Navigate to="/delivery/inbox" replace /> },
       { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
+
+      // Phase 6.UI.D.2 — ECD Review aggregator (PR 4). Subsidiary
+      // delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
+      { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       // Intelligence Layer
       {
