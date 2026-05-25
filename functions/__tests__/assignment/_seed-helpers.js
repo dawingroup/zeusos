@@ -30,6 +30,26 @@ function patchAuthForTests() {
     if (!a || !a.uid) throw new Error('unauth');
     return { uid: a.uid, user: { homeOrgId: PARENT_ORG_ID } };
   };
+  // ADR-2026-05-25 §2.Q2 — new commercial-principal helpers. Tests
+  // treat any authenticated caller as a parent-org principal (same
+  // semantics as the assertParentOrgPrincipal patch above) so we
+  // don't have to seed primaryBrandId fixtures across the board.
+  auth.assertCommercialPrincipal = async (a /* , clientId */) => {
+    if (!a || !a.uid) throw new Error('unauth');
+    return { uid: a.uid, user: { homeOrgId: PARENT_ORG_ID } };
+  };
+  auth.assertCommercialPrincipalForResource = async (a, ref) => {
+    if (!a || !a.uid) throw new Error('unauth');
+    // Mirror the production helper's contract: returns `{ uid, user, data }`
+    // where `data` is the resource's data. Try to fetch it for tests
+    // that consume the data (e.g. upsertSow reads `data.clientId`).
+    let data = {};
+    try {
+      const snap = await ref.get();
+      if (snap.exists) data = snap.data();
+    } catch { /* test fixture may not have the doc — that's ok */ }
+    return { uid: a.uid, user: { homeOrgId: PARENT_ORG_ID }, data };
+  };
   auth.assertDeliveryLead = async (a /* , sub */) => {
     if (!a || !a.uid) throw new Error('unauth');
     return { uid: a.uid, user: { homeOrgId: SUBSIDIARY } };
