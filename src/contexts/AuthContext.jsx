@@ -30,12 +30,41 @@ export const useCurrentUserId = () => {
   return user?.uid ?? 'unknown-user';
 };
 
+// Phase 6.UI.0 — dev-only auth bypass for local browser verification.
+// Set `VITE_DEV_BYPASS_AUTH=true` in `.env.local`; the synthetic user
+// is an admin/owner on `zeus-group` so the PARENT manifest renders.
+// Gated on `import.meta.env.DEV`, so production builds drop this code
+// path entirely via Vite tree-shaking.
+const DEV_BYPASS_AUTH =
+  import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
+
+const DEV_BYPASS_USER = DEV_BYPASS_AUTH
+  ? {
+      uid: 'dev-bypass-user',
+      // Email matches `SUPER_USER_EMAILS` in SubsidiaryDeliveryGuard so
+      // the bypass user can flip between PARENT and SUBSIDIARY views
+      // without tripping the guard.
+      email: 'onzimai@zeusgroup.co.ug',
+      displayName: 'Dev Bypass User',
+      photoURL: null,
+      emailVerified: true,
+      isAnonymous: false,
+      providerData: [],
+      getIdToken: async () => 'dev-bypass-token',
+    }
+  : null;
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [accessToken, setAccessToken] = useState(null);
+  const [user, setUser] = useState(DEV_BYPASS_USER);
+  const [loading, setLoading] = useState(!DEV_BYPASS_AUTH);
+  const [accessToken, setAccessToken] = useState(DEV_BYPASS_AUTH ? 'dev-bypass-token' : null);
 
   useEffect(() => {
+    if (DEV_BYPASS_AUTH) {
+      console.warn('[auth] VITE_DEV_BYPASS_AUTH active — using synthetic dev user. Do not enable in production.');
+      return;
+    }
+
     if (import.meta.env.DEV) {
       console.debug('[auth] AuthProvider: setting up auth state listener');
     }
