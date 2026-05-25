@@ -93,6 +93,18 @@ const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IW
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
+// Conflict Firewall — Phase 6.UI.C (parent-org only). Categories,
+// client tags, walls, breach risks.
+// ──────────────────────────────────────────────────────────────────────────
+const ConflictFirewallLayout = lazyWithRetry(() =>
+  import('@/modules/conflict-firewall').then(m => ({ default: m.ConflictFirewallLayout }))
+);
+const CFCategoriesPage   = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/CategoriesPage'));
+const CFClientTagsPage   = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/ClientTagsPage'));
+const CFWallsPage        = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/WallsPage'));
+const CFBreachRisksPage  = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/BreachRisksPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
 // Media Plan & Buying — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
 const MediaPlansListPage     = lazyWithRetry(() => import('@/modules/media/pages/MediaPlansListPage'));
@@ -437,6 +449,19 @@ export const router = createBrowserRouter([
       { path: 'delivery',           element: <Navigate to="/delivery/inbox" replace /> },
       { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
+
+      // Phase 6.UI.C — Conflict Firewall (PR 3). Parent-org only.
+      {
+        path: 'conflict-firewall',
+        element: <PageWrapper><ParentOrgGuard><ConflictFirewallLayout /></ParentOrgGuard></PageWrapper>,
+        children: [
+          { index: true,              element: <Navigate to="/conflict-firewall/categories" replace /> },
+          { path: 'categories',       element: <CFCategoriesPage /> },
+          { path: 'client-tags',      element: <CFClientTagsPage /> },
+          { path: 'walls',            element: <CFWallsPage /> },
+          { path: 'breach-risks',     element: <CFBreachRisksPage /> },
+        ],
+      },
 
       // Intelligence Layer
       {

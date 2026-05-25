@@ -4747,6 +4747,16 @@ exports.routeDirectClientRequest = assignment.routeDirectClientRequest;
 // Phase 6.B — brand routing recommendation (Addendum v1.1 §8).
 exports.routeBrand = assignment.routeBrand;
 
+// Phase 6.UI.C — Conflict Firewall admin callables (PR 3).
+// Categories, client tags, walls all gated on parent-org auth via
+// `assertParentOrgPrincipal`. All five callables are idempotent.
+const conflictFirewallAdmin = require('./src/conflict-firewall/admin');
+exports.addCategory          = conflictFirewallAdmin.addCategory;
+exports.addClientCategory    = conflictFirewallAdmin.addClientCategory;
+exports.removeClientCategory = conflictFirewallAdmin.removeClientCategory;
+exports.addConflictWall      = conflictFirewallAdmin.addConflictWall;
+exports.removeConflictWall   = conflictFirewallAdmin.removeConflictWall;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');
