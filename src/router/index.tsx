@@ -79,6 +79,7 @@ const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'))
 // authority signature with Account-Management + Billing).
 // ──────────────────────────────────────────────────────────────────────────
 import { ParentOrgGuard } from '@/router/guards/ParentOrgGuard';
+import { BrandAccessGuard } from '@/router/guards/BrandAccessGuard';
 const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
 const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
 const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
@@ -317,17 +318,23 @@ export const router = createBrowserRouter([
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
       // Account Management — Phase 3.D commercial core.
+      // ADR-2026-05-25 §2.Q2 (UI layer 4.3) — list routes stay on
+      // AMAccessGuard (parent-org only) since they expose the whole
+      // client roster; per-client detail routes use BrandAccessGuard,
+      // which accepts PARENT principals OR the home brand AD of the
+      // client. Routes that key on a master_job resolve clientId via
+      // `master_jobs/{id}.clientId`.
       { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
       { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId',                                              element: <PageWrapper><AMAccessGuard><AMClientDetailPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId',                                              element: <PageWrapper><BrandAccessGuard><AMClientDetailPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
       { path: 'master-jobs',                                                    element: <PageWrapper><AMAccessGuard><AMMasterJobsPage /></AMAccessGuard></PageWrapper> },
-      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><AMAccessGuard><AMMasterJobDetailPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><BrandAccessGuard clientIdParam="masterJobId" resolveVia="master_jobs"><AMMasterJobDetailPage /></BrandAccessGuard></PageWrapper> },
       {
         path: 'account-mgmt',
         element: (

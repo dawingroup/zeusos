@@ -190,26 +190,50 @@ const SUBSIDIARY_MIDDLE_ORDER: Record<DeliverySubsidiaryId, string[]> = {
 // ----------------------------------------------------------------------------
 
 /**
+ * Extended org-kind for `resolveNav`. Same set as Tech-Spec v1.0 plus
+ * the `SUBSIDIARY_SELLING` variant introduced by
+ * [ADR-2026-05-25 §3.2 step 5](../../../docs/ADR-2026-05-25-commercial-model.md):
+ * brand-direct ADs who own client relationships get a hybrid sidebar
+ * (delivery head + per-brand middle + commercial tail with brand-scoped
+ * Account Mgmt / Pricing / Billing entries).
+ */
+export type ResolveNavKind = OrganizationKind | 'SUBSIDIARY_SELLING';
+
+/**
+ * Commercial entries surfaced to `SUBSIDIARY_SELLING` ADs in their
+ * sidebar tail. These point at the same routes the parent-org AMs
+ * use; the `BrandAccessGuard` on each route gates the data scope
+ * to "clients with primaryBrandId == caller.homeOrgId".
+ */
+const NAV_MANIFEST_SUBSIDIARY_SELLING_COMMERCIAL: NavItem[] = [
+  { moduleId: 'account-management', label: 'My Clients',         icon: 'Briefcase', routePath: '/clients' },
+  { moduleId: 'pricing',            label: 'Pricing & Quotes',   icon: 'Tag',       routePath: '/pricing/rate-cards' },
+  { moduleId: 'billing',            label: 'Billing & Inter-Co', icon: 'Receipt',   routePath: '/billing/client-invoices' },
+];
+
+/**
  * Returns the ordered sidebar items for a given `(orgKind, subsidiaryId)`.
  *
  * - PARENT principals on `zeus-group` get `NAV_MANIFEST_PARENT`.
  * - SUBSIDIARY principals get `HEAD + per-brand middle + TAIL`, with
  *   capability-gated items filtered against `BRAND_CAPABILITIES`.
+ * - SUBSIDIARY_SELLING principals (ADR §3.2 step 5) get the same as
+ *   SUBSIDIARY plus brand-scoped commercial entries (My Clients,
+ *   Pricing, Billing) inserted before the universal tail.
  *
  * Unknown subsidiary ids fall back to an empty list — the caller is
  * expected to combine this with route-level guards.
  */
 export function resolveNav(
-  orgKind: OrganizationKind,
+  orgKind: ResolveNavKind,
   subsidiaryId: SubsidiaryId,
 ): NavItem[] {
   if (orgKind === 'PARENT' && subsidiaryId === 'zeus-group') {
     return NAV_MANIFEST_PARENT.filter((item) => !item.subsidiaryOnly);
   }
 
-  if (orgKind !== 'SUBSIDIARY' || subsidiaryId === 'zeus-group') {
-    return [];
-  }
+  if (orgKind !== 'SUBSIDIARY' && orgKind !== 'SUBSIDIARY_SELLING') return [];
+  if (subsidiaryId === 'zeus-group') return [];
 
   const subId = subsidiaryId as DeliverySubsidiaryId;
   const middleOrder = SUBSIDIARY_MIDDLE_ORDER[subId];
@@ -231,6 +255,15 @@ export function resolveNav(
 
   const head = NAV_MANIFEST_SUBSIDIARY_HEAD.filter((item) => !item.parentOrgOnly);
   const tail = NAV_MANIFEST_SUBSIDIARY_TAIL.filter((item) => !item.parentOrgOnly);
+
+  // ADR-2026-05-25 §3.2 step 5 — brand-direct ADs see brand-scoped
+  // commercial entries before the universal tail. The routes go to
+  // the same paths as the parent-org sidebar; BrandAccessGuard on
+  // each route narrows the data to "clients where primaryBrandId
+  // matches the caller's homeOrgId".
+  if (orgKind === 'SUBSIDIARY_SELLING') {
+    return [...head, ...middle, ...NAV_MANIFEST_SUBSIDIARY_SELLING_COMMERCIAL, ...tail];
+  }
 
   return [...head, ...middle, ...tail];
 }
