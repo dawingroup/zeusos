@@ -71,6 +71,16 @@ const DOMAIN_EVENT_TYPES = new Set([
   // a human in Traffic confirms or overrides before issueWorkOrder
   // runs. Payload carries the rejected candidates + reasons for audit.
   'RoutingBrandProposed',
+  // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor model.
+  // Emitted by `excludeConflicted` when 1+ candidate brand was walled
+  // because it currently serves a client on the requesting client's
+  // competitor list. Consumed by reporting (cycle-time vs routing
+  // rejections) + Conflict Sentinel (ZA-004, Phase 6.F) which
+  // surfaces the breach risk to Account Mgmt for review. Payload
+  // carries (requestedClientId, listedCompetitorIds[], walledBrandIds[],
+  // walledCompetitorByBrand: Record<brandId, competitorClientId[]>,
+  // masterJobId) — enough to reconstruct why routing got tight.
+  'ConflictExclusivityRisk',
 ]);
 
 /**
