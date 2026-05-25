@@ -4756,6 +4756,11 @@ const { postCesLineItem, signOffCes } = require('./src/pricing/cesLifecycle');
 exports.postCesLineItem = postCesLineItem;
 exports.signOffCes = signOffCes;
 
+// Phase 6.UI.D.1 — co-authored brief intake (PR 5). Single write path
+// for the AM-side brief editor; merges into master_jobs/{id}.campaign.brief.
+const { updateMasterJobBrief } = require('./src/account-management/updateMasterJobBrief');
+exports.updateMasterJobBrief = updateMasterJobBrief;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');
