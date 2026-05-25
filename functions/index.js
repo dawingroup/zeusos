@@ -590,6 +590,11 @@ exports.onInventoryItemDeletedCategorySync = onInventoryItemDeletedCategorySync;
 const { seedInventoryCategories } = require('./src/migrations/seedInventoryCategories');
 exports.seedInventoryCategories = seedInventoryCategories;
 
+// Q2 backfill (ADR-0001) — set commercialOwnerOrgId='zeus-group' on
+// every pre-Q2 client. One-time, idempotent, super-user only.
+const { backfillCommercialOwnerOnClients } = require('./src/migrations/backfillCommercialOwnerOnClients');
+exports.backfillCommercialOwnerOnClients = backfillCommercialOwnerOnClients;
+
 // Inventory Issue Triggers (Issue from Stores — stock deduction + numbering)
 const {
   generateIssueNumber,

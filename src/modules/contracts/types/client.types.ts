@@ -44,6 +44,32 @@ export interface Client {
   contacts?: ClientContact[];
   /** Account-Management user owning the client relationship. */
   relationshipManagerUserId?: string;
+
+  /**
+   * Which org commercially owns this client — per ADR-0001 Q2,
+   * "brands also sell direct" means a client can be either:
+   *
+   *   - `'zeus-group'`  — Zeus Group's Account-Management team owns
+   *                       the relationship (the historical default).
+   *   - one of the 5    — a brand sold this client direct; the brand's
+   *     sibling brand     commercial lead owns the MSA / SOW / Quote /
+   *     ids               ClientInvoice lifecycle. Other brands can
+   *                       still receive routed IWOs through the cost-
+   *                       plus inter-co path (Q3) — but only the owner
+   *                       brand can sign commercial documents.
+   *
+   * Anchor for the conflict firewall: `excludeConflicted` excludes a
+   * candidate brand if it commercially owns a client that the
+   * requesting client lists as a competitor (via `client_competitors`).
+   * Falls back to the open-IWO walk when this field is unset (legacy
+   * pre-Q2 clients).
+   *
+   * Optional during rollout. Migration in `functions/src/migrations/`
+   * backfills all existing clients to `'zeus-group'`. New clients
+   * created via account-management intake MUST set this.
+   */
+  commercialOwnerOrgId?: SubsidiaryId;
+
   notes?: string;
   createdAt: Timestamp | string;
   updatedAt: Timestamp | string;

@@ -181,9 +181,111 @@ async function isParentOrgUser(userId) {
   return hasParent;
 }
 
+/**
+ * Confirm caller can sign commercial documents for the listed brands —
+ * per ADR-0001 Q2 ("brands also sell direct"). The caller satisfies
+ * the check if EITHER:
+ *
+ *   (a) parent-org principal (existing path — Zeus Group's AM team can
+ *       always sign for any brand-owned account); OR
+ *   (b) homeOrgId equals one of `allowedBrandIds` AND the user carries
+ *       the `commercialLeadFor` flag for that brand. `commercialLeadFor`
+ *       is a `string[]` on the user doc, populated by Phase 6.F.2 admin
+ *       tooling; for the 6.F rollout window we accept the legacy
+ *       fallback "globalRole === 'admin' AND subsidiaryAccess includes
+ *       the brand".
+ *
+ * `allowedBrandIds` undefined or empty = parent-org-only (back-compat
+ * with the existing `assertParentOrgPrincipal` semantics — used for
+ * the genuinely group-level surfaces like intercompany invoicing or
+ * transfer-pricing config).
+ *
+ * Returns `{ uid, user, satisfiedAs }` where satisfiedAs ∈
+ * {'parent', brandId} so the calling CFn can branch behavior.
+ *
+ * Throws HttpsError('permission-denied') with code
+ * COMMERCIAL_SCOPE_REQUIRED if no path satisfies.
+ */
+async function assertCommercialPrincipal(auth, { allowedBrandIds = null } = {}) {
+  if (!auth || !auth.uid) {
+    throw new HttpsError('unauthenticated', 'Authentication required.');
+  }
+  const user = await loadUserDoc(auth.uid);
+  if (!user) {
+    throw new HttpsError('permission-denied', 'Caller has no user profile.');
+  }
+
+  // (a-i) Explicit super-email — always parent. Note we do NOT delegate
+  //       to `isSuper()` here because that helper also auto-promotes
+  //       any `globalRole === 'admin'` user, which would shadow the
+  //       brand-direct path below (a brand-side admin should resolve
+  //       to their brand, not to parent).
+  const callerEmail = auth.token && auth.token.email;
+  if (callerEmail && SUPER_EMAILS.has(callerEmail)) {
+    return { uid: auth.uid, user, satisfiedAs: 'parent' };
+  }
+
+  // (a-ii) Canonical parent path — user's home org doc is kind=PARENT.
+  if (user.homeOrgId) {
+    const db = getFirestore();
+    const orgSnap = await db.doc(`organizations/${user.homeOrgId}`).get();
+    if (orgSnap.exists && orgSnap.data().kind === 'PARENT') {
+      return { uid: auth.uid, user, satisfiedAs: 'parent' };
+    }
+  }
+
+  // (a-iii) Legacy parent path — explicit subsidiaryAccess to PARENT_ORG_ID
+  //         with admin/owner role. Only triggers when the user has NO
+  //         brand-side homeOrgId (otherwise the brand path below wins).
+  const hasParentLegacy =
+    Array.isArray(user.subsidiaryAccess) &&
+    user.subsidiaryAccess.some(
+      (s) => s && s.subsidiaryId === PARENT_ORG_ID && s.hasAccess,
+    ) &&
+    (user.globalRole === 'admin' || user.globalRole === 'owner') &&
+    (!user.homeOrgId || user.homeOrgId === PARENT_ORG_ID);
+  if (hasParentLegacy) {
+    return { uid: auth.uid, user, satisfiedAs: 'parent' };
+  }
+
+  // (b) Brand-direct path — caller's homeOrgId is in allowedBrandIds
+  //     AND they carry commercialLeadFor flag (canonical) OR admin
+  //     access to that brand (legacy fallback).
+  if (Array.isArray(allowedBrandIds) && allowedBrandIds.length > 0) {
+    const candidateBrandId = user.homeOrgId;
+    if (candidateBrandId && allowedBrandIds.indexOf(candidateBrandId) !== -1) {
+      // Canonical — explicit commercialLeadFor flag.
+      if (Array.isArray(user.commercialLeadFor) &&
+          user.commercialLeadFor.indexOf(candidateBrandId) !== -1) {
+        return { uid: auth.uid, user, satisfiedAs: candidateBrandId };
+      }
+      // Legacy fallback — admin/owner with subsidiary access to this brand.
+      const hasBrandAdmin =
+        (user.globalRole === 'admin' || user.globalRole === 'owner') &&
+        Array.isArray(user.subsidiaryAccess) &&
+        user.subsidiaryAccess.some(
+          (s) => s && s.subsidiaryId === candidateBrandId && s.hasAccess,
+        );
+      if (hasBrandAdmin) {
+        return { uid: auth.uid, user, satisfiedAs: candidateBrandId };
+      }
+    }
+  }
+
+  // No path satisfied.
+  const scope = (Array.isArray(allowedBrandIds) && allowedBrandIds.length > 0)
+    ? `parent OR brand-direct (${allowedBrandIds.join(', ')})`
+    : 'parent';
+  throw new HttpsError(
+    'permission-denied',
+    `COMMERCIAL_SCOPE_REQUIRED: caller is not authorised to commit commercial documents at scope ${scope}.`,
+  );
+}
+
 module.exports = {
   PARENT_ORG_ID,
   assertParentOrgPrincipal,
+  assertCommercialPrincipal,
   assertDeliveryLead,
   assertSubsidiaryAccessOrParent,
   isParentOrgUser,

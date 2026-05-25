@@ -35,6 +35,27 @@ export interface TaskCondition {
 /**
  * Per-event verb matrix entry. Four-flag authority + optional
  * condition envelope. Exactly the shape called out in v1.2 §2.2.
+ *
+ * Per ADR-0001 Q2 ("brands also sell direct"), a capability can be
+ * `brandScope`-restricted to a subset of sibling brands. When set,
+ * the capability only fires for events whose aggregate belongs to
+ * one of the listed brands. Examples:
+ *
+ *   - A Zeus Group AM has `brandScope: ['all']` on `quote.*` —
+ *     they can quote for any brand's account.
+ *   - A Zeus Digital Account Director has `brandScope: ['zeus-digital']`
+ *     on `quote.*` — they can quote only for Zeus-Digital-owned
+ *     accounts.
+ *   - A brand-specific Studio Manager has `brandScope: ['zeus-the-agency']`
+ *     on `creative.internal_approval_requested` — they can approve
+ *     only at ZTA's ladder, not e.g. House of Zeus's.
+ *
+ * Resolution: `assertCommercialPrincipal({ allowedBrandIds })` reads
+ * the role assignment's TaskCapability rows for the requested event,
+ * filters by brandScope intersection, and grants if any row matches.
+ *
+ * Missing or `['all']` brandScope = no restriction (legacy behaviour,
+ * what every pre-Q2 capability does).
  */
 export interface TaskCapability {
   eventType: EventTypeName;
@@ -44,6 +65,14 @@ export interface TaskCapability {
   canApprove: boolean;
   canDelegate: boolean;
   conditions?: TaskCondition[];
+
+  /**
+   * Subset of sibling brands this capability applies to. Optional;
+   * undefined or `['all']` means no brand-scope restriction.
+   * Values: 'zeus-the-agency' | 'zeus-digital' | 'labyrinth' |
+   * 'odd-gorilla' | 'house-of-zeus' | 'zeus-group' | 'all'.
+   */
+  brandScope?: Array<'all' | 'zeus-group' | 'zeus-the-agency' | 'zeus-digital' | 'labyrinth' | 'odd-gorilla' | 'house-of-zeus'>;
 }
 
 /**
