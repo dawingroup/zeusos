@@ -4741,6 +4741,13 @@ exports.signOffCes = signOffCes;
 const { onDomainEventCreated } = require('./src/platform/outbox');
 exports.onDomainEventCreated = onDomainEventCreated;
 
+// Phase 6.E — Event/Task engine. Fans every domain_event into
+// generated_tasks per matching EventDefinition rules (closes v1.2
+// subsystem B). Runs in parallel with onDomainEventCreated; tags
+// processedBy: ['task-generator'] for at-least-once dispatch.
+const { onDomainEventTaskGenerator } = require('./src/event-task-engine/onDomainEventTaskGenerator');
+exports.onDomainEventTaskGenerator = onDomainEventTaskGenerator;
+
 // ============================================================
 // Account Management — Phase 3.D (Commercial-core UI backing)
 // ============================================================
