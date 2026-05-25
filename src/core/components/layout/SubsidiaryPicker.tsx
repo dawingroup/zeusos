@@ -15,17 +15,21 @@ import type { SubsidiaryId } from '@/core/settings/types';
 import { cn } from '@/shared/lib/utils';
 
 const TYPE_LABEL: Record<string, string> = {
-  'zeus-the-agency': 'Manufacturing',
-  'zeus-digital': 'Services',
-  'labyrinth': 'Investment',
-  'odd-gorilla': 'Technology',
+  'zeus-group': 'Parent — commercial',
+  'zeus-the-agency': 'Flagship 360°',
+  'zeus-digital': 'Digital-first',
+  'labyrinth': 'Audio & visual',
+  'odd-gorilla': 'Conflict-isolated',
+  'house-of-zeus': 'Kenya market',
 };
 
 const CODE: Record<string, string> = {
-  'zeus-the-agency': 'DF',
-  'zeus-digital': 'DA',
-  'labyrinth': 'DC',
-  'odd-gorilla': 'DT',
+  'zeus-group': 'ZG',
+  'zeus-the-agency': 'ZA',
+  'zeus-digital': 'ZD',
+  'labyrinth': 'LB',
+  'odd-gorilla': 'OG',
+  'house-of-zeus': 'HZ',
 };
 
 /**

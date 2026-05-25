@@ -92,9 +92,53 @@ export class DriveTokenExpiredError extends Error {
 }
 
 /**
- * Subscribe to auth state changes
+ * Phase 6.UI.0 — dev-only auth bypass. When the env toggle is set,
+ * `onAuthChange` fires once with a synthetic admin user and returns a
+ * no-op unsubscribe. Both `src/shared/hooks/useAuth.ts` and
+ * `src/core/hooks/useAuth.ts` route through this function, so a
+ * single guard here unblocks the AuthGuard along with every other
+ * consumer. Gated on `import.meta.env.DEV`, so production builds drop
+ * the bypass via Vite tree-shaking.
+ */
+const DEV_BYPASS_AUTH =
+  import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
+
+const DEV_BYPASS_USER = DEV_BYPASS_AUTH
+  ? ({
+      uid: 'dev-bypass-user',
+      // Email matches `SUPER_USER_EMAILS` in SubsidiaryDeliveryGuard so
+      // the bypass user can flip between PARENT and SUBSIDIARY views
+      // without tripping the guard.
+      email: 'onzimai@zeusgroup.co.ug',
+      displayName: 'Dev Bypass User',
+      photoURL: null,
+      emailVerified: true,
+      isAnonymous: false,
+      providerData: [],
+      getIdToken: async () => 'dev-bypass-token',
+      // Other Firebase User fields the type expects — minimal stubs.
+      metadata: { creationTime: '', lastSignInTime: '' },
+      phoneNumber: null,
+      providerId: 'firebase',
+      refreshToken: '',
+      tenantId: null,
+      delete: async () => {},
+      getIdTokenResult: async () => ({} as unknown as ReturnType<User['getIdTokenResult']> extends Promise<infer R> ? R : never),
+      reload: async () => {},
+      toJSON: () => ({}),
+    } as unknown as User)
+  : null;
+
+/**
+ * Subscribe to auth state changes.
  */
 export function onAuthChange(callback: (user: User | null) => void): () => void {
+  if (DEV_BYPASS_AUTH) {
+    // Fire synthetic user asynchronously so React state-set callers see
+    // a fresh tick (matches the real `onAuthStateChanged` behaviour).
+    queueMicrotask(() => callback(DEV_BYPASS_USER));
+    return () => {};
+  }
   return onAuthStateChanged(auth, callback);
 }
 
