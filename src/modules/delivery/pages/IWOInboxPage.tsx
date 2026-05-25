@@ -20,6 +20,7 @@ import type { SubsidiaryId } from '@/core/settings/types';
 import { subscribeIWOInbox, subscribeIWOActive } from '../services/firestore';
 import { acceptWorkOrderFn, rejectWorkOrderFn } from '../services/firebase';
 import { resolveHomeSubsidiaryId } from '../components/deliveryAccess';
+import { isConflictIsolated } from '@/core/navigation/manifest';
 
 function formatMinor(amountMinor: number, currency: string): string {
   return `${currency} ${(amountMinor / 100).toLocaleString(undefined, {
@@ -106,6 +107,8 @@ export default function IWOInboxPage() {
     );
   }
 
+  const showIsolationBanner = isConflictIsolated(homeSub);
+
   return (
     <div style={{ padding: 24 }} data-testid="iwo-inbox-page">
       <header style={{ marginBottom: 24 }}>
@@ -114,6 +117,25 @@ export default function IWOInboxPage() {
           Internal work orders issued to <strong>{homeSub}</strong>. Accept to lock the budget hold; reject (with reason) to release it.
         </p>
       </header>
+
+      {showIsolationBanner && (
+        <div
+          role="note"
+          data-testid="iwo-inbox-isolation-banner"
+          style={{
+            padding: '10px 14px',
+            marginBottom: 16,
+            borderRadius: 6,
+            background: 'var(--rag-amber-soft, #fef3c7)',
+            color: 'var(--rag-amber-deep, #78350f)',
+            border: '1px solid var(--rag-amber, #f59e0b)',
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+        >
+          Conflict-isolated workspace — your clients are not visible to other brands.
+        </div>
+      )}
 
       {err && (
         <div role="alert" data-testid="iwo-inbox-error" style={{

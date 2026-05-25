@@ -45,6 +45,15 @@ git config core.hooksPath .githooks
 
 **Workflow:** `git switch -c <feature-branch>` → commit → push → `gh pr create`.
 
+**Dev-only auth bypass** (Phase 6.UI.0). For local browser verification of the sidebar / module surfaces without signing in:
+
+```bash
+# In .env (gitignored) — never commit, never deploy with this set.
+VITE_DEV_BYPASS_AUTH=true
+```
+
+Synthesises a parent-org admin DawinUser with access to all 5 sub-brands. Email matches the super-user allow-list in [SubsidiaryDeliveryGuard](src/modules/delivery/components/SubsidiaryDeliveryGuard.tsx), so you can flip between PARENT and SUBSIDIARY views via the org-switcher chip. Gated on `import.meta.env.DEV` — Vite tree-shakes the bypass code path out of production builds. Wired into [`onAuthChange`](src/shared/services/firebase/auth.ts:97) so every `useAuth` hook honours it through one chokepoint.
+
 **Emergency bypass** (use sparingly; explain why in the commit message):
 ```bash
 ALLOW_DIRECT_COMMIT=1 git commit ...
@@ -75,7 +84,9 @@ Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-ha
 - ❌ **Phase 5.E** — Client Portal rebrand (`customer-hub` carryover; no Zeus visual identity pass)
 - ❌ **Phase 5.F** — Production launch + custom domain DNS active + GA/PostHog (DNS for `os.zeustheagency.com` not yet verified — deploy health-check still hits `zeusos.web.app`)
 - ❌ **Phase 5.G** — Onboarding session with Zeus team (gated by 5.F)
+- 🟡 **Phase 6.UI.0** — Sidebar manifest + subsidiary-aware ordering. `src/core/navigation/manifest.ts` resolves `(OrganizationKind, SubsidiaryId)` → ordered NavItem list; `src/core/settings/brand-capabilities.ts` mirrors `BRAND_CAPABILITIES` from `functions/src/assignment/services/route-brand.service.js`. AppShell rewired off `resolveNav`; Odd Gorilla shows an "Isolated" badge on the org-switcher chip + a banner on the IWO Inbox. Zeus Group is now a selectable entry in the org-switcher (parent context). Placeholder routes (`/conflict-firewall/*`, `/delivery/ecd-review`, `/delivery/active`, `/delivery/burn`, `/reports`, `/hr/role-profiles`, `/hr/role-assignments`) wired via `ComingSoonPage` so manifest items don't 404 between PRs. PRs 3–6 (Conflict Firewall, ECD Review, CES, Role Profiles) still pending.
 - 🟡 **Phase 6.UI.A** — Role Profile + Role Assignment admin (PR 6). 5 new parent-org callables (`createRoleProfile`, `updateRoleProfile`, `archiveRoleProfile`, `assignEmployeeToRole`, `endRoleAssignment`) in `functions/src/hr-central/role-profiles.js`. `src/modules/hr-central/role-profiles/` adds `RoleProfilesListPage`, `RoleProfileDetailPage`, `RoleAssignmentsListPage`, `RoleProfileForm` (with the v1.2 verb-matrix UI + approval-authority list), and `RoleAssignmentDialog`. Routes: `/hr/role-profiles`, `/hr/role-profiles/:id`, `/hr/role-assignments`. 10 backend tests + 5 frontend tests.
+- 🟡 **Phase 6.UI.B** — Traffic surface (PR 2). `src/modules/traffic/` with `TrafficLayout` tabbed shell (Routing Queue · Active IWOs · Brand Capacity · Override Log). RoutingQueuePage subscribes to OPEN/unallocated master_jobs, calls the existing `routeBrand` callable (6.B), and renders `RouteBrandProposalCard` with tier badge + SLA countdown + KE-geography badge + candidate breakdown. Confirm hands off to the AM-side `IssueIWODialog` via a URL hash; Override opens a brand picker before the same hand-off. Active IWOs groups in-flight IWOs by brand with burn %. Brand Capacity reads `engine_config.brandCapacityThreshold`. Override Log lists `RoutingBrandProposed` events. Routes wrapped in `ParentOrgGuard`. 8 component tests passing.
 
 **Open decisions** (plan §12):
 - QuickBooks Online — open item #3, decision pending. Currently disabled via empty env in `functions/.env.zeusos`.
@@ -102,7 +113,7 @@ Active `src/modules/`:
 
 | Domain | Modules |
 |---|---|
-| Commercial (parent-org only) | `account-management`, `contracts`, `pricing`, `assignment`, `billing`, `intercompany` |
+| Commercial (parent-org only) | `account-management`, `contracts`, `pricing`, `assignment`, `billing`, `intercompany`, `traffic` |
 | Delivery (per-subsidiary) | `delivery`, `media`, `production`, `talent`, `asset-library`, `campaigns` |
 | Operations | `crm`, `procurement`, `suppliers`, `finance`, `hr-central`, `hr`, `strategy`, `compliance`, `admin` |
 | Platform | `platform` (outbox + idempotency), `shared-ops`, `intelligence`, `intelligence-layer`, `market-intelligence` |

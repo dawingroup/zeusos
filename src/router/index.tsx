@@ -24,6 +24,7 @@ import {
 } from 'react-router-dom';
 import { FullPageLoader } from '@/shared/components/feedback/FullPageLoader';
 import { ErrorBoundary } from '@/shared/components/feedback/ErrorBoundary';
+import { ComingSoonPage } from '@/shared/components/feedback/ComingSoonPage';
 import { AppShell } from '@/shared/components/layout/AppShell';
 import { AuthGuard } from './guards/AuthGuard';
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
@@ -91,6 +92,18 @@ const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/Q
 import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
+// Routing queue + brand-proposal cards consuming the routeBrand callable.
+// ──────────────────────────────────────────────────────────────────────────
+const TrafficLayout      = lazyWithRetry(() =>
+  import('@/modules/traffic').then(m => ({ default: m.TrafficLayout }))
+);
+const RoutingQueuePage   = lazyWithRetry(() => import('@/modules/traffic/pages/RoutingQueuePage'));
+const ActiveIwosPage     = lazyWithRetry(() => import('@/modules/traffic/pages/ActiveIwosPage'));
+const BrandCapacityPage  = lazyWithRetry(() => import('@/modules/traffic/pages/BrandCapacityPage'));
+const OverrideLogPage    = lazyWithRetry(() => import('@/modules/traffic/pages/OverrideLogPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Media Plan & Buying — Phase 4
@@ -447,6 +460,39 @@ export const router = createBrowserRouter([
       { path: 'delivery',           element: <Navigate to="/delivery/inbox" replace /> },
       { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
+
+      // ──────────────────────────────────────────────────────────────────
+      // Phase 6.UI placeholder routes — backing surfaces ship in later PRs.
+      // Wired here so manifest entries from `src/core/navigation/manifest.ts`
+      // don't 404 between PR 1 and the follow-up surface PRs.
+      // ──────────────────────────────────────────────────────────────────
+      // Phase 6.UI.B — Traffic surface (PR 2). Parent-org only; routes
+      // are wrapped in ParentOrgGuard so subsidiary principals 403.
+      {
+        path: 'traffic',
+        element: <PageWrapper><ParentOrgGuard><TrafficLayout /></ParentOrgGuard></PageWrapper>,
+        children: [
+          { index: true,         element: <RoutingQueuePage /> },
+          { path: 'active',      element: <ActiveIwosPage /> },
+          { path: 'capacity',    element: <BrandCapacityPage /> },
+          { path: 'overrides',   element: <OverrideLogPage /> },
+        ],
+      },
+
+      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/categories" replace /> },
+      { path: 'conflict-firewall/categories',      element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Categories" shipsIn="Phase 6.UI.C (PR 3)" description="Category registry that drives the conflict-exclusivity walls." /></PageWrapper> },
+      { path: 'conflict-firewall/client-tags',     element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Client Tags" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
+      { path: 'conflict-firewall/walls',           element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Walls" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
+      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Breach Risks" shipsIn="Phase 6.UI.C (PR 3)" description="Consumes ConflictExclusivityRisk events from domain_events." /></PageWrapper> },
+
+      { path: 'delivery/ecd-review',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="ECD Review" shipsIn="Phase 6.UI.D.2 (PR 4)" description="Approval-ladder rungs awaiting your action — Designer through ECD." /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/active',         element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/burn',           element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
+
+      { path: 'reports',                 element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
+
+      { path: 'hr/role-profiles',        element: <PageWrapper><ComingSoonPage title="Role Profiles" shipsIn="Phase 6.UI.A (PR 6)" description="Role definitions (brand, department, task capabilities, approval authorities) consumed by EmployeeAssignmentService." /></PageWrapper> },
+      { path: 'hr/role-assignments',     element: <PageWrapper><ComingSoonPage title="Role Assignments" shipsIn="Phase 6.UI.A (PR 6)" /></PageWrapper> },
 
       // Intelligence Layer
       {
