@@ -94,6 +94,18 @@ const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IW
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
+// Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
+// Routing queue + brand-proposal cards consuming the routeBrand callable.
+// ──────────────────────────────────────────────────────────────────────────
+const TrafficLayout      = lazyWithRetry(() =>
+  import('@/modules/traffic').then(m => ({ default: m.TrafficLayout }))
+);
+const RoutingQueuePage   = lazyWithRetry(() => import('@/modules/traffic/pages/RoutingQueuePage'));
+const ActiveIwosPage     = lazyWithRetry(() => import('@/modules/traffic/pages/ActiveIwosPage'));
+const BrandCapacityPage  = lazyWithRetry(() => import('@/modules/traffic/pages/BrandCapacityPage'));
+const OverrideLogPage    = lazyWithRetry(() => import('@/modules/traffic/pages/OverrideLogPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
 // Media Plan & Buying — Phase 4
 // ──────────────────────────────────────────────────────────────────────────
 const MediaPlansListPage     = lazyWithRetry(() => import('@/modules/media/pages/MediaPlansListPage'));
@@ -444,10 +456,18 @@ export const router = createBrowserRouter([
       // Wired here so manifest entries from `src/core/navigation/manifest.ts`
       // don't 404 between PR 1 and the follow-up surface PRs.
       // ──────────────────────────────────────────────────────────────────
-      { path: 'traffic',                  element: <PageWrapper><ComingSoonPage title="Traffic" shipsIn="Phase 6.UI.B (PR 2)" description="Routing queue + brand-proposal cards driven by the routeBrand callable. Confirm / override before issuing." /></PageWrapper> },
-      { path: 'traffic/active',           element: <PageWrapper><ComingSoonPage title="Active IWOs" shipsIn="Phase 6.UI.B (PR 2)" description="IWOs grouped by brand, SLA status and burn %." /></PageWrapper> },
-      { path: 'traffic/capacity',         element: <PageWrapper><ComingSoonPage title="Brand Capacity" shipsIn="Phase 6.UI.B (PR 2)" /></PageWrapper> },
-      { path: 'traffic/overrides',        element: <PageWrapper><ComingSoonPage title="Override Log" shipsIn="Phase 6.UI.B (PR 2)" /></PageWrapper> },
+      // Phase 6.UI.B — Traffic surface (PR 2). Parent-org only; routes
+      // are wrapped in ParentOrgGuard so subsidiary principals 403.
+      {
+        path: 'traffic',
+        element: <PageWrapper><ParentOrgGuard><TrafficLayout /></ParentOrgGuard></PageWrapper>,
+        children: [
+          { index: true,         element: <RoutingQueuePage /> },
+          { path: 'active',      element: <ActiveIwosPage /> },
+          { path: 'capacity',    element: <BrandCapacityPage /> },
+          { path: 'overrides',   element: <OverrideLogPage /> },
+        ],
+      },
 
       { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/categories" replace /> },
       { path: 'conflict-firewall/categories',      element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Categories" shipsIn="Phase 6.UI.C (PR 3)" description="Category registry that drives the conflict-exclusivity walls." /></PageWrapper> },
