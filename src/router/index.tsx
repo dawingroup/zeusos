@@ -170,6 +170,12 @@ const LeaveManagementPage = lazyWithRetry(() => import('@/pages/hr/LeaveManageme
 const PayrollPage = lazyWithRetry(() => import('@/pages/hr/PayrollPage'));
 const OrgStructurePage = lazyWithRetry(() => import('@/pages/hr/OrgStructurePage'));
 
+// Phase 6.UI.A — Role Profile + Role Assignment admin (PR 6). All
+// three pages wrap in ParentOrgGuard at the route level.
+const RoleProfilesListPage  = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfilesListPage'));
+const RoleProfileDetailPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfileDetailPage'));
+const RoleAssignmentsListPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleAssignmentsListPage'));
+
 // Performance
 const PerformanceLayout = lazyWithRetry(() => import('@/modules/hr-central/performance/components/PerformanceLayout'));
 const GoalListPage = lazyWithRetry(() => import('@/pages/performance/GoalListPage'));
@@ -341,6 +347,10 @@ export const router = createBrowserRouter([
           { path: 'leave',                   element: <LeaveManagementPage /> },
           { path: 'payroll',                 element: <PayrollPage /> },
           { path: 'org-structure',           element: <OrgStructurePage /> },
+          // Phase 6.UI.A — Role Profile + Role Assignment admin (PR 6).
+          { path: 'role-profiles',                  element: <ParentOrgGuard><RoleProfilesListPage /></ParentOrgGuard> },
+          { path: 'role-profiles/:id',              element: <ParentOrgGuard><RoleProfileDetailPage /></ParentOrgGuard> },
+          { path: 'role-assignments',               element: <ParentOrgGuard><RoleAssignmentsListPage /></ParentOrgGuard> },
         ],
       },
 

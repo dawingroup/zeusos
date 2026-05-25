@@ -75,6 +75,7 @@ Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-ha
 - ❌ **Phase 5.E** — Client Portal rebrand (`customer-hub` carryover; no Zeus visual identity pass)
 - ❌ **Phase 5.F** — Production launch + custom domain DNS active + GA/PostHog (DNS for `os.zeustheagency.com` not yet verified — deploy health-check still hits `zeusos.web.app`)
 - ❌ **Phase 5.G** — Onboarding session with Zeus team (gated by 5.F)
+- 🟡 **Phase 6.UI.A** — Role Profile + Role Assignment admin (PR 6). 5 new parent-org callables (`createRoleProfile`, `updateRoleProfile`, `archiveRoleProfile`, `assignEmployeeToRole`, `endRoleAssignment`) in `functions/src/hr-central/role-profiles.js`. `src/modules/hr-central/role-profiles/` adds `RoleProfilesListPage`, `RoleProfileDetailPage`, `RoleAssignmentsListPage`, `RoleProfileForm` (with the v1.2 verb-matrix UI + approval-authority list), and `RoleAssignmentDialog`. Routes: `/hr/role-profiles`, `/hr/role-profiles/:id`, `/hr/role-assignments`. 10 backend tests + 5 frontend tests.
 
 **Open decisions** (plan §12):
 - QuickBooks Online — open item #3, decision pending. Currently disabled via empty env in `functions/.env.zeusos`.

@@ -4747,6 +4747,16 @@ exports.routeDirectClientRequest = assignment.routeDirectClientRequest;
 // Phase 6.B — brand routing recommendation (Addendum v1.1 §8).
 exports.routeBrand = assignment.routeBrand;
 
+// Phase 6.UI.A — Role Profile + Role Assignment admin callables (PR 6).
+// Gates: parent-org admin via `assertParentOrgPrincipal`. Idempotent
+// upsert semantics on both collections.
+const roleProfileAdmin = require('./src/hr-central/role-profiles');
+exports.createRoleProfile     = roleProfileAdmin.createRoleProfile;
+exports.updateRoleProfile     = roleProfileAdmin.updateRoleProfile;
+exports.archiveRoleProfile    = roleProfileAdmin.archiveRoleProfile;
+exports.assignEmployeeToRole  = roleProfileAdmin.assignEmployeeToRole;
+exports.endRoleAssignment     = roleProfileAdmin.endRoleAssignment;
+
 // Domain-event outbox consumer (logs + marks processed; richer
 // consumers wired in Phase 3.D/3.F).
 const { onDomainEventCreated } = require('./src/platform/outbox');
