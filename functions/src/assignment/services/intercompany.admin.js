@@ -48,6 +48,16 @@ async function raiseIcInvoice(args) {
     amountMinor,
     isPartial,
     idempotencyKey,
+    /**
+     * Markup percentage applied at the moment of invoice creation.
+     * Per ADR-2026-05-25 §2.Q3 the consortium uses cost-plus pricing;
+     * the caller (e.g. closeWorkOrder) resolves the markup via
+     * `resolveIcMarkupPct` and passes it here so the value is frozen
+     * on the IC invoice doc for audit. `null`/`undefined` means the
+     * markup wasn't tracked (legacy invoices); downstream readers
+     * should treat that as "unknown" rather than "zero".
+     */
+    appliedMarkupPct,
   } = args;
 
   if (!iwo) throw new Error('raiseIcInvoice: iwo data required.');
@@ -95,6 +105,7 @@ async function raiseIcInvoice(args) {
     postedToGL: false,
     isPartial: !!isPartial,
     idempotencyKey: idempotencyKey || null,
+    appliedMarkupPct: typeof appliedMarkupPct === 'number' ? appliedMarkupPct : null,
     raisedAt: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
