@@ -14,9 +14,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // AI Functions
-const { analyzeFeatureFromAsset } = require('./src/ai/analyzeFeatureFromAsset');
 const { generateStrategyReport } = require('./src/ai/generateStrategyReport');
-const { designChat } = require('./src/ai/designChat');
 const { strategyResearch } = require('./src/ai/strategyResearch');
 const { assessStrategySection, rewriteStrategySection } = require('./src/ai/strategyAssessment');
 const { projectScoping } = require('./src/ai/projectScoping');
@@ -29,32 +27,26 @@ const { generateProductContent, generateDiscoverabilityData } = require('./src/a
 const { auditShopifyProduct } = require('./src/ai/catalogAudit');
 const { generateEmbedding, generateEmbeddings, semanticSearch, indexCollection } = require('./src/ai/embeddings');
 const { marketIntelligenceScan, getMarketIntelligenceReports } = require('./src/ai/marketIntelligence');
-const { priceMaterialAI } = require('./src/ai/materialPricingAI');
 const { extractMemories, getMemoryContext, saveManualMemory, semanticMemorySearch } = require('./src/ai/aiMemory');
 const { getMemoryContext: loadMemoryContext } = require('./src/utils/memoryLoader');
 const { reverseImageSearch } = require('./src/ai/reverseImageSearch');
 const { proxyFetchImage } = require('./src/ai/proxyFetchImage');
+// (Material pricing AI, design/inventory AI handlers, and matflow handlers were
+// removed in the Phase 1.E sweep — no httpsCallable callers in src/ or
+// zeusos-mcp-server/. See PR for full list.)
 const { researchProduct } = require('./src/ai/researchProduct');
-const { enhanceClipForMaterial } = require('./src/ai/enhanceClipForMaterial');
-const { enhanceInventoryItem } = require('./src/ai/enhanceInventoryItem');
 const { auditInventoryHealth } = require('./src/ai/auditInventoryHealth');
 const { mergeInventoryDuplicates } = require('./src/ai/mergeInventoryDuplicates');
-const { applyInventoryCorrections } = require('./src/ai/applyInventoryCorrections');
 const { crossModuleIntelligence } = require('./src/ai/crossModuleIntelligence');
 const { assetIntelligence } = require('./src/ai/assetIntelligence');
 const { procurementAdvisor } = require('./src/ai/procurementAdvisor');
 const { parsePurchaseOrderPdf } = require('./src/ai/parsePurchaseOrderPdf');
-const { enhanceBOQItems } = require('./src/matflow/enhanceBOQItems');
-const { generateFormulaBreakdown } = require('./src/matflow/generateFormulaBreakdown');
 
 // (Workshop Viewer AI — DawinOS construction-domain CFns removed in
 // Phase 1.C cleanup follow-up. The five CFns and the `workshop/` directory
 // have no callers in ZeusOS. Removed because `generateMesh` and
 // `generateParametric` referenced a deprecated `TRIPO_API_KEY` Secret
 // Manager secret that blocked `firebase deploy --only functions`.)
-
-// Material Pricing AI
-exports.priceMaterialAI = priceMaterialAI;
 
 // Scheduled Audit Functions
 const { dailyCatalogAudit, weeklyCatalogAudit } = require('./src/scheduled/catalogAudit');
@@ -124,7 +116,6 @@ const { shopifySampleOrder } = require('./src/webhooks/shopifySampleOrder');
 const { shopifyNewsletterSubscribe } = require('./src/webhooks/shopifyNewsletterSubscribe');
 const { shopifyDailyReconcile } = require('./src/scheduled/shopifyDailyReconcile');
 const { draftStorefrontContent } = require('./src/integrations/ai/draftStorefrontContent');
-const { draftCaseStudyFromProject } = require('./src/integrations/ai/draftCaseStudyFromProject');
 exports.shopifyProductUpdate = shopifyProductUpdate;
 exports.shopifyProductDelete = shopifyProductDelete;
 exports.shopifyOrderCreate = shopifyOrderCreate;
@@ -150,29 +141,23 @@ exports.shopifySampleOrder = shopifySampleOrder;
 exports.shopifyNewsletterSubscribe = shopifyNewsletterSubscribe;
 exports.shopifyDailyReconcile = shopifyDailyReconcile;
 exports.draftStorefrontContent = draftStorefrontContent;
-exports.draftCaseStudyFromProject = draftCaseStudyFromProject;
 
 // Shopify Inventory Sync Trigger (auto-push stock changes to Shopify)
 const { onStockLevelChanged } = require('./src/triggers/shopifyInventorySync');
 exports.onStockLevelChanged = onStockLevelChanged;
 
-// Manufacturing MES Triggers
+// Manufacturing MES Triggers (Phase 1.E: removed onManufacturingStepCompleted,
+// onMOCompletedMES, onBOMLineCreated — DawinOS-legacy with no callers)
 const {
-  onManufacturingStepCompleted,
   onQualityEventCreated,
-  onManufacturingOrderCompleted: onMOCompletedMES,
   dailyProductionReport,
   overdueOrderCheck,
-  onBOMLineCreated,
   checkBOMAvailability,
   generateBOMFromOptimization,
 } = require('./src/triggers/manufacturingTriggers');
-exports.onManufacturingStepCompleted = onManufacturingStepCompleted;
 exports.onQualityEventCreated = onQualityEventCreated;
-exports.onMOCompletedMES = onMOCompletedMES;
 exports.dailyProductionReport = dailyProductionReport;
 exports.overdueOrderCheck = overdueOrderCheck;
-exports.onBOMLineCreated = onBOMLineCreated;
 exports.checkBOMAvailability = checkBOMAvailability;
 exports.generateBOMFromOptimization = generateBOMFromOptimization;
 
@@ -190,7 +175,8 @@ exports.onSalesOrderReleased = onSalesOrderReleased;
 exports.staleSalesOrderCheck = staleSalesOrderCheckFn;
 exports.autoDetectRisks = autoDetectRisks;
 
-// BigQuery Operational Analytics Sync
+// BigQuery Operational Analytics Sync (Phase 1.E: removed onAdvisoryCustomerWritten +
+// onAdvisorySupplierWritten — advisory subsidiary stripped in PR #20)
 const {
   onInventoryItemWritten,
   onStockLevelWritten,
@@ -198,9 +184,7 @@ const {
   onProjectWritten,
   onMatflowProjectWritten,
   onCustomerWritten,
-  onAdvisoryCustomerWritten,
   onSupplierWritten,
-  onAdvisorySupplierWritten,
   onLegacySupplierWritten,
   backfillOperationalBigQuery,
 } = require('./src/intelligence/operationalBigQuerySync');
@@ -210,15 +194,11 @@ exports.onSalesOrderWritten = onSalesOrderWritten;
 exports.onProjectWritten = onProjectWritten;
 exports.onMatflowProjectWritten = onMatflowProjectWritten;
 exports.onCustomerWritten = onCustomerWritten;
-exports.onAdvisoryCustomerWritten = onAdvisoryCustomerWritten;
 exports.onSupplierWritten = onSupplierWritten;
-exports.onAdvisorySupplierWritten = onAdvisorySupplierWritten;
 exports.onLegacySupplierWritten = onLegacySupplierWritten;
 exports.backfillOperationalBigQuery = backfillOperationalBigQuery;
 
-exports.analyzeFeatureFromAsset = analyzeFeatureFromAsset;
 exports.generateStrategyReport = generateStrategyReport;
-exports.designChat = designChat;
 exports.strategyResearch = strategyResearch;
 exports.assessStrategySection = assessStrategySection;
 exports.rewriteStrategySection = rewriteStrategySection;
@@ -231,17 +211,14 @@ exports.crossModuleIntelligence = crossModuleIntelligence;
 exports.reverseImageSearch = reverseImageSearch;
 exports.proxyFetchImage = proxyFetchImage;
 exports.researchProduct = researchProduct;
-exports.enhanceClipForMaterial = enhanceClipForMaterial;
-exports.enhanceInventoryItem = enhanceInventoryItem;
 exports.auditInventoryHealth = auditInventoryHealth;
 exports.mergeInventoryDuplicates = mergeInventoryDuplicates;
-exports.applyInventoryCorrections = applyInventoryCorrections;
 exports.assetIntelligence = assetIntelligence;
 exports.procurementAdvisor = procurementAdvisor;
 exports.parsePurchaseOrderPdf = parsePurchaseOrderPdf;
-exports.enhanceBOQItems = enhanceBOQItems;
-exports.generateFormulaBreakdown = generateFormulaBreakdown;
-// (Workshop / Trimble CFn exports removed — see import block above.)
+// (Phase 1.E: removed enhanceClipForMaterial / enhanceInventoryItem /
+// applyInventoryCorrections / enhanceBOQItems / generateFormulaBreakdown —
+// no httpsCallable callers. Workshop / Trimble CFn exports already gone.)
 exports.generateProductNames = generateProductNames;
 exports.generateProductContent = generateProductContent;
 exports.generateDiscoverabilityData = generateDiscoverabilityData;
@@ -440,11 +417,8 @@ exports.syncQuoteToInvoice = syncQuoteToInvoice;
 exports.syncSOToInvoice = syncSOToInvoice;
 exports.syncPaymentToQBO = syncPaymentToQBO;
 
-// QuickBooks Invoice Sync Triggers
-const {
-  onManufacturingOrderCompleted,
-} = require('./src/triggers/qboInvoiceTrigger');
-exports.onManufacturingOrderCompleted = onManufacturingOrderCompleted;
+// (Phase 1.E: removed QuickBooks Invoice Sync Trigger
+// `onManufacturingOrderCompleted` — DawinOS construction-domain trigger.)
 
 // QuickBooks SO → Invoice Trigger (on released_to_production)
 const {
@@ -478,11 +452,8 @@ exports.syncInventoryItemsToQBO = syncInventoryItemsToQBO;
 exports.onInventoryItemUpdated = onInventoryItemUpdated;
 exports.onInventoryItemDeleted = onInventoryItemDeleted;
 
-// QuickBooks COGS Sync Triggers
-const {
-  onManufacturingOrderCompletedCOGS,
-} = require('./src/triggers/qboCOGSTrigger');
-exports.onManufacturingOrderCompletedCOGS = onManufacturingOrderCompletedCOGS;
+// (Phase 1.E: removed QuickBooks COGS Sync Trigger
+// `onManufacturingOrderCompletedCOGS` — DawinOS construction-domain trigger.)
 
 // QuickBooks Financial Sync
 const {
@@ -522,39 +493,31 @@ const { onFeatureWritten, onFeatureLibraryWritten } = require('./src/triggers/in
 exports.onFeatureWritten = onFeatureWritten;
 exports.onFeatureLibraryWritten = onFeatureLibraryWritten;
 
-// Clip Analysis Trigger
-const { onDesignClipCreated } = require('./src/triggers/analyzeNewClip');
-exports.onDesignClipCreated = onDesignClipCreated;
+// (Phase 1.E: removed Clip Analysis Trigger `onDesignClipCreated`
+// — DawinOS design-manager artifact.)
 
-// Business Event Monitors - AI Intelligence Integration
-const { 
-  onDesignItemUpdated,
+// Business Event Monitors - AI Intelligence Integration (Phase 1.E:
+// removed onDesignItemUpdated / onDesignProjectCreated / onDesignProjectUpdated
+// — design-manager stripped in Phase 1.A. onDesignItemCreated retained: still
+// referenced by src/modules/intelligence-layer.)
+const {
   onDesignItemCreated,
-  onDesignProjectCreated,
-  onDesignProjectUpdated,
   onLaunchProductUpdated,
   onEngagementCreated,
   onEngagementUpdated,
   onDisbursementCreated,
   onDeliveryProjectUpdated,
 } = require('./src/triggers/businessEventMonitors');
-exports.onDesignItemUpdated = onDesignItemUpdated;
 exports.onDesignItemCreated = onDesignItemCreated;
-exports.onDesignProjectCreated = onDesignProjectCreated;
-exports.onDesignProjectUpdated = onDesignProjectUpdated;
 exports.onLaunchProductUpdated = onLaunchProductUpdated;
 exports.onEngagementCreated = onEngagementCreated;
 exports.onEngagementUpdated = onEngagementUpdated;
 exports.onDisbursementCreated = onDisbursementCreated;
 exports.onDeliveryProjectUpdated = onDeliveryProjectUpdated;
 
-// Manufacturing Order Triggers
-const {
-  onManufacturingOrderCreated,
-  onManufacturingOrderUpdated,
-} = require('./src/triggers/manufacturingTriggers');
-exports.onManufacturingOrderCreated = onManufacturingOrderCreated;
-exports.onManufacturingOrderUpdated = onManufacturingOrderUpdated;
+// (Phase 1.E: removed Manufacturing Order Triggers
+// onManufacturingOrderCreated / onManufacturingOrderUpdated — manufacturing
+// module stripped in Phase 1.A.)
 
 // Purchase Order Triggers
 const {
@@ -564,9 +527,8 @@ const {
 exports.onPurchaseOrderCreated = onPurchaseOrderCreated;
 exports.onPurchaseOrderUpdated = onPurchaseOrderUpdated;
 
-// Finish Library Triggers
-const { onFinishUpdated } = require('./src/triggers/finishTriggers');
-exports.onFinishUpdated = onFinishUpdated;
+// (Phase 1.E: removed Finish Library Trigger `onFinishUpdated` — finish
+// library stripped in Phase 1.A.)
 
 // Stock Level Alerts
 const { checkLowStockLevels } = require('./src/triggers/stockAlerts');
