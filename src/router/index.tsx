@@ -95,6 +95,7 @@ const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IW
 const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
 const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/BurnAndSlaPage'));
 const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
+const MyTimeThisWeekPage = lazyWithRetry(() => import('@/modules/time-tracking/pages/MyTimeThisWeekPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -508,6 +509,13 @@ export const router = createBrowserRouter([
       { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><BurnAndSlaPage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       { path: 'reports',             element: <PageWrapper><ParentOrgGuard><IwoHealthPage /></ParentOrgGuard></PageWrapper> },
+
+      // Phase 5.D — cross-IWO "My Time This Week" read view. Posting still
+      // happens from /delivery/iwo/:id; this page closes the visibility gap.
+      // No guard: rule-layer scoping on time_entries already filters reads
+      // to (parent-org OR home subsidiary on the parent IWO), and a signed-
+      // out user falls into the page's own "Sign in" copy.
+      { path: 'time',                element: <PageWrapper><MyTimeThisWeekPage /></PageWrapper> },
 
       // Intelligence Layer
       {
