@@ -21,14 +21,17 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { ALLOWED_ORIGINS } = require('../config/cors');
-const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const {
+  assertParentOrgPrincipal,
+  assertCommercialPrincipal,
+  assertCommercialPrincipalForResource,
+} = require('../assignment/lib/auth');
 const { ulid } = require('../platform/ulid');
 const { generateCode } = require('./lib/codes');
 
 exports.upsertChangeOrder = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const data = request.data || {};
     const { id, sowId, code, deltaMinor, reason } = data;
 
@@ -41,9 +44,10 @@ exports.upsertChangeOrder = onCall(
     }
 
     const db = getFirestore();
-    const sowSnap = await db.doc(`sows/${sowId}`).get();
-    if (!sowSnap.exists) throw new HttpsError('not-found', `SOW ${sowId} not found.`);
-    const sow = sowSnap.data();
+    // ADR-2026-05-25 §2.Q2 — resource-scoped auth against the parent
+    // SOW. `data` carries the SOW doc so we don't re-read.
+    const sowRef = db.doc(`sows/${sowId}`);
+    const { uid, data: sow } = await assertCommercialPrincipalForResource(request.auth, sowRef);
     if (sow.status !== 'ACTIVE') {
       throw new HttpsError(
         'failed-precondition',
@@ -64,6 +68,7 @@ exports.upsertChangeOrder = onCall(
     const payload = {
       id: coId,
       sowId,
+      clientId: sow.clientId,
       code: code || generateCode('CO', sow.code || sowId),
       deltaMinor,
       currency: sow.currency,
@@ -84,7 +89,6 @@ exports.upsertChangeOrder = onCall(
 exports.approveChangeOrder = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { changeOrderId } = request.data || {};
     if (!changeOrderId) {
       throw new HttpsError('invalid-argument', 'changeOrderId is required.');
@@ -92,6 +96,9 @@ exports.approveChangeOrder = onCall(
 
     const db = getFirestore();
     const coRef = db.doc(`change_orders/${changeOrderId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped assert.
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, coRef);
 
     return db.runTransaction(async (tx) => {
       const coSnap = await tx.get(coRef);
@@ -172,7 +179,6 @@ exports.approveChangeOrder = onCall(
 exports.rejectChangeOrder = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { changeOrderId, reason } = request.data || {};
     if (!changeOrderId) {
       throw new HttpsError('invalid-argument', 'changeOrderId is required.');
@@ -182,6 +188,10 @@ exports.rejectChangeOrder = onCall(
     }
     const db = getFirestore();
     const ref = db.doc(`change_orders/${changeOrderId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped assert.
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, ref);
+
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       if (!snap.exists) throw new HttpsError('not-found', `ChangeOrder ${changeOrderId} not found.`);

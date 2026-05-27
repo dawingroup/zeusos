@@ -15,13 +15,14 @@
  * with a "Request change order" CTA per task brief.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { issueWorkOrderFn } from '@/modules/assignment/services/firebase';
 import type { SubsidiaryId } from '@/core/settings/types';
 import type { MasterJob } from '@/modules/assignment/types/master-job.types';
 import type { IssueWorkOrderHandoffPacket } from '@/modules/assignment/services/firebase';
 import { useAuth } from '@/shared/hooks';
+import { applyMarkup, resolveIcMarkupPct, DEFAULT_IC_MARKUP_PCT } from '@/modules/billing/utils/ic-markup';
 import { formatMinor, parseMajorToMinor } from '../utils/money';
 
 const SUBSIDIARIES: { id: SubsidiaryId; label: string }[] = [
@@ -62,10 +63,43 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
   ]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<{ code?: string; message: string; details?: any } | null>(null);
+  // Whether the AM has manually edited the transfer-price field — if so,
+  // we stop auto-syncing it to budget × markup so we don't clobber.
+  const [transferEdited, setTransferEdited] = useState(false);
+  // Resolved IC markup pct for the selected receiving brand. Loaded
+  // lazily once the subsidiary picker changes — ADR-2026-05-25 §2.Q3.
+  const [icMarkupPct, setIcMarkupPct] = useState<number>(DEFAULT_IC_MARKUP_PCT);
   const navigate = useNavigate();
 
   const budgetMinor = useMemo(() => parseMajorToMinor(budgetMajor) || 0, [budgetMajor]);
   const transferMinor = useMemo(() => parseMajorToMinor(transferMajor) || 0, [transferMajor]);
+
+  // ADR-2026-05-25 §2.Q3 — resolve the cost-plus markup for the chosen
+  // receiving brand. Falls back to DEFAULT_IC_MARKUP_PCT if engine_config
+  // isn't seeded or the org has no override.
+  useEffect(() => {
+    let cancelled = false;
+    resolveIcMarkupPct(subsidiaryOrgId).then((pct) => {
+      if (!cancelled) setIcMarkupPct(pct);
+    });
+    return () => { cancelled = true; };
+  }, [subsidiaryOrgId]);
+
+  // Auto-sync transfer = budget × (1 + markup/100) until the user
+  // edits the transfer field directly. AMs can still override.
+  useEffect(() => {
+    if (transferEdited) return;
+    if (!budgetMinor) {
+      if (transferMajor !== '') setTransferMajor('');
+      return;
+    }
+    const suggested = applyMarkup(budgetMinor, icMarkupPct);
+    // Convert minor → major string for the input field.
+    const suggestedMajor = (suggested / 100).toFixed(2);
+    if (suggestedMajor !== transferMajor) setTransferMajor(suggestedMajor);
+    // budgetMajor (string) is the input mirror; we sync via numeric budgetMinor.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [budgetMinor, icMarkupPct, transferEdited]);
 
   const projectedAllocated = (masterJob.allocatedMinor || 0) + budgetMinor;
   const wouldExceedCeiling = projectedAllocated > masterJob.ceilingMinor;
@@ -200,13 +234,29 @@ export function IssueIWODialog({ masterJob, headroomMinor, changeOrderHref, onCl
                   />
                 </label>
                 <label className="block">
-                  <span className="block text-xs text-muted-foreground">Transfer price (major units) *</span>
+                  <span className="block text-xs text-muted-foreground">
+                    Transfer price (major units) *
+                    <span className="ml-2 font-normal text-[10px] text-[var(--fg-tertiary)]">
+                      auto: budget × (1 + {icMarkupPct}%)
+                    </span>
+                  </span>
                   <input
                     value={transferMajor}
-                    onChange={e => setTransferMajor(e.target.value)}
+                    onChange={e => { setTransferMajor(e.target.value); setTransferEdited(true); }}
                     placeholder="i/c price subsidiary charges the parent"
                     className="mt-1 w-full rounded border px-2 py-1 tabular-nums"
+                    data-testid="iwo-transfer-price-input"
                   />
+                  {transferEdited && (
+                    <button
+                      type="button"
+                      onClick={() => { setTransferEdited(false); }}
+                      data-testid="iwo-transfer-reset"
+                      className="mt-1 text-[10px] text-[var(--accent)] hover:underline"
+                    >
+                      Reset to auto ({icMarkupPct}% markup)
+                    </button>
+                  )}
                 </label>
               </div>
               {wouldExceedCeiling && budgetMinor > 0 && (

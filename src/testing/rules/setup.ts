@@ -39,6 +39,19 @@ export const CHANGE_ORDER_ID = 'co_acme_brand_refresh_01';
 export const CLIENT_INVOICE_ID = 'ci_master_job_001';
 export const IWO_SAME_SUB_ID = 'iwo_for_zeus_the_agency';
 export const IWO_OTHER_SUB_ID = 'iwo_for_labyrinth';
+// ADR-2026-05-25 §2.Q2 — clients carry `primaryBrandId`. The default
+// fixture client is parent-owned (preserves Phase 3.A.5 behaviour for
+// the pre-existing deny tests); the second fixture is owned by the
+// SUBSIDIARY_ORG_ID brand so we can exercise the relaxed canActOnClient
+// path on the same set of commercial docs.
+export const CLIENT_ID = 'client_acme';
+export const BRAND_OWNED_CLIENT_ID = 'client_zta_owned';
+export const BRAND_OWNED_MSA_ID = 'msa_zta_owned';
+export const BRAND_OWNED_SOW_ID = 'sow_zta_owned';
+export const BRAND_OWNED_CHANGE_ORDER_ID = 'co_zta_owned';
+export const BRAND_OWNED_QUOTE_ID = 'q_zta_owned';
+export const BRAND_OWNED_MASTER_JOB_ID = 'mj_zta_owned';
+export const BRAND_OWNED_CLIENT_INVOICE_ID = 'ci_zta_owned';
 
 let cachedEnv: RulesTestEnvironment | null = null;
 
@@ -126,14 +139,36 @@ export async function seedFixtures(env: RulesTestEnvironment): Promise<void> {
     });
 
     // ── Commercial-gravity fixtures ────────────────────────────────────
+    // ADR-2026-05-25 §2.Q2 — every commercial doc must denormalise
+    // `clientId` (camelCase) so the `canActOnClient` rules helper can
+    // resolve the home brand without nested lookups.
+    await db.doc(`clients/${CLIENT_ID}`).set({
+      id: CLIENT_ID,
+      name: 'Acme Corp',
+      parentOrgId: PARENT_ORG_ID,
+      primaryBrandId: PARENT_ORG_ID, // parent-owned client (pre-ADR default)
+      billingCurrency: 'UGX',
+      status: 'ACTIVE',
+    });
+    await db.doc(`clients/${BRAND_OWNED_CLIENT_ID}`).set({
+      id: BRAND_OWNED_CLIENT_ID,
+      name: 'ZTA-Direct Client',
+      parentOrgId: PARENT_ORG_ID,
+      primaryBrandId: SUBSIDIARY_ORG_ID, // brand-direct sale
+      billingCurrency: 'UGX',
+      status: 'ACTIVE',
+    });
+
     await db.doc(`msas/${MSA_ID}`).set({
-      client_id: 'client_acme',
+      clientId: CLIENT_ID,
+      client_id: CLIENT_ID, // back-compat snake_case for legacy consumers
       effective_date: '2026-01-01',
       ceiling_minor: 500_000_000,
       base_currency: 'UGX',
     });
 
     await db.doc(`sows/${SOW_ID}`).set({
+      clientId: CLIENT_ID,
       msa_id: MSA_ID,
       scope_doc_ref: 'docs/scope/acme_brand_refresh.md',
       ceiling_minor: 80_000_000,
@@ -141,14 +176,54 @@ export async function seedFixtures(env: RulesTestEnvironment): Promise<void> {
     });
 
     await db.doc(`change_orders/${CHANGE_ORDER_ID}`).set({
+      clientId: CLIENT_ID,
       sow_id: SOW_ID,
       delta_minor: 12_000_000,
       reason: 'Extra Stage 2 revisions.',
     });
 
     await db.doc(`client_invoices/${CLIENT_INVOICE_ID}`).set({
+      clientId: CLIENT_ID,
       master_job_id: 'master_job_001',
       total_minor: 80_000_000,
+      status: 'ISSUED',
+    });
+
+    // Brand-owned mirrors of the same set — primaryBrandId on the
+    // backing client points at SUBSIDIARY_ORG_ID. The brand-direct
+    // path should pass canActOnClient for the SUBSIDIARY_USER_UID.
+    await db.doc(`msas/${BRAND_OWNED_MSA_ID}`).set({
+      clientId: BRAND_OWNED_CLIENT_ID,
+      effective_date: '2026-01-01',
+      ceiling_minor: 100_000_000,
+      base_currency: 'UGX',
+    });
+    await db.doc(`sows/${BRAND_OWNED_SOW_ID}`).set({
+      clientId: BRAND_OWNED_CLIENT_ID,
+      msa_id: BRAND_OWNED_MSA_ID,
+      ceiling_minor: 40_000_000,
+      base_currency: 'UGX',
+    });
+    await db.doc(`change_orders/${BRAND_OWNED_CHANGE_ORDER_ID}`).set({
+      clientId: BRAND_OWNED_CLIENT_ID,
+      sow_id: BRAND_OWNED_SOW_ID,
+      delta_minor: 5_000_000,
+    });
+    await db.doc(`quotes/${BRAND_OWNED_QUOTE_ID}`).set({
+      clientId: BRAND_OWNED_CLIENT_ID,
+      sow_id: BRAND_OWNED_SOW_ID,
+      status: 'DRAFT',
+      total_client_minor: 40_000_000,
+    });
+    await db.doc(`master_jobs/${BRAND_OWNED_MASTER_JOB_ID}`).set({
+      id: BRAND_OWNED_MASTER_JOB_ID,
+      clientId: BRAND_OWNED_CLIENT_ID,
+      status: 'OPEN',
+    });
+    await db.doc(`client_invoices/${BRAND_OWNED_CLIENT_INVOICE_ID}`).set({
+      clientId: BRAND_OWNED_CLIENT_ID,
+      master_job_id: BRAND_OWNED_MASTER_JOB_ID,
+      total_minor: 40_000_000,
       status: 'ISSUED',
     });
 
@@ -166,6 +241,7 @@ export async function seedFixtures(env: RulesTestEnvironment): Promise<void> {
     });
 
     await db.doc(`quotes/${QUOTE_ID}`).set({
+      clientId: CLIENT_ID,
       sow_id: SOW_ID,
       status: 'DRAFT',
       total_client_minor: 80_000_000,
