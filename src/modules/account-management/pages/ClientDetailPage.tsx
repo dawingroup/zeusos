@@ -15,6 +15,7 @@ import type { Client } from '@/modules/contracts/types/client.types';
 import type { MSA } from '@/modules/contracts/types/msa.types';
 import type { SOW } from '@/modules/contracts/types/sow.types';
 import { formatMinor } from '../utils/money';
+import { CompetitorListPanel } from '@/modules/conflict-firewall/components/CompetitorListPanel';
 
 export default function ClientDetailPage() {
   const navigate = useNavigate();
@@ -220,6 +221,13 @@ export default function ClientDetailPage() {
           </div>
         </section>
       )}
+
+      {/* ADR-2026-05-25 §2.Q4 — named-competitor list. Replaces the
+          earlier category model; routing excludes any brand currently
+          serving a listed competitor. */}
+      <section data-testid="client-competitor-section">
+        <CompetitorListPanel clientId={client.id} clientName={client.name} />
+      </section>
 
       <section>
         <h2 className="mb-2 text-sm font-semibold uppercase text-muted-foreground">MSAs</h2>
