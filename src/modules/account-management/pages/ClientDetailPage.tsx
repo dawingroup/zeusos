@@ -115,6 +115,14 @@ export default function ClientDetailPage() {
           <h1 className="mt-1 text-xl font-semibold">{client.name}</h1>
           <p className="text-sm text-muted-foreground">
             {client.code ? `${client.code} · ` : ''}{client.status} · billed in {client.billingCurrency}
+            {client.primaryBrandId && (
+              <>
+                {' · '}
+                <span data-testid="client-primary-brand" className="text-[var(--accent)]">
+                  home: {client.primaryBrandId}
+                </span>
+              </>
+            )}
           </p>
         </div>
         <div className="flex gap-2">

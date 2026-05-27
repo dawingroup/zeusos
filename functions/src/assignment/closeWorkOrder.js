@@ -37,6 +37,7 @@ const budgetHold = require('./services/budget-hold.service');
 const { raiseIcInvoice, IC_INVOICES } = require('./services/intercompany.admin');
 const { recordCostAllocation } = require('./services/cost-allocation.admin');
 const { PARENT_ORG_ID } = require('./lib/auth');
+const { resolveIcMarkupPct } = require('../billing/ic-markup');
 
 /**
  * Returns true if the receiving sub is configured as a separate legal
@@ -57,6 +58,22 @@ async function runCloseWorkOrder({ db, auth, data }) {
     if (!iwoId) throw new HttpsError('invalid-argument', 'iwoId is required.');
 
     const iwoRef = db.doc(`internal_work_orders/${iwoId}`);
+
+    // ADR-2026-05-25 §2.Q3 — resolve IC markup pct outside the txn.
+    // The value is engine_config / org-level metadata, not a per-IWO
+    // invariant, so reading it pre-txn is fine; it gets frozen onto the
+    // IC invoice doc at write time for audit. We need iwo.subsidiaryOrgId
+    // first, so we read the IWO non-transactionally just for that.
+    let appliedMarkupPct = null;
+    try {
+      const iwoPreSnap = await iwoRef.get();
+      if (iwoPreSnap.exists) {
+        appliedMarkupPct = await resolveIcMarkupPct(db, iwoPreSnap.data().subsidiaryOrgId);
+      }
+    } catch {
+      /* If the pre-read fails the txn read will catch the actual issue;
+       * the markup stays null (= "unknown"). */
+    }
 
     try {
       return await withIdempotency(
@@ -92,6 +109,7 @@ async function runCloseWorkOrder({ db, auth, data }) {
               amountMinor: iwo.transferPriceMinor,
               isPartial: false,
               idempotencyKey,
+              appliedMarkupPct, // ADR-2026-05-25 §2.Q3 — freeze for audit
             });
             settlementId = ic.id;
             settlementExisted = ic.existed;
