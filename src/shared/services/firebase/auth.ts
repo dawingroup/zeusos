@@ -14,6 +14,7 @@ import {
   type User
 } from 'firebase/auth';
 import { app } from './config';
+import { setAnalyticsUserId } from './analytics';
 
 // Initialize Firebase Authentication
 export const auth: Auth = getAuth(app);
@@ -131,15 +132,31 @@ const DEV_BYPASS_USER = DEV_BYPASS_AUTH
 
 /**
  * Subscribe to auth state changes.
+ *
+ * Phase 5.F: every transition tags the Firebase Analytics session with
+ * the authenticated UID (or clears it on sign-out) so GA4 dashboards
+ * can correlate events to a stable user identity without leaking PII.
+ * `setAnalyticsUserId` no-ops when analytics isn't initialised, so it's
+ * always safe to call.
  */
 export function onAuthChange(callback: (user: User | null) => void): () => void {
+  const wrapped = (user: User | null) => {
+    // Best-effort tagging — analytics module no-ops if not initialised.
+    try {
+      setAnalyticsUserId(user ? user.uid : null);
+    } catch {
+      /* swallow — analytics is opt-in */
+    }
+    callback(user);
+  };
+
   if (DEV_BYPASS_AUTH) {
     // Fire synthetic user asynchronously so React state-set callers see
     // a fresh tick (matches the real `onAuthStateChanged` behaviour).
-    queueMicrotask(() => callback(DEV_BYPASS_USER));
+    queueMicrotask(() => wrapped(DEV_BYPASS_USER));
     return () => {};
   }
-  return onAuthStateChanged(auth, callback);
+  return onAuthStateChanged(auth, wrapped);
 }
 
 export type { User };

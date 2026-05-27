@@ -27,7 +27,13 @@ import { GlobalProvider } from './integration/store'
 import { AlertTriangle } from 'lucide-react'
 import { AppRouter } from './router'
 import { ThemeSync } from './shared/hooks/useThemeSync'
+import { initAnalytics } from './shared/services/firebase/analytics'
 import './index.css'
+
+// Phase 5.F — Firebase Analytics (GA4). No-ops when env is not configured;
+// safe to land before the production GA4 measurement ID is provisioned.
+// Fire-and-forget; the analytics module guards its own errors.
+initAnalytics()
 
 const queryClient = new QueryClient({
   defaultOptions: {

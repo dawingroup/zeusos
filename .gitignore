@@ -51,6 +51,9 @@ functions/.env.*
 # `defineString()` params (CI doesn't carry per-developer .env). Secrets
 # stay in Secret Manager / `.secret.local`.
 !functions/.env.zeusos
+# Exception: `.env.example` is the developer-onboarding template; non-secret
+# documentation, must be tracked.
+!.env.example
 
 # Firebase
 .firebase/
