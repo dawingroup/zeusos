@@ -142,9 +142,12 @@ exports.shopifyNewsletterSubscribe = shopifyNewsletterSubscribe;
 exports.shopifyDailyReconcile = shopifyDailyReconcile;
 exports.draftStorefrontContent = draftStorefrontContent;
 
-// Shopify Inventory Sync Trigger (auto-push stock changes to Shopify)
-const { onStockLevelChanged } = require('./src/triggers/shopifyInventorySync');
-exports.onStockLevelChanged = onStockLevelChanged;
+// Shopify Inventory Sync Trigger — removed in Phase 1.E cleanup
+// (DawinOS-legacy; inventory module stripped in Phase 1.C; no consumers).
+// Was tripping firebase deploy with "Changing from HTTPS to background
+// triggered function" because the Firestore-trigger registration drifted
+// from prod state. Same pattern as PR #48's projectCaseStudyShopifySync
+// removal.
 
 // Manufacturing MES Triggers (Phase 1.E: removed onManufacturingStepCompleted,
 // onMOCompletedMES, onBOMLineCreated — DawinOS-legacy with no callers)
