@@ -1,12 +1,35 @@
 /**
  * Tool Registry
- * Central registry of all Claude tool definitions and their handlers.
- * Used by the crossModuleIntelligence orchestrator.
+ *
+ * Central registry of tool definitions + handlers consumed by the
+ * `crossModuleIntelligence` Cloud Function (the orchestrator behind
+ * `AIAssistantPanel` in the frontend).
+ *
+ * Three DawinOS-era tool modules were removed in the Phase 1.E
+ * follow-up cleanup:
+ *
+ *   • `designTools.js`        — queried `designProjects` / `designItems`
+ *                               / per-project `materials` sub-collection.
+ *                               Design Manager was stripped in Phase 1.A
+ *                               and these collections no longer carry
+ *                               data in ZeusOS.
+ *   • `manufacturingTools.js` — queried `manufacturingOrders` /
+ *                               `bomEntries` / `materialConsumptions` /
+ *                               `stageTransitions`. Manufacturing was
+ *                               stripped in Phase 1.A as well; the
+ *                               associated triggers came out in PR #104.
+ *   • `inventoryTools.js`     — queried `inventoryItems`. The inventory
+ *                               module was stripped in Phase 1.C and its
+ *                               triggers in PR #105.
+ *
+ * `crmTools.js`, `financeTools.js`, and `crossModuleTools.js` still
+ * cross-reference the same stripped collections in some of their
+ * branches; those are degraded-but-functional (the queries return
+ * empty) and the call shape will be re-pointed at ZeusOS-mapped
+ * collections (master_jobs / quotes / client_invoices) in a follow-up
+ * PR with proper domain analysis.
  */
 
-const designTools = require('./designTools');
-const manufacturingTools = require('./manufacturingTools');
-const inventoryTools = require('./inventoryTools');
 const crmTools = require('./crmTools');
 const financeTools = require('./financeTools');
 const supplierTools = require('./supplierTools');
@@ -18,9 +41,6 @@ const crossModuleTools = require('./crossModuleTools');
 // ============================================================================
 
 const allDefinitions = [
-  ...designTools.definitions,
-  ...manufacturingTools.definitions,
-  ...inventoryTools.definitions,
   ...crmTools.definitions,
   ...financeTools.definitions,
   ...supplierTools.definitions,
@@ -33,9 +53,6 @@ const allDefinitions = [
 // ============================================================================
 
 const allHandlers = {
-  ...designTools.handlers,
-  ...manufacturingTools.handlers,
-  ...inventoryTools.handlers,
   ...crmTools.handlers,
   ...financeTools.handlers,
   ...supplierTools.handlers,
@@ -47,9 +64,6 @@ module.exports = {
   allDefinitions,
   allHandlers,
   // Individual modules for selective loading
-  designTools,
-  manufacturingTools,
-  inventoryTools,
   crmTools,
   financeTools,
   supplierTools,
