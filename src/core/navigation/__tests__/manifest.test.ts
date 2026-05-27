@@ -67,10 +67,11 @@ describe('resolveNav — SUBSIDIARY: per-brand ordering', () => {
 
   it('Zeus The Agency leads with Campaigns', () => {
     const ids = moduleIds(resolveNav('SUBSIDIARY', 'zeus-the-agency'));
-    // Universal head (Inbox / ECD Review / Active Work) first, then
-    // Campaigns leads the per-brand middle.
-    expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
-    expect(ids[3]).toBe('campaigns');
+    // Universal head (Inbox + ECD Review) first, then Campaigns leads
+    // the per-brand middle. (Active Work was dropped in the Phase 6.UI
+    // close-out — IWOInboxPage already shows in-flight IWOs.)
+    expect(ids.slice(0, 2)).toEqual(['delivery-inbox', 'ecd-review']);
+    expect(ids[2]).toBe('campaigns');
   });
 });
 
@@ -83,7 +84,9 @@ describe('resolveNav — SUBSIDIARY: head + tail are universal', () => {
     ['house-of-zeus'],
   ] as const)('%s carries head + tail', (subId) => {
     const ids = moduleIds(resolveNav('SUBSIDIARY', subId));
-    expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
+    // Universal head: Inbox + ECD Review. (Active Work dropped — see
+    // the Zeus The Agency test above for the rationale.)
+    expect(ids.slice(0, 2)).toEqual(['delivery-inbox', 'ecd-review']);
     // Universal tail: Burn & SLA (per-brand) + HR. Reports is parent-org
     // only — subsidiaries use Burn & SLA as their reporting surface.
     expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);
@@ -111,8 +114,9 @@ describe('resolveNav — capability filtering', () => {
 describe('resolveNav — SUBSIDIARY_SELLING (ADR §3.2 step 5)', () => {
   it('returns delivery head + per-brand middle + commercial entries + universal tail', () => {
     const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'zeus-the-agency'));
-    // Delivery head still leads.
-    expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
+    // Delivery head still leads. (Active Work dropped — see
+    // SUBSIDIARY tests above.)
+    expect(ids.slice(0, 2)).toEqual(['delivery-inbox', 'ecd-review']);
     // Universal tail still trails (Burn & SLA + HR — Reports is
     // parent-org only).
     expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);

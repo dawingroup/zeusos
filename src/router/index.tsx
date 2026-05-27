@@ -24,7 +24,6 @@ import {
 } from 'react-router-dom';
 import { FullPageLoader } from '@/shared/components/feedback/FullPageLoader';
 import { ErrorBoundary } from '@/shared/components/feedback/ErrorBoundary';
-import { ComingSoonPage } from '@/shared/components/feedback/ComingSoonPage';
 import { AppShell } from '@/shared/components/layout/AppShell';
 import { AuthGuard } from './guards/AuthGuard';
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
@@ -501,7 +500,11 @@ export const router = createBrowserRouter([
       // Phase 6.UI.D.2 — ECD Review aggregator (live this PR).
       // Subsidiary delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
       { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
-      { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
+      // /delivery/active was a Phase 6.UI placeholder. IWOInboxPage at
+      // /delivery/inbox already shows in-flight IWOs in its second
+      // section, so the standalone route was duplicating the same data.
+      // Redirect preserves any deep-links that survived the manifest cut.
+      { path: 'delivery/active',     element: <Navigate to="/delivery/inbox" replace /> },
       { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><BurnAndSlaPage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       { path: 'reports',             element: <PageWrapper><ParentOrgGuard><IwoHealthPage /></ParentOrgGuard></PageWrapper> },

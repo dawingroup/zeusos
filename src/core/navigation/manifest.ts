@@ -95,9 +95,14 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
 // ----------------------------------------------------------------------------
 
 export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
-  { moduleId: 'delivery-inbox', label: 'Inbox',       icon: 'Inbox',          routePath: '/delivery/inbox', subsidiaryOnly: true },
+  // IWOInboxPage already shows two sections — "Awaiting acceptance"
+  // (ISSUED) and "In-flight" (ACCEPTED / IN_PROGRESS / DELIVERED) — so
+  // the historical "Active Work" entry pointing at /delivery/active
+  // was duplicating the bottom half of the same page. Dropped in the
+  // Phase 6.UI close-out; /delivery/active redirects to /delivery/inbox
+  // for any deep-links that survived.
+  { moduleId: 'delivery-inbox', label: 'Inbox',       icon: 'Inbox',          routePath: '/delivery/inbox',      subsidiaryOnly: true },
   { moduleId: 'ecd-review',     label: 'ECD Review',  icon: 'ClipboardCheck', routePath: '/delivery/ecd-review', subsidiaryOnly: true },
-  { moduleId: 'active-work',    label: 'Active Work', icon: 'Activity',       routePath: '/delivery/active', subsidiaryOnly: true },
 ];
 
 export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
