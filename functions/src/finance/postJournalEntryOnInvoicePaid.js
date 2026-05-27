@@ -28,24 +28,14 @@
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { appendDomainEvent, DOMAIN_EVENTS_COLLECTION } = require('../platform/outbox');
+const { loadChartOfAccounts } = require('./chartOfAccounts');
 
 const PROCESSOR_TAG = 'finance-je-poster';
 
-// Chart of accounts mapping by source doc kind
-const CHART_OF_ACCOUNTS = {
-  TALENT_FREELANCER: {
-    debit: { accountCode: '5010', accountName: 'Contractor Fees - Talent & Freelancers' },
-    credit: { accountCode: '2050', accountName: 'Accounts Payable - Contractors' },
-  },
-  MEDIA_SUPPLIER: {
-    debit: { accountCode: '5020', accountName: 'Media Spend - Agencies & Suppliers' },
-    credit: { accountCode: '2051', accountName: 'Accounts Payable - Media' },
-  },
-  CLIENT_REVENUE_RECOGNISED: {
-    debit: { accountCode: '1200', accountName: 'Accounts Receivable - Clients' },
-    credit: { accountCode: '4000', accountName: 'Service Revenue - Agencies' },
-  },
-};
+// Chart of accounts now lives in `./chartOfAccounts.js` and is loaded per
+// invocation from `finance_config/chart_of_accounts` (with hardcoded
+// defaults). Letting finance amend account codes without a deploy was
+// the §5 follow-up flagged in `docs/PHASE_4_1_HANDSHAKE.md`.
 
 // The event types this consumer listens for. Add to this list
 // when new source documents need GL posting.
@@ -89,13 +79,17 @@ exports.postJournalEntryOnInvoicePaid = onDocumentCreated(
       return;
     }
 
-    // Look up account codes from chart of accounts
-    const accountMapping = CHART_OF_ACCOUNTS[sourceDocKind];
+    // Look up account codes from chart of accounts. The loader reads
+    // `finance_config/chart_of_accounts` from Firestore and falls back
+    // to compiled-in defaults if the doc is missing or any single
+    // override is malformed (see chartOfAccounts.js for merge rules).
+    const chartOfAccounts = await loadChartOfAccounts(db);
+    const accountMapping = chartOfAccounts[sourceDocKind];
     if (!accountMapping) {
       // eslint-disable-next-line no-console
       console.error(
         `[finance-je-poster] Unknown source doc kind: ${sourceDocKind} ` +
-        `for event ${data.eventType}. Check CHART_OF_ACCOUNTS config.`,
+        `for event ${data.eventType}. Check finance_config/chart_of_accounts.`,
       );
       await eventRef.update({
         processedBy: FieldValue.arrayUnion(`${PROCESSOR_TAG}:unknown-kind`),
