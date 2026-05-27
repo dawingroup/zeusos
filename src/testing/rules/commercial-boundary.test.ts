@@ -51,6 +51,12 @@ import {
   RATE_CARD_LINE_ID,
   SOW_ID,
   SUBSIDIARY_USER_UID,
+  BRAND_OWNED_MSA_ID,
+  BRAND_OWNED_SOW_ID,
+  BRAND_OWNED_CHANGE_ORDER_ID,
+  BRAND_OWNED_QUOTE_ID,
+  BRAND_OWNED_MASTER_JOB_ID,
+  BRAND_OWNED_CLIENT_INVOICE_ID,
 } from './setup';
 
 let env: RulesTestEnvironment;
@@ -326,6 +332,77 @@ describe('Phase 3.G — unauthenticated callers', () => {
       setDoc(doc(anonDb(), 'internal_work_orders', 'iwo_anon_forge'), {
         subsidiaryOrgId: 'zeus-the-agency',
       }),
+    );
+  });
+});
+
+// ────────────────────────────────────────────────────────────────────
+// ADR-2026-05-25 §2.Q2 — brand-direct sales relax.
+//
+// Subsidiary principals can now READ the commercial docs for clients
+// where `clients/{clientId}.primaryBrandId == callerHomeOrgId()`.
+// Verifies the relaxed `canActOnClient` rules helper. Mutations stay
+// CFn-only — `assertCommercialPrincipal` on the function side gates
+// the same boundary at layer 2 (4.2 PR).
+// ────────────────────────────────────────────────────────────────────
+describe('ADR-2026-05-25 §2.Q2 — brand-direct commercial reads', () => {
+  it('home brand AD can read msa whose client.primaryBrandId matches', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'msas', BRAND_OWNED_MSA_ID)),
+    );
+  });
+
+  it('home brand AD can read sow', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'sows', BRAND_OWNED_SOW_ID)),
+    );
+  });
+
+  it('home brand AD can read change_order', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'change_orders', BRAND_OWNED_CHANGE_ORDER_ID)),
+    );
+  });
+
+  it('home brand AD can read quote', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'quotes', BRAND_OWNED_QUOTE_ID)),
+    );
+  });
+
+  it('home brand AD can read master_job', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'master_jobs', BRAND_OWNED_MASTER_JOB_ID)),
+    );
+  });
+
+  it('home brand AD can read client_invoice', async () => {
+    await assertSucceeds(
+      getDoc(doc(subDb(), 'client_invoices', BRAND_OWNED_CLIENT_INVOICE_ID)),
+    );
+  });
+
+  it('OTHER subsidiary still cannot read msa even though its primaryBrandId points elsewhere', async () => {
+    // labyrinth user trying to read a ZTA-direct client's MSA — denied.
+    await assertFails(
+      getDoc(doc(otherSubDb(), 'msas', BRAND_OWNED_MSA_ID)),
+    );
+  });
+
+  it('home brand AD still cannot read parent-owned MSA (primaryBrandId = zeus-group)', async () => {
+    // The original MSA_ID fixture has primaryBrandId='zeus-group'. The
+    // subsidiary user is still denied — relaxing the gate does NOT
+    // give brand ADs access to clients they don't own.
+    await assertFails(getDoc(doc(subDb(), 'msas', MSA_ID)));
+  });
+
+  it('home brand AD still cannot write commercial docs directly (CFn-only)', async () => {
+    await assertFails(
+      setDoc(
+        doc(subDb(), 'msas', BRAND_OWNED_MSA_ID),
+        { ceiling_minor: 200_000_000 },
+        { merge: true },
+      ),
     );
   });
 });
