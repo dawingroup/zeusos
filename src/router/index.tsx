@@ -94,6 +94,7 @@ import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
+const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/BurnAndSlaPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -500,7 +501,7 @@ export const router = createBrowserRouter([
       // Subsidiary delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
       { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
-      { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><BurnAndSlaPage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       { path: 'reports',             element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
 
