@@ -85,62 +85,24 @@ exports.triggerDocumentExport = triggerDocumentExport;
 exports.retryFailedExports = retryFailedExports;
 exports.getExportJobStatus = getExportJobStatus;
 
-// Shopify Webhook Handlers
-const { shopifyProductUpdate, shopifyProductDelete } = require('./src/webhooks/shopifyProductUpdate');
-const { shopifyOrderCreate } = require('./src/webhooks/shopifyOrderCreate');
-const { shopifyOrderUpdate } = require('./src/webhooks/shopifyOrderUpdate');
-const { shopifyFulfillmentCreate } = require('./src/webhooks/shopifyOrderFulfilled');
-const { shopifyProjectEnquiry } = require('./src/webhooks/shopifyProjectEnquiry');
-const { shopifyPublishCaseStudy } = require('./src/integrations/shopify/publishCaseStudy');
-const { publishFinishMetaobject } = require('./src/integrations/shopify/publishFinishMetaobject');
-const { finishShopifySync } = require('./src/triggers/finishShopifySync');
-const { publishProjectMetaobject } = require('./src/integrations/shopify/publishProjectMetaobject');
-// projectCaseStudyShopifySync removed — was a DawinOS Shopify trigger
-// (DesignProject case-study sync) that flipped from HTTPS to Firestore
-// background trigger between releases. Firebase refuses in-place trigger-
-// kind transitions ("Changing from an HTTPS function to a background
-// triggered function is not allowed"), which broke every prod deploy.
-// Zeus doesn't have a Shopify storefront — the underlying flow is dead.
-// Full removal of the Shopify export surface is tracked as task #1b.
-const { applyProductMetafieldsFn } = require('./src/integrations/shopify/applyProductMetafieldsCallable');
-const { manufacturingShopifyWorkshopStatus } = require('./src/triggers/manufacturingShopifyWorkshopStatus');
-const { publishVoiceMetaobject } = require('./src/integrations/shopify/publishVoiceMetaobject');
-const { voiceShopifySync } = require('./src/triggers/voiceShopifySync');
-const { publishPressMentionMetaobject } = require('./src/integrations/shopify/publishPressMentionMetaobject');
-const { pressMentionShopifySync } = require('./src/triggers/pressMentionShopifySync');
-const { publishFeaturedUpdateMetaobject } = require('./src/integrations/shopify/publishFeaturedUpdateMetaobject');
-const { featuredUpdateShopifySync } = require('./src/triggers/featuredUpdateShopifySync');
-const { publishMaterialMetaobject } = require('./src/integrations/shopify/publishMaterialMetaobject');
-const { materialShopifySync } = require('./src/triggers/materialShopifySync');
-const { shopifySampleOrder } = require('./src/webhooks/shopifySampleOrder');
-const { shopifyNewsletterSubscribe } = require('./src/webhooks/shopifyNewsletterSubscribe');
-const { shopifyDailyReconcile } = require('./src/scheduled/shopifyDailyReconcile');
-const { draftStorefrontContent } = require('./src/integrations/ai/draftStorefrontContent');
-exports.shopifyProductUpdate = shopifyProductUpdate;
-exports.shopifyProductDelete = shopifyProductDelete;
-exports.shopifyOrderCreate = shopifyOrderCreate;
-exports.shopifyOrderUpdate = shopifyOrderUpdate;
-exports.shopifyFulfillmentCreate = shopifyFulfillmentCreate;
-exports.shopifyProjectEnquiry = shopifyProjectEnquiry;
-exports.shopifyPublishCaseStudy = shopifyPublishCaseStudy;
-exports.publishFinishMetaobject = publishFinishMetaobject;
-exports.finishShopifySync = finishShopifySync;
-exports.publishProjectMetaobject = publishProjectMetaobject;
-// projectCaseStudyShopifySync export removed — see line 107 for rationale.
-exports.applyProductMetafields = applyProductMetafieldsFn;
-exports.manufacturingShopifyWorkshopStatus = manufacturingShopifyWorkshopStatus;
-exports.publishVoiceMetaobject = publishVoiceMetaobject;
-exports.voiceShopifySync = voiceShopifySync;
-exports.publishPressMentionMetaobject = publishPressMentionMetaobject;
-exports.pressMentionShopifySync = pressMentionShopifySync;
-exports.publishFeaturedUpdateMetaobject = publishFeaturedUpdateMetaobject;
-exports.featuredUpdateShopifySync = featuredUpdateShopifySync;
-exports.publishMaterialMetaobject = publishMaterialMetaobject;
-exports.materialShopifySync = materialShopifySync;
-exports.shopifySampleOrder = shopifySampleOrder;
-exports.shopifyNewsletterSubscribe = shopifyNewsletterSubscribe;
-exports.shopifyDailyReconcile = shopifyDailyReconcile;
-exports.draftStorefrontContent = draftStorefrontContent;
+// Shopify integration surface — fully removed in Phase 1.E sweep.
+// DawinOS shipped on a Shopify storefront (custom finishes, voice,
+// press mentions, materials, fulfillment); Zeus does not. Every webhook,
+// metaobject publisher, daily-reconcile scheduler, and AI storefront
+// drafter is gone. Removed:
+//   webhooks: shopifyProductUpdate/Delete, shopifyOrderCreate/Update,
+//             shopifyFulfillmentCreate, shopifyProjectEnquiry,
+//             shopifySampleOrder, shopifyNewsletterSubscribe
+//   integrations/shopify: shopifyPublishCaseStudy, publishFinishMetaobject,
+//             publishProjectMetaobject, applyProductMetafieldsCallable,
+//             publishVoiceMetaobject, publishPressMentionMetaobject,
+//             publishFeaturedUpdateMetaobject, publishMaterialMetaobject
+//   triggers: finishShopifySync, manufacturingShopifyWorkshopStatus,
+//             voiceShopifySync, pressMentionShopifySync,
+//             featuredUpdateShopifySync, materialShopifySync
+//   scheduled: shopifyDailyReconcile
+//   ai: draftStorefrontContent
+// Same trigger-kind-drift deploy failure pattern as PR #48/#103/#104.
 
 // Shopify Inventory Sync Trigger — removed in Phase 1.E cleanup
 // (DawinOS-legacy; inventory module stripped in Phase 1.C; no consumers).
@@ -360,80 +322,31 @@ exports.batchUpdateBillNumbers = batchUpdateBillNumbers;
 exports.detectQBOCustomFields = detectQBOCustomFields;
 exports.probeQBOCustomFields = probeQBOCustomFields;
 
-// QuickBooks Bill Sync Triggers
-const {
-  onPurchaseOrderApproved,
-  onReceiptCorrectionBillSync,
-} = require('./src/triggers/qboBillSyncTrigger');
-exports.onPurchaseOrderApproved = onPurchaseOrderApproved;
-exports.onReceiptCorrectionBillSync = onReceiptCorrectionBillSync;
-
-// QuickBooks Sales Order Sync
-const {
-  syncQuoteToSalesOrder,
-  syncMultipleQuotesToSalesOrders,
-} = require('./src/integrations/quickbooks/salesOrderSync');
-exports.syncQuoteToSalesOrder = syncQuoteToSalesOrder;
-exports.syncMultipleQuotesToSalesOrders = syncMultipleQuotesToSalesOrders;
-
-// QuickBooks Sales Order Sync Triggers
-const {
-  onClientQuoteApproved,
-} = require('./src/triggers/qboSalesOrderTrigger');
-exports.onClientQuoteApproved = onClientQuoteApproved;
-
-// QuickBooks Sales Order Sync Trigger (SO-centric — fires on scope freeze)
-const {
-  onSalesOrderScopeFrozen,
-} = require('./src/triggers/qboSOSalesOrderTrigger');
-exports.onSalesOrderScopeFrozen = onSalesOrderScopeFrozen;
-
-// QuickBooks Invoice Sync
-const {
-  syncMOToInvoice,
-  syncQuoteToInvoice,
-  syncSOToInvoice,
-  syncPaymentToQBO,
-} = require('./src/integrations/quickbooks/invoiceSync');
-exports.syncMOToInvoice = syncMOToInvoice;
-exports.syncQuoteToInvoice = syncQuoteToInvoice;
-exports.syncSOToInvoice = syncSOToInvoice;
-exports.syncPaymentToQBO = syncPaymentToQBO;
-
-// (Phase 1.E: removed QuickBooks Invoice Sync Trigger
-// `onManufacturingOrderCompleted` — DawinOS construction-domain trigger.)
-
-// QuickBooks SO → Invoice Trigger (on released_to_production)
-const {
-  onSalesOrderReleasedInvoice,
-} = require('./src/triggers/qboSOInvoiceTrigger');
-exports.onSalesOrderReleasedInvoice = onSalesOrderReleasedInvoice;
-
-// Stock Adjustment Triggers
-const {
-  generateAdjustmentNumber,
-  onStockAdjustmentStatusChange,
-} = require('./src/triggers/stockAdjustment.triggers');
-exports.generateAdjustmentNumber = generateAdjustmentNumber;
-exports.onStockAdjustmentStatusChange = onStockAdjustmentStatusChange;
-
-// QuickBooks COGS Journal Entry Sync
-const {
-  syncMOToCOGS,
-  syncMultipleMOsToCOGS,
-} = require('./src/integrations/quickbooks/journalEntrySync');
-exports.syncMOToCOGS = syncMOToCOGS;
-exports.syncMultipleMOsToCOGS = syncMultipleMOsToCOGS;
-
-// QuickBooks Item Resolution (DawinOS → QBO items)
-const {
-  syncInventoryItemsToQBO,
-  onInventoryItemUpdated,
-  onInventoryItemDeleted,
-} = require('./src/integrations/quickbooks/itemResolutionService');
-exports.syncInventoryItemsToQBO = syncInventoryItemsToQBO;
-exports.onInventoryItemUpdated = onInventoryItemUpdated;
-exports.onInventoryItemDeleted = onInventoryItemDeleted;
+// QuickBooks legacy syncs — fully removed in Phase 1.E sweep.
+// DawinOS shipped a tight QBO integration around its construction
+// domain: Bill sync on PO approval, SalesOrder/quote sync, MO→Invoice +
+// MO→COGS journal entries, SO scope-freeze sync, SO→Invoice on release,
+// inventory item resolution, stock-adjustment numbering. ZeusOS has
+// disabled QBO per plan §3 (open item #3) and the underlying
+// collections (manufacturingOrders, salesOrders, inventoryItems,
+// client_quotes legacy schema) are stripped. Removed:
+//   triggers: qboBillSyncTrigger (onPurchaseOrderApproved,
+//             onReceiptCorrectionBillSync), qboSalesOrderTrigger
+//             (onClientQuoteApproved), qboSOSalesOrderTrigger
+//             (onSalesOrderScopeFrozen), qboSOInvoiceTrigger
+//             (onSalesOrderReleasedInvoice), stockAdjustment.triggers
+//             (generateAdjustmentNumber, onStockAdjustmentStatusChange)
+//   integrations/quickbooks: salesOrderSync (syncQuoteToSalesOrder,
+//             syncMultipleQuotesToSalesOrders), invoiceSync
+//             (syncMOToInvoice, syncQuoteToInvoice, syncSOToInvoice,
+//             syncPaymentToQBO), journalEntrySync (syncMOToCOGS,
+//             syncMultipleMOsToCOGS), itemResolutionService
+//             (syncInventoryItemsToQBO, onInventoryItemUpdated,
+//             onInventoryItemDeleted)
+// Same trigger-kind-drift deploy failure pattern as PR #48/#103/#104.
+// Auth/connection HTTPS callables (qbGetAuthUrl, qbCallback,
+// qbCheckConnection, qbDisconnect) are retained so the integration can
+// be re-enabled in Phase 4.1 against an accounting provider TBD.
 
 // (Phase 1.E: removed QuickBooks COGS Sync Trigger
 // `onManufacturingOrderCompletedCOGS` — DawinOS construction-domain trigger.)
@@ -513,45 +426,22 @@ exports.onPurchaseOrderUpdated = onPurchaseOrderUpdated;
 // (Phase 1.E: removed Finish Library Trigger `onFinishUpdated` — finish
 // library stripped in Phase 1.A.)
 
-// Stock Level Alerts
-const { checkLowStockLevels } = require('./src/triggers/stockAlerts');
-exports.checkLowStockLevels = checkLowStockLevels;
-
-// Inventory Auto-Archive
-const { onInventoryItemUpdated: onInventoryItemUpdatedAutoArchive } = require('./src/triggers/inventoryAutoArchive');
-exports.onInventoryItemUpdatedAutoArchive = onInventoryItemUpdatedAutoArchive;
-
-// Inventory Category Sync (keeps itemCount in sync)
-const {
-  onInventoryItemCreatedCategorySync,
-  onInventoryItemUpdatedCategorySync,
-  onInventoryItemDeletedCategorySync,
-} = require('./src/triggers/inventoryCategorySync');
-exports.onInventoryItemCreatedCategorySync = onInventoryItemCreatedCategorySync;
-exports.onInventoryItemUpdatedCategorySync = onInventoryItemUpdatedCategorySync;
-exports.onInventoryItemDeletedCategorySync = onInventoryItemDeletedCategorySync;
-
-// Inventory Categories Migration
-const { seedInventoryCategories } = require('./src/migrations/seedInventoryCategories');
-exports.seedInventoryCategories = seedInventoryCategories;
-
-// Inventory Issue Triggers (Issue from Stores — stock deduction + numbering)
-const {
-  generateIssueNumber,
-  onInventoryIssueCreated,
-  onInventoryIssueUpdated,
-} = require('./src/triggers/inventoryIssueTriggers');
-exports.generateIssueNumber = generateIssueNumber;
-exports.onInventoryIssueCreated = onInventoryIssueCreated;
-exports.onInventoryIssueUpdated = onInventoryIssueUpdated;
-
-// Inventory Issue QBO Sync (expense journal entries)
-const {
-  onInventoryIssueQBOSync,
-  onInventoryIssueReversalQBOSync,
-} = require('./src/triggers/qboInventoryIssueTrigger');
-exports.onInventoryIssueQBOSync = onInventoryIssueQBOSync;
-exports.onInventoryIssueReversalQBOSync = onInventoryIssueReversalQBOSync;
+// Inventory + Stock surface — fully removed in Phase 1.E sweep.
+// All of DawinOS's inventory lifecycle is gone: low-stock alerts,
+// auto-archive, category itemCount sync, category seed migration,
+// inventory-issue (issue from stores) with numbering + QBO expense
+// journal mirroring. ZeusOS is a marketing agency, no warehouse.
+// Removed:
+//   triggers: stockAlerts (checkLowStockLevels), inventoryAutoArchive
+//             (onInventoryItemUpdatedAutoArchive), inventoryCategorySync
+//             (onInventoryItemCreatedCategorySync,
+//             onInventoryItemUpdatedCategorySync,
+//             onInventoryItemDeletedCategorySync), inventoryIssueTriggers
+//             (generateIssueNumber, onInventoryIssueCreated,
+//             onInventoryIssueUpdated), qboInventoryIssueTrigger
+//             (onInventoryIssueQBOSync, onInventoryIssueReversalQBOSync)
+//   migrations: seedInventoryCategories
+// Same trigger-kind-drift deploy failure pattern as PR #48/#103/#104.
 
 // Push Notifications
 const { 
