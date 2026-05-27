@@ -86,6 +86,7 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'hr-central',        label: 'HR Central',                icon: 'Users',           routePath: '/hr/employees' },
   { moduleId: 'strategy',          label: 'Strategy & Intelligence',   icon: 'Brain',           routePath: '/strategy' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
+  { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
 ];
 
@@ -100,9 +101,12 @@ export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
 ];
 
 export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
-  { moduleId: 'burn-sla', label: 'Burn & SLA', icon: 'Flame',     routePath: '/delivery/burn', subsidiaryOnly: true },
-  { moduleId: 'hr',       label: 'HR',         icon: 'Users',     routePath: '/hr/employees', subsidiaryOnly: true },
-  { moduleId: 'reports',  label: 'Reports',    icon: 'BarChart3', routePath: '/reports',      subsidiaryOnly: true },
+  // Burn & SLA is the per-brand reporting surface for subsidiary users.
+  // The cross-brand Reports page (`/reports`) is parent-org-gated and
+  // lives in `NAV_MANIFEST_PARENT`; subsidiary nav doesn't include it
+  // because BurnAndSlaPage already covers what one brand head needs.
+  { moduleId: 'burn-sla', label: 'Burn & SLA', icon: 'Flame', routePath: '/delivery/burn', subsidiaryOnly: true },
+  { moduleId: 'hr',       label: 'HR',         icon: 'Users', routePath: '/hr/employees',  subsidiaryOnly: true },
 ];
 
 // ----------------------------------------------------------------------------

@@ -84,7 +84,9 @@ describe('resolveNav — SUBSIDIARY: head + tail are universal', () => {
   ] as const)('%s carries head + tail', (subId) => {
     const ids = moduleIds(resolveNav('SUBSIDIARY', subId));
     expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
-    expect(ids.slice(-3)).toEqual(['burn-sla', 'hr', 'reports']);
+    // Universal tail: Burn & SLA (per-brand) + HR. Reports is parent-org
+    // only — subsidiaries use Burn & SLA as their reporting surface.
+    expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);
   });
 });
 
@@ -111,8 +113,9 @@ describe('resolveNav — SUBSIDIARY_SELLING (ADR §3.2 step 5)', () => {
     const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'zeus-the-agency'));
     // Delivery head still leads.
     expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
-    // Universal tail still trails.
-    expect(ids.slice(-3)).toEqual(['burn-sla', 'hr', 'reports']);
+    // Universal tail still trails (Burn & SLA + HR — Reports is
+    // parent-org only).
+    expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);
     // Commercial trio appears between middle and tail.
     expect(ids).toContain('account-management');
     expect(ids).toContain('pricing');
