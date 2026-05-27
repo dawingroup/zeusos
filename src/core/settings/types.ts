@@ -162,6 +162,19 @@ export interface Organization {
   /** Identifier of the GL adapter connection (QBO realm id, Xero tenant
    *  id, etc.). Null until Phase 3.F wires the adapter. */
   gl_connection_id: string | null;
+  /**
+   * Inter-company transfer-pricing markup percentage applied when this
+   * org RECEIVES work from another brand. Per
+   * [ADR-2026-05-25 §2.Q3](../../../docs/ADR-2026-05-25-commercial-model.md)
+   * the consortium uses cost-plus pricing; default is read from
+   * `engine_config.icMarkupPctDefault` (15%); this field lets us
+   * override per-brand when a sub-brand has unusual cost structure
+   * (e.g. Labyrinth's equipment depreciation argues for a higher floor).
+   *
+   * `null` means "use the engine_config default". Numeric value is
+   * a whole-percentage point — `15` not `0.15`.
+   */
+  icMarkupPct?: number | null;
   /** Optional legal registration metadata for invoicing / compliance. */
   legalName?: string;
   taxId?: string;
