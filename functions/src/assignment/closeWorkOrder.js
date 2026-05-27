@@ -37,7 +37,7 @@ const budgetHold = require('./services/budget-hold.service');
 const { raiseIcInvoice, IC_INVOICES } = require('./services/intercompany.admin');
 const { recordCostAllocation } = require('./services/cost-allocation.admin');
 const { PARENT_ORG_ID } = require('./lib/auth');
-const { resolveIcMarkupPct } = require('../billing/ic-markup');
+const { computeEffectiveTransferPrice } = require('../pricing/transferPricingPolicy');
 
 /**
  * Returns true if the receiving sub is configured as a separate legal
@@ -58,22 +58,6 @@ async function runCloseWorkOrder({ db, auth, data }) {
     if (!iwoId) throw new HttpsError('invalid-argument', 'iwoId is required.');
 
     const iwoRef = db.doc(`internal_work_orders/${iwoId}`);
-
-    // ADR-2026-05-25 §2.Q3 — resolve IC markup pct outside the txn.
-    // The value is engine_config / org-level metadata, not a per-IWO
-    // invariant, so reading it pre-txn is fine; it gets frozen onto the
-    // IC invoice doc at write time for audit. We need iwo.subsidiaryOrgId
-    // first, so we read the IWO non-transactionally just for that.
-    let appliedMarkupPct = null;
-    try {
-      const iwoPreSnap = await iwoRef.get();
-      if (iwoPreSnap.exists) {
-        appliedMarkupPct = await resolveIcMarkupPct(db, iwoPreSnap.data().subsidiaryOrgId);
-      }
-    } catch {
-      /* If the pre-read fails the txn read will catch the actual issue;
-       * the markup stays null (= "unknown"). */
-    }
 
     try {
       return await withIdempotency(
@@ -97,6 +81,24 @@ async function runCloseWorkOrder({ db, auth, data }) {
             tx, db, iwo.subsidiaryOrgId,
           );
 
+          // ADR-0001 Q3: cost-plus transfer pricing. Recompute the
+          // amount from policy at close time instead of using the
+          // (potentially stale) `iwo.transferPriceMinor` set at issue.
+          // Falls back to issue-time value when no policy exists for
+          // the (subsidiaryOrgId → PARENT) pair, preserving back-compat
+          // for pre-Q3 IWOs. The recomputed value is what flows into
+          // both the settlement record AND the outbox event payload,
+          // so reporting consistently sees the post-markup number.
+          //
+          // Brand-direct (Q2) routes that target a different toOrgId
+          // (the master_job's commercialOwnerOrgId, not PARENT) land
+          // in the Q3.2 follow-up once #98 (Q2) merges. For now the
+          // close path is always to the parent.
+          const pricing = await computeEffectiveTransferPrice({
+            db, iwo, toOrgId: PARENT_ORG_ID,
+          });
+          const effectiveAmountMinor = pricing.amountMinor;
+
           let settlementId = null;
           let settlementExisted = false;
           let settlementKind = null;
@@ -106,10 +108,9 @@ async function runCloseWorkOrder({ db, auth, data }) {
               tx, db,
               iwo,
               iwoId,
-              amountMinor: iwo.transferPriceMinor,
+              amountMinor: effectiveAmountMinor,
               isPartial: false,
               idempotencyKey,
-              appliedMarkupPct, // ADR-2026-05-25 §2.Q3 — freeze for audit
             });
             settlementId = ic.id;
             settlementExisted = ic.existed;
@@ -120,7 +121,7 @@ async function runCloseWorkOrder({ db, auth, data }) {
               tx, db,
               iwo,
               iwoId,
-              amountMinor: iwo.transferPriceMinor,
+              amountMinor: effectiveAmountMinor,
               isPartial: false,
               idempotencyKey,
             });
@@ -140,6 +141,15 @@ async function runCloseWorkOrder({ db, auth, data }) {
             interCompanyInvoiceId: isLegalEntity ? settlementId : null,
             costAllocationId: isLegalEntity ? null : settlementId,
             settlementKind,
+            // ADR-0001 Q3 audit fields: snapshot the cost-plus inputs
+            // + output at the moment of close. Reporting reconstructs
+            // "what markup applied to this IWO at close" without a
+            // second policy lookup. `settledTransferPriceMinor` is the
+            // authoritative number; `transferPriceMinor` stays as set
+            // at issue (preserved for diff visibility).
+            settledTransferPriceMinor: effectiveAmountMinor,
+            transferPriceSource: pricing.source,
+            transferPriceMarkupPct: pricing.markupPct,
             updatedAt: FieldValue.serverTimestamp(),
           });
 
@@ -169,8 +179,12 @@ async function runCloseWorkOrder({ db, auth, data }) {
                   iwoId,
                   fromOrgId: iwo.subsidiaryOrgId,
                   toOrgId: PARENT_ORG_ID,
-                  amountMinor: iwo.transferPriceMinor,
+                  amountMinor: effectiveAmountMinor,
                   currency: iwo.currency,
+                  // ADR-0001 Q3 trace.
+                  transferPriceSource: pricing.source,
+                  transferPriceMarkupPct: pricing.markupPct,
+                  cumulativeCostMinor: pricing.cumulativeCostMinor,
                 },
                 emittedByUserId: uid,
                 idempotencyKey,
@@ -185,8 +199,12 @@ async function runCloseWorkOrder({ db, auth, data }) {
                   costAllocationId: settlementId,
                   iwoId,
                   subsidiaryOrgId: iwo.subsidiaryOrgId,
-                  amountMinor: iwo.transferPriceMinor,
+                  amountMinor: effectiveAmountMinor,
                   currency: iwo.currency,
+                  // ADR-0001 Q3 trace.
+                  transferPriceSource: pricing.source,
+                  transferPriceMarkupPct: pricing.markupPct,
+                  cumulativeCostMinor: pricing.cumulativeCostMinor,
                 },
                 emittedByUserId: uid,
                 idempotencyKey,

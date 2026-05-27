@@ -4859,3 +4859,14 @@ const { resolveShareLink } = require('./src/asset-library/resolveShareLink');
 exports.onAssetUploaded = onAssetUploaded;
 exports.onAssetDeleted = onAssetDeleted;
 exports.resolveShareLink = resolveShareLink;
+
+// ============================================================
+// ADR-0001 Q3 — Transfer Pricing Policy seed migration
+// ============================================================
+// One-time callable that populates transfer_pricing_policy/{pairId}
+// parent docs + versions/v_seed subcollection docs for all 30 directed
+// pairs among the 6 Zeus Group org IDs. Idempotent (set+merge);
+// restricted to super-user emails. Run once after deploy, or whenever
+// a new org pair needs a default policy seeded.
+const { seedTransferPricingPolicy } = require('./src/migrations/seedTransferPricingPolicy');
+exports.seedTransferPricingPolicy = seedTransferPricingPolicy;

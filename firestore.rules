@@ -3634,6 +3634,29 @@ service cloud.firestore {
     }
 
     // ────────────────────────────────────────────────────────────────
+    // Transfer Pricing Policy — ADR-0001 Q3 (cost-plus markup config).
+    //
+    // transfer_pricing_policy/{pairId} — parent doc (pairId = fromOrgId__toOrgId)
+    //   read:   any authenticated staff (subsidiaries can see their own
+    //           cost-plus rate for transparency; the CFO-level read is fine)
+    //   write:  Cloud Functions only (Admin SDK — seedTransferPricingPolicy
+    //           + future admin callable). Direct client writes are blocked
+    //           so the "set new version + close prior version" atomic pair
+    //           always goes through the callable.
+    //
+    // transfer_pricing_policy/{pairId}/versions/{versionId}
+    //   Same auth as parent doc — read for audit, write via CFn only.
+    match /transfer_pricing_policy/{pairId} {
+      allow read: if isStaffAuth();
+      allow write: if false;
+
+      match /versions/{versionId} {
+        allow read: if isStaffAuth();
+        allow write: if false;
+      }
+    }
+
+    // ────────────────────────────────────────────────────────────────
     // Billing context — client_invoices + client_invoice_lines + the
     // single-invoice UNIQUE guard doc (spec §11.7).
     // The application-level lock lives at
