@@ -3645,16 +3645,25 @@ service cloud.firestore {
       // ADR-2026-05-25 §2.Q2 — invoice carries `clientId` (denormalised
       // at issue time). Home brand of the client sees its invoices;
       // parent-org AMs see everyone's.
-      allow read: if canActOnClient(resource.data.clientId);
+      //
+      // Safety: `'clientId' in resource.data` guards against
+      // "Property clientId is undefined on object" — in Firestore rules,
+      // accessing an absent map key throws rather than returning null.
+      // The `&&` short-circuit keeps canActOnClient's inner get() from
+      // being invoked with a null path segment on pre-ADR docs.
+      allow read: if isParentOrgPrincipal()
+        || ('clientId' in resource.data && canActOnClient(resource.data.clientId));
       allow write: if false;
       match /client_invoice_lines/{lineId} {
-        // Lines denormalise `clientId` from the parent invoice at
-        // creation time. Brand AD on home brand can read; parent-org
-        // can read; cost_minor never gets persisted here so there's
-        // no §4.5 leakage risk.
-        allow read: if resource.data.clientId == null
-          ? isParentOrgPrincipal()
-          : canActOnClient(resource.data.clientId);
+        // Lines denormalise `clientId` from the parent invoice at issue
+        // time (stamped by the issueClientInvoice callable). Same null-
+        // safety pattern as the parent rule above — the prior ternary
+        // `resource.data.clientId == null ? … : …` caused an emulator
+        // error because Firestore rules evaluates both ternary branches
+        // eagerly, blowing up when the field was absent. Replaced with
+        // lazy `||` / `&&` short-circuit.
+        allow read: if isParentOrgPrincipal()
+          || ('clientId' in resource.data && canActOnClient(resource.data.clientId));
         allow write: if false;
       }
     }
