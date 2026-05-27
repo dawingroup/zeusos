@@ -36,7 +36,9 @@ const { proxyFetchImage } = require('./src/ai/proxyFetchImage');
 // zeusos-mcp-server/. See PR for full list.)
 const { researchProduct } = require('./src/ai/researchProduct');
 const { auditInventoryHealth } = require('./src/ai/auditInventoryHealth');
-const { mergeInventoryDuplicates } = require('./src/ai/mergeInventoryDuplicates');
+// mergeInventoryDuplicates was a DawinOS inventory-management AI tool
+// that read `inventoryItems` (stripped in Phase 1.C). No frontend
+// callers in ZeusOS — removed in the tools/* cleanup.
 const { crossModuleIntelligence } = require('./src/ai/crossModuleIntelligence');
 const { assetIntelligence } = require('./src/ai/assetIntelligence');
 const { procurementAdvisor } = require('./src/ai/procurementAdvisor');
@@ -157,7 +159,7 @@ exports.reverseImageSearch = reverseImageSearch;
 exports.proxyFetchImage = proxyFetchImage;
 exports.researchProduct = researchProduct;
 exports.auditInventoryHealth = auditInventoryHealth;
-exports.mergeInventoryDuplicates = mergeInventoryDuplicates;
+// mergeInventoryDuplicates export removed — see import block for rationale.
 exports.assetIntelligence = assetIntelligence;
 exports.procurementAdvisor = procurementAdvisor;
 exports.parsePurchaseOrderPdf = parsePurchaseOrderPdf;
@@ -4475,10 +4477,10 @@ async function handleStrategyDocumentParse(req, res) {
 }
 
 // Admin Functions
-const { generateDesignManagerEvents, generateDesignManagerEventsHTTP, processPendingEvents } = require('./src/admin/generateDesignManagerEvents');
-exports.generateDesignManagerEvents = generateDesignManagerEvents;
-exports.generateDesignManagerEventsHTTP = generateDesignManagerEventsHTTP;
-exports.processPendingEvents = processPendingEvents;
+// generateDesignManagerEvents{,HTTP} + processPendingEvents were the
+// DawinOS Design Manager event-stream admin triggers — they ran on
+// `designProjects` / `designItems` (stripped in Phase 1.A). No
+// frontend callers in ZeusOS; removed in the tools/* cleanup.
 
 // Admin: Material backfill
 const { backfillMaterialFields } = require('./src/admin/backfillMaterialFields');
