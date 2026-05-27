@@ -3652,9 +3652,20 @@ service cloud.firestore {
         // creation time. Brand AD on home brand can read; parent-org
         // can read; cost_minor never gets persisted here so there's
         // no §4.5 leakage risk.
-        allow read: if resource.data.clientId == null
-          ? isParentOrgPrincipal()
-          : canActOnClient(resource.data.clientId);
+        //
+        // Field access via `.get('clientId', null)` rather than
+        // `resource.data.clientId == null` — Firestore Rules raise
+        // 'Property X is undefined' when the field is missing, and the
+        // ternary operator eagerly evaluates both branches, so the
+        // earlier ternary form crashed `canActOnClient(undefined)` on
+        // any line written before the ADR denormalisation backfilled.
+        // The OR-form short-circuits parent-org first, then guards the
+        // brand-direct branch on clientId presence.
+        allow read: if isParentOrgPrincipal()
+          || (
+            resource.data.get('clientId', null) != null
+            && canActOnClient(resource.data.clientId)
+          );
         allow write: if false;
       }
     }
