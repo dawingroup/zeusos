@@ -87,6 +87,10 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'strategy',          label: 'Strategy & Intelligence',   icon: 'Brain',           routePath: '/strategy' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
   { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
+  // Phase 5.D — parent-org admins log time against IWOs too (e.g. AM
+  // running a brief workshop) so My Time appears here as well as in
+  // the subsidiary head.
+  { moduleId: 'my-time',           label: 'My Time',                   icon: 'Clock',           routePath: '/time' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
 ];
 
@@ -103,6 +107,9 @@ export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
   // for any deep-links that survived.
   { moduleId: 'delivery-inbox', label: 'Inbox',       icon: 'Inbox',          routePath: '/delivery/inbox',      subsidiaryOnly: true },
   { moduleId: 'ecd-review',     label: 'ECD Review',  icon: 'ClipboardCheck', routePath: '/delivery/ecd-review', subsidiaryOnly: true },
+  // Phase 5.D — cross-IWO "My Time This Week" read view. Posting still
+  // happens from /delivery/iwo/:id; this is the staff-side visibility.
+  { moduleId: 'my-time',        label: 'My Time',     icon: 'Clock',          routePath: '/time',                subsidiaryOnly: true },
 ];
 
 export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
