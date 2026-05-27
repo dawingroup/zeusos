@@ -63,26 +63,26 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-          <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center gap-3 text-red-600 mb-4">
+        <div className="min-h-screen flex items-center justify-center bg-[var(--bg-sunken)] p-4">
+          <div className="max-w-lg w-full bg-card rounded-lg shadow-lg p-6">
+            <div className="flex items-center gap-3 text-[var(--rag-red)] mb-4">
               <AlertTriangle className="w-8 h-8" />
               <h1 className="text-xl font-bold">Something went wrong</h1>
             </div>
-            <div className="bg-red-50 border border-red-200 rounded p-3 mb-4">
-              <p className="text-sm font-mono text-red-800 break-all">
+            <div className="bg-[var(--rag-red-soft)] border border-[var(--rag-red)] rounded p-3 mb-4">
+              <p className="text-sm font-mono text-[var(--rag-red)] break-all">
                 {this.state.error?.message || 'Unknown error'}
               </p>
             </div>
-            <details className="text-xs text-gray-600 mb-4">
+            <details className="text-xs text-muted-foreground mb-4">
               <summary className="cursor-pointer font-medium">Stack trace</summary>
-              <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto max-h-48 text-xs">
+              <pre className="mt-2 p-2 bg-[var(--bg-sunken)] rounded overflow-auto max-h-48 text-xs">
                 {this.state.error?.stack}
               </pre>
             </details>
             <button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-[#872E5C] text-white rounded-md hover:bg-[#6a2449]"
+              className="w-full px-4 py-2 bg-[var(--accent)] text-[var(--accent-fg)] rounded-md hover:bg-[var(--accent)]/90"
             >
               Refresh Page
             </button>

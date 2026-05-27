@@ -11,7 +11,11 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { ALLOWED_ORIGINS } = require('../config/cors');
-const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const {
+  assertParentOrgPrincipal,
+  assertCommercialPrincipal,
+  assertCommercialPrincipalForResource,
+} = require('../assignment/lib/auth');
 const { ulid } = require('../platform/ulid');
 const { generateCode } = require('./lib/codes');
 
@@ -28,7 +32,6 @@ async function loadClient(db, clientId) {
 exports.upsertMsa = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const data = request.data || {};
     const {
       id,
@@ -46,6 +49,9 @@ exports.upsertMsa = onCall(
     } = data;
 
     if (!clientId) throw new HttpsError('invalid-argument', 'clientId is required.');
+    // ADR-2026-05-25 §2.Q2 — gate on home brand of `clientId` OR parent-org.
+    // assertCommercialPrincipal does the client lookup + brand check.
+    const { uid } = await assertCommercialPrincipal(request.auth, clientId);
     if (!title) throw new HttpsError('invalid-argument', 'title is required.');
     if (!effectiveFrom) {
       throw new HttpsError('invalid-argument', 'effectiveFrom (ISO date) is required.');
@@ -97,12 +103,18 @@ exports.upsertMsa = onCall(
 exports.activateMsa = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { msaId } = request.data || {};
     if (!msaId) throw new HttpsError('invalid-argument', 'msaId is required.');
 
     const db = getFirestore();
     const ref = db.doc(`msas/${msaId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped auth. Tries parent-org
+    // first (cheap), falls through to brand-direct via the doc's
+    // clientId. Throws permission-denied for unauthorized callers
+    // even when the doc doesn't exist (don't leak existence).
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, ref);
+
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       if (!snap.exists) throw new HttpsError('not-found', `MSA ${msaId} not found.`);

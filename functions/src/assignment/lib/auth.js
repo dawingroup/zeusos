@@ -158,6 +158,160 @@ async function assertSubsidiaryAccessOrParent(auth, subsidiaryOrgId) {
 }
 
 /**
+ * ADR-2026-05-25 §2.Q2 — commercial principal for a specific client.
+ *
+ * Accepts:
+ *   - PARENT-org principals (group-level AMs / admins / super-users)
+ *   - SUBSIDIARY principals whose homeOrgId matches the client's
+ *     `primaryBrandId` ("home brand AD")
+ *
+ * Throws HttpsError('permission-denied') otherwise. Throws
+ * HttpsError('not-found') if the client doc doesn't exist.
+ *
+ * Backward-compatible: clients without `primaryBrandId` (pre-ADR
+ * data) fall back to PARENT-only access — preserves Phase 3.A.5
+ * behaviour until backfill completes.
+ *
+ * The callable handlers swap their `assertParentOrgPrincipal(auth)`
+ * calls for `assertCommercialPrincipal(auth, clientId)` so the
+ * function-layer gate (spec §7.4 layer 2) matches the rules-layer
+ * gate (`canActOnClient` in firestore.rules).
+ */
+async function assertCommercialPrincipal(auth, clientId) {
+  if (!auth || !auth.uid) {
+    throw new HttpsError('unauthenticated', 'Authentication required.');
+  }
+  if (!clientId || typeof clientId !== 'string') {
+    throw new HttpsError('invalid-argument', 'clientId is required.');
+  }
+  const user = await loadUserDoc(auth.uid);
+  if (!user) {
+    throw new HttpsError('permission-denied', 'Caller has no user profile.');
+  }
+  if (isSuper(auth.token, user)) return { uid: auth.uid, user };
+
+  // Parent-org principal — same check as assertParentOrgPrincipal,
+  // inlined so we share the user-doc fetch.
+  const db = getFirestore();
+  if (user.homeOrgId) {
+    const orgSnap = await db.doc(`organizations/${user.homeOrgId}`).get();
+    if (orgSnap.exists && orgSnap.data().kind === 'PARENT') {
+      return { uid: auth.uid, user };
+    }
+  }
+  const hasParent =
+    Array.isArray(user.subsidiaryAccess) &&
+    user.subsidiaryAccess.some(
+      (s) => s && s.subsidiaryId === PARENT_ORG_ID && s.hasAccess,
+    );
+  if (hasParent && (user.globalRole === 'admin' || user.globalRole === 'owner')) {
+    return { uid: auth.uid, user };
+  }
+
+  // Brand-direct path — caller's homeOrgId matches the client's
+  // primaryBrandId. Any rejection here (missing client, no
+  // primaryBrandId, mismatched brand) reports `permission-denied`
+  // so we (a) don't leak client existence to a non-permitted caller
+  // and (b) keep the error code stable for callers that expect
+  // permission-denied for "subsidiary tried to act on a commercial
+  // doc they don't own."
+  try {
+    const clientSnap = await db.doc(`clients/${clientId}`).get();
+    if (clientSnap.exists) {
+      const clientData = clientSnap.data();
+      if (
+        user.homeOrgId &&
+        clientData.primaryBrandId &&
+        clientData.primaryBrandId === user.homeOrgId
+      ) {
+        return { uid: auth.uid, user };
+      }
+    }
+  } catch {
+    /* fall through to permission-denied */
+  }
+
+  throw new HttpsError(
+    'permission-denied',
+    `COMMERCIAL_SCOPE_REQUIRED: caller is neither a parent-org principal nor the home brand for client ${clientId}.`,
+  );
+}
+
+/**
+ * Resource-scoped variant of `assertCommercialPrincipal` — resolves
+ * the `clientId` from a Firestore doc reference rather than from a
+ * caller-supplied arg. Use this in lifecycle callables (activateMsa,
+ * approveSow, approveChangeOrder, etc.) that take an aggregate id and
+ * need to dereference the `clientId` from the existing doc.
+ *
+ * Failure ordering preserves the §7.4 boundary (don't leak existence
+ * to subsidiary callers):
+ *   1. Cheap parent-org check — if pass, allow (regardless of whether
+ *      the resource exists).
+ *   2. Otherwise read the resource. If missing OR has no `clientId` →
+ *      throw permission-denied (treat as if subsidiary caller has no
+ *      authorization, don't reveal existence).
+ *   3. If resource exists and has clientId → delegate to
+ *      assertCommercialPrincipal, which evaluates brand-direct match.
+ *
+ * @param {object} auth — request.auth
+ * @param {FirebaseFirestore.DocumentReference} ref — the resource doc
+ * @returns {Promise<{ uid: string, user: object, data: object }>}
+ *   where `data` is the snapshot data (so callers don't re-read).
+ */
+async function assertCommercialPrincipalForResource(auth, ref) {
+  if (!auth || !auth.uid) {
+    throw new HttpsError('unauthenticated', 'Authentication required.');
+  }
+  // Try parent-org first — cheap, no resource read.
+  try {
+    const result = await assertParentOrgPrincipal(auth);
+    // Parent-org passed; still read the resource for the caller.
+    const snap = await ref.get();
+    if (!snap.exists) {
+      throw new HttpsError('not-found', `Resource ${ref.path} not found.`);
+    }
+    return { ...result, data: snap.data() };
+  } catch (e) {
+    if (e && e.code === 'unauthenticated') throw e;
+    if (e && e.code === 'not-found') throw e;
+    if (e && e.code !== 'permission-denied') throw e;
+    // Parent-org rejection — fall through to brand-direct.
+  }
+
+  // Brand-direct attempt — pre-read the resource to get clientId.
+  // Wrap in try/catch so missing-doc reports permission-denied (don't
+  // reveal existence to subsidiary callers).
+  let snap;
+  try {
+    snap = await ref.get();
+  } catch {
+    throw new HttpsError(
+      'permission-denied',
+      `COMMERCIAL_SCOPE_REQUIRED: caller is not authorized for ${ref.path}.`,
+    );
+  }
+  if (!snap.exists) {
+    throw new HttpsError(
+      'permission-denied',
+      `COMMERCIAL_SCOPE_REQUIRED: caller is not authorized for ${ref.path}.`,
+    );
+  }
+  const data = snap.data();
+  const clientId = data && data.clientId;
+  if (!clientId) {
+    // No denormalised clientId — fall back to parent-only (which
+    // already failed above). Reject.
+    throw new HttpsError(
+      'permission-denied',
+      `COMMERCIAL_SCOPE_REQUIRED: resource ${ref.path} has no clientId; parent-org access required.`,
+    );
+  }
+  const result = await assertCommercialPrincipal(auth, clientId);
+  return { ...result, data };
+}
+
+/**
  * Verify a user id refers to a PARENT-org user. Used by the handoff-packet
  * validator to enforce "comms owner is always Account-Management."
  */
@@ -184,6 +338,8 @@ async function isParentOrgUser(userId) {
 module.exports = {
   PARENT_ORG_ID,
   assertParentOrgPrincipal,
+  assertCommercialPrincipal,
+  assertCommercialPrincipalForResource,
   assertDeliveryLead,
   assertSubsidiaryAccessOrParent,
   isParentOrgUser,

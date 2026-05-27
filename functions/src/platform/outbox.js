@@ -71,15 +71,15 @@ const DOMAIN_EVENT_TYPES = new Set([
   // a human in Traffic confirms or overrides before issueWorkOrder
   // runs. Payload carries the rejected candidates + reasons for audit.
   'RoutingBrandProposed',
-  // Phase 6.C — Conflict firewall (Addendum v1.1 §6 / change C3).
-  // Emitted by routeBrand's excludeConflicted() when at least one
-  // candidate brand was excluded because it's already walled in for
-  // the account's category. Consumed by reporting (cycle-time vs
-  // routing rejections) + Conflict Sentinel (ZA-004, 6.F) which
+  // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor model.
+  // Emitted by `excludeConflicted` when 1+ candidate brand was walled
+  // because it currently serves a client on the requesting client's
+  // competitor list. Consumed by reporting (cycle-time vs routing
+  // rejections) + Conflict Sentinel (ZA-004, Phase 6.F) which
   // surfaces the breach risk to Account Mgmt for review. Payload
-  // carries (categoryId, requestedClientId, walledClientIds[],
-  // excludedBrandIds[], masterJobId) — enough to reconstruct why
-  // routing got tight without re-querying.
+  // carries (requestedClientId, listedCompetitorIds[], walledBrandIds[],
+  // walledCompetitorByBrand: Record<brandId, competitorClientId[]>,
+  // masterJobId) — enough to reconstruct why routing got tight.
   'ConflictExclusivityRisk',
   // Phase 6.D — ECD approval ladder (Addendum v1.1 §7 / change C5).
   // The 6-rung internal-acceptance chain that gates DELIVERED →

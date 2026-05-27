@@ -1,30 +1,29 @@
 /**
- * excludeConflicted — Phase 6.C real impl (replaces 6.B stub).
+ * excludeConflicted — ADR-2026-05-25 §2.Q4 named-competitor model.
  *
- * For each candidate brand that's still in the running (no prior
- * rejection), query `conflict_walls` for rows matching:
+ * Replaces the Phase 6.B no-op stub and the (retired) Phase 6.C
+ * category-based matcher. The new algorithm:
  *
- *   servingOrgId == candidate.brandId  AND
- *   categoryId   == requestedCategory  AND
- *   clientId     != requestedClientId
+ *   1. Pull the requesting client's competitor list from
+ *      `client_competitors` (where clientId == requestedClientId).
+ *   2. If no competitors listed → no-op (firewall doesn't trigger).
+ *   3. For each candidate brand still in the running:
+ *      a. Query that brand's OPEN/IN_PROGRESS `internal_work_orders`.
+ *      b. Map each IWO to its master_job's clientId.
+ *      c. If any of those clientIds appears on the requesting
+ *         client's competitor list → mark the brand `conflicted`
+ *         with rejectionReason `CONFLICTED` and capture WHICH
+ *         competitor pinned it (for the risk-event payload).
+ *   4. If any brand was excluded, emit `ConflictExclusivityRisk`
+ *      transactionally with the routing decision (when tx is
+ *      passed) or in a fresh micro-txn otherwise. The event
+ *      payload identifies the competitor(s) that caused each
+ *      exclusion so reviewers can audit "why did routing tighten?"
  *
- * If any row exists, the brand is walled — it's already serving a
- * competitor in the same category. Mark the candidate `conflicted` +
- * set `rejectionReason = 'CONFLICTED'`.
- *
- * Mutates the candidates array in place (matches the 6.B contract:
- * the stub had no return value).
- *
- * No-op when `accountCategory` is not provided — the firewall can
- * only be evaluated when the request declares the category being
- * routed. The caller (routeBrand) is responsible for passing this
- * from master_job.account.category or per-IWO input.
- *
- * Bonus: if 2+ candidates are excluded by walls in the SAME category,
- * the routing pressure is real — emits `ConflictExclusivityRisk` via
- * the outbox so reporting + the Conflict Sentinel (ZA-004, Phase 6.F)
- * can surface the breach risk to Account Mgmt. The emission is
- * transactional with the caller (passed `tx` arg when emitting).
+ * The matcher consults `master_jobs` to bridge IWO → client; this
+ * is the cheap lookup pattern since OPEN IWOs per brand are small
+ * (typically <50 at any moment). Categories are NOT consulted by
+ * routing — they survive as a reporting overlay only.
  *
  * @param {{
  *   db: FirebaseFirestore.Firestore|object,
@@ -34,74 +33,96 @@
  *     conflicted: boolean,
  *     openIwoCount: number,
  *     availability: number,
- *     rejectionReason: string|null
+ *     rejectionReason: string|null,
  *   }>,
- *   accountId?: string,
- *   accountCategory?: string,
+ *   accountId?: string,            // the requesting client's id
  *   masterJobId?: string,           // forwarded into the risk event
- *   tx?: FirebaseFirestore.Transaction,  // optional — if provided, the
- *                                        // risk event is appended in
- *                                        // the same tx as the routing
- *                                        // decision; otherwise emitted
- *                                        // in a fresh microtx.
+ *   tx?: FirebaseFirestore.Transaction,
  * }} args
- * @returns {Promise<{ walledBrandIds: string[], walledClientIds: string[] }>}
- *          For tests + observability — the same data also lives on the
- *          mutated `candidates` array.
+ * @returns {Promise<{
+ *   walledBrandIds: string[],
+ *   listedCompetitorIds: string[],
+ *   walledCompetitorByBrand: Record<string, string[]>,
+ * }>}
  */
-async function excludeConflicted({ db, candidates, accountId, accountCategory, masterJobId, tx } = {}) {
-  if (!Array.isArray(candidates) || candidates.length === 0) {
-    return { walledBrandIds: [], walledClientIds: [] };
-  }
-  if (!accountCategory) {
-    // No category declared → firewall not evaluable.
-    return { walledBrandIds: [], walledClientIds: [] };
-  }
+async function excludeConflicted({ db, candidates, accountId, masterJobId, tx } = {}) {
+  const emptyResult = {
+    walledBrandIds: [],
+    listedCompetitorIds: [],
+    walledCompetitorByBrand: {},
+  };
+
+  if (!Array.isArray(candidates) || candidates.length === 0) return emptyResult;
+  if (!accountId) return emptyResult; // can't evaluate the firewall
+
+  // Step 1 — pull the requesting client's competitor list.
+  const competitorsSnap = await db
+    .collection('client_competitors')
+    .where('clientId', '==', accountId)
+    .get();
+  const listedCompetitorIds = [];
+  competitorsSnap.forEach((doc) => {
+    listedCompetitorIds.push(doc.data().competitorClientId);
+  });
+  if (listedCompetitorIds.length === 0) return emptyResult;
 
   const stillInTheRunning = candidates.filter((c) => c.rejectionReason === null);
   if (stillInTheRunning.length === 0) {
-    return { walledBrandIds: [], walledClientIds: [] };
+    return { ...emptyResult, listedCompetitorIds };
   }
 
+  // Step 3 — for each candidate brand, query their open IWOs and map
+  // each to a clientId via master_jobs lookup. Iterate sequentially;
+  // brand counts are small and parallel reads complicate the stub.
   const walledBrandIds = [];
-  const walledClientIds = new Set();
+  const walledCompetitorByBrand = {};
 
-  // Per-brand walls lookup. Firestore doesn't support OR across
-  // multiple `where` clauses with `!=` in 2nd-gen, so we issue one
-  // query per candidate brand. With ≤5 candidates this is cheap.
-  for (const c of stillInTheRunning) {
-    const snap = await db
-      .collection('conflict_walls')
-      .where('servingOrgId', '==', c.brandId)
-      .where('categoryId', '==', accountCategory)
+  const competitorIdSet = new Set(listedCompetitorIds);
+
+  for (const candidate of stillInTheRunning) {
+    // OPEN IWOs for this brand. We approximate "currently serving"
+    // by IWOs not in CLOSED / CANCELLED / REJECTED state. Since
+    // Firestore '!=' / 'not-in' is limited, we fetch by brand and
+    // filter in memory — counts are small.
+    const iwoSnap = await db
+      .collection('internal_work_orders')
+      .where('subsidiaryOrgId', '==', candidate.brandId)
       .get();
 
-    const otherClientWalls = [];
-    snap.forEach((doc) => {
-      const w = doc.data();
-      if (w.clientId !== accountId) otherClientWalls.push(w);
-    });
+    const conflictingCompetitors = new Set();
+    for (const iwoDoc of iwoSnap.docs) {
+      const iwo = iwoDoc.data();
+      const state = iwo.state;
+      if (state === 'CLOSED' || state === 'CANCELLED' || state === 'REJECTED') continue;
+      const mjId = iwo.masterJobId;
+      if (!mjId) continue;
+      const mjSnap = await db.doc(`master_jobs/${mjId}`).get();
+      if (!mjSnap.exists) continue;
+      const servedClientId = mjSnap.data().clientId;
+      if (!servedClientId) continue;
+      if (competitorIdSet.has(servedClientId)) {
+        conflictingCompetitors.add(servedClientId);
+      }
+    }
 
-    if (otherClientWalls.length > 0) {
-      c.conflicted = true;
-      c.rejectionReason = 'CONFLICTED';
-      walledBrandIds.push(c.brandId);
-      otherClientWalls.forEach((w) => walledClientIds.add(w.clientId));
+    if (conflictingCompetitors.size > 0) {
+      candidate.conflicted = true;
+      candidate.rejectionReason = 'CONFLICTED';
+      walledBrandIds.push(candidate.brandId);
+      walledCompetitorByBrand[candidate.brandId] = Array.from(conflictingCompetitors);
     }
   }
 
-  // Emit risk event if at least one brand was walled — even one
+  // Step 4 — emit the risk event if any brand was walled. Even one
   // exclusion is enough signal for Conflict Sentinel + reporting.
-  // Skip when we don't have a masterJobId (no aggregate to attach
-  // the event to — used by unit tests that exercise the pure logic).
   if (walledBrandIds.length > 0 && masterJobId) {
     try {
       const { appendDomainEvent } = require('../platform/outbox');
       const payload = {
-        categoryId: accountCategory,
-        requestedClientId: accountId || null,
-        walledClientIds: Array.from(walledClientIds),
-        excludedBrandIds: walledBrandIds,
+        requestedClientId: accountId,
+        listedCompetitorIds,
+        walledBrandIds,
+        walledCompetitorByBrand,
         masterJobId,
       };
       if (tx) {
@@ -126,8 +147,8 @@ async function excludeConflicted({ db, candidates, accountId, accountCategory, m
         });
       }
     } catch (err) {
-      // Outbox failure must not block routing — the wall is still
-      // applied (mutation above already ran). Log and continue.
+      // Outbox failure must not block routing — the exclusion is
+      // already applied; log and continue.
       // eslint-disable-next-line no-console
       console.error('excludeConflicted: outbox emit failed', err);
     }
@@ -135,7 +156,8 @@ async function excludeConflicted({ db, candidates, accountId, accountCategory, m
 
   return {
     walledBrandIds,
-    walledClientIds: Array.from(walledClientIds),
+    listedCompetitorIds,
+    walledCompetitorByBrand,
   };
 }
 

@@ -24,6 +24,7 @@ import {
 } from 'react-router-dom';
 import { FullPageLoader } from '@/shared/components/feedback/FullPageLoader';
 import { ErrorBoundary } from '@/shared/components/feedback/ErrorBoundary';
+import { ComingSoonPage } from '@/shared/components/feedback/ComingSoonPage';
 import { AppShell } from '@/shared/components/layout/AppShell';
 import { AuthGuard } from './guards/AuthGuard';
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
@@ -78,6 +79,7 @@ const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'))
 // authority signature with Account-Management + Billing).
 // ──────────────────────────────────────────────────────────────────────────
 import { ParentOrgGuard } from '@/router/guards/ParentOrgGuard';
+import { BrandAccessGuard } from '@/router/guards/BrandAccessGuard';
 const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
 const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
 const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
@@ -92,6 +94,18 @@ import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
+
+// ──────────────────────────────────────────────────────────────────────────
+// Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
+// Routing queue + brand-proposal cards consuming the routeBrand callable.
+// ──────────────────────────────────────────────────────────────────────────
+const TrafficLayout      = lazyWithRetry(() =>
+  import('@/modules/traffic').then(m => ({ default: m.TrafficLayout }))
+);
+const RoutingQueuePage   = lazyWithRetry(() => import('@/modules/traffic/pages/RoutingQueuePage'));
+const ActiveIwosPage     = lazyWithRetry(() => import('@/modules/traffic/pages/ActiveIwosPage'));
+const BrandCapacityPage  = lazyWithRetry(() => import('@/modules/traffic/pages/BrandCapacityPage'));
+const OverrideLogPage    = lazyWithRetry(() => import('@/modules/traffic/pages/OverrideLogPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Media Plan & Buying — Phase 4
@@ -170,6 +184,15 @@ const EmployeeEditPage = lazyWithRetry(() => import('@/pages/hr/EmployeeEditPage
 const LeaveManagementPage = lazyWithRetry(() => import('@/pages/hr/LeaveManagementPage'));
 const PayrollPage = lazyWithRetry(() => import('@/pages/hr/PayrollPage'));
 const OrgStructurePage = lazyWithRetry(() => import('@/pages/hr/OrgStructurePage'));
+
+// Phase 6.UI.A — Role Profile + Role Assignment admin (PR 6). All
+// three pages wrap in ParentOrgGuard at the route level.
+const RoleProfilesListPage  = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfilesListPage'));
+const RoleProfileDetailPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfileDetailPage'));
+const RoleAssignmentsListPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleAssignmentsListPage'));
+
+// ADR-2026-05-25 §2.Q4 — Conflict firewall breach-risks feed.
+const BreachRisksPage = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/BreachRisksPage'));
 
 // Performance
 const PerformanceLayout = lazyWithRetry(() => import('@/modules/hr-central/performance/components/PerformanceLayout'));
@@ -299,17 +322,23 @@ export const router = createBrowserRouter([
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
       // Account Management — Phase 3.D commercial core.
+      // ADR-2026-05-25 §2.Q2 (UI layer 4.3) — list routes stay on
+      // AMAccessGuard (parent-org only) since they expose the whole
+      // client roster; per-client detail routes use BrandAccessGuard,
+      // which accepts PARENT principals OR the home brand AD of the
+      // client. Routes that key on a master_job resolve clientId via
+      // `master_jobs/{id}.clientId`.
       { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
       { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId',                                              element: <PageWrapper><AMAccessGuard><AMClientDetailPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId',                                              element: <PageWrapper><BrandAccessGuard><AMClientDetailPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
       { path: 'master-jobs',                                                    element: <PageWrapper><AMAccessGuard><AMMasterJobsPage /></AMAccessGuard></PageWrapper> },
-      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><AMAccessGuard><AMMasterJobDetailPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><BrandAccessGuard clientIdParam="masterJobId" resolveVia="master_jobs"><AMMasterJobDetailPage /></BrandAccessGuard></PageWrapper> },
       {
         path: 'account-mgmt',
         element: (
@@ -342,6 +371,10 @@ export const router = createBrowserRouter([
           { path: 'leave',                   element: <LeaveManagementPage /> },
           { path: 'payroll',                 element: <PayrollPage /> },
           { path: 'org-structure',           element: <OrgStructurePage /> },
+          // Phase 6.UI.A — Role Profile + Role Assignment admin (PR 6).
+          { path: 'role-profiles',                  element: <ParentOrgGuard><RoleProfilesListPage /></ParentOrgGuard> },
+          { path: 'role-profiles/:id',              element: <ParentOrgGuard><RoleProfileDetailPage /></ParentOrgGuard> },
+          { path: 'role-assignments',               element: <ParentOrgGuard><RoleAssignmentsListPage /></ParentOrgGuard> },
         ],
       },
 
@@ -439,9 +472,37 @@ export const router = createBrowserRouter([
       { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
-      // Phase 6.UI.D.2 — ECD Review aggregator (PR 4). Subsidiary
-      // delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
+      // ──────────────────────────────────────────────────────────────────
+      // Phase 6.UI placeholder + live routes for manifest items.
+      // ──────────────────────────────────────────────────────────────────
+      // Phase 6.UI.B — Traffic surface (parent-org only).
+      {
+        path: 'traffic',
+        element: <PageWrapper><ParentOrgGuard><TrafficLayout /></ParentOrgGuard></PageWrapper>,
+        children: [
+          { index: true,         element: <RoutingQueuePage /> },
+          { path: 'active',      element: <ActiveIwosPage /> },
+          { path: 'capacity',    element: <BrandCapacityPage /> },
+          { path: 'overrides',   element: <OverrideLogPage /> },
+        ],
+      },
+
+      // ADR-2026-05-25 §2.Q4 — Conflict firewall (named-competitor).
+      // Per-client list lives on ClientDetailPage; categories survive
+      // as a reporting overlay only.
+      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/categories',      element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/client-tags',     element: <Navigate to="/clients" replace /> },
+      { path: 'conflict-firewall/walls',           element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ParentOrgGuard><BreachRisksPage /></ParentOrgGuard></PageWrapper> },
+
+      // Phase 6.UI.D.2 — ECD Review aggregator (live this PR).
+      // Subsidiary delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
       { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
+
+      { path: 'reports',             element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
 
       // Intelligence Layer
       {
