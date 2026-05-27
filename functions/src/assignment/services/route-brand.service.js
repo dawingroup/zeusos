@@ -142,10 +142,13 @@ async function runRouteBrand({ db, input, now = new Date() }) {
     if (!c.hasCapability) c.rejectionReason = 'NO_CAPABILITY';
   }
 
-  // Step 2: conflict firewall — stubbed in 6.B (lands in 6.C with the
-  // Conflict Sentinel + conflict_wall collection). For now, this is
-  // a hook future code can swap in without changing the call signature.
-  await excludeConflicted({ db, candidates, accountId, accountCategory });
+  // Step 2: conflict firewall — ADR-2026-05-25 §2.Q4 named-competitor
+  // model. Pulls the requesting client's competitor list and excludes
+  // any brand currently serving a listed competitor. `accountCategory`
+  // is still passed through but unused by the new matcher (categories
+  // survive as a reporting overlay only).
+  await excludeConflicted({ db, candidates, accountId, masterJobId });
+  void accountCategory; // categories no longer drive routing
 
   // Step 3: capacity check per brand. Soft signal — counts open IWOs
   // assigned to the brand vs DEFAULT_BRAND_CAPACITY_THRESHOLD (or an
@@ -208,16 +211,14 @@ async function runRouteBrand({ db, input, now = new Date() }) {
 }
 
 /**
- * Phase 6.B stub. Phase 6.C implements the real conflict-firewall
- * check against `conflict_wall/{id}` rows pinning accounts to a
- * serving brand. For now this is a no-op so candidates flow through
- * — the conflict_wall collection doesn't exist yet.
+ * Real conflict-firewall matcher — ADR-2026-05-25 §2.Q4. Imported
+ * from `functions/src/conflict-firewall/excludeConflicted.js` so the
+ * routing service stays focused on candidate ranking; the firewall
+ * logic owns its own file + tests.
  */
-async function excludeConflicted({ db, candidates, accountId, accountCategory }) {
-  void db; void candidates; void accountId; void accountCategory;
-  // 6.C will: for each candidate brand, check if any of its current
-  // accounts shares accountCategory with the requested account → if
-  // yes, mark candidate.conflicted = true and set rejectionReason.
+const { excludeConflicted: _firewallExcludeConflicted } = require('../../conflict-firewall/excludeConflicted');
+async function excludeConflicted(args) {
+  return _firewallExcludeConflicted(args);
 }
 
 /**

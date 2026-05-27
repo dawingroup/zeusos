@@ -35,6 +35,13 @@ export interface UpsertClientRequest {
   contacts?: ClientContact[];
   relationshipManagerUserId?: string;
   notes?: string;
+  /**
+   * Home brand owning the client relationship. Per ADR-2026-05-25 §2.Q2.
+   * Omit on create to let the backend default from the caller's
+   * `homeOrgId` (parent-org AMs get `'zeus-group'`, brand ADs get
+   * their own brand). Omit on edit to preserve the existing value.
+   */
+  primaryBrandId?: string;
 }
 
 export const upsertClientFn: HttpsCallable<UpsertClientRequest, { id: string; status: ClientStatus }> =
