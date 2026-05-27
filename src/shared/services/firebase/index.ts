@@ -49,3 +49,11 @@ export {
 
 // Functions
 export { functions } from './functions';
+
+// Analytics (Phase 5.F — opt-in via VITE_ANALYTICS_ENABLED + measurement ID)
+export {
+  initAnalytics,
+  logAnalyticsEvent,
+  setAnalyticsUserId,
+  setAnalyticsUserProperty,
+} from './analytics';
