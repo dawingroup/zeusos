@@ -45,6 +45,7 @@ import {
 import { computeBurnMeter } from '../services/burnMeter';
 import { BurnMeterBar } from '../components/BurnMeterBar';
 import { RouteToAMButton } from '../components/RouteToAMButton';
+import { ApprovalLadderPanel } from '../components/ApprovalLadderPanel';
 
 function formatMinor(amountMinor: number, currency: string): string {
   return `${currency} ${(amountMinor / 100).toLocaleString(undefined, {
@@ -312,6 +313,15 @@ export default function IWOWorkspacePage() {
         <section style={{ marginBottom: 24 }}>
           <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Burn</h2>
           <BurnMeterBar meter={meter} currency={iwo.currency} />
+        </section>
+      )}
+
+      {/* Phase 6.UI.D.2 — ECD approval ladder. Opens once the IWO
+          transitions IN_PROGRESS → DELIVERED. Until then the chain
+          isn't initialised and we hide the panel. */}
+      {iwo.approvalChain && (
+        <section style={{ marginBottom: 24 }} data-testid="iwo-approval-ladder-section">
+          <ApprovalLadderPanel iwoId={iwo.id} chain={iwo.approvalChain} />
         </section>
       )}
 

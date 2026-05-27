@@ -93,6 +93,7 @@ const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/Q
 import { SubsidiaryDeliveryGuard } from '@/modules/delivery';
 const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IWOInboxPage'));
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
+const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -472,12 +473,9 @@ export const router = createBrowserRouter([
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
       // ──────────────────────────────────────────────────────────────────
-      // Phase 6.UI placeholder routes — backing surfaces ship in later PRs.
-      // Wired here so manifest entries from `src/core/navigation/manifest.ts`
-      // don't 404 between PR 1 and the follow-up surface PRs.
+      // Phase 6.UI placeholder + live routes for manifest items.
       // ──────────────────────────────────────────────────────────────────
-      // Phase 6.UI.B — Traffic surface (PR 2). Parent-org only; routes
-      // are wrapped in ParentOrgGuard so subsidiary principals 403.
+      // Phase 6.UI.B — Traffic surface (parent-org only).
       {
         path: 'traffic',
         element: <PageWrapper><ParentOrgGuard><TrafficLayout /></ParentOrgGuard></PageWrapper>,
@@ -489,24 +487,22 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor
-      // model. Per-client list lives on ClientDetailPage (composed via
-      // `CompetitorListPanel`); the firewall has no separate Category
-      // surface anymore (categories survive as a reporting overlay).
+      // ADR-2026-05-25 §2.Q4 — Conflict firewall (named-competitor).
+      // Per-client list lives on ClientDetailPage; categories survive
+      // as a reporting overlay only.
       { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
       { path: 'conflict-firewall/categories',      element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
       { path: 'conflict-firewall/client-tags',     element: <Navigate to="/clients" replace /> },
       { path: 'conflict-firewall/walls',           element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
       { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ParentOrgGuard><BreachRisksPage /></ParentOrgGuard></PageWrapper> },
 
-      { path: 'delivery/ecd-review',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="ECD Review" shipsIn="Phase 6.UI.D.2 (PR 4)" description="Approval-ladder rungs awaiting your action — Designer through ECD." /></SubsidiaryDeliveryGuard></PageWrapper> },
-      { path: 'delivery/active',         element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
-      { path: 'delivery/burn',           element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
+      // Phase 6.UI.D.2 — ECD Review aggregator (live this PR).
+      // Subsidiary delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
+      { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
+      { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
 
-      { path: 'reports',                 element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
-
-      { path: 'hr/role-profiles',        element: <PageWrapper><ComingSoonPage title="Role Profiles" shipsIn="Phase 6.UI.A (PR 6)" description="Role definitions (brand, department, task capabilities, approval authorities) consumed by EmployeeAssignmentService." /></PageWrapper> },
-      { path: 'hr/role-assignments',     element: <PageWrapper><ComingSoonPage title="Role Assignments" shipsIn="Phase 6.UI.A (PR 6)" /></PageWrapper> },
+      { path: 'reports',             element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
 
       // Intelligence Layer
       {
