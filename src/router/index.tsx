@@ -472,6 +472,9 @@ export const router = createBrowserRouter([
       { path: 'delivery/inbox',     element: <PageWrapper><SubsidiaryDeliveryGuard><IWOInboxPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/iwo/:id',   element: <PageWrapper><SubsidiaryDeliveryGuard><IWOWorkspacePage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
+      // ──────────────────────────────────────────────────────────────────
+      // Phase 6.UI placeholder + live routes for manifest items.
+      // ──────────────────────────────────────────────────────────────────
       // Phase 6.UI.B — Traffic surface (parent-org only).
       {
         path: 'traffic',
@@ -485,6 +488,8 @@ export const router = createBrowserRouter([
       },
 
       // ADR-2026-05-25 §2.Q4 — Conflict firewall (named-competitor).
+      // Per-client list lives on ClientDetailPage; categories survive
+      // as a reporting overlay only.
       { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
       { path: 'conflict-firewall/categories',      element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
       { path: 'conflict-firewall/client-tags',     element: <Navigate to="/clients" replace /> },
@@ -492,6 +497,7 @@ export const router = createBrowserRouter([
       { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ParentOrgGuard><BreachRisksPage /></ParentOrgGuard></PageWrapper> },
 
       // Phase 6.UI.D.2 — ECD Review aggregator (live this PR).
+      // Subsidiary delivery only; per-rung RBAC follow-up lands in 6.D.2-RBAC.
       { path: 'delivery/ecd-review', element: <PageWrapper><SubsidiaryDeliveryGuard><EcdReviewPage /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Burn & SLA" shipsIn="Phase 6.UI (deferred)" description="Per-IWO burn meter + SLA countdown roll-ups." /></SubsidiaryDeliveryGuard></PageWrapper> },
