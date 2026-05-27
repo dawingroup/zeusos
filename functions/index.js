@@ -149,20 +149,16 @@ exports.draftStorefrontContent = draftStorefrontContent;
 // from prod state. Same pattern as PR #48's projectCaseStudyShopifySync
 // removal.
 
-// Manufacturing MES Triggers (Phase 1.E: removed onManufacturingStepCompleted,
-// onMOCompletedMES, onBOMLineCreated — DawinOS-legacy with no callers)
-const {
-  onQualityEventCreated,
-  dailyProductionReport,
-  overdueOrderCheck,
-  checkBOMAvailability,
-  generateBOMFromOptimization,
-} = require('./src/triggers/manufacturingTriggers');
-exports.onQualityEventCreated = onQualityEventCreated;
-exports.dailyProductionReport = dailyProductionReport;
-exports.overdueOrderCheck = overdueOrderCheck;
-exports.checkBOMAvailability = checkBOMAvailability;
-exports.generateBOMFromOptimization = generateBOMFromOptimization;
+// Manufacturing MES Triggers — fully removed in Phase 1.E sweep
+// (DawinOS-legacy, no callers; manufacturing module stripped in
+// Phase 1.C). Previously: onManufacturingStepCompleted, onMOCompletedMES,
+// onBOMLineCreated removed in an earlier pass; this hotfix removes the
+// remaining 5 — onQualityEventCreated, dailyProductionReport,
+// overdueOrderCheck, checkBOMAvailability, generateBOMFromOptimization
+// — because they were causing trigger-kind-drift deploy failures
+// ("Changing from an HTTPS function to a background triggered function
+// is not allowed"). Same pattern as PR #48's projectCaseStudyShopifySync
+// removal and PR #103's onStockLevelChanged removal.
 
 // Sales Order Triggers
 const {
