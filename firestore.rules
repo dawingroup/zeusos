@@ -4041,5 +4041,23 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       allow write: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor model.
+    //
+    // `client_competitors/{compositeKey}` — composite key
+    // `${clientId}__${competitorClientId}`. Asymmetric: A→B doesn't
+    // imply B→A. `excludeConflicted` reads these at routing time to
+    // exclude brands currently serving a listed competitor.
+    //
+    // Reads are staff-wide so reporting + watcher agents (ZA-004) can
+    // consume. Writes go through `addClientCompetitor` /
+    // `removeClientCompetitor` Cloud Functions (parent-org gated);
+    // admin direct writes also allowed as a safety valve.
+    // ════════════════════════════════════════════════════════════════
+    match /client_competitors/{compositeKey} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }

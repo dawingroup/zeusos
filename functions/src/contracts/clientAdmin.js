@@ -35,19 +35,24 @@ exports.upsertClient = onCall(
       contacts,
       relationshipManagerUserId,
       notes,
+      // ADR-2026-05-25 §2.Q2 — primaryBrandId is the home brand for this
+      // client's commercial relationship. New clients default to the
+      // caller's homeOrgId (or PARENT_ORG_ID for group AMs).
+      primaryBrandId,
     } = data;
 
     // ADR-2026-05-25 §2.Q2 — auth gate depends on create vs edit:
-    //  • CREATE (no id): parent-org only for now. PR #91's auto-default
-    //    of `primaryBrandId = caller.homeOrgId` sets ownership when a
+    //  • CREATE (no id): parent-org only for now. The auto-default of
+    //    primaryBrandId = caller.homeOrgId sets ownership when a
     //    brand-direct create path is added in a follow-up.
     //  • EDIT (id supplied): home brand of the existing client OR
     //    parent-org. Lets brand ADs edit "their" clients.
     let uid;
+    let user;
     if (id) {
-      ({ uid } = await assertCommercialPrincipal(request.auth, id));
+      ({ uid, user } = await assertCommercialPrincipal(request.auth, id));
     } else {
-      ({ uid } = await assertParentOrgPrincipal(request.auth));
+      ({ uid, user } = await assertParentOrgPrincipal(request.auth));
     }
 
     if (!name || typeof name !== 'string') {
@@ -65,9 +70,26 @@ exports.upsertClient = onCall(
     const ref = db.doc(`clients/${clientId}`);
     const snap = await ref.get();
 
+    // ADR-2026-05-25 §2.Q2 — resolve the home brand for new clients.
+    //   - Caller-supplied wins (lets group AMs hand-pick).
+    //   - Falls back to the caller's homeOrgId from their DawinUser doc.
+    //   - Final fallback is PARENT_ORG_ID (preserves pre-ADR behaviour
+    //     for backfilled clients).
+    // On UPDATE, never silently clobber an existing primaryBrandId — only
+    // change it when the caller explicitly passes a new value.
+    let resolvedPrimaryBrand = primaryBrandId;
+    if (!resolvedPrimaryBrand) {
+      if (snap.exists) {
+        resolvedPrimaryBrand = snap.data().primaryBrandId || PARENT_ORG_ID;
+      } else {
+        resolvedPrimaryBrand = (user && user.homeOrgId) || PARENT_ORG_ID;
+      }
+    }
+
     const payload = {
       id: clientId,
       parentOrgId: PARENT_ORG_ID,
+      primaryBrandId: resolvedPrimaryBrand,
       name,
       code: code || null,
       billingCurrency,

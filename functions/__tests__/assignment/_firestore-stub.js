@@ -104,6 +104,9 @@ class DocRef {
     if (!existing) throw new Error(`update on missing doc ${this._path}`);
     this._store.set(this._path, applyUpdate(existing, patch));
   }
+  async delete() {
+    this._store.delete(this._path);
+  }
 }
 
 class QueryRef {
