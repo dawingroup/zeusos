@@ -95,6 +95,7 @@ const IWOInboxPage     = lazyWithRetry(() => import('@/modules/delivery/pages/IW
 const IWOWorkspacePage = lazyWithRetry(() => import('@/modules/delivery/pages/IWOWorkspacePage'));
 const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/EcdReviewPage'));
 const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/BurnAndSlaPage'));
+const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -503,7 +504,7 @@ export const router = createBrowserRouter([
       { path: 'delivery/active',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/burn',       element: <PageWrapper><SubsidiaryDeliveryGuard><BurnAndSlaPage /></SubsidiaryDeliveryGuard></PageWrapper> },
 
-      { path: 'reports',             element: <PageWrapper><ComingSoonPage title="Reports" shipsIn="Phase 6.UI (deferred)" /></PageWrapper> },
+      { path: 'reports',             element: <PageWrapper><ParentOrgGuard><IwoHealthPage /></ParentOrgGuard></PageWrapper> },
 
       // Intelligence Layer
       {
