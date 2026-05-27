@@ -160,19 +160,14 @@ exports.draftStorefrontContent = draftStorefrontContent;
 // is not allowed"). Same pattern as PR #48's projectCaseStudyShopifySync
 // removal and PR #103's onStockLevelChanged removal.
 
-// Sales Order Triggers
-const {
-  onSalesOrderStatusChanged,
-  onChangeOrderApproved,
-  onSalesOrderReleased,
-  staleSalesOrderCheck: staleSalesOrderCheckFn,
-  autoDetectRisks,
-} = require('./src/triggers/salesOrderTriggers');
-exports.onSalesOrderStatusChanged = onSalesOrderStatusChanged;
-exports.onChangeOrderApproved = onChangeOrderApproved;
-exports.onSalesOrderReleased = onSalesOrderReleased;
-exports.staleSalesOrderCheck = staleSalesOrderCheckFn;
-exports.autoDetectRisks = autoDetectRisks;
+// Sales Order Triggers — fully removed in Phase 1.E sweep.
+// DawinOS construction-era SO lifecycle (status changes, change-order
+// approval, release, stale-check, risk auto-detection). ZeusOS replaces
+// this with the IWO state machine (functions/src/assignment/) and the
+// commercial-gravity flow (master_jobs → quotes → client_invoices).
+// Removed: onSalesOrderStatusChanged, onChangeOrderApproved,
+// onSalesOrderReleased, staleSalesOrderCheck, autoDetectRisks. Same
+// trigger-kind-drift pattern as PR #103/#104.
 
 // BigQuery Operational Analytics Sync (Phase 1.E: removed onAdvisoryCustomerWritten +
 // onAdvisorySupplierWritten — advisory subsidiary stripped in PR #20)
