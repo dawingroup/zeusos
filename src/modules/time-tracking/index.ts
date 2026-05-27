@@ -15,3 +15,5 @@ export {
   formatMinutes,
   type IwoBucket,
 } from './services/time-tracking.service';
+
+export { AddTimeEntryDialog } from './components/AddTimeEntryDialog';

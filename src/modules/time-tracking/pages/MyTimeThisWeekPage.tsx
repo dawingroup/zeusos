@@ -31,7 +31,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import { useCurrentDawinUser } from '@/core/settings';
+import { Button } from '@/core/components/ui/button';
 import type { TimeEntry } from '@/modules/delivery';
 import {
   subscribeMyTimeEntries,
@@ -41,6 +43,7 @@ import {
   dayKey,
   formatMinutes,
 } from '../services/time-tracking.service';
+import { AddTimeEntryDialog } from '../components/AddTimeEntryDialog';
 
 function fmtWeek(from: Date): string {
   // Monday → Sunday — show the calendar bounds compactly.
@@ -59,6 +62,7 @@ export default function MyTimeThisWeekPage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { from, to } = useMemo(
     () => weekRange(new Date(), weekOffset),
@@ -92,13 +96,30 @@ export default function MyTimeThisWeekPage() {
 
   return (
     <div style={{ padding: 24 }} data-testid="my-time-this-week-page">
-      <header style={{ marginBottom: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>My Time</h1>
-        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-          What you&apos;ve logged against IWOs this week. Posting still happens
-          from the individual IWO workspace where the rate-card + budget
-          context lives.
-        </p>
+      <header style={{
+        marginBottom: 16,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: 12,
+      }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>My Time</h1>
+          <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
+            What you&apos;ve logged against IWOs this week. The IWO workspace
+            still owns the canonical posting form (with rate-card +
+            budget-hold context) — this quick-add bypasses the round-trip
+            for the common case.
+          </p>
+        </div>
+        <Button
+          size="sm"
+          data-testid="my-time-add-entry-btn"
+          onClick={() => setDialogOpen(true)}
+        >
+          <Plus size={14} aria-hidden="true" style={{ marginRight: 4 }} />
+          Add entry
+        </Button>
       </header>
 
       {err && (
@@ -240,6 +261,13 @@ export default function MyTimeThisWeekPage() {
           ))}
         </ul>
       )}
+
+      <AddTimeEntryDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        userId={uid}
+        recentIwoIds={buckets.map(b => b.iwoId)}
+      />
     </div>
   );
 }
