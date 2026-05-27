@@ -12,11 +12,28 @@ vi.mock('../firebase/config', () => ({
   storage: {},
 }));
 
-vi.mock('firebase/app', () => ({
-  initializeApp: vi.fn(() => ({})),
-  getApps: vi.fn(() => []),
-  getApp: vi.fn(() => ({})),
-}));
+vi.mock('firebase/app', () => {
+  // Phase 6.UI tests check `err instanceof FirebaseError` in their
+  // routeBrandFn / IWO error paths; without exporting the class here
+  // those `instanceof` checks throw on the missing symbol and the
+  // catch-block silently bails. A minimal stub class is sufficient —
+  // tests build their own errors with `new Error('…')`.
+  class FirebaseError extends Error {
+    code: string;
+    customData?: Record<string, unknown>;
+    constructor(code: string, message: string) {
+      super(message);
+      this.name = 'FirebaseError';
+      this.code = code;
+    }
+  }
+  return {
+    initializeApp: vi.fn(() => ({})),
+    getApps: vi.fn(() => []),
+    getApp: vi.fn(() => ({})),
+    FirebaseError,
+  };
+});
 
 vi.mock('firebase/auth', () => {
   const GoogleAuthProvider = vi.fn(() => ({ addScope: vi.fn() }));
