@@ -1,4 +1,3 @@
-/* eslint-disable design-system/no-inline-style-literals -- TODO(U.4): early Phase 3.E scaffolding, uses inline px + hex throughout. Real Tailwind/token refactor scheduled for U.4. */
 /**
  * RouteToAMButton — Layer 3 of §7.4. When a subsidiary user has any UI
  * affordance that *could* be misinterpreted as direct client contact
@@ -14,9 +13,13 @@
  * transactional outbox atomically (mirrors how every other state change
  * in the platform writes its event — see `appendDomainEvent` in
  * `functions/src/platform/outbox.js`).
+ *
+ * Refactored U.4 from inline-styled scaffolding to shadcn <Button> +
+ * .rag red alert for the error state.
  */
 
 import { useState } from 'react';
+import { Button } from '@/shared/components/ui/button';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { routeDirectClientRequestFn } from '../services/firebase';
 
@@ -71,21 +74,16 @@ export function RouteToAMButton(props: RouteToAMButtonProps) {
 
   return (
     <div>
-      <button
-        type="button"
+      <Button
+        variant="outline"
         onClick={handleClick}
         disabled={busy}
         title="The subsidiary cannot answer the client directly — only Account Management can."
-        style={{
-          padding: '8px 14px', borderRadius: 6, border: '1px solid #1d4ed8',
-          background: '#fff', color: '#1d4ed8', fontWeight: 600,
-          cursor: busy ? 'wait' : 'pointer',
-        }}
       >
         Route to Account Management
-      </button>
+      </Button>
       {error && (
-        <p role="alert" style={{ marginTop: 6, color: '#7f1d1d', fontSize: 12 }}>
+        <p role="alert" className="rag red mt-1.5">
           {error}
         </p>
       )}

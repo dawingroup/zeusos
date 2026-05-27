@@ -19,6 +19,35 @@ import { hasGlobalPermission } from './types';
 
 const DEFAULT_ORG_ID = 'default';
 
+// Phase 6.UI.0 — dev-only DawinUser bypass. Mirrors the synthetic
+// Firebase user in `AuthContext.jsx`. When the env toggle is set the
+// hook returns a synthetic admin DawinUser with parent-org access,
+// so the AppShell renders the PARENT manifest without a Firestore
+// round-trip. Tree-shaken from prod builds via `import.meta.env.DEV`.
+const DEV_BYPASS_AUTH =
+  import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS_AUTH === 'true';
+
+const DEV_BYPASS_DAWIN_USER: DawinUser | null = DEV_BYPASS_AUTH
+  ? {
+      id: 'dev-bypass-user',
+      uid: 'dev-bypass-user',
+      email: 'onzimai@zeusgroup.co.ug',
+      displayName: 'Dev Bypass User',
+      globalRole: 'admin' as GlobalRole,
+      isActive: true,
+      subsidiaryAccess: [
+        { subsidiaryId: 'zeus-group',       hasAccess: true, modules: [] },
+        { subsidiaryId: 'zeus-the-agency',  hasAccess: true, modules: [] },
+        { subsidiaryId: 'zeus-digital',     hasAccess: true, modules: [] },
+        { subsidiaryId: 'labyrinth',        hasAccess: true, modules: [] },
+        { subsidiaryId: 'odd-gorilla',      hasAccess: true, modules: [] },
+        { subsidiaryId: 'house-of-zeus',    hasAccess: true, modules: [] },
+      ],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+  : null;
+
 // ============================================================================
 // ORGANIZATION SETTINGS
 // ============================================================================
@@ -100,13 +129,18 @@ export function useUsers() {
 
 export function useCurrentDawinUser() {
   const { user } = useAuth();
-  const [dawinUser, setDawinUser] = useState<DawinUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [dawinUser, setDawinUser] = useState<DawinUser | null>(DEV_BYPASS_DAWIN_USER);
+  const [isLoading, setIsLoading] = useState(!DEV_BYPASS_AUTH);
   const [error, setError] = useState<Error | null>(null);
 
   const orgId = (user as { organizationId?: string })?.organizationId || DEFAULT_ORG_ID;
 
   useEffect(() => {
+    if (DEV_BYPASS_AUTH) {
+      // Synthetic user is the source of truth in dev-bypass mode —
+      // skip Firestore subscription entirely.
+      return;
+    }
     if (!user) {
       setDawinUser(null);
       setIsLoading(false);

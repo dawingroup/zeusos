@@ -82,6 +82,24 @@ const ZEUS_DEFAULT_AGENCY_MODULES: SubsidiaryModule[] = [
  * between admin chrome and per-agency UI.
  */
 export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
+  // Zeus Group — parent legal entity. Switching the org-switcher chip
+  // into this entry flips the AppShell sidebar into the PARENT
+  // manifest (Account Mgmt, Traffic, Pricing & Quotes, Billing &
+  // Inter-Co, Conflict Firewall, …). Surfaced for every signed-in
+  // user; ParentOrgGuard still gates the actual routes for non-admin
+  // principals via three layers (UI / API / Firestore rules).
+  {
+    id: 'zeus-group',
+    name: 'Zeus Group',
+    shortName: 'Group',
+    color: '#872E5C',
+    description:
+      'Parent organisation — commercial surface (Account Management, Pricing & Quotes, Billing & Inter-Co, Conflict Firewall) lives here.',
+    modules: ZEUS_DEFAULT_AGENCY_MODULES,
+    status: 'active',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
   {
     id: 'zeus-the-agency',
     name: 'Zeus The Agency',

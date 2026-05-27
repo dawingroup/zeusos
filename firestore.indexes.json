@@ -6435,27 +6435,10 @@
       ]
     },
     {
-      "collectionGroup": "client_categories",
+      "collectionGroup": "client_competitors",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "clientId", "order": "ASCENDING" },
-        { "fieldPath": "exclusive", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "conflict_walls",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "servingOrgId", "order": "ASCENDING" },
-        { "fieldPath": "categoryId", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "conflict_walls",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "clientId", "order": "ASCENDING" },
-        { "fieldPath": "categoryId", "order": "ASCENDING" }
+        { "fieldPath": "clientId", "order": "ASCENDING" }
       ]
     }
   ],

@@ -6,7 +6,14 @@ ZeusOS is a hard fork of DawinOS, repurposed as the internal operations platform
 
 Source of truth for the work plan: `/Users/danielonzimai/.claude/plans/we-have-onboarded-a-lovely-planet.md`.
 
-Domain model overview (Tech Spec v1.0 + plan §14): [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
+**Architecture model** (per Addendum v1.1): **shared commercial core + five sibling brands** with overlapping capabilities, plus a conflict firewall (Odd Gorilla) and shared services (Tier System, ECD Approval Ladder). The v1.0 `OrganizationKind = PARENT | SUBSIDIARY` enum is retained — sibling brands stay separate legal entities with their own GL and rate cards, so the inter-co invoicing machinery is unchanged. "Which entity delivers" is now a **routing decision**, not a fixed mapping.
+
+**Reference docs:**
+- Tech Spec v1.0 domain model + plan §14: [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md)
+- Addendum v1.1 (sibling-brand reconciliation, plan §15): [`docs/ADDENDUM_V1_1.md`](docs/ADDENDUM_V1_1.md)
+- Addendum v1.2 (human capital × intelligence layer, plan §16): [`docs/ADDENDUM_V1_2.md`](docs/ADDENDUM_V1_2.md)
+- Phase 6 implementation playbook (plan §17): [`docs/PHASE_6_INTELLIGENCE_LAYER.md`](docs/PHASE_6_INTELLIGENCE_LAYER.md)
+- Phase 4.1 procurement/finance handshake: [`docs/PHASE_4_1_HANDSHAKE.md`](docs/PHASE_4_1_HANDSHAKE.md)
 
 ## Build & Deploy
 
@@ -45,6 +52,15 @@ git config core.hooksPath .githooks
 
 **Workflow:** `git switch -c <feature-branch>` → commit → push → `gh pr create`.
 
+**Dev-only auth bypass** (Phase 6.UI.0). For local browser verification of the sidebar / module surfaces without signing in:
+
+```bash
+# In .env (gitignored) — never commit, never deploy with this set.
+VITE_DEV_BYPASS_AUTH=true
+```
+
+Synthesises a parent-org admin DawinUser with access to all 5 sub-brands. Email matches the super-user allow-list in [SubsidiaryDeliveryGuard](src/modules/delivery/components/SubsidiaryDeliveryGuard.tsx), so you can flip between PARENT and SUBSIDIARY views via the org-switcher chip. Gated on `import.meta.env.DEV` — Vite tree-shakes the bypass code path out of production builds. Wired into [`onAuthChange`](src/shared/services/firebase/auth.ts:97) so every `useAuth` hook honours it through one chokepoint.
+
 **Emergency bypass** (use sparingly; explain why in the commit message):
 ```bash
 ALLOW_DIRECT_COMMIT=1 git commit ...
@@ -52,12 +68,13 @@ ALLOW_DIRECT_COMMIT=1 git commit ...
 
 To change the list of protected branches, edit the `PROTECTED_BRANCHES` array in `.githooks/pre-commit`.
 
-## Phase status (Phase 4 complete; Phase 5 in flight)
+## Phase status (Phase 4 complete; Phase 5 in flight; Phase 6 planned)
 
-Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-have-onboarded-a-lovely-planet.md` is the source of truth — this is the working dashboard.
+Last refreshed 2026-05-24. The plan in `/Users/danielonzimai/.claude/plans/we-have-onboarded-a-lovely-planet.md` is the source of truth — this is the working dashboard.
 
 - ✅ **Phase 0** — Repo bootstrap, Firebase project (`zeusos`) wired, branch protection (`.githooks/pre-commit`), CI scaffolding
-- ✅ **Phase 1.A–1.D** — DawinOS strip: design-manager, finishes, cutlist, inventory, manufacturing, construction, fulfillment, advisory subsidiary, three.js. Branding to Zeus palette. (Phase 1.E — strip the matching `functions/` exports — is in flight, see PR #42.)
+- ✅ **Phase 1.A–1.D** — DawinOS strip: design-manager, finishes, cutlist, inventory, manufacturing, construction, fulfillment, advisory subsidiary, three.js. Branding to Zeus palette.
+- 🟡 **Phase 1.E** — `functions/index.js` legacy-exports sweep: 23 confirmed-dead exports removed (advisory, inventory-AI, design-AI, matflow, manufacturing/design triggers, QBO MO triggers). Source files left in place; follow-up sweep needed for `functions/src/tools/*` to unblock `firestore.rules` cleanup of `designProjects` / `designItems` / `materials` / `inventoryItems` / `finishLibrary` / `bom` blocks.
 - ✅ **Phase 2** — 5 sub-brands + Zeus Group parent modelled as `OrganizationKind = PARENT | SUBSIDIARY`; module-roles registry; CRM seeded
 - ✅ **Phase 3.A.5** — Domain re-model per Tech Spec v1.0 §14 (Commercial Gravity). 11 new top-level Firestore collections: `master_jobs`, `internal_work_orders`, `clients`, `msas`, `sows`, `change_orders`, `rate_cards`, `quotes`, `budget_holds`, `intercompany_invoices`, `client_invoices`, `domain_events`. See [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
 - ✅ **Phase 3.B** — IWO state machine Cloud Functions in `functions/src/assignment/` (issue/accept/reject/start/postTime/postCost/submit/acceptInternal/requestRevision/close/cancel + handoff packet validation + idempotency keys + outbox)
@@ -75,14 +92,33 @@ Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-ha
 - ❌ **Phase 5.E** — Client Portal rebrand (`customer-hub` carryover; no Zeus visual identity pass)
 - ❌ **Phase 5.F** — Production launch + custom domain DNS active + GA/PostHog (DNS for `os.zeustheagency.com` not yet verified — deploy health-check still hits `zeusos.web.app`)
 - ❌ **Phase 5.G** — Onboarding session with Zeus team (gated by 5.F)
+- 🟡 **Phase 6.UI.0** — Sidebar manifest + subsidiary-aware ordering. `src/core/navigation/manifest.ts` resolves `(OrganizationKind, SubsidiaryId)` → ordered NavItem list; `src/core/settings/brand-capabilities.ts` mirrors `BRAND_CAPABILITIES` from `functions/src/assignment/services/route-brand.service.js`. AppShell rewired off `resolveNav`; Odd Gorilla shows an "Isolated" badge on the org-switcher chip + a banner on the IWO Inbox. Zeus Group is now a selectable entry in the org-switcher (parent context). Placeholder routes (`/conflict-firewall/*`, `/delivery/ecd-review`, `/delivery/active`, `/delivery/burn`, `/reports`, `/hr/role-profiles`, `/hr/role-assignments`) wired via `ComingSoonPage` so manifest items don't 404 between PRs. PRs 3–6 (Conflict Firewall, ECD Review, CES, Role Profiles) still pending.
+- 🟡 **Phase 6.UI.A** — Role Profile + Role Assignment admin (PR 6). 5 new parent-org callables (`createRoleProfile`, `updateRoleProfile`, `archiveRoleProfile`, `assignEmployeeToRole`, `endRoleAssignment`) in `functions/src/hr-central/role-profiles.js`. `src/modules/hr-central/role-profiles/` adds `RoleProfilesListPage`, `RoleProfileDetailPage`, `RoleAssignmentsListPage`, `RoleProfileForm` (with the v1.2 verb-matrix UI + approval-authority list), and `RoleAssignmentDialog`. Routes: `/hr/role-profiles`, `/hr/role-profiles/:id`, `/hr/role-assignments`. 10 backend tests + 5 frontend tests.
+- 🟡 **Phase 6.UI.B** — Traffic surface (PR 2). `src/modules/traffic/` with `TrafficLayout` tabbed shell (Routing Queue · Active IWOs · Brand Capacity · Override Log). RoutingQueuePage subscribes to OPEN/unallocated master_jobs, calls the existing `routeBrand` callable (6.B), and renders `RouteBrandProposalCard` with tier badge + SLA countdown + KE-geography badge + candidate breakdown. Confirm hands off to the AM-side `IssueIWODialog` via a URL hash; Override opens a brand picker before the same hand-off. Active IWOs groups in-flight IWOs by brand with burn %. Brand Capacity reads `engine_config.brandCapacityThreshold`. Override Log lists `RoutingBrandProposed` events. Routes wrapped in `ParentOrgGuard`. 8 component tests passing.
+- ✅ **Phase 6.A.1** — Human Capital Model foundation (#60): `role_profiles` + `role_assignments` + `EmployeeAssignmentService` skeleton with the `role` rule type on `hr-central`. Foundation for brand routing (v1.1 C2) and the verb-matrix ECD ladder (v1.1 C5). See [`docs/PHASE_6_INTELLIGENCE_LAYER.md`](docs/PHASE_6_INTELLIGENCE_LAYER.md).
+- ✅ **Phase 6.A.2** — Five rule types + Tier-SLA engine config (#66): `department`, `user`, `manager`, `creator`, `dynamic` resolvers + `TierSlaPolicy` + `EngineConfig` types + Tier-aware capacity check. Closes v1.1 C4.
+- ✅ **Phase 6.B** — Brand Routing in IWO issuance (#64): `routeBrand()` callable proposes a serving brand; Traffic confirms / overrides; `tier` propagates engagement → master_job → IWO with `slaDueAt` computed at issue. Closes v1.1 C2.
+- ❌ **Phase 6.E** — Event/Task Engine: `EventDefinition.tasks[]` → `generatedTasks` → uniform inbox; agency event families (`campaign.*` / `iwo.*` / `creative.*` / `media.*` / `financial.*` / `hr.*`). Closes v1.2 subsystem B.
+- ❌ **Phase 6.F** — Agent Network: `agents` + `agent_audit_entries` + dispatcher with 4 gates + MCP/agent registry unification; ZA-002 + ZA-003 in `draft_only` (ship early); ZA-001 + ZA-004 + ZA-006 in `gated` **only after §15.5 commercial questions resolved** (now ADR-2026-05-25). Closes v1.2 subsystem C.
+- 🟡 **ADR-2026-05-25** — Commercial model: §15.5 resolutions. See [`docs/ADR-2026-05-25-commercial-model.md`](docs/ADR-2026-05-25-commercial-model.md). Separate legal entities (Q1) · brand-direct sales with `primaryBrandId` precedence (Q2 — reverses the "subsidiary never quotes" invariant) · cost-plus IC markup (Q3) · named-competitor list per client (Q4 — **retires the original 6.C category-based conflict-firewall and 6.D PRs #78 + #83 — both closed**). Reshape plan: 6 ordered steps; mutating agents stay `draft_only` until steps 1–5 land.
+- 🟡 **ADR Step 2+3 (additive setup)** — `clients.primaryBrandId: SubsidiaryId` schema + create-form picker; `organizations.icMarkupPct` + `engine_config.icMarkupPctDefault` schemas; `resolveIcMarkupPct` helper (backend + frontend mirror) reads org override → engine_config → 15% default; `IssueIWODialog` auto-prefills `transferPriceMinor = budgetMinor × (1 + markupPct/100)`; `appliedMarkupPct` frozen on each `intercompany_invoices/{id}` doc for audit. 11 backend tests + 7 frontend tests.
+- 🟡 **ADR Step 1 (conflict firewall rewrite — supersedes original 6.C)** — named-competitor model per ADR §2.Q4. New `client_competitors/{clientId__competitorClientId}` collection + 2 admin callables (`addClientCompetitor` / `removeClientCompetitor`) gated on parent-org. `excludeConflicted` queries the requesting client's competitor list, walks each candidate brand's OPEN IWOs → master_job → clientId, excludes brands serving any listed competitor. Emits `ConflictExclusivityRisk` with `{ requestedClientId, listedCompetitorIds, walledBrandIds, walledCompetitorByBrand, masterJobId }`. `CompetitorListPanel` mounts on `ClientDetailPage`; `BreachRisksPage` at `/conflict-firewall/breach-risks` consumes the event feed. Categories survive as reporting overlay only — no longer drive routing. 12 backend tests + 5 frontend tests.
+- 🟡 **ADR Step 4.1 (rules layer relax)** — `canActOnClient(clientId)` helper added to `firestore.rules`. The `msas` / `sows` / `change_orders` / `quotes` / `master_jobs` / `client_invoices` collections now accept reads from PARENT principals OR the SUBSIDIARY whose `homeOrgId == clients/{clientId}.primaryBrandId`. Writes remain CFn-only. Backward-compatible: clients without `primaryBrandId` (pre-ADR) still gate to parent-org. 8 new rules tests + fixture updates. Steps 4.2 (CFn) and 4.3 (UI) ship on top.
+- 🟡 **ADR Step 4.2 (functions layer relax)** — Two new helpers in `functions/src/assignment/lib/auth.js`: `assertCommercialPrincipal(auth, clientId)` for callables that take a clientId arg, and `assertCommercialPrincipalForResource(auth, ref)` for callables that resolve clientId from an existing doc (preserves §7.4 "don't leak existence to unauthorized callers" via parent-first → resource → brand-direct ordering). Wired into `clientAdmin.upsertClient` (edit), `msaAdmin.upsertMsa` + `activateMsa`, all of `sowAdmin` (upsert / submit / approve / cancel), and all of `changeOrderAdmin` (upsert / approve / reject). Create paths stay parent-org until the corresponding UI flow opens up. 10 new brand-direct tests + 7 existing 403 tests still pass.
+- 🟡 **ADR Step 4.3 + Step 5 (UI layer relax + SUBSIDIARY_SELLING manifest)** — New `BrandAccessGuard` reads the URL's `clientId` (or resolves it via `master_jobs.clientId` etc.) and accepts PARENT principals OR the home brand AD. Per-client commercial routes (`/clients/:clientId`, nested MSA/SOW/CO/quote editors, `/master-jobs/:masterJobId`) swap from `AMAccessGuard` to `BrandAccessGuard`. Manifest gains a `SUBSIDIARY_SELLING` org-kind variant: same head + middle + tail as `SUBSIDIARY` plus a commercial trio (My Clients · Pricing & Quotes · Billing & Inter-Co) inserted before the universal tail. `AppShell` resolves three org-kinds — PARENT (zeus-group + parent-org admin), SUBSIDIARY_SELLING (brand AD on their own brand OR parent-org admin viewing a brand), SUBSIDIARY (plain delivery user). 4 new manifest tests + the existing 18 still pass.
 
-**Open decisions** (plan §12):
+**Open decisions** (plan §12 + §15.5):
 - QuickBooks Online — open item #3, decision pending. Currently disabled via empty env in `functions/.env.zeusos`.
 - Notion, Meta, Google Drive integrations — same: disabled until enabled per plan §3.
+- **Phase 6.F hard gate (plan §15.5 + §17.2)** — ZA-001 / ZA-004 / ZA-006 (mutating agents) may NOT ship until these four are resolved and recorded as an ADR in `docs/`:
+  1. Are the five brands separate legal entities (real inter-co invoicing) or trading names (internal cost allocation)?
+  2. Who holds the commercial relationship — group-level AM only, or do brands also sell direct?
+  3. Transfer pricing policy: cost, cost-plus, or market?
+  4. Category-exclusivity granularity: category, sub-category, or named-competitor list?
 
 **Known broken / stale**:
-- `functions/index.js` still has ~65 DawinOS-legacy exports (Shopify, Adobe, matflow, inventory-AI, design-manager triggers) — task tracker item `#1b`. PR #48 removed the `projectCaseStudyShopifySync` trigger that was breaking prod deploys due to a trigger-kind change.
-- `firestore.rules` still has match blocks for `bom` (nested under `manufacturingOrders`) and `materials`, `inventoryItems`, `finishLibrary`, `designProjects`, `designItems` — left in PR #45 because the cloud-function tools / semanticSearch / partyMerge services still reference them. Sweeps when the corresponding callers are stripped.
+- `functions/index.js` had ~325 exports, ~23 of which were DawinOS-legacy with **no live callers** (advisory triggers, inventory-AI handlers, design-manager AI, matflow handlers, manufacturing/design Firestore triggers, QBO manufacturing triggers). Removed in Phase 1.E sweep. PR #48 had earlier removed the `projectCaseStudyShopifySync` trigger (broke prod deploys via trigger-kind change). **Source files left in place** (e.g. `functions/src/{advisory,matflow}/`, `functions/src/ai/{materialPricingAI,designChat,enhanceInventoryItem,...}.js`) — only the `index.js` exports were removed; deleting the source dirs is a follow-up. **Adobe (~13 exports) and Shopify exports are LIVE** — `AdobePdfTest.tsx` and SettingsPage call them; do not remove.
+- **Follow-up sweep needed: `functions/src/tools/{designTools,crossModuleTools,crmTools,financeTools,inventoryTools}.js`** still read `designProjects` / `designItems` / `materials` / `inventoryItems` collections. Until those tools' callers are confirmed dead and they're removed, `firestore.rules` cannot drop the matching match blocks (`bom`, `materials`, `inventoryItems`, `finishLibrary`, `designProjects`, `designItems`). Also live readers: `functions/src/intelligence/operationalBigQuerySync.js` (BigQuery sync for `inventoryItems`), `functions/src/admin/backfillMaterialFields.js`, `functions/src/migrations/seedInventoryCategories.js`.
 - `ci.yml` still runs `lint || true` (line ~70) — ESLint stays advisory until the inherited 49k-problem backlog is paid down. `typecheck` is now gating (PR #46).
 
 ## Conventions
@@ -93,7 +129,8 @@ Last refreshed 2026-05-23. The plan in `/Users/danielonzimai/.claude/plans/we-ha
 - Each `organizations/{orgId}` doc carries `kind: 'PARENT' \| 'SUBSIDIARY'`, `is_legal_entity`, `base_currency`, `gl_connection_id`. The Commercial Gravity invariant ("subsidiary never quotes") is enforced at three layers: `RoleGuard requireOrgKind="PARENT"` in the UI ([src/router/guards/ParentOrgGuard.tsx](src/router/guards/ParentOrgGuard.tsx)), Cloud Function `assertParentOrgPrincipal` helpers, and `firestore.rules` `isParentOrgPrincipal()`.
 - Engagement-level collection is `master_jobs` (not `campaigns`). The marketing-facing `Campaign` interface composes onto `master_job.campaign` — see [`src/modules/campaigns/types/campaign.types.ts`](src/modules/campaigns/types/campaign.types.ts).
 - MCP server: `zeusos-mcp-server/` (bundled into `functions/vendor/zeusos-mcp-server/` at deploy time by the `functions` predeploy script in `firebase.json`).
-- Outbox: every state-changing Cloud Function appends to `domain_events/{eventId}` via `appendDomainEvent` in `functions/src/platform/outbox.js`. 11 canonical event types — see [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
+- Outbox: every state-changing Cloud Function appends to `domain_events/{eventId}` via `appendDomainEvent` in `functions/src/platform/outbox.js`. **17 event types live** (11 Tech Spec v1.0 + 4 Phase 4.1 procurement/finance + 2 from Phase 5.A scaffolding); **9 more planned** for Phase 6 (3 from v1.1 ECD ladder, 6 from v1.2 intelligence layer — see [`docs/ADDENDUM_V1_1.md`](docs/ADDENDUM_V1_1.md) §7.2 and [`docs/ADDENDUM_V1_2.md`](docs/ADDENDUM_V1_2.md) §6.1). Canonical list in [`docs/DOMAIN_MODEL.md`](docs/DOMAIN_MODEL.md).
+- **Capability-is-data principle** (v1.0 §4.1 + v1.2 §6.3): authority is data that is checked, never code that is trusted. For humans, the `taskCapabilities` verb matrix is the grant; for agents (Phase 6.F), `enabledTools[]` is the grant. Neither widens except by an explicit, audited admin action.
 
 ## Module surface (current)
 
@@ -101,10 +138,10 @@ Active `src/modules/`:
 
 | Domain | Modules |
 |---|---|
-| Commercial (parent-org only) | `account-management`, `contracts`, `pricing`, `assignment`, `billing`, `intercompany` |
-| Delivery (per-subsidiary) | `delivery`, `media`, `production`, `talent`, `asset-library`, `campaigns` |
+| Commercial — shared core (parent-org only) | `account-management`, `contracts`, `pricing`, `assignment`, `billing`, `intercompany`, `traffic` |
+| Delivery — per sibling brand (routed) | `delivery`, `media`, `production`, `talent`, `asset-library`, `campaigns` |
 | Operations | `crm`, `procurement`, `suppliers`, `finance`, `hr-central`, `hr`, `strategy`, `compliance`, `admin` |
-| Platform | `platform` (outbox + idempotency), `shared-ops`, `intelligence`, `intelligence-layer`, `market-intelligence` |
+| Platform / Intelligence | `platform` (outbox + idempotency), `shared-ops`, `intelligence`, `intelligence-layer`, `market-intelligence` (the two `intelligence*` modules **must be merged or formally bounded** in Phase 6.F.6) |
 | Removed in this fork | `capital` (PR #47 — plan §4.1 closed; Zeus isn't an investment vehicle), `design-manager`, `inventory`, `manufacturing`, `construction`, `cutlist-processor`, `finishes`, `fulfillment`, `advisory subsidiary` |
 
 The Phase 1 strip is **done in `src/`** but `functions/index.js` still carries the DawinOS-legacy exports (Shopify / matflow / Adobe / inventory triggers / design-manager triggers / QBO / Notion / Meta WhatsApp). Those run on every cold-start until task `#1b` lands.

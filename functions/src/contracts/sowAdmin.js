@@ -14,7 +14,11 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { ALLOWED_ORIGINS } = require('../config/cors');
-const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const {
+  assertParentOrgPrincipal,
+  assertCommercialPrincipal,
+  assertCommercialPrincipalForResource,
+} = require('../assignment/lib/auth');
 const { appendDomainEvent } = require('../platform/outbox');
 const { ulid } = require('../platform/ulid');
 const { generateCode } = require('./lib/codes');
@@ -33,7 +37,6 @@ async function loadMsa(db, msaId) {
 exports.upsertSow = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const data = request.data || {};
     const {
       id,
@@ -62,7 +65,11 @@ exports.upsertSow = onCall(
     }
 
     const db = getFirestore();
-    const msa = await loadMsa(db, msaId);
+    // ADR-2026-05-25 §2.Q2 — gate via the MSA's doc; resource-scoped
+    // assert throws permission-denied for unauthorized callers even
+    // when the MSA doesn't exist (preserves §7.4 boundary).
+    const msaRef = db.doc(`msas/${msaId}`);
+    const { uid, data: msa } = await assertCommercialPrincipalForResource(request.auth, msaRef);
     // SOWs can be drafted under a DRAFT MSA, but cannot be SUBMITTED for
     // approval until the MSA is ACTIVE. Enforced in `submitSowForApproval`.
 
@@ -108,12 +115,15 @@ exports.upsertSow = onCall(
 exports.submitSowForApproval = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { sowId } = request.data || {};
     if (!sowId) throw new HttpsError('invalid-argument', 'sowId is required.');
 
     const db = getFirestore();
     const ref = db.doc(`sows/${sowId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped assert.
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, ref);
+
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       if (!snap.exists) throw new HttpsError('not-found', `SOW ${sowId} not found.`);
@@ -147,12 +157,15 @@ exports.submitSowForApproval = onCall(
 exports.approveSow = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { sowId } = request.data || {};
     if (!sowId) throw new HttpsError('invalid-argument', 'sowId is required.');
 
     const db = getFirestore();
     const ref = db.doc(`sows/${sowId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped assert.
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, ref);
+
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       if (!snap.exists) throw new HttpsError('not-found', `SOW ${sowId} not found.`);
@@ -195,7 +208,6 @@ exports.approveSow = onCall(
 exports.cancelSow = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
     const { sowId, reason } = request.data || {};
     if (!sowId) throw new HttpsError('invalid-argument', 'sowId is required.');
     if (!reason || typeof reason !== 'string') {
@@ -203,6 +215,10 @@ exports.cancelSow = onCall(
     }
     const db = getFirestore();
     const ref = db.doc(`sows/${sowId}`);
+
+    // ADR-2026-05-25 §2.Q2 — resource-scoped assert.
+    const { uid } = await assertCommercialPrincipalForResource(request.auth, ref);
+
     return db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       if (!snap.exists) throw new HttpsError('not-found', `SOW ${sowId} not found.`);
