@@ -15,7 +15,7 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { ALLOWED_ORIGINS } = require('../config/cors');
-const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const { assertParentOrgPrincipal, assertCommercialPrincipal } = require('../assignment/lib/auth');
 const { ulid } = require('../platform/ulid');
 
 const PARENT_ORG_ID = 'zeus-group';
@@ -24,7 +24,6 @@ const VALID_CURRENCIES = ['UGX', 'USD', 'KES', 'EUR', 'GBP'];
 exports.upsertClient = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid, user } = await assertParentOrgPrincipal(request.auth);
     const data = request.data || {};
     const {
       id,
@@ -41,6 +40,20 @@ exports.upsertClient = onCall(
       // caller's homeOrgId (or PARENT_ORG_ID for group AMs).
       primaryBrandId,
     } = data;
+
+    // ADR-2026-05-25 §2.Q2 — auth gate depends on create vs edit:
+    //  • CREATE (no id): parent-org only for now. The auto-default of
+    //    primaryBrandId = caller.homeOrgId sets ownership when a
+    //    brand-direct create path is added in a follow-up.
+    //  • EDIT (id supplied): home brand of the existing client OR
+    //    parent-org. Lets brand ADs edit "their" clients.
+    let uid;
+    let user;
+    if (id) {
+      ({ uid, user } = await assertCommercialPrincipal(request.auth, id));
+    } else {
+      ({ uid, user } = await assertParentOrgPrincipal(request.auth));
+    }
 
     if (!name || typeof name !== 'string') {
       throw new HttpsError('invalid-argument', 'name is required.');
