@@ -6440,6 +6440,38 @@
       "fields": [
         { "fieldPath": "clientId", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "event_definitions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "eventType", "order": "ASCENDING" },
+        { "fieldPath": "isActive", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "generated_tasks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "assignedToUserId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "priority", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "generated_tasks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sourceEventId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "generated_tasks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "masterJobId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

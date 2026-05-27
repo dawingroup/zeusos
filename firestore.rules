@@ -4068,5 +4068,42 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       allow write: if isAdmin();
     }
+
+    // ════════════════════════════════════════════════════════════════
+    // Phase 6.E — Event/Task Engine (Addendum v1.2 §3 / subsystem B)
+    //
+    // Two collections:
+    //
+    //   event_definitions  — admin-curated rule set. One doc per
+    //                        (eventType, optional subsidiary scope).
+    //                        Defines the EventTaskRule[] that fires
+    //                        when a matching BusinessEvent lands.
+    //                        Reads are staff-wide (the catalogue is
+    //                        org-visible). Writes are admin-only
+    //                        until the rule-management UI ships in
+    //                        6.E.2.
+    //
+    //   generated_tasks    — system-written by the
+    //                        onDomainEventTaskGenerator trigger.
+    //                        Reads are staff-wide for the unified
+    //                        human inbox. Direct writes are admin-
+    //                        only — task transitions go through
+    //                        CFns shipping in 6.E.2 (claimTask /
+    //                        startTask / submitTask / completeTask /
+    //                        blockTask / escalateTask) which enforce
+    //                        the lifecycle state machine.
+    //
+    // Capability is data — see Phase 6.A docstring (v1.2 §6.3).
+    // Every status transition is logged in task.history[] for audit.
+    // ════════════════════════════════════════════════════════════════
+    match /event_definitions/{definitionId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
+
+    match /generated_tasks/{taskId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }
