@@ -106,6 +106,39 @@ describe('resolveNav — capability filtering', () => {
   });
 });
 
+describe('resolveNav — SUBSIDIARY_SELLING (ADR §3.2 step 5)', () => {
+  it('returns delivery head + per-brand middle + commercial entries + universal tail', () => {
+    const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'zeus-the-agency'));
+    // Delivery head still leads.
+    expect(ids.slice(0, 3)).toEqual(['delivery-inbox', 'ecd-review', 'active-work']);
+    // Universal tail still trails.
+    expect(ids.slice(-3)).toEqual(['burn-sla', 'hr', 'reports']);
+    // Commercial trio appears between middle and tail.
+    expect(ids).toContain('account-management');
+    expect(ids).toContain('pricing');
+    expect(ids).toContain('billing');
+  });
+
+  it('places commercial entries AFTER the per-brand middle', () => {
+    const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'zeus-the-agency'));
+    const lastMiddleIdx = ids.indexOf('crm');                  // last middle item per ZTA's order
+    const firstCommercialIdx = ids.indexOf('account-management');
+    expect(firstCommercialIdx).toBeGreaterThan(lastMiddleIdx);
+  });
+
+  it('places commercial entries BEFORE the universal tail', () => {
+    const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'labyrinth'));
+    const lastCommercialIdx = ids.indexOf('billing');
+    const firstTailIdx = ids.indexOf('burn-sla');
+    expect(lastCommercialIdx).toBeGreaterThan(0);
+    expect(firstTailIdx).toBeGreaterThan(lastCommercialIdx);
+  });
+
+  it('SUBSIDIARY_SELLING + zeus-group returns empty (commercial-only orgs use PARENT)', () => {
+    expect(resolveNav('SUBSIDIARY_SELLING', 'zeus-group')).toEqual([]);
+  });
+});
+
 describe('adaptManifestToLegacyNavItem', () => {
   interface Legacy {
     id: string;

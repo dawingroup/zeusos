@@ -79,6 +79,7 @@ const MCPPairingPage = lazyWithRetry(() => import('@/pages/mcp/MCPPairingPage'))
 // authority signature with Account-Management + Billing).
 // ──────────────────────────────────────────────────────────────────────────
 import { ParentOrgGuard } from '@/router/guards/ParentOrgGuard';
+import { BrandAccessGuard } from '@/router/guards/BrandAccessGuard';
 const RateCardsPage      = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardsPage'));
 const RateCardEditorPage = lazyWithRetry(() => import('@/modules/pricing/pages/RateCardEditorPage'));
 const QuoteBuilderPage   = lazyWithRetry(() => import('@/modules/pricing/pages/QuoteBuilderPage'));
@@ -188,6 +189,9 @@ const OrgStructurePage = lazyWithRetry(() => import('@/pages/hr/OrgStructurePage
 const RoleProfilesListPage  = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfilesListPage'));
 const RoleProfileDetailPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfileDetailPage'));
 const RoleAssignmentsListPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleAssignmentsListPage'));
+
+// ADR-2026-05-25 §2.Q4 — Conflict firewall breach-risks feed.
+const BreachRisksPage = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/BreachRisksPage'));
 
 // Performance
 const PerformanceLayout = lazyWithRetry(() => import('@/modules/hr-central/performance/components/PerformanceLayout'));
@@ -317,17 +321,23 @@ export const router = createBrowserRouter([
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
       // Account Management — Phase 3.D commercial core.
+      // ADR-2026-05-25 §2.Q2 (UI layer 4.3) — list routes stay on
+      // AMAccessGuard (parent-org only) since they expose the whole
+      // client roster; per-client detail routes use BrandAccessGuard,
+      // which accepts PARENT principals OR the home brand AD of the
+      // client. Routes that key on a master_job resolve clientId via
+      // `master_jobs/{id}.clientId`.
       { path: 'clients',                                                        element: <PageWrapper><AMAccessGuard><AMClientsPage /></AMAccessGuard></PageWrapper> },
       { path: 'clients/new',                                                    element: <PageWrapper><AMAccessGuard><AMClientCreatePage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId',                                              element: <PageWrapper><AMAccessGuard><AMClientDetailPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><AMAccessGuard><AMMSAEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><AMAccessGuard><AMSOWEditorPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
-      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><AMAccessGuard><AMChangeOrderPage /></AMAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId',                                              element: <PageWrapper><BrandAccessGuard><AMClientDetailPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/new',                                     element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId',                                  element: <PageWrapper><BrandAccessGuard><AMMSAEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/new',                         element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId',                      element: <PageWrapper><BrandAccessGuard><AMSOWEditorPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/new',    element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
+      { path: 'clients/:clientId/msas/:msaId/sows/:sowId/change-orders/:coId',  element: <PageWrapper><BrandAccessGuard><AMChangeOrderPage /></BrandAccessGuard></PageWrapper> },
       { path: 'master-jobs',                                                    element: <PageWrapper><AMAccessGuard><AMMasterJobsPage /></AMAccessGuard></PageWrapper> },
-      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><AMAccessGuard><AMMasterJobDetailPage /></AMAccessGuard></PageWrapper> },
+      { path: 'master-jobs/:masterJobId',                                       element: <PageWrapper><BrandAccessGuard clientIdParam="masterJobId" resolveVia="master_jobs"><AMMasterJobDetailPage /></BrandAccessGuard></PageWrapper> },
       {
         path: 'account-mgmt',
         element: (
@@ -479,11 +489,15 @@ export const router = createBrowserRouter([
         ],
       },
 
-      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/categories" replace /> },
-      { path: 'conflict-firewall/categories',      element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Categories" shipsIn="Phase 6.UI.C (PR 3)" description="Category registry that drives the conflict-exclusivity walls." /></PageWrapper> },
-      { path: 'conflict-firewall/client-tags',     element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Client Tags" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
-      { path: 'conflict-firewall/walls',           element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Walls" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
-      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Breach Risks" shipsIn="Phase 6.UI.C (PR 3)" description="Consumes ConflictExclusivityRisk events from domain_events." /></PageWrapper> },
+      // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor
+      // model. Per-client list lives on ClientDetailPage (composed via
+      // `CompetitorListPanel`); the firewall has no separate Category
+      // surface anymore (categories survive as a reporting overlay).
+      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/categories',      element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/client-tags',     element: <Navigate to="/clients" replace /> },
+      { path: 'conflict-firewall/walls',           element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ParentOrgGuard><BreachRisksPage /></ParentOrgGuard></PageWrapper> },
 
       { path: 'delivery/ecd-review',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="ECD Review" shipsIn="Phase 6.UI.D.2 (PR 4)" description="Approval-ladder rungs awaiting your action — Designer through ECD." /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/active',         element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },

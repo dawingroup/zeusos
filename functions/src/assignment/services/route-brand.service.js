@@ -142,10 +142,13 @@ async function runRouteBrand({ db, input, now = new Date() }) {
     if (!c.hasCapability) c.rejectionReason = 'NO_CAPABILITY';
   }
 
-  // Step 2: conflict firewall — Phase 6.C real impl. Queries
-  // conflict_walls; mutates candidates in place; emits
-  // ConflictExclusivityRisk when any brand is walled.
-  await excludeConflicted({ db, candidates, accountId, accountCategory, masterJobId });
+  // Step 2: conflict firewall — ADR-2026-05-25 §2.Q4 named-competitor
+  // model. Pulls the requesting client's competitor list and excludes
+  // any brand currently serving a listed competitor. `accountCategory`
+  // is still passed through but unused by the new matcher (categories
+  // survive as a reporting overlay only).
+  await excludeConflicted({ db, candidates, accountId, masterJobId });
+  void accountCategory; // categories no longer drive routing
 
   // Step 3: capacity check per brand. Soft signal — counts open IWOs
   // assigned to the brand vs DEFAULT_BRAND_CAPACITY_THRESHOLD (or an
@@ -208,32 +211,14 @@ async function runRouteBrand({ db, input, now = new Date() }) {
 }
 
 /**
- * Phase 6.C v2 implementation — delegates to functions/src/conflict-firewall/.
- *
- * Per ADR-0001 Q4, the firewall walks the requesting client's
- * `client_competitors` edge. For each listed competitor, check
- * whether any candidate brand has an OPEN IWO whose master_job
- * belongs to that competitor. If yes → wall the brand.
- *
- * Mutates the candidates array in place (sets `conflicted: true` and
- * `rejectionReason: 'CONFLICTED'` on each walled candidate). Also
- * emits `ConflictExclusivityRisk` via the outbox when 1+ brands are
- * excluded, so Conflict Sentinel (ZA-004) + reporting see the breach
- * risk live. See excludeConflicted.js for the signature.
- *
- * The legacy `accountCategory` arg is accepted but ignored — kept
- * only so existing 6.B call sites don't need same-PR updates.
+ * Real conflict-firewall matcher — ADR-2026-05-25 §2.Q4. Imported
+ * from `functions/src/conflict-firewall/excludeConflicted.js` so the
+ * routing service stays focused on candidate ranking; the firewall
+ * logic owns its own file + tests.
  */
-const { excludeConflicted: realExcludeConflicted } = require('../../conflict-firewall/excludeConflicted');
-
-async function excludeConflicted({ db, candidates, accountId, accountCategory, masterJobId }) {
-  // accountCategory deprecated in v2 — pass-through ignored.
-  void accountCategory;
-  await realExcludeConflicted({
-    db, candidates,
-    requestingClientId: accountId,
-    masterJobId,
-  });
+const { excludeConflicted: _firewallExcludeConflicted } = require('../../conflict-firewall/excludeConflicted');
+async function excludeConflicted(args) {
+  return _firewallExcludeConflicted(args);
 }
 
 /**

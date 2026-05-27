@@ -73,17 +73,32 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Verify FIREBASE_TOKEN is set
+      # Validate the deploy token before attempting to deploy. A missing or
+      # expired/revoked FIREBASE_TOKEN is the dominant failure mode for this
+      # workflow (see docs/CI_FIREBASE_TOKEN.md). When the token can't
+      # authenticate, skip the deploy with a warning annotation instead of
+      # failing the check — the preview channel is a reviewer convenience,
+      # not a correctness gate, and a broken token shouldn't block merge of
+      # unrelated work. Maintainer rotates the token via `firebase login:ci`.
+      - name: Validate Firebase auth
+        id: validate
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          if [ -z "$FIREBASE_TOKEN" ]; then
-            echo "::error::FIREBASE_TOKEN secret is not set — same token as deploy-production.yml."
-            exit 1
+          if [ -z "${FIREBASE_TOKEN:-}" ]; then
+            echo "::warning::FIREBASE_TOKEN secret is empty — preview deploy skipped. See docs/CI_FIREBASE_TOKEN.md."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
-          echo "Firebase token present (length: ${#FIREBASE_TOKEN})"
+          if ! firebase projects:list --token "$FIREBASE_TOKEN" >/dev/null 2>&1; then
+            echo "::warning::FIREBASE_TOKEN is set but failed to authenticate (likely expired or revoked) — preview deploy skipped. Rotate via 'npx firebase login:ci' and update the FIREBASE_TOKEN repository secret. See docs/CI_FIREBASE_TOKEN.md."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to preview channel
+        if: steps.validate.outputs.skip != 'true'
         id: preview_deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -110,4 +125,15 @@ jobs:
             echo "🔗 **[$url]($url)**"
             echo ""
             echo "Channel: \`$CHANNEL_ID\` · expires in 7 days"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Note skipped deploy
+        if: steps.validate.outputs.skip == 'true'
+        run: |
+          {
+            echo "## Preview deploy skipped"
+            echo ""
+            echo "FIREBASE_TOKEN is missing or invalid. The preview channel was not updated."
+            echo ""
+            echo "See [docs/CI_FIREBASE_TOKEN.md](../blob/${{ github.event.pull_request.head.sha || github.sha }}/docs/CI_FIREBASE_TOKEN.md) for rotation steps."
           } >> "$GITHUB_STEP_SUMMARY"

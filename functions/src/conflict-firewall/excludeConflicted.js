@@ -1,147 +1,134 @@
 /**
- * excludeConflicted — Phase 6.C v2 (ADR-0001 Q4 + v1.1 C3).
+ * excludeConflicted — ADR-2026-05-25 §2.Q4 named-competitor model.
  *
- * SUPERSEDES the v1 Category-model implementation. Per ADR-0001 Q4,
- * Zeus leadership chose the named-competitor-list model over category
- * exclusivity. This function walks the requesting client's
- * `client_competitors` edge, then for each competitor checks which
- * brand(s) are serving them via OPEN IWOs, and excludes those brands.
+ * Replaces the Phase 6.B no-op stub and the (retired) Phase 6.C
+ * category-based matcher. The new algorithm:
  *
- * Algorithm:
+ *   1. Pull the requesting client's competitor list from
+ *      `client_competitors` (where clientId == requestedClientId).
+ *   2. If no competitors listed → no-op (firewall doesn't trigger).
+ *   3. For each candidate brand still in the running:
+ *      a. Query that brand's OPEN/IN_PROGRESS `internal_work_orders`.
+ *      b. Map each IWO to its master_job's clientId.
+ *      c. If any of those clientIds appears on the requesting
+ *         client's competitor list → mark the brand `conflicted`
+ *         with rejectionReason `CONFLICTED` and capture WHICH
+ *         competitor pinned it (for the risk-event payload).
+ *   4. If any brand was excluded, emit `ConflictExclusivityRisk`
+ *      transactionally with the routing decision (when tx is
+ *      passed) or in a fresh micro-txn otherwise. The event
+ *      payload identifies the competitor(s) that caused each
+ *      exclusion so reviewers can audit "why did routing tighten?"
  *
- *   1. Read client_competitors WHERE clientId == requestingClientId.
- *      No competitors → no exclusions.
- *
- *   2. For each candidate brand still in the running:
- *        Read open IWOs at this brand.
- *        For each open IWO, lookup the master_job and check whether
- *        master_job.clientId is in the competitor set. If yes → wall
- *        the brand and stop checking more IWOs.
- *
- *   3. If any walled brands → emit ConflictExclusivityRisk with the
- *      walled-by-brand → competitor mapping for Account Mgmt review.
- *
- * Mutates the candidates array in place (matches the v1 contract:
- * `conflicted: true`, `rejectionReason: 'CONFLICTED'`).
- *
- * Cost note: O(brands × open_iwos_at_brand × 1 mj-read), with
- * de-duped mj reads. Q2 PR (Client.commercialOwnerOrgId) will let
- * this collapse to a composite-index query per (brand, competitor)
- * pair against master_jobs — see ADR-0001 Q2.
- *
- * Idempotent. No state writes other than the optional risk event.
+ * The matcher consults `master_jobs` to bridge IWO → client; this
+ * is the cheap lookup pattern since OPEN IWOs per brand are small
+ * (typically <50 at any moment). Categories are NOT consulted by
+ * routing — they survive as a reporting overlay only.
  *
  * @param {{
  *   db: FirebaseFirestore.Firestore|object,
- *   candidates: Array<{ brandId, hasCapability, conflicted,
- *                       openIwoCount, availability, rejectionReason }>,
- *   accountId?: string,          // v1 alias — preserved for back-compat
- *   requestingClientId?: string, // canonical name; same as accountId
- *   accountCategory?: string,    // v1 alias — IGNORED in v2 (no-op)
- *   masterJobId?: string,
+ *   candidates: Array<{
+ *     brandId: string,
+ *     hasCapability: boolean,
+ *     conflicted: boolean,
+ *     openIwoCount: number,
+ *     availability: number,
+ *     rejectionReason: string|null,
+ *   }>,
+ *   accountId?: string,            // the requesting client's id
+ *   masterJobId?: string,           // forwarded into the risk event
  *   tx?: FirebaseFirestore.Transaction,
  * }} args
- * @returns {Promise<{ walledBrandIds: string[], walledByBrand: object }>}
+ * @returns {Promise<{
+ *   walledBrandIds: string[],
+ *   listedCompetitorIds: string[],
+ *   walledCompetitorByBrand: Record<string, string[]>,
+ * }>}
  */
-async function excludeConflicted({
-  db, candidates,
-  accountId, requestingClientId,
-  // accountCategory intentionally ignored (v1 → v2 deprecation)
-  masterJobId, tx,
-} = {}) {
-  const requesterId = requestingClientId || accountId || null;
+async function excludeConflicted({ db, candidates, accountId, masterJobId, tx } = {}) {
+  const emptyResult = {
+    walledBrandIds: [],
+    listedCompetitorIds: [],
+    walledCompetitorByBrand: {},
+  };
 
-  if (!Array.isArray(candidates) || candidates.length === 0) {
-    return { walledBrandIds: [], walledByBrand: {} };
-  }
-  if (!requesterId) {
-    // No requesting client → firewall not evaluable.
-    return { walledBrandIds: [], walledByBrand: {} };
-  }
+  if (!Array.isArray(candidates) || candidates.length === 0) return emptyResult;
+  if (!accountId) return emptyResult; // can't evaluate the firewall
+
+  // Step 1 — pull the requesting client's competitor list.
+  const competitorsSnap = await db
+    .collection('client_competitors')
+    .where('clientId', '==', accountId)
+    .get();
+  const listedCompetitorIds = [];
+  competitorsSnap.forEach((doc) => {
+    listedCompetitorIds.push(doc.data().competitorClientId);
+  });
+  if (listedCompetitorIds.length === 0) return emptyResult;
 
   const stillInTheRunning = candidates.filter((c) => c.rejectionReason === null);
   if (stillInTheRunning.length === 0) {
-    return { walledBrandIds: [], walledByBrand: {} };
+    return { ...emptyResult, listedCompetitorIds };
   }
 
-  // 1. Read competitor list for the requesting client.
-  const competitorsSnap = await db
-    .collection('client_competitors')
-    .where('clientId', '==', requesterId)
-    .get();
-
-  const competitorIds = [];
-  competitorsSnap.forEach((doc) => {
-    const d = doc.data();
-    if (d && d.competitorClientId) competitorIds.push(d.competitorClientId);
-  });
-  if (competitorIds.length === 0) {
-    return { walledBrandIds: [], walledByBrand: {} };
-  }
-
-  // 2. For each candidate brand, check whether any competitor is
-  //    being served via an open IWO at this brand. State filter is
-  //    applied in-memory (rather than via Firestore `in` query) so
-  //    the same code runs against the unit-test stub.
-  const OPEN_IWO_STATES = new Set([
-    'ISSUED', 'ACCEPTED', 'IN_PROGRESS', 'REVISION_REQUESTED', 'DELIVERED',
-  ]);
+  // Step 3 — for each candidate brand, query their open IWOs and map
+  // each to a clientId via master_jobs lookup. Iterate sequentially;
+  // brand counts are small and parallel reads complicate the stub.
   const walledBrandIds = [];
-  const walledByBrand = {};      // brandId → competitorId that caused the wall
+  const walledCompetitorByBrand = {};
 
-  for (const c of stillInTheRunning) {
-    let walledByCompetitor = null;
+  const competitorIdSet = new Set(listedCompetitorIds);
 
+  for (const candidate of stillInTheRunning) {
+    // OPEN IWOs for this brand. We approximate "currently serving"
+    // by IWOs not in CLOSED / CANCELLED / REJECTED state. Since
+    // Firestore '!=' / 'not-in' is limited, we fetch by brand and
+    // filter in memory — counts are small.
     const iwoSnap = await db
       .collection('internal_work_orders')
-      .where('subsidiaryOrgId', '==', c.brandId)
+      .where('subsidiaryOrgId', '==', candidate.brandId)
       .get();
 
-    if (!iwoSnap || iwoSnap.size === 0) continue;
-
-    // De-dupe masterJobId reads (multiple IWOs often share an mj),
-    // and filter to OPEN states in-memory.
-    const seenMjs = new Set();
+    const conflictingCompetitors = new Set();
     for (const iwoDoc of iwoSnap.docs) {
       const iwo = iwoDoc.data();
-      if (!iwo || !iwo.masterJobId) continue;
-      if (!OPEN_IWO_STATES.has(iwo.state)) continue;
-      if (seenMjs.has(iwo.masterJobId)) continue;
-      seenMjs.add(iwo.masterJobId);
-
-      const mjSnap = await db.doc(`master_jobs/${iwo.masterJobId}`).get();
+      const state = iwo.state;
+      if (state === 'CLOSED' || state === 'CANCELLED' || state === 'REJECTED') continue;
+      const mjId = iwo.masterJobId;
+      if (!mjId) continue;
+      const mjSnap = await db.doc(`master_jobs/${mjId}`).get();
       if (!mjSnap.exists) continue;
-      const mj = mjSnap.data();
-      if (!mj || !mj.clientId) continue;
-
-      if (competitorIds.includes(mj.clientId)) {
-        walledByCompetitor = mj.clientId;
-        break;
+      const servedClientId = mjSnap.data().clientId;
+      if (!servedClientId) continue;
+      if (competitorIdSet.has(servedClientId)) {
+        conflictingCompetitors.add(servedClientId);
       }
     }
 
-    if (walledByCompetitor) {
-      c.conflicted = true;
-      c.rejectionReason = 'CONFLICTED';
-      walledBrandIds.push(c.brandId);
-      walledByBrand[c.brandId] = walledByCompetitor;
+    if (conflictingCompetitors.size > 0) {
+      candidate.conflicted = true;
+      candidate.rejectionReason = 'CONFLICTED';
+      walledBrandIds.push(candidate.brandId);
+      walledCompetitorByBrand[candidate.brandId] = Array.from(conflictingCompetitors);
     }
   }
 
-  // 3. Emit risk event if any brand was walled.
+  // Step 4 — emit the risk event if any brand was walled. Even one
+  // exclusion is enough signal for Conflict Sentinel + reporting.
   if (walledBrandIds.length > 0 && masterJobId) {
     try {
       const { appendDomainEvent } = require('../platform/outbox');
       const payload = {
-        requestedClientId: requesterId,
-        listedCompetitorIds: competitorIds,
+        requestedClientId: accountId,
+        listedCompetitorIds,
         walledBrandIds,
-        walledCompetitorByBrand: walledByBrand,
+        walledCompetitorByBrand,
         masterJobId,
       };
       if (tx) {
         appendDomainEvent({
-          tx, db,
+          tx,
+          db,
           eventType: 'ConflictExclusivityRisk',
           aggregateType: 'MasterJob',
           aggregateId: masterJobId,
@@ -150,7 +137,8 @@ async function excludeConflicted({
       } else {
         await db.runTransaction(async (innerTx) => {
           appendDomainEvent({
-            tx: innerTx, db,
+            tx: innerTx,
+            db,
             eventType: 'ConflictExclusivityRisk',
             aggregateType: 'MasterJob',
             aggregateId: masterJobId,
@@ -159,14 +147,18 @@ async function excludeConflicted({
         });
       }
     } catch (err) {
-      // Outbox failure must not block routing — the wall is still
-      // applied (mutation above already ran). Log + continue.
+      // Outbox failure must not block routing — the exclusion is
+      // already applied; log and continue.
       // eslint-disable-next-line no-console
       console.error('excludeConflicted: outbox emit failed', err);
     }
   }
 
-  return { walledBrandIds, walledByBrand };
+  return {
+    walledBrandIds,
+    listedCompetitorIds,
+    walledCompetitorByBrand,
+  };
 }
 
 module.exports = { excludeConflicted };

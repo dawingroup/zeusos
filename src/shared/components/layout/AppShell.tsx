@@ -200,7 +200,28 @@ export function AppShell({ children }: AppShellProps) {
 
   const mainNavItems = useMemo(() => {
     const subId = (currentSubsidiary?.id ?? 'zeus-group') as SubsidiaryId;
-    const orgKind = isParentOrgPrincipal && subId === 'zeus-group' ? 'PARENT' : 'SUBSIDIARY';
+
+    // ADR-2026-05-25 §3.2 step 5 — three org-kind branches:
+    //  • PARENT          parent-org admin on `zeus-group`
+    //  • SUBSIDIARY_SELLING  parent-org admin viewing a sub-brand, OR
+    //                       a brand-direct AD on their own brand
+    //                       (their homeOrgId == subId AND they have a
+    //                       sales-bearing globalRole). Sidebar adds
+    //                       brand-scoped commercial entries.
+    //  • SUBSIDIARY     plain delivery user on a sub-brand (delivery-only sidebar)
+    let orgKind: 'PARENT' | 'SUBSIDIARY' | 'SUBSIDIARY_SELLING';
+    if (isParentOrgPrincipal && subId === 'zeus-group') {
+      orgKind = 'PARENT';
+    } else if (subId !== 'zeus-group') {
+      const userHome = (dawinUser as { homeOrgId?: string } | null)?.homeOrgId;
+      const isBrandSeller =
+        !!dawinUser &&
+        ['admin', 'owner', 'manager'].includes(dawinUser.globalRole) &&
+        (userHome === subId || isParentOrgPrincipal);
+      orgKind = isBrandSeller ? 'SUBSIDIARY_SELLING' : 'SUBSIDIARY';
+    } else {
+      orgKind = 'SUBSIDIARY';
+    }
 
     const resolved = resolveNav(orgKind, subId);
     const adapted = resolved.map((item) => adaptManifestToLegacyNavItem(item, LEGACY_LOOKUP));

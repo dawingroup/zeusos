@@ -1,64 +1,65 @@
 /**
- * Conflict Firewall — Phase 6.C v2 (closes ADR-0001 Q4 + v1.1 C3).
+ * Client Competitor — Phase 6.UI.C rewrite per
+ * [ADR-2026-05-25 §2.Q4](../../../../docs/ADR-2026-05-25-commercial-model.md).
  *
- * SUPERSEDES the Category / ClientCategory / ConflictWall model from
- * the v1 conflict firewall. Per ADR-0001 §Q4, Zeus leadership chose
- * **named-competitor lists per client** over category exclusivity:
- * each client carries an explicit list of competitor clients they
- * do not want sharing a brand. Most flexible, most accurate, requires
- * upfront list maintenance at intake.
+ * Replaces the retired Phase 6.C category-based conflict_walls model.
+ * Each client carries an explicit, contract-derived list of competitors
+ * the consortium has agreed not to serve simultaneously. Routing
+ * excludes any brand currently serving a listed competitor.
  *
- * One collection, one edge type:
+ * Collection: `client_competitors/{compositeKey}`
  *
- *   client_competitors/{compositeKey}
- *       compositeKey = `${clientId}__${competitorClientId}`
- *
- * Semantics:
- *   - Each row says "client X considers client Y a competitor".
- *   - Asymmetric. Adding (pepsi → coke) does NOT auto-create
- *     (coke → pepsi). In practice the AM enters both at intake.
- *   - At routing time, `excludeConflicted` reads the requesting
- *     client's competitor list, then for each competitor checks
- *     which brand(s) are serving them (via open master_jobs /
- *     IWOs) and excludes those brands from the candidate pool.
- *
- * Phase 6.C v2 ships the EDGE collection + RBAC + new
- * excludeConflicted impl + tests. The full intake UI for managing
- * competitor lists lands in Phase 6.UI.D. The brand-anchor refinement
- * (use Client.commercialOwnerOrgId once it exists from the Q2 PR)
- * lands as a tightening pass post-Q2.
+ *   compositeKey: `${clientId}__${competitorClientId}` — double-underscore
+ *   delimiter so either side can contain underscores. Asymmetric by
+ *   design: A→B doesn't imply B→A. The AM signing the Pepsi MSA adds
+ *   Coca-Cola to Pepsi's competitor list; doesn't automatically add
+ *   Pepsi to Coca-Cola's (Coca-Cola's MSA, if/when it exists, would
+ *   write its own row).
  */
 
-import { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore';
 
 /**
- * Composite key — `${clientId}__${competitorClientId}`.
- * Double-underscore delimiter so either id can contain underscores.
+ * Composite-key format: `${clientId}__${competitorClientId}`.
  */
 export type ClientCompetitorId = string;
 
+/**
+ * Why this row exists — drives reporting + future contract-audit
+ * tooling. `MSA` / `SOW` rows are auto-created when a contract is
+ * signed with a competitor-clause; `MANUAL` is human-added.
+ */
+export type ClientCompetitorSource = 'MSA' | 'SOW' | 'MANUAL';
+
 export interface ClientCompetitor {
+  /** `${clientId}__${competitorClientId}`. */
   id: ClientCompetitorId;
 
-  /** Client declaring the competitor relationship. */
+  /** The client this row "belongs" to — the one whose contract forbids
+   *  the agency from serving the competitor. */
   clientId: string;
 
-  /** The other client they don't want sharing a brand. */
+  /** The competitor named in the client's exclusivity clause. Foreign
+   *  key into `clients/{competitorClientId}`; the row is informational
+   *  if the competitor isn't itself a Zeus client (firewall still
+   *  consults `internal_work_orders` keyed by clientId so an external
+   *  competitor with no IWOs is a no-op). */
   competitorClientId: string;
 
-  /**
-   * Optional free-text justification — useful when the AM needs to
-   * remember the reasoning years later (e.g. "Diageo NDA §4.2 names
-   * Bell + Tusker as off-limits").
-   */
+  /** Why this row exists. `MANUAL` is the default for AM-added rows. */
+  source: ClientCompetitorSource;
+
+  /** Back-reference for traceability. `MSA` source → MSA id, `SOW`
+   *  source → SOW id, `MANUAL` → `'manual'`. */
+  sourceAggregateId: string;
+
+  /** Free-text — typically the literal contract clause language so
+   *  reviewers can audit "why does Pepsi block us from Coca-Cola?". */
   notes?: string;
 
-  /**
-   * Optional pin to the engagement context the competitor was
-   * declared in. Lets reporting answer "which client added this
-   * exclusion clause?" without re-reading every contract.
-   */
-  declaredAtMasterJobId?: string;
+  /** Optional sunset. When set, the firewall ignores this row past
+   *  the date; useful for fixed-term retainer exclusivities. */
+  effectiveUntil?: Timestamp | string;
 
   // Audit
   addedBy: string;
@@ -72,30 +73,32 @@ export interface ClientCompetitor {
 export interface AddClientCompetitorInput {
   clientId: string;
   competitorClientId: string;
+  source?: ClientCompetitorSource;     // defaults 'MANUAL'
+  sourceAggregateId?: string;          // defaults 'manual'
   notes?: string;
-  declaredAtMasterJobId?: string;
+  effectiveUntil?: Timestamp | string;
 }
 
 export interface RemoveClientCompetitorInput {
   clientId: string;
   competitorClientId: string;
-  /** Reason — recorded on the audit log when the row is deleted. */
-  reason?: string;
 }
 
 // ============================================
-// Pure helpers
+// Type guards
 // ============================================
-
-export function buildClientCompetitorId(
-  clientId: string,
-  competitorClientId: string,
-): ClientCompetitorId {
-  return `${clientId}__${competitorClientId}`;
-}
 
 export function isClientCompetitor(v: unknown): v is ClientCompetitor {
   return !!v && typeof v === 'object' &&
     typeof (v as ClientCompetitor).clientId === 'string' &&
-    typeof (v as ClientCompetitor).competitorClientId === 'string';
+    typeof (v as ClientCompetitor).competitorClientId === 'string' &&
+    typeof (v as ClientCompetitor).source === 'string';
+}
+
+/**
+ * Build the composite id used as the Firestore doc id and in lookups.
+ * Same as the server-side helper in `functions/src/conflict-firewall/admin.js`.
+ */
+export function clientCompetitorDocId(clientId: string, competitorClientId: string): ClientCompetitorId {
+  return `${clientId}__${competitorClientId}`;
 }
