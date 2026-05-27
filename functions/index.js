@@ -185,30 +185,25 @@ exports.generateEmbeddings = generateEmbeddings;
 exports.semanticSearch = semanticSearch;
 exports.indexCollection = indexCollection;
 
-// Cash Flow Optimizer Functions
-const { dailyCashFlowOptimizer } = require('./src/finance/dailyCashFlowOptimizer');
-const { triggerOptimizer, generateSpendPlan, rescoreExpenditures } = require('./src/finance/optimizerCallable');
-const { crisisAlertOnSpendPlan, statutoryDeadlineReminder } = require('./src/finance/optimizerNotifications');
-const {
-  autoAllocateSavingsOnInflow,
-  reingestOnQBOSync,
-  rescoreOnBalanceChange,
-  rescoreOnSpendPlanApproval,
-  detectLiabilitiesFromQBO,
-  updateClientPaymentProfile,
-} = require('./src/triggers/cashFlowTriggers');
-exports.dailyCashFlowOptimizer = dailyCashFlowOptimizer;
-exports.triggerOptimizer = triggerOptimizer;
-exports.generateSpendPlan = generateSpendPlan;
-exports.rescoreExpenditures = rescoreExpenditures;
-exports.crisisAlertOnSpendPlan = crisisAlertOnSpendPlan;
-exports.statutoryDeadlineReminder = statutoryDeadlineReminder;
-exports.autoAllocateSavingsOnInflow = autoAllocateSavingsOnInflow;
-exports.reingestOnQBOSync = reingestOnQBOSync;
-exports.rescoreOnBalanceChange = rescoreOnBalanceChange;
-exports.rescoreOnSpendPlanApproval = rescoreOnSpendPlanApproval;
-exports.detectLiabilitiesFromQBO = detectLiabilitiesFromQBO;
-exports.updateClientPaymentProfile = updateClientPaymentProfile;
+// Cash Flow Optimizer — fully removed in Phase 1.E sweep.
+// DawinOS-era spend-plan + crisis-alert + statutory-deadline + savings-
+// allocation + QBO re-ingest + balance-change rescoring + spend-plan
+// approval rescoring + liability detection from QBO + client payment
+// profile updates. ZeusOS replaces this with the Phase 4.1
+// procurement/finance handshake (talent + media supplier invoices →
+// PO + JE via outbox consumers in functions/src/finance/) against an
+// accounting provider TBD. QBO is disabled per plan §3 anyway.
+// Removed:
+//   finance/dailyCashFlowOptimizer (dailyCashFlowOptimizer)
+//   finance/optimizerCallable (triggerOptimizer, generateSpendPlan,
+//                              rescoreExpenditures)
+//   finance/optimizerNotifications (crisisAlertOnSpendPlan,
+//                                   statutoryDeadlineReminder)
+//   triggers/cashFlowTriggers (autoAllocateSavingsOnInflow,
+//     reingestOnQBOSync, rescoreOnBalanceChange,
+//     rescoreOnSpendPlanApproval, detectLiabilitiesFromQBO,
+//     updateClientPaymentProfile)
+// Same trigger-kind-drift deploy failure pattern as PR #48/#103/#104.
 
 // Client Portal admin — invite a portal user by email (staff-only callable)
 const { inviteClientPortalUser } = require('./src/admin/inviteClientPortalUser');
