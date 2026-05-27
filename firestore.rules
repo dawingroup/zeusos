@@ -4007,6 +4007,22 @@ service cloud.firestore {
     }
 
     // ════════════════════════════════════════════════════════════════
+    // Phase 4.1 — Finance config (chart of accounts, etc.)
+    //
+    // `finance_config/chart_of_accounts` carries the debit/credit
+    // account mapping the JE consumer (postJournalEntryOnInvoicePaid)
+    // reads on every invocation. Letting finance amend account codes
+    // without a CFn deploy is the whole point of the doc; writes are
+    // gated to parent-org admins only. Subsidiaries cannot read —
+    // their org's GL never sees these codes directly; they call the
+    // posted JE via the consumer, not the config.
+    // ════════════════════════════════════════════════════════════════
+    match /finance_config/{configId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if isParentOrgPrincipal();
+    }
+
+    // ════════════════════════════════════════════════════════════════
     // Phase 4 — CRM (sales pipeline, parent-org only)
     //
     // crm_leads/{leadId} — lead/prospect tracker. Subsidiaries cannot

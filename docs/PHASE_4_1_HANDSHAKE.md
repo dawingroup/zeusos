@@ -42,11 +42,14 @@ pattern is preserved.
 | `PurchaseOrderRaised` | the two consumers above | `postJournalEntryOnInvoicePaid` | `journal_entries/je_${kind}_${poId}` |
 | `JournalEntryPosted` | `postJournalEntryOnInvoicePaid` | (audit log + dashboards) | terminal |
 
-## Status — COMPLETE (2026-05-23)
+## Status — COMPLETE
 
-All scaffolds have been replaced with working implementations.
-Acceptance gate verified by `npm test` in `functions/` — 88 tests
-pass, including 3 dedicated to this handshake.
+Consumer bodies complete since 2026-05-23; the remaining doc-only test
+scaffolds + the hardcoded chart-of-accounts were closed out 2026-05-27.
+Acceptance gate verified by `npm test` in `functions/` — 277 tests
+pass, including 21 dedicated to this handshake (6 talent + 6 media +
+9 finance covering happy path, replay-idempotency, malformed payload,
+source-deleted, unknown-kind, CoA override, and CoA fallback).
 
 ### ✅ 1. Upstream emitters wired
 - [src/modules/talent/services/talent-invoice.service.ts:69-114](../src/modules/talent/services/talent-invoice.service.ts) — `approveTalentInvoice` batch-writes the status update + `TalentInvoiceApproved` event in one Firestore commit.
@@ -66,8 +69,17 @@ pass, including 3 dedicated to this handshake.
 - [functions/\_\_tests\_\_/finance/postJournalEntryOnInvoicePaid.test.js](../functions/__tests__/finance/postJournalEntryOnInvoicePaid.test.js) — debits/credits balance check, unknown-kind guard, PO `postedToGL` flip
 - ⏳ Playwright lifecycle spec extending the Phase 3 e2e (`approve talent invoice → assert PO + JE land within 5s`) — deferred to Phase 3.H test-id backfill (the spec needs stable selectors on the talent invoice approval page).
 
-### ✅ 5. Chart of accounts
-Inlined in `functions/src/finance/postJournalEntryOnInvoicePaid.js:35-48`:
+### ✅ 5. Chart of accounts — Firestore-driven
+
+Source of truth: `finance_config/chart_of_accounts` (Firestore). The
+loader (`functions/src/finance/chartOfAccounts.js#loadChartOfAccounts`)
+reads the doc on every JE-posting invocation and merges the entries
+with compiled-in defaults at the kind level. A missing or malformed
+override for a single kind falls back to the default for that kind;
+a missing doc falls back entirely to defaults. This means the consumer
+is always safe to invoke even before finance has seeded the doc.
+
+Default mapping (also the fallback):
 
 | Source kind | Debit | Credit |
 |---|---|---|
@@ -75,9 +87,27 @@ Inlined in `functions/src/finance/postJournalEntryOnInvoicePaid.js:35-48`:
 | `MEDIA_SUPPLIER` | `5020` Media Spend — Agencies & Suppliers | `2051` Accounts Payable — Media |
 | `CLIENT_REVENUE_RECOGNISED` | `1200` Accounts Receivable — Clients | `4000` Service Revenue — Agencies |
 
-This is a code-level mapping for Phase 4.1. Phase 5.F (go-live) should
-migrate it to a `finance_config/chart_of_accounts` Firestore doc so
-the finance team can amend codes without a deploy.
+Doc shape:
+
+```jsonc
+// /finance_config/chart_of_accounts
+{
+  "version": 1,
+  "updatedAt": "<serverTimestamp>",
+  "updatedByUserId": "u_...",
+  "entries": {
+    "TALENT_FREELANCER": {
+      "debit":  { "accountCode": "5010", "accountName": "Contractor Fees" },
+      "credit": { "accountCode": "2050", "accountName": "AP - Contractors" }
+    }
+    // …add more kinds here as new GL-posting sources land
+  }
+}
+```
+
+Rules: [`firestore.rules`](../firestore.rules) gates `finance_config/{configId}`
+reads to parent-org admins (subsidiaries can't see GL codes) and writes
+to parent-org principals only.
 
 ## Functions barrel
 
