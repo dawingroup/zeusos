@@ -62,11 +62,31 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 window.scrollTo = vi.fn() as any;
 
 // Mock Firebase
-vi.mock('firebase/app', () => ({
-  initializeApp: vi.fn(() => ({})),
-  getApps: vi.fn(() => []),
-  getApp: vi.fn(() => ({})),
-}));
+vi.mock('firebase/app', () => {
+  // Phase 6.UI tests check `err instanceof FirebaseError` in their
+  // routeBrandFn / IWO error paths; without exporting the class here
+  // those `instanceof` checks throw on the missing symbol and the
+  // catch-block silently bails. A minimal stub class is sufficient —
+  // tests build their own errors with `new Error('…')` or
+  // `new FirebaseError('…', '…')`. Mirrors the parallel mock in
+  // `src/testing/setup.ts` (used by the root `vitest.config.ts`); CI's
+  // `test:unit` script uses this config + setup pair instead.
+  class FirebaseError extends Error {
+    code: string;
+    customData?: Record<string, unknown>;
+    constructor(code: string, message: string) {
+      super(message);
+      this.name = 'FirebaseError';
+      this.code = code;
+    }
+  }
+  return {
+    initializeApp: vi.fn(() => ({})),
+    getApps: vi.fn(() => []),
+    getApp: vi.fn(() => ({})),
+    FirebaseError,
+  };
+});
 
 vi.mock('firebase/auth', () => {
   const GoogleAuthProvider = vi.fn(() => ({ addScope: vi.fn() }));
