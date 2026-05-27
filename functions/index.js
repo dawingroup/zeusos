@@ -169,28 +169,17 @@ exports.draftStorefrontContent = draftStorefrontContent;
 // onSalesOrderReleased, staleSalesOrderCheck, autoDetectRisks. Same
 // trigger-kind-drift pattern as PR #103/#104.
 
-// BigQuery Operational Analytics Sync (Phase 1.E: removed onAdvisoryCustomerWritten +
-// onAdvisorySupplierWritten — advisory subsidiary stripped in PR #20)
-const {
-  onInventoryItemWritten,
-  onStockLevelWritten,
-  onSalesOrderWritten,
-  onProjectWritten,
-  onMatflowProjectWritten,
-  onCustomerWritten,
-  onSupplierWritten,
-  onLegacySupplierWritten,
-  backfillOperationalBigQuery,
-} = require('./src/intelligence/operationalBigQuerySync');
-exports.onInventoryItemWritten = onInventoryItemWritten;
-exports.onStockLevelWritten = onStockLevelWritten;
-exports.onSalesOrderWritten = onSalesOrderWritten;
-exports.onProjectWritten = onProjectWritten;
-exports.onMatflowProjectWritten = onMatflowProjectWritten;
-exports.onCustomerWritten = onCustomerWritten;
-exports.onSupplierWritten = onSupplierWritten;
-exports.onLegacySupplierWritten = onLegacySupplierWritten;
-exports.backfillOperationalBigQuery = backfillOperationalBigQuery;
+// BigQuery Operational Analytics Sync — fully removed in Phase 1.E sweep.
+// DawinOS construction-era analytics sync (inventory, stock levels, sales
+// orders, design projects, matflow projects, customers, suppliers, legacy
+// suppliers). All source collections are stripped in ZeusOS, so the
+// triggers fire on nothing. BigQuery for ZeusOS will be re-introduced in
+// Phase 5.B (Executive Dashboard rebuild) against the new commercial-
+// gravity collections (master_jobs, quotes, client_invoices, IWOs).
+// Removed: onInventoryItemWritten, onStockLevelWritten,
+// onSalesOrderWritten, onProjectWritten, onMatflowProjectWritten,
+// onCustomerWritten, onSupplierWritten, onLegacySupplierWritten,
+// backfillOperationalBigQuery. Same trigger-kind-drift pattern.
 
 exports.generateStrategyReport = generateStrategyReport;
 exports.strategyResearch = strategyResearch;
