@@ -81,6 +81,17 @@ const DOMAIN_EVENT_TYPES = new Set([
   // walledCompetitorByBrand: Record<brandId, competitorClientId[]>,
   // masterJobId) — enough to reconstruct why routing got tight.
   'ConflictExclusivityRisk',
+  // Phase 6.D — ECD approval ladder (Addendum v1.1 §7 / change C5).
+  // The 6-rung internal-acceptance chain that gates DELIVERED →
+  // ACCEPTED_INTERNALLY on every IWO. Each event carries the IWO id,
+  // the rung being acted on, and (for reject) structured notes.
+  // Consumed by reporting (cycle-time + rejection-loop hotspots) and
+  // ECD Cycle-Time Watcher (ZA-003, 6.F). InternalApprovalGranted is
+  // the terminal event — only after it fires can the IWO move to
+  // ACCEPTED_INTERNALLY and unlock client presentation / IC invoice.
+  'ApprovalRungAdvanced',
+  'ApprovalRungRejected',
+  'InternalApprovalGranted',
 ]);
 
 /**

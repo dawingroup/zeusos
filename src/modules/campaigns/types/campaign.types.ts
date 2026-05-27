@@ -90,6 +90,67 @@ export interface Brief {
 
   signOffByUserId?: string;
   signedOffAt?: Timestamp | string;
+
+  // ──────────────────────────────────────────────────────────────────
+  // Phase 6.D — Co-authored brief (Addendum v1.1 §7.3 / refinement C6)
+  //
+  // "The profile's Campaign Proposal Stage has the client and agency
+  // co-author the brief, with agency input and references."
+  //
+  // The handoff packet's brief field records authorship/contribution
+  // and the 24h-document-before-verbal rule.
+  // ──────────────────────────────────────────────────────────────────
+
+  /**
+   * When the documented brief was delivered (the 24h-doc-before-verbal
+   * anchor). Set by the AM the moment the brief doc lands in the file
+   * share / Drive / asset library.
+   */
+  documentDeliveredAt?: Timestamp | string;
+
+  /**
+   * When the verbal briefing happened (the agency-call after the doc).
+   * Per profile §2.3 Tier 1 / 2 expects a meeting / call; Tier 3 may
+   * skip. Validated against `documentDeliveredAt` to enforce
+   * "≥ 24h gap" — see `validateBriefingCadence()` below.
+   */
+  verbalBriefingAt?: Timestamp | string;
+
+  /**
+   * Append-only list of who contributed what to the brief. Client +
+   * agency both appear here in the Campaign Proposal Stage. Empty
+   * array means single-author (legacy pre-6.D briefs).
+   */
+  authorContributions?: BriefAuthorContribution[];
+}
+
+/**
+ * One contribution to a co-authored brief. Both `client` and `agency`
+ * principals are typed so reporting can answer "what proportion of our
+ * briefs are genuinely co-authored vs client-only?".
+ */
+export interface BriefAuthorContribution {
+  /** Stable id for the contribution row — ULID. */
+  id: string;
+
+  /** Who's contributing. `principalKind` distinguishes the side. */
+  principalKind: 'client' | 'agency';
+
+  /** Free-text identifier — userId for staff, contactId or name for client side. */
+  principalRef: string;
+
+  /** What role the contributor played at the brief table. Free-text but
+   *  conventional values: 'creative_lead', 'strategy_lead', 'account_lead',
+   *  'client_lead', 'subject_matter_expert'. */
+  role: string;
+
+  /** 1-2 sentence summary of the contribution itself. */
+  contributionSummary: string;
+
+  /** Optional references — URLs to inspiration, brand assets, prior work. */
+  references?: string[];
+
+  contributedAt: Timestamp | string;
 }
 
 export interface BriefKPI {

@@ -20,6 +20,7 @@ const { ALLOWED_ORIGINS } = require('../config/cors');
 const { assertParentOrgPrincipal } = require('./lib/auth');
 const { withIdempotency, toHttpsError } = require('../platform/idempotency');
 const { nextState } = require('./lib/iwo-state-machine');
+const { isApprovalGranted } = require('./services/approval-ladder.service');
 
 async function runAcceptInternal({ db, auth, data }) {
     const { uid } = await assertParentOrgPrincipal(auth);
@@ -53,6 +54,25 @@ async function runAcceptInternal({ db, auth, data }) {
               'failed-precondition',
               `acceptInternal blocked: ${requiredUnsigned.length} required acceptance criteria not yet signed.`,
               { unsignedIds: requiredUnsigned.map((c) => c.id) },
+            );
+          }
+
+          // Phase 6.D: ECD approval ladder must be GRANTED before
+          // internal acceptance can fire (Addendum v1.1 §7 / change C5).
+          // IWOs initialized pre-6.D may not have an approvalChain yet —
+          // skip the gate in that case so legacy flows keep working
+          // during rollout. The acceptance-criteria check above is the
+          // pre-6.D gate; it still runs for both paths.
+          if (iwo.approvalChain && !isApprovalGranted(iwo.approvalChain)) {
+            throw new HttpsError(
+              'failed-precondition',
+              `acceptInternal blocked: ECD approval ladder not yet granted ` +
+              `(currentRung = ${iwo.approvalChain.currentRung}). ` +
+              `Advance the ladder to the terminal rung before accepting internally.`,
+              {
+                currentRung: iwo.approvalChain.currentRung,
+                ladder: iwo.approvalChain.ladder,
+              },
             );
           }
 
