@@ -189,6 +189,9 @@ const RoleProfilesListPage  = lazyWithRetry(() => import('@/modules/hr-central/r
 const RoleProfileDetailPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleProfileDetailPage'));
 const RoleAssignmentsListPage = lazyWithRetry(() => import('@/modules/hr-central/role-profiles/pages/RoleAssignmentsListPage'));
 
+// ADR-2026-05-25 §2.Q4 — Conflict firewall breach-risks feed.
+const BreachRisksPage = lazyWithRetry(() => import('@/modules/conflict-firewall/pages/BreachRisksPage'));
+
 // Performance
 const PerformanceLayout = lazyWithRetry(() => import('@/modules/hr-central/performance/components/PerformanceLayout'));
 const GoalListPage = lazyWithRetry(() => import('@/pages/performance/GoalListPage'));
@@ -479,11 +482,15 @@ export const router = createBrowserRouter([
         ],
       },
 
-      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/categories" replace /> },
-      { path: 'conflict-firewall/categories',      element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Categories" shipsIn="Phase 6.UI.C (PR 3)" description="Category registry that drives the conflict-exclusivity walls." /></PageWrapper> },
-      { path: 'conflict-firewall/client-tags',     element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Client Tags" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
-      { path: 'conflict-firewall/walls',           element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Walls" shipsIn="Phase 6.UI.C (PR 3)" /></PageWrapper> },
-      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ComingSoonPage title="Conflict Firewall · Breach Risks" shipsIn="Phase 6.UI.C (PR 3)" description="Consumes ConflictExclusivityRisk events from domain_events." /></PageWrapper> },
+      // ADR-2026-05-25 §2.Q4 — Conflict firewall on named-competitor
+      // model. Per-client list lives on ClientDetailPage (composed via
+      // `CompetitorListPanel`); the firewall has no separate Category
+      // surface anymore (categories survive as a reporting overlay).
+      { path: 'conflict-firewall',                 element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/categories',      element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/client-tags',     element: <Navigate to="/clients" replace /> },
+      { path: 'conflict-firewall/walls',           element: <Navigate to="/conflict-firewall/breach-risks" replace /> },
+      { path: 'conflict-firewall/breach-risks',    element: <PageWrapper><ParentOrgGuard><BreachRisksPage /></ParentOrgGuard></PageWrapper> },
 
       { path: 'delivery/ecd-review',     element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="ECD Review" shipsIn="Phase 6.UI.D.2 (PR 4)" description="Approval-ladder rungs awaiting your action — Designer through ECD." /></SubsidiaryDeliveryGuard></PageWrapper> },
       { path: 'delivery/active',         element: <PageWrapper><SubsidiaryDeliveryGuard><ComingSoonPage title="Active Work" shipsIn="Phase 6.UI.D.2 (PR 4)" /></SubsidiaryDeliveryGuard></PageWrapper> },

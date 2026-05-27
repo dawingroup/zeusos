@@ -72,6 +72,17 @@ export interface EngineConfig {
   overdueEscalation: OverdueEscalationThresholds;
   reminderCadence: ReminderCadence;
 
+  /**
+   * Default inter-company transfer-pricing markup percentage applied
+   * when a brand receives work from another brand. Per
+   * [ADR-2026-05-25 §2.Q3](../../../../../docs/ADR-2026-05-25-commercial-model.md):
+   * cost-plus, default 15%, per-brand override on
+   * `organizations.icMarkupPct` for outliers. Whole-percentage point
+   * (`15` not `0.15`). Optional — falls back to a hard-coded 15 in
+   * `resolveIcMarkupPct` if unset.
+   */
+  icMarkupPctDefault?: number;
+
   updatedBy: string;
   updatedAt: Timestamp;
 }

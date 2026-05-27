@@ -24,7 +24,7 @@ const VALID_CURRENCIES = ['UGX', 'USD', 'KES', 'EUR', 'GBP'];
 exports.upsertClient = onCall(
   { cors: ALLOWED_ORIGINS, region: 'europe-west1' },
   async (request) => {
-    const { uid } = await assertParentOrgPrincipal(request.auth);
+    const { uid, user } = await assertParentOrgPrincipal(request.auth);
     const data = request.data || {};
     const {
       id,
@@ -36,6 +36,10 @@ exports.upsertClient = onCall(
       contacts,
       relationshipManagerUserId,
       notes,
+      // ADR-2026-05-25 §2.Q2 — primaryBrandId is the home brand for this
+      // client's commercial relationship. New clients default to the
+      // caller's homeOrgId (or PARENT_ORG_ID for group AMs).
+      primaryBrandId,
     } = data;
 
     if (!name || typeof name !== 'string') {
@@ -53,9 +57,26 @@ exports.upsertClient = onCall(
     const ref = db.doc(`clients/${clientId}`);
     const snap = await ref.get();
 
+    // ADR-2026-05-25 §2.Q2 — resolve the home brand for new clients.
+    //   - Caller-supplied wins (lets group AMs hand-pick).
+    //   - Falls back to the caller's homeOrgId from their DawinUser doc.
+    //   - Final fallback is PARENT_ORG_ID (preserves pre-ADR behaviour
+    //     for backfilled clients).
+    // On UPDATE, never silently clobber an existing primaryBrandId — only
+    // change it when the caller explicitly passes a new value.
+    let resolvedPrimaryBrand = primaryBrandId;
+    if (!resolvedPrimaryBrand) {
+      if (snap.exists) {
+        resolvedPrimaryBrand = snap.data().primaryBrandId || PARENT_ORG_ID;
+      } else {
+        resolvedPrimaryBrand = (user && user.homeOrgId) || PARENT_ORG_ID;
+      }
+    }
+
     const payload = {
       id: clientId,
       parentOrgId: PARENT_ORG_ID,
+      primaryBrandId: resolvedPrimaryBrand,
       name,
       code: code || null,
       billingCurrency,
