@@ -368,41 +368,12 @@ service cloud.firestore {
     // blocks + a workstations block are removed below.
 
     // ============================================
-    // Design Studio
+    // Design Studio — match blocks removed in the further MES-rules
+    // pass. productDefinitions, designKnowledgeBase,
+    // manufacturingDataPackages, projectPDFs, configuratorAnalytics are
+    // all DawinOS Design Studio collections (stripped in Phase 1.A) with
+    // zero frontend readers.
     // ============================================
-
-    // Product Definition Documents
-    match /productDefinitions/{pddId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    // Design Knowledge Base
-    match /designKnowledgeBase/{entryId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    // Manufacturing Data Packages
-    match /manufacturingDataPackages/{mdpId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    // Project PDFs
-    match /projectPDFs/{pdfId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-    }
-
-    // Configurator Analytics
-    match /configuratorAnalytics/{eventId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-    }
 
     // ============================================
     // CRM & Sales Pipeline
@@ -3138,29 +3109,10 @@ service cloud.firestore {
     // ============================================
 
     // `manufacturingOrders` MES block (+ nested steps / quality_events;
-    // bom already removed in the Phase 1.E strip) and the `workstations`
-    // block removed in the manufacturing/inventory rules cleanup.
-    // DawinOS MES, no frontend readers. (routing_templates,
-    // productionReports, part_identifications below are left for a
-    // future MES-rules pass — not verified clear in this scope.)
-
-    match /routing_templates/{templateId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /productionReports/{reportId} {
-      allow read: if isAuthenticated();
-      allow create, update: if false; // Cloud Functions only
-    }
-
-    // Workshop Viewer — AI part identification learning store
-    match /part_identifications/{docId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update, delete: if isAdmin();
-    }
+    // bom already removed in the Phase 1.E strip), `workstations`,
+    // `routing_templates`, `productionReports`, and `part_identifications`
+    // all removed across the manufacturing/inventory + further MES-rules
+    // cleanup passes. DawinOS MES, all zero frontend readers.
 
     // Design Revisions — Workshop Viewer revision timeline
     match /designRevisions/{revisionId} {
