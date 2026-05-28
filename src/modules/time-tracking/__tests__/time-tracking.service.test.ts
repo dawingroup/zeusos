@@ -16,7 +16,9 @@ import {
   groupByUser,
   dayKey,
   formatMinutes,
+  formatMinor,
 } from '../services/time-tracking.service';
+import { __testing as userDir } from '../services/user-directory.service';
 import type { TimeEntry } from '@/modules/delivery';
 
 function entry(over: Partial<TimeEntry> = {}): TimeEntry {
@@ -140,8 +142,44 @@ describe('groupByUser', () => {
     expect(buckets.map(b => b.userId)).toEqual(['u_high', 'u_mid', 'u_low']);
   });
 
+  it('rolls up costMinor per member (Phase 5.D depth)', () => {
+    const buckets = groupByUser([
+      entry({ id: '1', userId: 'u_a', costMinor: 10_000 }),
+      entry({ id: '2', userId: 'u_a', costMinor: 5_500 }),
+      entry({ id: '3', userId: 'u_b', costMinor: 20_000 }),
+    ]);
+    expect(buckets.find(b => b.userId === 'u_a')?.totalCostMinor).toBe(15_500);
+    expect(buckets.find(b => b.userId === 'u_b')?.totalCostMinor).toBe(20_000);
+  });
+
   it('returns [] on an empty list', () => {
     expect(groupByUser([])).toEqual([]);
+  });
+});
+
+describe('formatMinor', () => {
+  it('renders minor units as CUR 0.00', () => {
+    expect(formatMinor(0)).toBe('USD 0.00');
+    expect(formatMinor(10_000)).toBe('USD 100.00');
+    expect(formatMinor(155_055, 'KES')).toBe('KES 1,550.55');
+  });
+  it('clamps negative / NaN to 0', () => {
+    expect(formatMinor(-500)).toBe('USD 0.00');
+    expect(formatMinor(Number.NaN)).toBe('USD 0.00');
+  });
+});
+
+describe('user-directory pickName precedence', () => {
+  it('prefers displayName, then name, then fullName, then email, then uid', () => {
+    expect(userDir.pickName({ displayName: 'Ada', name: 'X', fullName: 'Y', email: 'a@z' }, 'u1')).toBe('Ada');
+    expect(userDir.pickName({ name: 'Grace', fullName: 'Y', email: 'a@z' }, 'u1')).toBe('Grace');
+    expect(userDir.pickName({ fullName: 'Linus T.', email: 'a@z' }, 'u1')).toBe('Linus T.');
+    expect(userDir.pickName({ email: 'ken@zeus' }, 'u1')).toBe('ken@zeus');
+    expect(userDir.pickName({}, 'u_fallback')).toBe('u_fallback');
+    expect(userDir.pickName(undefined, 'u_missing')).toBe('u_missing');
+  });
+  it('treats a blank displayName as absent', () => {
+    expect(userDir.pickName({ displayName: '   ', name: 'Grace' }, 'u1')).toBe('Grace');
   });
 });
 
