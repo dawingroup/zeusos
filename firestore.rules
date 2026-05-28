@@ -330,41 +330,12 @@ service cloud.firestore {
     // Phase 1.A/1.C) with no remaining frontend readers. (CFn readers
     // use the Admin SDK, which bypasses rules.)
 
-    // Inventory Categories (dynamic category registry)
-    match /inventoryCategories/{slug} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAdmin();
-      allow delete: if isAdmin()
-        && resource.data.isSystem == false
-        && resource.data.itemCount == 0;
-    }
-
-    // Inventory Issues (spareparts/consumables expense flow)
-    match /inventoryIssues/{issueId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAdmin(); // only admin can retry QBO sync
-      allow delete: if false;
-    }
-
-    // Stock Adjustments
-    match /stock_adjustments/{adjustmentId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if false; // Never delete — use cancel status
-    }
-
-    // Inventory AI Agent Instructions (admin-configurable audit profiles)
-    match /inventoryAgentInstructions/{docId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-
-    // Inventory AI Audit Results (persisted last audit)
-    match /inventoryAuditResults/{docId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-    }
+    // DawinOS inventory match blocks removed in the manufacturing/
+    // inventory rules cleanup — inventoryCategories, inventoryIssues,
+    // stock_adjustments, inventoryAgentInstructions,
+    // inventoryAuditResults. All DawinOS-era (inventory module stripped
+    // in Phase 1.C) with no remaining frontend readers. (creditUsage
+    // below is retained — it tracks AI-generation credits, not inventory.)
 
     // Credit Usage (AI generation tracking)
     match /creditUsage/{subsidiaryId} {
@@ -376,31 +347,10 @@ service cloud.firestore {
     // intelligence-layer strip — DawinOS collection (Phase 1.A) with no
     // remaining frontend readers.
 
-    // Finish Attribute Definitions (dynamic attribute schemas per category)
-    match /finishAttributeDefinitions/{attrId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-
-    // Product Variants (finish + attribute combinations with stock)
-    match /productVariants/{variantId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-
-      // Stock transaction ledger (subcollection)
-      match /stockTransactions/{txnId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update, delete: if false; // Ledger entries are immutable
-      }
-
-      // Stock reservations (subcollection)
-      match /reservations/{resId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAdmin();
-      }
-    }
+    // DawinOS finishes match blocks removed in the manufacturing/
+    // inventory rules cleanup — finishAttributeDefinitions and
+    // productVariants (+ nested stockTransactions / reservations). The
+    // finishes module was stripped in Phase 1.A; no frontend readers.
 
     // Offcut Library
     match /offcuts/{offcutId} {
@@ -412,13 +362,10 @@ service cloud.firestore {
     // Manufacturing & Inventory Operations
     // ============================================
 
-    // Manufacturing Orders
-    match /manufacturingOrders/{moId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
+    // `manufacturingOrders` match block removed in the manufacturing/
+    // inventory rules cleanup (DawinOS, stripped in Phase 1.A; no
+    // frontend readers). Two further duplicate manufacturingOrders
+    // blocks + a workstations block are removed below.
 
     // ============================================
     // Design Studio
@@ -2676,30 +2623,10 @@ service cloud.firestore {
     // Manufacturing Module
     // ============================================
 
-    match /manufacturingOrders/{moId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-
-      // `bomEntries` subcollection removed in the Phase 1.E
-      // intelligence-layer strip (DawinOS BOM data, no frontend readers).
-      // The manufacturingOrders parent + its other subcollections are a
-      // separate manufacturing-rules cleanup.
-
-      // Material consumptions subcollection
-      match /materialConsumptions/{consumptionId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update, delete: if isAdmin();
-      }
-
-      // Stage transitions subcollection (immutable audit trail)
-      match /stageTransitions/{transitionId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update, delete: if false; // Immutable
-      }
-    }
+    // `manufacturingOrders` match block (+ nested materialConsumptions /
+    // stageTransitions; bomEntries already removed in the Phase 1.E
+    // strip) removed in the manufacturing/inventory rules cleanup.
+    // DawinOS MES, no frontend readers.
 
     match /purchaseOrders/{poId} {
       allow read: if isAuthenticated();
@@ -3210,35 +3137,12 @@ service cloud.firestore {
     // Manufacturing MES Collections
     // ============================================
 
-    match /manufacturingOrders/{orderId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-
-      // Steps subcollection
-      match /steps/{stepId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAdmin();
-      }
-
-      // `bom` subcollection removed in the Phase 1.E intelligence-layer
-      // strip (DawinOS BOM data, no frontend readers).
-
-      // Quality events subcollection
-      match /quality_events/{eventId} {
-        allow read: if isAuthenticated();
-        allow create: if isAuthenticated();
-        allow update: if isAdmin();
-        allow delete: if isAdmin();
-      }
-    }
-
-    match /workstations/{workstationId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
+    // `manufacturingOrders` MES block (+ nested steps / quality_events;
+    // bom already removed in the Phase 1.E strip) and the `workstations`
+    // block removed in the manufacturing/inventory rules cleanup.
+    // DawinOS MES, no frontend readers. (routing_templates,
+    // productionReports, part_identifications below are left for a
+    // future MES-rules pass — not verified clear in this scope.)
 
     match /routing_templates/{templateId} {
       allow read: if isAuthenticated();
