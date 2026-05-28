@@ -113,6 +113,9 @@ export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
   // Phase 5.D — cross-IWO "My Time This Week" read view. Posting still
   // happens from /delivery/iwo/:id; this is the staff-side visibility.
   { moduleId: 'my-time',        label: 'My Time',     icon: 'Clock',          routePath: '/time',                subsidiaryOnly: true },
+  // Phase 5.D depth — brand-scoped Team Time (TeamTimePage adapts to the
+  // subsidiary's own brand; rules enforce the scope).
+  { moduleId: 'team-time',      label: 'Team Time',   icon: 'Users',          routePath: '/time/team',           subsidiaryOnly: true },
 ];
 
 export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [

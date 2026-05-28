@@ -3288,8 +3288,20 @@ service cloud.firestore {
       // the postTimeEntry CFn (3.B). Reads: parent + the receiving sub
       // (cost_minor on the entry is internal, but the receiving sub
       // genuinely needs it to render their burn meter).
+      //
+      // The third clause matches the denormalised `subsidiaryOrgId` field
+      // directly (no get()), which lets a subsidiary lead run the
+      // brand-scoped team-time COLLECTION-GROUP query (Phase 5.D depth)
+      // without tripping the 20-access-call limit that a per-doc get()
+      // would hit on a large result set. The get()-based clause is kept
+      // for the per-IWO subcollection reads (burn meter etc.) that
+      // don't carry the denormalised field on legacy docs.
       match /time_entries/{teId} {
         allow read: if isParentOrgPrincipal()
+          || (
+            isSubsidiaryOrgPrincipal()
+            && resource.data.subsidiaryOrgId == callerHomeOrgId()
+          )
           || (
             isSubsidiaryOrgPrincipal()
             && get(/databases/$(database)/documents/internal_work_orders/$(iwoId)).data.subsidiaryOrgId == callerHomeOrgId()

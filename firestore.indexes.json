@@ -5635,6 +5635,20 @@
       ]
     },
     {
+      "collectionGroup": "time_entries",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "subsidiaryOrgId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "entryDate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "master_jobs",
       "queryScope": "COLLECTION",
       "fields": [

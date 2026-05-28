@@ -1,36 +1,38 @@
 /* eslint-disable design-system/no-inline-style-literals -- TODO(U.4): Phase 5.D scaffolding mirrors MyTimeThisWeekPage; full Tailwind/token refactor scheduled with the U.4 sweep. */
 /**
- * TeamTimePage — `/time/team` (parent-org).
+ * TeamTimePage — `/time/team`.
  *
- * The manager-facing counterpart to `/time` (MyTimeThisWeekPage, which
- * is each individual's own view). This page shows EVERY time entry
- * logged across the org in the selected week, grouped by person, so
- * Zeus Group leadership can see where effort is going week-to-week.
+ * The manager-facing counterpart to `/time` (each individual's own
+ * view). Shows time entries logged in the selected week grouped by
+ * person, with hours + cost roll-ups.
  *
- * Scope (MVP):
- *   • Parent-org only. The `time_entries` read rule only lets parent-org
- *     principals see across brands; a subsidiary principal's
- *     collection-group query would be rejected wholesale. The route is
- *     wrapped in `ParentOrgGuard`; this page additionally surfaces a
- *     permission-denied error in its alert region as a backstop.
- *   • Grouped by `userId`. The page shows the raw uid — a follow-up can
- *     join against the employee directory to render display names once
- *     the uid→employee map is wired (it's a SystemAccess.userId lookup
- *     today, not a direct field on Employee).
+ * Two scopes, resolved from the viewer's org context:
+ *   • Parent-org principal → ALL brands (`subscribeTeamTimeEntries`),
+ *     so Zeus Group leadership sees the whole consortium.
+ *   • Subsidiary member → THEIR brand only
+ *     (`subscribeTeamTimeEntriesByBrand`, filtered on the denormalised
+ *     `subsidiaryOrgId`). The `time_entries` rule's direct-field clause
+ *     authorises this collection-group query without a per-doc get().
+ * A viewer with neither context sees the empty state. The rules are the
+ * backstop — a subsidiary member can never read another brand's entries.
  *
- * Out of scope (documented follow-ups):
- *   • Brand-scoped team view for subsidiary delivery leads (needs
- *     `subsidiaryOrgId` denormalised onto the time-entry doc, or a
- *     fan-out of per-member queries via the role-assignment org graph).
- *   • Display-name resolution (uid → employee.fullName).
- *   • Cost roll-up (costMinor is internal; a parent-org cost view is a
- *     separate, more sensitive surface).
+ * Display names resolve via `user-directory.service` (uid → users/{uid}
+ * profile). Cost is the internal `costMinor` roll-up; subsidiary members
+ * already see their own brand's cost on the burn meter, and parent-org
+ * sees all — so showing it here leaks nothing new.
+ *
+ * Caveat: brand scope relies on `subsidiaryOrgId` denormalised onto the
+ * entry at post time; entries posted before that shipped won't appear in
+ * the brand view until backfilled.
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { useCurrentDawinUser } from '@/core/settings';
+import { isParentOrgUser, resolveHomeSubsidiaryId } from '@/modules/delivery/components/deliveryAccess';
 import type { TimeEntry } from '@/modules/delivery';
 import {
   subscribeTeamTimeEntries,
+  subscribeTeamTimeEntriesByBrand,
   weekRange,
   totalMinutes,
   groupByUser,
@@ -47,6 +49,7 @@ function fmtWeek(from: Date): string {
 }
 
 export default function TeamTimePage() {
+  const { dawinUser } = useCurrentDawinUser();
   const [weekOffset, setWeekOffset] = useState(0);
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [err, setErr] = useState<string | null>(null);
@@ -54,16 +57,24 @@ export default function TeamTimePage() {
 
   const { from, to } = useMemo(() => weekRange(new Date(), weekOffset), [weekOffset]);
 
+  // Resolve the viewer's scope: parent-org → all brands; subsidiary
+  // member → their home brand; otherwise none.
+  const scope = useMemo<{ kind: 'parent' } | { kind: 'brand'; orgId: string } | { kind: 'none' }>(() => {
+    if (!dawinUser) return { kind: 'none' };
+    if (isParentOrgUser(dawinUser)) return { kind: 'parent' };
+    const homeOrg = resolveHomeSubsidiaryId(dawinUser);
+    return homeOrg ? { kind: 'brand', orgId: homeOrg } : { kind: 'none' };
+  }, [dawinUser]);
+
   useEffect(() => {
     setErr(null);
-    const u = subscribeTeamTimeEntries(
-      from,
-      to,
-      setEntries,
-      (e) => setErr(`Team time load failed: ${e.message}`),
-    );
+    if (scope.kind === 'none') { setEntries([]); return; }
+    const onErr = (e: Error) => setErr(`Team time load failed: ${e.message}`);
+    const u = scope.kind === 'parent'
+      ? subscribeTeamTimeEntries(from, to, setEntries, onErr)
+      : subscribeTeamTimeEntriesByBrand(scope.orgId, from, to, setEntries, onErr);
     return () => u();
-  }, [from, to]);
+  }, [scope, from, to]);
 
   const members = useMemo(() => groupByUser(entries), [entries]);
   const weekTotal = useMemo(() => totalMinutes(entries), [entries]);
@@ -89,10 +100,12 @@ export default function TeamTimePage() {
     <div style={{ padding: 24 }} data-testid="team-time-page">
       <header style={{ marginBottom: 16 }}>
         <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Team Time</h1>
-        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-          Every time entry logged across the group this week, grouped by person.
-          Parent-org view — subsidiary leads see their own time on the personal
-          My Time page.
+        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }} data-testid="team-time-scope-note">
+          {scope.kind === 'parent'
+            ? 'Every time entry logged across the group this week, grouped by person (all brands).'
+            : scope.kind === 'brand'
+              ? 'Time logged by your brand this week, grouped by person.'
+              : 'No team-time scope for your account.'}
         </p>
       </header>
 

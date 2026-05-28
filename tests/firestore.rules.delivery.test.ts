@@ -130,6 +130,49 @@ describe.skip('Phase 3.E — IWO cross-subsidiary rules', () => {
     await assertSucceeds(getDoc(doc(db, 'internal_work_orders/iwo-zta-1/time_entries/te1')));
   });
 
+  // ── Phase 5.D depth — denormalised `subsidiaryOrgId` direct-field clause.
+  // The brand-scoped team-time view runs a COLLECTION-GROUP query filtered
+  // on `time_entries.subsidiaryOrgId`; the read rule's direct-field clause
+  // authorises it without a per-doc get() (which would blow the
+  // 20-access-call CG limit). These tests pin that clause.
+  async function seedDenormTimeEntry(
+    iwoId: string,
+    iwoOrg: string,
+    teId: string,
+    teOrg: string,
+  ) {
+    await testEnv.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), `internal_work_orders/${iwoId}`), {
+        id: iwoId,
+        subsidiaryOrgId: iwoOrg,
+        state: 'IN_PROGRESS',
+        budgetMinor: 1_000_00,
+        currency: 'UGX',
+      });
+      await setDoc(
+        doc(ctx.firestore(), `internal_work_orders/${iwoId}/time_entries/${teId}`),
+        { id: teId, minutes: 60, costMinor: 100_00, subsidiaryOrgId: teOrg },
+      );
+    });
+  }
+
+  test('home brand CAN read a denormalised time entry via the direct-field clause', async () => {
+    await seedOrg('zeus-the-agency', 'SUBSIDIARY');
+    await seedSubsidiaryUser('zta-user', 'zeus-the-agency');
+    await seedDenormTimeEntry('iwo-zta-2', 'zeus-the-agency', 'te-denorm', 'zeus-the-agency');
+    const db = testEnv.authenticatedContext('zta-user').firestore();
+    await assertSucceeds(getDoc(doc(db, 'internal_work_orders/iwo-zta-2/time_entries/te-denorm')));
+  });
+
+  test('another brand CANNOT read a denormalised time entry (field mismatch)', async () => {
+    await seedOrg('zeus-the-agency', 'SUBSIDIARY');
+    await seedOrg('labyrinth', 'SUBSIDIARY');
+    await seedSubsidiaryUser('lab-user', 'labyrinth');
+    await seedDenormTimeEntry('iwo-zta-3', 'zeus-the-agency', 'te-denorm', 'zeus-the-agency');
+    const db = testEnv.authenticatedContext('lab-user').firestore();
+    await assertFails(getDoc(doc(db, 'internal_work_orders/iwo-zta-3/time_entries/te-denorm')));
+  });
+
   test('client SDK cannot write IWOs — transitions go via Cloud Functions', async () => {
     await seedOrg('zeus-the-agency', 'SUBSIDIARY');
     await seedSubsidiaryUser('zta-user', 'zeus-the-agency');
