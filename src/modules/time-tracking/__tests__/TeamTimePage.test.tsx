@@ -30,6 +30,12 @@ vi.mock('../services/time-tracking.service', async () => {
   };
 });
 
+// Resolve uid → name deterministically in tests (avoids hitting Firestore).
+vi.mock('../services/user-directory.service', () => ({
+  resolveUserNames: (uids: string[]) =>
+    Promise.resolve(Object.fromEntries(uids.map((u) => [u, `Name(${u})`]))),
+}));
+
 import TeamTimePage from '../pages/TeamTimePage';
 
 function entry(over: Partial<TimeEntry> = {}): TimeEntry {
@@ -75,9 +81,9 @@ describe('TeamTimePage', () => {
   it('groups by person with per-member totals + IWO/entry counts', async () => {
     mockSubscribe.mockImplementation((_f, _t, cb) => {
       cb([
-        entry({ id: '1', userId: 'u_a', iwoId: 'iwo_1', minutes: 30 }),
-        entry({ id: '2', userId: 'u_a', iwoId: 'iwo_2', minutes: 90 }),
-        entry({ id: '3', userId: 'u_b', iwoId: 'iwo_1', minutes: 240 }),
+        entry({ id: '1', userId: 'u_a', iwoId: 'iwo_1', minutes: 30, costMinor: 30_000 }),
+        entry({ id: '2', userId: 'u_a', iwoId: 'iwo_2', minutes: 90, costMinor: 90_000 }),
+        entry({ id: '3', userId: 'u_b', iwoId: 'iwo_1', minutes: 240, costMinor: 240_000 }),
       ]);
       return () => {};
     });
@@ -90,12 +96,27 @@ describe('TeamTimePage', () => {
     expect(screen.getByTestId('team-time-member-u_a-total').textContent).toBe('2h 0m');
     // u_b: 240 = 4h 0m
     expect(screen.getByTestId('team-time-member-u_b-total').textContent).toBe('4h 0m');
-    // Header rollups
+    // Header rollups (hours + cost)
     expect(screen.getByTestId('team-time-people-count').textContent).toBe('2');
     expect(screen.getByTestId('team-time-week-total').textContent).toBe('6h 0m');
+    expect(screen.getByTestId('team-time-week-cost').textContent).toBe('USD 3,600.00');
+    // Per-member cost roll-up.
+    expect(screen.getByTestId('team-time-member-u_a-cost').textContent).toBe('USD 1,200.00');
+    expect(screen.getByTestId('team-time-member-u_b-cost').textContent).toBe('USD 2,400.00');
     // Member metadata line shows IWO + entry counts.
     expect(screen.getByTestId('team-time-member-u_a').textContent).toContain('2 IWOs');
     expect(screen.getByTestId('team-time-member-u_b').textContent).toContain('1 IWO');
+  });
+
+  it('resolves uid → display name once the directory lookup returns', async () => {
+    mockSubscribe.mockImplementation((_f, _t, cb) => {
+      cb([entry({ id: '1', userId: 'u_zed', minutes: 60 })]);
+      return () => {};
+    });
+    renderPage();
+    await waitFor(() => {
+      expect(screen.getByTestId('team-time-member-u_zed-name').textContent).toBe('Name(u_zed)');
+    });
   });
 
   it('orders members by total minutes desc', async () => {
@@ -111,9 +132,11 @@ describe('TeamTimePage', () => {
       expect(screen.getByTestId('team-time-member-list')).toBeTruthy();
     });
     const list = screen.getByTestId('team-time-member-list');
+    // Match only the row <li> (exact `team-time-member-{uid}`), excluding
+    // the per-row -name / -total / -cost sub-elements.
     const order = Array.from(list.querySelectorAll('[data-testid^="team-time-member-"]'))
       .map(el => el.getAttribute('data-testid'))
-      .filter(t => t && !t.endsWith('-total'));
+      .filter((t): t is string => !!t && !/-(?:name|total|cost)$/.test(t));
     expect(order[0]).toBe('team-time-member-u_high');
     expect(order[1]).toBe('team-time-member-u_low');
   });

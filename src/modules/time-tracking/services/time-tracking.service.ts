@@ -172,6 +172,9 @@ export function groupByIwo(entries: readonly TimeEntry[]): IwoBucket[] {
 export interface UserBucket {
   userId: string;
   totalMinutes: number;
+  /** Sum of `costMinor` across the member's entries (Phase 5.D depth).
+   *  Internal cost — only surfaced on the parent-org team view. */
+  totalCostMinor: number;
   iwoCount: number;
   entries: TimeEntry[];
 }
@@ -182,11 +185,13 @@ export function groupByUser(entries: readonly TimeEntry[]): UserBucket[] {
     const existing = buckets.get(e.userId);
     if (existing) {
       existing.totalMinutes += e.minutes || 0;
+      existing.totalCostMinor += e.costMinor || 0;
       existing.entries.push(e);
     } else {
       buckets.set(e.userId, {
         userId: e.userId,
         totalMinutes: e.minutes || 0,
+        totalCostMinor: e.costMinor || 0,
         iwoCount: 0,
         entries: [e],
       });
@@ -222,4 +227,18 @@ export function formatMinutes(min: number): string {
   const h = Math.floor(min / 60);
   const m = min % 60;
   return `${h}h ${m}m`;
+}
+
+/**
+ * Minor units → `CUR 1,234.56`. Time entries don't all share a
+ * currency in principle, but a single subsidiary's IWOs do, so the
+ * team view passes the dominant currency for display. Negative / NaN
+ * clamp to 0 for a steady column.
+ */
+export function formatMinor(amountMinor: number, currency = 'USD'): string {
+  const safe = Number.isFinite(amountMinor) && amountMinor > 0 ? amountMinor : 0;
+  return `${currency} ${(safe / 100).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }

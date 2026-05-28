@@ -35,7 +35,9 @@ import {
   totalMinutes,
   groupByUser,
   formatMinutes,
+  formatMinor,
 } from '../services/time-tracking.service';
+import { resolveUserNames, type UserNameMap } from '../services/user-directory.service';
 
 function fmtWeek(from: Date): string {
   const to = new Date(from);
@@ -48,6 +50,7 @@ export default function TeamTimePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const [names, setNames] = useState<UserNameMap>({});
 
   const { from, to } = useMemo(() => weekRange(new Date(), weekOffset), [weekOffset]);
 
@@ -64,6 +67,23 @@ export default function TeamTimePage() {
 
   const members = useMemo(() => groupByUser(entries), [entries]);
   const weekTotal = useMemo(() => totalMinutes(entries), [entries]);
+  const weekCostMinor = useMemo(
+    () => members.reduce((s, m) => s + m.totalCostMinor, 0),
+    [members],
+  );
+  // The dominant currency in the window (entries within one brand share it).
+  const currency = entries[0]?.currency ?? 'USD';
+
+  // Resolve uid → display name whenever the member set changes.
+  useEffect(() => {
+    const uids = members.map((m) => m.userId);
+    if (uids.length === 0) return;
+    let cancelled = false;
+    resolveUserNames(uids).then((map) => {
+      if (!cancelled) setNames(map);
+    });
+    return () => { cancelled = true; };
+  }, [members]);
 
   return (
     <div style={{ padding: 24 }} data-testid="team-time-page">
@@ -137,8 +157,12 @@ export default function TeamTimePage() {
             <strong data-testid="team-time-people-count">{members.length}</strong>
           </span>
           <span>
-            <span style={{ color: '#64748b', marginRight: 6 }}>Total</span>
+            <span style={{ color: '#64748b', marginRight: 6 }}>Hours</span>
             <strong data-testid="team-time-week-total">{formatMinutes(weekTotal)}</strong>
+          </span>
+          <span>
+            <span style={{ color: '#64748b', marginRight: 6 }}>Cost</span>
+            <strong data-testid="team-time-week-cost">{formatMinor(weekCostMinor, currency)}</strong>
           </span>
         </div>
       </section>
@@ -166,17 +190,30 @@ export default function TeamTimePage() {
               }}
             >
               <div style={{ minWidth: 0 }}>
-                <code style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{m.userId}</code>
+                <span
+                  data-testid={`team-time-member-${m.userId}-name`}
+                  style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}
+                >
+                  {names[m.userId] ?? m.userId}
+                </span>
                 <div style={{ marginTop: 2, color: '#64748b', fontSize: 12 }}>
                   {m.iwoCount} {m.iwoCount === 1 ? 'IWO' : 'IWOs'} · {m.entries.length} {m.entries.length === 1 ? 'entry' : 'entries'}
                 </div>
               </div>
-              <strong
-                data-testid={`team-time-member-${m.userId}-total`}
-                style={{ fontSize: 15, fontVariantNumeric: 'tabular-nums' }}
-              >
-                {formatMinutes(m.totalMinutes)}
-              </strong>
+              <div style={{ textAlign: 'right' }}>
+                <strong
+                  data-testid={`team-time-member-${m.userId}-total`}
+                  style={{ fontSize: 15, fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {formatMinutes(m.totalMinutes)}
+                </strong>
+                <div
+                  data-testid={`team-time-member-${m.userId}-cost`}
+                  style={{ marginTop: 2, color: '#64748b', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {formatMinor(m.totalCostMinor, currency)}
+                </div>
+              </div>
             </li>
           ))}
         </ul>
