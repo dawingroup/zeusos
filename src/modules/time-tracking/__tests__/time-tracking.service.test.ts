@@ -13,6 +13,7 @@ import {
   weekRange,
   totalMinutes,
   groupByIwo,
+  groupByUser,
   dayKey,
   formatMinutes,
 } from '../services/time-tracking.service';
@@ -109,6 +110,38 @@ describe('groupByIwo', () => {
 
   it('returns [] on an empty list', () => {
     expect(groupByIwo([])).toEqual([]);
+  });
+});
+
+describe('groupByUser', () => {
+  it('emits one bucket per user with totals + distinct IWO count', () => {
+    const buckets = groupByUser([
+      entry({ id: '1', userId: 'u_a', iwoId: 'iwo_1', minutes: 30 }),
+      entry({ id: '2', userId: 'u_b', iwoId: 'iwo_2', minutes: 120 }),
+      entry({ id: '3', userId: 'u_a', iwoId: 'iwo_1', minutes: 45 }),
+      entry({ id: '4', userId: 'u_a', iwoId: 'iwo_3', minutes: 15 }),
+    ]);
+    expect(buckets).toHaveLength(2);
+    const a = buckets.find(b => b.userId === 'u_a');
+    expect(a?.totalMinutes).toBe(90);     // 30 + 45 + 15
+    expect(a?.iwoCount).toBe(2);          // iwo_1 + iwo_3 (distinct)
+    expect(a?.entries).toHaveLength(3);
+    const b = buckets.find(b => b.userId === 'u_b');
+    expect(b?.totalMinutes).toBe(120);
+    expect(b?.iwoCount).toBe(1);
+  });
+
+  it('sorts members by total minutes desc', () => {
+    const buckets = groupByUser([
+      entry({ id: '1', userId: 'u_low', minutes: 15 }),
+      entry({ id: '2', userId: 'u_high', minutes: 300 }),
+      entry({ id: '3', userId: 'u_mid', minutes: 90 }),
+    ]);
+    expect(buckets.map(b => b.userId)).toEqual(['u_high', 'u_mid', 'u_low']);
+  });
+
+  it('returns [] on an empty list', () => {
+    expect(groupByUser([])).toEqual([]);
   });
 });
 
