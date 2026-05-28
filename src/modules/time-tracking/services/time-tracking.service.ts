@@ -67,6 +67,52 @@ export function subscribeMyTimeEntries(
   );
 }
 
+/**
+ * Subscribe to EVERY time entry in a date window — the team view.
+ *
+ * No `userId` filter: this returns the whole org's entries for the
+ * window. The `time_entries` read rule only lets parent-org principals
+ * see across brands (subsidiary principals are scoped to IWOs in their
+ * own brand). Because a collection-group query is rejected wholesale if
+ * ANY returned doc fails the rule, this query is **parent-org-only** in
+ * practice — the page guards `/time/team` with `ParentOrgGuard`, and a
+ * subsidiary principal who reached it anyway would get a
+ * permission-denied error surfaced in the alert region rather than a
+ * partial result.
+ *
+ * Index: the single-field `entryDate` range query uses Firestore's
+ * auto-created collection-group single-field index (no fieldOverride
+ * exemption exists for `time_entries.entryDate`), so no composite index
+ * needs to be added.
+ *
+ * A future brand-scoped team view would either denormalise
+ * `subsidiaryOrgId` onto the time-entry doc (then query
+ * `where subsidiaryOrgId == … && entryDate in window`) or fan out one
+ * `subscribeMyTimeEntries` per resolved team-member uid. Both are
+ * out of scope for this MVP.
+ */
+export function subscribeTeamTimeEntries(
+  from: Date,
+  to: Date,
+  cb: (entries: TimeEntry[]) => void,
+  onError?: (err: Error) => void,
+): Unsubscribe {
+  const q = query(
+    collectionGroup(db, 'time_entries'),
+    where('entryDate', '>=', from.toISOString()),
+    where('entryDate', '<', to.toISOString()),
+    orderBy('entryDate', 'desc'),
+  );
+  return onSnapshot(
+    q,
+    (snap) => cb(snap.docs.map((d) => ({
+      id: d.id,
+      ...(d.data() as Omit<TimeEntry, 'id'>),
+    }))),
+    (err) => onError?.(err),
+  );
+}
+
 // ──────────────────────────────────────────────────────────────────
 // Date math — extracted for testability.
 // ──────────────────────────────────────────────────────────────────
@@ -114,6 +160,41 @@ export function groupByIwo(entries: readonly TimeEntry[]): IwoBucket[] {
     } else {
       buckets.set(e.iwoId, { iwoId: e.iwoId, totalMinutes: e.minutes || 0, entries: [e] });
     }
+  }
+  return Array.from(buckets.values()).sort((a, b) => b.totalMinutes - a.totalMinutes);
+}
+
+/**
+ * Group entries by `userId` — the team view's primary axis. Each
+ * member bucket keeps a nested per-IWO breakdown so the page can show
+ * "who, doing what" at a glance.
+ */
+export interface UserBucket {
+  userId: string;
+  totalMinutes: number;
+  iwoCount: number;
+  entries: TimeEntry[];
+}
+
+export function groupByUser(entries: readonly TimeEntry[]): UserBucket[] {
+  const buckets = new Map<string, UserBucket>();
+  for (const e of entries) {
+    const existing = buckets.get(e.userId);
+    if (existing) {
+      existing.totalMinutes += e.minutes || 0;
+      existing.entries.push(e);
+    } else {
+      buckets.set(e.userId, {
+        userId: e.userId,
+        totalMinutes: e.minutes || 0,
+        iwoCount: 0,
+        entries: [e],
+      });
+    }
+  }
+  // Compute distinct IWO count per member after collection.
+  for (const b of buckets.values()) {
+    b.iwoCount = new Set(b.entries.map((e) => e.iwoId)).size;
   }
   return Array.from(buckets.values()).sort((a, b) => b.totalMinutes - a.totalMinutes);
 }

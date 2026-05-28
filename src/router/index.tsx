@@ -96,6 +96,7 @@ const EcdReviewPage    = lazyWithRetry(() => import('@/modules/delivery/pages/Ec
 const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/BurnAndSlaPage'));
 const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
 const MyTimeThisWeekPage = lazyWithRetry(() => import('@/modules/time-tracking/pages/MyTimeThisWeekPage'));
+const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pages/TeamTimePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -516,6 +517,11 @@ export const router = createBrowserRouter([
       // to (parent-org OR home subsidiary on the parent IWO), and a signed-
       // out user falls into the page's own "Sign in" copy.
       { path: 'time',                element: <PageWrapper><MyTimeThisWeekPage /></PageWrapper> },
+      // Phase 5.D — parent-org cross-brand team-time roll-up. Guarded
+      // because the underlying collection-group query only succeeds for
+      // parent-org principals (the time_entries rule rejects a
+      // subsidiary's cross-brand read wholesale).
+      { path: 'time/team',           element: <PageWrapper><ParentOrgGuard><TeamTimePage /></ParentOrgGuard></PageWrapper> },
 
       // Intelligence Layer
       {

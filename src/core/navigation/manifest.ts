@@ -89,8 +89,11 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
   // Phase 5.D — parent-org admins log time against IWOs too (e.g. AM
   // running a brief workshop) so My Time appears here as well as in
-  // the subsidiary head.
+  // the subsidiary head. Team Time is the parent-org-only cross-brand
+  // roll-up (subsidiary leads don't get it — their personal My Time
+  // covers their own work, and the cross-brand query is parent-org-only).
   { moduleId: 'my-time',           label: 'My Time',                   icon: 'Clock',           routePath: '/time' },
+  { moduleId: 'team-time',         label: 'Team Time',                 icon: 'Users',           routePath: '/time/team' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
 ];
 
