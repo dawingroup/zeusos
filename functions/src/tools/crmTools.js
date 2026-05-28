@@ -13,7 +13,7 @@ const db = admin.firestore();
 const definitions = [
   {
     name: 'get_customer_360',
-    description: 'Get a complete 360-degree view of a customer including their projects, deals, manufacturing orders, communication history, and financial summary. Use when discussing a specific customer or their relationship with the company.',
+    description: 'Get a 360-degree view of a CRM customer: their profile plus their open sales-pipeline deals (with weighted-value summary). Use when discussing a specific customer or their relationship with the agency.',
     input_schema: {
       type: 'object',
       properties: {
@@ -21,19 +21,9 @@ const definitions = [
           type: 'string',
           description: 'Customer document ID',
         },
-        includeProjects: {
-          type: 'boolean',
-          description: 'Include linked design projects',
-          default: true,
-        },
         includeDeals: {
           type: 'boolean',
-          description: 'Include CRM deals',
-          default: true,
-        },
-        includeManufacturingOrders: {
-          type: 'boolean',
-          description: 'Include manufacturing orders',
+          description: 'Include the customer\'s CRM deals + pipeline summary',
           default: true,
         },
       },
@@ -104,7 +94,7 @@ const definitions = [
 
 const handlers = {
   get_customer_360: async (input, context) => {
-    const { customerId, includeProjects = true, includeDeals = true, includeManufacturingOrders = true } = input;
+    const { customerId, includeDeals = true } = input;
 
     const customerDoc = await db.collection('customers').doc(customerId).get();
     if (!customerDoc.exists) {
@@ -113,87 +103,38 @@ const handlers = {
 
     const customer = { id: customerDoc.id, ...customerDoc.data() };
 
-    // Parallel fetch of related data
-    const promises = [];
-
-    if (includeProjects) {
-      promises.push(
-        db.collection('designProjects')
-          .where('customerId', '==', customerId)
-          .orderBy('updatedAt', 'desc')
-          .limit(10)
-          .get()
-          .then(snap => ({
-            key: 'projects',
-            data: snap.docs.map(d => ({
-              id: d.id,
-              name: d.data().name || d.data().code,
-              status: d.data().status,
-              stage: d.data().stage,
-              createdAt: d.data().createdAt,
-              updatedAt: d.data().updatedAt,
-            })),
-          }))
-      );
-    }
-
+    // ZeusOS is a marketing CRM: a customer-360 is the profile + their
+    // sales-pipeline deals. The DawinOS `designProjects` and
+    // `manufacturingOrders` joins were dropped in the Phase 1.E tools
+    // sweep — those collections are stripped, and the commercial
+    // engagement graph (master_jobs) is keyed on `clients/{id}`, a
+    // different identifier space than CRM `customers/{id}`, so it can't
+    // be joined here by customerId.
     if (includeDeals) {
-      promises.push(
-        db.collection('crm_deals')
-          .where('customerId', '==', customerId)
-          .orderBy('updatedAt', 'desc')
-          .limit(10)
-          .get()
-          .then(snap => ({
-            key: 'deals',
-            data: snap.docs.map(d => ({
-              id: d.id,
-              title: d.data().title,
-              stage: d.data().stage,
-              value: d.data().value,
-              currency: d.data().currency,
-              probability: d.data().probability,
-              weightedValue: (d.data().value || 0) * ((d.data().probability || 0) / 100),
-              ownerName: d.data().ownerName,
-              expectedCloseDate: d.data().expectedCloseDate,
-            })),
-          }))
-      );
-    }
-
-    if (includeManufacturingOrders) {
-      promises.push(
-        db.collection('manufacturingOrders')
-          .where('customerId', '==', customerId)
-          .orderBy('createdAt', 'desc')
-          .limit(10)
-          .get()
-          .then(snap => ({
-            key: 'manufacturingOrders',
-            data: snap.docs.map(d => ({
-              id: d.id,
-              moNumber: d.data().moNumber || d.data().orderNumber,
-              name: d.data().name,
-              status: d.data().status,
-              currentStage: d.data().currentStage,
-              totalEstimatedCost: d.data().totalEstimatedCost,
-              createdAt: d.data().createdAt,
-            })),
-          }))
-      );
-    }
-
-    const results = await Promise.all(promises);
-    for (const r of results) {
-      customer[r.key] = r.data;
+      const snap = await db.collection('crm_deals')
+        .where('customerId', '==', customerId)
+        .orderBy('updatedAt', 'desc')
+        .limit(10)
+        .get();
+      customer.deals = snap.docs.map(d => ({
+        id: d.id,
+        title: d.data().title,
+        stage: d.data().stage,
+        value: d.data().value,
+        currency: d.data().currency,
+        probability: d.data().probability,
+        weightedValue: (d.data().value || 0) * ((d.data().probability || 0) / 100),
+        ownerName: d.data().ownerName,
+        expectedCloseDate: d.data().expectedCloseDate,
+      }));
     }
 
     // Summary stats
     customer.summary = {
-      projectCount: (customer.projects || []).length,
+      dealCount: (customer.deals || []).length,
       activeDeals: (customer.deals || []).filter(d => !['won', 'lost'].includes(d.stage)).length,
       totalDealValue: (customer.deals || []).reduce((sum, d) => sum + (d.value || 0), 0),
-      activeMOs: (customer.manufacturingOrders || []).filter(m => m.status === 'in-progress').length,
+      weightedPipeline: (customer.deals || []).reduce((sum, d) => sum + (d.weightedValue || 0), 0),
     };
 
     return customer;

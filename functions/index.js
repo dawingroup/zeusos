@@ -4482,9 +4482,11 @@ async function handleStrategyDocumentParse(req, res) {
 // `designProjects` / `designItems` (stripped in Phase 1.A). No
 // frontend callers in ZeusOS; removed in the tools/* cleanup.
 
-// Admin: Material backfill
-const { backfillMaterialFields } = require('./src/admin/backfillMaterialFields');
-exports.backfillMaterialFields = backfillMaterialFields;
+// Admin: Material backfill — removed in the Phase 1.E tools/* sweep.
+// backfillMaterialFields was a one-time DawinOS migration that
+// read+wrote the `materials` collection (stripped in Phase 1.C). It had
+// no frontend callers and was the last reader of `materials`, so
+// dropping it lets firestore.rules retire the matching match block.
 
 // Admin: Service credentials (Firebase Secret Manager)
 const {
