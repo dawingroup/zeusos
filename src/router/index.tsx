@@ -517,11 +517,12 @@ export const router = createBrowserRouter([
       // to (parent-org OR home subsidiary on the parent IWO), and a signed-
       // out user falls into the page's own "Sign in" copy.
       { path: 'time',                element: <PageWrapper><MyTimeThisWeekPage /></PageWrapper> },
-      // Phase 5.D — parent-org cross-brand team-time roll-up. Guarded
-      // because the underlying collection-group query only succeeds for
-      // parent-org principals (the time_entries rule rejects a
-      // subsidiary's cross-brand read wholesale).
-      { path: 'time/team',           element: <PageWrapper><ParentOrgGuard><TeamTimePage /></ParentOrgGuard></PageWrapper> },
+      // Phase 5.D depth — team-time is dual-scope: a parent-org admin sees
+      // all brands; a subsidiary member sees their own brand. TeamTimePage
+      // resolves scope from org context and the time_entries rules enforce
+      // it, so NO ParentOrgGuard (it would block subsidiary leads). A user
+      // with no org scope falls into the page's "no scope" empty state.
+      { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
 
       // Intelligence Layer
       {

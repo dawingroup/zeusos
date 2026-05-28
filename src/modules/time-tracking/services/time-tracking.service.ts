@@ -68,28 +68,18 @@ export function subscribeMyTimeEntries(
 }
 
 /**
- * Subscribe to EVERY time entry in a date window — the team view.
+ * Subscribe to EVERY time entry in a date window — the parent-org team
+ * view (all brands).
  *
- * No `userId` filter: this returns the whole org's entries for the
- * window. The `time_entries` read rule only lets parent-org principals
- * see across brands (subsidiary principals are scoped to IWOs in their
- * own brand). Because a collection-group query is rejected wholesale if
- * ANY returned doc fails the rule, this query is **parent-org-only** in
- * practice — the page guards `/time/team` with `ParentOrgGuard`, and a
- * subsidiary principal who reached it anyway would get a
- * permission-denied error surfaced in the alert region rather than a
- * partial result.
+ * No `userId` / `subsidiaryOrgId` filter: returns the whole org's
+ * entries. The `time_entries` read rule only lets parent-org principals
+ * read across brands, so this collection-group query succeeds only for
+ * them; a subsidiary principal would be rejected wholesale. TeamTimePage
+ * routes parent-org viewers here and subsidiary viewers to
+ * `subscribeTeamTimeEntriesByBrand` instead.
  *
  * Index: the single-field `entryDate` range query uses Firestore's
- * auto-created collection-group single-field index (no fieldOverride
- * exemption exists for `time_entries.entryDate`), so no composite index
- * needs to be added.
- *
- * A future brand-scoped team view would either denormalise
- * `subsidiaryOrgId` onto the time-entry doc (then query
- * `where subsidiaryOrgId == … && entryDate in window`) or fan out one
- * `subscribeMyTimeEntries` per resolved team-member uid. Both are
- * out of scope for this MVP.
+ * auto-created collection-group single-field index.
  */
 export function subscribeTeamTimeEntries(
   from: Date,
@@ -99,6 +89,49 @@ export function subscribeTeamTimeEntries(
 ): Unsubscribe {
   const q = query(
     collectionGroup(db, 'time_entries'),
+    where('entryDate', '>=', from.toISOString()),
+    where('entryDate', '<', to.toISOString()),
+    orderBy('entryDate', 'desc'),
+  );
+  return onSnapshot(
+    q,
+    (snap) => cb(snap.docs.map((d) => ({
+      id: d.id,
+      ...(d.data() as Omit<TimeEntry, 'id'>),
+    }))),
+    (err) => onError?.(err),
+  );
+}
+
+/**
+ * Subscribe to a single brand's team time in a date window — the
+ * subsidiary-lead team view (Phase 5.D depth).
+ *
+ * Filters the collection-group query on the denormalised
+ * `subsidiaryOrgId` field (written by postTimeEntry). The
+ * `time_entries` read rule has a matching direct-field clause
+ * (`resource.data.subsidiaryOrgId == callerHomeOrgId()`), so the query
+ * is allowed for the brand's own members without a per-doc get() —
+ * which keeps it under Firestore's collection-group access-call limit.
+ *
+ * Index: composite collection-group `(subsidiaryOrgId ASC, entryDate
+ * DESC)` in firestore.indexes.json.
+ *
+ * Caveat: only entries posted AFTER the denormalisation shipped carry
+ * `subsidiaryOrgId`. Pre-existing entries won't appear in this view
+ * until backfilled — acceptable for a pre-launch system; a backfill is
+ * a follow-up if historical brand-team data is needed.
+ */
+export function subscribeTeamTimeEntriesByBrand(
+  subsidiaryOrgId: string,
+  from: Date,
+  to: Date,
+  cb: (entries: TimeEntry[]) => void,
+  onError?: (err: Error) => void,
+): Unsubscribe {
+  const q = query(
+    collectionGroup(db, 'time_entries'),
+    where('subsidiaryOrgId', '==', subsidiaryOrgId),
     where('entryDate', '>=', from.toISOString()),
     where('entryDate', '<', to.toISOString()),
     orderBy('entryDate', 'desc'),

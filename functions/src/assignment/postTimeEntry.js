@@ -97,6 +97,13 @@ async function runPostTimeEntry({ db, auth, data }) {
             rateCardId: cost.rateCardId,
             rateCardLineId: cost.rateCardLineId,
             entryDate,
+            // Denormalised from the parent IWO so the brand-scoped
+            // team-time view (Phase 5.D depth) can run a collection-group
+            // query filtered by `subsidiaryOrgId` without a per-doc
+            // get() in rules (which would blow the 20-access-call limit
+            // on a large collection-group query). The firestore.rules
+            // read clause matches this field directly.
+            subsidiaryOrgId: iwo.subsidiaryOrgId,
             createdAt: FieldValue.serverTimestamp(),
           });
 

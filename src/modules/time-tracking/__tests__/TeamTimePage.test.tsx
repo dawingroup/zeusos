@@ -1,11 +1,15 @@
 /**
  * TeamTimePage tests — Phase 5.D team-time view.
  *
- * Render-level coverage of the parent-org cross-brand roll-up: empty
- * state, member buckets with per-person totals + IWO/entry counts,
- * week-pager interaction, header totals, and the subscription-error
- * alert (which is also how a non-parent-org caller who reached the
- * page would see the permission-denied).
+ * Render-level coverage of the cross-brand roll-up. The page resolves
+ * its scope from the viewer's org context:
+ *   • parent-org admin → ALL brands (`subscribeTeamTimeEntries`)
+ *   • subsidiary lead  → THEIR brand (`subscribeTeamTimeEntriesByBrand`)
+ *   • no org context   → empty state, no subscription
+ *
+ * The bulk of the rendering assertions (empty state, member buckets,
+ * counts, week pager, totals, error alert) run under the default
+ * parent-org scope. Two extra tests pin the brand + none branches.
  */
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -15,6 +19,9 @@ import { MemoryRouter } from 'react-router-dom';
 import type { TimeEntry } from '@/modules/delivery';
 
 const mockSubscribe = vi.fn();
+const mockSubscribeByBrand = vi.fn();
+const mockUseUser = vi.fn();
+
 vi.mock('../services/time-tracking.service', async () => {
   const actual = await vi.importActual<typeof import('../services/time-tracking.service')>(
     '../services/time-tracking.service',
@@ -27,6 +34,13 @@ vi.mock('../services/time-tracking.service', async () => {
       cb: (entries: TimeEntry[]) => void,
       onErr?: (e: Error) => void,
     ) => mockSubscribe(from, to, cb, onErr),
+    subscribeTeamTimeEntriesByBrand: (
+      orgId: string,
+      from: Date,
+      to: Date,
+      cb: (entries: TimeEntry[]) => void,
+      onErr?: (e: Error) => void,
+    ) => mockSubscribeByBrand(orgId, from, to, cb, onErr),
   };
 });
 
@@ -36,7 +50,26 @@ vi.mock('../services/user-directory.service', () => ({
     Promise.resolve(Object.fromEntries(uids.map((u) => [u, `Name(${u})`]))),
 }));
 
+vi.mock('@/core/settings', () => ({
+  useCurrentDawinUser: () => mockUseUser(),
+}));
+
 import TeamTimePage from '../pages/TeamTimePage';
+
+// Org-context fixtures. The real `isParentOrgUser` / `resolveHomeSubsidiaryId`
+// helpers run against these (only the user hook is mocked).
+const PARENT_USER = {
+  id: 'u_admin',
+  email: 'admin@zeus',
+  globalRole: 'admin',
+  subsidiaryAccess: [{ subsidiaryId: 'zeus-group', hasAccess: true }],
+};
+const BRAND_LEAD_USER = {
+  id: 'u_lead',
+  email: 'lead@zeus',
+  globalRole: 'manager',
+  subsidiaryAccess: [{ subsidiaryId: 'zeus-digital', hasAccess: true }],
+};
 
 function entry(over: Partial<TimeEntry> = {}): TimeEntry {
   return {
@@ -54,6 +87,10 @@ function entry(over: Partial<TimeEntry> = {}): TimeEntry {
 
 beforeEach(() => {
   mockSubscribe.mockReset();
+  mockSubscribeByBrand.mockReset();
+  mockUseUser.mockReset();
+  // Default: parent-org admin → cross-brand scope.
+  mockUseUser.mockReturnValue({ dawinUser: PARENT_USER });
 });
 
 function renderPage() {
@@ -169,5 +206,32 @@ describe('TeamTimePage', () => {
       expect(screen.getByTestId('team-time-error')).toBeTruthy();
     });
     expect(screen.getByTestId('team-time-error').textContent).toMatch(/insufficient permissions/);
+  });
+
+  it('subsidiary lead → brand-scoped subscription on their home org', async () => {
+    mockUseUser.mockReturnValue({ dawinUser: BRAND_LEAD_USER });
+    mockSubscribeByBrand.mockImplementation((_orgId, _f, _t, cb) => {
+      cb([entry({ id: '1', userId: 'u_a', minutes: 60 })]);
+      return () => {};
+    });
+    renderPage();
+    await waitFor(() => {
+      expect(screen.getByTestId('team-time-member-u_a')).toBeTruthy();
+    });
+    // Brand path used; cross-brand path untouched.
+    expect(mockSubscribeByBrand).toHaveBeenCalled();
+    expect(mockSubscribeByBrand.mock.calls[0][0]).toBe('zeus-digital');
+    expect(mockSubscribe).not.toHaveBeenCalled();
+    // Scope note reflects the brand-only copy.
+    expect(screen.getByTestId('team-time-scope-note').textContent).toMatch(/your brand/i);
+  });
+
+  it('no org context → empty state, no subscription on either path', () => {
+    mockUseUser.mockReturnValue({ dawinUser: null });
+    renderPage();
+    expect(screen.getByTestId('team-time-empty')).toBeTruthy();
+    expect(mockSubscribe).not.toHaveBeenCalled();
+    expect(mockSubscribeByBrand).not.toHaveBeenCalled();
+    expect(screen.getByTestId('team-time-scope-note').textContent).toMatch(/no team-time scope/i);
   });
 });
