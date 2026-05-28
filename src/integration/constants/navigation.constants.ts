@@ -321,31 +321,6 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     scopeField: 'organizationId',
   },
 
-  // ----- Capital (corporate) -----
-  {
-    module: 'capital_hub',
-    type: 'capital_application',
-    label: 'Capital Applications',
-    collection: 'capital_applications',
-    searchFields: ['provider', 'productType', 'stage'],
-    displayField: 'provider',
-    subtitleField: 'stage',
-    icon: 'FileText',
-    urlTemplate: '/capital/applications/{id}',
-    scopeField: 'organizationId',
-  },
-  {
-    module: 'capital_hub',
-    type: 'capital_facility',
-    label: 'Capital Facilities',
-    collection: 'capital_facilities',
-    searchFields: ['facilityName', 'provider', 'productType'],
-    displayField: 'facilityName',
-    subtitleField: 'provider',
-    icon: 'Building',
-    urlTemplate: '/capital/facilities/{id}',
-    scopeField: 'organizationId',
-  },
 
   // ----- Market Intelligence (corporate) -----
   {
@@ -387,47 +362,7 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     scopeField: 'organizationId',
   },
 
-  // ----- Inventory (finishes) -----
-  {
-    module: 'inventory' as ModuleId,
-    type: 'inventory_item',
-    label: 'Inventory',
-    collection: 'inventoryItems',
-    searchFields: ['name', 'sku', 'description', 'classification', 'category'],
-    displayField: 'name',
-    subtitleField: 'sku',
-    icon: 'Package',
-    urlTemplate: '/inventory',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
-  {
-    module: 'inventory' as ModuleId,
-    type: 'finish_library',
-    label: 'Finish Library',
-    collection: 'finishLibrary',
-    searchFields: ['name', 'code', 'category', 'supplier'],
-    displayField: 'name',
-    subtitleField: 'category',
-    icon: 'Palette',
-    urlTemplate: '/inventory/finishes',
-    scopeField: 'organizationId',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
 
-  // ----- Sales Orders (finishes) -----
-  {
-    module: 'sales_orders' as ModuleId,
-    type: 'sales_order',
-    label: 'Sales Orders',
-    collection: 'salesOrders',
-    searchFields: ['orderNumber', 'customerName', 'status', 'title'],
-    displayField: 'orderNumber',
-    subtitleField: 'customerName',
-    icon: 'ShoppingCart',
-    urlTemplate: '/sales-orders/{id}',
-    scopeField: 'subsidiaryId',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
 
   // ----- CRM (finishes) -----
   {
@@ -483,48 +418,8 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     urlTemplate: '/procurement/orders/{id}',
   },
 
-  // ----- Manufacturing (finishes) -----
-  {
-    module: 'manufacturing' as ModuleId,
-    type: 'manufacturing_order',
-    label: 'Manufacturing Orders',
-    collection: 'manufacturingOrders',
-    searchFields: ['moNumber', 'productName', 'status', 'orderNumber'],
-    displayField: 'moNumber',
-    subtitleField: 'productName',
-    icon: 'Factory',
-    urlTemplate: '/manufacturing/orders/{id}',
-    scopeField: 'subsidiaryId',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
 
-  // ----- Design Manager (finishes) -----
-  {
-    module: 'design_manager' as ModuleId,
-    type: 'design_project',
-    label: 'Design Projects',
-    collection: 'designProjects',
-    searchFields: ['name', 'clientName', 'status', 'projectCode'],
-    displayField: 'name',
-    subtitleField: 'clientName',
-    icon: 'FolderKanban',
-    urlTemplate: '/design/project/{id}',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
 
-  // ----- Construction (finishes) -----
-  {
-    module: 'construction' as ModuleId,
-    type: 'construction_order',
-    label: 'Construction Orders',
-    collection: 'constructionOrders',
-    searchFields: ['orderNumber', 'projectName', 'status'],
-    displayField: 'orderNumber',
-    subtitleField: 'projectName',
-    icon: 'HardHat',
-    urlTemplate: '/construction/{id}',
-    subsidiaryIds: ['zeus-the-agency'],
-  },
 ];
 
 // ----------------------------------------------------------------------------
