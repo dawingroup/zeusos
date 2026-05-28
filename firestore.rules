@@ -325,17 +325,10 @@ service cloud.firestore {
     // Material Library Collections
     // ============================================
     
-    // Global materials (admin managed)
-    match /materials/{materialId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
-
-    // Unified Inventory (single source of truth for materials)
-    match /inventoryItems/{itemId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
+    // `materials` + `inventoryItems` match blocks removed in the Phase
+    // 1.E intelligence-layer strip — DawinOS collections (stripped in
+    // Phase 1.A/1.C) with no remaining frontend readers. (CFn readers
+    // use the Admin SDK, which bypasses rules.)
 
     // Inventory Categories (dynamic category registry)
     match /inventoryCategories/{slug} {
@@ -379,11 +372,9 @@ service cloud.firestore {
       allow write: if isAuthenticated();
     }
 
-    // Finish Library (shared finish catalog)
-    match /finishLibrary/{finishId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
-    }
+    // `finishLibrary` match block removed in the Phase 1.E
+    // intelligence-layer strip — DawinOS collection (Phase 1.A) with no
+    // remaining frontend readers.
 
     // Finish Attribute Definitions (dynamic attribute schemas per category)
     match /finishAttributeDefinitions/{attrId} {
@@ -577,11 +568,8 @@ service cloud.firestore {
       // Cloud Functions use Firebase Admin SDK which bypasses rules
       allow update, delete: if isAuthenticated();
 
-      // Customer-specific materials
-      match /materials/{materialId} {
-        allow read: if isAuthenticated();
-        allow create, update, delete: if isAuthenticated();
-      }
+      // Customer-specific `materials` subcollection removed in the
+      // Phase 1.E intelligence-layer strip (DawinOS, no readers).
 
       // Customer Projects subcollection (future)
       match /projects/{projectId} {
@@ -641,134 +629,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Design Projects
-    match /designProjects/{projectId} {
-      // Read access:
-      //  - Projects WITHOUT a `clientPortalUserIds` whitelist keep the
-      //    existing behaviour (any authenticated user, including the
-      //    legacy anonymous-token portal sessions). This preserves
-      //    every internal staff flow and the old client portal.
-      //  - Projects WITH a non-empty whitelist are scoped: admins,
-      //    project members (createdBy / assignedDesigner / engineer)
-      //    or UIDs explicitly whitelisted on the doc can read.
-      //    Anonymous users are blocked — they cannot be in the
-      //    whitelist by construction, so the new portal stays gated.
-      allow read: if isAuthenticated() && (
-        !isPortalEnabled(resource.data)
-        || isAdmin()
-        || isProjectMember(projectId)
-        || hasPortalAccess(resource.data)
-      );
-
-      // P5: A DesignProject MUST be linked to a customer. New writes must set
-      // `customerId` as a non-empty string. Update enforcement only kicks in
-      // when the request explicitly touches `customerId`, so legacy docs that
-      // already have a value don't break on unrelated updates — but no write
-      // is allowed to clear or null it out.
-      allow create: if isAuthenticated()
-        && request.resource.data.customerId is string
-        && request.resource.data.customerId.size() > 0;
-
-      // Updates: existing customerId guard PLUS two anti-privilege
-      // protections for the new portal —
-      //   1. The whitelist itself (`clientPortalUserIds`) is admin-
-      //      managed only, so a portal client cannot escalate by
-      //      adding their own UID or removing the project director's.
-      //   2. Anonymous (token-portal) sessions cannot mutate a portal-
-      //      enabled project at all — the new portal does writes via
-      //      staff-side services, never directly from the client app.
-      allow update: if isAuthenticated()
-        && (
-          !('customerId' in request.resource.data.diff(resource.data).affectedKeys())
-          || (request.resource.data.customerId is string
-              && request.resource.data.customerId.size() > 0)
-        )
-        && (
-          !('clientPortalUserIds' in request.resource.data.diff(resource.data).affectedKeys())
-          || isAdmin()
-        )
-        && (
-          !isPortalEnabled(resource.data)
-          || !isAnonymousAuth()
-        );
-
-      allow delete: if isProjectMember(projectId) || isAdmin();
-      
-      // Project-specific materials
-      match /materials/{materialId} {
-        allow read: if isAuthenticated();
-        allow create, update, delete: if isProjectMember(projectId);
-      }
-      
-      // Project Parts Library (shared special parts across design items)
-      match /projectParts/{partId} {
-        allow read: if isAuthenticated();
-        allow create, update, delete: if isProjectMember(projectId);
-      }
-      
-      // Design Items (subcollection)
-      match /designItems/{itemId} {
-        allow read: if isAuthenticated();
-        allow create, update, delete: if isProjectMember(projectId);
-        
-        // Stage History (append-only audit trail)
-        match /stageHistory/{historyId} {
-          allow read: if isAuthenticated();
-          allow create: if isProjectMember(projectId);
-          allow update, delete: if false; // Immutable audit trail
-        }
-        
-        // Approvals
-        match /approvals/{approvalId} {
-          allow read: if isAuthenticated();
-          allow create, delete: if isProjectMember(projectId);
-          allow update: if isAuthenticated() && 
-            resource.data.assignedTo == request.auth.token.email;
-        }
-        
-        // Deliverables
-        match /deliverables/{deliverableId} {
-          allow read: if isAuthenticated();
-          allow create, update, delete: if isProjectMember(projectId);
-        }
-
-        // Parts history (append-only audit trail of every parts sync —
-        // Workshop Viewer AI import, CSV import, Design Studio scene sync).
-        // Written by writePartsWithVersion alongside the designItem update.
-        // Without this rule the whole syncPartsToDesignItem flow fails with
-        // "Missing or insufficient permissions" because the history write
-        // lands in a subcollection with no matching rule.
-        match /parts_history/{historyId} {
-          allow read: if isAuthenticated();
-          allow create: if isProjectMember(projectId);
-          allow update, delete: if false; // Immutable audit trail
-        }
-      }
-      
-      // Client Documents (uploaded files with AI analysis)
-      match /clientDocuments/{documentId} {
-        allow read: if isAuthenticated();
-        allow create: if isProjectMember(projectId);
-        allow update: if isProjectMember(projectId);
-        allow delete: if isProjectMember(projectId);
-      }
-
-      // Client Interactions (meetings, calls, site visits, etc.)
-      match /clientInteractions/{interactionId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isProjectMember(projectId);
-        allow delete: if isProjectMember(projectId);
-      }
-
-      // AI Analyses (project-level)
-      match /aiAnalyses/{analysisId} {
-        allow read: if isAuthenticated();
-        allow create: if isProjectMember(projectId);
-        allow update: if isAuthenticated() && 
-          resource.data.requestedBy == request.auth.token.email;
-        allow delete: if isAdmin();
-      }
-    }
+    // Design Projects (+ all nested subcollections: materials,
+    // projectParts, designItems/stageHistory/approvals/deliverables/
+    // parts_history, clientDocuments, clientInteractions, aiAnalyses)
+    // removed in the Phase 1.E intelligence-layer strip. The DawinOS
+    // Design Manager was stripped in Phase 1.A; designProjects has no
+    // remaining frontend readers (CFn readers use the Admin SDK, which
+    // bypasses rules).
     
     // ============================================
     // User Management
@@ -2814,12 +2681,10 @@ service cloud.firestore {
       allow create, update: if isAuthenticated();
       allow delete: if isAdmin();
 
-      // BOM entries subcollection
-      match /bomEntries/{entryId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAdmin();
-      }
+      // `bomEntries` subcollection removed in the Phase 1.E
+      // intelligence-layer strip (DawinOS BOM data, no frontend readers).
+      // The manufacturingOrders parent + its other subcollections are a
+      // separate manufacturing-rules cleanup.
 
       // Material consumptions subcollection
       match /materialConsumptions/{consumptionId} {
@@ -3357,12 +3222,8 @@ service cloud.firestore {
         allow delete: if isAdmin();
       }
 
-      // BOM subcollection
-      match /bom/{lineId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isAuthenticated();
-        allow delete: if isAuthenticated();
-      }
+      // `bom` subcollection removed in the Phase 1.E intelligence-layer
+      // strip (DawinOS BOM data, no frontend readers).
 
       // Quality events subcollection
       match /quality_events/{eventId} {
