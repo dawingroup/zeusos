@@ -3,7 +3,11 @@
  * RAG Framework components for semantic search and context injection
  */
 
-// Semantic Search
+// Semantic Search — generic embedding primitives only. The DawinOS
+// collection-specific indexers (indexProducts/Clips/Features/Parts +
+// reindexAll + the build*Content helpers) were removed in the Phase 1.E
+// intelligence-layer strip; they targeted stripped collections and had
+// no live callers.
 export {
   generateEmbedding,
   generateEmbeddings,
@@ -11,16 +15,7 @@ export {
   searchCollection,
   indexDocument,
   indexDocuments,
-  indexProducts,
-  indexClips,
-  indexFeatures,
-  indexParts,
-  reindexAll,
   cosineSimilarity,
-  buildProductContent,
-  buildClipContent,
-  buildFeatureContent,
-  buildPartContent,
   type EmbeddingDocument,
   type SemanticSearchResult,
   type IndexableDocument,

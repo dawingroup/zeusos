@@ -38,12 +38,10 @@ const INTENT_PATTERNS: IntentPattern[] = [
   { keywords: ['pending', 'waiting', 'approval', 'pending approval'], intent: 'pending_tasks', module: 'intelligence', collection: 'generatedTasks', responseType: 'list' },
   { keywords: ['completed', 'done', 'finished'], intent: 'completed_tasks', module: 'intelligence', collection: 'generatedTasks', responseType: 'list' },
 
-  // Design queries
-  { keywords: ['design', 'design item', 'design project', 'project'], intent: 'list_designs', module: 'design_manager', collection: 'designProjects', responseType: 'list' },
-  { keywords: ['stage', 'pipeline', 'workflow'], intent: 'design_stages', module: 'design_manager', collection: 'designProjects', responseType: 'summary' },
-
-  // Inventory queries
-  { keywords: ['stock', 'inventory', 'material', 'low stock', 'reorder'], intent: 'inventory_status', module: 'inventory', collection: 'inventoryItems', responseType: 'list' },
+  // Design + inventory intents removed in the Phase 1.E intelligence-layer
+  // strip — they queried `designProjects` / `inventoryItems`, DawinOS
+  // collections stripped in Phase 1.A/1.C. Unmatched queries now fall to
+  // the default "I don't understand" response.
 
   // Event queries
   { keywords: ['event', 'events', 'recent activity', 'what happened', 'recent'], intent: 'recent_events', module: 'intelligence', collection: 'businessEvents', responseType: 'list' },
@@ -85,7 +83,7 @@ class NaturalLanguageQueryService {
       };
     }
 
-    return this.executeIntent(intent, normalizedQuery);
+    return this.executeIntent(intent);
   }
 
   /**
@@ -148,7 +146,7 @@ class NaturalLanguageQueryService {
   /**
    * Execute detected intent and return results
    */
-  private async executeIntent(intent: IntentPattern, queryText: string): Promise<NLQueryResponse> {
+  private async executeIntent(intent: IntentPattern): Promise<NLQueryResponse> {
     try {
       switch (intent.intent) {
         case 'list_tasks':
@@ -163,15 +161,12 @@ class NaturalLanguageQueryService {
           return this.queryTasks('completed');
         case 'recent_events':
           return this.queryRecentEvents();
-        case 'inventory_status':
-          return this.queryInventory(queryText);
         case 'count_query':
           return this.queryTaskCounts();
         case 'analytics':
           return this.queryTaskAnalytics();
-        case 'list_designs':
-        case 'design_stages':
-          return this.queryDesignProjects();
+        // inventory_status / list_designs / design_stages removed — see
+        // the INTENT_PATTERNS strip note above.
         default:
           return {
             type: 'summary',
@@ -334,61 +329,8 @@ class NaturalLanguageQueryService {
     };
   }
 
-  private async queryInventory(queryText: string): Promise<NLQueryResponse> {
-    const constraints: any[] = [limit(15)];
-
-    if (queryText.includes('low') || queryText.includes('reorder')) {
-      // Try to find items with low stock — field name may vary
-      constraints.unshift(orderBy('stockLevel', 'asc'));
-    }
-
-    const q = query(collection(db, 'inventoryItems'), ...constraints);
-
-    try {
-      const snap = await getDocs(q);
-      const items = snap.docs.map((d) => {
-        const data = d.data();
-        return {
-          name: data.name || data.itemCode || d.id,
-          stockLevel: data.stockLevel ?? data.quantity ?? 'N/A',
-          reorderPoint: data.reorderPoint ?? 'N/A',
-          unit: data.unit || 'units',
-        };
-      });
-
-      if (items.length === 0) {
-        return {
-          type: 'summary',
-          content: 'No inventory items found.',
-          explanation: 'The inventory collection appears to be empty.',
-          confidence: 0.8,
-          suggestedFollowUps: ['Show my tasks', 'Show recent events'],
-        };
-      }
-
-      const itemList = items.map((i) => `- **${i.name}**: ${i.stockLevel} ${i.unit} (reorder at ${i.reorderPoint})`).join('\n');
-
-      return {
-        type: 'list',
-        content: `Inventory status (${items.length} items):\n\n${itemList}`,
-        explanation: 'Showing inventory items sorted by stock level.',
-        confidence: 0.82,
-        suggestedFollowUps: [
-          'Which items need reordering?',
-          'Show recent material receipts',
-          'What are the most used materials?',
-        ],
-      };
-    } catch {
-      return {
-        type: 'summary',
-        content: 'Unable to query inventory at this time.',
-        explanation: 'The inventory collection may require additional indexes.',
-        confidence: 0.4,
-        suggestedFollowUps: ['Show my tasks', 'Show recent events'],
-      };
-    }
-  }
+  // queryInventory removed — it read the DawinOS `inventoryItems`
+  // collection (stripped in Phase 1.C). See the INTENT_PATTERNS note.
 
   private async queryTaskCounts(): Promise<NLQueryResponse> {
     const q = query(collection(db, 'generatedTasks'), limit(200));
@@ -464,53 +406,8 @@ class NaturalLanguageQueryService {
     };
   }
 
-  private async queryDesignProjects(): Promise<NLQueryResponse> {
-    const q = query(collection(db, 'designProjects'), orderBy('createdAt', 'desc'), limit(10));
-
-    try {
-      const snap = await getDocs(q);
-      const projects = snap.docs.map((d) => {
-        const data = d.data();
-        return {
-          name: data.name || data.projectCode || d.id,
-          status: data.status || 'Active',
-          itemCount: data.designItemCount || 0,
-        };
-      });
-
-      if (projects.length === 0) {
-        return {
-          type: 'summary',
-          content: 'No design projects found.',
-          explanation: 'The design projects collection is empty.',
-          confidence: 0.8,
-          suggestedFollowUps: ['Show my tasks', 'Show recent events'],
-        };
-      }
-
-      const projectList = projects.map((p) => `- **${p.name}** (${p.status}) — ${p.itemCount} items`).join('\n');
-
-      return {
-        type: 'list',
-        content: `Design Projects:\n\n${projectList}`,
-        explanation: `Showing ${projects.length} most recent design projects.`,
-        confidence: 0.85,
-        suggestedFollowUps: [
-          'Show tasks for this project',
-          'Which projects are at risk?',
-          'Show project deadlines',
-        ],
-      };
-    } catch {
-      return {
-        type: 'summary',
-        content: 'Unable to query design projects at this time.',
-        explanation: 'The collection may require additional indexes.',
-        confidence: 0.4,
-        suggestedFollowUps: ['Show my tasks', 'Show recent events'],
-      };
-    }
-  }
+  // queryDesignProjects removed — it read the DawinOS `designProjects`
+  // collection (stripped in Phase 1.A). See the INTENT_PATTERNS note.
 }
 
 export const naturalLanguageQueryService = new NaturalLanguageQueryService();
