@@ -85,6 +85,52 @@ const LEGACY_LOOKUP: Map<string, NavItem> = (() => {
   return map;
 })();
 
+// UI refresh — sidebar section grouping. The manifest is a flat ordered
+// list (no `section` field), so we derive a section per moduleId here and
+// render eyebrow-labelled groups. Unmapped ids fall into 'work' (subsidiary)
+// so new manifest entries still appear. Order matches SECTION_ORDER.
+const SECTION_FOR_MODULE: Record<string, string> = {
+  // parent + shared
+  dashboard: 'main',
+  'account-management': 'commercial',
+  clients: 'commercial', // adapter maps account-management → legacy id "clients"
+  traffic: 'commercial',
+  pricing: 'commercial',
+  billing: 'commercial',
+  commercial: 'commercial',
+  'conflict-firewall': 'commercial',
+  procurement: 'ops',
+  suppliers: 'ops',
+  crm: 'ops',
+  talent: 'ops',
+  'asset-library': 'ops',
+  finance: 'ops',
+  'hr-central': 'ops',
+  strategy: 'ops',
+  'market-intel': 'ops',
+  reports: 'admin',
+  compliance: 'admin',
+  'my-time': 'admin',
+  'team-time': 'admin',
+  admin: 'admin',
+  // subsidiary head/middle/tail
+  'delivery-inbox': 'main',
+  'ecd-review': 'main',
+  campaigns: 'work',
+  production: 'work',
+  media: 'work',
+  'burn-sla': 'admin',
+  hr: 'admin',
+};
+const SECTION_LABELS: Record<string, string> = {
+  main: 'Today',
+  commercial: 'Commercial',
+  work: 'Delivery',
+  ops: 'Operations',
+  admin: 'System',
+};
+const SECTION_ORDER = ['main', 'commercial', 'work', 'ops', 'admin'];
+
 interface AppShellProps {
   children: React.ReactNode;
 }
@@ -95,7 +141,7 @@ export function AppShell({ children }: AppShellProps) {
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
-  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed } = useUIStore();
+  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
   const { 
     favoriteItems, 
@@ -135,6 +181,15 @@ export function AppShell({ children }: AppShellProps) {
       icon.href = faviconSrc;
     });
   }, [branding.faviconUrl, branding.logoUrl]);
+
+  // UI refresh — mirror the active sub-brand onto <html data-brand> so the
+  // [data-brand] CSS blocks light up --brand-accent across the shell (sidebar
+  // accent bar, active-item marker) and ported surfaces. Canonical SubsidiaryId
+  // values match the [data-brand] keys 1:1.
+  useEffect(() => {
+    const brandId = currentSubsidiary?.id || 'zeus-group';
+    document.documentElement.setAttribute('data-brand', brandId);
+  }, [currentSubsidiary?.id]);
 
   // Messaging (WhatsApp + Google Chat combined)
   const whatsappEnabled = useFeatureFlag('WHATSAPP_ENABLED');
@@ -441,12 +496,18 @@ export function AppShell({ children }: AppShellProps) {
       <div key={item.id}>
         <div
           className={cn(
-            'group flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
+            'group relative flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
             isHighlighted
               ? 'bg-[var(--bg-sidebar-active)] text-[var(--fg-on-dark)] font-medium'
               : 'text-[var(--fg-on-dark)] hover:bg-[var(--bg-sidebar-hover)]'
           )}
         >
+          {isHighlighted && direction === 'ambitious' && (
+            <span
+              className="absolute left-0 rounded-full"
+              style={{ top: 6, bottom: 6, width: 3, background: 'var(--brand-accent)' }}
+            />
+          )}
           <Link
             to={item.href}
             className="flex items-center gap-3 flex-1 min-w-0"
@@ -801,6 +862,30 @@ export function AppShell({ children }: AppShellProps) {
             borderRightColor: 'var(--border-on-dark)',
           }}
         >
+          {/* UI refresh — wordmark + sub-brand accent bar */}
+          <div className={cn(
+            'flex items-center gap-2 pt-4 pb-1',
+            sidebarExpanded ? 'px-5' : 'lg:px-0 lg:justify-center px-5'
+          )}>
+            <span
+              className="inline-flex items-center justify-center rounded-[5px] font-extrabold flex-none"
+              style={{
+                width: 22, height: 22, fontSize: 12, letterSpacing: '-0.01em',
+                background: direction === 'ambitious' ? 'var(--brand-accent)' : 'var(--zeus-red)',
+                color: direction === 'ambitious' ? 'var(--brand-accent-fg)' : '#fff',
+              }}
+            >Z</span>
+            {sidebarExpanded && (
+              <span className="font-bold text-[14.5px] tracking-[-0.01em] text-[var(--fg-on-dark)]">ZeusOS</span>
+            )}
+          </div>
+          {direction === 'ambitious' && sidebarExpanded && (
+            <div
+              className="rounded-full"
+              style={{ height: 3, margin: '8px 20px 0', background: 'var(--brand-accent)', opacity: 0.85 }}
+            />
+          )}
+
           {/* Toggle button - desktop only */}
           <div className={cn(
             'hidden lg:flex items-center border-b border-[var(--border-on-dark)] px-2 py-2',
@@ -822,15 +907,30 @@ export function AppShell({ children }: AppShellProps) {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className={cn('p-3 space-y-1', !sidebarExpanded && 'lg:px-2')}>
-              {/* Phase 6.UI.0 — single resolved manifest. Dashboard,
-                  Commercial (Account Mgmt / Pricing / Billing) and
-                  Admin all live inside `mainNavItems` for PARENT
-                  principals; SUBSIDIARY principals see Inbox / ECD
-                  Review / Active Work / per-brand middle / Burn &
-                  SLA / HR / Reports — resolved by
-                  `src/core/navigation/manifest.ts`. */}
-              {mainNavItems.map((item: NavItem) => renderNavItem(item))}
+            <div className={cn('p-3', !sidebarExpanded && 'lg:px-2')}>
+              {/* Phase 6.UI.0 — single resolved manifest. UI refresh groups
+                  the resolved items into eyebrow-labelled sections (Today /
+                  Commercial / Delivery / Operations / System) via
+                  SECTION_FOR_MODULE when expanded; the collapsed rail keeps
+                  a flat icon list. */}
+              {sidebarExpanded
+                ? SECTION_ORDER.map((section) => {
+                    const items = mainNavItems.filter(
+                      (it: NavItem) => (SECTION_FOR_MODULE[it.id] || 'work') === section
+                    );
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={section} className="mb-3">
+                        <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--fg-on-dark-muted)]">
+                          {SECTION_LABELS[section] || section}
+                        </div>
+                        <div className="space-y-px">
+                          {items.map((item: NavItem) => renderNavItem(item))}
+                        </div>
+                      </div>
+                    );
+                  })
+                : <div className="space-y-1">{mainNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
             </div>
           </ScrollArea>
         </aside>
