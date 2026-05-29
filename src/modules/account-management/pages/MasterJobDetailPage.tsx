@@ -8,12 +8,13 @@
  */
 
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMasterJobRollup } from '@/modules/assignment/hooks/useMasterJobRollup';
 import { MasterJobRollupCard } from '../components/MasterJobRollupCard';
 import { IssueIWODialog } from '../components/IssueIWODialog';
 import { BriefIntakeForm } from '../components/BriefIntakeForm';
 import { CesTable } from '../components/CesTable';
+import { BackBar, Pill, SideCard, MetaRow } from '@/shared/components/refresh';
 import { formatMinor } from '../utils/money';
 import type { IWOState } from '@/modules/assignment/constants/iwo-states';
 import { cn } from '@/shared/lib/utils';
@@ -40,41 +41,48 @@ const STATE_TONE: Record<IWOState, string> = {
 };
 
 export default function MasterJobDetailPage() {
+  const navigate = useNavigate();
   const { masterJobId } = useParams<{ masterJobId: string }>();
   const { rollup, loading, masterJob } = useMasterJobRollup(masterJobId);
   const [issueOpen, setIssueOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [tab, setTab] = useState<Tab>('overview');
 
-  if (loading && !rollup) return <div className="p-6">Loading master job…</div>;
-  if (!rollup || !masterJob) return <div className="p-6">Master job not found. <Link to="/master-jobs" className="text-[var(--rag-blue)]">Back</Link></div>;
+  if (loading && !rollup) return <div style={{ padding: 'var(--pad-page)', color: 'var(--fg-tertiary)' }}>Loading master job…</div>;
+  if (!rollup || !masterJob) return <div style={{ padding: 'var(--pad-page)' }}>Master job not found. <Link to="/master-jobs" className="text-[var(--rag-blue)]">Back</Link></div>;
 
   const headroom = rollup.ceilingMinor - rollup.allocatedMinor;
   const changeOrderHref = `/clients/${masterJob.clientId}/master-jobs/${masterJob.id}/change-orders/new`;
+  const closed = rollup.status === 'CLOSED' || rollup.status === 'CANCELLED';
+  const statusTone = rollup.status === 'OPEN' ? 'green' : closed ? 'neutral' : 'blue';
 
   return (
-    <div className="space-y-6 p-6" key={refreshKey} data-testid="master-job-detail-page">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Link to="/master-jobs" className="text-xs text-muted-foreground">← Master jobs</Link>
-          <h1 className="mt-1 text-xl font-semibold" data-testid="master-job-code">{rollup.code}</h1>
-          <p className="text-sm text-muted-foreground">
-            Status <span data-testid="master-job-status">{rollup.status}</span> · SOW {masterJob.sowId} · Quote {masterJob.quoteId}
-          </p>
+    <div style={{ padding: 'var(--pad-page)' }} key={refreshKey} data-testid="master-job-detail-page">
+      <BackBar label="Master jobs" onBack={() => navigate('/master-jobs')} />
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, marginBottom: 20 }}>
+        <div style={{ minWidth: 0 }}>
+          <div className="eyebrow" style={{ marginBottom: 6 }}>Master job</div>
+          <h1 className="display" data-testid="master-job-code">{rollup.code}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
+            <Pill tone={statusTone}><span data-testid="master-job-status">{rollup.status}</span></Pill>
+            <span className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>SOW {masterJob.sowId}</span>
+            <span className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>Quote {masterJob.quoteId}</span>
+          </div>
         </div>
         <button
           data-testid="issue-work-order"
           onClick={() => setIssueOpen(true)}
-          disabled={rollup.status === 'CLOSED' || rollup.status === 'CANCELLED'}
-          className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
+          disabled={closed}
+          className="btn btn-accept"
         >
           Issue Work Order
         </button>
-      </header>
+      </div>
 
       {/* Phase 6.UI.D — tabbed surface (Overview · Brief · CES · IWOs).
           Quote + Reporting tabs deferred. */}
-      <nav className="border-b border-[var(--border-default)]" aria-label="Master job tabs">
+      <nav style={{ borderBottom: '1px solid var(--border-subtle)', marginBottom: 20 }} aria-label="Master job tabs">
         <ul className="flex gap-1 -mb-px">
           {TAB_DEFS.map((t) => (
             <li key={t.id}>
@@ -82,10 +90,10 @@ export default function MasterJobDetailPage() {
                 data-testid={t.testId}
                 onClick={() => setTab(t.id)}
                 className={cn(
-                  'inline-block px-3 py-2 text-[13px] font-medium border-b-2 transition-colors',
+                  'inline-block px-3.5 py-2.5 text-[13px] border-b-2 transition-colors',
                   tab === t.id
-                    ? 'border-[var(--accent)] text-[var(--accent)]'
-                    : 'border-transparent text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]',
+                    ? 'border-[var(--zeus-red)] text-[var(--fg-primary)] font-semibold'
+                    : 'border-transparent text-[var(--fg-tertiary)] font-medium hover:text-[var(--fg-primary)]',
                 )}
               >
                 {t.label}
@@ -99,13 +107,13 @@ export default function MasterJobDetailPage() {
         <div className="space-y-6">
           <MasterJobRollupCard rollup={rollup} />
           {rollup.clientInvoice && (
-            <section>
-              <h2 className="mb-2 text-sm font-semibold uppercase text-muted-foreground">Client invoice</h2>
-              <div className="rounded border bg-card p-4">
-                <div className="text-sm">Status: <strong>{rollup.clientInvoice.status}</strong></div>
-                <div className="mt-1 tabular-nums">{formatMinor(rollup.clientInvoice.amountMinor, rollup.clientInvoice.currency)}</div>
-              </div>
-            </section>
+            <SideCard title="Client invoice">
+              <MetaRow label="Status" value={<strong>{rollup.clientInvoice.status}</strong>} />
+              <MetaRow
+                label="Amount"
+                value={<span className="tabular">{formatMinor(rollup.clientInvoice.amountMinor, rollup.clientInvoice.currency)}</span>}
+              />
+            </SideCard>
           )}
         </div>
       )}
@@ -128,47 +136,55 @@ export default function MasterJobDetailPage() {
       {tab === 'iwos' && (
         <section data-testid="mj-tab-iwos-panel">
           {rollup.workOrders.length === 0 && (
-            <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+            <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
               No IWOs issued yet. Click "Issue Work Order" to allocate a slice of the ceiling to one subsidiary.
             </div>
           )}
           {rollup.workOrders.length > 0 && (
-            <table className="w-full border-collapse text-sm">
-              <thead>
-                <tr className="text-left text-xs uppercase text-muted-foreground">
-                  <th className="px-3 py-2">IWO</th>
-                  <th className="px-3 py-2">Subsidiary</th>
-                  <th className="px-3 py-2">State</th>
-                  <th className="px-3 py-2 text-right">Budget</th>
-                  <th className="px-3 py-2 text-right">Cumulative cost</th>
-                  <th className="px-3 py-2 text-right">Transfer price</th>
-                  <th className="px-3 py-2 text-right">Burn</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rollup.workOrders.map(wo => (
-                  <tr key={wo.id} className="border-t hover:bg-[var(--bg-sunken)]" data-testid={`mj-iwo-row-${wo.id}`}>
-                    <td className="px-3 py-2 font-mono text-xs" data-testid={`mj-iwo-row-${wo.id}-code`}>{wo.code}</td>
-                    <td className="px-3 py-2">{wo.subsidiary.name}</td>
-                    <td className="px-3 py-2">
-                      <span
-                        data-testid={`mj-iwo-row-${wo.id}-state`}
-                        className={`rounded px-2 py-0.5 text-xs font-medium ${STATE_TONE[wo.status]}`}>
-                        {wo.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.budgetMinor, wo.currency)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.cumulativeCostMinor, wo.currency)}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">{formatMinor(wo.transferPriceMinor, wo.currency)}</td>
-                    <td
-                      data-testid={`mj-iwo-row-${wo.id}-burn`}
-                      className={`px-3 py-2 text-right tabular-nums ${wo.burnPct >= 100 ? 'text-[var(--rag-red)]' : wo.burnPct >= 80 ? 'text-[var(--rag-amber)]' : ''}`}>
-                      {wo.burnPct.toFixed(0)}%
-                    </td>
+            <div className="card" style={{ overflow: 'hidden' }}>
+              <table className="tbl">
+                <thead>
+                  <tr>
+                    <th>IWO</th>
+                    <th>Subsidiary</th>
+                    <th>State</th>
+                    <th style={{ textAlign: 'right' }}>Budget</th>
+                    <th style={{ textAlign: 'right' }}>Cumulative cost</th>
+                    <th style={{ textAlign: 'right' }}>Transfer price</th>
+                    <th style={{ textAlign: 'right' }}>Burn</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rollup.workOrders.map((wo) => (
+                    <tr key={wo.id} data-testid={`mj-iwo-row-${wo.id}`}>
+                      <td className="mono" style={{ fontSize: 12 }} data-testid={`mj-iwo-row-${wo.id}-code`}>{wo.code}</td>
+                      <td>{wo.subsidiary.name}</td>
+                      <td>
+                        <span
+                          data-testid={`mj-iwo-row-${wo.id}-state`}
+                          className={`rounded px-2 py-0.5 text-xs font-medium ${STATE_TONE[wo.status]}`}
+                        >
+                          {wo.status}
+                        </span>
+                      </td>
+                      <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(wo.budgetMinor, wo.currency)}</td>
+                      <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(wo.cumulativeCostMinor, wo.currency)}</td>
+                      <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(wo.transferPriceMinor, wo.currency)}</td>
+                      <td
+                        data-testid={`mj-iwo-row-${wo.id}-burn`}
+                        className="tabular"
+                        style={{
+                          textAlign: 'right',
+                          color: wo.burnPct >= 100 ? 'var(--rag-red)' : wo.burnPct >= 80 ? 'var(--rag-amber)' : undefined,
+                        }}
+                      >
+                        {wo.burnPct.toFixed(0)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       )}
