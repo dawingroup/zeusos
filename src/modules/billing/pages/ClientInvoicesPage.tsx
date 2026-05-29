@@ -19,6 +19,15 @@ import {
   CLIENT_INVOICE_STATUSES,
   CLIENT_INVOICE_STATUS_LABEL,
 } from '../constants/statuses';
+import { PageHero, Pill, type RagTone } from '@/shared/components/refresh';
+
+function invoiceTone(status: string): RagTone {
+  const s = status.toUpperCase();
+  if (s.includes('PAID')) return 'green';
+  if (s.includes('OVERDUE') || s.includes('VOID') || s.includes('CANCEL')) return 'red';
+  if (s.includes('ISSUED') || s.includes('SENT')) return 'blue';
+  return 'neutral';
+}
 
 export function ClientInvoicesPage() {
   const [invoices, setInvoices] = useState<ClientInvoice[]>([]);
@@ -57,80 +66,79 @@ export function ClientInvoicesPage() {
   }, [invoices]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Client Invoices</h1>
-          <p className="text-sm text-muted-foreground">
-            Issued by Zeus Group to external clients. Subsidiary identity is
-            never shown on these documents.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as ClientInvoiceStatus | 'ALL')}
-            className="rounded border px-2 py-1 text-sm"
-          >
-            <option value="ALL">All statuses</option>
-            {CLIENT_INVOICE_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {CLIENT_INVOICE_STATUS_LABEL[s]}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            value={clientIdFilter}
-            onChange={(e) => setClientIdFilter(e.target.value)}
-            placeholder="Filter by client ID"
-            className="rounded border px-2 py-1 text-sm"
-          />
-        </div>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }}>
+      <PageHero
+        eyebrow="Billing · Parent-org"
+        title="Client invoices"
+        body="Issued by Zeus Group to external clients. Subsidiary identity is never shown on these documents."
+        actions={
+          <>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as ClientInvoiceStatus | 'ALL')}
+              className="input"
+              style={{ width: 'auto' }}
+            >
+              <option value="ALL">All statuses</option>
+              {CLIENT_INVOICE_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {CLIENT_INVOICE_STATUS_LABEL[s]}
+                </option>
+              ))}
+            </select>
+            <input
+              type="text"
+              value={clientIdFilter}
+              onChange={(e) => setClientIdFilter(e.target.value)}
+              placeholder="Filter by client ID"
+              className="input"
+              style={{ width: 180 }}
+            />
+          </>
+        }
+      />
 
-      {loading && <p className="text-sm text-muted-foreground">Loading invoices…</p>}
-      {error && (
-        <p className="text-sm text-destructive">Failed to load invoices: {error}</p>
-      )}
+      {loading && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Loading invoices…</p>}
+      {error && <p style={{ fontSize: 13, color: 'var(--rag-red)' }}>Failed to load invoices: {error}</p>}
 
       {!loading && !error && invoices.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No client invoices yet. The Quote → Invoice flow lands once
           Phase 3.C (Pricing) and Phase 3.D (AM UI) ship.
         </div>
       )}
 
       {!loading && invoices.length > 0 && (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {CLIENT_INVOICE_STATUSES.map((status) => {
             const bucket = grouped[status];
             if (!bucket?.length) return null;
             return (
-              <section key={status} className="space-y-2">
-                <h2 className="text-sm font-semibold uppercase text-muted-foreground">
-                  {CLIENT_INVOICE_STATUS_LABEL[status]} · {bucket.length}
-                </h2>
-                <ul className="divide-y rounded border">
+              <section key={status}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 10px' }}>
+                  <Pill tone={invoiceTone(status)}>{CLIENT_INVOICE_STATUS_LABEL[status]}</Pill>
+                  <span className="tabular" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{bucket.length}</span>
+                </div>
+                <div className="card" style={{ overflow: 'hidden' }}>
                   {bucket.map((inv) => (
-                    <li key={inv.id} className="flex items-center justify-between p-3">
+                    <Link
+                      key={inv.id}
+                      to={`/billing/client-invoices/${inv.id}`}
+                      className="list-row"
+                      style={{ justifyContent: 'space-between' }}
+                    >
                       <div>
-                        <Link
-                          to={`/billing/client-invoices/${inv.id}`}
-                          className="font-mono text-sm hover:underline"
-                        >
-                          {inv.id}
-                        </Link>
-                        <div className="text-xs text-muted-foreground">
-                          Client {inv.clientId} · Job {inv.masterJobId}
+                        <div className="ttl mono">{inv.id}</div>
+                        <div className="meta">
+                          Client {inv.clientId} <span className="sep">·</span> Job {inv.masterJobId}
                         </div>
                       </div>
-                      <div className="text-right font-mono text-sm">
+                      <div className="mono tabular" style={{ fontWeight: 600 }}>
                         {inv.total.currency} {(inv.total.amountMinor / 100).toLocaleString()}
                       </div>
-                    </li>
+                    </Link>
                   ))}
-                </ul>
+                </div>
               </section>
             );
           })}

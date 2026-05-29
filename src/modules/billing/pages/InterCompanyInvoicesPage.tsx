@@ -18,6 +18,7 @@ import {
   INTERCOMPANY_INVOICE_STATUSES,
   INTERCOMPANY_INVOICE_STATUS_LABEL,
 } from '../constants/statuses';
+import { PageHero, Pill } from '@/shared/components/refresh';
 
 export function InterCompanyInvoicesPage() {
   const [invoices, setInvoices] = useState<InterCompanyInvoice[]>([]);
@@ -46,85 +47,77 @@ export function InterCompanyInvoicesPage() {
   }, [statusFilter]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Inter-Company Invoices</h1>
-          <p className="text-sm text-muted-foreground">
-            Subsidiary → Parent settlement. Amounts shown in the
-            subsidiary's currency — FX conversion happens later, at the
-            client-invoice consolidation step.
-          </p>
-        </div>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value as InterCompanyInvoiceStatus | 'ALL')}
-          className="rounded border px-2 py-1 text-sm"
-        >
-          <option value="ALL">All statuses</option>
-          {INTERCOMPANY_INVOICE_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {INTERCOMPANY_INVOICE_STATUS_LABEL[s]}
-            </option>
-          ))}
-        </select>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }}>
+      <PageHero
+        eyebrow="Billing · Inter-co"
+        title="Inter-company invoices"
+        body="Subsidiary → Parent settlement. Amounts shown in the subsidiary's currency — FX conversion happens later, at the client-invoice consolidation step."
+        actions={
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as InterCompanyInvoiceStatus | 'ALL')}
+            className="input"
+            style={{ width: 'auto' }}
+          >
+            <option value="ALL">All statuses</option>
+            {INTERCOMPANY_INVOICE_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {INTERCOMPANY_INVOICE_STATUS_LABEL[s]}
+              </option>
+            ))}
+          </select>
+        }
+      />
 
-      {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
-      {error && <p className="text-sm text-destructive">Failed to load: {error}</p>}
+      {loading && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Loading…</p>}
+      {error && <p style={{ fontSize: 13, color: 'var(--rag-red)' }}>Failed to load: {error}</p>}
 
       {!loading && !error && invoices.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No inter-company invoices yet. The onIWOClosed trigger that
           raises these automatically lands in Phase 3.B (IWO state machine).
         </div>
       )}
 
       {!loading && invoices.length > 0 && (
-        <table className="w-full text-sm">
-          <thead className="text-left text-xs uppercase text-muted-foreground">
-            <tr>
-              <th className="py-2">Invoice</th>
-              <th className="py-2">Flow</th>
-              <th className="py-2">IWO</th>
-              <th className="py-2 text-right">Amount</th>
-              <th className="py-2">Tax</th>
-              <th className="py-2">GL</th>
-              <th className="py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices.map((inv) => (
-              <tr key={inv.id} className="border-t">
-                <td className="py-2 font-mono">{inv.id}</td>
-                <td className="py-2 text-xs">
-                  {inv.fromOrgId} → {inv.toOrgId}
-                </td>
-                <td className="py-2 font-mono text-xs">{inv.iwoId || '—'}</td>
-                <td className="py-2 text-right font-mono">
-                  {inv.amount.currency} {(inv.amount.amountMinor / 100).toLocaleString()}
-                </td>
-                <td className="py-2 text-xs">
-                  {inv.taxTreatment.type} ({(inv.taxTreatment.rateBps / 100).toFixed(2)}%)
-                </td>
-                <td className="py-2">
-                  {inv.postedToGL ? (
-                    <span className="rounded bg-[var(--rag-green-soft)] px-2 py-0.5 text-xs text-[var(--rag-green)]">
-                      Posted
-                    </span>
-                  ) : (
-                    <span className="rounded bg-[var(--rag-amber-soft)] px-2 py-0.5 text-xs text-[var(--rag-amber)]">
-                      Pending
-                    </span>
-                  )}
-                </td>
-                <td className="py-2 text-xs">
-                  {INTERCOMPANY_INVOICE_STATUS_LABEL[inv.status]}
-                </td>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Flow</th>
+                <th>IWO</th>
+                <th style={{ textAlign: 'right' }}>Amount</th>
+                <th>Tax</th>
+                <th>GL</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {invoices.map((inv) => (
+                <tr key={inv.id}>
+                  <td className="mono" style={{ fontSize: 12 }}>{inv.id}</td>
+                  <td style={{ fontSize: 12 }}>
+                    {inv.fromOrgId} <span style={{ color: 'var(--fg-quaternary)' }}>→</span> {inv.toOrgId}
+                  </td>
+                  <td className="mono" style={{ fontSize: 12 }}>{inv.iwoId || '—'}</td>
+                  <td className="mono tabular" style={{ textAlign: 'right' }}>
+                    {inv.amount.currency} {(inv.amount.amountMinor / 100).toLocaleString()}
+                  </td>
+                  <td style={{ fontSize: 12, color: 'var(--fg-secondary)' }}>
+                    {inv.taxTreatment.type} ({(inv.taxTreatment.rateBps / 100).toFixed(2)}%)
+                  </td>
+                  <td>
+                    <Pill tone={inv.postedToGL ? 'green' : 'amber'} dot={false}>
+                      {inv.postedToGL ? 'Posted' : 'Pending'}
+                    </Pill>
+                  </td>
+                  <td style={{ fontSize: 12 }}>{INTERCOMPANY_INVOICE_STATUS_LABEL[inv.status]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
