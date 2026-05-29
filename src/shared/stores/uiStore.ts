@@ -8,6 +8,10 @@ import { persist } from 'zustand/middleware';
 
 export type Density = 'dense' | 'balanced' | 'airy';
 export type Accent = 'boysenberry' | 'goldenbell' | 'seafoam' | 'pesto';
+/** UI-refresh editorial axis. `ambitious` is the production default. */
+export type Direction = 'conservative' | 'ambitious';
+/** Sidebar chrome treatment. */
+export type SidebarStyle = 'dark' | 'light';
 
 interface UIState {
   sidebarOpen: boolean; // Mobile drawer open/close
@@ -17,6 +21,8 @@ interface UIState {
   theme: 'light' | 'dark' | 'system';
   density: Density;
   accent: Accent;
+  direction: Direction;
+  sidebarStyle: SidebarStyle;
   sparklinesEnabled: boolean;
   aiPanelEnabled: boolean;
   /** True once we've applied org-level platform defaults at least once. */
@@ -35,6 +41,8 @@ interface UIState {
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   setDensity: (density: Density) => void;
   setAccent: (accent: Accent) => void;
+  setDirection: (direction: Direction) => void;
+  setSidebarStyle: (style: SidebarStyle) => void;
   setSparklinesEnabled: (enabled: boolean) => void;
   setAiPanelEnabled: (enabled: boolean) => void;
   /** Apply platform defaults without marking as overrides. No-op for keys
@@ -74,6 +82,8 @@ export const useUIStore = create<UIState>()(
       theme: 'light',
       density: 'balanced',
       accent: 'boysenberry',
+      direction: 'ambitious',
+      sidebarStyle: 'dark',
       sparklinesEnabled: true,
       aiPanelEnabled: true,
       appliedPlatformDefaults: false,
@@ -105,6 +115,10 @@ export const useUIStore = create<UIState>()(
 
       setAccent: (accent) =>
         set((state) => ({ accent, overrides: { ...state.overrides, accent: true } })),
+
+      setDirection: (direction) => set({ direction }),
+
+      setSidebarStyle: (sidebarStyle) => set({ sidebarStyle }),
 
       setSparklinesEnabled: (sparklinesEnabled) => set({ sparklinesEnabled }),
 
@@ -154,6 +168,8 @@ export const useUIStore = create<UIState>()(
         theme: state.theme,
         density: state.density,
         accent: state.accent,
+        direction: state.direction,
+        sidebarStyle: state.sidebarStyle,
         sparklinesEnabled: state.sparklinesEnabled,
         aiPanelEnabled: state.aiPanelEnabled,
         appliedPlatformDefaults: state.appliedPlatformDefaults,

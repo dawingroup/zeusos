@@ -14,6 +14,7 @@ export function useThemeSync() {
   const theme = useUIStore((s) => s.theme);
   const density = useUIStore((s) => s.density);
   const accent = useUIStore((s) => s.accent);
+  const direction = useUIStore((s) => s.direction);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -46,6 +47,10 @@ export function useThemeSync() {
   useEffect(() => {
     document.documentElement.setAttribute('data-accent', accent);
   }, [accent]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-direction', direction);
+  }, [direction]);
 }
 
 /**
