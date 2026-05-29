@@ -19,6 +19,8 @@ import {
   MessageSquare,
   PanelLeftOpen,
   PanelLeftClose,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import { getIconByName } from '@/shared/utils/iconMap';
 import { Button } from '@/core/components/ui/button';
@@ -55,6 +57,7 @@ import {
   type NavItem,
 } from '@/config/navigation.unified';
 import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
+import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { useUserModules } from '@/hooks/useUserModules';
 import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIntelligenceMenu';
@@ -66,7 +69,6 @@ import { useBranding } from '@/shared/hooks/useBranding';
 const subscribeToUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 const subscribeToGChatUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 import { GroupNavPills } from '@/core/components/layout/GroupNavPills';
-import { SubsidiaryPicker } from '@/core/components/layout/SubsidiaryPicker';
 import { PreferencesMenu } from '@/core/components/layout/PreferencesMenu';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 
@@ -378,6 +380,21 @@ export function AppShell({ children }: AppShellProps) {
     return location.pathname === href || location.pathname.startsWith(href);
   };
 
+  // UI refresh — shell-level breadcrumb + org-chip framing.
+  const isParentRoot =
+    isParentOrgPrincipal && (currentSubsidiary?.id ?? 'zeus-group') === 'zeus-group';
+  const breadcrumbRoot = isParentRoot ? 'Zeus Group' : subsidiaryName;
+  const activeNavLabel = [...mainNavItems, ...corporateNavItems]
+    .filter((it) => isActive(it.href))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.label;
+  const userInitials =
+    user?.displayName?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U';
+  const userRoleLabel = isParentRoot
+    ? 'Parent-org admin'
+    : dawinUser?.globalRole
+      ? dawinUser.globalRole.charAt(0).toUpperCase() + dawinUser.globalRole.slice(1)
+      : 'Team member';
+
   const getIcon = (iconName: string): LucideIcon | null => {
     return getIconByName(iconName);
   };
@@ -585,11 +602,14 @@ export function AppShell({ children }: AppShellProps) {
           isScrolled && 'shadow-[var(--shadow-sm)]'
         )}
       >
-        <div className="flex items-center gap-2 shrink-0">
-          {branding.logoUrl ? (
-            <img src={branding.logoUrl} alt="Logo" className="h-7 w-auto object-contain" />
-          ) : (
-            <Building2 className="h-4 w-4 text-[var(--fg-tertiary)]" />
+        {/* UI refresh — shell breadcrumb (root › active surface) */}
+        <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
+          <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
+          {activeNavLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
+              <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
+            </>
           )}
         </div>
 
@@ -631,62 +651,9 @@ export function AppShell({ children }: AppShellProps) {
           </Button>
         )}
 
-        {/* Subsidiary Switcher (now a compact pill before the avatar) */}
-        <SubsidiaryPicker />
-
-        {/* User Menu — now circular avatar w/ Preferences submenu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full h-8 w-8 ml-1"
-              aria-label="Account menu"
-            >
-              <div
-                className="h-7 w-7 rounded-full flex items-center justify-center text-[11.5px] font-semibold"
-                style={{
-                  backgroundColor: 'var(--accent-soft)',
-                  color: 'var(--accent)',
-                }}
-              >
-                {user?.displayName?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U'}
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-60">
-            <div className="px-2 py-1.5">
-              <div className="text-[13px] font-medium text-[var(--fg-primary)] truncate">
-                {user?.displayName || 'User'}
-              </div>
-              <div className="text-[11px] text-[var(--fg-tertiary)] truncate">
-                {user?.email}
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to="/profile">
-                <User className="mr-2 h-3.5 w-3.5" /> Profile
-              </Link>
-            </DropdownMenuItem>
-            {adminNavItems.length > 0 && (
-              <DropdownMenuItem asChild>
-                <Link to="/admin">
-                  <Settings className="mr-2 h-3.5 w-3.5" /> Admin
-                </Link>
-              </DropdownMenuItem>
-            )}
-            <PreferencesMenu />
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => signOut()}
-              data-testid="logout-button"
-              className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
-            >
-              <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Org switcher + account menu relocated into the sidebar (chip +
+            footer card) in the UI refresh. Mobile keeps its own header
+            dropdowns below. */}
       </header>
 
       {/* Mobile Header */}
@@ -886,6 +853,77 @@ export function AppShell({ children }: AppShellProps) {
             />
           )}
 
+          {/* UI refresh — org switcher chip (relocated from the header) */}
+          <div className={cn('pt-2.5 pb-1', sidebarExpanded ? 'px-3.5' : 'lg:px-2 px-3.5')}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    'flex items-center rounded-[10px] text-left border border-white/[0.06] transition-colors',
+                    'bg-[var(--bg-sidebar-hover)] hover:bg-[var(--bg-sidebar-active)]',
+                    sidebarExpanded ? 'w-full gap-2.5 px-2.5 py-2' : 'justify-center p-1.5'
+                  )}
+                  aria-label="Switch organisation"
+                >
+                  <span
+                    className="inline-flex items-center justify-center rounded-lg font-bold flex-none"
+                    style={{
+                      width: 30, height: 30, fontSize: 11, letterSpacing: '0.04em',
+                      background: 'var(--brand-accent)', color: 'var(--brand-accent-fg)',
+                      boxShadow: direction === 'ambitious' ? '0 0 0 2px color-mix(in srgb, var(--brand-accent) 30%, transparent)' : 'none',
+                    }}
+                  >
+                    {currentSubsidiary?.shortName ?? 'ZG'}
+                  </span>
+                  {sidebarExpanded && (
+                    <>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[13px] font-semibold leading-tight text-[var(--fg-on-dark)] truncate">
+                          {subsidiaryName}
+                        </span>
+                        <span className="block text-[10.5px] uppercase tracking-[0.08em] text-[var(--fg-on-dark-muted)] mt-0.5">
+                          {isParentRoot ? 'Parent · Zeus Group' : 'Subsidiary'}
+                        </span>
+                      </span>
+                      <ChevronDown className="h-3.5 w-3.5 text-[var(--fg-on-dark-muted)] flex-none" />
+                    </>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56" style={{ zIndex: 70 }}>
+                <div className="px-2 py-1.5 text-[11px] font-medium text-muted-foreground">
+                  Switch organisation
+                </div>
+                {subsidiaries.filter((s) => s.status === 'active').map((sub) => (
+                  <DropdownMenuItem
+                    key={sub.id}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSubsidiarySwitch(sub); }}
+                    className="gap-2.5 cursor-pointer"
+                  >
+                    <span
+                      className="rounded flex-none"
+                      style={{
+                        width: 18, height: 18, background: sub.color,
+                        border: currentSubsidiary?.id === sub.id ? '2px solid var(--fg-primary)' : 'none',
+                      }}
+                    />
+                    <span className="flex-1 truncate">{sub.name}</span>
+                    {isConflictIsolated(sub.id as SubsidiaryId) && (
+                      <span
+                        className="text-[9.5px] uppercase tracking-[0.06em] px-1.5 py-0.5 rounded-full"
+                        style={{ background: 'rgba(230,91,102,0.18)', color: '#cf4b54' }}
+                      >
+                        Isolated
+                      </span>
+                    )}
+                    {currentSubsidiary?.id === sub.id && <Check className="h-3.5 w-3.5 flex-none" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
           {/* Toggle button - desktop only */}
           <div className={cn(
             'hidden lg:flex items-center border-b border-[var(--border-on-dark)] px-2 py-2',
@@ -933,6 +971,69 @@ export function AppShell({ children }: AppShellProps) {
                 : <div className="space-y-1">{mainNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
             </div>
           </ScrollArea>
+
+          {/* UI refresh — user footer card (relocated from the header) */}
+          <div className={cn('mt-auto', sidebarExpanded ? 'm-2.5' : 'lg:mx-1.5 lg:my-2 m-2.5')}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    'flex items-center rounded-[10px] text-left bg-white/[0.04] hover:bg-white/[0.07] transition-colors',
+                    sidebarExpanded ? 'w-full gap-2.5 p-2.5' : 'justify-center p-1.5'
+                  )}
+                  aria-label="Account menu"
+                >
+                  <span
+                    className="inline-flex items-center justify-center rounded-full text-[11px] font-semibold text-white flex-none"
+                    style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #e63946, #b8222e)' }}
+                  >
+                    {userInitials}
+                  </span>
+                  {sidebarExpanded && (
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[12.5px] font-semibold leading-tight text-[var(--fg-on-dark)] truncate">
+                        {user?.displayName || 'User'}
+                      </span>
+                      <span className="block text-[10.5px] text-[var(--fg-on-dark-muted)] mt-0.5 truncate">
+                        {userRoleLabel}
+                      </span>
+                    </span>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" side="top" className="w-56">
+                <div className="px-2 py-1.5">
+                  <div className="text-[13px] font-medium text-[var(--fg-primary)] truncate">
+                    {user?.displayName || 'User'}
+                  </div>
+                  <div className="text-[11px] text-[var(--fg-tertiary)] truncate">{user?.email}</div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile">
+                    <User className="mr-2 h-3.5 w-3.5" /> Profile
+                  </Link>
+                </DropdownMenuItem>
+                {adminNavItems.length > 0 && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin">
+                      <Settings className="mr-2 h-3.5 w-3.5" /> Admin
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <PreferencesMenu />
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  data-testid="logout-button"
+                  className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
+                >
+                  <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </aside>
 
         {/* Mobile Overlay */}
