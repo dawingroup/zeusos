@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { listMediaPlans } from '../services/media-plan.service';
 import type { MediaPlan, MediaPlanStatus } from '../types/media-plan.types';
 import { MediaPlanStatusBadge } from '../components/MediaPlanStatusBadge';
+import { PageHero } from '@/shared/components/refresh';
 
 const STATUS_OPTIONS: Array<MediaPlanStatus | 'ALL'> = ['ALL', 'DRAFT', 'ACTIVE', 'CLOSED'];
 
@@ -27,62 +28,56 @@ export default function MediaPlansListPage() {
   }, [statusFilter]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Media Plans</h1>
-          <p className="text-sm text-muted-foreground">
-            Budget allocation and channel buys for active campaigns.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as MediaPlanStatus | 'ALL')}
-            className="rounded border px-2 py-1 text-sm"
-          >
-            {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>{s === 'ALL' ? 'All statuses' : s}</option>
-            ))}
-          </select>
-          <Link
-            to="/media/new"
-            className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
-          >
-            New Plan
-          </Link>
-        </div>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · Media"
+        title="Media plans"
+        body="Budget allocation and channel buys for active campaigns."
+        actions={
+          <>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as MediaPlanStatus | 'ALL')}
+              className="input"
+              style={{ width: 'auto' }}
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>{s === 'ALL' ? 'All statuses' : s}</option>
+              ))}
+            </select>
+            <Link to="/media/new" className="btn btn-primary">
+              New plan
+            </Link>
+          </>
+        }
+      />
 
-      {loading && <p className="text-sm text-muted-foreground">Loading media plans…</p>}
-      {error && <p className="text-sm text-destructive">Error: {error}</p>}
+      {loading && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Loading media plans…</p>}
+      {error && <p style={{ fontSize: 13, color: 'var(--rag-red)' }}>Error: {error}</p>}
 
       {!loading && !error && plans.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No media plans found. Create a plan to start buying media for a campaign.
         </div>
       )}
 
       {!loading && plans.length > 0 && (
-        <ul className="divide-y rounded border">
+        <div className="card" style={{ overflow: 'hidden' }}>
           {plans.map((plan) => (
-            <li key={plan.id} className="flex items-center justify-between p-3 hover:bg-muted/20">
+            <div key={plan.id} className="list-row" style={{ justifyContent: 'space-between' }}>
               <div>
-                <Link
-                  to={`/media/${plan.id}`}
-                  className="font-medium hover:underline"
-                >
+                <Link to={`/media/${plan.id}`} className="ttl hover:underline">
                   {plan.title}
                 </Link>
-                <div className="text-xs text-muted-foreground">
-                  Job: {plan.masterJobId} · {plan.currency}{' '}
+                <div className="meta">
+                  Job: {plan.masterJobId} <span className="sep">·</span> {plan.currency}{' '}
                   {(plan.totalBudgetMinor / 100).toLocaleString()} total budget
                 </div>
               </div>
               <MediaPlanStatusBadge status={plan.status} />
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
