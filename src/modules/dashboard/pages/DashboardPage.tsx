@@ -25,7 +25,9 @@ import { useCurrentDawinUser } from '@/core/settings';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
-import type { InternalWorkOrder, IWOState } from '@/modules/assignment/types/iwo.types';
+import type { Timestamp } from 'firebase/firestore';
+import type { InternalWorkOrder } from '@/modules/assignment/types/iwo.types';
+import type { IWOState } from '@/modules/assignment/constants/iwo-states';
 import { computeBurnMeter } from '@/modules/delivery/services/burnMeter';
 import { subscribeIWOInbox, subscribeIWOActive } from '@/modules/delivery/services/firestore';
 import { subscribeActiveIwos, subscribeOpenMasterJobs } from '@/modules/traffic/services/traffic.service';
@@ -52,17 +54,27 @@ function brandMeta(id: string) {
 }
 
 type Sla = 'breach' | 'warn' | 'ok' | 'na';
+function toMs(v: Timestamp | string | undefined): number | null {
+  if (!v) return null;
+  if (typeof v === 'string') {
+    const t = new Date(v).getTime();
+    return Number.isNaN(t) ? null : t;
+  }
+  const maybe = v as unknown as { toDate?: () => Date; seconds?: number };
+  if (typeof maybe.toDate === 'function') return maybe.toDate().getTime();
+  if (typeof maybe.seconds === 'number') return maybe.seconds * 1000;
+  return null;
+}
 function slaRisk(iwo: InternalWorkOrder, nowMs: number): Sla {
-  if (!iwo.slaDueAt) return 'na';
-  const due = new Date(iwo.slaDueAt).getTime();
-  if (Number.isNaN(due)) return 'na';
+  const due = toMs(iwo.slaDueAt);
+  if (due == null) return 'na';
   if (due < nowMs) return 'breach';
   if (due - nowMs < 24 * 60 * 60 * 1000) return 'warn';
   return 'ok';
 }
 function stateTone(state: IWOState): RagTone {
   if (state === 'DELIVERED' || state === 'ACCEPTED_INTERNALLY' || state === 'CLOSED') return 'green';
-  if (state === 'REJECTED' || state === 'CANCELLED' || state === 'REVISION_REQUESTED') return 'red';
+  if (state === 'REJECTED' || state === 'CANCELLED') return 'red';
   return 'blue';
 }
 
@@ -193,7 +205,7 @@ function ParentDashboard({ today }: { today: string }) {
               <tbody>
                 {iwos.slice(0, 7).map((i) => {
                   const b = brandMeta(i.subsidiaryOrgId);
-                  const burn = computeBurnMeter(i);
+                  const burn = computeBurnMeter({ cumulativeMinor: i.cumulativeCostMinor, budgetMinor: i.budgetMinor });
                   return (
                     <tr key={i.id}>
                       <td className="mono" style={{ fontSize: 12 }}>
@@ -204,8 +216,8 @@ function ParentDashboard({ today }: { today: string }) {
                           <span style={{ width: 8, height: 8, borderRadius: 2, background: b.accent }} />{b.short}
                         </span>
                       </td>
-                      <td className="tabular" style={{ textAlign: 'right', color: burn.pct >= 100 ? 'var(--rag-red)' : burn.pct >= 80 ? 'var(--rag-amber)' : undefined }}>
-                        {Math.round(burn.pct)}%
+                      <td className="tabular" style={{ textAlign: 'right', color: burn.percentage >= 100 ? 'var(--rag-red)' : burn.percentage >= 80 ? 'var(--rag-amber)' : undefined }}>
+                        {Math.round(burn.percentage)}%
                       </td>
                       <td><Pill tone={stateTone(i.state)}>{i.state.replace(/_/g, ' ')}</Pill></td>
                     </tr>
@@ -318,13 +330,13 @@ function SubsidiaryDashboard({ today, brandId }: { today: string; brandId: Subsi
       <div className="card" style={{ overflow: 'hidden' }}>
         <table className="tbl">
           <thead>
-            <tr><th>IWO</th><th>Title</th><th style={{ textAlign: 'right' }}>Budget</th><th /></tr>
+            <tr><th>IWO</th><th>Master job</th><th style={{ textAlign: 'right' }}>Budget</th><th /></tr>
           </thead>
           <tbody>
             {issued.map((i) => (
               <tr key={i.id} className="brand-edge">
                 <td className="mono" style={{ fontSize: 12 }}>{i.code}</td>
-                <td>{i.title || '—'}</td>
+                <td className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{i.masterJobId}</td>
                 <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(i.budgetMinor, i.currency)}</td>
                 <td style={{ textAlign: 'right' }}>
                   <Link to={`/delivery/iwo/${i.id}`} className="btn btn-ghost" style={{ padding: '4px 10px' }}>Open</Link>
