@@ -19,6 +19,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks';
 import { useCurrentDawinUser } from '@/core/settings';
 import { FullPageLoader } from '@/shared/components/feedback';
+import { resolveOrgKind, isSuperUserEmail } from '@/core/settings/org-kind';
 
 type UserRole = string;
 type OrgKind = 'PARENT' | 'SUBSIDIARY';
@@ -34,11 +35,6 @@ interface RoleGuardProps {
   fallback?: React.ReactNode;
 }
 
-// Super user email with unrestricted access to all functions
-const SUPER_USER_EMAILS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
-
-const PARENT_ORG_ID = 'zeus-group';
-
 export function RoleGuard({ children, roles, requireGlobalRole, requireOrgKind, fallback }: RoleGuardProps) {
   const { user, loading } = useAuth();
   const { dawinUser, isLoading: userLoading } = useCurrentDawinUser();
@@ -53,7 +49,7 @@ export function RoleGuard({ children, roles, requireGlobalRole, requireOrgKind, 
   }
 
   // Super user bypasses all role checks
-  if (user.email && SUPER_USER_EMAILS.includes(user.email)) {
+  if (isSuperUserEmail(user.email)) {
     return <>{children}</>;
   }
 
@@ -92,28 +88,13 @@ export function RoleGuard({ children, roles, requireGlobalRole, requireOrgKind, 
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // Phase 3.D — org-kind gate (spec §7.4). 'PARENT' rejects subsidiary
-  // principals; 'SUBSIDIARY' would reject parent principals (not yet
-  // used). Until 3.E lands homeOrgId on every user, fall back to
-  // "subsidiaryAccess includes 'zeus-group'" as the PARENT proxy.
-  if (requireOrgKind === 'PARENT') {
-    const hasParentMembership =
-      Array.isArray(dawinUser.subsidiaryAccess) &&
-      dawinUser.subsidiaryAccess.some(
-        (s) => s.subsidiaryId === PARENT_ORG_ID && s.hasAccess,
-      );
-    if (!hasParentMembership) {
-      if (fallback) return <>{fallback}</>;
-      return <Navigate to="/unauthorized" replace />;
-    }
-  }
-  if (requireOrgKind === 'SUBSIDIARY') {
-    const onlyParent =
-      Array.isArray(dawinUser.subsidiaryAccess) &&
-      dawinUser.subsidiaryAccess.every(
-        (s) => !s.hasAccess || s.subsidiaryId === PARENT_ORG_ID,
-      );
-    if (onlyParent) {
+  // Phase 3.D — org-kind gate (spec §7.4), via the shared resolver in
+  // `@/core/settings/org-kind` so the route guards, the AppShell nav
+  // builder, and the dashboard all agree (no "passes the guard but gets
+  // an empty sidebar" drift).
+  if (requireOrgKind) {
+    const resolvedKind = resolveOrgKind(user.email, dawinUser);
+    if (resolvedKind !== requireOrgKind) {
       if (fallback) return <>{fallback}</>;
       return <Navigate to="/unauthorized" replace />;
     }

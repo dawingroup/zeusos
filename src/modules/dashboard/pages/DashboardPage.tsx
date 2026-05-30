@@ -22,9 +22,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Shield, Inbox, Plus } from 'lucide-react';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useAuth } from '@/shared/hooks';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
+import { isParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { Timestamp } from 'firebase/firestore';
 import type { InternalWorkOrder } from '@/modules/assignment/types/iwo.types';
 import type { IWOState } from '@/modules/assignment/constants/iwo-states';
@@ -80,17 +82,16 @@ function stateTone(state: IWOState): RagTone {
 
 export default function DashboardPage() {
   const { dawinUser } = useCurrentDawinUser();
+  const { user } = useAuth();
   const { currentSubsidiary } = useSubsidiary();
 
   const brandId = (currentSubsidiary?.id ?? 'zeus-group') as SubsidiaryId;
-  const isParent = useMemo(() => {
-    const onGroup = brandId === 'zeus-group';
-    const privileged =
-      (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
-      Array.isArray(dawinUser?.subsidiaryAccess) &&
-      dawinUser.subsidiaryAccess.some((s) => s.subsidiaryId === 'zeus-group' && s.hasAccess);
-    return onGroup && !!privileged;
-  }, [dawinUser, brandId]);
+  // Use the shared resolver (super-user email / homeOrgId / zeus-group
+  // access) so the dashboard variant matches the sidebar + route guards.
+  const isParent = useMemo(
+    () => brandId === 'zeus-group' && isParentOrgPrincipal(user?.email, dawinUser),
+    [user?.email, dawinUser, brandId],
+  );
 
   const today = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
