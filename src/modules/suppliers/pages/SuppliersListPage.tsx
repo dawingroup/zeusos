@@ -15,6 +15,7 @@ import type {
 } from '../types/supplier.types';
 import { SupplierKindBadge } from '../components/SupplierKindBadge';
 import { SupplierStatusBadge } from '../components/SupplierStatusBadge';
+import { PageHero } from '@/shared/components/refresh';
 
 const KIND_OPTIONS: Array<SupplierKind | 'ALL'> = [
   'ALL', 'MEDIA_HOUSE', 'TALENT_AGENCY', 'PRODUCTION_HOUSE', 'PRINT_SHOP', 'TECH_VENDOR', 'VENDOR_OTHER',
@@ -55,21 +56,19 @@ export default function SuppliersListPage() {
     : rows;
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Suppliers</h1>
-          <p className="text-sm text-muted-foreground">
-            Shared directory of media houses, talent agencies, production houses, and other
-            external vendors. Linked to media supplier invoices and procurement POs.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · Suppliers"
+        title="Suppliers"
+        body="Shared directory of media houses, talent agencies, production houses, and other external vendors. Linked to media supplier invoices and procurement POs."
+      />
+      <div className="flex flex-wrap gap-2">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name…"
-            className="rounded border px-2 py-1 text-sm"
+            className="input"
+            style={{ width: 'auto' }}
             data-testid="supplier-search"
           />
           <select
@@ -100,45 +99,42 @@ export default function SuppliersListPage() {
             + New supplier
           </Link>
         </div>
-      </header>
 
       {loading && <p className="text-sm text-muted-foreground">Loading suppliers…</p>}
       {error && <p className="text-sm text-destructive">Error: {error}</p>}
 
       {!loading && !error && filtered.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No suppliers found. Click &quot;New supplier&quot; to add one.
         </div>
       )}
 
       {!loading && !error && filtered.length > 0 && (
-        <div className="overflow-x-auto rounded border">
-          <table className="w-full text-sm" data-testid="supplier-table">
-            <thead className="bg-muted/50">
-              <tr className="text-left text-xs uppercase text-muted-foreground">
-                <th className="px-4 py-2 font-medium">Name</th>
-                <th className="px-4 py-2 font-medium">Kind</th>
-                <th className="px-4 py-2 font-medium">Country</th>
-                <th className="px-4 py-2 font-medium">Currency</th>
-                <th className="px-4 py-2 font-medium">Terms</th>
-                <th className="px-4 py-2 font-medium">Status</th>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table className="tbl" data-testid="supplier-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Kind</th>
+                <th>Country</th>
+                <th>Currency</th>
+                <th>Terms</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((s) => (
-                <tr key={s.id} className="border-t hover:bg-muted/30" data-supplier-id={s.id}>
-                  <td className="px-4 py-2 font-medium">
+                <tr key={s.id} data-supplier-id={s.id}>
+                  <td style={{ fontWeight: 600 }}>
                     <Link to={`/suppliers/${s.id}`} className="hover:underline">
                       {s.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-2"><SupplierKindBadge kind={s.kind} /></td>
-                  <td className="px-4 py-2 text-xs text-muted-foreground">
-                    {s.countryCode ?? '—'}
-                  </td>
-                  <td className="px-4 py-2 text-xs">{s.currency}</td>
-                  <td className="px-4 py-2 text-xs text-muted-foreground">{s.paymentTerms}</td>
-                  <td className="px-4 py-2"><SupplierStatusBadge status={s.status} /></td>
+                  <td><SupplierKindBadge kind={s.kind} /></td>
+                  <td style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{s.countryCode ?? '—'}</td>
+                  <td style={{ fontSize: 12 }}>{s.currency}</td>
+                  <td style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{s.paymentTerms}</td>
+                  <td><SupplierStatusBadge status={s.status} /></td>
                 </tr>
               ))}
             </tbody>
