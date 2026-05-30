@@ -13,6 +13,7 @@ import { listLeads } from '../services/lead.service';
 import type { Lead, LeadStage } from '../types/lead.types';
 import { LeadCard } from '../components/LeadCard';
 import { STAGE_LABEL } from '../components/LeadStageBadge';
+import { PageHero } from '@/shared/components/refresh';
 
 const DEFAULT_ORG_ID = 'default';
 
@@ -113,18 +114,17 @@ export default function PipelineKanbanPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Pipeline</h1>
-          <p className="text-sm text-muted-foreground">
-            Open leads grouped by funnel stage. Move leads between stages from the detail page.
-          </p>
-        </div>
-        <Link to="/crm" className="rounded border px-3 py-1 text-sm" data-testid="crm-list-link">
-          List view
-        </Link>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · CRM"
+        title="Pipeline"
+        body="Open leads grouped by funnel stage. Move leads between stages from the detail page."
+        actions={
+          <Link to="/crm" className="btn btn-secondary" data-testid="crm-list-link">
+            List view
+          </Link>
+        }
+      />
 
       {loading && <p className="text-sm text-muted-foreground">Loading pipeline…</p>}
       {error && <p className="text-sm text-destructive">Error: {error}</p>}
