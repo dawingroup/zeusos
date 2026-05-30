@@ -32,6 +32,7 @@ import { lazyWithRetry } from '@/shared/utils/lazyWithRetry';
 // ──────────────────────────────────────────────────────────────────────────
 // Auth
 // ──────────────────────────────────────────────────────────────────────────
+const DashboardPage = lazyWithRetry(() => import('@/modules/dashboard/pages/DashboardPage'));
 const LoginPage = lazyWithRetry(() => import('@/pages/auth/LoginPage'));
 const ForgotPasswordPage = lazyWithRetry(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPasswordPage'));
@@ -322,7 +323,7 @@ export const router = createBrowserRouter([
       </AuthGuard>
     ),
     children: [
-      { index: true, element: <Navigate to="/strategy" replace /> },
+      { index: true, element: <PageWrapper><DashboardPage /></PageWrapper> },
       { path: 'dashboard', element: <Navigate to="/strategy" replace /> },
 
       // Account Management — Phase 3.D commercial core.
