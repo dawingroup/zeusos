@@ -43,6 +43,7 @@ import { resolveHomeSubsidiaryId } from '../components/deliveryAccess';
 import { isConflictIsolated } from '@/core/navigation/manifest';
 import { computeBurnMeter, type BurnMeter } from '../services/burnMeter';
 import { BurnMeterBar } from '../components/BurnMeterBar';
+import { PageHero } from '@/shared/components/refresh';
 
 type Filter = 'all' | 'overheating' | 'on-track';
 
@@ -161,13 +162,12 @@ export default function BurnAndSlaPage() {
   const showIsolationBanner = isConflictIsolated(homeSub);
 
   return (
-    <div style={{ padding: 24 }} data-testid="burn-sla-page">
-      <header style={{ marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Burn &amp; SLA</h1>
-        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-          Active IWOs in <strong>{homeSub}</strong>. Sorted with overheating first; click any row for the workspace.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="burn-sla-page">
+      <PageHero
+        eyebrow={`${homeSub} · Delivery`}
+        title="Burn & SLA"
+        body="Active IWOs in your brand. Sorted with overheating first; click any row for the workspace."
+      />
 
       {showIsolationBanner && (
         <div

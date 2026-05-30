@@ -13,6 +13,9 @@
  * Phase 6.D scope gates the action on parent-org only (the callable
  * enforces this). Per-rung RBAC ("only ECDs see the ECD-rung Pending
  * tab") lands in 6.D.2-RBAC as a follow-up.
+ *
+ * UI refresh (batch 3b): PageHero + zeus-red underline tabs. All logic,
+ * subscriptions, and data-testids preserved.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -25,6 +28,7 @@ import {
   subscribeCompletedApprovals,
 } from '../services/approval-ladder.service';
 import { ApprovalChainTimeline } from '../components/ApprovalChainTimeline';
+import { PageHero } from '@/shared/components/refresh';
 import { cn } from '@/shared/lib/utils';
 
 type Tab = 'pending' | 'progress' | 'returned' | 'history';
@@ -100,27 +104,24 @@ export default function EcdReviewPage() {
   };
 
   return (
-    <div className="p-6" data-testid="ecd-review-page">
-      <header className="mb-4">
-        <h1 className="text-[20px] font-semibold text-[var(--fg-primary)] mb-1">
-          ECD Review
-        </h1>
-        <p className="text-[13px] text-[var(--fg-tertiary)]">
-          Approval-ladder rungs awaiting action across in-flight IWOs.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="ecd-review-page">
+      <PageHero
+        eyebrow="Delivery"
+        title="ECD review"
+        body="Approval-ladder rungs awaiting action across in-flight IWOs."
+      />
 
       {err && (
         <div
           role="alert"
           data-testid="ecd-review-error"
-          className="mb-4 p-3 rounded-md border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red-deep)] text-[13px]"
+          className="mb-4 p-3 rounded-md border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-[13px]"
         >
           {err}
         </div>
       )}
 
-      <nav className="border-b border-[var(--border-default)] mb-4" aria-label="ECD Review tabs">
+      <nav style={{ borderBottom: '1px solid var(--border-subtle)', marginBottom: 18 }} aria-label="ECD Review tabs">
         <ul className="flex gap-1 -mb-px">
           {TAB_DEFS.map((t) => {
             const Icon = t.icon;
@@ -131,10 +132,10 @@ export default function EcdReviewPage() {
                   data-testid={t.testId}
                   onClick={() => setTab(t.id)}
                   className={cn(
-                    'inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium border-b-2 transition-colors',
+                    'inline-flex items-center gap-1.5 px-3.5 py-2.5 text-[13px] border-b-2 transition-colors',
                     isActive
-                      ? 'border-[var(--accent)] text-[var(--accent)]'
-                      : 'border-transparent text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]',
+                      ? 'border-[var(--zeus-red)] text-[var(--fg-primary)] font-semibold'
+                      : 'border-transparent text-[var(--fg-tertiary)] font-medium hover:text-[var(--fg-primary)]',
                   )}
                 >
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -142,7 +143,7 @@ export default function EcdReviewPage() {
                   <span
                     className={cn(
                       'inline-block text-[10.5px] px-1.5 py-0.5 rounded',
-                      isActive ? 'bg-[var(--accent-soft)]' : 'bg-[var(--bg-sunken)]',
+                      isActive ? 'bg-[var(--brand-accent-soft)]' : 'bg-[var(--bg-sunken)]',
                     )}
                   >
                     {tabCount(t.id)}
@@ -168,12 +169,12 @@ export default function EcdReviewPage() {
                 : 'No approvals have been completed yet.'}
         </p>
       ) : (
-        <ul className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {visible.map((iwo) => (
-            <li
+            <div
               key={iwo.id}
               data-testid={`ecd-row-${iwo.id}`}
-              className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3"
+              className="card card-pad brand-edge"
             >
               <header className="flex items-baseline justify-between gap-3 mb-2">
                 <Link
@@ -186,12 +187,10 @@ export default function EcdReviewPage() {
                   {iwo.subsidiaryOrgId}
                 </span>
               </header>
-              {iwo.approvalChain && (
-                <ApprovalChainTimeline chain={iwo.approvalChain} compact />
-              )}
-            </li>
+              {iwo.approvalChain && <ApprovalChainTimeline chain={iwo.approvalChain} compact />}
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

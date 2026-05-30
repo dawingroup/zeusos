@@ -1,4 +1,3 @@
-/* eslint-disable design-system/no-inline-style-literals -- TODO(U.4): early Phase 3.E scaffolding, uses inline px + hex throughout. Real Tailwind/token refactor scheduled for U.4. */
 /**
  * IWOInboxPage — the subsidiary delivery workspace inbox.
  *
@@ -10,6 +9,9 @@
  * Spec §6.1.1: only the delivery lead of the receiving subsidiary can
  * accept or reject. Firestore rules + the callable both check this; the
  * UI surfaces the resulting error as a banner.
+ *
+ * UI refresh (batch 3b): PageHero + brand-edge .card rows + btn-accept/
+ * btn-reject. All data wiring and data-testids preserved.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -21,6 +23,7 @@ import { subscribeIWOInbox, subscribeIWOActive } from '../services/firestore';
 import { acceptWorkOrderFn, rejectWorkOrderFn } from '../services/firebase';
 import { resolveHomeSubsidiaryId } from '../components/deliveryAccess';
 import { isConflictIsolated } from '@/core/navigation/manifest';
+import { PageHero, SectionH, Pill } from '@/shared/components/refresh';
 
 function formatMinor(amountMinor: number, currency: string): string {
   return `${currency} ${(amountMinor / 100).toLocaleString(undefined, {
@@ -32,7 +35,6 @@ function formatMinor(amountMinor: number, currency: string): string {
 function formatTimestamp(ts: InternalWorkOrder['issuedAt']): string {
   if (!ts) return '—';
   if (typeof ts === 'string') return new Date(ts).toLocaleString();
-  // Firestore Timestamp duck-typed
   const maybe = ts as unknown as { toDate?: () => Date; seconds?: number };
   if (typeof maybe.toDate === 'function') return maybe.toDate().toLocaleString();
   if (typeof maybe.seconds === 'number') return new Date(maybe.seconds * 1000).toLocaleString();
@@ -53,16 +55,8 @@ export default function IWOInboxPage() {
 
   useEffect(() => {
     if (!homeSub) return;
-    const u1 = subscribeIWOInbox(
-      homeSub,
-      setInbox,
-      (e) => setErr(`Inbox load failed: ${e.message}`),
-    );
-    const u2 = subscribeIWOActive(
-      homeSub,
-      setActive,
-      () => { /* swallow — active list is a convenience */ },
-    );
+    const u1 = subscribeIWOInbox(homeSub, setInbox, (e) => setErr(`Inbox load failed: ${e.message}`));
+    const u2 = subscribeIWOActive(homeSub, setActive, () => { /* swallow — active list is a convenience */ });
     return () => { u1(); u2(); };
   }, [homeSub]);
 
@@ -94,15 +88,12 @@ export default function IWOInboxPage() {
   };
 
   if (!dawinUser) {
-    return <div style={{ padding: 24 }}>Loading user…</div>;
+    return <div style={{ padding: 'var(--pad-page)', color: 'var(--fg-tertiary)' }}>Loading user…</div>;
   }
   if (!homeSub) {
     return (
-      <div style={{ padding: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 600 }}>Delivery Inbox</h1>
-        <p style={{ color: '#475569' }}>
-          You don't appear to have access to any operating subsidiary. Speak to your administrator.
-        </p>
+      <div style={{ padding: 'var(--pad-page)' }}>
+        <PageHero eyebrow="Delivery" title="IWO inbox" body="You don't appear to have access to any operating subsidiary. Speak to your administrator." />
       </div>
     );
   }
@@ -110,13 +101,12 @@ export default function IWOInboxPage() {
   const showIsolationBanner = isConflictIsolated(homeSub);
 
   return (
-    <div style={{ padding: 24 }} data-testid="iwo-inbox-page">
-      <header style={{ marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Delivery Inbox</h1>
-        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-          Internal work orders issued to <strong>{homeSub}</strong>. Accept to lock the budget hold; reject (with reason) to release it.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="iwo-inbox-page">
+      <PageHero
+        eyebrow={`${homeSub} · Delivery`}
+        title="IWO inbox"
+        body="Internal work orders issued to your brand. Accept to lock the budget hold; reject (with reason) to release it."
+      />
 
       {showIsolationBanner && (
         <div
@@ -125,10 +115,10 @@ export default function IWOInboxPage() {
           style={{
             padding: '10px 14px',
             marginBottom: 16,
-            borderRadius: 6,
-            background: 'var(--rag-amber-soft, #fef3c7)',
-            color: 'var(--rag-amber-deep, #78350f)',
-            border: '1px solid var(--rag-amber, #f59e0b)',
+            borderRadius: 'var(--radius)',
+            background: 'var(--rag-amber-soft)',
+            color: 'var(--rag-amber)',
+            border: '1px solid var(--rag-amber)',
             fontSize: 13,
             fontWeight: 500,
           }}
@@ -138,99 +128,102 @@ export default function IWOInboxPage() {
       )}
 
       {err && (
-        <div role="alert" data-testid="iwo-inbox-error" style={{
-          padding: 12, marginBottom: 16, borderRadius: 6,
-          background: '#fef2f2', color: '#7f1d1d', border: '1px solid #fecaca',
-        }}>
+        <div
+          role="alert"
+          data-testid="iwo-inbox-error"
+          style={{
+            padding: 12,
+            marginBottom: 16,
+            borderRadius: 'var(--radius)',
+            background: 'var(--rag-red-soft)',
+            color: 'var(--rag-red)',
+            border: '1px solid var(--rag-red)',
+            fontSize: 13,
+          }}
+        >
           {err}
         </div>
       )}
 
-      <section style={{ marginBottom: 32 }} data-testid="iwo-inbox-awaiting">
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
-          Awaiting acceptance (<span data-testid="iwo-inbox-awaiting-count">{inbox.length}</span>)
-        </h2>
+      <section data-testid="iwo-inbox-awaiting">
+        <SectionH
+          title={
+            <>
+              Awaiting acceptance (<span data-testid="iwo-inbox-awaiting-count">{inbox.length}</span>)
+            </>
+          }
+          titleSize={15}
+        />
         {inbox.length === 0 ? (
-          <p style={{ color: '#64748b', fontSize: 13 }} data-testid="iwo-inbox-empty">No new work orders issued to you.</p>
+          <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }} data-testid="iwo-inbox-empty">
+            No new work orders issued to you.
+          </p>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>
-                <th style={{ padding: '8px 12px' }}>Code</th>
-                <th style={{ padding: '8px 12px' }}>Budget</th>
-                <th style={{ padding: '8px 12px' }}>Issued</th>
-                <th style={{ padding: '8px 12px' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inbox.map((iwo) => {
-                const busy = busyId === iwo.id;
-                return (
-                  <tr key={iwo.id} data-testid={`iwo-row-${iwo.id}`} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '10px 12px', fontFamily: 'monospace' }} data-testid={`iwo-row-${iwo.id}-code`}>{iwo.code}</td>
-                    <td style={{ padding: '10px 12px' }} data-testid={`iwo-row-${iwo.id}-budget`}>{formatMinor(iwo.budgetMinor, iwo.currency)}</td>
-                    <td style={{ padding: '10px 12px' }}>{formatTimestamp(iwo.issuedAt)}</td>
-                    <td style={{ padding: '10px 12px', display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {inbox.map((iwo) => {
+              const busy = busyId === iwo.id;
+              return (
+                <div key={iwo.id} className="card card-pad brand-edge" data-testid={`iwo-row-${iwo.id}`}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                    <div>
+                      <Link to={`/delivery/iwo/${iwo.id}`} className="mono hover:underline" style={{ fontWeight: 600 }} data-testid={`iwo-row-${iwo.id}-code`}>
+                        {iwo.code}
+                      </Link>
+                      <div style={{ fontSize: 11.5, color: 'var(--fg-tertiary)', marginTop: 2 }}>
+                        <span data-testid={`iwo-row-${iwo.id}-budget`}>{formatMinor(iwo.budgetMinor, iwo.currency)}</span>
+                        {' · issued '}{formatTimestamp(iwo.issuedAt)}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8, flex: 'none' }}>
                       <button
                         type="button"
                         data-testid={`iwo-row-${iwo.id}-accept`}
                         onClick={() => handleAccept(iwo)}
                         disabled={busy}
-                        style={{
-                          padding: '6px 12px', borderRadius: 4, border: 'none',
-                          background: '#15803d', color: '#fff', fontWeight: 600,
-                          cursor: busy ? 'wait' : 'pointer',
-                        }}
+                        className="btn btn-accept"
                       >
-                        Accept
+                        {busy ? '…' : 'Accept'}
                       </button>
                       <button
                         type="button"
                         data-testid={`iwo-row-${iwo.id}-reject`}
                         onClick={() => handleReject(iwo)}
                         disabled={busy}
-                        style={{
-                          padding: '6px 12px', borderRadius: 4,
-                          background: '#fff', color: '#7f1d1d',
-                          border: '1px solid #fecaca', fontWeight: 600,
-                          cursor: busy ? 'wait' : 'pointer',
-                        }}
+                        className="btn btn-reject"
                       >
                         Reject
                       </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </section>
 
-      <section>
-        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12 }}>
-          In-flight ({active.length})
-        </h2>
-        {active.length === 0 ? (
-          <p style={{ color: '#64748b', fontSize: 13 }}>Nothing in flight.</p>
-        ) : (
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {active.map((iwo) => (
-              <li key={iwo.id} style={{ padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
-                <Link
-                  to={`/delivery/iwo/${iwo.id}`}
-                  style={{ color: '#1d4ed8', textDecoration: 'none', fontWeight: 600 }}
-                >
+      <SectionH title={`In-flight (${active.length})`} titleSize={15} />
+      {active.length === 0 ? (
+        <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Nothing in flight.</p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {active.map((iwo) => (
+            <div key={iwo.id} className="card card-pad brand-edge">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                <Link to={`/delivery/iwo/${iwo.id}`} className="mono hover:underline" style={{ fontWeight: 600 }}>
                   {iwo.code}
                 </Link>
-                <span style={{ marginLeft: 12, color: '#475569' }}>
-                  {iwo.state} · {formatMinor(iwo.cumulativeCostMinor, iwo.currency)} of {formatMinor(iwo.budgetMinor, iwo.currency)}
+                <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 12, color: 'var(--fg-tertiary)' }} className="tabular">
+                    {formatMinor(iwo.cumulativeCostMinor, iwo.currency)} of {formatMinor(iwo.budgetMinor, iwo.currency)}
+                  </span>
+                  <Pill tone="blue">{iwo.state}</Pill>
                 </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

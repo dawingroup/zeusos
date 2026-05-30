@@ -40,6 +40,7 @@ import {
   formatMinor,
 } from '../services/time-tracking.service';
 import { resolveUserNames, type UserNameMap } from '../services/user-directory.service';
+import { PageHero } from '@/shared/components/refresh';
 
 function fmtWeek(from: Date): string {
   const to = new Date(from);
@@ -97,17 +98,20 @@ export default function TeamTimePage() {
   }, [members]);
 
   return (
-    <div style={{ padding: 24 }} data-testid="team-time-page">
-      <header style={{ marginBottom: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Team Time</h1>
-        <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }} data-testid="team-time-scope-note">
-          {scope.kind === 'parent'
-            ? 'Every time entry logged across the group this week, grouped by person (all brands).'
-            : scope.kind === 'brand'
-              ? 'Time logged by your brand this week, grouped by person.'
-              : 'No team-time scope for your account.'}
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="team-time-page">
+      <PageHero
+        eyebrow="Delivery · Time"
+        title="Team time"
+        body={
+          <span data-testid="team-time-scope-note">
+            {scope.kind === 'parent'
+              ? 'Every time entry logged across the group this week, grouped by person (all brands).'
+              : scope.kind === 'brand'
+                ? 'Time logged by your brand this week, grouped by person.'
+                : 'No team-time scope for your account.'}
+          </span>
+        }
+      />
 
       {err && (
         <div role="alert" data-testid="team-time-error" style={{
