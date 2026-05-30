@@ -120,10 +120,11 @@ const CompetitorListPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-semibold">Competitors</h1>
-          <p className="text-muted-foreground">Track and analyze your competitive landscape</p>
+          <div className="eyebrow" style={{ marginBottom: 4 }}>System · Market Intel</div>
+          <h1 className="display">Competitors</h1>
+          <p className="text-muted-foreground mt-1">Track and analyze your competitive landscape</p>
         </div>
         <div className="flex gap-2">
           {selectedForComparison.length >= 2 && (

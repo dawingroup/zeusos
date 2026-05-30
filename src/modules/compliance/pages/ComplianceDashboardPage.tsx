@@ -55,9 +55,10 @@ export function ComplianceDashboardPage() {
 
   return (
     <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-5 max-w-[1640px] mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <div>
-          <h1>Compliance Dashboard</h1>
+          <div className="eyebrow" style={{ marginBottom: 4 }}>System · Compliance</div>
+          <h1 className="display">Compliance dashboard</h1>
           <p className="mt-1 text-[12.5px]" style={{ color: 'var(--fg-secondary)' }}>
             Document registry, obligations, and regulatory scorecard
           </p>

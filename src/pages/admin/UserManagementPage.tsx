@@ -165,11 +165,12 @@ export default function UserManagementPage() {
         <title>User Management | ZeusOS</title>
       </Helmet>
 
-      <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
+      <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+        <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">User Management</h1>
-            <p className="text-muted-foreground">
+            <div className="eyebrow" style={{ marginBottom: 4 }}>System · Admin</div>
+            <h1 className="display">User management</h1>
+            <p className="text-muted-foreground mt-1">
               Manage system users, roles, and permissions
             </p>
           </div>
