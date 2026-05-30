@@ -274,6 +274,7 @@ const KPILibraryPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPIL
 // ──────────────────────────────────────────────────────────────────────────
 const ProfilePage = lazyWithRetry(() => import('@/pages/profile/ProfilePage'));
 const NotificationSettingsPage = lazyWithRetry(() => import('@/pages/profile/NotificationSettingsPage'));
+const AppearanceSettingsPage = lazyWithRetry(() => import('@/pages/profile/AppearanceSettingsPage'));
 const UserManagementPage = lazyWithRetry(() => import('@/pages/admin/UserManagementPage'));
 const RoleManagementPage = lazyWithRetry(() => import('@/pages/admin/RoleManagementPage'));
 const AuditLogPage = lazyWithRetry(() => import('@/pages/admin/AuditLogPage'));
@@ -558,6 +559,8 @@ export const router = createBrowserRouter([
       // Profile
       { path: 'profile',                element: <PageWrapper><ProfilePage /></PageWrapper> },
       { path: 'notification-settings',  element: <PageWrapper><NotificationSettingsPage /></PageWrapper> },
+      // Phase 5 — per-user appearance preferences (theme / density / accent).
+      { path: 'settings/appearance',    element: <PageWrapper><AppearanceSettingsPage /></PageWrapper> },
 
       // Admin
       { path: 'admin/users',         element: <PageWrapper><UserManagementPage /></PageWrapper> },

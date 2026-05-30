@@ -6,6 +6,7 @@
 import type { SubsidiaryModule } from '@/types/subsidiary';
 import type { WorkshopProcessingRates } from '@/shared/types/processingSteps';
 import type { PricingAssumptions } from '@/shared/types/pricingAssumptions';
+import type { Accent } from '@/shared/stores/uiStore';
 
 // ============================================================================
 // ORGANIZATION SETTINGS
@@ -66,7 +67,8 @@ export interface SubsidiaryBranding {
 /** Platform-wide defaults that seed each user's PreferencesMenu on first login. */
 export interface PlatformDefaults {
   theme?: 'light' | 'dark' | 'system';
-  accent?: 'boysenberry' | 'goldenbell' | 'seafoam' | 'pesto';
+  /** Canonical Zeus accents + retained legacy values — see `Accent` in uiStore. */
+  accent?: Accent;
   density?: 'dense' | 'balanced' | 'airy';
 }
 
