@@ -19,6 +19,8 @@ import {
   MessageSquare,
   PanelLeftOpen,
   PanelLeftClose,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import { getIconByName } from '@/shared/utils/iconMap';
 import { Button } from '@/core/components/ui/button';
@@ -55,6 +57,7 @@ import {
   type NavItem,
 } from '@/config/navigation.unified';
 import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
+import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { useUserModules } from '@/hooks/useUserModules';
 import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIntelligenceMenu';
@@ -66,7 +69,6 @@ import { useBranding } from '@/shared/hooks/useBranding';
 const subscribeToUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 const subscribeToGChatUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 import { GroupNavPills } from '@/core/components/layout/GroupNavPills';
-import { SubsidiaryPicker } from '@/core/components/layout/SubsidiaryPicker';
 import { PreferencesMenu } from '@/core/components/layout/PreferencesMenu';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 
@@ -85,6 +87,52 @@ const LEGACY_LOOKUP: Map<string, NavItem> = (() => {
   return map;
 })();
 
+// UI refresh — sidebar section grouping. The manifest is a flat ordered
+// list (no `section` field), so we derive a section per moduleId here and
+// render eyebrow-labelled groups. Unmapped ids fall into 'work' (subsidiary)
+// so new manifest entries still appear. Order matches SECTION_ORDER.
+const SECTION_FOR_MODULE: Record<string, string> = {
+  // parent + shared
+  dashboard: 'main',
+  'account-management': 'commercial',
+  clients: 'commercial', // adapter maps account-management → legacy id "clients"
+  traffic: 'commercial',
+  pricing: 'commercial',
+  billing: 'commercial',
+  commercial: 'commercial',
+  'conflict-firewall': 'commercial',
+  procurement: 'ops',
+  suppliers: 'ops',
+  crm: 'ops',
+  talent: 'ops',
+  'asset-library': 'ops',
+  finance: 'ops',
+  'hr-central': 'ops',
+  strategy: 'ops',
+  'market-intel': 'ops',
+  reports: 'admin',
+  compliance: 'admin',
+  'my-time': 'admin',
+  'team-time': 'admin',
+  admin: 'admin',
+  // subsidiary head/middle/tail
+  'delivery-inbox': 'main',
+  'ecd-review': 'main',
+  campaigns: 'work',
+  production: 'work',
+  media: 'work',
+  'burn-sla': 'admin',
+  hr: 'admin',
+};
+const SECTION_LABELS: Record<string, string> = {
+  main: 'Today',
+  commercial: 'Commercial',
+  work: 'Delivery',
+  ops: 'Operations',
+  admin: 'System',
+};
+const SECTION_ORDER = ['main', 'commercial', 'work', 'ops', 'admin'];
+
 interface AppShellProps {
   children: React.ReactNode;
 }
@@ -95,7 +143,7 @@ export function AppShell({ children }: AppShellProps) {
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
-  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed } = useUIStore();
+  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
   const { 
     favoriteItems, 
@@ -135,6 +183,15 @@ export function AppShell({ children }: AppShellProps) {
       icon.href = faviconSrc;
     });
   }, [branding.faviconUrl, branding.logoUrl]);
+
+  // UI refresh — mirror the active sub-brand onto <html data-brand> so the
+  // [data-brand] CSS blocks light up --brand-accent across the shell (sidebar
+  // accent bar, active-item marker) and ported surfaces. Canonical SubsidiaryId
+  // values match the [data-brand] keys 1:1.
+  useEffect(() => {
+    const brandId = currentSubsidiary?.id || 'zeus-group';
+    document.documentElement.setAttribute('data-brand', brandId);
+  }, [currentSubsidiary?.id]);
 
   // Messaging (WhatsApp + Google Chat combined)
   const whatsappEnabled = useFeatureFlag('WHATSAPP_ENABLED');
@@ -323,6 +380,21 @@ export function AppShell({ children }: AppShellProps) {
     return location.pathname === href || location.pathname.startsWith(href);
   };
 
+  // UI refresh — shell-level breadcrumb + org-chip framing.
+  const isParentRoot =
+    isParentOrgPrincipal && (currentSubsidiary?.id ?? 'zeus-group') === 'zeus-group';
+  const breadcrumbRoot = isParentRoot ? 'Zeus Group' : subsidiaryName;
+  const activeNavLabel = [...mainNavItems, ...corporateNavItems]
+    .filter((it) => isActive(it.href))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.label;
+  const userInitials =
+    user?.displayName?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U';
+  const userRoleLabel = isParentRoot
+    ? 'Parent-org admin'
+    : dawinUser?.globalRole
+      ? dawinUser.globalRole.charAt(0).toUpperCase() + dawinUser.globalRole.slice(1)
+      : 'Team member';
+
   const getIcon = (iconName: string): LucideIcon | null => {
     return getIconByName(iconName);
   };
@@ -441,12 +513,18 @@ export function AppShell({ children }: AppShellProps) {
       <div key={item.id}>
         <div
           className={cn(
-            'group flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
+            'group relative flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
             isHighlighted
               ? 'bg-[var(--bg-sidebar-active)] text-[var(--fg-on-dark)] font-medium'
               : 'text-[var(--fg-on-dark)] hover:bg-[var(--bg-sidebar-hover)]'
           )}
         >
+          {isHighlighted && direction === 'ambitious' && (
+            <span
+              className="absolute left-0 rounded-full"
+              style={{ top: 6, bottom: 6, width: 3, background: 'var(--brand-accent)' }}
+            />
+          )}
           <Link
             to={item.href}
             className="flex items-center gap-3 flex-1 min-w-0"
@@ -524,11 +602,14 @@ export function AppShell({ children }: AppShellProps) {
           isScrolled && 'shadow-[var(--shadow-sm)]'
         )}
       >
-        <div className="flex items-center gap-2 shrink-0">
-          {branding.logoUrl ? (
-            <img src={branding.logoUrl} alt="Logo" className="h-7 w-auto object-contain" />
-          ) : (
-            <Building2 className="h-4 w-4 text-[var(--fg-tertiary)]" />
+        {/* UI refresh — shell breadcrumb (root › active surface) */}
+        <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
+          <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
+          {activeNavLabel && (
+            <>
+              <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
+              <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
+            </>
           )}
         </div>
 
@@ -570,62 +651,9 @@ export function AppShell({ children }: AppShellProps) {
           </Button>
         )}
 
-        {/* Subsidiary Switcher (now a compact pill before the avatar) */}
-        <SubsidiaryPicker />
-
-        {/* User Menu — now circular avatar w/ Preferences submenu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full h-8 w-8 ml-1"
-              aria-label="Account menu"
-            >
-              <div
-                className="h-7 w-7 rounded-full flex items-center justify-center text-[11.5px] font-semibold"
-                style={{
-                  backgroundColor: 'var(--accent-soft)',
-                  color: 'var(--accent)',
-                }}
-              >
-                {user?.displayName?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U'}
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-60">
-            <div className="px-2 py-1.5">
-              <div className="text-[13px] font-medium text-[var(--fg-primary)] truncate">
-                {user?.displayName || 'User'}
-              </div>
-              <div className="text-[11px] text-[var(--fg-tertiary)] truncate">
-                {user?.email}
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to="/profile">
-                <User className="mr-2 h-3.5 w-3.5" /> Profile
-              </Link>
-            </DropdownMenuItem>
-            {adminNavItems.length > 0 && (
-              <DropdownMenuItem asChild>
-                <Link to="/admin">
-                  <Settings className="mr-2 h-3.5 w-3.5" /> Admin
-                </Link>
-              </DropdownMenuItem>
-            )}
-            <PreferencesMenu />
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => signOut()}
-              data-testid="logout-button"
-              className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
-            >
-              <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Org switcher + account menu relocated into the sidebar (chip +
+            footer card) in the UI refresh. Mobile keeps its own header
+            dropdowns below. */}
       </header>
 
       {/* Mobile Header */}
@@ -801,6 +829,101 @@ export function AppShell({ children }: AppShellProps) {
             borderRightColor: 'var(--border-on-dark)',
           }}
         >
+          {/* UI refresh — wordmark + sub-brand accent bar */}
+          <div className={cn(
+            'flex items-center gap-2 pt-4 pb-1',
+            sidebarExpanded ? 'px-5' : 'lg:px-0 lg:justify-center px-5'
+          )}>
+            <span
+              className="inline-flex items-center justify-center rounded-[5px] font-extrabold flex-none"
+              style={{
+                width: 22, height: 22, fontSize: 12, letterSpacing: '-0.01em',
+                background: direction === 'ambitious' ? 'var(--brand-accent)' : 'var(--zeus-red)',
+                color: direction === 'ambitious' ? 'var(--brand-accent-fg)' : '#fff',
+              }}
+            >Z</span>
+            {sidebarExpanded && (
+              <span className="font-bold text-[14.5px] tracking-[-0.01em] text-[var(--fg-on-dark)]">ZeusOS</span>
+            )}
+          </div>
+          {direction === 'ambitious' && sidebarExpanded && (
+            <div
+              className="rounded-full"
+              style={{ height: 3, margin: '8px 20px 0', background: 'var(--brand-accent)', opacity: 0.85 }}
+            />
+          )}
+
+          {/* UI refresh — org switcher chip (relocated from the header) */}
+          <div className={cn('pt-2.5 pb-1', sidebarExpanded ? 'px-3.5' : 'lg:px-2 px-3.5')}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    'flex items-center rounded-[10px] text-left border border-white/[0.06] transition-colors',
+                    'bg-[var(--bg-sidebar-hover)] hover:bg-[var(--bg-sidebar-active)]',
+                    sidebarExpanded ? 'w-full gap-2.5 px-2.5 py-2' : 'justify-center p-1.5'
+                  )}
+                  aria-label="Switch organisation"
+                >
+                  <span
+                    className="inline-flex items-center justify-center rounded-lg font-bold flex-none"
+                    style={{
+                      width: 30, height: 30, fontSize: 11, letterSpacing: '0.04em',
+                      background: 'var(--brand-accent)', color: 'var(--brand-accent-fg)',
+                      boxShadow: direction === 'ambitious' ? '0 0 0 2px color-mix(in srgb, var(--brand-accent) 30%, transparent)' : 'none',
+                    }}
+                  >
+                    {currentSubsidiary?.shortName ?? 'ZG'}
+                  </span>
+                  {sidebarExpanded && (
+                    <>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[13px] font-semibold leading-tight text-[var(--fg-on-dark)] truncate">
+                          {subsidiaryName}
+                        </span>
+                        <span className="block text-[10.5px] uppercase tracking-[0.08em] text-[var(--fg-on-dark-muted)] mt-0.5">
+                          {isParentRoot ? 'Parent · Zeus Group' : 'Subsidiary'}
+                        </span>
+                      </span>
+                      <ChevronDown className="h-3.5 w-3.5 text-[var(--fg-on-dark-muted)] flex-none" />
+                    </>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56" style={{ zIndex: 70 }}>
+                <div className="px-2 py-1.5 text-[11px] font-medium text-muted-foreground">
+                  Switch organisation
+                </div>
+                {subsidiaries.filter((s) => s.status === 'active').map((sub) => (
+                  <DropdownMenuItem
+                    key={sub.id}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSubsidiarySwitch(sub); }}
+                    className="gap-2.5 cursor-pointer"
+                  >
+                    <span
+                      className="rounded flex-none"
+                      style={{
+                        width: 18, height: 18, background: sub.color,
+                        border: currentSubsidiary?.id === sub.id ? '2px solid var(--fg-primary)' : 'none',
+                      }}
+                    />
+                    <span className="flex-1 truncate">{sub.name}</span>
+                    {isConflictIsolated(sub.id as SubsidiaryId) && (
+                      <span
+                        className="text-[9.5px] uppercase tracking-[0.06em] px-1.5 py-0.5 rounded-full"
+                        style={{ background: 'rgba(230,91,102,0.18)', color: '#cf4b54' }}
+                      >
+                        Isolated
+                      </span>
+                    )}
+                    {currentSubsidiary?.id === sub.id && <Check className="h-3.5 w-3.5 flex-none" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
           {/* Toggle button - desktop only */}
           <div className={cn(
             'hidden lg:flex items-center border-b border-[var(--border-on-dark)] px-2 py-2',
@@ -822,17 +945,95 @@ export function AppShell({ children }: AppShellProps) {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className={cn('p-3 space-y-1', !sidebarExpanded && 'lg:px-2')}>
-              {/* Phase 6.UI.0 — single resolved manifest. Dashboard,
-                  Commercial (Account Mgmt / Pricing / Billing) and
-                  Admin all live inside `mainNavItems` for PARENT
-                  principals; SUBSIDIARY principals see Inbox / ECD
-                  Review / Active Work / per-brand middle / Burn &
-                  SLA / HR / Reports — resolved by
-                  `src/core/navigation/manifest.ts`. */}
-              {mainNavItems.map((item: NavItem) => renderNavItem(item))}
+            <div className={cn('p-3', !sidebarExpanded && 'lg:px-2')}>
+              {/* Phase 6.UI.0 — single resolved manifest. UI refresh groups
+                  the resolved items into eyebrow-labelled sections (Today /
+                  Commercial / Delivery / Operations / System) via
+                  SECTION_FOR_MODULE when expanded; the collapsed rail keeps
+                  a flat icon list. */}
+              {sidebarExpanded
+                ? SECTION_ORDER.map((section) => {
+                    const items = mainNavItems.filter(
+                      (it: NavItem) => (SECTION_FOR_MODULE[it.id] || 'work') === section
+                    );
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={section} className="mb-3">
+                        <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--fg-on-dark-muted)]">
+                          {SECTION_LABELS[section] || section}
+                        </div>
+                        <div className="space-y-px">
+                          {items.map((item: NavItem) => renderNavItem(item))}
+                        </div>
+                      </div>
+                    );
+                  })
+                : <div className="space-y-1">{mainNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
             </div>
           </ScrollArea>
+
+          {/* UI refresh — user footer card (relocated from the header) */}
+          <div className={cn('mt-auto', sidebarExpanded ? 'm-2.5' : 'lg:mx-1.5 lg:my-2 m-2.5')}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    'flex items-center rounded-[10px] text-left bg-white/[0.04] hover:bg-white/[0.07] transition-colors',
+                    sidebarExpanded ? 'w-full gap-2.5 p-2.5' : 'justify-center p-1.5'
+                  )}
+                  aria-label="Account menu"
+                >
+                  <span
+                    className="inline-flex items-center justify-center rounded-full text-[11px] font-semibold text-white flex-none"
+                    style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #e63946, #b8222e)' }}
+                  >
+                    {userInitials}
+                  </span>
+                  {sidebarExpanded && (
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[12.5px] font-semibold leading-tight text-[var(--fg-on-dark)] truncate">
+                        {user?.displayName || 'User'}
+                      </span>
+                      <span className="block text-[10.5px] text-[var(--fg-on-dark-muted)] mt-0.5 truncate">
+                        {userRoleLabel}
+                      </span>
+                    </span>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" side="top" className="w-56">
+                <div className="px-2 py-1.5">
+                  <div className="text-[13px] font-medium text-[var(--fg-primary)] truncate">
+                    {user?.displayName || 'User'}
+                  </div>
+                  <div className="text-[11px] text-[var(--fg-tertiary)] truncate">{user?.email}</div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile">
+                    <User className="mr-2 h-3.5 w-3.5" /> Profile
+                  </Link>
+                </DropdownMenuItem>
+                {adminNavItems.length > 0 && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin">
+                      <Settings className="mr-2 h-3.5 w-3.5" /> Admin
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <PreferencesMenu />
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  data-testid="logout-button"
+                  className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
+                >
+                  <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </aside>
 
         {/* Mobile Overlay */}

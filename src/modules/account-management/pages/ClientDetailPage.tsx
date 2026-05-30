@@ -5,17 +5,34 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import {
   getClient,
   listMsasForClient,
   listSowsForMsa,
 } from '@/modules/contracts/services/firestore';
 import { upsertClientFn } from '@/modules/contracts/services/firebase';
-import type { Client } from '@/modules/contracts/types/client.types';
+import type { Client, ClientStatus } from '@/modules/contracts/types/client.types';
 import type { MSA } from '@/modules/contracts/types/msa.types';
 import type { SOW } from '@/modules/contracts/types/sow.types';
+import {
+  BackBar,
+  DetailLayout,
+  SideCard,
+  MetaRow,
+  SectionH,
+  Pill,
+  type RagTone,
+} from '@/shared/components/refresh';
 import { formatMinor } from '../utils/money';
 import { CompetitorListPanel } from '@/modules/conflict-firewall/components/CompetitorListPanel';
+
+const STATUS_TONE: Record<ClientStatus, RagTone> = {
+  ACTIVE: 'green',
+  PROSPECT: 'blue',
+  CHURNED: 'neutral',
+  BLOCKED: 'red',
+};
 
 export default function ClientDetailPage() {
   const navigate = useNavigate();
@@ -104,187 +121,172 @@ export default function ClientDetailPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (!client) return <div className="p-6">Client not found. <Link to="/clients" className="text-[var(--rag-blue)]">Back</Link></div>;
+  if (loading) return <div style={{ padding: 'var(--pad-page)', color: 'var(--fg-tertiary)' }}>Loading…</div>;
+  if (!client)
+    return (
+      <div style={{ padding: 'var(--pad-page)' }}>
+        Client not found. <Link to="/clients" className="text-[var(--rag-blue)]">Back</Link>
+      </div>
+    );
+
+  const editForm = editing && (
+    <div className="card card-pad" style={{ marginBottom: 16 }}>
+      <h2 className="h1" style={{ fontSize: 15, marginBottom: 12 }}>Edit client</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <label className="block">
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Name</span>
+          <input className="input" style={{ marginTop: 4 }} value={draft.name ?? ''} onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} />
+        </label>
+        <label className="block">
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Code</span>
+          <input className="input" style={{ marginTop: 4 }} value={draft.code ?? ''} onChange={(e) => setDraft((d) => ({ ...d, code: e.target.value }))} />
+        </label>
+        <label className="block">
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Billing currency</span>
+          <select className="input" style={{ marginTop: 4 }} value={(draft.billingCurrency ?? 'USD') as string} onChange={(e) => setDraft((d) => ({ ...d, billingCurrency: e.target.value as Client['billingCurrency'] }))}>
+            {['UGX', 'USD', 'KES', 'EUR', 'GBP'].map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label className="block">
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Status</span>
+          <select className="input" style={{ marginTop: 4 }} value={(draft.status ?? 'PROSPECT') as string} onChange={(e) => setDraft((d) => ({ ...d, status: e.target.value as Client['status'] }))}>
+            {['PROSPECT', 'ACTIVE', 'CHURNED', 'BLOCKED'].map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </label>
+        <label className="block" style={{ gridColumn: '1 / -1' }}>
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Sector</span>
+          <input className="input" style={{ marginTop: 4 }} value={draft.sector ?? ''} onChange={(e) => setDraft((d) => ({ ...d, sector: e.target.value }))} />
+        </label>
+        <label className="block" style={{ gridColumn: '1 / -1' }}>
+          <span className="eyebrow" style={{ fontSize: 10.5 }}>Notes</span>
+          <textarea className="input" style={{ marginTop: 4 }} rows={3} value={draft.notes ?? ''} onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))} />
+        </label>
+      </div>
+      <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+        <button onClick={handleSave} disabled={busy} className="btn btn-primary">{busy ? 'Saving…' : 'Save'}</button>
+        <button onClick={() => setEditing(false)} className="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Link to="/clients" className="text-xs text-muted-foreground">← Clients</Link>
-          <h1 className="mt-1 text-xl font-semibold">{client.name}</h1>
-          <p className="text-sm text-muted-foreground">
-            {client.code ? `${client.code} · ` : ''}{client.status} · billed in {client.billingCurrency}
-            {client.primaryBrandId && (
-              <>
-                {' · '}
-                <span data-testid="client-primary-brand" className="text-[var(--accent)]">
-                  home: {client.primaryBrandId}
-                </span>
-              </>
-            )}
-          </p>
+    <div style={{ padding: 'var(--pad-page)' }}>
+      <BackBar label="Clients" onBack={() => navigate('/clients')} />
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, marginBottom: 20 }}>
+        <div style={{ minWidth: 0 }}>
+          <div className="eyebrow" style={{ marginBottom: 6 }}>Account Management</div>
+          <h1 className="display">{client.name}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+            <Pill tone={STATUS_TONE[client.status]}>{client.status.toLowerCase()}</Pill>
+            {client.code && <span className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{client.code}</span>}
+            <span style={{ fontSize: 12.5, color: 'var(--fg-tertiary)' }}>billed in {client.billingCurrency}</span>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: 8, flex: 'none' }}>
           {!editing && client.status !== 'BLOCKED' && (
             <>
-              <button
-                type="button"
-                onClick={() => { setDraft(client); setEditing(true); }}
-                className="rounded border px-3 py-1.5 text-sm hover:bg-[var(--bg-sunken)]"
-              >
+              <button type="button" onClick={() => { setDraft(client); setEditing(true); }} className="btn btn-secondary">
                 Edit
               </button>
-              <button
-                type="button"
-                onClick={handleArchive}
-                disabled={archiving}
-                className="rounded border border-[var(--rag-red)] px-3 py-1.5 text-sm text-[var(--rag-red)] hover:bg-[var(--rag-red-soft)] disabled:opacity-50"
-                data-testid="client-archive-btn"
-              >
+              <button type="button" onClick={handleArchive} disabled={archiving} className="btn btn-reject" data-testid="client-archive-btn">
                 {archiving ? 'Archiving…' : 'Archive'}
               </button>
             </>
           )}
-          <Link
-            to={`/clients/${client.id}/msas/new`}
-            className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)]"
-          >
-            + New MSA
+          <Link to={`/clients/${client.id}/msas/new`} className="btn btn-primary">
+            <Plus size={13} /> New MSA
           </Link>
         </div>
-      </header>
+      </div>
 
-      {editing && (
-        <section className="rounded border bg-[var(--bg-sunken)] p-4">
-          <h2 className="mb-3 text-sm font-semibold">Edit client</h2>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <label className="block">
-              <span className="block text-xs text-muted-foreground">Name</span>
-              <input
-                value={draft.name ?? ''}
-                onChange={e => setDraft(d => ({ ...d, name: e.target.value }))}
-                className="mt-1 w-full rounded border px-2 py-1"
-              />
-            </label>
-            <label className="block">
-              <span className="block text-xs text-muted-foreground">Code</span>
-              <input
-                value={draft.code ?? ''}
-                onChange={e => setDraft(d => ({ ...d, code: e.target.value }))}
-                className="mt-1 w-full rounded border px-2 py-1"
-              />
-            </label>
-            <label className="block">
-              <span className="block text-xs text-muted-foreground">Billing currency</span>
-              <select
-                value={(draft.billingCurrency ?? 'USD') as string}
-                onChange={e => setDraft(d => ({ ...d, billingCurrency: e.target.value as Client['billingCurrency'] }))}
-                className="mt-1 w-full rounded border px-2 py-1"
-              >
-                {['UGX','USD','KES','EUR','GBP'].map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </label>
-            <label className="block">
-              <span className="block text-xs text-muted-foreground">Status</span>
-              <select
-                value={(draft.status ?? 'PROSPECT') as string}
-                onChange={e => setDraft(d => ({ ...d, status: e.target.value as Client['status'] }))}
-                className="mt-1 w-full rounded border px-2 py-1"
-              >
-                {['PROSPECT','ACTIVE','CHURNED','BLOCKED'].map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </label>
-            <label className="col-span-2 block">
-              <span className="block text-xs text-muted-foreground">Sector</span>
-              <input
-                value={draft.sector ?? ''}
-                onChange={e => setDraft(d => ({ ...d, sector: e.target.value }))}
-                className="mt-1 w-full rounded border px-2 py-1"
-              />
-            </label>
-            <label className="col-span-2 block">
-              <span className="block text-xs text-muted-foreground">Notes</span>
-              <textarea
-                value={draft.notes ?? ''}
-                onChange={e => setDraft(d => ({ ...d, notes: e.target.value }))}
-                rows={3}
-                className="mt-1 w-full rounded border px-2 py-1"
-              />
-            </label>
-          </div>
-          <div className="mt-3 flex gap-2">
-            <button onClick={handleSave} disabled={busy} className="rounded bg-[var(--rag-blue)] px-3 py-1.5 text-sm font-medium text-white hover:bg-[var(--rag-blue)] disabled:opacity-50">
-              {busy ? 'Saving…' : 'Save'}
-            </button>
-            <button onClick={() => setEditing(false)} className="rounded border px-3 py-1.5 text-sm hover:bg-card">Cancel</button>
-          </div>
-        </section>
-      )}
+      {editForm}
 
-      {/* ADR-2026-05-25 §2.Q4 — named-competitor list. Replaces the
-          earlier category model; routing excludes any brand currently
-          serving a listed competitor. */}
-      <section data-testid="client-competitor-section">
-        <CompetitorListPanel clientId={client.id} clientName={client.name} />
-      </section>
+      <DetailLayout
+        left={
+          <>
+            {/* ADR-2026-05-25 §2.Q4 — named-competitor list. Routing excludes
+                any brand currently serving a listed competitor. */}
+            <section data-testid="client-competitor-section">
+              <CompetitorListPanel clientId={client.id} clientName={client.name} />
+            </section>
 
-      <section>
-        <h2 className="mb-2 text-sm font-semibold uppercase text-muted-foreground">MSAs</h2>
-        {msas.length === 0 && (
-          <p className="text-sm text-muted-foreground">No MSAs yet.</p>
-        )}
-        {msas.length > 0 && (
-          <div className="space-y-3">
-            {msas.map(msa => (
-              <div key={msa.id} className="rounded border bg-card">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b p-3">
-                  <div>
-                    <Link to={`/clients/${client.id}/msas/${msa.id}`} className="font-medium text-[var(--rag-blue)] hover:underline">
-                      {msa.code || msa.title}
-                    </Link>
-                    <div className="text-xs text-muted-foreground">{msa.title} · {msa.status}</div>
+            <SectionH
+              title="MSAs"
+              titleSize={15}
+              action={
+                <Link to={`/clients/${client.id}/msas/new`} className="btn btn-ghost">
+                  <Plus size={13} /> New MSA
+                </Link>
+              }
+            />
+            {msas.length === 0 && (
+              <div className="card card-pad" style={{ color: 'var(--fg-tertiary)', fontSize: 13 }}>No MSAs yet.</div>
+            )}
+            {msas.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {msas.map((msa) => (
+                  <div key={msa.id} className="card" style={{ overflow: 'hidden' }}>
+                    <div className="card-head" style={{ alignItems: 'center' }}>
+                      <div>
+                        <Link to={`/clients/${client.id}/msas/${msa.id}`} style={{ fontWeight: 600 }} className="hover:underline">
+                          {msa.code || msa.title}
+                        </Link>
+                        <div style={{ fontSize: 11.5, color: 'var(--fg-tertiary)' }}>{msa.title} · {msa.status}</div>
+                      </div>
+                      <Link to={`/clients/${client.id}/msas/${msa.id}/sows/new`} className="btn btn-ghost" style={{ fontSize: 11 }}>
+                        + New SOW
+                      </Link>
+                    </div>
+                    <table className="tbl">
+                      <thead>
+                        <tr>
+                          <th>SOW</th>
+                          <th>Type</th>
+                          <th>Status</th>
+                          <th style={{ textAlign: 'right' }}>Ceiling</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(sowsByMsa[msa.id] || []).map((sow) => (
+                          <tr key={sow.id}>
+                            <td>
+                              <Link to={`/clients/${client.id}/msas/${msa.id}/sows/${sow.id}`} className="mono hover:underline" style={{ fontSize: 12, color: 'var(--rag-blue)' }}>
+                                {sow.code || sow.id}
+                              </Link>
+                              <div style={{ fontSize: 11.5, color: 'var(--fg-tertiary)' }}>{sow.title}</div>
+                            </td>
+                            <td>{sow.type}</td>
+                            <td>{sow.status}</td>
+                            <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(sow.ceilingMinor, sow.currency)}</td>
+                          </tr>
+                        ))}
+                        {(sowsByMsa[msa.id] || []).length === 0 && (
+                          <tr>
+                            <td colSpan={4} style={{ fontSize: 11.5, color: 'var(--fg-tertiary)' }}>No SOWs yet.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
-                  <Link
-                    to={`/clients/${client.id}/msas/${msa.id}/sows/new`}
-                    className="rounded border px-2 py-1 text-xs hover:bg-[var(--bg-sunken)]"
-                  >
-                    + New SOW
-                  </Link>
-                </div>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-left text-xs uppercase text-muted-foreground">
-                      <th className="px-3 py-2">SOW</th>
-                      <th className="px-3 py-2">Type</th>
-                      <th className="px-3 py-2">Status</th>
-                      <th className="px-3 py-2 text-right">Ceiling</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(sowsByMsa[msa.id] || []).map(sow => (
-                      <tr key={sow.id} className="border-t hover:bg-[var(--bg-sunken)]">
-                        <td className="px-3 py-2">
-                          <Link to={`/clients/${client.id}/msas/${msa.id}/sows/${sow.id}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">
-                            {sow.code || sow.id}
-                          </Link>
-                          <div className="text-xs text-muted-foreground">{sow.title}</div>
-                        </td>
-                        <td className="px-3 py-2">{sow.type}</td>
-                        <td className="px-3 py-2">{sow.status}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{formatMinor(sow.ceilingMinor, sow.currency)}</td>
-                      </tr>
-                    ))}
-                    {(sowsByMsa[msa.id] || []).length === 0 && (
-                      <tr><td colSpan={4} className="px-3 py-3 text-xs text-muted-foreground">No SOWs yet.</td></tr>
-                    )}
-                  </tbody>
-                </table>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-      </section>
+            )}
+          </>
+        }
+        right={
+          <SideCard title="Client">
+            <MetaRow label="Status" value={<Pill tone={STATUS_TONE[client.status]}>{client.status.toLowerCase()}</Pill>} />
+            <MetaRow label="Billing" value={client.billingCurrency} />
+            <MetaRow
+              label="Primary brand"
+              value={<span data-testid="client-primary-brand">{client.primaryBrandId || '—'}</span>}
+            />
+            <MetaRow label="Sector" value={client.sector || '—'} />
+            <MetaRow label="Code" value={client.code || '—'} />
+          </SideCard>
+        }
+      />
     </div>
   );
 }

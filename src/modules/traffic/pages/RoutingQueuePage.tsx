@@ -143,7 +143,7 @@ export default function RoutingQueuePage() {
           return (
             <div key={job.id} data-testid={`queue-row-${job.id}`} className="space-y-2">
               {!row.proposal ? (
-                <article className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
+                <article className="card card-pad">
                   <header className="flex items-center justify-between gap-3 mb-3">
                     <div className="min-w-0">
                       <p className="text-[14px] font-semibold text-[var(--fg-primary)] truncate">

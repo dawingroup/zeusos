@@ -19,6 +19,14 @@ import { subscribeRateCardsForSubsidiary } from '../services/firestore';
 import { createRateCardVersionFn } from '../services/firebase';
 import type { RateCard } from '../types';
 import type { SubsidiaryId } from '@/core/settings/types';
+import { PageHero, Pill, type RagTone } from '@/shared/components/refresh';
+import { Plus } from 'lucide-react';
+
+const STATUS_TONE: Record<RateCard['status'], RagTone> = {
+  DRAFT: 'blue',
+  ACTIVE: 'green',
+  RETIRED: 'neutral',
+};
 
 const SUBSIDIARIES: { id: SubsidiaryId; label: string }[] = [
   { id: 'zeus-the-agency', label: 'Zeus The Agency' },
@@ -71,52 +79,45 @@ export default function RateCardsPage() {
   };
 
   return (
-    <div style={{ padding: 24 }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>Rate Cards</h1>
-          <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-            Subsidiary cost basis per role and unit. PRICING_ADMIN only — subsidiary users cannot view <code>cost_minor</code>.
-          </p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <label style={{ fontSize: 12, color: '#475569' }}>
-            <input
-              type="checkbox"
-              checked={showRetired}
-              onChange={e => setShowRetired(e.target.checked)}
-              style={{ marginRight: 6 }}
-            />
-            Show retired
-          </label>
-          <button
-            type="button"
-            onClick={handleNewDraft}
-            disabled={busy}
-            style={{
-              padding: '8px 14px', borderRadius: 6, border: 'none',
-              background: '#1d4ed8', color: '#fff', fontWeight: 600, cursor: 'pointer',
-            }}
-          >
-            + New draft for {SUBSIDIARIES.find(s => s.id === active)?.label}
-          </button>
-        </div>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }}>
+      <PageHero
+        eyebrow="Commercial · Pricing"
+        title="Rate cards"
+        body="Subsidiary cost basis per role and unit. PRICING_ADMIN only — subsidiary users cannot view cost_minor."
+        actions={
+          <>
+            <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={showRetired}
+                onChange={(e) => setShowRetired(e.target.checked)}
+                style={{ marginRight: 2 }}
+              />
+              Retired
+            </label>
+            <button type="button" onClick={handleNewDraft} disabled={busy} className="btn btn-primary">
+              <Plus size={13} /> New draft · {SUBSIDIARIES.find((s) => s.id === active)?.label}
+            </button>
+          </>
+        }
+      />
 
-      <nav role="tablist" style={{ display: 'flex', gap: 4, borderBottom: '1px solid #e2e8f0', marginBottom: 16 }}>
-        {SUBSIDIARIES.map(s => (
+      <nav role="tablist" style={{ display: 'flex', gap: 2, borderBottom: '1px solid var(--border-subtle)', marginBottom: 18 }}>
+        {SUBSIDIARIES.map((s) => (
           <button
             key={s.id}
             role="tab"
             aria-selected={active === s.id}
             onClick={() => setActive(s.id)}
             style={{
-              padding: '8px 16px',
-              border: 'none',
+              padding: '10px 14px',
+              border: 0,
               background: 'transparent',
-              borderBottom: active === s.id ? '2px solid #1d4ed8' : '2px solid transparent',
-              color: active === s.id ? '#1d4ed8' : '#475569',
-              fontWeight: active === s.id ? 600 : 400,
+              borderBottom: `2px solid ${active === s.id ? 'var(--zeus-red)' : 'transparent'}`,
+              marginBottom: -1,
+              color: active === s.id ? 'var(--fg-primary)' : 'var(--fg-tertiary)',
+              fontWeight: active === s.id ? 600 : 500,
+              fontSize: 13,
               cursor: 'pointer',
             }}
           >
@@ -126,58 +127,42 @@ export default function RateCardsPage() {
       </nav>
 
       {visible.length === 0 ? (
-        <div style={{ padding: 32, textAlign: 'center', color: '#94a3b8', border: '1px dashed #e2e8f0', borderRadius: 8 }}>
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No rate cards for this subsidiary yet. Click <strong>+ New draft</strong> to start.
         </div>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-          <thead>
-            <tr style={{ textAlign: 'left', color: '#64748b', fontSize: 12, textTransform: 'uppercase' }}>
-              <th style={{ padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }}>Version</th>
-              <th style={{ padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }}>Status</th>
-              <th style={{ padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }}>Effective from</th>
-              <th style={{ padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }}>Effective to</th>
-              <th style={{ padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }} />
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map(card => (
-              <tr key={card.id}>
-                <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>v{card.version}</td>
-                <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                  <StatusPill status={card.status} />
-                </td>
-                <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                  {formatDate(card.effectiveFrom)}
-                </td>
-                <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                  {formatDate(card.effectiveTo)}
-                </td>
-                <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', textAlign: 'right' }}>
-                  <Link to={`/pricing/rate-cards/${card.id}`} style={{ color: '#1d4ed8', fontWeight: 600 }}>
-                    Open →
-                  </Link>
-                </td>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Effective from</th>
+                <th>Effective to</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {visible.map((card) => (
+                <tr key={card.id}>
+                  <td className="tabular" style={{ fontWeight: 600 }}>v{card.version}</td>
+                  <td>
+                    <Pill tone={STATUS_TONE[card.status]} dot={false}>{card.status}</Pill>
+                  </td>
+                  <td className="tabular" style={{ color: 'var(--fg-secondary)' }}>{formatDate(card.effectiveFrom)}</td>
+                  <td className="tabular" style={{ color: 'var(--fg-secondary)' }}>{formatDate(card.effectiveTo)}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    <Link to={`/pricing/rate-cards/${card.id}`} style={{ color: 'var(--rag-blue)', fontWeight: 600 }}>
+                      Open →
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
-  );
-}
-
-function StatusPill({ status }: { status: RateCard['status'] }) {
-  const colors: Record<RateCard['status'], { bg: string; fg: string }> = {
-    DRAFT:   { bg: '#e2e8f0', fg: '#475569' },
-    ACTIVE:  { bg: '#dcfce7', fg: '#166534' },
-    RETIRED: { bg: '#f1f5f9', fg: '#94a3b8' },
-  };
-  const s = colors[status];
-  return (
-    <span style={{ padding: '2px 8px', borderRadius: 4, background: s.bg, color: s.fg, fontSize: 11, fontWeight: 600 }}>
-      {status}
-    </span>
   );
 }
 

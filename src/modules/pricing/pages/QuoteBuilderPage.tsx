@@ -13,6 +13,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { PageHero } from '@/shared/components/refresh';
 import {
   acceptQuoteFn,
   issueQuoteFn,
@@ -172,20 +173,23 @@ export default function QuoteBuilderPage() {
 
   if (isExisting && existingQuote) {
     return (
-      <div style={{ padding: 24 }}>
-        <header style={{ marginBottom: 16 }}>
-          <h1 style={{ margin: 0, fontSize: 22, fontWeight: 600 }}>Quote {existingQuote.code || existingQuote.id}</h1>
-          <p style={{ margin: '4px 0 0', color: '#475569', fontSize: 13 }}>
-            SOW {existingQuote.sowId} · Status {existingQuote.status} · Client total{' '}
-            {(existingQuote.clientTotalMinor / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}{' '}
-            {existingQuote.currency}
-            {typeof existingQuote.marginPctAtIssue === 'number' && (
-              <span style={{ marginLeft: 8 }}>
-                <MarginBadge marginPct={existingQuote.marginPctAtIssue} floorPct={existingQuote.marginFloorPct} compact />
-              </span>
-            )}
-          </p>
-        </header>
+      <div style={{ padding: 'var(--pad-page)' }}>
+        <PageHero
+          eyebrow="Commercial · Pricing"
+          title={`Quote ${existingQuote.code || existingQuote.id}`}
+          body={
+            <>
+              SOW {existingQuote.sowId} · Status {existingQuote.status} · Client total{' '}
+              {(existingQuote.clientTotalMinor / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}{' '}
+              {existingQuote.currency}
+              {typeof existingQuote.marginPctAtIssue === 'number' && (
+                <span style={{ marginLeft: 8 }}>
+                  <MarginBadge marginPct={existingQuote.marginPctAtIssue} floorPct={existingQuote.marginFloorPct} compact />
+                </span>
+              )}
+            </>
+          }
+        />
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }} data-testid={`quote-status-${existingQuote.status.toLowerCase()}`}>
           {existingQuote.status === 'DRAFT' && (
@@ -233,13 +237,13 @@ export default function QuoteBuilderPage() {
   }
 
   return (
-    <div style={{ padding: 24 }} data-testid="quote-builder-page">
-      <header style={{ marginBottom: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 22, fontWeight: 600 }}>Quote Builder</h1>
-        <p style={{ margin: '4px 0 0', color: '#475569', fontSize: 13 }}>
-          Spec §8.1 pricing pipeline. Cost is internal; only the client total reaches the client.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="quote-builder-page">
+      <PageHero
+        eyebrow="Commercial · Pricing"
+        title="Quote builder"
+        body="Spec §8.1 pricing pipeline. Cost is internal; only the client total reaches the client."
+      />
+
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 16 }}>
         <label style={{ fontSize: 13 }}>

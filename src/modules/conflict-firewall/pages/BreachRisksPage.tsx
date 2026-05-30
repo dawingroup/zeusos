@@ -12,7 +12,8 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertTriangle } from 'lucide-react';
+import { Shield } from 'lucide-react';
+import { PageHero, Pill } from '@/shared/components/refresh';
 import {
   subscribeConflictRisks,
   type ConflictExclusivityRiskEvent,
@@ -41,16 +42,12 @@ export default function BreachRisksPage() {
   }, []);
 
   return (
-    <div className="p-6 space-y-4" data-testid="breach-risks-page">
-      <header>
-        <h1 className="text-[20px] font-semibold text-[var(--fg-primary)] mb-1">
-          Conflict-firewall breach risks
-        </h1>
-        <p className="text-[12.5px] text-[var(--fg-tertiary)]">
-          Every routing decision that was tightened by a competitor wall.
-          Sorted newest first.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="breach-risks-page">
+      <PageHero
+        eyebrow="Compliance · Parent-org"
+        title="Conflict firewall"
+        body="Every routing decision that was tightened by a competitor wall (ADR-2026-05-25). Named-competitor lists live on each client; routing automatically excludes any brand already serving a listed competitor. Sorted newest first."
+      />
 
       {err && (
         <div
@@ -63,32 +60,41 @@ export default function BreachRisksPage() {
       )}
 
       {events.length === 0 ? (
-        <p
+        <div
           data-testid="breach-risks-empty"
-          className="text-[13px] text-[var(--fg-tertiary)] italic p-4 rounded-md border border-dashed border-[var(--border-default)] text-center"
+          className="card card-pad"
+          style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}
         >
           No exclusivity-risk events yet. They fire whenever routing has
           to exclude a brand because of a competitor wall.
-        </p>
+        </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2.5">
           {events.map((event) => (
             <li
               key={event.id}
               data-testid={`breach-risk-${event.id}`}
-              className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-1.5"
+              className="card card-pad space-y-1.5"
             >
               <header className="flex items-baseline justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-3.5 w-3.5 text-[var(--rag-amber)]" aria-hidden="true" />
+                  <span
+                    className="inline-flex items-center justify-center flex-none"
+                    style={{ width: 26, height: 26, borderRadius: 7, background: 'var(--rag-amber-soft)', color: 'var(--rag-amber)' }}
+                  >
+                    <Shield className="h-3.5 w-3.5" aria-hidden="true" />
+                  </span>
                   <Link
                     to={`/master-jobs/${event.payload.masterJobId}`}
                     className="text-[13.5px] font-semibold text-[var(--fg-primary)] hover:underline"
                   >
                     {event.payload.masterJobId}
                   </Link>
+                  <Pill tone="amber" dot={false}>
+                    {event.payload.walledBrandIds.length} walled
+                  </Pill>
                 </div>
-                <span className="text-[11px] text-[var(--fg-tertiary)]">
+                <span className="text-[11px] text-[var(--fg-tertiary)] tabular">
                   {formatWhen(event.occurredAt)}
                 </span>
               </header>
