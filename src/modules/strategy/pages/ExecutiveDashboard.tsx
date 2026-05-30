@@ -44,13 +44,14 @@ export const ExecutiveDashboard: React.FC = () => {
   return (
     <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-5 max-w-[1640px] mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <h1 className="inline-flex items-center gap-2">
-              <Target className="h-5 w-5" style={{ color: 'var(--accent)' }} />
-              Executive Dashboard
+            <div className="eyebrow" style={{ marginBottom: 4 }}>Zeus Group · Strategy</div>
+            <h1 className="display inline-flex items-center gap-2">
+              <Target className="h-6 w-6" style={{ color: 'var(--brand-accent)' }} />
+              <span className="zeus-underline">Executive dashboard</span>
             </h1>
-            <p className="mt-1 text-[12.5px]" style={{ color: 'var(--fg-secondary)' }}>
+            <p className="mt-2 text-[12.5px]" style={{ color: 'var(--fg-secondary)' }}>
               Strategic performance overview for Zeus Group
             </p>
           </div>
