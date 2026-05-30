@@ -7,7 +7,25 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type Density = 'dense' | 'balanced' | 'airy';
-export type Accent = 'boysenberry' | 'goldenbell' | 'seafoam' | 'pesto';
+/**
+ * Accent options. Canonical Zeus accents (navy/red + the five sub-brand
+ * keys) map 1:1 to the `[data-accent]` CSS blocks in `src/index.css`.
+ * Legacy DawinOS values (boysenberry/goldenbell/seafoam/pesto) are
+ * retained so previously-persisted preferences keep resolving (the CSS
+ * remaps them onto the Zeus palette).
+ */
+export type Accent =
+  | 'zeus-navy'
+  | 'zeus-red'
+  | 'zeus-the-agency'
+  | 'zeus-digital'
+  | 'labyrinth'
+  | 'odd-gorilla'
+  | 'house-of-zeus'
+  | 'boysenberry'
+  | 'goldenbell'
+  | 'seafoam'
+  | 'pesto';
 /** UI-refresh editorial axis. `ambitious` is the production default. */
 export type Direction = 'conservative' | 'ambitious';
 /** Sidebar chrome treatment. */
@@ -81,7 +99,7 @@ export const useUIStore = create<UIState>()(
       sidebarAutoClose: true, // Auto-close by default on mobile
       theme: 'light',
       density: 'balanced',
-      accent: 'boysenberry',
+      accent: 'zeus-navy',
       direction: 'ambitious',
       sidebarStyle: 'dark',
       sparklinesEnabled: true,
@@ -138,7 +156,7 @@ export const useUIStore = create<UIState>()(
         set(() => ({
           theme: defaults.theme ?? 'system',
           density: defaults.density ?? 'balanced',
-          accent: defaults.accent ?? 'boysenberry',
+          accent: defaults.accent ?? 'zeus-navy',
           overrides: { theme: false, density: false, accent: false },
           appliedPlatformDefaults: true,
         })),

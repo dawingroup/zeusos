@@ -21,6 +21,7 @@ import {
   PanelLeftClose,
   ChevronRight,
   ChevronDown,
+  Palette,
 } from 'lucide-react';
 import { getIconByName } from '@/shared/utils/iconMap';
 import { Button } from '@/core/components/ui/button';
@@ -1013,6 +1014,11 @@ export function AppShell({ children }: AppShellProps) {
                 <DropdownMenuItem asChild>
                   <Link to="/profile">
                     <User className="mr-2 h-3.5 w-3.5" /> Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/appearance">
+                    <Palette className="mr-2 h-3.5 w-3.5" /> Appearance
                   </Link>
                 </DropdownMenuItem>
                 {adminNavItems.length > 0 && (

@@ -5,6 +5,37 @@
 
 import { afterEach, beforeAll, vi } from 'vitest';
 
+// jsdom in this config does not provide a working localStorage (the
+// `--localstorage-file` flag is unset), so anything backed by zustand's
+// `persist` middleware (e.g. uiStore) throws "storage.setItem is not a
+// function" on first write. Install a minimal in-memory polyfill at module
+// load — before any store module initialises createJSONStorage(localStorage).
+if (
+  typeof globalThis.localStorage === 'undefined' ||
+  typeof globalThis.localStorage.setItem !== 'function'
+) {
+  const mem = new Map<string, string>();
+  Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    value: {
+      getItem: (k: string) => (mem.has(k) ? mem.get(k)! : null),
+      setItem: (k: string, v: string) => {
+        mem.set(k, String(v));
+      },
+      removeItem: (k: string) => {
+        mem.delete(k);
+      },
+      clear: () => {
+        mem.clear();
+      },
+      key: (i: number) => Array.from(mem.keys())[i] ?? null,
+      get length() {
+        return mem.size;
+      },
+    },
+  });
+}
+
 // Mock Firebase
 vi.mock('../firebase/config', () => ({
   db: {},

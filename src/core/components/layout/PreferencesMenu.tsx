@@ -14,11 +14,16 @@ import {
 import { useUIStore, type Density, type Accent } from '@/shared/stores/uiStore';
 import { useOrganizationSettings } from '@/core/settings';
 
+// Canonical Zeus accents — map 1:1 to the `[data-accent]` CSS blocks.
+// (Legacy DawinOS values still resolve via the store type + CSS aliases.)
 const ACCENT_OPTIONS: { value: Accent; label: string; color: string }[] = [
-  { value: 'boysenberry', label: 'Boysenberry', color: '#872e5c' },
-  { value: 'goldenbell', label: 'Golden Bell', color: '#e18425' },
-  { value: 'seafoam', label: 'Seafoam', color: '#2f7b8c' },
-  { value: 'pesto', label: 'Pesto', color: '#6a6037' },
+  { value: 'zeus-navy', label: 'Zeus Navy', color: '#0a1f4a' },
+  { value: 'zeus-red', label: 'Zeus Red', color: '#e63946' },
+  { value: 'zeus-the-agency', label: 'Zeus The Agency', color: '#f5d900' },
+  { value: 'zeus-digital', label: 'Zeus Digital', color: '#00c5e5' },
+  { value: 'labyrinth', label: 'Labyrinth', color: '#2f9d5c' },
+  { value: 'odd-gorilla', label: 'Odd Gorilla', color: '#e65b66' },
+  { value: 'house-of-zeus', label: 'House of Zeus', color: '#6fa823' },
 ];
 
 /**
