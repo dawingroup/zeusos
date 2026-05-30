@@ -6,17 +6,16 @@
  * dashboard from the design package:
  *
  *   • PARENT (zeus-group): group-wide KPI strip + 5-brand portfolio roll-up
- *     + recent IWO activity + conflict-firewall watch + weekly pulse.
+ *     + recent IWO activity + conflict-firewall watch + weekly-pulse stub.
  *   • SUBSIDIARY: the brand's "today's work" — awaiting-acceptance + in-flight
- *     KPIs scoped to the user's home brand.
+ *     KPIs + inbox table scoped to the user's home brand.
  *
- * Data: wired to real Firestore where a source exists —
- *   - `subscribeAllIwosForBurnReport` (collection-group over internal_work_orders)
- *     powers IWO counts, burn, SLA, brand roll-up, and recent activity.
- *   - `subscribeOpenMasterJobs` powers the open-master-jobs KPI.
- *   - `subscribeConflictRisks` powers the conflict-firewall watch.
- * The "weekly pulse" has no single backing source yet and renders a
- * clearly-labelled placeholder rather than fabricated numbers.
+ * Data: wired to real Firestore. Parent reads the cross-brand active-IWO
+ * collection-group via `subscribeActiveIwos` (parent-org-gated) + open master
+ * jobs + conflict risks. Subsidiary reads its own brand via the delivery
+ * inbox/active subscriptions (home-brand-scoped, rules-safe). Burn comes from
+ * the pure `computeBurnMeter`. The weekly pulse has no aggregator yet and
+ * renders a labelled placeholder rather than fabricated numbers.
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -26,26 +25,25 @@ import { useCurrentDawinUser } from '@/core/settings';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
-import {
-  subscribeAllIwosForBurnReport,
-  type BurnRow,
-} from '@/modules/delivery/services/burn-sla.service';
-import { subscribeOpenMasterJobs } from '@/modules/traffic/services/traffic.service';
+import type { InternalWorkOrder, IWOState } from '@/modules/assignment/types/iwo.types';
+import { computeBurnMeter } from '@/modules/delivery/services/burnMeter';
+import { subscribeIWOInbox, subscribeIWOActive } from '@/modules/delivery/services/firestore';
+import { subscribeActiveIwos, subscribeOpenMasterJobs } from '@/modules/traffic/services/traffic.service';
 import {
   subscribeConflictRisks,
   type ConflictExclusivityRiskEvent,
 } from '@/modules/conflict-firewall/services/conflict-firewall.service';
-import { PageHero, KPI, BurnMeter, Sparkline, SectionH, Pill, type RagTone } from '@/shared/components/refresh';
+import { KPI, BurnMeter, SectionH, Pill, type RagTone } from '@/shared/components/refresh';
 import { formatMinor } from '@/modules/account-management/utils/money';
 
-// Brand metadata for chips/accents — mirrors the Phase 1 [data-brand] palette.
+// Brand metadata — mirrors the Phase 1 [data-brand] palette.
 const BRAND_META: Record<string, { name: string; short: string; accent: string }> = {
-  'zeus-group':      { name: 'Zeus Group',     short: 'ZG', accent: '#0a1f4a' },
+  'zeus-group':      { name: 'Zeus Group',      short: 'ZG', accent: '#0a1f4a' },
   'zeus-the-agency': { name: 'Zeus The Agency', short: 'ZA', accent: '#f5d900' },
-  'zeus-digital':    { name: 'Zeus Digital',   short: 'ZD', accent: '#00c5e5' },
-  labyrinth:         { name: 'Labyrinth',      short: 'LB', accent: '#2f9d5c' },
-  'odd-gorilla':     { name: 'Odd Gorilla',    short: 'OG', accent: '#e65b66' },
-  'house-of-zeus':   { name: 'House of Zeus',  short: 'HZ', accent: '#6fa823' },
+  'zeus-digital':    { name: 'Zeus Digital',    short: 'ZD', accent: '#00c5e5' },
+  labyrinth:         { name: 'Labyrinth',       short: 'LB', accent: '#2f9d5c' },
+  'odd-gorilla':     { name: 'Odd Gorilla',     short: 'OG', accent: '#e65b66' },
+  'house-of-zeus':   { name: 'House of Zeus',   short: 'HZ', accent: '#6fa823' },
 };
 const DELIVERY_BRANDS = ['zeus-the-agency', 'zeus-digital', 'labyrinth', 'odd-gorilla', 'house-of-zeus'];
 
@@ -53,73 +51,76 @@ function brandMeta(id: string) {
   return BRAND_META[id] ?? { name: id, short: id.slice(0, 2).toUpperCase(), accent: '#0a1f4a' };
 }
 
-function slaTone(s: BurnRow['slaState']): RagTone {
-  return s === 'breach' ? 'red' : s === 'warn' ? 'amber' : s === 'ok' ? 'green' : 'blue';
+type Sla = 'breach' | 'warn' | 'ok' | 'na';
+function slaRisk(iwo: InternalWorkOrder, nowMs: number): Sla {
+  if (!iwo.slaDueAt) return 'na';
+  const due = new Date(iwo.slaDueAt).getTime();
+  if (Number.isNaN(due)) return 'na';
+  if (due < nowMs) return 'breach';
+  if (due - nowMs < 24 * 60 * 60 * 1000) return 'warn';
+  return 'ok';
 }
-
-const IN_FLIGHT = new Set(['ACCEPTED', 'IN_PROGRESS', 'DELIVERED']);
+function stateTone(state: IWOState): RagTone {
+  if (state === 'DELIVERED' || state === 'ACCEPTED_INTERNALLY' || state === 'CLOSED') return 'green';
+  if (state === 'REJECTED' || state === 'CANCELLED' || state === 'REVISION_REQUESTED') return 'red';
+  return 'blue';
+}
 
 export default function DashboardPage() {
   const { dawinUser } = useCurrentDawinUser();
   const { currentSubsidiary } = useSubsidiary();
 
+  const brandId = (currentSubsidiary?.id ?? 'zeus-group') as SubsidiaryId;
   const isParent = useMemo(() => {
-    const onGroup = (currentSubsidiary?.id ?? 'zeus-group') === 'zeus-group';
+    const onGroup = brandId === 'zeus-group';
     const privileged =
       (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
       Array.isArray(dawinUser?.subsidiaryAccess) &&
       dawinUser.subsidiaryAccess.some((s) => s.subsidiaryId === 'zeus-group' && s.hasAccess);
     return onGroup && !!privileged;
-  }, [dawinUser, currentSubsidiary?.id]);
-
-  const [iwos, setIwos] = useState<BurnRow[]>([]);
-  const [openMjCount, setOpenMjCount] = useState<number | null>(null);
-  const [risks, setRisks] = useState<ConflictExclusivityRiskEvent[]>([]);
-
-  useEffect(() => {
-    const unsubs: Array<() => void> = [];
-    unsubs.push(subscribeAllIwosForBurnReport(setIwos, () => setIwos([])));
-    unsubs.push(subscribeOpenMasterJobs((jobs) => setOpenMjCount(jobs.length), () => setOpenMjCount(null)));
-    unsubs.push(subscribeConflictRisks(setRisks, () => setRisks([])));
-    return () => unsubs.forEach((u) => u());
-  }, []);
+  }, [dawinUser, brandId]);
 
   const today = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
 
-  if (isParent) {
-    return <ParentDashboard today={today} iwos={iwos} openMjCount={openMjCount} risks={risks} />;
-  }
-  return <SubsidiaryDashboard today={today} iwos={iwos} brandId={currentSubsidiary?.id ?? null} />;
+  if (isParent) return <ParentDashboard today={today} />;
+  return <SubsidiaryDashboard today={today} brandId={brandId} />;
 }
 
 // ---------------------------------------------------------------------------
 // PARENT — Commercial Gravity
 // ---------------------------------------------------------------------------
-function ParentDashboard({
-  today,
-  iwos,
-  openMjCount,
-  risks,
-}: {
-  today: string;
-  iwos: BurnRow[];
-  openMjCount: number | null;
-  risks: ConflictExclusivityRiskEvent[];
-}) {
-  const inFlight = iwos.filter((i) => IN_FLIGHT.has(i.state));
-  const breaches = iwos.filter((i) => i.slaState === 'breach').length;
+function ParentDashboard({ today }: { today: string }) {
+  const [iwos, setIwos] = useState<InternalWorkOrder[]>([]);
+  const [openMjCount, setOpenMjCount] = useState<number | null>(null);
+  const [risks, setRisks] = useState<ConflictExclusivityRiskEvent[]>([]);
+  const nowMs = useMemo(() => Date.now(), [iwos]);
 
-  const portfolio = useMemo(() => {
-    return DELIVERY_BRANDS.map((id) => {
-      const rows = iwos.filter((r) => (r.brandId ?? r.subsidiaryOrgId) === id && IN_FLIGHT.has(r.state));
-      const budget = rows.reduce((s, r) => s + (r.budgetMinor || 0), 0);
-      const cost = rows.reduce((s, r) => s + (r.cumulativeCostMinor || 0), 0);
-      const burn = budget > 0 ? cost / budget : 0;
-      const sla = rows.filter((r) => r.slaState === 'breach' || r.slaState === 'warn').length;
-      const ccy = rows[0]?.currency ?? 'UGX';
-      return { id, activeIWOs: rows.length, burn, billable: budget ? formatMinor(budget, ccy) : '—', sla };
-    });
-  }, [iwos]);
+  useEffect(() => {
+    const unsubs: Array<() => void> = [];
+    unsubs.push(subscribeActiveIwos(setIwos, () => setIwos([])));
+    unsubs.push(subscribeOpenMasterJobs((jobs) => setOpenMjCount(jobs.length), () => setOpenMjCount(null)));
+    unsubs.push(subscribeConflictRisks(setRisks, () => setRisks([])));
+    return () => unsubs.forEach((u) => u());
+  }, []);
+
+  const breaches = iwos.filter((i) => slaRisk(i, nowMs) === 'breach').length;
+
+  const portfolio = useMemo(
+    () =>
+      DELIVERY_BRANDS.map((id) => {
+        const rows = iwos.filter((r) => r.subsidiaryOrgId === id);
+        const budget = rows.reduce((s, r) => s + (r.budgetMinor || 0), 0);
+        const cost = rows.reduce((s, r) => s + (r.cumulativeCostMinor || 0), 0);
+        const burn = budget > 0 ? cost / budget : 0;
+        const sla = rows.filter((r) => {
+          const x = slaRisk(r, nowMs);
+          return x === 'breach' || x === 'warn';
+        }).length;
+        const ccy = rows[0]?.currency ?? 'UGX';
+        return { id, activeIWOs: rows.length, burn, billable: budget ? formatMinor(budget, ccy) : '—', sla };
+      }),
+    [iwos, nowMs],
+  );
 
   return (
     <div style={{ padding: 'var(--pad-page)' }}>
@@ -143,8 +144,8 @@ function ParentDashboard({
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
         <KPI label="Open Master Jobs" value={openMjCount ?? '—'} accent="#0a1f4a" />
-        <KPI label="In-flight IWOs" value={inFlight.length} accent="#e63946" />
-        <KPI label="Total IWOs" value={iwos.length} accent="#2f9d5c" />
+        <KPI label="In-flight IWOs" value={iwos.length} accent="#e63946" />
+        <KPI label="Brands engaged" value={portfolio.filter((p) => p.activeIWOs > 0).length} accent="#2f9d5c" />
         <KPI label="SLA breaches" value={breaches} deltaDir={breaches > 0 ? 'down' : 'flat'} accent="#e18425" />
       </div>
 
@@ -190,8 +191,9 @@ function ParentDashboard({
                 <tr><th>Code</th><th>Brand</th><th style={{ textAlign: 'right' }}>Burn</th><th>State</th></tr>
               </thead>
               <tbody>
-                {inFlight.slice(0, 7).map((i) => {
-                  const b = brandMeta(i.brandId ?? i.subsidiaryOrgId);
+                {iwos.slice(0, 7).map((i) => {
+                  const b = brandMeta(i.subsidiaryOrgId);
+                  const burn = computeBurnMeter(i);
                   return (
                     <tr key={i.id}>
                       <td className="mono" style={{ fontSize: 12 }}>
@@ -202,14 +204,14 @@ function ParentDashboard({
                           <span style={{ width: 8, height: 8, borderRadius: 2, background: b.accent }} />{b.short}
                         </span>
                       </td>
-                      <td className="tabular" style={{ textAlign: 'right', color: i.burnPct >= 100 ? 'var(--rag-red)' : i.burnPct >= 80 ? 'var(--rag-amber)' : undefined }}>
-                        {i.burnPct != null ? `${Math.round(i.burnPct)}%` : '—'}
+                      <td className="tabular" style={{ textAlign: 'right', color: burn.pct >= 100 ? 'var(--rag-red)' : burn.pct >= 80 ? 'var(--rag-amber)' : undefined }}>
+                        {Math.round(burn.pct)}%
                       </td>
-                      <td><Pill tone={slaTone(i.slaState)}>{i.state.replace(/_/g, ' ')}</Pill></td>
+                      <td><Pill tone={stateTone(i.state)}>{i.state.replace(/_/g, ' ')}</Pill></td>
                     </tr>
                   );
                 })}
-                {inFlight.length === 0 && (
+                {iwos.length === 0 && (
                   <tr><td colSpan={4} style={{ padding: 20, textAlign: 'center', color: 'var(--fg-tertiary)' }}>No in-flight IWOs.</td></tr>
                 )}
               </tbody>
@@ -260,18 +262,30 @@ function ParentDashboard({
 }
 
 // ---------------------------------------------------------------------------
-// SUBSIDIARY — Today's work
+// SUBSIDIARY — Today's work (home-brand scoped, rules-safe)
 // ---------------------------------------------------------------------------
-function SubsidiaryDashboard({ today, iwos, brandId }: { today: string; iwos: BurnRow[]; brandId: string | null }) {
-  const b = brandMeta(brandId ?? 'zeus-group');
-  const mine = iwos.filter((i) => (i.brandId ?? i.subsidiaryOrgId) === brandId);
-  const issued = mine.filter((i) => i.state === 'ISSUED');
-  const inFlight = mine.filter((i) => IN_FLIGHT.has(i.state));
-  const budget = inFlight.reduce((s, r) => s + (r.budgetMinor || 0), 0);
-  const cost = inFlight.reduce((s, r) => s + (r.cumulativeCostMinor || 0), 0);
+function SubsidiaryDashboard({ today, brandId }: { today: string; brandId: SubsidiaryId }) {
+  const b = brandMeta(brandId);
+  const [issued, setIssued] = useState<InternalWorkOrder[]>([]);
+  const [active, setActive] = useState<InternalWorkOrder[]>([]);
+  const nowMs = useMemo(() => Date.now(), [issued, active]);
+
+  useEffect(() => {
+    if (brandId === 'zeus-group') return;
+    const unsubs: Array<() => void> = [];
+    unsubs.push(subscribeIWOInbox(brandId, setIssued, () => setIssued([])));
+    unsubs.push(subscribeIWOActive(brandId, setActive, () => setActive([])));
+    return () => unsubs.forEach((u) => u());
+  }, [brandId]);
+
+  const budget = active.reduce((s, r) => s + (r.budgetMinor || 0), 0);
+  const cost = active.reduce((s, r) => s + (r.cumulativeCostMinor || 0), 0);
   const burn = budget > 0 ? cost / budget : 0;
-  const slaRisk = mine.filter((i) => i.slaState === 'breach' || i.slaState === 'warn').length;
-  const isolated = brandId ? isConflictIsolated(brandId as SubsidiaryId) : false;
+  const slaAtRisk = active.filter((i) => {
+    const x = slaRisk(i, nowMs);
+    return x === 'breach' || x === 'warn';
+  }).length;
+  const isolated = isConflictIsolated(brandId);
 
   return (
     <div style={{ padding: 'var(--pad-page)' }}>
@@ -295,16 +309,16 @@ function SubsidiaryDashboard({ today, iwos, brandId }: { today: string; iwos: Bu
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
         <KPI label="Awaiting acceptance" value={issued.length} accent={b.accent} />
-        <KPI label="In-flight IWOs" value={inFlight.length} accent={b.accent} />
+        <KPI label="In-flight IWOs" value={active.length} accent={b.accent} />
         <KPI label="Brand burn" value={`${Math.round(burn * 100)}%`} deltaDir={burn > 0.8 ? 'down' : 'up'} accent="#2f9d5c" />
-        <KPI label="SLA at risk" value={slaRisk} deltaDir={slaRisk > 0 ? 'down' : 'up'} accent="#e18425" />
+        <KPI label="SLA at risk" value={slaAtRisk} deltaDir={slaAtRisk > 0 ? 'down' : 'up'} accent="#e18425" />
       </div>
 
       <SectionH eyebrow="Inbox" title="Awaiting your acceptance" titleSize={17} />
       <div className="card" style={{ overflow: 'hidden' }}>
         <table className="tbl">
           <thead>
-            <tr><th>IWO</th><th>Title</th><th style={{ textAlign: 'right' }}>Budget</th><th>SLA</th><th /></tr>
+            <tr><th>IWO</th><th>Title</th><th style={{ textAlign: 'right' }}>Budget</th><th /></tr>
           </thead>
           <tbody>
             {issued.map((i) => (
@@ -312,14 +326,13 @@ function SubsidiaryDashboard({ today, iwos, brandId }: { today: string; iwos: Bu
                 <td className="mono" style={{ fontSize: 12 }}>{i.code}</td>
                 <td>{i.title || '—'}</td>
                 <td className="tabular" style={{ textAlign: 'right' }}>{formatMinor(i.budgetMinor, i.currency)}</td>
-                <td><Pill tone={slaTone(i.slaState)}>{i.slaState}</Pill></td>
                 <td style={{ textAlign: 'right' }}>
                   <Link to={`/delivery/iwo/${i.id}`} className="btn btn-ghost" style={{ padding: '4px 10px' }}>Open</Link>
                 </td>
               </tr>
             ))}
             {issued.length === 0 && (
-              <tr><td colSpan={5} style={{ padding: 24, textAlign: 'center', color: 'var(--fg-tertiary)' }}>Nothing waiting on you. Nice.</td></tr>
+              <tr><td colSpan={4} style={{ padding: 24, textAlign: 'center', color: 'var(--fg-tertiary)' }}>Nothing waiting on you. Nice.</td></tr>
             )}
           </tbody>
         </table>
