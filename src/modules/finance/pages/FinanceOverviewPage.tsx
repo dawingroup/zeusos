@@ -151,10 +151,11 @@ export function FinanceOverviewPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Financial Overview</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <div className="eyebrow" style={{ marginBottom: 4 }}>Operations · Finance</div>
+          <h2 className="h1">Financial overview</h2>
+          <p className="text-sm text-muted-foreground mt-1">
             Performance summary and key metrics
           </p>
         </div>

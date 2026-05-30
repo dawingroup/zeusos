@@ -12,6 +12,7 @@ import type {
 } from '../types/asset-item.types';
 import { AssetGrid } from '../components/AssetGrid';
 import { AssetSearchBar } from '../components/AssetSearchBar';
+import { PageHero } from '@/shared/components/refresh';
 
 const CATEGORY_OPTIONS: Array<AssetCategory | 'ALL'> = [
   'ALL',
@@ -107,29 +108,22 @@ export default function AssetLibraryListPage() {
   }, [items, activeTags]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Asset Library</h1>
-          <p className="text-sm text-muted-foreground">
-            Logos, brand guidelines, photography, fonts, and templates.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Link
-            to="/assets/collections"
-            className="rounded border px-3 py-1 text-sm"
-          >
-            Collections
-          </Link>
-          <Link
-            to="/assets/new"
-            className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
-          >
-            Upload
-          </Link>
-        </div>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · Asset Library"
+        title="Asset library"
+        body="Logos, brand guidelines, photography, fonts, and templates."
+        actions={
+          <>
+            <Link to="/assets/collections" className="btn btn-secondary">
+              Collections
+            </Link>
+            <Link to="/assets/new" className="btn btn-primary">
+              Upload
+            </Link>
+          </>
+        }
+      />
 
       {/* Filters */}
       <div className="space-y-2">

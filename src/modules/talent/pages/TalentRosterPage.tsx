@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { listTalentProfiles } from '../services/talent-profile.service';
 import type { TalentProfile, TalentType, TalentStatus } from '../types/talent-profile.types';
 import { TalentCard } from '../components/TalentCard';
+import { PageHero } from '@/shared/components/refresh';
 
 const TYPE_OPTIONS: Array<TalentType | 'ALL'> = ['ALL', 'INFLUENCER', 'MODEL', 'FREELANCER', 'STAFF'];
 const STATUS_OPTIONS: Array<TalentStatus | 'ALL'> = ['ALL', 'ACTIVE', 'INACTIVE', 'BLACKLISTED'];
@@ -44,21 +45,17 @@ export default function TalentRosterPage() {
   }, [profiles, search]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Talent Roster</h1>
-          <p className="text-sm text-muted-foreground">
-            Influencers, models, freelancers, and staff — profiles, rate cards, and contracts.
-          </p>
-        </div>
-        <Link
-          to="/talent/new"
-          className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground"
-        >
-          Add Talent
-        </Link>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · Talent"
+        title="Talent roster"
+        body="Influencers, models, freelancers, and staff — profiles, rate cards, and contracts."
+        actions={
+          <Link to="/talent/new" className="btn btn-primary">
+            Add talent
+          </Link>
+        }
+      />
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">

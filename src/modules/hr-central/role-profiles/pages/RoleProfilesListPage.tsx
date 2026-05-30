@@ -15,6 +15,7 @@ import type { RoleProfile } from '@/modules/hr-central/role-profiles/types';
 import { subscribeRoleProfiles } from '../services/role-profile.service';
 import { RoleProfileForm } from '../components/RoleProfileForm';
 import { cn } from '@/shared/lib/utils';
+import { PageHero } from '@/shared/components/refresh';
 
 const STATUS_TONE: Record<RoleProfile['status'], string> = {
   draft:    'bg-[var(--bg-sunken)] text-[var(--fg-secondary)]',
@@ -45,21 +46,20 @@ export default function RoleProfilesListPage() {
   }, [rows, brandFilter, statusFilter]);
 
   return (
-    <div className="p-6 space-y-4" data-testid="role-profiles-list-page">
-      <header className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-[20px] font-semibold text-[var(--fg-primary)] mb-1">Role Profiles</h1>
-          <p className="text-[12.5px] text-[var(--fg-tertiary)]">
-            Typed contracts describing what a holder can do, approve, and absorb in workload (Addendum v1.2 §2.1).
-          </p>
-        </div>
-        {!showCreate && (
-          <Button size="sm" data-testid="open-create-role-profile" onClick={() => setShowCreate(true)}>
-            <Plus className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
-            New role profile
-          </Button>
-        )}
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-4" data-testid="role-profiles-list-page">
+      <PageHero
+        eyebrow="Operations · HR Central"
+        title="Role profiles"
+        body="Typed contracts describing what a holder can do, approve, and absorb in workload (Addendum v1.2 §2.1)."
+        actions={
+          !showCreate ? (
+            <Button size="sm" data-testid="open-create-role-profile" onClick={() => setShowCreate(true)}>
+              <Plus className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
+              New role profile
+            </Button>
+          ) : undefined
+        }
+      />
 
       {err && (
         <div role="alert" data-testid="role-profiles-error" className="p-3 rounded-md border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red-deep)] text-[13px]">
