@@ -18,6 +18,7 @@ import type {
 } from '../types/purchase-order.types';
 import { PurchaseOrderStatusBadge } from '../components/PurchaseOrderStatusBadge';
 import { PurchaseOrderKindBadge } from '../components/PurchaseOrderKindBadge';
+import { PageHero } from '@/shared/components/refresh';
 
 const DEFAULT_ORG_ID = 'default';
 
@@ -73,16 +74,13 @@ export default function PurchaseOrdersListPage() {
   useEffect(() => { reload(); }, [user, orgId, kindFilter, statusFilter]);
 
   return (
-    <div className="space-y-6 p-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold">Purchase Orders</h1>
-          <p className="text-sm text-muted-foreground">
-            Procurement ledger raised by approved talent invoices and paid media supplier invoices.
-            Parent-org visibility only.
-          </p>
-        </div>
-        <div className="flex gap-2">
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Operations · Procurement"
+        title="Purchase orders"
+        body="Procurement ledger raised by approved talent invoices and paid media supplier invoices. Parent-org visibility only."
+        actions={
+          <div className="flex gap-2">
           <select
             value={kindFilter}
             onChange={(e) => setKindFilter(e.target.value as PurchaseOrderKind | 'ALL')}
@@ -105,65 +103,51 @@ export default function PurchaseOrdersListPage() {
           </select>
           <Link
             to="/procurement/purchase-orders/new"
-            className="rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className="btn btn-primary"
             data-testid="po-new-btn"
           >
             + New PO
           </Link>
-        </div>
-      </header>
+          </div>
+        }
+      />
 
       {loading && <p className="text-sm text-muted-foreground">Loading purchase orders…</p>}
       {error && <p className="text-sm text-destructive">Error: {error}</p>}
 
       {!loading && !error && pos.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No purchase orders found. They are created automatically when talent invoices are
           approved or media supplier invoices are paid.
         </div>
       )}
 
       {!loading && !error && pos.length > 0 && (
-        <div className="overflow-x-auto rounded border">
-          <table className="w-full text-sm" data-testid="po-table">
-            <thead className="bg-muted/50">
-              <tr className="text-left text-xs uppercase text-muted-foreground">
-                <th className="px-4 py-2 font-medium">PO ID</th>
-                <th className="px-4 py-2 font-medium">Kind</th>
-                <th className="px-4 py-2 font-medium">Master Job</th>
-                <th className="px-4 py-2 font-medium">Amount</th>
-                <th className="px-4 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 font-medium">Raised</th>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table className="tbl" data-testid="po-table">
+            <thead>
+              <tr>
+                <th>PO ID</th>
+                <th>Kind</th>
+                <th>Master Job</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Raised</th>
               </tr>
             </thead>
             <tbody>
               {pos.map((po) => (
-                <tr
-                  key={po.id}
-                  className="border-t hover:bg-muted/30"
-                  data-po-id={po.id}
-                  data-po-source-invoice={po.sourceInvoiceId}
-                >
-                  <td className="px-4 py-2 font-mono text-xs">
+                <tr key={po.id} data-po-id={po.id} data-po-source-invoice={po.sourceInvoiceId}>
+                  <td className="mono" style={{ fontSize: 12 }}>
                     <Link to={`/procurement/purchase-orders/${po.id}`} className="hover:underline">
                       {po.id}
                     </Link>
                   </td>
-                  <td className="px-4 py-2">
-                    <PurchaseOrderKindBadge kind={po.kind} />
-                  </td>
-                  <td className="px-4 py-2 font-mono text-xs text-muted-foreground">
-                    {po.masterJobId}
-                  </td>
-                  <td className="px-4 py-2 font-medium">
-                    {formatMoney(po.amountMinor, po.currency)}
-                  </td>
-                  <td className="px-4 py-2">
-                    <PurchaseOrderStatusBadge status={po.status} />
-                  </td>
-                  <td className="px-4 py-2 text-xs text-muted-foreground">
-                    {formatDate(po.raisedAt)}
-                  </td>
+                  <td><PurchaseOrderKindBadge kind={po.kind} /></td>
+                  <td className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{po.masterJobId}</td>
+                  <td style={{ fontWeight: 600 }}>{formatMoney(po.amountMinor, po.currency)}</td>
+                  <td><PurchaseOrderStatusBadge status={po.status} /></td>
+                  <td style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>{formatDate(po.raisedAt)}</td>
                 </tr>
               ))}
             </tbody>
