@@ -59,6 +59,7 @@ import {
 } from '@/config/navigation.unified';
 import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
+import { isParentOrgPrincipal as resolveIsParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { useUserModules } from '@/hooks/useUserModules';
 import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIntelligenceMenu';
@@ -246,15 +247,15 @@ export function AppShell({ children }: AppShellProps) {
   // selected, we render the PARENT manifest (Account Mgmt, Traffic,
   // Pricing, Billing, Conflict Firewall, …). Otherwise we render the
   // SUBSIDIARY manifest for the selected sub-brand.
-  const isParentOrgPrincipal = useMemo(() => {
-    return (
-      (dawinUser?.globalRole === 'admin' || dawinUser?.globalRole === 'owner') &&
-      Array.isArray(dawinUser?.subsidiaryAccess) &&
-      dawinUser.subsidiaryAccess.some(
-        (s) => s.subsidiaryId === 'zeus-group' && s.hasAccess,
-      )
-    );
-  }, [dawinUser]);
+  // Shared resolver (super-user email OR homeOrgId==='zeus-group' OR
+  // admin/owner with zeus-group access) so the sidebar matches the route
+  // guards. Previously this only checked the last branch, so a Zeus Group
+  // owner whose subsidiaryAccess listed only a sub-brand — or a super-user
+  // email — got an empty sidebar + subsidiary dashboard.
+  const isParentOrgPrincipal = useMemo(
+    () => resolveIsParentOrgPrincipal(user?.email, dawinUser),
+    [user?.email, dawinUser],
+  );
 
   const mainNavItems = useMemo(() => {
     const subId = (currentSubsidiary?.id ?? 'zeus-group') as SubsidiaryId;
