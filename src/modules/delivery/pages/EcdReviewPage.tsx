@@ -1,70 +1,197 @@
 /**
- * ECD Review — Executive Creative Director approval ladder surface.
- * Phase 6.UI. Subsidiary-scoped. UI refresh (batch 3b).
+ * EcdReviewPage — Phase 6.UI.D.2.
+ *
+ * Aggregates every IWO with an open `approvalChain` across the user's
+ * brand. Four tabs partition the queue:
+ *
+ *   Pending      — `currentRung` matches the user's rung; awaits action
+ *   In Progress  — chain open at a different rung (visibility only)
+ *   Returned     — last history entry is `REJECT` (the rejection-loop
+ *                  signal — this row is back at the originator)
+ *   History      — `approvalChain.complete === true`
+ *
+ * Phase 6.D scope gates the action on parent-org only (the callable
+ * enforces this). Per-rung RBAC ("only ECDs see the ECD-rung Pending
+ * tab") lands in 6.D.2-RBAC as a follow-up.
+ *
+ * UI refresh (batch 3b): PageHero + zeus-red underline tabs. All logic,
+ * subscriptions, and data-testids preserved.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { subscribeEcdQueue } from '../services/firestore';
-import type { InternalWorkOrder } from '@/modules/assignment/types/internal-work-order.types';
-import { useSubsidiary } from '@/contexts/SubsidiaryContext';
-import { SubsidiaryDeliveryGuard } from '../components/SubsidiaryDeliveryGuard';
-import { ApprovalLadder } from '../components/ApprovalLadder';
+import { Inbox, Hourglass, Undo2, History as HistoryIcon } from 'lucide-react';
+import type { InternalWorkOrder } from '@/modules/assignment/types/iwo.types';
+import type { ApprovalRung } from '@/modules/assignment/types/approval-chain.types';
+import {
+  subscribeAllDeliveredIwos,
+  subscribeCompletedApprovals,
+} from '../services/approval-ladder.service';
+import { ApprovalChainTimeline } from '../components/ApprovalChainTimeline';
 import { PageHero } from '@/shared/components/refresh';
+import { cn } from '@/shared/lib/utils';
 
-function EcdReviewInner() {
-  const { currentSubsidiary } = useSubsidiary();
-  const [queue, setQueue] = useState<InternalWorkOrder[]>([]);
-  const [loading, setLoading] = useState(true);
+type Tab = 'pending' | 'progress' | 'returned' | 'history';
+
+const TAB_DEFS: { id: Tab; label: string; icon: typeof Inbox; testId: string }[] = [
+  { id: 'pending',  label: 'Pending (my rung)', icon: Inbox,       testId: 'ecd-tab-pending' },
+  { id: 'progress', label: 'In Progress',       icon: Hourglass,   testId: 'ecd-tab-progress' },
+  { id: 'returned', label: 'Returned',          icon: Undo2,       testId: 'ecd-tab-returned' },
+  { id: 'history',  label: 'History',           icon: HistoryIcon, testId: 'ecd-tab-history' },
+];
+
+function partition(iwos: InternalWorkOrder[], myRung: ApprovalRung | 'ALL') {
+  const pending: InternalWorkOrder[] = [];
+  const progress: InternalWorkOrder[] = [];
+  const returned: InternalWorkOrder[] = [];
+  for (const iwo of iwos) {
+    const chain = iwo.approvalChain;
+    if (!chain) continue;
+    const last = chain.history[chain.history.length - 1];
+    if (last?.action === 'REJECT') {
+      returned.push(iwo);
+      continue;
+    }
+    if (myRung === 'ALL' || chain.currentRung === myRung) {
+      pending.push(iwo);
+    } else {
+      progress.push(iwo);
+    }
+  }
+  return { pending, progress, returned };
+}
+
+export default function EcdReviewPage() {
+  const [tab, setTab] = useState<Tab>('pending');
+  const [delivered, setDelivered] = useState<InternalWorkOrder[]>([]);
+  const [completed, setCompleted] = useState<InternalWorkOrder[]>([]);
+  const [err, setErr] = useState<string | null>(null);
+
+  // Per-rung scope. The Phase 6.D.2-RBAC follow-up will derive this
+  // from the current user's role profile. For PR 4, default to 'ALL'
+  // so parent-org admins see every Pending row.
+  const myRung: ApprovalRung | 'ALL' = 'ALL';
 
   useEffect(() => {
-    if (!currentSubsidiary?.id) return;
-    const unsub = subscribeEcdQueue(currentSubsidiary.id, (next) => {
-      setQueue(next);
-      setLoading(false);
-    });
-    return () => unsub();
-  }, [currentSubsidiary?.id]);
+    const u1 = subscribeAllDeliveredIwos(setDelivered, (e) =>
+      setErr(`Approval-ladder subscription failed: ${e.message}`),
+    );
+    const u2 = subscribeCompletedApprovals(setCompleted);
+    return () => { u1(); u2(); };
+  }, []);
 
-  if (loading) return <div style={{ padding: 'var(--pad-page)', color: 'var(--fg-tertiary)' }}>Loading ECD queue…</div>;
+  const { pending, progress, returned } = useMemo(
+    () => partition(delivered, myRung),
+    [delivered, myRung],
+  );
+
+  const visible: InternalWorkOrder[] = useMemo(() => {
+    switch (tab) {
+      case 'pending':  return pending;
+      case 'progress': return progress;
+      case 'returned': return returned;
+      case 'history':  return completed;
+    }
+  }, [tab, pending, progress, returned, completed]);
+
+  const tabCount = (t: Tab): number => {
+    switch (t) {
+      case 'pending':  return pending.length;
+      case 'progress': return progress.length;
+      case 'returned': return returned.length;
+      case 'history':  return completed.length;
+    }
+  };
 
   return (
-    <div style={{ padding: 'var(--pad-page)' }}>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="ecd-review-page">
       <PageHero
-        eyebrow={`${currentSubsidiary?.name ?? 'Subsidiary'} · Delivery`}
+        eyebrow="Delivery"
         title="ECD review"
-        body="Creative work awaiting approval-ladder sign-off. Advance or reject each rung of the Executive Creative Director ladder."
+        body="Approval-ladder rungs awaiting action across in-flight IWOs."
       />
 
-      {queue.length === 0 && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Nothing in the ECD queue.</p>}
+      {err && (
+        <div
+          role="alert"
+          data-testid="ecd-review-error"
+          className="mb-4 p-3 rounded-md border border-[var(--rag-red)] bg-[var(--rag-red-soft)] text-[var(--rag-red)] text-[13px]"
+        >
+          {err}
+        </div>
+      )}
 
-      {queue.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {queue.map((wo) => (
-            <div key={wo.id} className="card card-pad brand-edge" data-testid={`ecd-${wo.id}`}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-                <div>
-                  <Link to={`/delivery/iwo/${wo.id}`} style={{ fontWeight: 600 }} className="hover:underline">
-                    {wo.code}
-                  </Link>
-                  <div style={{ fontSize: 11.5, color: 'var(--fg-tertiary)', marginTop: 2 }}>{wo.title || 'Untitled'}</div>
-                </div>
-              </div>
-              <div style={{ marginTop: 14 }}>
-                <ApprovalLadder iwo={wo} />
-              </div>
+      <nav style={{ borderBottom: '1px solid var(--border-subtle)', marginBottom: 18 }} aria-label="ECD Review tabs">
+        <ul className="flex gap-1 -mb-px">
+          {TAB_DEFS.map((t) => {
+            const Icon = t.icon;
+            const isActive = t.id === tab;
+            return (
+              <li key={t.id}>
+                <button
+                  data-testid={t.testId}
+                  onClick={() => setTab(t.id)}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 px-3.5 py-2.5 text-[13px] border-b-2 transition-colors',
+                    isActive
+                      ? 'border-[var(--zeus-red)] text-[var(--fg-primary)] font-semibold'
+                      : 'border-transparent text-[var(--fg-tertiary)] font-medium hover:text-[var(--fg-primary)]',
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                  {t.label}
+                  <span
+                    className={cn(
+                      'inline-block text-[10.5px] px-1.5 py-0.5 rounded',
+                      isActive ? 'bg-[var(--brand-accent-soft)]' : 'bg-[var(--bg-sunken)]',
+                    )}
+                  >
+                    {tabCount(t.id)}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {visible.length === 0 ? (
+        <p
+          data-testid="ecd-review-empty"
+          className="text-[13px] text-[var(--fg-tertiary)] italic p-4 rounded-md border border-dashed border-[var(--border-default)] text-center"
+        >
+          {tab === 'pending'
+            ? 'Nothing awaits your action right now.'
+            : tab === 'progress'
+              ? 'No IWOs are climbing the ladder elsewhere.'
+              : tab === 'returned'
+                ? 'No IWOs have been rejected.'
+                : 'No approvals have been completed yet.'}
+        </p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {visible.map((iwo) => (
+            <div
+              key={iwo.id}
+              data-testid={`ecd-row-${iwo.id}`}
+              className="card card-pad brand-edge"
+            >
+              <header className="flex items-baseline justify-between gap-3 mb-2">
+                <Link
+                  to={`/delivery/iwo/${iwo.id}`}
+                  className="text-[13.5px] font-semibold text-[var(--fg-primary)] hover:underline"
+                >
+                  {iwo.code || iwo.id}
+                </Link>
+                <span className="text-[11px] font-mono text-[var(--fg-tertiary)]">
+                  {iwo.subsidiaryOrgId}
+                </span>
+              </header>
+              {iwo.approvalChain && <ApprovalChainTimeline chain={iwo.approvalChain} compact />}
             </div>
           ))}
         </div>
       )}
     </div>
-  );
-}
-
-export default function EcdReviewPage() {
-  return (
-    <SubsidiaryDeliveryGuard>
-      <EcdReviewInner />
-    </SubsidiaryDeliveryGuard>
   );
 }
