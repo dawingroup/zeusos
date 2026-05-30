@@ -34,6 +34,7 @@ import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useCurrentDawinUser } from '@/core/settings';
 import { Button } from '@/core/components/ui/button';
+import { PageHero } from '@/shared/components/refresh';
 import type { TimeEntry } from '@/modules/delivery';
 import {
   subscribeMyTimeEntries,
@@ -87,40 +88,25 @@ export default function MyTimeThisWeekPage() {
 
   if (!uid) {
     return (
-      <div style={{ padding: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 600 }}>My Time</h1>
-        <p style={{ color: '#475569' }}>Sign in to see your time entries.</p>
+      <div style={{ padding: 'var(--pad-page)' }}>
+        <PageHero eyebrow="Delivery" title="My time" body="Sign in to see your time entries." />
       </div>
     );
   }
 
   return (
-    <div style={{ padding: 24 }} data-testid="my-time-this-week-page">
-      <header style={{
-        marginBottom: 16,
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        gap: 12,
-      }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }}>My Time</h1>
-          <p style={{ marginTop: 4, color: '#475569', fontSize: 13 }}>
-            What you&apos;ve logged against IWOs this week. The IWO workspace
-            still owns the canonical posting form (with rate-card +
-            budget-hold context) — this quick-add bypasses the round-trip
-            for the common case.
-          </p>
-        </div>
-        <Button
-          size="sm"
-          data-testid="my-time-add-entry-btn"
-          onClick={() => setDialogOpen(true)}
-        >
-          <Plus size={14} aria-hidden="true" style={{ marginRight: 4 }} />
-          Add entry
-        </Button>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} data-testid="my-time-this-week-page">
+      <PageHero
+        eyebrow="Delivery · Time"
+        title="My time"
+        body="What you've logged against IWOs this week. The IWO workspace still owns the canonical posting form (with rate-card + budget-hold context) — this quick-add bypasses the round-trip for the common case."
+        actions={
+          <Button size="sm" data-testid="my-time-add-entry-btn" onClick={() => setDialogOpen(true)}>
+            <Plus size={14} aria-hidden="true" style={{ marginRight: 4 }} />
+            Add entry
+          </Button>
+        }
+      />
 
       {err && (
         <div role="alert" data-testid="my-time-error" style={{
