@@ -227,28 +227,21 @@ export default function IWOWorkspacePage() {
   const canStart = iwo.state === 'ACCEPTED';
 
   return (
-    <div style={{ padding: 24, maxWidth: 960, margin: '0 auto' }} data-testid="iwo-workspace-page">
-      <button
-        type="button"
-        data-testid="iwo-back-to-inbox"
-        onClick={() => navigate('/delivery/inbox')}
-        style={{
-          padding: '4px 8px', marginBottom: 16, border: '1px solid #cbd5e1',
-          background: '#fff', borderRadius: 4, cursor: 'pointer', fontSize: 12,
-        }}
-      >
-        ← Inbox
-      </button>
+    <div style={{ padding: 'var(--pad-page)', maxWidth: 960, margin: '0 auto' }} data-testid="iwo-workspace-page">
+      <span data-testid="iwo-back-to-inbox">
+        <BackBar label="Inbox" onBack={() => navigate('/delivery/inbox')} />
+      </span>
 
-      <header style={{ marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 600 }} data-testid="iwo-code">
-          {iwo.code}
-        </h1>
-        <div style={{ marginTop: 4, fontSize: 13, color: '#475569', display: 'flex', gap: 16 }}>
-          <span>State: <strong data-testid="iwo-state">{iwo.state}</strong></span>
-          <span data-testid="iwo-budget">Budget: {formatMinor(iwo.budgetMinor, iwo.currency)}</span>
+      <div style={{ marginBottom: 24 }}>
+        <div className="eyebrow" style={{ marginBottom: 6 }}>Delivery · IWO</div>
+        <h1 className="display mono" data-testid="iwo-code">{iwo.code}</h1>
+        <div style={{ marginTop: 10, display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Pill tone="blue"><span data-testid="iwo-state">{iwo.state}</span></Pill>
+          <span data-testid="iwo-budget" className="tabular" style={{ fontSize: 12.5, color: 'var(--fg-tertiary)' }}>
+            Budget: {formatMinor(iwo.budgetMinor, iwo.currency)}
+          </span>
         </div>
-      </header>
+      </div>
 
       {err && (
         <div role="alert" style={{
