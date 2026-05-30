@@ -82,11 +82,20 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'crm',               label: 'CRM',                       icon: 'Target',          routePath: '/crm' },
   { moduleId: 'talent',            label: 'Talent',                    icon: 'Star',            routePath: '/talent' },
   { moduleId: 'procurement',       label: 'Procurement',               icon: 'ShoppingCart',    routePath: '/procurement/purchase-orders' },
+  // Suppliers: routed (/suppliers) + present in navigation.unified, but was
+  // absent from the parent manifest so the live page had no sidebar entry.
+  { moduleId: 'suppliers',         label: 'Suppliers',                 icon: 'Package',         routePath: '/suppliers' },
   { moduleId: 'finance',           label: 'Finance',                   icon: 'DollarSign',      routePath: '/finance/overview' },
   { moduleId: 'hr-central',        label: 'HR Central',                icon: 'Users',           routePath: '/hr/employees' },
   { moduleId: 'strategy',          label: 'Strategy & Intelligence',   icon: 'Brain',           routePath: '/strategy' },
+  // Market Intel: routed (/market-intel) competitor/insights surface — was
+  // missing from the manifest despite the design placing it after Strategy.
+  { moduleId: 'market-intel',      label: 'Market Intel',              icon: 'Sparkles',        routePath: '/market-intel' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
   { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
+  // Compliance: routed (/compliance) dashboard + documents + obligations —
+  // present in navigation.unified but never surfaced in the parent sidebar.
+  { moduleId: 'compliance',        label: 'Compliance',                icon: 'Shield',          routePath: '/compliance' },
   // Phase 5.D — parent-org admins log time against IWOs too (e.g. AM
   // running a brief workshop) so My Time appears here as well as in
   // the subsidiary head. Team Time is the parent-org-only cross-brand
