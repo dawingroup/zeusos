@@ -46,6 +46,7 @@ import { computeBurnMeter } from '../services/burnMeter';
 import { BurnMeterBar } from '../components/BurnMeterBar';
 import { RouteToAMButton } from '../components/RouteToAMButton';
 import { ApprovalLadderPanel } from '../components/ApprovalLadderPanel';
+import { BackBar, Pill } from '@/shared/components/refresh';
 
 function formatMinor(amountMinor: number, currency: string): string {
   return `${currency} ${(amountMinor / 100).toLocaleString(undefined, {
