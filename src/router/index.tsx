@@ -308,6 +308,7 @@ const StrategyAssistantPage = lazyWithRetry(() =>
 const ProfilePage = lazyWithRetry(() => import('@/pages/profile/ProfilePage'));
 const NotificationSettingsPage = lazyWithRetry(() => import('@/pages/profile/NotificationSettingsPage'));
 const AppearanceSettingsPage = lazyWithRetry(() => import('@/pages/profile/AppearanceSettingsPage'));
+const SettingsPage = lazyWithRetry(() => import('@/app/pages/SettingsPage'));
 const UserManagementPage = lazyWithRetry(() => import('@/pages/admin/UserManagementPage'));
 const RoleManagementPage = lazyWithRetry(() => import('@/pages/admin/RoleManagementPage'));
 const AuditLogPage = lazyWithRetry(() => import('@/pages/admin/AuditLogPage'));
@@ -615,6 +616,11 @@ export const router = createBrowserRouter([
       { path: 'settings/appearance',    element: <PageWrapper><AppearanceSettingsPage /></PageWrapper> },
 
       // Admin
+      // Org settings hub (General / Users / Access / Integrations / Modules / …).
+      // The header avatar "Settings", Header.tsx, and the admin sub-pages all
+      // navigate to /admin/settings — but the route was never registered, so it
+      // 404'd. Wire it to the built SettingsPage.
+      { path: 'admin/settings',      element: <PageWrapper><SettingsPage /></PageWrapper> },
       { path: 'admin/users',         element: <PageWrapper><UserManagementPage /></PageWrapper> },
       { path: 'admin/roles',         element: <PageWrapper><RoleManagementPage /></PageWrapper> },
       { path: 'admin/audit-log',     element: <PageWrapper><AuditLogPage /></PageWrapper> },

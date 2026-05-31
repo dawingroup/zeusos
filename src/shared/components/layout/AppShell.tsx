@@ -112,6 +112,8 @@ const SECTION_FOR_MODULE: Record<string, string> = {
   'hr-central': 'ops',
   strategy: 'ops',
   'market-intel': 'ops',
+  'ai-assistant': 'ops',
+  intelligence: 'ops',
   reports: 'admin',
   compliance: 'admin',
   'my-time': 'admin',

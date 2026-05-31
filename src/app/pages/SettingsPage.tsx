@@ -36,6 +36,7 @@ import {
   AlertCircle,
   Plug,
   Box,
+  Brain,
   DollarSign,
   MessagesSquare,
 } from 'lucide-react';
@@ -1088,6 +1089,14 @@ function ModulesTab() {
       badgeText: 'Wa',
       badgeBg: 'bg-[var(--rag-green)]',
       icon: MessagesSquare,
+    },
+    {
+      label: 'Automation & Intelligence',
+      description: 'Role profiles, task-generation templates, event automation rules, and AI memory (admin only).',
+      href: '/intelligence/admin',
+      badgeText: 'AI',
+      badgeBg: 'bg-[var(--rag-green)]',
+      icon: Brain,
     },
   ];
 
