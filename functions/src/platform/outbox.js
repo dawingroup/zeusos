@@ -98,6 +98,13 @@ const DOMAIN_EVENT_TYPES = new Set([
   // the clientId. Payload: { clientId, briefId, sectors[], competitorCount,
   // regulatoryCount, stakeholderCount }.
   'ClientStrategyBriefGenerated',
+  // Phase 4.2 — Comms. Channel-agnostic client message events (WhatsApp today,
+  // email next). aggregateType 'whatsappConversation' (or 'emailThread');
+  // payload carries { channel, conversationId, phoneNumber?, clientId?, brandId?,
+  // textPreview }. The notification spine (Phase 4.4) + the planned 6.E uniform
+  // inbox consume these — channel-specific details stay in the payload.
+  'ClientMessageReceived',
+  'ClientMessageSent',
 ]);
 
 /**

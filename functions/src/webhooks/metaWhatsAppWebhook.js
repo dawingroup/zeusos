@@ -13,10 +13,10 @@ const admin = require('firebase-admin');
 const { META_WHATSAPP_APP_SECRET } = require('../integrations/meta/metaCloudApiClient');
 const { META_WEBHOOK_VERIFY_TOKEN, verifyWebhookChallenge, validateSignature } = require('../integrations/meta/webhookVerification');
 const { normalizePhoneNumber } = require('../integrations/meta/utils');
+const { appendDomainEvent } = require('../platform/outbox');
 const {
   META_WHATSAPP_ACCESS_TOKEN,
   META_WHATSAPP_PHONE_NUMBER_ID,
-  sendTextMessage,
 } = require('../integrations/meta/metaCloudApiClient');
 
 if (!admin.apps.length) {
@@ -151,157 +151,51 @@ async function storeInboundMessage(conversationId, messageData) {
 }
 
 /**
- * Emit a business event for the intelligence layer
+ * Runtime kill-switch — WhatsApp ships dark until enabled in commsConfig.
+ * (Phase 4.2). The GET verification challenge stays live regardless; this
+ * gates inbound message PROCESSING + (via the send path) outbound.
  */
-async function emitBusinessEvent(eventType, conversation, messageText) {
-  const eventRef = db.collection(COLLECTIONS.BUSINESS_EVENTS).doc();
-  await eventRef.set({
-    id: eventRef.id,
-    eventType,
-    category: 'client_interaction',
-    severity: 'medium',
-    sourceModule: 'customer_hub',
-    subsidiary: 'finishes',
-    entityType: 'customer',
-    entityId: conversation.customerId || conversation.id,
-    entityName: conversation.customerName,
-    title: `WhatsApp message from ${conversation.customerName}`,
-    description: messageText
-      ? `Customer sent: "${messageText.substring(0, 200)}${messageText.length > 200 ? '...' : ''}"`
-      : 'Customer sent a WhatsApp message',
-    previousState: null,
-    currentState: { messageReceived: true, conversationId: conversation.id },
-    triggeredBy: 'system',
-    triggeredByName: 'Meta WhatsApp Webhook',
-    triggeredAt: admin.firestore.FieldValue.serverTimestamp(),
-    status: 'pending',
-    metadata: {
-      conversationId: conversation.id,
-      phoneNumber: conversation.phoneNumber,
-      provider: 'meta',
-    },
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-  });
+async function isWhatsAppEnabled() {
+  try {
+    const snap = await db.doc('commsConfig/whatsapp').get();
+    return snap.exists && snap.data().enabled === true;
+  } catch {
+    return false;
+  }
 }
 
 /**
- * Handle quote approval/rejection via interactive button reply
- * Button reply IDs: quote_approve_{quoteId} or quote_reject_{quoteId}
+ * Emit a Zeus domain event on the outbox for an inbound client message
+ * (Phase 4.2 — replaces the DawinOS `businessEvents`/`subsidiary:'finishes'`
+ * write). Channel-agnostic payload; the notification spine + uniform inbox
+ * consume `ClientMessageReceived`.
  */
-async function handleQuoteButtonReply(buttonReplyId, phoneNumber, conversationId) {
-  const match = buttonReplyId.match(/^quote_(approve|reject)_(.+)$/);
-  if (!match) return false;
-
-  const action = match[1]; // 'approve' or 'reject'
-  const quoteId = match[2];
-
+async function emitClientMessageReceived(conversation, messageText) {
   try {
-    const quoteRef = db.collection('clientQuotes').doc(quoteId);
-    const quoteSnap = await quoteRef.get();
-
-    if (!quoteSnap.exists) {
-      logger.warn('Quote not found for button reply', { quoteId, action });
-      return true; // Consumed the event even though quote wasn't found
-    }
-
-    const quote = quoteSnap.data();
-    const newStatus = action === 'approve' ? 'approved' : 'rejected';
-
-    // Only process if quote is in a respondable state
-    if (!['sent', 'viewed'].includes(quote.status)) {
-      logger.info('Quote not in respondable state', { quoteId, currentStatus: quote.status });
-      await sendTextMessage(
-        phoneNumber,
-        `This quote has already been ${quote.status}. No further action needed.`
-      );
-      return true;
-    }
-
-    // Update quote status
-    const now = admin.firestore.FieldValue.serverTimestamp();
-    await quoteRef.update({
-      status: newStatus,
-      respondedAt: now,
-      clientResponse: {
-        status: newStatus,
-        notes: `${action === 'approve' ? 'Approved' : 'Rejected'} via WhatsApp`,
-        respondedAt: now,
-        respondedBy: phoneNumber,
-      },
-      updatedAt: now,
-    });
-
-    // Log activity on the quote
-    await quoteRef.collection('activity').add({
-      action: newStatus,
-      timestamp: now,
-      details: `Client responded via WhatsApp button: ${action}`,
-      performedBy: phoneNumber,
-    });
-
-    // Update linked CRM deal if exists
-    if (quote.projectId) {
-      const dealsQuery = await db.collection('deals')
-        .where('linkedProjectId', '==', quote.projectId)
-        .limit(1)
-        .get();
-
-      if (!dealsQuery.empty) {
-        const dealDoc = dealsQuery.docs[0];
-        await dealDoc.ref.collection('activities').add({
-          type: 'quote_response',
-          activityType: `quote_${newStatus}`,
-          title: `Quote ${quote.quoteNumber} ${newStatus} via WhatsApp`,
-          details: {
-            quoteId,
-            quoteNumber: quote.quoteNumber,
-            quoteTotal: quote.total,
-            quoteCurrency: quote.currency,
-            responseChannel: 'whatsapp',
-          },
-          createdAt: now,
-          createdBy: 'system',
-        });
-      }
-    }
-
-    // Send confirmation message back to the customer
-    const confirmMsg = action === 'approve'
-      ? `Thank you! Your quote *${quote.quoteNumber}* for *${quote.title}* has been *approved*. Our team will be in touch shortly to proceed.`
-      : `Your quote *${quote.quoteNumber}* for *${quote.title}* has been *rejected*. If you'd like to discuss alternatives, please reply to this message.`;
-
-    await sendTextMessage(phoneNumber, confirmMsg);
-
-    // Store the confirmation as an outbound message
-    if (conversationId) {
-      const confirmMsgRef = db
-        .collection(COLLECTIONS.CONVERSATIONS)
-        .doc(conversationId)
-        .collection('messages')
-        .doc();
-
-      await confirmMsgRef.set({
-        id: confirmMsgRef.id,
-        conversationId,
-        direction: 'outbound',
-        messageType: 'text',
-        textContent: confirmMsg,
-        senderType: 'system',
-        senderName: 'System',
-        status: 'sent',
-        provider: 'meta',
-        createdAt: now,
-        sentAt: now,
+    await db.runTransaction(async (tx) => {
+      appendDomainEvent({
+        tx,
+        db,
+        eventType: 'ClientMessageReceived',
+        aggregateType: 'whatsappConversation',
+        aggregateId: conversation.id,
+        payload: {
+          channel: 'whatsapp',
+          conversationId: conversation.id,
+          phoneNumber: conversation.phoneNumber || null,
+          customerId: conversation.customerId || null,
+          customerName: conversation.customerName || null,
+          clientId: conversation.clientId || null,
+          brandId: conversation.brandId || null,
+          textPreview: messageText ? messageText.substring(0, 200) : null,
+        },
       });
-    }
-
-    logger.info('Quote button reply processed', { quoteId, action, newStatus });
-    return true;
+    });
   } catch (err) {
-    logger.error('Error processing quote button reply', { quoteId, action, error: err.message });
-    return true; // Still consumed the event
+    logger.warn('[metaWhatsAppWebhook] domain event emit failed', { error: err.message });
   }
 }
+
 
 /**
  * Process an inbound message from Meta's webhook
@@ -379,30 +273,11 @@ async function handleInboundMessage(contact, message, metadata) {
   // Store the message
   await storeInboundMessage(conversation.id, messageData);
 
-  // Check for quote approval/rejection button replies (interactive reply buttons)
-  if (messageType === 'interactive' && message.interactive?.button_reply?.id) {
-    const handled = await handleQuoteButtonReply(
-      message.interactive.button_reply.id,
-      normalized,
-      conversation.id
-    );
-    if (handled) {
-      logger.info('Quote button reply handled', { buttonId: message.interactive.button_reply.id });
-    }
-  }
-
-  // Check for template quick-reply button responses
-  // Template buttons arrive as type: 'button' with button.payload
-  if (messageType === 'button' && message.button?.payload) {
-    const handled = await handleQuoteButtonReply(
-      message.button.payload,
-      normalized,
-      conversation.id
-    );
-    if (handled) {
-      logger.info('Template quick-reply button handled', { payload: message.button.payload });
-    }
-  }
+  // Interactive / template button replies are stored on the message above
+  // (messageData carries the button id/payload) and flow through the generic
+  // ClientMessageReceived event below. The DawinOS quote-approval handler
+  // (clientQuotes/deals writes) was removed in the Phase 4.2 de-coupling —
+  // wiring button ids to Zeus quotes/master_jobs is a separate, deliberate step.
 
   // Update conversation metadata
   await db.collection(COLLECTIONS.CONVERSATIONS).doc(conversation.id).update({
@@ -422,8 +297,8 @@ async function handleInboundMessage(contact, message, metadata) {
       : {}),
   });
 
-  // Emit business event for intelligence layer
-  await emitBusinessEvent('whatsapp_message_received', conversation, messageData.textContent);
+  // Emit the Zeus domain event (outbox) for the inbound client message.
+  await emitClientMessageReceived(conversation, messageData.textContent);
 
   logger.info('Inbound WhatsApp message processed (Meta)', {
     conversationId: conversation.id,
@@ -538,7 +413,7 @@ async function processWebhookEvents(body) {
  */
 const metaWhatsAppWebhook = onRequest(
   {
-    region: 'us-central1',
+    region: 'europe-west1',
     memory: '256MiB',
     timeoutSeconds: 30,
     secrets: [META_WHATSAPP_APP_SECRET, META_WEBHOOK_VERIFY_TOKEN, META_WHATSAPP_ACCESS_TOKEN, META_WHATSAPP_PHONE_NUMBER_ID],
@@ -560,6 +435,13 @@ const metaWhatsAppWebhook = onRequest(
 
       // Respond immediately (Meta requires 200 within 20 seconds)
       res.status(200).json({ received: true });
+
+      // Kill-switch: WhatsApp ships dark until enabled in commsConfig (Phase 4.2).
+      // We still ack Meta (200 above) but skip all processing when disabled.
+      if (!(await isWhatsAppEnabled())) {
+        logger.info('[metaWhatsAppWebhook] WhatsApp disabled — skipping inbound processing');
+        return;
+      }
 
       // Process events asynchronously
       try {
