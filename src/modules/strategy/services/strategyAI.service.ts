@@ -3,7 +3,8 @@
 // Frontend service for Claude-powered strategy analysis
 // ============================================================================
 
-import { auth } from '../../../shared/services/firebase/auth';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { app } from '@/core/services/firebase/config';
 import type {
   AIStrategyAnalysisRequest,
   AIStrategyAnalysisResponse,
@@ -11,28 +12,17 @@ import type {
   StrategyReviewData,
 } from '../types/strategy.types';
 
-const API_ENDPOINT = 'https://api-ukbyoc6i5q-uc.a.run.app/api';
-
-// ----------------------------------------------------------------------------
-// Auth Headers
-// ----------------------------------------------------------------------------
-async function getAuthHeaders(): Promise<HeadersInit> {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  const currentUser = auth.currentUser;
-  if (currentUser) {
-    try {
-      const token = await currentUser.getIdToken();
-      headers['Authorization'] = `Bearer ${token}`;
-    } catch (error) {
-      console.warn('Failed to get auth token:', error);
-    }
-  }
-
-  return headers;
-}
+// Phase 3.4 — the strategy AI now runs on ZeusOS callables (the old DawinOS
+// Cloud Run REST endpoint was dead). Region matches the platform spine.
+const functions = getFunctions(app, 'europe-west1');
+const analyzeStrategySectionFn = httpsCallable<AIStrategyAnalysisRequest, AIStrategyAnalysisResponse>(
+  functions,
+  'analyzeStrategySection',
+);
+const parseStrategyDocumentFn = httpsCallable<
+  { companyId: string; fileName: string; textContent?: string; fileBase64?: string },
+  { success: boolean; content: string }
+>(functions, 'parseStrategyDocument');
 
 // ----------------------------------------------------------------------------
 // Strategy AI Analysis
@@ -41,27 +31,7 @@ export async function analyzeStrategySection(
   request: AIStrategyAnalysisRequest
 ): Promise<AIStrategyAnalysisResponse> {
   try {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_ENDPOINT}/ai/strategy-review`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Strategy analysis failed: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('[StrategyAI] Response data:', {
-      success: data.success,
-      messageLength: data.message?.length,
-      suggestionsCount: data.suggestions?.length,
-      hasConversationMessage: !!data.conversationMessage,
-      error: data.error,
-      memoryCount: data.memoryCount,
-    });
+    const { data } = await analyzeStrategySectionFn(request);
     return data;
   } catch (error) {
     console.error('Strategy AI analysis error:', error);
@@ -112,24 +82,11 @@ export async function parseStrategyDocument(
       fileBase64 = btoa(binary);
     }
 
-    const headers = await getAuthHeaders();
-
-    const response = await fetch(`${API_ENDPOINT}/ai/strategy-parse-document`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        companyId,
-        fileName,
-        ...(textContent ? { textContent } : { fileBase64 }),
-      }),
+    const { data } = await parseStrategyDocumentFn({
+      companyId,
+      fileName,
+      ...(textContent ? { textContent } : { fileBase64 }),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || 'Document parsing failed');
-    }
-
-    const data = await response.json();
     return {
       success: true,
       content: data.content || '',
