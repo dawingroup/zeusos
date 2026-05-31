@@ -41,8 +41,11 @@ const db = admin.firestore();
 const COLLECTIONS = {
   CONVERSATIONS: 'whatsappConversations',
   TEMPLATES: 'whatsappTemplates',
-  CONFIG: 'systemConfig',
+  // Phase 4.2 — config moved off DawinOS `systemConfig` onto the Zeus comms
+  // config (`commsConfig/whatsapp`, the same doc the webhook kill-switch reads).
+  CONFIG: 'commsConfig',
 };
+const CONFIG_DOC_ID = 'whatsapp';
 
 /**
  * Verify Firebase ID token from Authorization header
@@ -60,7 +63,7 @@ async function verifyAuth(req) {
  * Check if user has an allowed role for WhatsApp messaging
  */
 async function hasWhatsAppAccess(uid) {
-  const configDoc = await db.collection(COLLECTIONS.CONFIG).doc('whatsappConfig').get();
+  const configDoc = await db.collection(COLLECTIONS.CONFIG).doc(CONFIG_DOC_ID).get();
   const config = configDoc.exists ? configDoc.data() : {};
   const allowedRoles = config.allowedSenderRoles || ['admin', 'owner', 'design-manager', 'client-liaison'];
 
@@ -72,15 +75,13 @@ async function hasWhatsAppAccess(uid) {
     return true;
   }
 
-  // Fallback: check Firestore user document globalRole
-  const userSnap = await db
-    .collection('organizations/default/users')
-    .where('uid', '==', uid)
-    .limit(1)
-    .get();
-
-  if (!userSnap.empty) {
-    const globalRole = userSnap.docs[0].data().globalRole || '';
+  // Fallback: check the Firestore user document globalRole. ZeusOS keys the
+  // user doc by uid (organizations/default/users/{uid}, then users/{uid}) —
+  // mirror loadUserDoc rather than the DawinOS uid-field query. (Phase 4.2)
+  let userSnap = await db.doc(`organizations/default/users/${uid}`).get();
+  if (!userSnap.exists) userSnap = await db.doc(`users/${uid}`).get();
+  if (userSnap.exists) {
+    const globalRole = userSnap.data().globalRole || '';
     if (allowedRoles.includes(globalRole)) {
       return true;
     }
@@ -178,7 +179,7 @@ async function getOrCreateConversation(customerId, customerName, phoneNumber) {
  * @returns {Promise<string>} 'meta' or 'zoko'
  */
 async function getActiveProvider() {
-  const configDoc = await db.collection(COLLECTIONS.CONFIG).doc('whatsappConfig').get();
+  const configDoc = await db.collection(COLLECTIONS.CONFIG).doc(CONFIG_DOC_ID).get();
   return configDoc.exists ? configDoc.data()?.activeProvider || 'meta' : 'meta';
 }
 
@@ -239,7 +240,7 @@ function buildTemplateComponents(params, headerConfig) {
  */
 const sendWhatsAppMessage = onRequest(
   {
-    region: 'us-central1',
+    region: 'europe-west1',
     memory: '256MiB',
     timeoutSeconds: 60,
     cors: ALLOWED_ORIGINS,

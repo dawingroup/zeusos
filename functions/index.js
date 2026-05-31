@@ -462,6 +462,11 @@ exports.onDeliveryCreated = onDeliveryCreated;
 exports.onProcurementStatusChange = onProcurementStatusChange;
 exports.checkCriticalItems = checkCriticalItems;
 
+// Phase 4.4 — comms notification spine. Fans ClientMessageReceived domain
+// events out to web-push for the assigned staff / client relationship manager.
+const { onCommsEventNotify } = require('./src/notifications/commsEventConsumer');
+exports.onCommsEventNotify = onCommsEventNotify;
+
 // WhatsApp Cloud API Integration (Meta)
 const { sendWhatsAppMessage } = require('./src/integrations/meta/sendMessage');
 const { metaWhatsAppWebhook } = require('./src/webhooks/metaWhatsAppWebhook');

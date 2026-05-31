@@ -9,7 +9,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "node --test __tests__/assignment/*.test.js __tests__/pricing/*.test.js __tests__/contracts/*.test.js __tests__/hr-central/*.test.js __tests__/billing/*.test.js __tests__/conflict-firewall/*.test.js __tests__/event-task-engine/*.test.js __tests__/talent/*.test.js __tests__/media/*.test.js __tests__/finance/*.test.js __tests__/platform/*.test.js __tests__/account-management/*.test.js"
+    "test": "node --test __tests__/assignment/*.test.js __tests__/pricing/*.test.js __tests__/contracts/*.test.js __tests__/hr-central/*.test.js __tests__/billing/*.test.js __tests__/conflict-firewall/*.test.js __tests__/event-task-engine/*.test.js __tests__/talent/*.test.js __tests__/media/*.test.js __tests__/finance/*.test.js __tests__/platform/*.test.js __tests__/account-management/*.test.js __tests__/notifications/*.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

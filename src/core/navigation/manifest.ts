@@ -95,6 +95,8 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'ai-assistant',      label: 'AI Assistant',              icon: 'Bot',             routePath: '/ai-assistant' },
   // Business Memory: the group-brain store the assistant + briefs draw on (Phase 3.2).
   { moduleId: 'business-memory',   label: 'Business Memory',           icon: 'Brain',           routePath: '/intelligence/memory' },
+  // Comms: internal team chat — universal (also in the subsidiary head). (Phase 4.1)
+  { moduleId: 'comms',             label: 'Comms',                     icon: 'MessagesSquare',  routePath: '/comms' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
   { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
   // Compliance: routed (/compliance) dashboard + documents + obligations —
@@ -132,6 +134,10 @@ export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
 ];
 
 export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
+  // Comms: internal team chat — universal (also in NAV_MANIFEST_PARENT). In the
+  // tail (not head) so the head's first four + the per-brand middle ordering
+  // stay stable. (Phase 4.1)
+  { moduleId: 'comms',          label: 'Comms',       icon: 'MessagesSquare', routePath: '/comms' },
   // Burn & SLA is the per-brand reporting surface for subsidiary users.
   // The cross-brand Reports page (`/reports`) is parent-org-gated and
   // lives in `NAV_MANIFEST_PARENT`; subsidiary nav doesn't include it
