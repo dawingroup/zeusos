@@ -42,7 +42,7 @@ export function DocumentRegistryPage() {
   );
 
   const { documents, loading, error, refresh, update, remove, uploadFile, toggleChecklist, changeStatus } =
-    useComplianceDocuments(COMPANY_ID, filters);
+    useComplianceDocuments(companyId, filters);
 
   const filteredDocs = useMemo(() => {
     if (!search) return documents;

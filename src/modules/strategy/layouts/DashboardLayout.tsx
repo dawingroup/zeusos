@@ -31,7 +31,7 @@ const STRATEGY_TABS: TabNavItem[] = [
   {
     id: 'kpis',
     label: 'KPIs',
-    path: '/strategy/kpi',
+    path: '/strategy/kpis',
     icon: 'Gauge',
   },
   {
@@ -39,6 +39,24 @@ const STRATEGY_TABS: TabNavItem[] = [
     label: 'Analytics',
     path: '/strategy/analytics',
     icon: 'BarChart3',
+  },
+  {
+    id: 'experiments',
+    label: 'Experiments',
+    path: '/strategy/experiments',
+    icon: 'FlaskConical',
+  },
+  {
+    id: 'options',
+    label: 'Options Analysis',
+    path: '/strategy/options',
+    icon: 'GitBranch',
+  },
+  {
+    id: 'assistant',
+    label: 'Strategy Assistant',
+    path: '/strategy/assistant',
+    icon: 'Sparkles',
   },
 ];
 
