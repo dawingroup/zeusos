@@ -147,6 +147,12 @@ export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
   // principals; parent-org gets the group rollup). Placed ahead of the
   // Burn & SLA + HR pair, which remain the trailing universal items. (Phase 2.1)
   { moduleId: 'compliance', label: 'Compliance', icon: 'Shield', routePath: '/compliance', subsidiaryOnly: true },
+  // AI Assistant + Business Memory — universal (also in NAV_MANIFEST_PARENT).
+  // The assistant scopes to the viewer's brand; the group-brain memory is
+  // staff-readable. Placed ahead of the Burn & SLA + HR pair, which remain the
+  // trailing universal items.
+  { moduleId: 'ai-assistant',    label: 'AI Assistant',    icon: 'Bot',   routePath: '/ai-assistant' },
+  { moduleId: 'business-memory', label: 'Business Memory', icon: 'Brain', routePath: '/intelligence/memory' },
   { moduleId: 'burn-sla', label: 'Burn & SLA', icon: 'Flame', routePath: '/delivery/burn', subsidiaryOnly: true },
   { moduleId: 'hr',       label: 'HR',         icon: 'Users', routePath: '/hr/employees',  subsidiaryOnly: true },
 ];
