@@ -19,7 +19,7 @@ const STRATEGY_TABS: TabNavItem[] = [
   {
     id: 'plans',
     label: 'Strategic Plans',
-    path: '/strategy/plans',
+    path: '/strategy/overview',
     icon: 'Flag',
   },
   {
@@ -31,7 +31,7 @@ const STRATEGY_TABS: TabNavItem[] = [
   {
     id: 'kpis',
     label: 'KPIs',
-    path: '/strategy/kpis',
+    path: '/strategy/kpi',
     icon: 'Gauge',
   },
   {
