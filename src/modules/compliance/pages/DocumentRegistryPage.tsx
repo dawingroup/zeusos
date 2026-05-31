@@ -24,10 +24,10 @@ import {
   REGULATORY_BODY_LABELS,
   FREQUENCY_LABELS,
 } from '../types/constants';
-
-const COMPANY_ID = 'default';
+import { useComplianceCompanyId } from '../hooks/useComplianceScope';
 
 export function DocumentRegistryPage() {
+  const companyId = useComplianceCompanyId();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<ComplianceDocumentStatus | ''>('');
   const [categoryFilter, setCategoryFilter] = useState<ComplianceDocumentCategory | ''>('');

@@ -400,7 +400,7 @@ function UsersTab({ canManage }: { canManage: boolean }) {
   const { users, isLoading } = useUsers();
   const { updateUserRole, deactivateUser, reactivateUser, isSubmitting } = useUserMutations();
 
-  const FIREBASE_PROJECT_ID = 'dawinos';
+  const FIREBASE_PROJECT_ID = 'zeusos';
   const firebaseAuthUrl = `https://console.firebase.google.com/project/${FIREBASE_PROJECT_ID}/authentication/users`;
 
   const getRoleBadgeColor = (role: GlobalRole) => {
