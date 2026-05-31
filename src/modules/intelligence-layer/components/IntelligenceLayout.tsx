@@ -6,6 +6,7 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Brain, ClipboardList, Users, Settings } from 'lucide-react';
 import { useAuth } from '@/integration/store';
+import { useCurrentDawinUser } from '@/core/settings';
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
 
 interface TabItem {
@@ -57,11 +58,20 @@ export default function IntelligenceLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { hasRole } = useAuth();
+  const { dawinUser } = useCurrentDawinUser();
 
-  // Filter tabs based on user role using the standard hasRole() API
+  // Role-gate the manager/admin tabs. Zeus assigns authority via the user's
+  // `globalRole` (PARENT-org owner/admin/super_admin, plus `manager`), NOT the
+  // DawinOS `users/{uid}.roles` array that `hasRole()` reads — which is unset
+  // for Zeus users. Honour both so the Team Dashboard + Admin Console tabs are
+  // visible to the right people instead of hidden from everyone.
+  const globalRole = dawinUser?.globalRole;
+  const satisfiesRole = (roles: string[]) =>
+    roles.some((role) => hasRole(role)) || (!!globalRole && roles.includes(globalRole));
+
   const visibleTabs = INTELLIGENCE_TABS.filter(tab => {
     if (!tab.roles) return true;
-    return tab.roles.some(role => hasRole(role));
+    return satisfiesRole(tab.roles);
   });
 
   const isActive = (path: string) => {

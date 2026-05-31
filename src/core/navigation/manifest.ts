@@ -93,8 +93,9 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'market-intel',      label: 'Market Intel',              icon: 'Sparkles',        routePath: '/market-intel' },
   // AI Assistant: full-page cross-module NL assistant (Phase 3.1).
   { moduleId: 'ai-assistant',      label: 'AI Assistant',              icon: 'Bot',             routePath: '/ai-assistant' },
-  // Business Memory: the group-brain store the assistant + briefs draw on (Phase 3.2).
-  { moduleId: 'business-memory',   label: 'Business Memory',           icon: 'Brain',           routePath: '/intelligence/memory' },
+  // AI Intelligence hub: lands on /intelligence; the layout's role-gated tab bar
+  // exposes My Tasks, Business Memory, Team Dashboard, and Admin Console.
+  { moduleId: 'intelligence',      label: 'AI Intelligence',           icon: 'Brain',           routePath: '/intelligence' },
   // Comms: internal team chat — universal (also in the subsidiary head). (Phase 4.1)
   { moduleId: 'comms',             label: 'Comms',                     icon: 'MessagesSquare',  routePath: '/comms' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
@@ -147,12 +148,13 @@ export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
   // principals; parent-org gets the group rollup). Placed ahead of the
   // Burn & SLA + HR pair, which remain the trailing universal items. (Phase 2.1)
   { moduleId: 'compliance', label: 'Compliance', icon: 'Shield', routePath: '/compliance', subsidiaryOnly: true },
-  // AI Assistant + Business Memory — universal (also in NAV_MANIFEST_PARENT).
-  // The assistant scopes to the viewer's brand; the group-brain memory is
-  // staff-readable. Placed ahead of the Burn & SLA + HR pair, which remain the
-  // trailing universal items.
+  // AI Assistant + AI Intelligence hub — universal (also in NAV_MANIFEST_PARENT).
+  // The assistant scopes to the viewer's brand; the Intelligence hub lands on
+  // /intelligence where the layout's role-gated tab bar exposes My Tasks,
+  // Business Memory, Team Dashboard, and Admin Console. Placed ahead of the
+  // Burn & SLA + HR pair, which remain the trailing universal items.
   { moduleId: 'ai-assistant',    label: 'AI Assistant',    icon: 'Bot',   routePath: '/ai-assistant' },
-  { moduleId: 'business-memory', label: 'Business Memory', icon: 'Brain', routePath: '/intelligence/memory' },
+  { moduleId: 'intelligence',    label: 'AI Intelligence', icon: 'Brain', routePath: '/intelligence' },
   { moduleId: 'burn-sla', label: 'Burn & SLA', icon: 'Flame', routePath: '/delivery/burn', subsidiaryOnly: true },
   { moduleId: 'hr',       label: 'HR',         icon: 'Users', routePath: '/hr/employees',  subsidiaryOnly: true },
 ];

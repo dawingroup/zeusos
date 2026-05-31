@@ -39,6 +39,7 @@ import {
 } from '@/modules/conflict-firewall/services/conflict-firewall.service';
 import { KPI, BurnMeter, SectionH, Pill, type RagTone } from '@/shared/components/refresh';
 import { formatMinor } from '@/modules/account-management/utils/money';
+import { MyTasksCard } from '../components/MyTasksCard';
 
 // Brand metadata — mirrors the Phase 1 [data-brand] palette.
 const BRAND_META: Record<string, { name: string; short: string; accent: string }> = {
@@ -233,6 +234,7 @@ function ParentDashboard({ today }: { today: string }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <MyTasksCard />
           <div className="card">
             <div className="card-head">
               <h3>Conflict firewall</h3>
@@ -350,6 +352,9 @@ function SubsidiaryDashboard({ today, brandId }: { today: string; brandId: Subsi
           </tbody>
         </table>
       </div>
+
+      <SectionH eyebrow="Intelligence" title="My tasks" titleSize={17} />
+      <MyTasksCard />
     </div>
   );
 }
