@@ -19,3 +19,10 @@ export { startPresenceHeartbeat, subscribeToPresence } from './services/presence
 export { subscribeStaff } from './services/staff-directory.service';
 export { isPushSupported, getPermissionStatus, subscribeToPush } from './services/pushNotification.service';
 export { PushRegistrar } from './components/PushRegistrar';
+export {
+  getWhatsAppConfig,
+  saveWhatsAppConfig,
+  getEmailConfig,
+  saveEmailConfig,
+} from './services/comms-config.service';
+export type { WhatsAppConfig, EmailConfig } from './services/comms-config.service';
