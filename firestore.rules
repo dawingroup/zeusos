@@ -889,16 +889,34 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // CFO briefing + cash-flow scenarios are the parent-org (group) financial
+    // view — read-gated to parent-org principals. Writes are CFn-only
+    // (generateCFOBriefing / runCashFlowScenario via Admin SDK, which bypasses
+    // rules), so direct client writes are denied. (Phase 1.4)
     match /companies/{companyId}/cfo_briefings/{briefingId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
     }
 
     match /companies/{companyId}/scenario_results/{scenarioId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // Group consolidation rollups (Phase 1.2) — materialised P&L/BS/CF per
+    // period at companies/zeus-group/rollups/{YYYY-MM}. Read by the group
+    // statement pages (parent-org only); written exclusively by the
+    // groupFinancialRollup CFn.
+    match /companies/{companyId}/rollups/{periodKey} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if false;
+    }
+
+    // Manual intercompany-elimination supplements the auto-derivation can't
+    // see. Operator-curated by parent-org finance admins.
+    match /companies/{companyId}/eliminations/{periodKey} {
+      allow read: if isParentOrgPrincipal();
+      allow write: if isParentOrgPrincipal();
     }
 
     match /companies/{companyId}/notifications/{notificationId} {
@@ -3091,17 +3109,45 @@ service cloud.firestore {
     }
 
     // ============================================
-    // Compliance Module
+    // Compliance Module (Phase 2.3 — org-scoped)
     // ============================================
+    //
+    // Docs/obligations carry a `companyId` field naming the owning brand
+    // (one of the 5 SubsidiaryIds). Parent-org principals see/curate every
+    // brand's compliance (the group rollup); a subsidiary principal is
+    // confined to their OWN brand (`companyId == callerHomeOrgId()`).
+    // Was previously wide-open `isAuthenticated()` — closed here.
+    // NOTE: the field is still named `companyId` (renaming to
+    // `subsidiaryOrgId` is a deferred cosmetic alignment; it already holds
+    // the brand id the whole module queries on).
 
     match /complianceDocuments/{documentId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
+      allow read:   if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && resource.data.companyId == callerHomeOrgId());
+      allow create: if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && request.resource.data.companyId == callerHomeOrgId());
+      allow update: if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && resource.data.companyId == callerHomeOrgId());
+      allow delete: if isAdmin();
     }
 
     match /complianceObligations/{obligationId} {
-      allow read: if isAuthenticated();
-      allow create, update, delete: if isAuthenticated();
+      allow read:   if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && resource.data.companyId == callerHomeOrgId());
+      allow create: if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && request.resource.data.companyId == callerHomeOrgId());
+      allow update: if isParentOrgPrincipal()
+                    || (isSubsidiaryOrgPrincipal() && resource.data.companyId == callerHomeOrgId());
+      allow delete: if isAdmin();
+    }
+
+    // Regulatory-change feed (Phase 2.4) — group-wide reference data. Readable
+    // by any staff principal (it feeds the client Strategy Assistant); curated
+    // by parent-org/compliance. Not brand-scoped — a change can affect any
+    // brand or client sector.
+    match /regulatory_changes/{changeId} {
+      allow read:  if isStaffAuth();
+      allow write: if isParentOrgPrincipal();
     }
 
     // ============================================

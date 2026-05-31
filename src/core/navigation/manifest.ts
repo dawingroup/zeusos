@@ -132,6 +132,11 @@ export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
   // The cross-brand Reports page (`/reports`) is parent-org-gated and
   // lives in `NAV_MANIFEST_PARENT`; subsidiary nav doesn't include it
   // because BurnAndSlaPage already covers what one brand head needs.
+  // Compliance: brand leads see their OWN obligations/documents (the
+  // ComplianceDashboardPage renders the single-brand view for subsidiary
+  // principals; parent-org gets the group rollup). Placed ahead of the
+  // Burn & SLA + HR pair, which remain the trailing universal items. (Phase 2.1)
+  { moduleId: 'compliance', label: 'Compliance', icon: 'Shield', routePath: '/compliance', subsidiaryOnly: true },
   { moduleId: 'burn-sla', label: 'Burn & SLA', icon: 'Flame', routePath: '/delivery/burn', subsidiaryOnly: true },
   { moduleId: 'hr',       label: 'HR',         icon: 'Users', routePath: '/hr/employees',  subsidiaryOnly: true },
 ];

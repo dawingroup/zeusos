@@ -14,13 +14,21 @@ const { defineSecret } = require('firebase-functions/params');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');
 const { ALLOWED_ORIGINS } = require('../config/cors');
+const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const { getAnthropic } = require('./_anthropic');
+const aging = require('../finance/aging');
+const native = require('../finance/ledger/nativeLedgerSource');
 
 if (!admin.apps.length) {
   admin.initializeApp();
 }
 
 const db = admin.firestore();
+// Bootstrap binding — the runtime resolver in _anthropic.js prefers the
+// Secret Manager latest version (rotatable from Settings → API Keys) and
+// falls back to this env value.
 const ANTHROPIC_API_KEY = defineSecret('ANTHROPIC_API_KEY');
+const GROUP_ORG_ID = 'zeus-group';
 
 // JSON structure matching frontend CFOBriefing types
 const BRIEFING_JSON_SCHEMA = `{
@@ -59,19 +67,17 @@ const BRIEFING_JSON_SCHEMA = `{
 exports.generateCFOBriefing = onCall(
   {
     cors: ALLOWED_ORIGINS,
+    region: 'europe-west1',
     timeoutSeconds: 120,
     memory: '512MiB',
     secrets: [ANTHROPIC_API_KEY],
   },
   async (request) => {
-    if (!request.auth) {
-      throw new HttpsError('unauthenticated', 'Authentication required');
-    }
+    // Parent-org (commercial-scope) principals only — the consolidated CFO
+    // view spans all brands.
+    await assertParentOrgPrincipal(request.auth);
 
-    const { companyId } = request.data;
-    if (!companyId) {
-      throw new HttpsError('invalid-argument', 'companyId is required');
-    }
+    const companyId = (request.data && request.data.companyId) || GROUP_ORG_ID;
 
     logger.info(`[CFOBriefing] Generating briefing for ${companyId}`);
 
@@ -79,17 +85,25 @@ exports.generateCFOBriefing = onCall(
       // Gather context data
       const context = await gatherBriefingContext(companyId);
 
-      // Call Claude
-      const AnthropicModule = require('@anthropic-ai/sdk');
-      const Anthropic = AnthropicModule.default || AnthropicModule;
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+      // Call Claude (key resolved at runtime — rotatable from Settings).
+      const { client, model } = await getAnthropic();
 
       const response = await client.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model,
         max_tokens: 2000,
-        system: `You are an AI CFO assistant for DawinOS, a Ugandan construction and interior finishes company.
-You provide daily financial briefings in a structured format. All amounts are in UGX (Ugandan Shillings).
-Be concise, actionable, and highlight risks clearly. Use business-appropriate language.
+        system: `You are the AI CFO assistant for Zeus Group, an East African marketing consortium of five sibling brands.
+You provide daily financial briefings in a structured format. All amounts are in MINOR units (cents) of the group presentation currency (context.presentationCurrency, default UGX).
+
+Signals in the context object:
+- ar.totalOutstanding, ar.buckets (current/d0_30/d31_60/d61_90/d90_plus), ar.dso, ar.topOverdue (named customers), ar.byBrand
+- ap.totalOutstanding, ap.buckets, ap.dpo, ap.topOverdue (named vendors)
+- cashPosition (GL cash balance), savingsBalance, liabilities, topItems, criticalCount, todaysSpendPlan
+
+Rules:
+- If ar.buckets.d61_90 or ar.buckets.d90_plus > 0, raise at least one riskAlert naming the top overdue customer + the bucket.
+- If ar.dso or ap.dpo is null/0, do not fabricate a number — skip that commentary.
+- If criticalCount >= 1 AND cashPosition < ap.buckets.d0_30, raise a 'critical' severity alert.
+- Keep executiveSummary <= 3 sentences; each riskAlert.message <= 25 words.
 Format your response as JSON with this exact structure:
 ${BRIEFING_JSON_SCHEMA}
 Important: priority in recommendations must be a number (1=highest). Return ONLY valid JSON, no markdown.`,
@@ -123,7 +137,7 @@ Important: priority in recommendations must be a number (1=highest). Return ONLY
       // Save briefing to Firestore
       const briefingDoc = {
         companyId,
-        subsidiaryId: 'dawin-group',
+        subsidiaryId: GROUP_ORG_ID,
         date: new Date().toISOString().split('T')[0],
         generatedAt: admin.firestore.FieldValue.serverTimestamp(),
         generatedBy: request.auth.uid,
@@ -139,6 +153,15 @@ Important: priority in recommendations must be a number (1=highest). Return ONLY
           upcomingReceipts: 0,
           savingsBalance: context.savingsBalance || 0,
           liabilitiesDueSoon: context.liabilities?.length || 0,
+          arOutstanding: context.ar?.totalOutstanding || 0,
+          arBuckets: context.ar?.buckets || null,
+          dso: context.ar?.dso ?? null,
+          arOverdueCount: context.ar?.overdueCount || 0,
+          apOutstanding: context.ap?.totalOutstanding || 0,
+          apBuckets: context.ap?.buckets || null,
+          dpo: context.ap?.dpo ?? null,
+          apOverdueCount: context.ap?.overdueCount || 0,
+          presentationCurrency: context.presentationCurrency || 'UGX',
         },
       };
 
@@ -151,6 +174,9 @@ Important: priority in recommendations must be a number (1=highest). Return ONLY
         briefing: { id: docRef.id, ...briefingDoc },
       };
     } catch (error) {
+      if (error && error.code === 'NOT_CONFIGURED') {
+        throw new HttpsError('failed-precondition', error.message);
+      }
       logger.error('[CFOBriefing] Error:', error);
       throw new HttpsError('internal', error.message);
     }
@@ -165,70 +191,77 @@ exports.dailyCFOBriefing = onSchedule(
   {
     schedule: '30 5 * * 1-5', // 5:30 AM Mon-Fri (after optimizer runs at 5 AM)
     timeZone: 'Africa/Nairobi',
+    region: 'europe-west1',
     timeoutSeconds: 120,
     memory: '512MiB',
     secrets: [ANTHROPIC_API_KEY],
   },
   async () => {
-    logger.info('[CFOBriefing] Starting daily auto-briefing...');
+    logger.info('[CFOBriefing] Starting daily auto-briefing for the group...');
 
-    const companiesSnap = await db.collection('companies').get();
+    // The CFO briefing is the consolidated, group-level view (zeus-group).
+    // Per-brand briefings would need brand-scoped aging — a later refinement.
+    const companyId = GROUP_ORG_ID;
+    try {
+      const context = await gatherBriefingContext(companyId);
 
-    for (const companyDoc of companiesSnap.docs) {
-      const companyId = companyDoc.id;
-      try {
-        const context = await gatherBriefingContext(companyId);
-
-        // Only generate if there's meaningful data
-        if (context.pendingExpenditures === 0 && context.totalPending === 0) {
-          continue;
-        }
-
-        const AnthropicModule = require('@anthropic-ai/sdk');
-        const Anthropic = AnthropicModule.default || AnthropicModule;
-        const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
-
-        const response = await client.messages.create({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1500,
-          system: `You are an AI CFO assistant for a Ugandan construction company. Generate a brief daily financial summary in JSON format matching this structure:
-${BRIEFING_JSON_SCHEMA}
-Important: priority in recommendations must be a number (1=highest). Return ONLY valid JSON.`,
-          messages: [
-            { role: 'user', content: `Daily briefing data:\n${JSON.stringify(context, null, 2)}` },
-          ],
-        });
-
-        const content = response.content[0]?.text || '{}';
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        let briefing = jsonMatch ? JSON.parse(jsonMatch[0]) : { executiveSummary: content };
-        briefing = normalizeBriefing(briefing);
-
-        await db.collection('companies').doc(companyId).collection('cfo_briefings').add({
-          companyId,
-          subsidiaryId: 'dawin-group',
-          date: new Date().toISOString().split('T')[0],
-          generatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          generatedBy: 'system:daily-auto',
-          executiveSummary: briefing.executiveSummary,
-          keyDecisions: briefing.keyDecisions,
-          riskAlerts: briefing.riskAlerts,
-          recommendations: briefing.recommendations,
-          cashOutlookNarrative: briefing.cashOutlookNarrative,
-          contextSnapshot: {
-            bankBalance: context.cashPosition || 0,
-            projectedMinBalance: 0,
-            criticalExpenditures: context.criticalCount || 0,
-            upcomingReceipts: 0,
-            savingsBalance: context.savingsBalance || 0,
-            liabilitiesDueSoon: context.liabilities?.length || 0,
-          },
-        });
-
-        logger.info(`[CFOBriefing] Auto-briefing generated for ${companyId}`);
-      } catch (error) {
-        logger.error(`[CFOBriefing] Error for ${companyId}:`, error);
+      // Only generate if there's meaningful data.
+      const hasReceivables = (context.ar?.totalOutstanding || 0) > 0;
+      if (context.pendingExpenditures === 0 && context.totalPending === 0 && !hasReceivables) {
+        logger.info('[CFOBriefing] No meaningful data; skipping auto-briefing.');
+        return;
       }
+
+      const { client, model } = await getAnthropic();
+
+      const response = await client.messages.create({
+        model,
+        max_tokens: 1500,
+        system: `You are the AI CFO assistant for Zeus Group, an East African marketing consortium. Generate a brief daily financial summary in JSON format matching this structure:
+${BRIEFING_JSON_SCHEMA}
+All amounts are minor units of context.presentationCurrency. Name the customer/vendor + aging bucket when surfacing AR/AP risk. If ar.dso or ap.dpo is null, do not invent a number.
+Important: priority in recommendations must be a number (1=highest). Return ONLY valid JSON.`,
+        messages: [
+          { role: 'user', content: `Daily briefing data:\n${JSON.stringify(context, null, 2)}` },
+        ],
+      });
+
+      const content = response.content[0]?.text || '{}';
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      let briefing = jsonMatch ? JSON.parse(jsonMatch[0]) : { executiveSummary: content };
+      briefing = normalizeBriefing(briefing);
+
+      await db.collection('companies').doc(companyId).collection('cfo_briefings').add({
+        companyId,
+        subsidiaryId: GROUP_ORG_ID,
+        date: new Date().toISOString().split('T')[0],
+        generatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        generatedBy: 'system:daily-auto',
+        executiveSummary: briefing.executiveSummary,
+        keyDecisions: briefing.keyDecisions,
+        riskAlerts: briefing.riskAlerts,
+        recommendations: briefing.recommendations,
+        cashOutlookNarrative: briefing.cashOutlookNarrative,
+        contextSnapshot: {
+          bankBalance: context.cashPosition || 0,
+          projectedMinBalance: 0,
+          criticalExpenditures: context.criticalCount || 0,
+          upcomingReceipts: 0,
+          savingsBalance: context.savingsBalance || 0,
+          liabilitiesDueSoon: context.liabilities?.length || 0,
+          arOutstanding: context.ar?.totalOutstanding || 0,
+          arBuckets: context.ar?.buckets || null,
+          dso: context.ar?.dso ?? null,
+          apOutstanding: context.ap?.totalOutstanding || 0,
+          apBuckets: context.ap?.buckets || null,
+          dpo: context.ap?.dpo ?? null,
+          presentationCurrency: context.presentationCurrency || 'UGX',
+        },
+      });
+
+      logger.info(`[CFOBriefing] Auto-briefing generated for ${companyId}`);
+    } catch (error) {
+      logger.error(`[CFOBriefing] Error for ${companyId}:`, error);
     }
   }
 );
@@ -279,48 +312,64 @@ function normalizeCategory(category) {
 async function gatherBriefingContext(companyId) {
   const today = new Date().toISOString().split('T')[0];
 
-  // Get expenditure queue
-  const queueSnap = await db.collection('companies').doc(companyId)
-    .collection('expenditure_queue')
-    .where('status', '==', 'pending')
-    .orderBy('compositeScore', 'desc')
-    .limit(20)
-    .get();
+  // AR/AP aging (native ledger, FX-normalised) + GL cash position run in
+  // parallel with the expenditure queue read.
+  const [queueSnap, arSummary, apSummary, cashPos] = await Promise.all([
+    db.collection('companies').doc(companyId)
+      .collection('expenditure_queue')
+      .where('status', '==', 'pending')
+      .limit(50)
+      .get(),
+    aging.getArAging({}).catch((e) => { logger.warn('[CFOBriefing] AR aging failed:', e.message); return null; }),
+    aging.getApAging({}).catch((e) => { logger.warn('[CFOBriefing] AP aging failed:', e.message); return null; }),
+    native.getCashPosition({ orgId: companyId }).catch(() => null),
+  ]);
 
-  const items = queueSnap.docs.map(d => {
-    const data = d.data();
-    return {
-      description: data.description,
-      amount: data.amountUGX,
-      category: data.category,
-      priorityTier: data.priorityTier,
-      compositeScore: data.compositeScore,
-      vendor: data.vendor,
-    };
-  });
+  // Sort by compositeScore in memory (avoids a composite index requirement).
+  const items = queueSnap.docs
+    .map(d => {
+      const data = d.data();
+      return {
+        description: data.description,
+        amount: data.amountUGX ?? data.amountMinor,
+        category: data.category,
+        priorityTier: data.priorityTier,
+        compositeScore: data.compositeScore ?? (data.scores && data.scores.composite) ?? 0,
+        vendor: data.vendor,
+      };
+    })
+    .sort((a, b) => (b.compositeScore || 0) - (a.compositeScore || 0))
+    .slice(0, 20);
 
   const criticalItems = items.filter(i => i.priorityTier === 'CRITICAL');
   const totalPending = items.reduce((s, i) => s + (i.amount || 0), 0);
 
-  // Get today's spend plan (use status filter to match existing composite index)
+  // Get today's spend plan — filter in memory to avoid a composite index.
   const planSnap = await db.collection('companies').doc(companyId)
     .collection('spend_plans')
     .where('date', '==', today)
-    .where('status', 'in', ['draft', 'active'])
-    .orderBy('generatedAt', 'desc')
-    .limit(1)
+    .limit(10)
     .get();
 
-  const plan = planSnap.empty ? null : planSnap.docs[0].data();
+  const plan = planSnap.empty
+    ? null
+    : planSnap.docs
+      .map(d => d.data())
+      .filter(p => ['draft', 'active'].includes(p.status))
+      .sort((a, b) => String(b.generatedAt || '').localeCompare(String(a.generatedAt || '')))[0] || null;
 
-  // Get savings balance (field is 'date', not 'createdAt')
+  // Get savings balance — latest by date, chosen in memory.
   const savingsSnap = await db.collection('companies').doc(companyId)
     .collection('savings_ledger')
-    .orderBy('date', 'desc')
-    .limit(1)
+    .limit(50)
     .get();
 
-  const savingsBalance = savingsSnap.empty ? 0 : (savingsSnap.docs[0].data().runningBalance || 0);
+  const latestSavings = savingsSnap.empty
+    ? null
+    : savingsSnap.docs
+      .map(d => d.data())
+      .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))[0];
+  const savingsBalance = latestSavings ? (latestSavings.runningBalance || 0) : 0;
 
   // Get upcoming liabilities (status is 'current', not 'active')
   const liabilitiesSnap = await db.collection('companies').doc(companyId)
@@ -342,11 +391,14 @@ async function gatherBriefingContext(companyId) {
 
   return {
     date: today,
+    presentationCurrency: arSummary?.presentationCurrency || apSummary?.presentationCurrency || 'UGX',
     pendingExpenditures: queueSnap.size,
     criticalCount: criticalItems.length,
     totalPending,
     topItems: items.slice(0, 10),
-    cashPosition: plan?.openingBankBalance || 0,
+    // GL cash balance is the source of truth; fall back to the spend plan's
+    // opening bank balance when GL has no cash postings yet.
+    cashPosition: cashPos?.balanceMinor ?? plan?.openingBankBalance ?? 0,
     todaysSpendPlan: plan ? {
       scheduledCount: plan.scheduledExpenditures?.length || 0,
       totalOutflow: plan.totalOutflow || 0,
@@ -355,5 +407,7 @@ async function gatherBriefingContext(companyId) {
     } : null,
     savingsBalance,
     liabilities,
+    ar: arSummary,
+    ap: apSummary,
   };
 }

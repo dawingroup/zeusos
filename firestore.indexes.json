@@ -1,6 +1,30 @@
 {
   "indexes": [
     {
+      "collectionGroup": "complianceObligations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "companyId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "complianceDocuments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "companyId", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "regulatory_changes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sector", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "effectiveDate", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "budgetLines",
       "queryScope": "COLLECTION",
       "fields": [

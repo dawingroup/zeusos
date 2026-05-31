@@ -3,6 +3,7 @@
  * Score card, expiry timeline, status breakdown, quick actions.
  */
 
+import { useMemo } from 'react';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Loader2, RefreshCw, AlertTriangle, Clock } from 'lucide-react';
@@ -10,8 +11,11 @@ import { useComplianceDashboard } from '../hooks/useComplianceDashboard';
 import { ComplianceScoreCard } from '../components/ComplianceScoreCard';
 import { ExpiryTimeline } from '../components/ExpiryTimeline';
 import { StatusBreakdown } from '../components/StatusBreakdown';
+import { ComplianceGroupDashboard } from '../components/ComplianceGroupDashboard';
 import { REGULATORY_BODY_LABELS, OBLIGATION_PRIORITY_LABELS } from '../types/constants';
 import { RagBadge, Banner, EmptyStateV2 } from '@/shared/components/data-display';
+import { useCurrentDawinUser } from '@/core/settings';
+import { isParentOrgUser, resolveHomeSubsidiaryId } from '@/modules/delivery/components/deliveryAccess';
 
 const PRIORITY_TONE: Record<string, 'green' | 'amber' | 'red' | 'blue' | 'na'> = {
   critical: 'red',
@@ -20,11 +24,8 @@ const PRIORITY_TONE: Record<string, 'green' | 'amber' | 'red' | 'blue' | 'na'> =
   low: 'na',
 };
 
-// TODO: Replace with actual company context
-const COMPANY_ID = 'default';
-
-export function ComplianceDashboardPage() {
-  const { data, loading, error, refresh } = useComplianceDashboard(COMPANY_ID);
+function SingleBrandDashboard({ companyId }: { companyId: string }) {
+  const { data, loading, error, refresh } = useComplianceDashboard(companyId);
 
   if (loading && !data) {
     return (
@@ -152,6 +153,41 @@ export function ComplianceDashboardPage() {
           />
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * Org-kind aware entry point (Phase 2.1):
+ *   • Parent-org principal → consolidated group dashboard across all 5 brands.
+ *   • Subsidiary member    → their own brand's single-company dashboard.
+ */
+export function ComplianceDashboardPage() {
+  const { dawinUser } = useCurrentDawinUser();
+  const scope = useMemo<{ kind: 'parent' } | { kind: 'brand'; orgId: string } | { kind: 'none' }>(() => {
+    if (!dawinUser) return { kind: 'none' };
+    if (isParentOrgUser(dawinUser)) return { kind: 'parent' };
+    const homeOrg = resolveHomeSubsidiaryId(dawinUser);
+    return homeOrg ? { kind: 'brand', orgId: homeOrg } : { kind: 'none' };
+  }, [dawinUser]);
+
+  if (scope.kind === 'parent') {
+    return (
+      <div className="px-4 py-4 sm:px-6 sm:py-6 max-w-[1640px] mx-auto">
+        <ComplianceGroupDashboard />
+      </div>
+    );
+  }
+  if (scope.kind === 'brand') {
+    return <SingleBrandDashboard companyId={scope.orgId} />;
+  }
+  return (
+    <div className="px-4 py-6 sm:px-6 max-w-[1640px] mx-auto">
+      <Banner
+        tone="info"
+        title="No brand context"
+        message="Your account isn't scoped to a brand or the parent org, so there's no compliance view to show yet."
+      />
     </div>
   );
 }

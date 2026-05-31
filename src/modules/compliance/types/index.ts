@@ -35,6 +35,7 @@ export type RegulatoryBody =
   | 'MoFPED'
   | 'BoU'
   | 'UIA'
+  | 'NITA_U'
   | 'LOCAL_COUNCIL'
   | 'OTHER';
 

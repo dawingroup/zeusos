@@ -115,10 +115,13 @@ function scoreOperational(item) {
   if (item.risk?.operationalImpact > 80) return 90;
   if (item.risk?.operationalImpact > 50) return 60;
   if (item.risk?.operationalImpact > 20) return 30;
-  // Fallback category-based scoring
-  if (item.category === 'labor' || item.category === 'rent') return 80;
+  // Fallback category-based scoring. Marketing-agency categories
+  // (talent_fees, media_spend, production) sit alongside the legacy
+  // construction ones (House of Zeus furniture may still use materials/
+  // equipment) — generalised in the Phase 1.5 cleanup.
+  if (['labor', 'rent', 'talent_fees', 'production'].includes(item.category)) return 80;
   if (item.category === 'utilities') return 70;
-  if (item.category === 'materials' || item.category === 'equipment') return 60;
+  if (['materials', 'equipment', 'media_spend'].includes(item.category)) return 60;
   return 10;
 }
 

@@ -28,6 +28,12 @@ const COMPLIANCE_TABS: TabNavItem[] = [
     path: '/compliance/obligations',
     icon: 'ClipboardCheck',
   },
+  {
+    id: 'regulatory',
+    label: 'Regulatory Feed',
+    path: '/compliance/regulatory',
+    icon: 'Scale',
+  },
 ];
 
 export function ComplianceLayout() {

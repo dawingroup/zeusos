@@ -126,7 +126,18 @@ class QueryRef {
     const candidates = this._store.byPrefix(this._base);
     const matched = candidates.filter(({ data }) => {
       return this._filters.every(({ field, op, value }) => {
-        if (op === '==') return data && data[field] === value;
+        if (!data) return false;
+        const fv = data[field];
+        if (op === '==') return fv === value;
+        if (op === '!=') return fv !== value;
+        if (op === 'in') return Array.isArray(value) && value.includes(fv);
+        if (op === 'not-in') return Array.isArray(value) && !value.includes(fv);
+        if (op === 'array-contains') return Array.isArray(fv) && fv.includes(value);
+        if (op === 'array-contains-any') return Array.isArray(fv) && Array.isArray(value) && fv.some((x) => value.includes(x));
+        if (op === '>=') return fv >= value;
+        if (op === '<=') return fv <= value;
+        if (op === '>') return fv > value;
+        if (op === '<') return fv < value;
         return false;
       });
     });
