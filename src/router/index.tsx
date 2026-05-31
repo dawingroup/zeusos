@@ -248,6 +248,9 @@ const MarketNewsFeedPage = lazyWithRetry(() => import('@/modules/intelligence/pa
 const MarketAnalysisPage = lazyWithRetry(() => import('@/modules/intelligence/pages/MarketAnalysisPage'));
 const MarketInsightsPage = lazyWithRetry(() => import('@/modules/intelligence/pages/InsightsPage'));
 const MarketTopicTrackingPage = lazyWithRetry(() => import('@/modules/intelligence/pages/TopicTrackingPage'));
+const MarketIntelScanPage = lazyWithRetry(() =>
+  import('@/modules/intelligence/pages/MarketIntelligenceScanPage').then(m => ({ default: m.MarketIntelligenceScanPage }))
+);
 const MarketSocialIntelligencePage = lazyWithRetry(() => import('@/modules/intelligence/pages/SocialIntelligencePage'));
 
 const IntelligenceLayout = lazyWithRetry(() => import('@/modules/intelligence-layer/components/IntelligenceLayout'));
@@ -273,6 +276,9 @@ const OKRDashboard = lazyWithRetry(() =>
   import('@/modules/strategy/pages/OKRDashboard').then(m => ({ default: m.OKRDashboard }))
 );
 const KPILayout = lazyWithRetry(() => import('@/modules/strategy/components/kpi/KPILayout'));
+const PerformanceDeepDive = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/PerformanceDeepDive').then(m => ({ default: m.PerformanceDeepDive }))
+);
 const KPIOverviewPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPIOverviewPage'));
 const KPILibraryPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPILibraryPage'));
 
@@ -468,6 +474,7 @@ export const router = createBrowserRouter([
           { path: 'insights',       element: <MarketInsightsPage /> },
           { path: 'topics',         element: <MarketTopicTrackingPage /> },
           { path: 'social',         element: <MarketSocialIntelligencePage /> },
+          { path: 'ai-scan',        element: <MarketIntelScanPage /> },
         ],
       },
 
@@ -561,6 +568,7 @@ export const router = createBrowserRouter([
           { index: true,            element: <ExecutiveDashboard /> },
           { path: 'overview',       element: <StrategyOverview /> },
           { path: 'okrs',           element: <OKRDashboard /> },
+          { path: 'analytics',      element: <PerformanceDeepDive /> },
           {
             path: 'kpi',
             element: <KPILayout />,

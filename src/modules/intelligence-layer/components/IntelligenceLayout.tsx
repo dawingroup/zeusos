@@ -17,29 +17,37 @@ interface TabItem {
 }
 
 const INTELLIGENCE_TABS: TabItem[] = [
+  // Paths align with the registered routes under /intelligence (the DawinOS
+  // /ai base was never wired in ZeusOS — these 404'd).
   {
     id: 'dashboard',
     label: 'Dashboard',
-    path: '/ai',
+    path: '/intelligence',
     icon: Brain,
   },
   {
     id: 'my-tasks',
     label: 'My Tasks',
-    path: '/my-tasks',
+    path: '/intelligence/inbox',
     icon: ClipboardList,
+  },
+  {
+    id: 'memory',
+    label: 'Business Memory',
+    path: '/intelligence/memory',
+    icon: Brain,
   },
   {
     id: 'team',
     label: 'Team Dashboard',
-    path: '/ai/team',
+    path: '/intelligence/manager',
     icon: Users,
     roles: ['manager', 'admin', 'owner', 'super_admin'],
   },
   {
     id: 'admin',
     label: 'Admin Console',
-    path: '/ai/admin',
+    path: '/intelligence/admin',
     icon: Settings,
     roles: ['admin', 'owner', 'super_admin'],
   },
