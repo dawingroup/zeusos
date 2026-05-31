@@ -91,6 +91,10 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   // Market Intel: routed (/market-intel) competitor/insights surface — was
   // missing from the manifest despite the design placing it after Strategy.
   { moduleId: 'market-intel',      label: 'Market Intel',              icon: 'Sparkles',        routePath: '/market-intel' },
+  // AI Assistant: full-page cross-module NL assistant (Phase 3.1).
+  { moduleId: 'ai-assistant',      label: 'AI Assistant',              icon: 'Bot',             routePath: '/ai-assistant' },
+  // Business Memory: the group-brain store the assistant + briefs draw on (Phase 3.2).
+  { moduleId: 'business-memory',   label: 'Business Memory',           icon: 'Brain',           routePath: '/intelligence/memory' },
   { moduleId: 'asset-library',     label: 'Asset Library',             icon: 'FolderOpen',      routePath: '/assets' },
   { moduleId: 'reports',           label: 'Reports',                   icon: 'BarChart3',       routePath: '/reports' },
   // Compliance: routed (/compliance) dashboard + documents + obligations —

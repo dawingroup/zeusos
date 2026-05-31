@@ -14,6 +14,7 @@ const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');
+const { ALLOWED_ORIGINS } = require('../config/cors');
 
 if (!admin.apps.length) admin.initializeApp();
 
@@ -33,50 +34,39 @@ function auditLogPath(companyId, reviewId) {
 // ─── Business context loader ──────────────────────────────────────────────────
 
 /**
- * Loads a lightweight snapshot of current business data to ground the assessment.
- * Pulls recent POs, MO status, advisory project counts, and spend plan summaries.
+ * Loads a lightweight snapshot of current ZeusOS business data to ground the
+ * assessment: master-job (engagement) status mix, recent client-invoice
+ * activity, and spend-plan summaries. (Phase 3.4 — re-pointed off the DawinOS
+ * manufacturing/PO reads.)
  */
 async function loadBusinessContext(companyId) {
   const ctx = {};
 
   try {
-    // Recent PO activity
-    const poSnap = await db.collection('purchaseOrders')
-      .orderBy('createdAt', 'desc').limit(5).get();
-    ctx.recentPOs = poSnap.docs.map(d => ({
-      id: d.id,
-      supplier: d.data().supplierName,
-      status: d.data().status,
-      total: d.data().totalAmount,
-    }));
-  } catch { ctx.recentPOs = []; }
-
-  try {
-    // MO status summary
-    const moSnap = await db.collection('manufacturingOrders')
-      .where('status', 'in', ['in-progress', 'approved']).limit(10).get();
-    ctx.activeMOs = moSnap.size;
-  } catch { ctx.activeMOs = 0; }
-
-  try {
-    // MasterJob counts by status (Phase 3.A.5: campaigns → master_jobs).
-    const projSnap = await db
-      .collection(`organizations/${companyId}/master_jobs`)
-      .limit(20).get();
+    // Engagements (master_jobs) by status — top-level collection in ZeusOS.
+    const mjSnap = await db.collection('master_jobs').limit(50).get();
     const statusCounts = {};
-    projSnap.docs.forEach(d => {
+    mjSnap.docs.forEach((d) => {
       const s = d.data().status ?? 'unknown';
       statusCounts[s] = (statusCounts[s] ?? 0) + 1;
     });
-    ctx.projectsByStatus = statusCounts;
-  } catch { ctx.projectsByStatus = {}; }
+    ctx.masterJobsByStatus = statusCounts;
+    ctx.activeMasterJobs = mjSnap.size;
+  } catch { ctx.masterJobsByStatus = {}; ctx.activeMasterJobs = 0; }
 
   try {
-    // Spend plan summary
+    // Recent client-invoice activity (revenue signal).
+    const invSnap = await db.collection('client_invoices')
+      .where('status', 'in', ['ISSUED', 'PART_PAID', 'PAID']).limit(10).get();
+    ctx.openClientInvoices = invSnap.size;
+  } catch { ctx.openClientInvoices = 0; }
+
+  try {
+    // Spend plan summary (native).
     const spendSnap = await db
       .collection(`companies/${companyId}/spend_plans`)
       .orderBy('createdAt', 'desc').limit(3).get();
-    ctx.recentSpendPlans = spendSnap.docs.map(d => ({
+    ctx.recentSpendPlans = spendSnap.docs.map((d) => ({
       id: d.id,
       title: d.data().title,
       totalBudget: d.data().totalBudget,
@@ -90,7 +80,7 @@ async function loadBusinessContext(companyId) {
 // ─── assessStrategySection ────────────────────────────────────────────────────
 
 exports.assessStrategySection = onCall(
-  { secrets: [GEMINI_API_KEY], timeoutSeconds: 120, memory: '512MiB', region: 'us-central1' },
+  { cors: ALLOWED_ORIGINS, secrets: [GEMINI_API_KEY], timeoutSeconds: 120, memory: '512MiB', region: 'europe-west1' },
   async (request) => {
     if (!request.auth) throw new HttpsError('unauthenticated', 'Must be signed in');
 
@@ -121,9 +111,9 @@ CURRENT SECTION CONTENT:
 ${section.content}
 
 CURRENT BUSINESS DATA SNAPSHOT:
-- Active manufacturing orders: ${bizCtx.activeMOs}
-- Recent purchase orders: ${JSON.stringify(bizCtx.recentPOs, null, 2)}
-- Projects by status: ${JSON.stringify(bizCtx.projectsByStatus, null, 2)}
+- Active engagements (master jobs): ${bizCtx.activeMasterJobs}
+- Engagements by status: ${JSON.stringify(bizCtx.masterJobsByStatus, null, 2)}
+- Open client invoices: ${bizCtx.openClientInvoices}
 - Recent spend plans: ${JSON.stringify(bizCtx.recentSpendPlans, null, 2)}
 
 TASK: Assess how well this strategy section aligns with the current business data.
@@ -184,7 +174,7 @@ Respond with ONLY a JSON object (no introductory text, no markdown fences):
 // ─── rewriteStrategySection ───────────────────────────────────────────────────
 
 exports.rewriteStrategySection = onCall(
-  { secrets: [GEMINI_API_KEY], timeoutSeconds: 180, memory: '512MiB', region: 'us-central1' },
+  { cors: ALLOWED_ORIGINS, secrets: [GEMINI_API_KEY], timeoutSeconds: 180, memory: '512MiB', region: 'europe-west1' },
   async (request) => {
     if (!request.auth) throw new HttpsError('unauthenticated', 'Must be signed in');
 
@@ -216,9 +206,9 @@ ORIGINAL SECTION CONTENT:
 ${section.content}
 
 CURRENT BUSINESS DATA:
-- Active manufacturing orders: ${bizCtx.activeMOs}
-- Recent purchase orders: ${JSON.stringify(bizCtx.recentPOs, null, 2)}
-- Projects by status: ${JSON.stringify(bizCtx.projectsByStatus, null, 2)}
+- Active engagements (master jobs): ${bizCtx.activeMasterJobs}
+- Engagements by status: ${JSON.stringify(bizCtx.masterJobsByStatus, null, 2)}
+- Open client invoices: ${bizCtx.openClientInvoices}
 - Recent spend plans: ${JSON.stringify(bizCtx.recentSpendPlans, null, 2)}
 
 TASK: Rewrite this section to improve its alignment score. The rewrite should:

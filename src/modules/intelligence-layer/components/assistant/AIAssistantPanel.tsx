@@ -53,6 +53,9 @@ interface AIAssistantPanelProps {
   initialMode?: AssistantModeId;
   context?: Record<string, any>;
   companyId?: string;
+  /** 'floating' = the bottom-right FAB drawer (default); 'full' = embedded
+   *  full-height page surface (AIAssistantPage). (Phase 3.1) */
+  variant?: 'floating' | 'full';
 }
 
 const modeIcons: Record<AssistantModeId, React.ReactNode> = {
@@ -70,9 +73,12 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
   initialMode = 'general',
   context,
   companyId: propCompanyId,
+  variant = 'floating',
 }) => {
   const { user } = useAuth();
-  const companyId = propCompanyId || 'default';
+  // Default scope is the group brain (zeus-group) — the assistant spans all
+  // brands. Callers pass a brand orgId to scope memory/queries to one brand.
+  const companyId = propCompanyId || 'zeus-group';
   const userId = user?.uid || '';
 
   const [mode, setMode] = useState<AssistantModeId>(initialMode);
@@ -308,7 +314,11 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
 
   return (
     <div
-      className="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] flex flex-col rounded-xl shadow-2xl overflow-hidden z-50 bg-background border"
+      className={
+        variant === 'full'
+          ? 'flex flex-col w-full h-[calc(100vh-8rem)] rounded-xl overflow-hidden bg-background border'
+          : 'fixed bottom-6 right-6 w-96 max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] flex flex-col rounded-xl shadow-2xl overflow-hidden z-50 bg-background border'
+      }
     >
       {/* Header */}
       <div
@@ -381,16 +391,18 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
             </Tooltip>
           </TooltipProvider>
         )}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onClose}>
-                <X className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Close</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {variant !== 'full' && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onClose}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Close</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
 
       {/* Messages */}

@@ -17,6 +17,8 @@ const db = admin.firestore();
 const { generateStrategyReport } = require('./src/ai/generateStrategyReport');
 const { strategyResearch } = require('./src/ai/strategyResearch');
 const { assessStrategySection, rewriteStrategySection } = require('./src/ai/strategyAssessment');
+// Phase 3.4 — strategy AI chat/analysis (replaces the dead DawinOS REST endpoint).
+const { analyzeStrategySection, parseStrategyDocument } = require('./src/ai/strategyChat');
 const { projectScoping } = require('./src/ai/projectScoping');
 const { designItemEnhancement } = require('./src/ai/designItemEnhancement');
 const { imageAnalysis } = require('./src/ai/imageAnalysis');
@@ -149,6 +151,8 @@ exports.generateStrategyReport = generateStrategyReport;
 exports.strategyResearch = strategyResearch;
 exports.assessStrategySection = assessStrategySection;
 exports.rewriteStrategySection = rewriteStrategySection;
+exports.analyzeStrategySection = analyzeStrategySection;
+exports.parseStrategyDocument = parseStrategyDocument;
 exports.projectScoping = projectScoping;
 exports.designItemEnhancement = designItemEnhancement;
 exports.imageAnalysis = imageAnalysis;
@@ -217,6 +221,12 @@ const { runCashFlowScenario } = require('./src/ai/cashFlowScenario');
 exports.generateCFOBriefing = generateCFOBriefing;
 exports.dailyCFOBriefing = dailyCFOBriefing;
 exports.runCashFlowScenario = runCashFlowScenario;
+
+// Phase 3.5 — Client Strategy Assistant. Aggregates stakeholders + competitors
+// + regulatory exposure + business memory for a client, Claude-synthesised into
+// a structured brief. Brand-direct ADs (own client) or parent-org principals.
+const { generateClientStrategyBrief } = require('./src/ai/clientStrategyBrief');
+exports.generateClientStrategyBrief = generateClientStrategyBrief;
 
 // DawinOS v2.0 - Auth & Claims Functions
 const { syncEmployeeClaims, setAdminClaims, initializeFirstAdmin, getCurrentClaims, updateUserClaims } = require('./src/auth/setCustomClaims');

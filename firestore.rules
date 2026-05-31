@@ -1003,18 +1003,22 @@ service cloud.firestore {
     }
     
     // AI Memory (persistent business knowledge)
+    // Phase 3.2 — Business memory (group brain). `zeus-group` is the all-staff
+    // group-brain bucket (the assistant + CFO/strategy briefs write here);
+    // brand-scoped memories match the caller's home org. `default` retained for
+    // backward-compat with pre-rebrand data.
     match /ai_memory/{memoryId} {
       allow read: if isAuthenticated() && (
-        resource.data.companyId == 'default' || resource.data.companyId == getUserOrg() || isAdmin()
+        resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg() || isAdmin()
       );
       allow create: if isAuthenticated() && (
-        request.resource.data.companyId == 'default' || request.resource.data.companyId == getUserOrg() || isAdmin()
+        request.resource.data.companyId in ['default', 'zeus-group'] || request.resource.data.companyId == getUserOrg() || isAdmin()
       );
       allow update: if isAuthenticated() && (
-        resource.data.companyId == 'default' || resource.data.companyId == getUserOrg() || isAdmin()
+        resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg() || isAdmin()
       );
       allow delete: if isAuthenticated() && (
-        (resource.data.createdBy == request.auth.uid && (resource.data.companyId == 'default' || resource.data.companyId == getUserOrg()))
+        (resource.data.createdBy == request.auth.uid && (resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg()))
         || isAdmin()
       );
     }
@@ -3227,6 +3231,20 @@ service cloud.firestore {
     match /clients/{clientId} {
       allow read: if isStaffAuth();
       allow write: if false;  // mutations via Cloud Functions only
+
+      // Phase 3.5 — Client Strategy Assistant.
+      // Stakeholder contacts: the client's owning principal (parent-org OR the
+      // home brand AD) reads + curates them.
+      match /client_contacts/{contactId} {
+        allow read, create, update: if canActOnClient(clientId);
+        allow delete: if isAdmin();
+      }
+      // AI strategy briefs: read by the owning principal; written only by the
+      // generateClientStrategyBrief CFn (Admin SDK bypasses rules).
+      match /strategy_briefs/{briefId} {
+        allow read: if canActOnClient(clientId);
+        allow write: if false;
+      }
     }
 
     match /msas/{msaId} {

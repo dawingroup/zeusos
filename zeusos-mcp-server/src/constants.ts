@@ -4,9 +4,10 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const MAX_PAGE_SIZE = 100;
 
 // ─── Organisation ─────────────────────────────────────────────────────────────
-// Audit finding: DEFAULT_ORG_ID is 'default', not 'dawin-group'
-// Source: src/core/settings/settingsService.ts:33
-export const DEFAULT_ORG_ID = 'default';
+// The parent org / group-brain scope. Finance + memory tools default here so an
+// unscoped MCP call reads the consolidated group, not an orphaned 'default'
+// bucket. Pass an explicit brand SubsidiaryId to scope to one brand. (Phase 3.2)
+export const DEFAULT_ORG_ID = 'zeus-group';
 
 /**
  * Compliance hardening:

@@ -92,6 +92,12 @@ const DOMAIN_EVENT_TYPES = new Set([
   'ApprovalRungAdvanced',
   'ApprovalRungRejected',
   'InternalApprovalGranted',
+  // Phase 3.5 — Client Strategy Assistant. Emitted when an AI strategy brief
+  // is generated for a client (aggregating stakeholders + competitors +
+  // regulatory exposure + business memory). aggregateType 'Client', aggregateId
+  // the clientId. Payload: { clientId, briefId, sectors[], competitorCount,
+  // regulatoryCount, stakeholderCount }.
+  'ClientStrategyBriefGenerated',
 ]);
 
 /**

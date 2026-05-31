@@ -19,11 +19,17 @@ const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const MEMORY_COLLECTION = 'ai_memory';
 const CONVERSATION_COLLECTION = 'ai_conversations';
 
+// Phase 3.2 — the group brain. A missing or legacy `'default'` scope maps to
+// `zeus-group` so all callers share one consortium-wide memory bucket; an
+// explicit brand orgId scopes to that brand.
+const SCOPE_GROUP = 'zeus-group';
+const normScope = (c) => (!c || c === 'default' ? SCOPE_GROUP : c);
+
 // ============================================================================
 // Memory Extraction Prompt
 // ============================================================================
 
-const EXTRACTION_SYSTEM_PROMPT = `You are a business knowledge extraction system for Dawin Group, a custom millwork and furniture manufacturing company in East Africa.
+const EXTRACTION_SYSTEM_PROMPT = `You are a business knowledge extraction system for Zeus Group, an East African marketing consortium of five sibling brands (Zeus The Agency, Zeus Digital, Labyrinth, Odd Gorilla, House of Zeus).
 
 Your job is to analyze conversations and extract persistent business knowledge that would be valuable to remember for future interactions.
 
@@ -37,11 +43,11 @@ For each extracted memory, provide:
 - importance: critical, high, medium, or low
 
 Examples of what to extract:
-- "The CEO prefers weekly financial reports on Monday mornings" → user_preference
-- "Project X was delayed because the supplier in Dar es Salaam had lead time issues" → project_insight
-- "Customer ABC always requests FSC-certified wood for their projects" → customer_intel
-- "The standard markup for custom millwork is 35-40%" → financial_insight
-- "CNC machine capacity is 200 sheets per week" → business_fact
+- "The MD prefers campaign performance reports on Monday mornings" → user_preference
+- "The Diageo retainer pitch slipped because the client's legal review ran long" → project_insight
+- "Client ABC insists all influencer talent be vetted for prior competitor work" → customer_intel
+- "Standard agency markup on media buys is 15%" → financial_insight
+- "Labyrinth's studio can shoot two productions per week at capacity" → business_fact
 
 Do NOT extract:
 - Greetings or small talk
@@ -82,11 +88,8 @@ const extractMemories = onCall(
       throw new HttpsError('unauthenticated', 'User must be authenticated');
     }
 
-    const { conversationId, companyId, messages } = request.data;
-
-    if (!companyId) {
-      throw new HttpsError('invalid-argument', 'companyId is required');
-    }
+    const { conversationId, companyId: companyIdRaw, messages } = request.data;
+    const companyId = normScope(companyIdRaw);
 
     // Use provided messages or load from conversation
     let conversationMessages = messages;
@@ -204,16 +207,13 @@ const getMemoryContext = onCall(
     }
 
     const {
-      companyId,
+      companyId: companyIdRaw,
       categories,
       projectId,
       customerId,
       maxMemories = 15,
     } = request.data;
-
-    if (!companyId) {
-      throw new HttpsError('invalid-argument', 'companyId is required');
-    }
+    const companyId = normScope(companyIdRaw);
 
     try {
       const memories = [];
@@ -358,10 +358,11 @@ const saveManualMemory = onCall(
       throw new HttpsError('unauthenticated', 'User must be authenticated');
     }
 
-    const { companyId, category, content, summary, tags, importance, relatedEntityIds } = request.data;
+    const { companyId: companyIdRaw, category, content, summary, tags, importance, relatedEntityIds } = request.data;
+    const companyId = normScope(companyIdRaw);
 
-    if (!companyId || !content || !category) {
-      throw new HttpsError('invalid-argument', 'companyId, content, and category are required');
+    if (!content || !category) {
+      throw new HttpsError('invalid-argument', 'content and category are required');
     }
 
     const validCategories = [
@@ -430,10 +431,11 @@ const semanticMemorySearch = onCall(
       throw new HttpsError('unauthenticated', 'User must be authenticated');
     }
 
-    const { companyId, query, topK = 10, minSimilarity = 0.45, categories } = request.data;
+    const { companyId: companyIdRaw, query, topK = 10, minSimilarity = 0.45, categories } = request.data;
+    const companyId = normScope(companyIdRaw);
 
-    if (!companyId || !query) {
-      throw new HttpsError('invalid-argument', 'companyId and query are required');
+    if (!query) {
+      throw new HttpsError('invalid-argument', 'query is required');
     }
 
     try {
