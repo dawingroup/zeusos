@@ -256,6 +256,7 @@ const IntelligenceAdminPage = lazyWithRetry(() => import('@/modules/intelligence
 const EmployeeTaskInboxPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/EmployeeTaskInboxPage'));
 const ManagerDashboardPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/ManagerDashboardPage'));
 const BusinessMemoryPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/BusinessMemoryPage'));
+const TeamChatPage = lazyWithRetry(() => import('@/modules/messaging/pages/TeamChatPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Strategy
@@ -531,6 +532,10 @@ export const router = createBrowserRouter([
       // it, so NO ParentOrgGuard (it would block subsidiary leads). A user
       // with no org scope falls into the page's "no scope" empty state.
       { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
+
+      // Comms — internal team chat (Phase 4.1). Everyone communicates, so no
+      // org-kind guard; chatChannels rules enforce membership.
+      { path: 'comms',               element: <PageWrapper><ModuleContentWrapper><TeamChatPage /></ModuleContentWrapper></PageWrapper> },
 
       // Intelligence Layer
       {

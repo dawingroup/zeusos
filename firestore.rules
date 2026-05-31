@@ -3155,6 +3155,34 @@ service cloud.firestore {
     }
 
     // ============================================
+    // Comms — internal team chat (Phase 4.1)
+    // ============================================
+    // chatChannels are member-gated: only uids in `memberIds` read/write a
+    // channel or its messages. Client-direct writes (no Cloud Function in the
+    // send path); messages are append-only and the sender must be the caller.
+    match /chatChannels/{channelId} {
+      allow read:   if isStaffAuth() && request.auth.uid in resource.data.memberIds;
+      allow create: if isStaffAuth() && request.auth.uid in request.resource.data.memberIds;
+      allow update: if isStaffAuth() && request.auth.uid in resource.data.memberIds;
+      allow delete: if isAdmin();
+
+      match /messages/{messageId} {
+        allow read: if isStaffAuth()
+          && request.auth.uid in get(/databases/$(database)/documents/chatChannels/$(channelId)).data.memberIds;
+        allow create: if isStaffAuth()
+          && request.auth.uid == request.resource.data.senderId
+          && request.auth.uid in get(/databases/$(database)/documents/chatChannels/$(channelId)).data.memberIds;
+        allow update, delete: if false;
+      }
+    }
+
+    // Presence heartbeat — staff read the roster; each user writes only their own doc.
+    match /presence/{uid} {
+      allow read:  if isStaffAuth();
+      allow write: if isStaffAuth() && request.auth.uid == uid;
+    }
+
+    // ============================================
     // Manufacturing MES Collections
     // ============================================
 
