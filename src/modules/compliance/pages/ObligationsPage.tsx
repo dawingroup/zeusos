@@ -35,10 +35,10 @@ import {
   REGULATORY_BODY_LABELS,
   FREQUENCY_LABELS,
 } from '../types/constants';
-
-const COMPANY_ID = 'default';
+import { useComplianceCompanyId } from '../hooks/useComplianceScope';
 
 export function ObligationsPage() {
+  const companyId = useComplianceCompanyId();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<ObligationStatus | ''>('');
   const [categoryFilter, setCategoryFilter] = useState<ComplianceDocumentCategory | ''>('');
@@ -54,7 +54,7 @@ export function ObligationsPage() {
   );
 
   const { obligations, loading, error, refresh, create, remove, complete } =
-    useComplianceObligations(COMPANY_ID, filters);
+    useComplianceObligations(companyId, filters);
 
   const filteredObligations = useMemo(() => {
     if (!search) return obligations;
