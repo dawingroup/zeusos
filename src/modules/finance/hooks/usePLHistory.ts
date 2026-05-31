@@ -9,7 +9,7 @@ import { getDetailedPLHistory } from '../services/forecastService';
 import type { HistoricalPeriodData } from '../services/forecastService';
 import type { PLAccountDetail } from '../types/forecast.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function usePLHistory(histMonths = 12) {
   const [accounts, setAccounts] = useState<PLAccountDetail[]>([]);

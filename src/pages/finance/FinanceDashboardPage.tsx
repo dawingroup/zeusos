@@ -33,7 +33,7 @@ import { QuickActionsGrid } from '@/shared/components/data-display';
 import { useFinanceDashboard } from '@/modules/finance/hooks/useFinanceDashboard';
 
 const FINANCE_COLOR = '#4CAF50';
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 // Format currency in UGX
 function formatCurrencyUGX(amount: number): string {

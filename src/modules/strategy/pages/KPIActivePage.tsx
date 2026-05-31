@@ -176,7 +176,7 @@ function KPIRow({ kpi, onSetTarget, onPause, onArchive }: {
 
 // ── Main Page ─────────────────────────────────────────────────────────────
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function KPIActivePage() {
   const navigate = useNavigate();

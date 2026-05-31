@@ -32,7 +32,7 @@ import {
 } from '../constants/okr.constants';
 import type { OKRObjective } from '../types/okr.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 const LEVEL_ICONS: Record<OKRLevel, React.ElementType> = {
   [OKR_LEVEL.COMPANY]: Building2,

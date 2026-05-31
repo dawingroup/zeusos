@@ -14,7 +14,7 @@ import { Skeleton } from '@/core/components/ui/skeleton';
 import { getQBOCashFlow, syncQBOCategory } from '../services/qboSyncService';
 import type { QBOCashFlow } from '../types/integrations.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

@@ -47,7 +47,7 @@ function confidenceBadge(score: number) {
 
 export function CashProjectionsPage() {
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     projection,

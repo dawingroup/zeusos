@@ -56,7 +56,7 @@ type TabValue = 'all' | AccountType;
 
 export const ChartOfAccounts: React.FC = () => {
   useAuth();
-  const companyId = 'dawinos'; // In production, from context
+  const companyId = 'zeus-group'; // In production, from context
 
   // View state
   const [_viewMode, _setViewMode] = useState<ViewMode>('tree');

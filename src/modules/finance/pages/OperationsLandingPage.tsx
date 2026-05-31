@@ -15,7 +15,7 @@ import { useAuth } from '@/shared/hooks/useAuth';
 import { Skeleton } from '@/core/components/ui/skeleton';
 import { KPIGrid, KPICard } from '@/shared/components/data-display';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 function formatCompact(value: number): string {
   if (Math.abs(value) >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}B`;

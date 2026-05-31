@@ -22,7 +22,7 @@ import type { BreakevenResult, ProfitabilityMetrics } from '../services/profitab
 import { periodLabel } from '../types/forecast.types';
 import type { PLAccountDetail } from '../types/forecast.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 const HIST_MONTHS = 12;
 
 function fmtCurrency(v: number): string {

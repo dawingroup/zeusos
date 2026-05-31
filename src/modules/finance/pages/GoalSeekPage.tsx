@@ -20,7 +20,7 @@ import {
 import type { GoalMetricId, SensitivityResult } from '../services/profitabilityEngine';
 import { periodLabel } from '../types/forecast.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 const HIST_MONTHS = 12;
 
 function fmtPct(v: number, decimals = 2): string {

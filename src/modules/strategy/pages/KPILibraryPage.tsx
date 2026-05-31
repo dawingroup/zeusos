@@ -13,7 +13,7 @@ import { AddFromLibraryDialog } from '../components/kpi/AddFromLibraryDialog';
 import type { KPILibraryEntry } from '../constants/kpiLibrary.constants';
 import type { CreateKPIInput } from '../types/kpi.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function KPILibraryPage() {
   const [searchParams] = useSearchParams();

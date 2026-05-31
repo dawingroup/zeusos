@@ -44,7 +44,7 @@ const SEVERITY_ICONS: Record<string, typeof AlertTriangle> = {
 export function CFOBriefingPage() {
   const navigate = useNavigate();
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     briefing,

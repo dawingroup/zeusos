@@ -42,7 +42,7 @@ function formatDate(ts: unknown): string {
 
 export function LiabilityRegisterPage() {
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     liabilities,

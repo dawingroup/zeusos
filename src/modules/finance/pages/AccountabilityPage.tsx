@@ -19,7 +19,7 @@ import {
 import type { AccountabilityReport } from '../types/operations.types';
 import { useAuth, useCurrentUserId } from '@/contexts/AuthContext';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 type StatusFilter = 'all' | AccountabilityReport['status'];
 

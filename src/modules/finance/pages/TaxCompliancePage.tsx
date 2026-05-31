@@ -19,7 +19,7 @@ import { Card, CardContent } from '@/core/components/ui/card';
 import { TaxPortalLinks } from '../components/admin/TaxPortalLinks';
 import { useTaxPortals } from '../hooks/useTaxPortals';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 // ============================================================================
 // FILING CALENDAR DATA
