@@ -17,7 +17,7 @@ import {
   type KPIScorecardType,
 } from '../constants/kpi.constants';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function KPIScorecardsPage() {
   const navigate = useNavigate();

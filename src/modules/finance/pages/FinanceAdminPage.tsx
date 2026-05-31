@@ -39,7 +39,7 @@ const TABS: { id: AdminTab; label: string; icon: React.ComponentType<{ className
   { id: 'documents', label: 'Document Library', icon: FolderOpen },
 ];
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function FinanceAdminPage() {
   const userId = useCurrentUserId();

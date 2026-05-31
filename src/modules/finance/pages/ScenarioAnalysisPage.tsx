@@ -42,7 +42,7 @@ interface ModificationEntry {
 
 export function ScenarioAnalysisPage() {
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     scenarioResults,

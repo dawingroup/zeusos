@@ -33,7 +33,7 @@ function toDateString(date: Date): string {
 
 export function SpendPlanPage() {
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     todaysSpendPlan,

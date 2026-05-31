@@ -9,7 +9,7 @@ import { QBOConnectionCard } from '../components/integrations/QBOConnectionCard'
 import { useQBOSync } from '../hooks/useQBOSync';
 import type { QBODataCategory } from '../types/integrations.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function IntegrationsPage() {
   const qbo = useQBOSync({

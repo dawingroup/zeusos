@@ -43,7 +43,7 @@ const SUBSIDIARY_NAMES: Record<string, string> = {
 };
 
 export default function GroupCashFlowPage() {
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
   const [allItems, setAllItems] = useState<ExpenditureItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [subsidiaryFilter, setSubsidiaryFilter] = useState<string>('');

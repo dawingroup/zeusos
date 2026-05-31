@@ -29,7 +29,7 @@ import {
   RECONCILIATION_FREQUENCIES,
 } from '../constants/integrations.constants';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 function isThisMonth(timestamp: any): boolean {
   if (!timestamp) return false;

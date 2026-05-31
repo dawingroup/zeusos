@@ -67,7 +67,7 @@ function CategoryCard({ category, kpiCount }: {
 
 // ── Main Page ─────────────────────────────────────────────────────────────
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export function KPIOverviewPage() {
   const navigate = useNavigate();

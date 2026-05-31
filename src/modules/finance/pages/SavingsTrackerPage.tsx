@@ -41,7 +41,7 @@ function formatDate(ts: unknown): string {
 
 export function SavingsTrackerPage() {
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     position,

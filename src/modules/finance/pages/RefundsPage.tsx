@@ -20,7 +20,7 @@ import {
 import type { RefundRequest, RefundCategory } from '../types/operations.types';
 import { useAuth, useCurrentUserId } from '@/contexts/AuthContext';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 type StatusFilter = 'all' | RefundRequest['status'];
 

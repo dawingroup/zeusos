@@ -181,7 +181,7 @@ function ReceiptRow({
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function ProjectedReceiptsPage() {
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const {
     filteredItems,

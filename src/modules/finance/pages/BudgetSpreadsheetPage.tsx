@@ -35,7 +35,7 @@ import {
 import type { BudgetLineItem, BudgetLineUpdate, BudgetInput } from '../types/budget.types';
 import { pushBudgetLineToForecast, getAvailableForecasts } from '../services/budgetForecastBridge';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 function formatCompact(value: number): string {
   if (Math.abs(value) >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}B`;

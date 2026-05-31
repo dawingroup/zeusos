@@ -56,7 +56,7 @@ import {
 } from '../services/forecastService';
 import type { HistoricalPeriodData } from '../services/forecastService';
 
-const COMPANY_ID  = 'dawinos';
+const COMPANY_ID  = 'zeus-group';
 const BASELINE    = 'Baseline Forecast';
 const HIST_MONTHS = 12;
 

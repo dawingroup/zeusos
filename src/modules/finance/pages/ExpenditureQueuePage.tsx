@@ -298,7 +298,7 @@ export function ExpenditureQueuePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   useAuth();
-  const companyId = 'dawinos'; // From company context
+  const companyId = 'zeus-group'; // From company context
 
   const initialTier = searchParams.get('tier') as PriorityTier | null;
 

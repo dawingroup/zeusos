@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import { useOKRs } from './useOKRs';
 import { useKPIs } from './useKPIs';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 interface StrategyDashboardMetrics {
   totalOKRs: number;

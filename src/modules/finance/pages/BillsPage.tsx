@@ -15,7 +15,7 @@ import { db } from '@/shared/services/firebase';
 import { getQBOBills, syncQBOCategory, syncMultiplePOsToBills } from '../services/qboSyncService';
 import type { QBOBill } from '../types/integrations.types';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 function formatUSD(amount: number) {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount);

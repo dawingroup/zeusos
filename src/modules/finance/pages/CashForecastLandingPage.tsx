@@ -44,7 +44,7 @@ function formatCompact(value: number): string {
 export function CashForecastLandingPage() {
   const navigate = useNavigate();
   useAuth();
-  const companyId = 'dawinos';
+  const companyId = 'zeus-group';
 
   const {
     projection,

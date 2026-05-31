@@ -7,7 +7,7 @@
 import { Link } from 'react-router-dom';
 import { QBOAccountMappingSettings } from '../components/settings/QBOAccountMappingSettings';
 
-const COMPANY_ID = 'dawinos';
+const COMPANY_ID = 'zeus-group';
 
 export default function AccountMappingsPage() {
   return (
