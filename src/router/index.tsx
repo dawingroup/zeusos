@@ -281,6 +281,26 @@ const PerformanceDeepDive = lazyWithRetry(() =>
 );
 const KPIOverviewPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPIOverviewPage'));
 const KPILibraryPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPILibraryPage'));
+const KPIActivePage = lazyWithRetry(() => import('@/modules/strategy/pages/KPIActivePage'));
+const KPIScorecardsPage = lazyWithRetry(() => import('@/modules/strategy/pages/KPIScorecardsPage'));
+const KpiDetailPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/KpiDetailPage').then(m => ({ default: m.KpiDetailPage }))
+);
+const ScorecardDetailPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/ScorecardDetailPage').then(m => ({ default: m.ScorecardDetailPage }))
+);
+const ObjectiveDetailPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/ObjectiveDetailPage').then(m => ({ default: m.ObjectiveDetailPage }))
+);
+const ExperimentsPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/ExperimentsPage').then(m => ({ default: m.ExperimentsPage }))
+);
+const OptionsAnalysisPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/OptionsAnalysisPage').then(m => ({ default: m.OptionsAnalysisPage }))
+);
+const StrategyAssistantPage = lazyWithRetry(() =>
+  import('@/modules/strategy/pages/StrategyAssistantPage').then(m => ({ default: m.StrategyAssistantPage }))
+);
 
 // ──────────────────────────────────────────────────────────────────────────
 // Profile + Admin
@@ -568,13 +588,21 @@ export const router = createBrowserRouter([
           { index: true,            element: <ExecutiveDashboard /> },
           { path: 'overview',       element: <StrategyOverview /> },
           { path: 'okrs',           element: <OKRDashboard /> },
+          { path: 'okrs/:objectiveId', element: <ObjectiveDetailPage /> },
           { path: 'analytics',      element: <PerformanceDeepDive /> },
+          { path: 'experiments',    element: <ExperimentsPage /> },
+          { path: 'options',        element: <OptionsAnalysisPage /> },
+          { path: 'assistant',      element: <StrategyAssistantPage /> },
           {
-            path: 'kpi',
+            path: 'kpis',
             element: <KPILayout />,
             children: [
-              { index: true,        element: <KPIOverviewPage /> },
-              { path: 'library',    element: <KPILibraryPage /> },
+              { index: true,                element: <KPIOverviewPage /> },
+              { path: 'library',            element: <KPILibraryPage /> },
+              { path: 'active',             element: <KPIActivePage /> },
+              { path: 'active/:kpiId',      element: <KpiDetailPage /> },
+              { path: 'scorecards',         element: <KPIScorecardsPage /> },
+              { path: 'scorecards/:scorecardId', element: <ScorecardDetailPage /> },
             ],
           },
         ],

@@ -451,6 +451,15 @@ export interface CreateDataPointInput {
   fiscalMonth?: number;
   value: number;
   note?: string;
+  /**
+   * Stable key identifying the upstream record that produced this value
+   * (e.g. `auto:finance:2026-05`). When set, the data service upserts
+   * instead of inserting on a matching (kpiId, sourceReference). Used by
+   * the auto-measurement pipeline so source corrections flow through.
+   */
+  sourceReference?: string;
+  /** Override KPI's configured data source (e.g. `calculated` for auto). */
+  dataSourceOverride?: KPIDataSource;
 }
 
 export interface CreateScorecardInput {

@@ -5,6 +5,9 @@
 
 import {
   Activity,
+  FlaskConical,
+  GitBranch,
+  Gauge,
   Box,
   BarChart3,
   BookOpen,
@@ -69,6 +72,9 @@ import {
 
 const iconMap: Record<string, LucideIcon> = {
   Activity,
+  FlaskConical,
+  GitBranch,
+  Gauge,
   Box,
   BarChart3,
   BookOpen,

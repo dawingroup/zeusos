@@ -117,7 +117,12 @@ export interface KeyResult {
   // Ownership
   ownerId?: string;
   ownerName?: string;
-  
+
+  // Linked KPI (denormalized for chip rendering — kept in sync on link / unlink)
+  linkedKpiId?: string;
+  linkedKpiName?: string;
+  linkedKpiUnit?: string;
+
   // Status
   isComplete: boolean;
   completedAt?: Timestamp;
@@ -373,6 +378,9 @@ export interface CreateKeyResultInput {
   ownerId?: string;
   ownerName?: string;
   weight?: number;
+  linkedKpiId?: string;
+  linkedKpiName?: string;
+  linkedKpiUnit?: string;
 }
 
 export interface UpdateKeyResultInput {
@@ -386,6 +394,9 @@ export interface UpdateKeyResultInput {
   ownerId?: string | null;
   ownerName?: string | null;
   weight?: number;
+  linkedKpiId?: string | null;
+  linkedKpiName?: string | null;
+  linkedKpiUnit?: string | null;
 }
 
 export interface CreateMilestoneInput {

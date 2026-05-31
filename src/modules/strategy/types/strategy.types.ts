@@ -725,6 +725,18 @@ export interface StrategyReviewData {
   rewriteThreshold?: number;
   autoApplyRewrites?: boolean;
 
+  // Authored Strategy Document v2 fields (Experiments / Options surfaces)
+  /** Financial model (microforecasts, NPV) when the document includes one. */
+  financialModel?: FinancialModel;
+  /** Authored strategic themes (corporate / business level). */
+  strategicThemes?: AuthoredTheme[];
+  /** Capital allocation table. */
+  capitalAllocation?: AuthoredCapitalBucket[];
+  /** Spin-off experiments. */
+  spinoffs?: AuthoredSpinoff[];
+  /** Options analyses authored against this doc. */
+  optionsAnalyses?: AuthoredOptionsAnalysis[];
+
   // Metadata
   createdAt: string;
   updatedAt: string;
@@ -838,4 +850,327 @@ export interface AIStrategyAnalysisResponse {
   suggestions: AISuggestion[];
   conversationMessage: AIMessage;
   error?: string;
+}
+
+// ============================================================================
+// Authored Strategy Document v2 cluster — ported from DawinOS for the
+// Experiments + Options Analysis surfaces (themes / spin-offs / options /
+// capital allocation / financial model). Additive, optional interfaces.
+// ============================================================================
+export interface FinancialMicroforecastRow {
+  /** Period label ('Q1 FY26', '2026-04', etc.). */
+  period: string;
+  /** Absolute period order (1, 2, 3, …). */
+  index: number;
+  revenue: number;
+  cogs: number;
+  opex: number;
+  capex: number;
+  workingCapital: number;
+  /** Net free cash flow for the period (derived; persisted for audit). */
+  netCashFlow: number;
+}
+
+/** NPV / IRR assessment for an initiative or scenario. */
+export interface NPVAssessment {
+  id: string;
+  label: string;
+  /** Annual discount rate (e.g. 0.18 = 18%). */
+  discountRate: number;
+  /** Cash flow series (period 0 is the upfront investment, usually negative). */
+  cashFlows: number[];
+  /** Derived. NaN until cash flows present. */
+  npv: number;
+  /** Derived. NaN if no sign change. */
+  irr?: number;
+  /** Derived payback period in periods (NaN if never paid back). */
+  paybackPeriods?: number;
+  notes?: string;
+}
+
+// ── Authored content shapes ─────────────────────────────────────────────
+// These power the authoring-first editor surfaces. A strategy document is
+// authored *directly* into these structures rather than being analysed
+// from an uploaded PDF (the original review-mode workflow).
+
+/** Strategic theme — the big bets that carry the strategy. */
+export interface AuthoredTheme {
+  id: string;
+  /** Two-digit number ('01', '02', …) displayed in headings. */
+  n?: string;
+  name: string;
+  owner: string;
+  /** Subsidiary or BU short code (DG/DF/DA/DC/DT). Optional. */
+  sub?: string;
+  /** RAG tone. */
+  status?: 'green' | 'amber' | 'red';
+  /** Investment envelope, in document's display currency. */
+  envelope?: number;
+  /** Narrative "why this theme matters". */
+  why?: string;
+  /** Big-bet outcomes (the WHAT, not the HOW). */
+  bigBets: string[];
+  /** Current progress percentage 0–100, optional. */
+  progress?: number;
+}
+
+/** A concrete initiative — operational tier and below. */
+export interface AuthoredInitiative {
+  id: string;
+  title: string;
+  /** The expected outcome (the WHAT). */
+  outcome: string;
+  owner: string;
+  /** Optional theme link, if this initiative rolls up to a theme. */
+  themeId?: string;
+  /** ISO date string for the milestone / due date. */
+  milestone?: string;
+  status?: 'green' | 'amber' | 'red' | 'na';
+}
+
+/** Capability the function will build, sustain, or retire. */
+export interface AuthoredCapability {
+  id: string;
+  name: string;
+  /** Current maturity 1–5. */
+  currentLevel: number;
+  /** Target maturity 1–5. */
+  targetLevel: number;
+  /** Stance to take. */
+  stance: 'build' | 'sustain' | 'retire';
+  /** What the function commits to deliver — the WHAT. */
+  outcome?: string;
+  owner?: string;
+}
+
+/** Risk register entry (full structured form, distinct from the freeform
+ *  text-only `riskAssessment` review section). */
+export interface AuthoredRisk {
+  id: string;
+  title: string;
+  category?: string;
+  probability: 'low' | 'medium' | 'high';
+  impact: 'low' | 'medium' | 'high';
+  /** Net = max(prob, impact) by default — but editable. */
+  net: 'low' | 'medium' | 'high';
+  owner: string;
+  mitigation: string;
+}
+
+/** A bucket in the capital allocation table. */
+export interface AuthoredCapitalBucket {
+  id: string;
+  label: string;
+  /** Amount in document's display currency. */
+  amount: number;
+  /** Optional theme this funds. */
+  themeId?: string;
+  /** Display tag. */
+  tag?: string;
+}
+
+/** A single KPI tile (situation / scoreboard). */
+export interface AuthoredKPITile {
+  id: string;
+  label: string;
+  /** Display value as captured ('1.42B', '34.4%', '88', '+38'). */
+  value: string;
+  /** Target (display value). */
+  target?: string;
+  /** Delta vs prior period. */
+  delta?: string;
+  trend?: 'up' | 'down' | 'flat';
+  status?: 'green' | 'amber' | 'red';
+  /** Sparkline points (latest-on-the-right). */
+  spark?: number[];
+  /**
+   * Linked KPI from the tracked KPI library. When set, the tile renders
+   * `label`, `value`, `target`, and `status` from the live KPI definition
+   * rather than from the user-authored fields. Editing controls are
+   * hidden for linked tiles to prevent drift from the source of truth.
+   */
+  linkedKpiId?: string;
+}
+
+/** "Choices made / Choices avoided" two-column entry. */
+export interface AuthoredChoice {
+  id: string;
+  /** true = a choice we are making. false = a choice we are NOT making. */
+  pro: boolean;
+  text: string;
+}
+
+/** North-star aspiration + concrete proofs by end-of-horizon. */
+export interface AuthoredNorthStar {
+  /** One-sentence aspiration. */
+  aspiration: string;
+  /** Three measurable proofs (free text, e.g. "≥45% UG premium share"). */
+  proofs: string[];
+  /** Horizon label ('FY26–FY28', '3-year', etc.). Display only. */
+  horizon?: string;
+}
+
+/** Cadence row (weekly check-in, monthly review, etc.). */
+export interface AuthoredCadence {
+  id: string;
+  /** Frequency label ('Weekly', 'Monthly', 'Quarterly', 'Half-year', 'Annual'). */
+  frequency: string;
+  name: string;
+  /** Who attends ('Theme owners ↔ CEO', 'All MDs', etc.). */
+  who: string;
+  /** What gets done in the meeting. */
+  what: string;
+}
+
+/** Approval-chain entry. */
+export interface AuthoredApprover {
+  id: string;
+  name: string;
+  role: string;
+  status: 'signed' | 'pending' | 'na';
+  date?: string;
+}
+
+/** Microforecast line item — granular, monthly, feeds the master model. */
+export interface AuthoredMicroforecastLine {
+  id: string;
+  label: string;
+  /** Driver document or PO/SO id ('PO-FIN-2026-0044'). */
+  driver?: string;
+  /** Cash impact per period (typically months, in the doc's currency). */
+  periods: number[];
+  /** Confidence band 0–100. */
+  confidence: number;
+  /** Upstream owner this line rolls up to ('PLAN-DF-MFG-26 · MFG-3'). */
+  feedsTo?: string;
+}
+
+/** A spin-off experiment — timeboxed hypothesis test. */
+export interface AuthoredSpinoff {
+  id: string;
+  /** Parent theme/objective id this experiment serves. */
+  parent: string;
+  name: string;
+  /** The hypothesis being tested. */
+  hypothesis: string;
+  /** How we will test it. */
+  mechanism: string;
+  /** The metric this should move. */
+  metric: string;
+  target?: string;
+  current?: string;
+  owner: string;
+  /** Subsidiary or BU short code. */
+  sub?: string;
+  /** Timebox label ('12 wks', '90 days'). */
+  timebox?: string;
+  started?: string;
+  ends?: string;
+  /** Lifecycle stage. */
+  stage: 'brief' | 'running' | 'learning' | 'decided';
+  /** Decision when stage === 'decided'. */
+  decision?: 'promote' | 'iterate' | 'pause' | 'kill';
+  evidence?: string;
+  /** Confidence band 0–100. */
+  confidence?: number;
+  /**
+   * Source strategy document id this experiment was spawned from. Used by
+   * the enterprise Experiments tab to attribute each test to a doc.
+   */
+  sourceDoc?: string;
+  /**
+   * Tracked KPI id this experiment is trying to move. When set, the
+   * experiment detail surface pulls live current/target/status from the
+   * KPI library — replaces the free-text metric/target/current fields
+   * with a live read.
+   */
+  linkedKpiId?: string;
+  /**
+   * Options-analysis id this experiment was spawned from (when the spin-off
+   * was created via the "Spawn pilot spin-off" action on an analysis).
+   */
+  sourceAnalysis?: string;
+}
+
+/** A weighted decision criterion for an options analysis. */
+export interface OptionsAnalysisCriterion {
+  id: string;
+  /** Human-readable label, e.g. "NPV", "Time-to-value", "Strategic fit". */
+  label: string;
+  /** Weight, 0..1. Weights across all criteria should sum to 1. */
+  weight: number;
+}
+
+/** A single option being evaluated within an analysis. */
+export interface OptionsAnalysisOption {
+  id: string;
+  /** Option name, e.g. "Build CNC line 3 in-house". */
+  name: string;
+  summary?: string;
+  capex?: number;
+  opex?: number;
+  timeToValueMonths?: number;
+  /** Optional link to a FinancialModel.npvAssessment for this option. */
+  linkedNpvAssessmentId?: string;
+  pros: string[];
+  cons: string[];
+  risks: string[];
+  /** Per-criterion score, 0..5. Weighted-sum drives the recommendation. */
+  scores: Record<string, number>;
+}
+
+/** A single approver in an options-analysis approval chain. */
+export interface OptionsAnalysisApprover {
+  id: string;
+  name: string;
+  role?: string;
+  status: 'pending' | 'signed' | 'declined';
+  /** ISO date the approver acted (signed/declined). */
+  date?: string;
+  note?: string;
+}
+
+/** A structured decision surface for evaluating infrastructure / capital /
+ *  vendor / build-vs-buy choices. Sized between an experiment (timeboxed
+ *  test) and a financial model (one set of numbers). */
+export interface AuthoredOptionsAnalysis {
+  id: string;
+  /** The decision question, e.g. "How do we add 30% finishing capacity?". */
+  question: string;
+  /** Strategy doc this analysis belongs to. */
+  sourceDocId: string;
+  /** Optional parent theme this analysis serves. */
+  themeId?: string;
+  criteria: OptionsAnalysisCriterion[];
+  options: OptionsAnalysisOption[];
+  /** id of the recommended option. Defaults (computed) to the highest
+   *  weighted score; user may override. */
+  recommendation?: string;
+  rationale?: string;
+  status: 'draft' | 'in_review' | 'decided' | 'executing';
+  /** ISO date the decision was made. */
+  decisionDate?: string;
+  /** Primary approver (display only — chain lives in `approvers`). */
+  approver?: string;
+  /** Multi-step approval chain. Status auto-advances to `decided` when all
+   *  approvers have signed and the analysis is `in_review`. */
+  approvers?: OptionsAnalysisApprover[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FinancialModel {
+  /** Forecast horizon length (number of periods). */
+  horizonPeriods: number;
+  /** Period granularity. */
+  periodKind: 'month' | 'quarter' | 'year';
+  /** Annual discount rate used for the headline NPV. */
+  discountRate: number;
+  /** Microforecast periods. */
+  microforecast: FinancialMicroforecastRow[];
+  /** Initiative-level NPV assessments. */
+  npvAssessments: NPVAssessment[];
+  /** Has this model been pushed to the group finance master model? */
+  syncedToMasterAt?: string;
+  notes?: string;
 }

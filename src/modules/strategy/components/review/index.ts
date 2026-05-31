@@ -16,3 +16,14 @@ export { AssetGapAnalysis } from './AssetGapAnalysis';
 export { MarketIntelligenceContext } from './MarketIntelligenceContext';
 export { CrossModuleContext } from './CrossModuleContext';
 export { SectionRegistryPanel } from './SectionRegistryPanel';
+export {
+  NewExperimentDialog,
+  ExperimentDetailDrawer,
+  type ExperimentSourceDocRef,
+  type ExperimentKPIResolved,
+} from './ExperimentDialogs';
+export {
+  OptionsAnalysisEditor,
+  createEmptyOptionsAnalysis,
+  weightedScore,
+} from './OptionsAnalysisEditor';

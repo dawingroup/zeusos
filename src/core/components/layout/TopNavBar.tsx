@@ -122,7 +122,7 @@ export function TopNavBar({
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={() => navigate('/ai')}
+              onClick={() => navigate('/intelligence')}
               aria-label="AI Intelligence"
             >
               <Sparkles className="h-4 w-4" />
@@ -131,29 +131,28 @@ export function TopNavBar({
           <TooltipContent>AI Intelligence</TooltipContent>
         </Tooltip>
 
-        {/* Messaging */}
-        {whatsappEnabled && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 relative"
-                onClick={() => navigate('/whatsapp')}
-                aria-label="Messages"
-              >
-                <MessageSquare className="h-4 w-4" />
-                {waUnread > 0 && (
-                  <span
-                    className="absolute top-1 right-1 h-2 w-2 rounded-full ring-2 ring-[var(--bg-surface)]"
-                    style={{ backgroundColor: 'var(--rag-green)' }}
-                  />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Messages{waUnread > 0 ? ` (${waUnread})` : ''}</TooltipContent>
-          </Tooltip>
-        )}
+        {/* Messaging — internal team chat (/comms). Always available; WhatsApp
+            folds into the same surface once enabled. */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 relative"
+              onClick={() => navigate('/comms')}
+              aria-label="Messages"
+            >
+              <MessageSquare className="h-4 w-4" />
+              {waUnread > 0 && (
+                <span
+                  className="absolute top-1 right-1 h-2 w-2 rounded-full ring-2 ring-[var(--bg-surface)]"
+                  style={{ backgroundColor: 'var(--rag-green)' }}
+                />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Messages{waUnread > 0 ? ` (${waUnread})` : ''}</TooltipContent>
+        </Tooltip>
 
         {/* Notifications */}
         <Tooltip>
