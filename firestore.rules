@@ -2527,6 +2527,12 @@ service cloud.firestore {
       allow write: if isParentOrgPrincipal();
     }
 
+    // Web-push subscriptions (Phase 4.4) — keyed by uid. A user manages only
+    // their own; the push sender (Cloud Function) reads via Admin SDK.
+    match /push_subscriptions/{uid} {
+      allow read, write: if isStaffAuth() && request.auth.uid == uid;
+    }
+
     // ============================================
     // GOOGLE CHAT COMMUNICATION COLLECTIONS
     // ============================================

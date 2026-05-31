@@ -25,6 +25,7 @@ import {
 import { subscribeToPresence } from '../services/presenceService';
 import { startPresenceHeartbeat } from '../services/presenceService';
 import { subscribeStaff } from '../services/staff-directory.service';
+import { PushRegistrar } from '../components/PushRegistrar';
 import {
   channelLabel,
   isChannelUnread,
@@ -135,6 +136,7 @@ export default function TeamChatPage() {
   return (
     <>
       <Helmet><title>Team Chat | ZeusOS</title></Helmet>
+      <PushRegistrar />
       <div className="px-4 py-4 sm:px-6 sm:py-4 max-w-[1640px] mx-auto">
         <div className="mb-3">
           <h1 className="display flex items-center gap-2"><MessagesSquare className="h-5 w-5" style={{ color: 'var(--accent)' }} /> Team chat</h1>

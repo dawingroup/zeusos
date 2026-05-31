@@ -16,7 +16,7 @@ const vapidPublicKey = defineSecret('VAPID_PUBLIC_KEY');
 const vapidPrivateKey = defineSecret('VAPID_PRIVATE_KEY');
 
 // VAPID subject (can be hardcoded as it's not sensitive)
-const VAPID_SUBJECT = 'mailto:admin@dawinos.com';
+const VAPID_SUBJECT = 'mailto:admin@zeusgroup.co.ug';
 
 // Initialize webpush lazily when secrets are available
 let webpushInitialized = false;
@@ -319,4 +319,7 @@ module.exports = {
   onDeliveryCreated: exports.onDeliveryCreated,
   onProcurementStatusChange: exports.onProcurementStatusChange,
   checkCriticalItems: exports.checkCriticalItems,
+  // Phase 4.4 — reused by the comms notification fan-out consumer.
+  sendPushToUser,
+  sendPushToUsers,
 };
