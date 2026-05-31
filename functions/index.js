@@ -4670,6 +4670,21 @@ exports.onMediaSupplierInvoicePaid = onMediaSupplierInvoicePaid;
 exports.postJournalEntryOnInvoicePaid = postJournalEntryOnInvoicePaid;
 
 // ============================================================
+// Finance — Group consolidation rollup (Phase 1.2)
+// ============================================================
+// Multi-currency consolidation of the 5 sibling brands onto Zeus's
+// native ledger (gl_postings → P&L/BS/CF), FX-converted to a group
+// presentation currency, with auto-derived intercompany eliminations.
+// Writes companies/zeus-group/rollups/{YYYY-MM}. `runGroupRollupNow`
+// is parent-org-only (commercial scope).
+const {
+  groupFinancialRollup,
+  runGroupRollupNow,
+} = require('./src/finance/groupRollup');
+exports.groupFinancialRollup = groupFinancialRollup;
+exports.runGroupRollupNow = runGroupRollupNow;
+
+// ============================================================
 // Billing — Phase 3.F (client invoices + GL adapter)
 // ============================================================
 // AM-driven client-invoice lifecycle (generate → issue → record

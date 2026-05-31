@@ -27,7 +27,11 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const secretClient = new SecretManagerServiceClient();
 
-const SUPER_USER_EMAILS = ['onzimai@dawin.group'];
+const SUPER_USER_EMAILS = [
+  'onzimai@zeusgroup.co.ug',
+  'onzimai@dawin.group',
+  'admin@zeusgroup.co.ug',
+];
 
 /**
  * Registry of secrets exposed in the API Keys page.
@@ -135,7 +139,7 @@ async function getProjectId() {
     process.env.GOOGLE_CLOUD_PROJECT ||
     process.env.GCLOUD_PROJECT ||
     (await admin.app().options.projectId) ||
-    'dawin-os'
+    'zeusos'
   );
 }
 
@@ -185,6 +189,54 @@ async function readSecretStatus(projectId, id) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Runtime resolver — used by AI / comms / integration functions to read a
+// credential at call time. Reads `versions/latest` from Secret Manager so a
+// key set via the Settings → API Keys page takes effect WITHOUT a redeploy
+// (a `defineSecret`-bound env var only refreshes on deploy). Falls back to the
+// process env (the deploy-time bound value) when Secret Manager has no version,
+// and returns null when nothing is configured. Short-TTL in-memory cache keeps
+// us off the Secret Manager API on every invocation within a warm instance.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const SECRET_CACHE_TTL_MS = 5 * 60 * 1000;
+const _secretCache = new Map(); // id -> { value, fetchedAt }
+
+/**
+ * Resolve a service credential value at runtime.
+ * @param {string} id — registry id, e.g. 'ANTHROPIC_API_KEY'.
+ * @returns {Promise<string|null>} the secret value, or null if unconfigured.
+ */
+async function resolveServiceSecret(id) {
+  if (!id || typeof id !== 'string') return null;
+
+  const cached = _secretCache.get(id);
+  if (cached && Date.now() - cached.fetchedAt < SECRET_CACHE_TTL_MS) {
+    return cached.value;
+  }
+
+  let value = null;
+  try {
+    const projectId = await getProjectId();
+    const [version] = await secretClient.accessSecretVersion({
+      name: latestVersionName(projectId, id),
+    });
+    const raw = version?.payload?.data?.toString('utf8') ?? '';
+    if (raw) value = raw;
+  } catch (err) {
+    // NOT_FOUND / access errors fall through to the env fallback.
+    if (!(err && (err.code === 5 || err.code === 'NOT_FOUND'))) {
+      logger.warn(`resolveServiceSecret(${id}) Secret Manager read failed`, err?.message);
+    }
+  }
+
+  // Fallback to the deploy-time bound value (defineSecret / .env).
+  if (!value && process.env[id]) value = process.env[id];
+
+  _secretCache.set(id, { value, fetchedAt: Date.now() });
+  return value;
+}
+
 async function requireAuthorized(request, requireOwner) {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'Authentication required');
@@ -193,17 +245,17 @@ async function requireAuthorized(request, requireOwner) {
   const isSuperUser = email && SUPER_USER_EMAILS.includes(email);
   if (isSuperUser) return { uid: request.auth.uid, email, role: 'owner' };
 
-  // Look up DawinUser profile to read globalRole.
-  const orgId = 'default';
+  // Look up the DawinUser profile to read globalRole. ZeusOS stores the
+  // user doc keyed by uid at `organizations/default/users/{uid}` (canonical)
+  // with a `users/{uid}` fallback — mirror `loadUserDoc` in
+  // assignment/lib/auth.js rather than the legacy DawinOS uid-field query
+  // (which misses doc-id-keyed records).
   let role;
   try {
-    const snapshot = await db
-      .collection(`organizations/${orgId}/users`)
-      .where('uid', '==', request.auth.uid)
-      .limit(1)
-      .get();
-    if (!snapshot.empty) {
-      role = snapshot.docs[0].data()?.globalRole;
+    let snap = await db.doc(`organizations/default/users/${request.auth.uid}`).get();
+    if (!snap.exists) snap = await db.doc(`users/${request.auth.uid}`).get();
+    if (snap.exists) {
+      role = snap.data()?.globalRole;
     }
   } catch (err) {
     logger.warn('Failed to look up DawinUser', err?.message);
@@ -399,3 +451,6 @@ exports.adminTestServiceCredential = onCall(
     return testGeneric(id, rawValue);
   },
 );
+
+// Runtime resolver for other Cloud Functions (AI / comms / integrations).
+exports.resolveServiceSecret = resolveServiceSecret;

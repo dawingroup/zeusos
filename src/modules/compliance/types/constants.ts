@@ -68,6 +68,7 @@ export const REGULATORY_BODY_LABELS: Record<RegulatoryBody, string> = {
   MoFPED: 'Ministry of Finance',
   BoU: 'Bank of Uganda',
   UIA: 'Uganda Investment Authority',
+  NITA_U: 'National Information Technology Authority (Data Protection)',
   LOCAL_COUNCIL: 'Local Council',
   OTHER: 'Other',
 };

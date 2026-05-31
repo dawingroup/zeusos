@@ -235,6 +235,9 @@ const DocumentRegistryPage = lazyWithRetry(() =>
 const ObligationsPage = lazyWithRetry(() =>
   import('@/modules/compliance/pages/ObligationsPage').then(m => ({ default: m.ObligationsPage }))
 );
+const RegulatoryChangesPage = lazyWithRetry(() =>
+  import('@/modules/compliance/pages/RegulatoryChangesPage').then(m => ({ default: m.RegulatoryChangesPage }))
+);
 
 // ──────────────────────────────────────────────────────────────────────────
 // Market Intelligence + Intelligence Layer
@@ -280,6 +283,7 @@ const UserManagementPage = lazyWithRetry(() => import('@/pages/admin/UserManagem
 const RoleManagementPage = lazyWithRetry(() => import('@/pages/admin/RoleManagementPage'));
 const AuditLogPage = lazyWithRetry(() => import('@/pages/admin/AuditLogPage'));
 const DesignSystemPage = lazyWithRetry(() => import('@/pages/admin/DesignSystemPage'));
+const ServiceCredentialsPage = lazyWithRetry(() => import('@/modules/admin/pages/ServiceCredentialsPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Error pages
@@ -445,6 +449,7 @@ export const router = createBrowserRouter([
           { index: true,            element: <ComplianceDashboardPage /> },
           { path: 'documents',      element: <DocumentRegistryPage /> },
           { path: 'obligations',    element: <ObligationsPage /> },
+          { path: 'regulatory',     element: <RegulatoryChangesPage /> },
         ],
       },
 
@@ -568,6 +573,7 @@ export const router = createBrowserRouter([
       { path: 'admin/roles',         element: <PageWrapper><RoleManagementPage /></PageWrapper> },
       { path: 'admin/audit-log',     element: <PageWrapper><AuditLogPage /></PageWrapper> },
       { path: 'admin/design-system', element: <PageWrapper><DesignSystemPage /></PageWrapper> },
+      { path: 'admin/api-keys',      element: <PageWrapper><ServiceCredentialsPage /></PageWrapper> },
 
       // ── Media Plan & Buying — Phase 4 ─────────────────────────────────────
       // Gated: parent-org users for plan creation; subsidiary buyers can post

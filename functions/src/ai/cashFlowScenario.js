@@ -13,29 +13,34 @@ const { defineSecret } = require('firebase-functions/params');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');
 const { ALLOWED_ORIGINS } = require('../config/cors');
+const { assertParentOrgPrincipal } = require('../assignment/lib/auth');
+const { getAnthropic } = require('./_anthropic');
+const native = require('../finance/ledger/nativeLedgerSource');
 
 if (!admin.apps.length) {
   admin.initializeApp();
 }
 
 const db = admin.firestore();
+const GROUP_ORG_ID = 'zeus-group';
 const ANTHROPIC_API_KEY = defineSecret('ANTHROPIC_API_KEY');
 
 exports.runCashFlowScenario = onCall(
   {
     cors: ALLOWED_ORIGINS,
+    region: 'europe-west1',
     timeoutSeconds: 120,
     memory: '512MiB',
     secrets: [ANTHROPIC_API_KEY],
   },
   async (request) => {
-    if (!request.auth) {
-      throw new HttpsError('unauthenticated', 'Authentication required');
-    }
+    // Parent-org (commercial scope) only.
+    await assertParentOrgPrincipal(request.auth);
 
-    const { companyId, scenario } = request.data;
-    if (!companyId || !scenario) {
-      throw new HttpsError('invalid-argument', 'companyId and scenario are required');
+    const { scenario } = request.data || {};
+    const companyId = (request.data && request.data.companyId) || GROUP_ORG_ID;
+    if (!scenario) {
+      throw new HttpsError('invalid-argument', 'scenario is required');
     }
 
     logger.info(`[Scenario] Running scenario "${scenario.name}" for ${companyId}`);
@@ -47,15 +52,13 @@ exports.runCashFlowScenario = onCall(
       // Apply scenario modifications
       const modified = applyModifications(baseline, scenario.modifications || []);
 
-      // Get AI analysis
-      const AnthropicModule = require('@anthropic-ai/sdk');
-      const Anthropic = AnthropicModule.default || AnthropicModule;
-      const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY.value() });
+      // Get AI analysis (key resolved at runtime — rotatable from Settings).
+      const { client, model } = await getAnthropic();
 
       const response = await client.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model,
         max_tokens: 1500,
-        system: `You are a financial scenario analyst for a Ugandan construction company. Analyze a what-if cash flow scenario and provide insights. All amounts in UGX.
+        system: `You are a financial scenario analyst for Zeus Group, an East African marketing consortium. Analyze a what-if cash flow scenario and provide insights. All amounts are in minor units of the group presentation currency.
 Respond in JSON format:
 {
   "impact": "positive|negative|neutral",
@@ -107,6 +110,9 @@ Respond in JSON format:
         result,
       };
     } catch (error) {
+      if (error && error.code === 'NOT_CONFIGURED') {
+        throw new HttpsError('failed-precondition', error.message);
+      }
       logger.error('[Scenario] Error:', error);
       throw new HttpsError('internal', error.message);
     }
@@ -118,39 +124,49 @@ Respond in JSON format:
 // ────────────────────────────────────────────────────────────────────────────
 
 async function getBaselineData(companyId) {
-  const queueSnap = await db.collection('companies').doc(companyId)
-    .collection('expenditure_queue')
-    .where('status', '==', 'pending')
-    .orderBy('compositeScore', 'desc')
-    .limit(30)
-    .get();
+  const [queueSnap, cashPos] = await Promise.all([
+    db.collection('companies').doc(companyId)
+      .collection('expenditure_queue')
+      .where('status', '==', 'pending')
+      .limit(50)
+      .get(),
+    native.getCashPosition({ orgId: companyId }).catch(() => null),
+  ]);
 
-  const items = queueSnap.docs.map(d => {
-    const data = d.data();
-    return {
-      id: d.id,
-      description: data.description,
-      amount: data.amountUGX,
-      category: data.category,
-      priorityTier: data.priorityTier,
-      vendor: data.vendor,
-      dueDate: data.latestDate?.toDate?.()?.toISOString?.() || null,
-    };
-  });
+  const items = queueSnap.docs
+    .map(d => {
+      const data = d.data();
+      return {
+        id: d.id,
+        description: data.description,
+        amount: data.amountUGX ?? data.amountMinor,
+        category: data.category,
+        priorityTier: data.priorityTier,
+        compositeScore: data.compositeScore ?? (data.scores && data.scores.composite) ?? 0,
+        vendor: data.vendor,
+        dueDate: data.latestDate?.toDate?.()?.toISOString?.() || null,
+      };
+    })
+    .sort((a, b) => (b.compositeScore || 0) - (a.compositeScore || 0))
+    .slice(0, 30);
 
   const today = new Date().toISOString().split('T')[0];
   const planSnap = await db.collection('companies').doc(companyId)
     .collection('spend_plans')
     .where('date', '==', today)
-    .where('status', 'in', ['draft', 'active'])
-    .orderBy('generatedAt', 'desc')
-    .limit(1)
+    .limit(10)
     .get();
 
-  const plan = planSnap.empty ? null : planSnap.docs[0].data();
+  const plan = planSnap.empty
+    ? null
+    : planSnap.docs
+      .map(d => d.data())
+      .filter(p => ['draft', 'active'].includes(p.status))
+      .sort((a, b) => String(b.generatedAt || '').localeCompare(String(a.generatedAt || '')))[0] || null;
 
   return {
-    cashPosition: plan?.openingBankBalance || 0,
+    // GL cash balance is the source of truth; fall back to spend-plan opening.
+    cashPosition: cashPos?.balanceMinor ?? plan?.openingBankBalance ?? 0,
     totalPending: items.reduce((s, i) => s + (i.amount || 0), 0),
     criticalCount: items.filter(i => i.priorityTier === 'CRITICAL').length,
     items: items.slice(0, 15),

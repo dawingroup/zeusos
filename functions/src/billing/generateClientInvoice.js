@@ -16,60 +16,27 @@ const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { ALLOWED_ORIGINS } = require('../config/cors');
 const { assertBillingAdmin } = require('./lib/auth');
 const { readIdempotentResponse, storeIdempotentResponse } = require('./lib/idempotency');
+// Shared FX module (Phase 1.1) — single rate table for billing + finance
+// consolidation. `resolveFxShared` throws a plain Error(code FX_UNAVAILABLE);
+// the wrapper below preserves this callable's failed-precondition contract.
+const {
+  resolveFxRate: resolveFxShared,
+  convertMinor,
+} = require('../finance/lib/fx');
 
 const ISSUER_ORG_ID = 'zeus-group';
 
-// Seed FX cross-rates (vs UGX). Mirrors EXCHANGE_RATES_TO_UGX in
-// src/modules/finance/constants/currency.constants.ts. Used when the
-// fx_rates/{date} snapshot is missing — Phase 5 wires the daily writer.
-const SEED_FX_TO_UGX = {
-  UGX: 1,
-  USD: 3700,
-  EUR: 4000,
-  GBP: 4600,
-  AED: 1000,
-  KES: 29,
-  ZAR: 205,
-};
-
-/**
- * Resolve the rate to convert `from` → `to` for a given consolidation
- * date. Tries `fx_rates/{date}` first, falls back to seeded cross-rates
- * via UGX. Same-currency short-circuits to 1.0.
- *
- * Mirrors src/modules/billing/services/fx-rate.service.ts#getEffectiveRate.
- */
+/** Billing-context FX resolver: maps the shared module's FX_UNAVAILABLE
+ *  failure onto the HttpsError('failed-precondition') this callable returns. */
 async function resolveFxRate(db, fromCurrency, toCurrency, date) {
-  if (fromCurrency === toCurrency) return { rate: 1, source: 'manual' };
-
-  const snap = await db.doc(`fx_rates/${date}`).get();
-  if (snap.exists) {
-    const data = snap.data() || {};
-    const base = data.base;
-    const rates = data.rates || {};
-    const fromVsBase = fromCurrency === base ? 1 : rates[fromCurrency];
-    const toVsBase   = toCurrency   === base ? 1 : rates[toCurrency];
-    if (fromVsBase != null && toVsBase != null && fromVsBase !== 0) {
-      return { rate: toVsBase / fromVsBase, source: data.source || 'manual' };
+  try {
+    return await resolveFxShared(db, fromCurrency, toCurrency, date);
+  } catch (err) {
+    if (err && err.code === 'FX_UNAVAILABLE') {
+      throw new HttpsError('failed-precondition', err.message);
     }
+    throw err;
   }
-
-  // Fallback — cross via UGX.
-  const fromUgx = SEED_FX_TO_UGX[fromCurrency];
-  const toUgx   = SEED_FX_TO_UGX[toCurrency];
-  if (fromUgx == null || toUgx == null || toUgx === 0) {
-    throw new HttpsError(
-      'failed-precondition',
-      `FX rate unavailable: ${fromCurrency} → ${toCurrency} on ${date}. ` +
-        'Seed cross-rates do not cover one of these currencies. ' +
-        'Post the rate to fx_rates/{YYYY-MM-DD} or extend SEED_FX_TO_UGX.',
-    );
-  }
-  return { rate: fromUgx / toUgx, source: 'manual' };
-}
-
-function convertMinor(amountMinor, rate) {
-  return Math.round(amountMinor * rate);
 }
 
 function jurisdictionForOrg(orgId) {

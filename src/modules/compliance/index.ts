@@ -65,7 +65,34 @@ export {
   scanUpcomingObligations,
 } from './services/complianceObligationService';
 
+// Group rollup (Phase 2.1)
+export {
+  complianceGroupService,
+  GROUP_SUBSIDIARIES,
+} from './services/complianceGroupService';
+export type {
+  GroupSubsidiary,
+  GroupComplianceDashboardData,
+} from './services/complianceGroupService';
+
+// Regulatory-change feed (Phase 2.4)
+export {
+  getRegulatoryChanges,
+  getRegulatoryChangesForSectors,
+  getRegulatoryChange,
+  createRegulatoryChange,
+  updateRegulatoryChange,
+  deleteRegulatoryChange,
+} from './services/regulatoryChangeService';
+export type {
+  RegulatoryChange,
+  RegulatoryChangeInput,
+  RegulatoryImpactLevel,
+  RegulatoryChangeStatus,
+} from './types/regulatory.types';
+
 // Hooks
 export { useComplianceDocuments } from './hooks/useComplianceDocuments';
 export { useComplianceObligations } from './hooks/useComplianceObligations';
+export { useComplianceGroupDashboard } from './hooks/useComplianceGroupDashboard';
 export { useComplianceDashboard } from './hooks/useComplianceDashboard';
