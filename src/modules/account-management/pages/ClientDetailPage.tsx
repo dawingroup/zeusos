@@ -26,6 +26,7 @@ import {
 } from '@/shared/components/refresh';
 import { formatMinor } from '../utils/money';
 import { CompetitorListPanel } from '@/modules/conflict-firewall/components/CompetitorListPanel';
+import { ClientStrategyAssistantPanel } from '../components/ClientStrategyAssistantPanel';
 
 const STATUS_TONE: Record<ClientStatus, RagTone> = {
   ACTIVE: 'green',
@@ -209,6 +210,12 @@ export default function ClientDetailPage() {
                 any brand currently serving a listed competitor. */}
             <section data-testid="client-competitor-section">
               <CompetitorListPanel clientId={client.id} clientName={client.name} />
+            </section>
+
+            {/* Phase 3.5 — AI strategy brief from stakeholders + competitors +
+                regulatory exposure + business memory. */}
+            <section data-testid="client-strategy-assistant-section">
+              <ClientStrategyAssistantPanel clientId={client.id} clientName={client.name} />
             </section>
 
             <SectionH

@@ -25,6 +25,14 @@
       ]
     },
     {
+      "collectionGroup": "ai_memory",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "companyId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "budgetLines",
       "queryScope": "COLLECTION",
       "fields": [

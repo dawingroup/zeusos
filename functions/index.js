@@ -218,6 +218,12 @@ exports.generateCFOBriefing = generateCFOBriefing;
 exports.dailyCFOBriefing = dailyCFOBriefing;
 exports.runCashFlowScenario = runCashFlowScenario;
 
+// Phase 3.5 — Client Strategy Assistant. Aggregates stakeholders + competitors
+// + regulatory exposure + business memory for a client, Claude-synthesised into
+// a structured brief. Brand-direct ADs (own client) or parent-org principals.
+const { generateClientStrategyBrief } = require('./src/ai/clientStrategyBrief');
+exports.generateClientStrategyBrief = generateClientStrategyBrief;
+
 // DawinOS v2.0 - Auth & Claims Functions
 const { syncEmployeeClaims, setAdminClaims, initializeFirstAdmin, getCurrentClaims, updateUserClaims } = require('./src/auth/setCustomClaims');
 exports.syncEmployeeClaims = syncEmployeeClaims;

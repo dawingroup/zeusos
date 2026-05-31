@@ -255,6 +255,7 @@ const IntelligenceLayerDashboard = lazyWithRetry(() => import('@/modules/intelli
 const IntelligenceAdminPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/IntelligenceAdminPage'));
 const EmployeeTaskInboxPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/EmployeeTaskInboxPage'));
 const ManagerDashboardPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/ManagerDashboardPage'));
+const BusinessMemoryPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/BusinessMemoryPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Strategy
@@ -540,6 +541,7 @@ export const router = createBrowserRouter([
           { path: 'admin',          element: <IntelligenceAdminPage /> },
           { path: 'inbox',          element: <EmployeeTaskInboxPage /> },
           { path: 'manager',        element: <ManagerDashboardPage /> },
+          { path: 'memory',         element: <BusinessMemoryPage /> },
         ],
       },
 
