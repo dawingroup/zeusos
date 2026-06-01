@@ -145,7 +145,7 @@ export const ScorecardDetailPage: React.FC = () => {
   const sectionsSorted = [...scorecard.sections].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-5 max-w-[1100px] mx-auto">
+    <div className="space-y-5">
       {/* Breadcrumb */}
       <div className="flex items-center gap-1.5 text-[12px] text-gray-500">
         <button

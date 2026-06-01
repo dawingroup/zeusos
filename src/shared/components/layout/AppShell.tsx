@@ -638,22 +638,22 @@ export function AppShell({ children }: AppShellProps) {
         {/* Global Task Button (My Tasks quick-access) */}
         <GlobalTaskButton />
 
-        {/* Messaging (WhatsApp + Google Chat) */}
-        {whatsappEnabled && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/whatsapp')}
-            className="relative h-8 w-8"
-          >
-            <MessageSquare className="h-4 w-4" />
-            {totalMessagingUnread > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-                {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-              </span>
-            )}
-          </Button>
-        )}
+        {/* Messaging — internal team chat (/comms). Always available; WhatsApp
+            folds into the same surface once enabled. (/whatsapp is not routed.) */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/comms')}
+          className="relative h-8 w-8"
+          aria-label="Messages"
+        >
+          <MessageSquare className="h-4 w-4" />
+          {totalMessagingUnread > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
+              {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
+            </span>
+          )}
+        </Button>
 
         {/* Org switcher + account menu relocated into the sidebar (chip +
             footer card) in the UI refresh. Mobile keeps its own header
@@ -689,22 +689,21 @@ export function AppShell({ children }: AppShellProps) {
         <AIIntelligenceMenu />
         <GlobalTaskButton />
 
-        {/* Messaging - Mobile */}
-        {whatsappEnabled && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/whatsapp')}
-            className="relative"
-          >
-            <MessageSquare className="h-5 w-5" />
-            {totalMessagingUnread > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-                {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-              </span>
-            )}
-          </Button>
-        )}
+        {/* Messaging - Mobile — internal team chat (/comms), always available. */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/comms')}
+          className="relative"
+          aria-label="Messages"
+        >
+          <MessageSquare className="h-5 w-5" />
+          {totalMessagingUnread > 0 && (
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
+              {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
+            </span>
+          )}
+        </Button>
         {/* Zeus Group dropdown for mobile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

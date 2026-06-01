@@ -270,7 +270,7 @@ export const ObjectiveDetailPage: React.FC = () => {
   const isActive = objective.status === OKR_STATUS.ACTIVE;
 
   return (
-    <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-5 max-w-[1100px] mx-auto">
+    <div className="space-y-5">
       {/* Breadcrumb + back */}
       <div className="flex items-center gap-1.5 text-[12px] text-gray-500">
         <button
