@@ -344,7 +344,7 @@ export const KpiDetailPage: React.FC = () => {
       : Minus;
 
   return (
-    <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-5 max-w-[1100px] mx-auto">
+    <div className="space-y-5">
       {autoSyncMsg && (
         <Banner
           tone={autoSyncMsg.startsWith('Sync failed') ? 'danger' : 'info'}

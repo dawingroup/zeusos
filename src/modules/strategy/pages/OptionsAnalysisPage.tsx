@@ -269,7 +269,7 @@ export const OptionsAnalysisPage: React.FC = () => {
   }, [detail, detailSourceDoc]);
 
   return (
-    <div className="page-inner" style={{ padding: '24px 32px 64px', maxWidth: 1640, margin: '0 auto' }}>
+    <div className="space-y-6">
       {/* Page head */}
       <div
         style={{

@@ -132,7 +132,7 @@ export const StrategyAssistantPage: React.FC = () => {
   }, [audit]);
 
   return (
-    <div className="px-4 py-4 sm:px-6 sm:py-6 max-w-[1640px] mx-auto">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
           <h1 className="inline-flex items-center gap-2 text-2xl font-bold text-gray-900">
