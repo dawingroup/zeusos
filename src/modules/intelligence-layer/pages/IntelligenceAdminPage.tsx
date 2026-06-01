@@ -25,6 +25,7 @@ import {
   Clock,
   Zap,
   BarChart3,
+  Bot,
 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -39,9 +40,10 @@ import { TaskManagementPanel } from '../components/admin/TaskManagementPanel';
 import { EmployeeWorkloadPanel } from '../components/admin/EmployeeWorkloadPanel';
 import { RoleProfilePanel } from '../components/admin/RoleProfilePanel';
 import { AIMemoryPanel } from '../components/admin/AIMemoryPanel';
+import { AgentManagementPanel } from '../components/admin/AgentManagementPanel';
 import { useIntelligenceAdminOverview } from '../hooks/useIntelligenceAdminOverview';
 
-type AdminTab = 'overview' | 'events' | 'tasks' | 'workload' | 'roles' | 'memory';
+type AdminTab = 'overview' | 'events' | 'tasks' | 'workload' | 'agents' | 'roles' | 'memory';
 
 export default function IntelligenceAdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
@@ -86,7 +88,7 @@ export default function IntelligenceAdminPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as AdminTab)}>
-        <TabsList className="grid grid-cols-6 w-full max-w-3xl">
+        <TabsList className="grid grid-cols-7 w-full max-w-4xl">
           <TabsTrigger value="overview" className="gap-2">
             <BarChart3 className="h-4 w-4" />
             Overview
@@ -113,6 +115,10 @@ export default function IntelligenceAdminPage() {
             <Users className="h-4 w-4" />
             Workload
           </TabsTrigger>
+          <TabsTrigger value="agents" className="gap-2">
+            <Bot className="h-4 w-4" />
+            Agents
+          </TabsTrigger>
           <TabsTrigger value="roles" className="gap-2">
             <Shield className="h-4 w-4" />
             Roles
@@ -134,6 +140,9 @@ export default function IntelligenceAdminPage() {
         </TabsContent>
         <TabsContent value="workload" className="mt-6">
           <EmployeeWorkloadPanel />
+        </TabsContent>
+        <TabsContent value="agents" className="mt-6">
+          <AgentManagementPanel />
         </TabsContent>
         <TabsContent value="roles" className="mt-6">
           <RoleProfilePanel />
