@@ -3194,6 +3194,33 @@ service cloud.firestore {
     }
 
     // ============================================
+    // Agent Network (Phase 6.F) — registry + skill docs + audit
+    // ============================================
+    // `agents` — the agent registry. Staff may read (the admin UI + the
+    // "why this matters · <AGENT>" task headers resolve from it); only admins
+    // may create/update/delete. The dispatcher (Admin SDK) bypasses rules to
+    // update locked `metrics`.
+    match /agents/{agentId} {
+      allow read:   if isStaffAuth();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // `agentSkillDocs` — per-agent knowledge base. Staff read, admin write.
+    match /agentSkillDocs/{docId} {
+      allow read:   if isStaffAuth();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // `agentAuditEntries` — immutable action log. Reads gated to admins (raw
+    // prompt I/O snapshots are sensitive); writes are Cloud-Function only.
+    match /agentAuditEntries/{entryId} {
+      allow read:   if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // ============================================
     // Manufacturing MES Collections
     // ============================================
 
