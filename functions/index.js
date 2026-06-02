@@ -4739,3 +4739,19 @@ const { resolveShareLink } = require('./src/asset-library/resolveShareLink');
 exports.onAssetUploaded = onAssetUploaded;
 exports.onAssetDeleted = onAssetDeleted;
 exports.resolveShareLink = resolveShareLink;
+
+// ============================================================
+// Agent Network (Phase 6.F) — dispatcher callable + rule-based watchers.
+// `agentExecuteTool` — one onCall, every tool: { agentId, toolId, input }.
+//   The dispatcher enforces the 4 gates (agent active → tool enabled →
+//   schema-valid → autoActMode boundary) + writes an immutable
+//   agentAuditEntries row, then routes to the handler.
+// `agentWatchersDaily` — scheduled deterministic sweep (ZA-002 burn/SLA,
+//   ZA-005 finance) that acts THROUGH the dispatcher (draft_only: findings +
+//   draft tasks only) and emits AgentFindingRaised.
+// `runAgentWatchersNow` — callable to run the sweep on demand (verification).
+const { agentExecuteTool } = require('./src/agents/agentExecuteTool');
+const { agentWatchersDaily, runAgentWatchersNow } = require('./src/agents/watchers');
+exports.agentExecuteTool = agentExecuteTool;
+exports.agentWatchersDaily = agentWatchersDaily;
+exports.runAgentWatchersNow = runAgentWatchersNow;

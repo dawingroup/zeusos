@@ -105,6 +105,14 @@ const DOMAIN_EVENT_TYPES = new Set([
   // inbox consume these — channel-specific details stay in the payload.
   'ClientMessageReceived',
   'ClientMessageSent',
+  // Phase 6.F — Agent Network. A watcher/agent raised a finding (overheating
+  // IWO, overdue invoice, stalled approval, conflict risk) via the dispatcher,
+  // or the dispatcher refused an action against the gates. aggregateType
+  // 'Agent', aggregateId the agentId. Payload: { agentId, kind, entityType?,
+  // entityId?, summary, severity?, auditId? }. The per-action detail lives in
+  // the immutable agentAuditEntries log.
+  'AgentFindingRaised',
+  'AgentActionRefused',
 ]);
 
 /**
