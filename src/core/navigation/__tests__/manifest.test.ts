@@ -30,7 +30,8 @@ describe('resolveNav — PARENT', () => {
     expect(moduleIds(items)).toEqual(moduleIds(NAV_MANIFEST_PARENT));
     // First and last anchors so accidental reorders fail loudly.
     expect(items[0]?.moduleId).toBe('dashboard');
-    expect(items[items.length - 1]?.moduleId).toBe('admin');
+    expect(items[items.length - 1]?.moduleId).toBe('api-keys');
+    expect(items.some((i) => i.moduleId === 'admin')).toBe(true);
   });
 
   it('exposes Traffic and Conflict Firewall (Phase 6.UI.B/C surfaces)', () => {
