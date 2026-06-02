@@ -57,7 +57,7 @@ import {
   filterNavigationByAccess,
   type NavItem,
 } from '@/config/navigation.unified';
-import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
+import { adaptManifestToLegacyNavItem, resolveNav, type NavStatus } from '@/core/navigation/manifest';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import { isParentOrgPrincipal as resolveIsParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { SubsidiaryId } from '@/core/settings/types';
@@ -148,7 +148,7 @@ export function AppShell({ children }: AppShellProps) {
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
-  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction } = useUIStore();
+  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction, navScope, setNavScope } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
   const { 
     favoriteItems, 
@@ -307,6 +307,20 @@ export function AppShell({ children }: AppShellProps) {
     user?.email,
     dawinUser,
   ]);
+
+  // UI Refresh v3 — roadmap nav scope. 'deployed' hides `planned` items;
+  // 'roadmap' (default) keeps them (rendered dimmed in renderNavItem). The
+  // status field rides through the manifest adapter onto each NavItem.
+  const scopedNavItems = useMemo(() => {
+    if (navScope === 'roadmap') return mainNavItems;
+    return mainNavItems.filter(
+      (it) => ((it as { status?: NavStatus }).status ?? 'live') === 'live',
+    );
+  }, [mainNavItems, navScope]);
+  const hasPlanned = useMemo(
+    () => mainNavItems.some((it) => (it as { status?: NavStatus }).status === 'planned'),
+    [mainNavItems],
+  );
 
   // Corporate modules filtered by access (header pills)
   const corporateNavItems = useMemo(() => {
@@ -487,11 +501,14 @@ export function AppShell({ children }: AppShellProps) {
     // Check if any child is active (for parent highlight in collapsed mode)
     const hasActiveChild = item.children?.some((child: NavItem) => isActive(child.href));
     const isHighlighted = active || hasActiveChild;
+    // UI Refresh v3 — roadmap status. `planned` items render dimmed with a
+    // hollow-dot marker (only reachable when navScope === 'roadmap').
+    const planned = (item as { status?: NavStatus }).status === 'planned';
 
     // Collapsed rail mode (desktop only): show icon-only with popover flyout
     if (!sidebarExpanded) {
       return (
-        <div key={item.id}>
+        <div key={item.id} style={planned ? { opacity: 0.8 } : undefined}>
           <NavItemPopover item={item}>
             <Link
               to={item.href}
@@ -515,7 +532,7 @@ export function AppShell({ children }: AppShellProps) {
     }
 
     return (
-      <div key={item.id}>
+      <div key={item.id} style={planned ? { opacity: 0.8 } : undefined}>
         <div
           className={cn(
             'group relative flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
@@ -541,8 +558,15 @@ export function AppShell({ children }: AppShellProps) {
           >
             {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0" />}
             <span className="truncate">{item.label}</span>
+            {planned && (
+              <span
+                className="ml-auto h-1.5 w-1.5 rounded-full border border-[var(--fg-on-dark-muted)] flex-none"
+                title="Planned — not yet deployed"
+                aria-label="Planned"
+              />
+            )}
             {item.badge && (
-              <span className="ml-auto text-[10px] bg-[var(--bg-sidebar-hover)] text-[var(--fg-on-dark)] px-1.5 py-0.5 rounded">
+              <span className={cn('text-[10px] bg-[var(--bg-sidebar-hover)] text-[var(--fg-on-dark)] px-1.5 py-0.5 rounded', !planned && 'ml-auto')}>
                 {item.badge}
               </span>
             )}
@@ -957,7 +981,7 @@ export function AppShell({ children }: AppShellProps) {
                   a flat icon list. */}
               {sidebarExpanded
                 ? SECTION_ORDER.map((section) => {
-                    const items = mainNavItems.filter(
+                    const items = scopedNavItems.filter(
                       (it: NavItem) => (SECTION_FOR_MODULE[it.id] || 'work') === section
                     );
                     if (items.length === 0) return null;
@@ -972,7 +996,31 @@ export function AppShell({ children }: AppShellProps) {
                       </div>
                     );
                   })
-                : <div className="space-y-1">{mainNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
+                : <div className="space-y-1">{scopedNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
+
+              {/* UI Refresh v3 — roadmap legend + scope toggle. Only shown
+                  (expanded) when the resolved nav actually carries a planned
+                  item, so deployed-only orgs see no clutter. */}
+              {sidebarExpanded && hasPlanned && (
+                <div className="mt-3 px-3 pt-3 border-t border-[var(--border-on-dark)]">
+                  <div className="flex items-center gap-3 text-[10px] text-[var(--fg-on-dark-muted)]">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--fg-on-dark)]" /> Live
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full border border-[var(--fg-on-dark-muted)]" /> Planned
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setNavScope(navScope === 'roadmap' ? 'deployed' : 'roadmap')}
+                      className="ml-auto text-[10px] text-[var(--fg-on-dark-muted)] hover:text-[var(--fg-on-dark)] transition-colors"
+                      title={navScope === 'roadmap' ? 'Hide planned modules' : 'Show full roadmap'}
+                    >
+                      {navScope === 'roadmap' ? 'Deployed only' : 'Full roadmap'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
 

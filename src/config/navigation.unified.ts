@@ -39,6 +39,8 @@ export interface NavItem {
   keywords?: string[];
   /** Optional keyboard shortcut, e.g. "G S" for Strategy. */
   shortcut?: string;
+  /** Roadmap status — 'live' (default) | 'planned'. See manifest.ts. */
+  status?: 'live' | 'planned';
 }
 
 export interface SubsidiaryConfig {
