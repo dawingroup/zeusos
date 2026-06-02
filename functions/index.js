@@ -4762,3 +4762,10 @@ exports.runAgentWatchersNow = runAgentWatchersNow;
 // can't reach mutating tools.
 const { agentReason } = require('./src/agents/agentReason');
 exports.agentReason = agentReason;
+
+// `enrichTaskOnCreate` (Phase F) — Firestore trigger on generated_tasks/{id}
+// that uses Claude to turn a terse task into an actionable brief (aiDescription
+// + aiChecklist + urgency). The inbox already renders these fields. Dark until
+// ANTHROPIC_API_KEY is set; never blocks task creation.
+const { enrichTaskOnCreate } = require('./src/event-task-engine/enrichTaskOnCreate');
+exports.enrichTaskOnCreate = enrichTaskOnCreate;
