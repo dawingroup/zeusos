@@ -119,6 +119,7 @@ const SECTION_FOR_MODULE: Record<string, string> = {
   'my-time': 'admin',
   'team-time': 'admin',
   admin: 'admin',
+  'api-keys': 'admin',
   // subsidiary head/middle/tail
   'delivery-inbox': 'main',
   'ecd-review': 'main',
@@ -297,7 +298,7 @@ export function AppShell({ children }: AppShellProps) {
     const isAdminEmail = !!user?.email && adminEmails.includes(user.email);
     const hasAdminRole = !!dawinUser && ['admin', 'owner', 'super_admin'].includes(dawinUser.globalRole);
     if (hasAdminRole || isAdminEmail || isPrivileged) return filtered;
-    return filtered.filter((item) => item.id !== 'admin');
+    return filtered.filter((item) => item.id !== 'admin' && item.id !== 'api-keys');
   }, [
     allAccessibleModuleIds,
     isPrivileged,

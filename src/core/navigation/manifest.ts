@@ -111,6 +111,11 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'my-time',           label: 'My Time',                   icon: 'Clock',           routePath: '/time' },
   { moduleId: 'team-time',         label: 'Team Time',                 icon: 'Users',           routePath: '/time/team' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
+  // API Keys: the integration-secrets surface where ANTHROPIC / GEMINI / Meta /
+  // QBO keys are entered (Settings → Integrations also links here). Surfaced
+  // directly because it was hard to find buried under Settings. Admin-gated in
+  // AppShell (same filter as the Admin item).
+  { moduleId: 'api-keys',          label: 'API Keys',                  icon: 'KeyRound',        routePath: '/admin/api-keys' },
 ];
 
 // ----------------------------------------------------------------------------
