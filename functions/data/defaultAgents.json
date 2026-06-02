@@ -77,10 +77,11 @@
     "maxOutputTokens": 2048,
     "confidenceFloor": 0.8,
     "autoActMode": "gated",
+    "status": "active",
     "systemPrompt": "You propose a serving brand for an open master job using tier, brand capability, current capacity, and conflict walls. Output a ranked recommendation with reasons. A human in Traffic confirms before anything issues.",
     "promptVersion": 1,
     "promptUpdatedAt": null,
-    "enabledTools": ["read.master_jobs", "read.internal_work_orders", "read.clients", "read.employees", "notify.escalate"],
+    "enabledTools": ["read.master_jobs", "read.internal_work_orders", "read.clients", "read.employees", "write.create_alert", "write.create_task", "notify.escalate"],
     "skillDocIds": []
   },
   {
@@ -98,10 +99,11 @@
     "maxOutputTokens": 2048,
     "confidenceFloor": 0.85,
     "autoActMode": "gated",
+    "status": "active",
     "systemPrompt": "You check whether assigning a brand to a client would breach a named-competitor wall. Raise an exclusivity-risk finding with the conflicting client and brand. A human resolves it.",
     "promptVersion": 1,
     "promptUpdatedAt": null,
-    "enabledTools": ["read.clients", "read.master_jobs", "read.internal_work_orders", "write.create_alert", "notify.escalate"],
+    "enabledTools": ["read.clients", "read.master_jobs", "read.internal_work_orders", "write.create_alert", "write.create_task", "notify.escalate"],
     "skillDocIds": []
   }
 ]
