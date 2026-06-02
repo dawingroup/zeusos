@@ -11,10 +11,12 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import {
   listOpenIntakeRequests,
   type DirectClientRequestEvent,
 } from '@/modules/assignment/services/firestore';
+import { PageHero, Pill } from '@/shared/components/refresh';
 
 export default function IntakeQueuePage() {
   const [rows, setRows] = useState<DirectClientRequestEvent[]>([]);
@@ -28,60 +30,59 @@ export default function IntakeQueuePage() {
   }, []);
 
   return (
-    <div className="space-y-4 p-6">
-      <header>
-        <h1 className="text-xl font-semibold">Intake queue</h1>
-        <p className="text-sm text-muted-foreground">
-          Direct client requests that subsidiaries routed back to Account
-          Management. Pricing, contracts and billing live exclusively here —
-          subsidiaries have no UI affordance to answer the client with a price.
-        </p>
-      </header>
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Account Management"
+        title="Intake"
+        body="Inbound client requests that subsidiaries routed back to Account Management — ready to triage into a Master Job. Pricing, contracts and billing live exclusively here; subsidiaries have no UI affordance to answer the client with a price."
+      />
 
-      {loading && <p className="text-sm text-muted-foreground">Loading intake queue…</p>}
+      {loading && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Loading intake queue…</p>}
 
       {!loading && rows.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No open intake items. When a subsidiary forwards a direct client ask, it appears here.
         </div>
       )}
 
       {!loading && rows.length > 0 && (
-        <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="text-left text-xs uppercase text-muted-foreground">
-              <th className="px-3 py-2">Subsidiary</th>
-              <th className="px-3 py-2">Client</th>
-              <th className="px-3 py-2">Related</th>
-              <th className="px-3 py-2">Request</th>
-              <th className="px-3 py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map(r => (
-              <tr key={r.id} className="border-t align-top">
-                <td className="px-3 py-2">{r.subsidiaryOrgId}</td>
-                <td className="px-3 py-2">{r.clientId || '—'}</td>
-                <td className="px-3 py-2 text-xs">
-                  {r.iwoId && <div>IWO {r.iwoId}</div>}
-                  {r.masterJobId && (
-                    <Link to={`/master-jobs/${r.masterJobId}`} className="font-mono text-[var(--rag-blue)] hover:underline">
-                      {r.masterJobId}
-                    </Link>
-                  )}
-                </td>
-                <td className="px-3 py-2 text-xs">{r.requestText}</td>
-                <td className="px-3 py-2 text-xs">
-                  {r.clientId && (
-                    <Link to={`/clients/${r.clientId}`} className="block text-[var(--rag-blue)] hover:underline">
-                      Open client →
-                    </Link>
-                  )}
-                </td>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>Subsidiary</th>
+                <th>Client</th>
+                <th>Related</th>
+                <th>Request</th>
+                <th style={{ textAlign: 'right' }}>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td><Pill tone="brand" dot={false}>{r.subsidiaryOrgId}</Pill></td>
+                  <td style={{ fontWeight: 600 }}>{r.clientId || '—'}</td>
+                  <td className="mono" style={{ fontSize: 12, color: 'var(--fg-tertiary)' }}>
+                    {r.iwoId && <div>IWO {r.iwoId}</div>}
+                    {r.masterJobId && (
+                      <Link to={`/master-jobs/${r.masterJobId}`} className="hover:underline" style={{ color: 'var(--rag-blue)' }}>
+                        {r.masterJobId}
+                      </Link>
+                    )}
+                  </td>
+                  <td style={{ maxWidth: 340, color: 'var(--fg-secondary)', fontSize: 12.5 }}>{r.requestText}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {r.clientId && (
+                      <Link to={`/clients/${r.clientId}`} className="btn btn-secondary" style={{ marginLeft: 'auto' }}>
+                        <ArrowUpRight size={13} /> Open client
+                      </Link>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
