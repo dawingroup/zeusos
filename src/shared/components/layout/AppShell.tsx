@@ -760,7 +760,7 @@ export function AppShell({ children }: AppShellProps) {
                 className="h-6 w-6 rounded flex items-center justify-center"
                 style={{ backgroundColor: subsidiaryColor }}
               >
-                <span className="text-white text-xs font-bold">{subsidiaryName.charAt(0)}</span>
+                <span className="text-xs font-bold" style={{ color: currentSubsidiary?.ink ?? '#fff' }}>{subsidiaryName.charAt(0)}</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -782,7 +782,7 @@ export function AppShell({ children }: AppShellProps) {
                   className="h-6 w-6 rounded flex items-center justify-center"
                   style={{ backgroundColor: sub.color }}
                 >
-                  <span className="text-white text-xs font-bold">{sub.shortName.charAt(0)}</span>
+                  <span className="text-xs font-bold" style={{ color: sub.ink }}>{sub.shortName.charAt(0)}</span>
                 </div>
                 <span className="flex-1">{sub.name}</span>
                 {currentSubsidiary?.id === sub.id && (

@@ -41,14 +41,15 @@ import { KPI, BurnMeter, SectionH, Pill, type RagTone } from '@/shared/component
 import { formatMinor } from '@/modules/account-management/utils/money';
 import { MyTasksCard } from '../components/MyTasksCard';
 
-// Brand metadata — mirrors the Phase 1 [data-brand] palette.
-const BRAND_META: Record<string, { name: string; short: string; accent: string }> = {
-  'zeus-group':      { name: 'Zeus Group',      short: 'ZG', accent: '#0a1f4a' },
-  'zeus-the-agency': { name: 'Zeus The Agency', short: 'ZA', accent: '#f5d900' },
-  'zeus-digital':    { name: 'Zeus Digital',    short: 'ZD', accent: '#00c5e5' },
-  labyrinth:         { name: 'Labyrinth',       short: 'LB', accent: '#2f9d5c' },
-  'odd-gorilla':     { name: 'Odd Gorilla',     short: 'OG', accent: '#e65b66' },
-  'house-of-zeus':   { name: 'House of Zeus',   short: 'HZ', accent: '#6fa823' },
+// Brand metadata — mirrors the [data-brand] palette (UI Refresh v3: light
+// sub-brand accents + per-brand `ink` for text/icons rendered ON the accent).
+const BRAND_META: Record<string, { name: string; short: string; accent: string; ink: string }> = {
+  'zeus-group':      { name: 'Zeus Group',      short: 'ZG', accent: '#0a1f4a', ink: '#ffffff' },
+  'zeus-the-agency': { name: 'Zeus The Agency', short: 'ZA', accent: '#f5d900', ink: '#0a1f4a' },
+  'zeus-digital':    { name: 'Zeus Digital',    short: 'ZD', accent: '#00c5e5', ink: '#0a1f4a' },
+  labyrinth:         { name: 'Labyrinth',       short: 'LB', accent: '#c8f0d6', ink: '#0a1f4a' },
+  'odd-gorilla':     { name: 'Odd Gorilla',     short: 'OG', accent: '#ffb0b8', ink: '#0a1f4a' },
+  'house-of-zeus':   { name: 'House of Zeus',   short: 'HZ', accent: '#c8ff3c', ink: '#0a1f4a' },
 };
 const DELIVERY_BRANDS = ['zeus-the-agency', 'zeus-digital', 'labyrinth', 'odd-gorilla', 'house-of-zeus'];
 
@@ -174,7 +175,7 @@ function ParentDashboard({ today }: { today: string }) {
           return (
             <div key={p.id} className="card card-pad is-hoverable" style={{ position: 'relative', overflow: 'hidden', borderTop: `3px solid ${b.accent}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span style={{ width: 22, height: 22, borderRadius: 5, background: b.accent, color: ['zeus-the-agency', 'zeus-digital'].includes(p.id) ? '#0a1f4a' : '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 10 }}>{b.short}</span>
+                <span style={{ width: 22, height: 22, borderRadius: 5, background: b.accent, color: b.ink, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 10 }}>{b.short}</span>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>{b.name}</div>
                 {isConflictIsolated(p.id as SubsidiaryId) && (
                   <span style={{ fontSize: 9, padding: '1px 5px', borderRadius: 100, background: 'var(--rag-amber-soft)', color: 'var(--rag-amber)', marginLeft: 'auto', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Isolated</span>

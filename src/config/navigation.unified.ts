@@ -46,6 +46,14 @@ export interface SubsidiaryConfig {
   name: string;
   shortName: string;
   color: string;
+  /**
+   * Ink — the foreground colour for text/icons/initials rendered directly
+   * ON the `color` fill. UI Refresh v3: every sub-brand accent is a LIGHT
+   * colour, so this is navy (`#0A1F4A`) for sub-brands and white for the
+   * parent. Drive on-accent foreground from this, never from a hard-coded
+   * white or a brand-id special-case (mint/pink/lime would be unreadable).
+   */
+  ink: string;
   icon: string;
   defaultPath: string;
   navigation: NavItem[];
@@ -447,6 +455,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     name: 'Zeus The Agency',
     shortName: 'Zeus',
     color: '#F5D900',
+    ink: '#0A1F4A',
     icon: 'Sparkles',
     defaultPath: '/',
     navigation: ZEUS_AGENCY_NAVIGATION,
@@ -456,6 +465,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     name: 'Zeus Digital',
     shortName: 'ZD',
     color: '#00C5E5',
+    ink: '#0A1F4A',
     icon: 'Zap',
     defaultPath: '/',
     navigation: ZEUS_DIGITAL_NAVIGATION,
@@ -465,6 +475,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     name: 'Labyrinth Audio & Visual',
     shortName: 'Labyrinth',
     color: '#C8F0D6',
+    ink: '#0A1F4A',
     icon: 'Music',
     defaultPath: '/',
     navigation: LABYRINTH_NAVIGATION,
@@ -474,6 +485,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     name: 'Odd Gorilla',
     shortName: 'Odd Gorilla',
     color: '#FFB0B8',
+    ink: '#0A1F4A',
     icon: 'PawPrint',
     defaultPath: '/',
     navigation: ODD_GORILLA_NAVIGATION,
@@ -483,6 +495,7 @@ export const SUBSIDIARIES: SubsidiaryConfig[] = [
     name: 'House of Zeus',
     shortName: 'HoZ',
     color: '#C8FF3C',
+    ink: '#0A1F4A',
     icon: 'Home',
     defaultPath: '/',
     navigation: HOUSE_OF_ZEUS_NAVIGATION,

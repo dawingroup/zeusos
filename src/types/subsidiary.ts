@@ -13,6 +13,13 @@ export interface Subsidiary {
   shortName: string;
   logo?: string;
   color: string;
+  /**
+   * Ink — foreground for text/icons/initials rendered ON the `color` fill.
+   * UI Refresh v3: sub-brand accents are LIGHT, so this is navy (`#0A1F4A`)
+   * for sub-brands, white for the parent. Consume this instead of a
+   * hard-coded `text-white` (which is unreadable on mint/pink/lime/yellow).
+   */
+  ink: string;
   description: string;
   modules: SubsidiaryModule[];
   status: 'active' | 'inactive' | 'coming-soon';
@@ -92,7 +99,8 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     id: 'zeus-group',
     name: 'Zeus Group',
     shortName: 'Group',
-    color: '#872E5C',
+    color: '#0A1F4A',
+    ink: '#FFFFFF',
     description:
       'Parent organisation — commercial surface (Account Management, Pricing & Quotes, Billing & Inter-Co, Conflict Firewall) lives here.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
@@ -105,6 +113,7 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     name: 'Zeus The Agency',
     shortName: 'Zeus',
     color: '#F5D900',
+    ink: '#0A1F4A',
     description:
       'Flagship 360-degree Ugandan advertising agency. Creative, BTL, Digital, PR, Media Buying, and Production strategies.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
@@ -117,6 +126,7 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     name: 'Zeus Digital',
     shortName: 'ZD',
     color: '#00C5E5',
+    ink: '#0A1F4A',
     description:
       'Digital-focused offshoot delivering content, SEM/SEO, influencer, media buy, channel, and digital innovation strategy.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
@@ -129,6 +139,7 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     name: 'Labyrinth Audio & Visual Content Studio',
     shortName: 'Labyrinth',
     color: '#C8F0D6',
+    ink: '#0A1F4A',
     description:
       'Audio and visual content creation: sound production, photography, podcast, product photography, film, and documentary production.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
@@ -141,6 +152,7 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     name: 'Odd Gorilla',
     shortName: 'Odd Gorilla',
     color: '#FFB0B8',
+    ink: '#0A1F4A',
     description:
       'Fully integrated conflict agency — serves clients in categories already handled by Zeus The Agency. 360-degree marketing and communications services.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
@@ -153,6 +165,7 @@ export const DEFAULT_SUBSIDIARIES: Subsidiary[] = [
     name: 'House of Zeus',
     shortName: 'HoZ',
     color: '#C8FF3C',
+    ink: '#0A1F4A',
     description:
       'Kenya market expansion. 360-degree marketing and communications services for the Kenyan market.',
     modules: ZEUS_DEFAULT_AGENCY_MODULES,
