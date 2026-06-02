@@ -53,6 +53,7 @@ import {
   AGENCY_NAVIGATION,
   COMMERCIAL_NAVIGATION,
   CORPORATE_NAVIGATION,
+  UTILITY_NAVIGATION,
   ADMIN_NAVIGATION,
   filterNavigationByAccess,
   type NavItem,
@@ -617,72 +618,81 @@ export function AppShell({ children }: AppShellProps) {
       <SearchIndexMount />
       <OfflineBanner />
 
-      {/* Desktop Header - Group nav pills + cluster (Phase 2). On lg+,
-          left-padded to start at the sidebar's right edge (sidebar is
-          fixed-width: 16 collapsed, 60 expanded). */}
+      {/* Desktop Header — UI Refresh v3 two-row layout (handoff README
+          §"Top bar, two rows"). Row 1: breadcrumb + search + icon cluster.
+          Row 2: corporate service pills. On lg+, left-padded to start at the
+          sidebar's right edge (sidebar: w-16 collapsed, w-60 expanded). */}
       <header
         className={cn(
-          'hidden lg:flex sticky top-0 z-40 h-14 items-center gap-3 pr-6 transition-shadow duration-200',
+          'hidden lg:flex sticky top-0 z-40 flex-col transition-shadow duration-200',
           'border-b border-[var(--border-default)] bg-[var(--bg-surface)]',
-          // Sidebar widths: w-60 (15rem) expanded · w-16 (4rem) collapsed.
-          // Add the same 1.5rem (px-6 equivalent) gutter on top so content
-          // doesn't kiss the sidebar's right edge.
           sidebarExpanded ? 'lg:pl-[16.5rem]' : 'lg:pl-[5.5rem]',
           isScrolled && 'shadow-[var(--shadow-sm)]'
         )}
       >
-        {/* UI refresh — shell breadcrumb (root › active surface) */}
-        <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
-          <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
-          {activeNavLabel && (
-            <>
-              <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
-              <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
-            </>
-          )}
+        {/* Row 1 — breadcrumb · search · actions */}
+        <div className="flex h-14 items-center gap-3 pr-6">
+          {/* UI refresh — shell breadcrumb (root › active surface) */}
+          <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
+            <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
+            {activeNavLabel && (
+              <>
+                <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
+                <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
+              </>
+            )}
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Command Palette in header */}
+          <CommandPalette
+            items={commandItems}
+            recentItems={recentItems}
+            favoriteItems={favoriteItems}
+            onAddFavorite={addFavorite}
+            onRemoveFavorite={removeFavorite}
+            organizationId={(user as { organizationId?: string } | null)?.organizationId || 'default'}
+            subsidiaryId={currentSubsidiary?.id}
+          />
+
+          {/* Global Task Button (My Tasks quick-access) */}
+          <GlobalTaskButton />
+
+          {/* Messaging — internal team chat (/comms). Always available; WhatsApp
+              folds into the same surface once enabled. (/whatsapp is not routed.) */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/comms')}
+            className="relative h-8 w-8"
+            aria-label="Messages"
+          >
+            <MessageSquare className="h-4 w-4" />
+            {totalMessagingUnread > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
+                {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
+              </span>
+            )}
+          </Button>
         </div>
 
-        <GroupNavPills items={corporateNavItems} />
-
-        <div className="flex-1" />
-
-        {/* Command Palette in header */}
-        <CommandPalette
-          items={commandItems}
-          recentItems={recentItems}
-          favoriteItems={favoriteItems}
-          onAddFavorite={addFavorite}
-          onRemoveFavorite={removeFavorite}
-          organizationId={(user as { organizationId?: string } | null)?.organizationId || 'default'}
-          subsidiaryId={currentSubsidiary?.id}
-        />
-
-        {/* AI Intelligence Menu */}
-        <AIIntelligenceMenu />
-
-        {/* Global Task Button (My Tasks quick-access) */}
-        <GlobalTaskButton />
-
-        {/* Messaging — internal team chat (/comms). Always available; WhatsApp
-            folds into the same surface once enabled. (/whatsapp is not routed.) */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/comms')}
-          className="relative h-8 w-8"
-          aria-label="Messages"
-        >
-          <MessageSquare className="h-4 w-4" />
-          {totalMessagingUnread > 0 && (
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-              {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-            </span>
+        {/* Row 2 — corporate service pills: "CORPORATE" label · module pills ·
+            divider · AI Intelligence · (parent only) right-aligned Admin.
+            Org switcher + account menu live in the sidebar (chip + footer). */}
+        <div className="flex items-center gap-1 pr-6 pb-2 overflow-x-auto">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--fg-quaternary)] mr-1.5 flex-none">
+            Corporate
+          </span>
+          <GroupNavPills items={corporateNavItems} />
+          <span className="self-stretch w-px bg-[var(--border-subtle)] mx-1.5 my-1" />
+          <GroupNavPills items={UTILITY_NAVIGATION} />
+          {isParentRoot && adminNavItems.length > 0 && (
+            <div className="ml-auto flex-none">
+              <GroupNavPills items={ADMIN_NAVIGATION} />
+            </div>
           )}
-        </Button>
-
-        {/* Org switcher + account menu relocated into the sidebar (chip +
-            footer card) in the UI refresh. Mobile keeps its own header
-            dropdowns below. */}
+        </div>
       </header>
 
       {/* Mobile Header */}
