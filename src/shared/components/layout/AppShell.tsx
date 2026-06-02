@@ -48,16 +48,18 @@ import { CommandPalette } from '@/core/components/navigation/CommandPalette';
 import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
 import { GlobalTaskButton } from '@/modules/intelligence-layer/components/GlobalTaskButton';
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
+import { ActionCenter } from '@/modules/intelligence-layer/components/ActionCenter';
 import {
   getAllCommandItems,
   AGENCY_NAVIGATION,
   COMMERCIAL_NAVIGATION,
   CORPORATE_NAVIGATION,
+  UTILITY_NAVIGATION,
   ADMIN_NAVIGATION,
   filterNavigationByAccess,
   type NavItem,
 } from '@/config/navigation.unified';
-import { adaptManifestToLegacyNavItem, resolveNav } from '@/core/navigation/manifest';
+import { adaptManifestToLegacyNavItem, resolveNav, type NavStatus } from '@/core/navigation/manifest';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import { isParentOrgPrincipal as resolveIsParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { SubsidiaryId } from '@/core/settings/types';
@@ -148,7 +150,7 @@ export function AppShell({ children }: AppShellProps) {
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
-  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction } = useUIStore();
+  const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction, navScope, setNavScope } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
   const { 
     favoriteItems, 
@@ -307,6 +309,20 @@ export function AppShell({ children }: AppShellProps) {
     user?.email,
     dawinUser,
   ]);
+
+  // UI Refresh v3 — roadmap nav scope. 'deployed' hides `planned` items;
+  // 'roadmap' (default) keeps them (rendered dimmed in renderNavItem). The
+  // status field rides through the manifest adapter onto each NavItem.
+  const scopedNavItems = useMemo(() => {
+    if (navScope === 'roadmap') return mainNavItems;
+    return mainNavItems.filter(
+      (it) => ((it as { status?: NavStatus }).status ?? 'live') === 'live',
+    );
+  }, [mainNavItems, navScope]);
+  const hasPlanned = useMemo(
+    () => mainNavItems.some((it) => (it as { status?: NavStatus }).status === 'planned'),
+    [mainNavItems],
+  );
 
   // Corporate modules filtered by access (header pills)
   const corporateNavItems = useMemo(() => {
@@ -487,11 +503,14 @@ export function AppShell({ children }: AppShellProps) {
     // Check if any child is active (for parent highlight in collapsed mode)
     const hasActiveChild = item.children?.some((child: NavItem) => isActive(child.href));
     const isHighlighted = active || hasActiveChild;
+    // UI Refresh v3 — roadmap status. `planned` items render dimmed with a
+    // hollow-dot marker (only reachable when navScope === 'roadmap').
+    const planned = (item as { status?: NavStatus }).status === 'planned';
 
     // Collapsed rail mode (desktop only): show icon-only with popover flyout
     if (!sidebarExpanded) {
       return (
-        <div key={item.id}>
+        <div key={item.id} style={planned ? { opacity: 0.8 } : undefined}>
           <NavItemPopover item={item}>
             <Link
               to={item.href}
@@ -515,7 +534,7 @@ export function AppShell({ children }: AppShellProps) {
     }
 
     return (
-      <div key={item.id}>
+      <div key={item.id} style={planned ? { opacity: 0.8 } : undefined}>
         <div
           className={cn(
             'group relative flex items-center gap-3 px-2.5 h-8 rounded-md text-[13px] transition-colors cursor-pointer select-none',
@@ -541,8 +560,15 @@ export function AppShell({ children }: AppShellProps) {
           >
             {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0" />}
             <span className="truncate">{item.label}</span>
+            {planned && (
+              <span
+                className="ml-auto h-1.5 w-1.5 rounded-full border border-[var(--fg-on-dark-muted)] flex-none"
+                title="Planned — not yet deployed"
+                aria-label="Planned"
+              />
+            )}
             {item.badge && (
-              <span className="ml-auto text-[10px] bg-[var(--bg-sidebar-hover)] text-[var(--fg-on-dark)] px-1.5 py-0.5 rounded">
+              <span className={cn('text-[10px] bg-[var(--bg-sidebar-hover)] text-[var(--fg-on-dark)] px-1.5 py-0.5 rounded', !planned && 'ml-auto')}>
                 {item.badge}
               </span>
             )}
@@ -593,72 +619,81 @@ export function AppShell({ children }: AppShellProps) {
       <SearchIndexMount />
       <OfflineBanner />
 
-      {/* Desktop Header - Group nav pills + cluster (Phase 2). On lg+,
-          left-padded to start at the sidebar's right edge (sidebar is
-          fixed-width: 16 collapsed, 60 expanded). */}
+      {/* Desktop Header — UI Refresh v3 two-row layout (handoff README
+          §"Top bar, two rows"). Row 1: breadcrumb + search + icon cluster.
+          Row 2: corporate service pills. On lg+, left-padded to start at the
+          sidebar's right edge (sidebar: w-16 collapsed, w-60 expanded). */}
       <header
         className={cn(
-          'hidden lg:flex sticky top-0 z-40 h-14 items-center gap-3 pr-6 transition-shadow duration-200',
+          'hidden lg:flex sticky top-0 z-40 flex-col transition-shadow duration-200',
           'border-b border-[var(--border-default)] bg-[var(--bg-surface)]',
-          // Sidebar widths: w-60 (15rem) expanded · w-16 (4rem) collapsed.
-          // Add the same 1.5rem (px-6 equivalent) gutter on top so content
-          // doesn't kiss the sidebar's right edge.
           sidebarExpanded ? 'lg:pl-[16.5rem]' : 'lg:pl-[5.5rem]',
           isScrolled && 'shadow-[var(--shadow-sm)]'
         )}
       >
-        {/* UI refresh — shell breadcrumb (root › active surface) */}
-        <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
-          <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
-          {activeNavLabel && (
-            <>
-              <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
-              <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
-            </>
-          )}
+        {/* Row 1 — breadcrumb · search · actions */}
+        <div className="flex h-14 items-center gap-3 pr-6">
+          {/* UI refresh — shell breadcrumb (root › active surface) */}
+          <div className="flex items-center gap-1.5 text-[13px] shrink-0 min-w-0 max-w-[280px]">
+            <span className="text-[var(--fg-tertiary)] truncate">{breadcrumbRoot}</span>
+            {activeNavLabel && (
+              <>
+                <ChevronRight className="h-3 w-3 text-[var(--fg-quaternary)] flex-none" />
+                <span className="font-semibold text-[var(--fg-primary)] truncate">{activeNavLabel}</span>
+              </>
+            )}
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Command Palette in header */}
+          <CommandPalette
+            items={commandItems}
+            recentItems={recentItems}
+            favoriteItems={favoriteItems}
+            onAddFavorite={addFavorite}
+            onRemoveFavorite={removeFavorite}
+            organizationId={(user as { organizationId?: string } | null)?.organizationId || 'default'}
+            subsidiaryId={currentSubsidiary?.id}
+          />
+
+          {/* Global Task Button (My Tasks quick-access) */}
+          <GlobalTaskButton />
+
+          {/* Messaging — internal team chat (/comms). Always available; WhatsApp
+              folds into the same surface once enabled. (/whatsapp is not routed.) */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate('/comms')}
+            className="relative h-8 w-8"
+            aria-label="Messages"
+          >
+            <MessageSquare className="h-4 w-4" />
+            {totalMessagingUnread > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
+                {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
+              </span>
+            )}
+          </Button>
         </div>
 
-        <GroupNavPills items={corporateNavItems} />
-
-        <div className="flex-1" />
-
-        {/* Command Palette in header */}
-        <CommandPalette
-          items={commandItems}
-          recentItems={recentItems}
-          favoriteItems={favoriteItems}
-          onAddFavorite={addFavorite}
-          onRemoveFavorite={removeFavorite}
-          organizationId={(user as { organizationId?: string } | null)?.organizationId || 'default'}
-          subsidiaryId={currentSubsidiary?.id}
-        />
-
-        {/* AI Intelligence Menu */}
-        <AIIntelligenceMenu />
-
-        {/* Global Task Button (My Tasks quick-access) */}
-        <GlobalTaskButton />
-
-        {/* Messaging — internal team chat (/comms). Always available; WhatsApp
-            folds into the same surface once enabled. (/whatsapp is not routed.) */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/comms')}
-          className="relative h-8 w-8"
-          aria-label="Messages"
-        >
-          <MessageSquare className="h-4 w-4" />
-          {totalMessagingUnread > 0 && (
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-              {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-            </span>
+        {/* Row 2 — corporate service pills: "CORPORATE" label · module pills ·
+            divider · AI Intelligence · (parent only) right-aligned Admin.
+            Org switcher + account menu live in the sidebar (chip + footer). */}
+        <div className="flex items-center gap-1 pr-6 pb-2 overflow-x-auto">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--fg-quaternary)] mr-1.5 flex-none">
+            Corporate
+          </span>
+          <GroupNavPills items={corporateNavItems} />
+          <span className="self-stretch w-px bg-[var(--border-subtle)] mx-1.5 my-1" />
+          <GroupNavPills items={UTILITY_NAVIGATION} />
+          {isParentRoot && adminNavItems.length > 0 && (
+            <div className="ml-auto flex-none">
+              <GroupNavPills items={ADMIN_NAVIGATION} />
+            </div>
           )}
-        </Button>
-
-        {/* Org switcher + account menu relocated into the sidebar (chip +
-            footer card) in the UI refresh. Mobile keeps its own header
-            dropdowns below. */}
+        </div>
       </header>
 
       {/* Mobile Header */}
@@ -760,7 +795,7 @@ export function AppShell({ children }: AppShellProps) {
                 className="h-6 w-6 rounded flex items-center justify-center"
                 style={{ backgroundColor: subsidiaryColor }}
               >
-                <span className="text-white text-xs font-bold">{subsidiaryName.charAt(0)}</span>
+                <span className="text-xs font-bold" style={{ color: currentSubsidiary?.ink ?? '#fff' }}>{subsidiaryName.charAt(0)}</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -782,7 +817,7 @@ export function AppShell({ children }: AppShellProps) {
                   className="h-6 w-6 rounded flex items-center justify-center"
                   style={{ backgroundColor: sub.color }}
                 >
-                  <span className="text-white text-xs font-bold">{sub.shortName.charAt(0)}</span>
+                  <span className="text-xs font-bold" style={{ color: sub.ink }}>{sub.shortName.charAt(0)}</span>
                 </div>
                 <span className="flex-1">{sub.name}</span>
                 {currentSubsidiary?.id === sub.id && (
@@ -957,7 +992,7 @@ export function AppShell({ children }: AppShellProps) {
                   a flat icon list. */}
               {sidebarExpanded
                 ? SECTION_ORDER.map((section) => {
-                    const items = mainNavItems.filter(
+                    const items = scopedNavItems.filter(
                       (it: NavItem) => (SECTION_FOR_MODULE[it.id] || 'work') === section
                     );
                     if (items.length === 0) return null;
@@ -972,7 +1007,31 @@ export function AppShell({ children }: AppShellProps) {
                       </div>
                     );
                   })
-                : <div className="space-y-1">{mainNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
+                : <div className="space-y-1">{scopedNavItems.map((item: NavItem) => renderNavItem(item))}</div>}
+
+              {/* UI Refresh v3 — roadmap legend + scope toggle. Only shown
+                  (expanded) when the resolved nav actually carries a planned
+                  item, so deployed-only orgs see no clutter. */}
+              {sidebarExpanded && hasPlanned && (
+                <div className="mt-3 px-3 pt-3 border-t border-[var(--border-on-dark)]">
+                  <div className="flex items-center gap-3 text-[10px] text-[var(--fg-on-dark-muted)]">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--fg-on-dark)]" /> Live
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full border border-[var(--fg-on-dark-muted)]" /> Planned
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setNavScope(navScope === 'roadmap' ? 'deployed' : 'roadmap')}
+                      className="ml-auto text-[10px] text-[var(--fg-on-dark-muted)] hover:text-[var(--fg-on-dark)] transition-colors"
+                      title={navScope === 'roadmap' ? 'Hide planned modules' : 'Show full roadmap'}
+                    >
+                      {navScope === 'roadmap' ? 'Deployed only' : 'Full roadmap'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
 
@@ -1063,6 +1122,13 @@ export function AppShell({ children }: AppShellProps) {
         >
           {children}
         </main>
+      </div>
+
+      {/* UI Refresh v3 — Action Center: floating "needs a person now" panel,
+          wired to the real AI task inbox. Renders nothing when the inbox is
+          empty, so it never adds chrome. Desktop only (lg+). */}
+      <div className="hidden lg:block">
+        <ActionCenter />
       </div>
 
       {/* Global AI Assistant FAB */}

@@ -96,16 +96,16 @@ export default function IntelligenceLayout() {
                   key={tab.id}
                   onClick={() => navigate(tab.path)}
                   className={`
-                    flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm
+                    flex items-center gap-2 py-3.5 px-1 border-b-2 text-[13px]
                     transition-colors
                     ${
                       active
-                        ? 'border-[var(--rag-blue)] text-[var(--rag-blue)]'
-                        : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-[var(--border-default)]'
+                        ? 'border-[var(--zeus-red)] text-[var(--fg-primary)] font-semibold'
+                        : 'border-transparent text-[var(--fg-tertiary)] font-medium hover:text-[var(--fg-primary)]'
                     }
                   `}
                 >
-                  <Icon className={`w-5 h-5 ${active ? 'text-[var(--rag-blue)]' : 'text-[var(--fg-tertiary)]'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-[var(--fg-primary)]' : 'text-[var(--fg-tertiary)]'}`} />
                   {tab.label}
                 </button>
               );

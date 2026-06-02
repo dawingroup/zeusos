@@ -7,6 +7,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type Density = 'dense' | 'balanced' | 'airy';
+/** Sidebar roadmap scope — 'roadmap' shows the full ideal IA (incl. planned
+ *  items, dimmed); 'deployed' hides planned items. UI Refresh v3. */
+export type NavScope = 'roadmap' | 'deployed';
 /**
  * Accent options. Canonical Zeus accents (navy/red + the five sub-brand
  * keys) map 1:1 to the `[data-accent]` CSS blocks in `src/index.css`.
@@ -41,6 +44,7 @@ interface UIState {
   accent: Accent;
   direction: Direction;
   sidebarStyle: SidebarStyle;
+  navScope: NavScope;
   sparklinesEnabled: boolean;
   aiPanelEnabled: boolean;
   /** True once we've applied org-level platform defaults at least once. */
@@ -61,6 +65,7 @@ interface UIState {
   setAccent: (accent: Accent) => void;
   setDirection: (direction: Direction) => void;
   setSidebarStyle: (style: SidebarStyle) => void;
+  setNavScope: (scope: NavScope) => void;
   setSparklinesEnabled: (enabled: boolean) => void;
   setAiPanelEnabled: (enabled: boolean) => void;
   /** Apply platform defaults without marking as overrides. No-op for keys
@@ -102,6 +107,7 @@ export const useUIStore = create<UIState>()(
       accent: 'zeus-navy',
       direction: 'ambitious',
       sidebarStyle: 'dark',
+      navScope: 'roadmap',
       sparklinesEnabled: true,
       aiPanelEnabled: true,
       appliedPlatformDefaults: false,
@@ -137,6 +143,8 @@ export const useUIStore = create<UIState>()(
       setDirection: (direction) => set({ direction }),
 
       setSidebarStyle: (sidebarStyle) => set({ sidebarStyle }),
+
+      setNavScope: (navScope) => set({ navScope }),
 
       setSparklinesEnabled: (sparklinesEnabled) => set({ sparklinesEnabled }),
 
@@ -188,6 +196,7 @@ export const useUIStore = create<UIState>()(
         accent: state.accent,
         direction: state.direction,
         sidebarStyle: state.sidebarStyle,
+        navScope: state.navScope,
         sparklinesEnabled: state.sparklinesEnabled,
         aiPanelEnabled: state.aiPanelEnabled,
         appliedPlatformDefaults: state.appliedPlatformDefaults,

@@ -26,7 +26,19 @@ import {
 import type { InternalWorkOrder } from '@/modules/assignment/types/iwo.types';
 import type { HandoffPacket } from '@/modules/assignment/types/handoff-packet.types';
 import { useAuth } from '@/shared/hooks';
+import { PageHero } from '@/shared/components/refresh';
 import { formatMinor } from '../utils/money';
+
+// Brand accents (UI Refresh v3 — light accents). Drives the per-card
+// brand-edge marker on each review row.
+const BRAND_ACCENT: Record<string, string> = {
+  'zeus-group': '#0a1f4a',
+  'zeus-the-agency': '#f5d900',
+  'zeus-digital': '#00c5e5',
+  labyrinth: '#c8f0d6',
+  'odd-gorilla': '#ffb0b8',
+  'house-of-zeus': '#c8ff3c',
+};
 
 interface ReviewRow {
   iwo: InternalWorkOrder;
@@ -95,22 +107,39 @@ export default function DeliverableReviewQueuePage() {
     }
   };
 
-  return (
-    <div className="space-y-6 p-6">
-      <header>
-        <h1 className="text-xl font-semibold">Deliverable review</h1>
-        <p className="text-sm text-muted-foreground">
-          DELIVERED Internal Work Orders awaiting AM acceptance. Tick the
-          acceptance criteria as you verify them; when all required
-          criteria are signed, "Accept internal" unlocks. Anything failing
-          → "Request revision" bounces it back to delivery.
-        </p>
-      </header>
+  const awaiting = rows.filter(({ packet }) => {
+    const criteria = packet?.acceptanceCriteria || [];
+    return criteria.some((c) => c.required && !c.signedByUserId) || criteria.length === 0;
+  }).length;
+  const ready = rows.length - awaiting;
 
-      {loading && <p className="text-sm text-muted-foreground">Loading review queue…</p>}
+  return (
+    <div style={{ padding: 'var(--pad-page)' }} className="space-y-6">
+      <PageHero
+        eyebrow="Account Management"
+        title="Review Queue"
+        body="DELIVERED Internal Work Orders awaiting AM sign-off before they go to the client. Tick the acceptance criteria as you verify them; when all required criteria are signed, “Accept internal” unlocks. Anything failing → “Request revision” bounces it back to delivery."
+      />
+
+      {!loading && rows.length > 0 && (
+        <div style={{ display: 'flex', gap: 12 }}>
+          {[
+            { label: 'Awaiting sign-off', value: awaiting, tone: 'var(--rag-amber)' },
+            { label: 'Ready to accept', value: ready, tone: 'var(--rag-green)' },
+            { label: 'In queue', value: rows.length, tone: 'var(--fg-primary)' },
+          ].map((s) => (
+            <div key={s.label} className="card card-pad" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span className="display tabular" style={{ fontSize: 26, color: s.tone }}>{s.value}</span>
+              <span className="eyebrow" style={{ fontSize: 10.5 }}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {loading && <p style={{ fontSize: 13, color: 'var(--fg-tertiary)' }}>Loading review queue…</p>}
 
       {!loading && rows.length === 0 && (
-        <div className="rounded border border-dashed p-6 text-center text-sm text-muted-foreground">
+        <div className="card card-pad" style={{ borderStyle: 'dashed', textAlign: 'center', color: 'var(--fg-tertiary)', fontSize: 13 }}>
           No deliverables awaiting review. As subsidiaries submit deliverables, IWOs will appear here.
         </div>
       )}
@@ -119,11 +148,12 @@ export default function DeliverableReviewQueuePage() {
         const criteria = packet?.acceptanceCriteria || [];
         const unsignedRequired = criteria.filter(c => c.required && !c.signedByUserId);
         const canAccept = unsignedRequired.length === 0 && criteria.length > 0;
+        const accent = BRAND_ACCENT[iwo.subsidiaryOrgId] ?? '#0a1f4a';
         return (
-          <article key={iwo.id} className="rounded border bg-card p-4 shadow-sm">
+          <article key={iwo.id} className="card card-pad brand-edge" style={{ ['--brand-accent' as string]: accent }}>
             <header className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <Link to={`/master-jobs/${iwo.masterJobId}`} className="font-mono text-xs text-[var(--rag-blue)] hover:underline">{iwo.code}</Link>
+                <Link to={`/master-jobs/${iwo.masterJobId}`} className="mono hover:underline" style={{ fontSize: 12, color: 'var(--rag-blue)' }}>{iwo.code}</Link>
                 <div className="text-sm font-medium">{iwo.subsidiaryOrgId}</div>
                 <div className="text-xs text-muted-foreground">
                   Budget {formatMinor(iwo.budgetMinor, iwo.currency)} ·
@@ -134,7 +164,7 @@ export default function DeliverableReviewQueuePage() {
                 <button
                   onClick={() => handleRequestRevision(iwo.id, unsignedRequired.map(c => c.id))}
                   disabled={busyIwo === iwo.id || unsignedRequired.length === 0}
-                  className="rounded border border-[var(--rag-amber)] px-3 py-1.5 text-xs font-medium text-[var(--rag-amber)] hover:bg-[var(--rag-amber-soft)] disabled:opacity-50"
+                  className="btn btn-reject"
                   title={unsignedRequired.length === 0 ? 'Sign criteria first to use this' : ''}
                 >
                   Request revision
@@ -142,7 +172,7 @@ export default function DeliverableReviewQueuePage() {
                 <button
                   onClick={() => handleAcceptInternal(iwo.id)}
                   disabled={busyIwo === iwo.id || !canAccept}
-                  className="rounded bg-[var(--rag-green)] px-3 py-1.5 text-xs font-medium text-white hover:bg-[var(--rag-green)] disabled:opacity-50"
+                  className="btn btn-accept"
                   title={!canAccept ? 'All required criteria must be signed' : ''}
                 >
                   Accept internal

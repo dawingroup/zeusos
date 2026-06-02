@@ -17,8 +17,30 @@ import {
   isConflictIsolated,
   adaptManifestToLegacyNavItem,
   MANIFEST_TO_LEGACY_ID,
+  navStatusOf,
+  applyNavScope,
   type NavItem,
 } from '../manifest';
+
+describe('roadmap nav status (UI Refresh v3)', () => {
+  it('navStatusOf defaults to live when unset', () => {
+    expect(navStatusOf({})).toBe('live');
+    expect(navStatusOf({ status: 'planned' })).toBe('planned');
+    expect(navStatusOf({ status: 'live' })).toBe('live');
+  });
+
+  it('applyNavScope("deployed") hides planned items; "roadmap" keeps all', () => {
+    const items = [
+      { status: 'live' as const },
+      { status: 'planned' as const },
+      {} /* defaults live */,
+    ];
+    expect(applyNavScope(items, 'roadmap')).toHaveLength(3);
+    const deployed = applyNavScope(items, 'deployed');
+    expect(deployed).toHaveLength(2);
+    expect(deployed.every((i) => navStatusOf(i) === 'live')).toBe(true);
+  });
+});
 
 function moduleIds(items: { moduleId: string }[]): string[] {
   return items.map((i) => i.moduleId);
@@ -155,6 +177,7 @@ describe('adaptManifestToLegacyNavItem', () => {
     href: string;
     icon: string;
     children?: Legacy[];
+    status?: 'live' | 'planned';
   }
 
   it('reuses the legacy entry when one exists, overlaying label + routePath', () => {
@@ -197,6 +220,9 @@ describe('adaptManifestToLegacyNavItem', () => {
       label: 'Traffic',
       href: '/traffic',
       icon: 'Workflow',
+      // UI Refresh v3 — the adapter now stamps the roadmap status (default
+      // 'live') onto every synthesised item so the sidebar can dim planned ones.
+      status: 'live',
     });
   });
 

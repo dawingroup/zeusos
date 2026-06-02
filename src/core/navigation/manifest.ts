@@ -66,6 +66,37 @@ export interface NavItem {
   parentOrgOnly?: boolean;
   /** Show only when `OrganizationKind === 'SUBSIDIARY'`. */
   subsidiaryOnly?: boolean;
+  /**
+   * Roadmap status (UI Refresh v3 — handoff README §"roadmap model").
+   * `live` (default) = the module is deployed and routed today.
+   * `planned` = part of the ideal IA but not yet shipped; rendered dimmed
+   * with a hollow-dot marker and hidden when `navScope === 'deployed'`.
+   * Drive status off this field, never a hard-coded list — promoting a
+   * module to production is then a one-word change. Omitted ⇒ `live`.
+   */
+  status?: NavStatus;
+}
+
+export type NavStatus = 'live' | 'planned';
+
+/** A NavItem's effective status — defaults to `live` when unset. */
+export function navStatusOf(item: Pick<NavItem, 'status'>): NavStatus {
+  return item.status ?? 'live';
+}
+
+/** User preference: show the full roadmap (all items) or deployed-only. */
+export type NavScope = 'roadmap' | 'deployed';
+
+/**
+ * Filter a resolved nav list by scope. `deployed` hides `planned` items;
+ * `roadmap` keeps everything. Pure — callers apply it after resolveNav.
+ */
+export function applyNavScope<T extends Pick<NavItem, 'status'>>(
+  items: T[],
+  scope: NavScope,
+): T[] {
+  if (scope === 'roadmap') return items;
+  return items.filter((it) => navStatusOf(it) === 'live');
 }
 
 // ----------------------------------------------------------------------------
@@ -357,6 +388,7 @@ interface LegacyNavItemLike {
   badge?: number | string;
   keywords?: string[];
   shortcut?: string;
+  status?: NavStatus;
 }
 
 /**
@@ -391,14 +423,18 @@ export function adaptManifestToLegacyNavItem<T extends LegacyNavItemLike>(
 ): T {
   const legacyId = MANIFEST_TO_LEGACY_ID[item.moduleId] ?? item.moduleId;
   const legacy = legacyLookup.get(legacyId);
+  // Carry the manifest's roadmap status through the adaptation so the
+  // sidebar can dim `planned` items + honour the navScope filter.
+  const status = navStatusOf(item);
   if (legacy) {
-    return { ...legacy, label: item.label, href: item.routePath };
+    return { ...legacy, label: item.label, href: item.routePath, status };
   }
   return {
     id: item.moduleId,
     label: item.label,
     href: item.routePath,
     icon: item.icon ?? 'Circle',
+    status,
   } as T;
 }
 

@@ -263,12 +263,17 @@
    Drives the sidebar org-chip, "loud" sub-brand
    prominence, and the IWO-row left-edge marker.
    ============================================ */
+/* UI Refresh v3 (handoff README §"sub-brand accents"): every sub-brand
+   accent is now a LIGHT colour, so text/icon/initials rendered ON the
+   accent fill MUST use the brand ink (`--brand-accent-fg`), which is navy
+   for all five sub-brands — white only for the parent. Soft tints are the
+   active-background variant. Mirrors `ink` in the design `data.js`. */
 [data-brand="zeus-group"]      { --brand-accent: #0a1f4a; --brand-accent-soft: #eef1f8; --brand-accent-fg: #ffffff; }
 [data-brand="zeus-the-agency"] { --brand-accent: #f5d900; --brand-accent-soft: #fef9d6; --brand-accent-fg: #0a1f4a; }
 [data-brand="zeus-digital"]    { --brand-accent: #00c5e5; --brand-accent-soft: #d6f6fb; --brand-accent-fg: #0a1f4a; }
-[data-brand="labyrinth"]       { --brand-accent: #2f9d5c; --brand-accent-soft: #e0f4e8; --brand-accent-fg: #ffffff; }
-[data-brand="odd-gorilla"]     { --brand-accent: #e65b66; --brand-accent-soft: #fde0e3; --brand-accent-fg: #ffffff; }
-[data-brand="house-of-zeus"]   { --brand-accent: #6fa823; --brand-accent-soft: #ecf6d6; --brand-accent-fg: #ffffff; }
+[data-brand="labyrinth"]       { --brand-accent: #c8f0d6; --brand-accent-soft: #eafaf0; --brand-accent-fg: #0a1f4a; }
+[data-brand="odd-gorilla"]     { --brand-accent: #ffb0b8; --brand-accent-soft: #ffe5e8; --brand-accent-fg: #0a1f4a; }
+[data-brand="house-of-zeus"]   { --brand-accent: #c8ff3c; --brand-accent-soft: #eeffc9; --brand-accent-fg: #0a1f4a; }
 
 /* ============================================
    Accent variants — Zeus navy is default.
