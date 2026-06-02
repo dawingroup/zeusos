@@ -48,6 +48,7 @@ import { CommandPalette } from '@/core/components/navigation/CommandPalette';
 import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
 import { GlobalTaskButton } from '@/modules/intelligence-layer/components/GlobalTaskButton';
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
+import { ActionCenter } from '@/modules/intelligence-layer/components/ActionCenter';
 import {
   getAllCommandItems,
   AGENCY_NAVIGATION,
@@ -1121,6 +1122,13 @@ export function AppShell({ children }: AppShellProps) {
         >
           {children}
         </main>
+      </div>
+
+      {/* UI Refresh v3 — Action Center: floating "needs a person now" panel,
+          wired to the real AI task inbox. Renders nothing when the inbox is
+          empty, so it never adds chrome. Desktop only (lg+). */}
+      <div className="hidden lg:block">
+        <ActionCenter />
       </div>
 
       {/* Global AI Assistant FAB */}
