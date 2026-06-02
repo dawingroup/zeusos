@@ -8,7 +8,7 @@
  * dispatcher (Cloud Function) is the runtime that actually enforces the gates.
  */
 import { useMemo, useState } from 'react';
-import { Bot, ShieldCheck, ShieldAlert, Sparkles, Loader2, Save } from 'lucide-react';
+import { Bot, ShieldCheck, ShieldAlert, Sparkles, Loader2, Save, Play, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Button } from '@/core/components/ui/button';
 import { Badge } from '@/core/components/ui/badge';
@@ -24,7 +24,7 @@ import { getIconByName } from '@/shared/utils/iconMap';
 import { cn } from '@/shared/lib/utils';
 import { useCurrentDawinUser } from '@/core/settings';
 import { useAgents } from '../../agents/hooks/useAgents';
-import { updateAgentSettings } from '../../agents/services/agentService';
+import { updateAgentSettings, runAgentReasoning, runAgentWatchersNow, type AgentReasonResult } from '../../agents/services/agentService';
 import {
   AGENT_TOOLS,
   AGENT_MODELS,
@@ -82,9 +82,12 @@ export function AgentManagementPanel() {
             action passes the dispatcher's gates and is audited.
           </p>
         </div>
-        {isSeedFallback && (
-          <Badge variant="secondary" className="text-[11px]">Showing seed agents · not yet saved</Badge>
-        )}
+        <div className="flex items-center gap-2">
+          {isSeedFallback && (
+            <Badge variant="secondary" className="text-[11px]">Showing seed agents · not yet saved</Badge>
+          )}
+          {isAdmin && <RunWatchersButton />}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
@@ -136,6 +139,25 @@ function AgentDetail({ agent, canEdit, uid }: { agent: Agent; canEdit: boolean; 
   const [tools, setTools] = useState<string[]>(agent.enabledTools);
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [running, setRunning] = useState(false);
+  const [runResult, setRunResult] = useState<AgentReasonResult | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
+
+  const run = async () => {
+    setRunning(true);
+    setRunError(null);
+    setRunResult(null);
+    try {
+      setRunResult(await runAgentReasoning(agent.id));
+    } catch (e) {
+      const msg = (e as { message?: string })?.message || 'Run failed';
+      setRunError(/ANTHROPIC_API_KEY|NOT_CONFIGURED|not configured/i.test(msg)
+        ? 'Anthropic API key not set. Add it in Settings → API Keys to enable live reasoning.'
+        : msg);
+    } finally {
+      setRunning(false);
+    }
+  };
 
   const dirty =
     status !== agent.status ||
@@ -186,10 +208,16 @@ function AgentDetail({ agent, canEdit, uid }: { agent: Agent; canEdit: boolean; 
             <CardTitle className="text-sm">{agent.name}</CardTitle>
             <p className="text-xs text-muted-foreground mt-1 max-w-xl">{agent.description}</p>
           </div>
-          <Button size="sm" onClick={save} disabled={!canEdit || !dirty || saving}>
-            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            <span className="ml-1.5">Save</span>
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button size="sm" variant="outline" onClick={run} disabled={!canEdit || running || agent.status === 'paused'} title={agent.status === 'paused' ? 'Agent is paused' : 'Run the live reasoning loop'}>
+              {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+              <span className="ml-1.5">Run now</span>
+            </Button>
+            <Button size="sm" onClick={save} disabled={!canEdit || !dirty || saving}>
+              {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+              <span className="ml-1.5">Save</span>
+            </Button>
+          </div>
         </div>
         {!canEdit && (
           <p className="text-[11px] text-[var(--fg-tertiary)] flex items-center gap-1 mt-1">
@@ -203,6 +231,32 @@ function AgentDetail({ agent, canEdit, uid }: { agent: Agent; canEdit: boolean; 
         )}
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* Run output */}
+        {(running || runResult || runError) && (
+          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-sunken)] p-3 text-xs">
+            {running && <div className="flex items-center gap-2 text-[var(--fg-secondary)]"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Reasoning…</div>}
+            {runError && <div className="text-[var(--rag-amber)]">{runError}</div>}
+            {runResult && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-[var(--fg-tertiary)]">
+                  <Zap className="h-3.5 w-3.5" /> {runResult.model} · {runResult.iterations} iteration(s) · {runResult.toolCalls.length} tool call(s)
+                </div>
+                {runResult.finalText && <p className="whitespace-pre-wrap text-[var(--fg-primary)]">{runResult.finalText}</p>}
+                {runResult.toolCalls.length > 0 && (
+                  <ul className="space-y-0.5">
+                    {runResult.toolCalls.map((c, i) => (
+                      <li key={i} className="font-mono text-[10.5px]">
+                        <span className={c.ok ? 'text-[var(--rag-green)]' : 'text-[var(--rag-red)]'}>{c.ok ? '✓' : '✗'}</span>{' '}
+                        {c.toolId} {c.ok ? `· ${c.summary ?? ''}` : `· ${c.error ?? ''}`}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Settings row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field label="Status">
@@ -286,6 +340,33 @@ function AgentDetail({ agent, canEdit, uid }: { agent: Agent; canEdit: boolean; 
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+function RunWatchersButton() {
+  const [running, setRunning] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const run = async () => {
+    setRunning(true);
+    setMsg(null);
+    try {
+      const res = await runAgentWatchersNow();
+      const total = (res.results as Array<{ findings?: number }>).reduce((s, r) => s + (r.findings ?? 0), 0);
+      setMsg(`${total} finding(s) raised`);
+    } catch (e) {
+      setMsg((e as { message?: string })?.message || 'Run failed');
+    } finally {
+      setRunning(false);
+    }
+  };
+  return (
+    <div className="flex items-center gap-2">
+      {msg && <span className="text-[11px] text-[var(--fg-tertiary)]">{msg}</span>}
+      <Button size="sm" variant="outline" onClick={run} disabled={running} title="Run the deterministic rule-based watcher sweep now">
+        {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+        <span className="ml-1.5">Run watchers</span>
+      </Button>
+    </div>
   );
 }
 

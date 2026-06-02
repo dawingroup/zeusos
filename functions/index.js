@@ -4755,3 +4755,10 @@ const { agentWatchersDaily, runAgentWatchersNow } = require('./src/agents/watche
 exports.agentExecuteTool = agentExecuteTool;
 exports.agentWatchersDaily = agentWatchersDaily;
 exports.runAgentWatchersNow = runAgentWatchersNow;
+
+// `agentReason` (Phase D) — live Claude tool-use loop for an agent. Claude
+// drives; every tool call executes through the gated + audited dispatcher.
+// Anthropic key resolves at runtime (Settings → API Keys); draft_only agents
+// can't reach mutating tools.
+const { agentReason } = require('./src/agents/agentReason');
+exports.agentReason = agentReason;

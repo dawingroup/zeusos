@@ -18,11 +18,38 @@ import {
   deleteDoc,
   serverTimestamp,
 } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { db } from '@/shared/services/firebase/firestore';
+import { app } from '@/shared/services/firebase';
 import type { Agent, AgentSettings, AgentAuditEntry } from '../types/agent';
 
 const AGENTS = 'agents';
 const AUDIT = 'agentAuditEntries';
+
+// Agent functions live in europe-west1 (the shared `functions` export is us-central1).
+const euFunctions = getFunctions(app, 'europe-west1');
+
+export interface AgentReasonResult {
+  agentId: string;
+  model: string;
+  iterations: number;
+  finalText: string;
+  toolCalls: Array<{ toolId: string; ok: boolean; auditId?: string; summary?: string; error?: string }>;
+}
+
+/** Run an agent's live Claude reasoning loop (needs ANTHROPIC_API_KEY set). */
+export async function runAgentReasoning(agentId: string, prompt?: string): Promise<AgentReasonResult> {
+  const fn = httpsCallable<{ agentId: string; prompt?: string }, AgentReasonResult>(euFunctions, 'agentReason');
+  const res = await fn({ agentId, prompt });
+  return res.data;
+}
+
+/** Run the deterministic rule-based watcher sweep on demand. */
+export async function runAgentWatchersNow(): Promise<{ ok: boolean; results: unknown[] }> {
+  const fn = httpsCallable<Record<string, never>, { ok: boolean; results: unknown[] }>(euFunctions, 'runAgentWatchersNow');
+  const res = await fn({});
+  return res.data;
+}
 
 export function subscribeAgents(
   onNext: (agents: Agent[]) => void,
