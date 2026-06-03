@@ -259,8 +259,13 @@ const IntelligenceAdminPage = lazyWithRetry(() => import('@/modules/intelligence
 const EmployeeTaskInboxPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/EmployeeTaskInboxPage'));
 const ManagerDashboardPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/ManagerDashboardPage'));
 const BusinessMemoryPage = lazyWithRetry(() => import('@/modules/intelligence-layer/pages/BusinessMemoryPage'));
+const CommsLayout = lazyWithRetry(() => import('@/modules/messaging/pages/CommsLayout'));
 const TeamChatPage = lazyWithRetry(() => import('@/modules/messaging/pages/TeamChatPage'));
 const MessagingSettingsPage = lazyWithRetry(() => import('@/modules/messaging/pages/MessagingSettingsPage'));
+const WhatsAppHubPage = lazyWithRetry(() => import('@/modules/messaging/pages/WhatsAppHubPage'));
+const UnifiedInboxPage = lazyWithRetry(() => import('@/modules/messaging/pages/UnifiedInboxPage'));
+const WATemplatesPage = lazyWithRetry(() => import('@/modules/messaging/pages/WATemplatesPage'));
+const BroadcastsPage = lazyWithRetry(() => import('@/modules/messaging/pages/BroadcastsPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Strategy
@@ -562,11 +567,24 @@ export const router = createBrowserRouter([
       // with no org scope falls into the page's "no scope" empty state.
       { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
 
-      // Comms — internal team chat (Phase 4.1). Everyone communicates, so no
-      // org-kind guard; chatChannels rules enforce membership.
-      { path: 'comms',               element: <PageWrapper><ModuleContentWrapper><TeamChatPage /></ModuleContentWrapper></PageWrapper> },
-      // Channel config (Phase 4.5) — parent-org admins only (enforced in-page + rules).
-      { path: 'comms/settings',      element: <PageWrapper><ModuleContentWrapper><MessagingSettingsPage /></ModuleContentWrapper></PageWrapper> },
+      // Comms — tabbed messaging module (ported from DawinOS). Everyone
+      // communicates, so no org-kind guard; chatChannels rules enforce
+      // membership and commsConfig rules gate the WhatsApp channel. Tabs:
+      // Team Chat (index) · WhatsApp · Unified Inbox · Templates · Broadcasts ·
+      // Settings. The WhatsApp-channel tabs render a "not configured" state
+      // until a Meta Business provider is enabled in commsConfig/whatsapp.
+      {
+        path: 'comms',
+        element: <PageWrapper><CommsLayout /></PageWrapper>,
+        children: [
+          { index: true,            element: <TeamChatPage /> },
+          { path: 'whatsapp',       element: <WhatsAppHubPage /> },
+          { path: 'inbox',          element: <UnifiedInboxPage /> },
+          { path: 'templates',      element: <WATemplatesPage /> },
+          { path: 'broadcasts',     element: <BroadcastsPage /> },
+          { path: 'settings',       element: <MessagingSettingsPage /> },
+        ],
+      },
 
       // Intelligence Layer
       {

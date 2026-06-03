@@ -9,7 +9,8 @@
  * Writes are gated to parent-org principals by firestore.rules (commsConfig).
  */
 
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import { db } from '@/core/services/firebase/firestore';
 
 export interface WhatsAppConfig {
@@ -48,4 +49,33 @@ export async function getEmailConfig(): Promise<EmailConfig> {
 
 export async function saveEmailConfig(patch: Partial<EmailConfig>): Promise<void> {
   await setDoc(doc(db, 'commsConfig', 'email'), { ...patch, updatedAt: serverTimestamp() }, { merge: true });
+}
+
+/** Real-time subscription to the WhatsApp gate doc. */
+export function subscribeWhatsAppConfig(
+  cb: (config: WhatsAppConfig) => void,
+  onError?: (e: Error) => void,
+): () => void {
+  return onSnapshot(
+    doc(db, 'commsConfig', 'whatsapp'),
+    (snap) => cb(snap.exists() ? { ...WHATSAPP_DEFAULTS, ...(snap.data() as Partial<WhatsAppConfig>) } : { ...WHATSAPP_DEFAULTS }),
+    (e) => onError?.(e as Error),
+  );
+}
+
+/**
+ * Hook: live WhatsApp config + `enabled` gate. The WhatsApp-channel tabs use
+ * `enabled` to decide between the real channel UI and ChannelNotConfigured.
+ */
+export function useWhatsAppConfig(): { config: WhatsAppConfig; loading: boolean } {
+  const [config, setConfig] = useState<WhatsAppConfig>(WHATSAPP_DEFAULTS);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const unsub = subscribeWhatsAppConfig(
+      (c) => { setConfig(c); setLoading(false); },
+      () => { setConfig(WHATSAPP_DEFAULTS); setLoading(false); },
+    );
+    return () => unsub();
+  }, []);
+  return { config, loading };
 }

@@ -124,6 +124,7 @@ const SECTION_FOR_MODULE: Record<string, string> = {
   'market-intel': 'ops',
   'ai-assistant': 'ops',
   intelligence: 'ops',
+  comms: 'ops',
   reports: 'admin',
   compliance: 'admin',
   'my-time': 'admin',
