@@ -19,6 +19,7 @@ const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { logger } = require('firebase-functions/v2');
 const admin = require('firebase-admin');
 const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+const { WHATSAPP_REQUIRED_IDS, deriveWhatsAppConfig } = require('./commsAutoWire');
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -93,6 +94,22 @@ const SERVICE_REGISTRY = [
     helpUrl: 'https://developers.facebook.com/docs/whatsapp/cloud-api/get-started',
   },
   {
+    id: 'WHATSAPP_PHONE_NUMBER_ID',
+    label: 'WhatsApp — Phone Number ID',
+    group: 'messaging',
+    description:
+      'Non-secret Cloud API phone-number ID. Kept here so all WhatsApp config lives in one place; auto-wired into commsConfig when set.',
+    helpUrl: 'https://developers.facebook.com/docs/whatsapp/cloud-api/get-started',
+  },
+  {
+    id: 'WHATSAPP_BUSINESS_ACCOUNT_ID',
+    label: 'WhatsApp — Business Account ID',
+    group: 'messaging',
+    description:
+      'Non-secret WhatsApp Business Account (WABA) ID, needed for template + broadcast management; auto-wired into commsConfig when set.',
+    helpUrl: 'https://developers.facebook.com/docs/whatsapp/cloud-api/get-started',
+  },
+  {
     id: 'META_APP_ID',
     label: 'Meta App ID',
     group: 'messaging',
@@ -149,6 +166,70 @@ function secretName(projectId, id) {
 
 function latestVersionName(projectId, id) {
   return `${secretName(projectId, id)}/versions/latest`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Credential auto-wiring
+//
+// When integration credentials are saved in the API Keys page, derive the
+// non-secret config the rest of the app reads so the feature "embeds" itself
+// without a separate manual toggle. The SECRET values stay in Secret Manager
+// and are only ever read server-side by the functions that need them; only the
+// "is it configured" signal + non-secret identifiers flow to Firestore (which
+// the client SDK can read) so the UI gate can flip live.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function readSecretValue(projectId, id) {
+  try {
+    const [version] = await secretClient.accessSecretVersion({
+      name: latestVersionName(projectId, id),
+    });
+    const value = version?.payload?.data?.toString('utf8') ?? '';
+    return value.trim() || null;
+  } catch (err) {
+    if (err && (err.code === 5 || err.code === 'NOT_FOUND')) return null;
+    throw err;
+  }
+}
+
+/**
+ * Re-derive `commsConfig/whatsapp` from the current WhatsApp credentials.
+ * - enabled = true once the token + phone-number ID + business-account ID all
+ *   exist; false otherwise.
+ * - copies the NON-SECRET phone-number / business-account IDs into the doc so
+ *   the send/receive functions + UI can read them without touching the token.
+ * Idempotent — safe to call after every messaging-credential write.
+ */
+async function wireWhatsAppConfig(projectId, actor) {
+  const [token, phoneNumberId, businessAccountId] = await Promise.all([
+    readSecretValue(projectId, 'META_WHATSAPP_ACCESS_TOKEN'),
+    readSecretValue(projectId, 'WHATSAPP_PHONE_NUMBER_ID'),
+    readSecretValue(projectId, 'WHATSAPP_BUSINESS_ACCOUNT_ID'),
+  ]);
+
+  const derived = deriveWhatsAppConfig({ token, phoneNumberId, businessAccountId });
+
+  await db.doc('commsConfig/whatsapp').set(
+    {
+      ...derived,
+      // Non-secret identifiers only — the access token is NEVER copied here;
+      // functions read it from Secret Manager.
+      autoWiredAt: admin.firestore.FieldValue.serverTimestamp(),
+      autoWiredBy: actor?.email || actor?.uid || 'system',
+    },
+    { merge: true },
+  );
+
+  logger.info(`Auto-wired commsConfig/whatsapp (enabled=${derived.enabled})`);
+  return { enabled: derived.enabled };
+}
+
+/** Run the right auto-wire step for the credential that was just written. */
+async function autoWireCredential(projectId, id, actor) {
+  if (WHATSAPP_REQUIRED_IDS.includes(id)) {
+    return wireWhatsAppConfig(projectId, actor);
+  }
+  return null;
 }
 
 /**
@@ -364,7 +445,17 @@ exports.adminSetServiceCredential = onCall(
         versionName: version?.name,
       });
 
-      return { ok: true };
+      // Auto-wire: derive the non-secret config the app reads (e.g. flip the
+      // WhatsApp channel live once all its credentials are present). Best-effort
+      // — a wiring failure must not fail the credential write itself.
+      let wired = null;
+      try {
+        wired = await autoWireCredential(projectId, id, actor);
+      } catch (wireErr) {
+        logger.error(`Auto-wire after setting ${id} failed (non-fatal)`, wireErr);
+      }
+
+      return { ok: true, wired };
     } catch (err) {
       logger.error(`Failed to set secret ${id}`, err);
       if (err?.code === 7 || err?.code === 'PERMISSION_DENIED') {
@@ -454,3 +545,8 @@ exports.adminTestServiceCredential = onCall(
 
 // Runtime resolver for other Cloud Functions (AI / comms / integrations).
 exports.resolveServiceSecret = resolveServiceSecret;
+
+// Re-export the pure auto-wire helpers (defined in ./commsAutoWire) so existing
+// importers of secrets.js keep working.
+exports.deriveWhatsAppConfig = deriveWhatsAppConfig;
+exports.WHATSAPP_REQUIRED_IDS = WHATSAPP_REQUIRED_IDS;
