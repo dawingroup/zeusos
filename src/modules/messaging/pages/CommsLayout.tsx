@@ -18,9 +18,10 @@ import { ModuleTabNav, type TabNavItem } from '@/core/components/navigation/Modu
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
 
 const COMMS_TABS: TabNavItem[] = [
-  { id: 'team-chat',  label: 'Team Chat',     path: '/comms',            icon: 'MessagesSquare', exact: true },
+  // Unified Inbox is the module's default landing surface (loads first).
+  { id: 'unified',    label: 'Unified Inbox', path: '/comms',            icon: 'Inbox', exact: true },
+  { id: 'team-chat',  label: 'Team Chat',     path: '/comms/team',       icon: 'MessagesSquare' },
   { id: 'whatsapp',   label: 'WhatsApp',      path: '/comms/whatsapp',   icon: 'MessageSquare' },
-  { id: 'unified',    label: 'Unified Inbox', path: '/comms/inbox',      icon: 'Inbox' },
   { id: 'templates',  label: 'Templates',     path: '/comms/templates',  icon: 'FileText' },
   { id: 'broadcasts', label: 'Broadcasts',    path: '/comms/broadcasts', icon: 'Megaphone' },
   { id: 'settings',   label: 'Settings',      path: '/comms/settings',   icon: 'Settings' },
