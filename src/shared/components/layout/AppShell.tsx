@@ -684,8 +684,10 @@ export function AppShell({ children }: AppShellProps) {
             subsidiaryId={currentSubsidiary?.id}
           />
 
-          {/* Global Task Button (My Tasks quick-access) */}
-          <GlobalTaskButton />
+          {/* (Tasks quick-access removed from the desktop header — the
+              floating Action Center now surfaces "needs a person now" work.
+              Mobile keeps its GlobalTaskButton since the Action Center is
+              desktop-only.) */}
 
           {/* Messaging — internal team chat (/comms). Always available; WhatsApp
               folds into the same surface once enabled. (/whatsapp is not routed.) */}
