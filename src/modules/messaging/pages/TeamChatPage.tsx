@@ -32,11 +32,17 @@ import {
   isChannelUnread,
   presenceStateFrom,
   presenceColor,
+  computeReadState,
   type ChatChannel,
   type ChatMember,
   type ChatMessage,
   type PresenceDoc,
 } from '../types/internalChat';
+
+function fmtClock(ts: { toDate?: () => Date } | null): string {
+  const d = ts?.toDate?.();
+  return d ? d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : '';
+}
 
 function Dot({ color }: { color: string }) {
   return <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} aria-hidden />;
@@ -197,19 +203,35 @@ export default function TeamChatPage() {
               </div>
             ) : (
               <>
-                <div className="px-4 py-2.5 border-b text-[13.5px] font-medium" style={{ borderColor: 'var(--border-subtle)' }}>
-                  {channelLabel(active, me?.uid || '')}
+                <div className="px-4 py-2.5 border-b flex items-center gap-2" style={{ borderColor: 'var(--border-subtle)' }}>
+                  {active.type === 'channel'
+                    ? <Hash className="h-4 w-4" style={{ color: 'var(--fg-tertiary)' }} />
+                    : (() => {
+                        const peer = active.memberIds.find((u) => u !== me?.uid);
+                        return peer ? <Dot color={presenceColor(presenceStateFrom(presence[peer]))} /> : null;
+                      })()}
+                  <span className="text-[13.5px] font-semibold">{channelLabel(active, me?.uid || '')}</span>
+                  <span className="text-[11.5px]" style={{ color: 'var(--fg-tertiary)' }}>
+                    {active.type === 'channel'
+                      ? `${active.memberIds.length} member${active.memberIds.length === 1 ? '' : 's'}`
+                      : 'Direct message'}
+                  </span>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
                   {messages.map((m) => {
                     const mine = m.senderId === me?.uid;
+                    const read = mine && me ? computeReadState(active, m, me.uid) : null;
                     return (
                       <div key={m.id} className={`flex flex-col ${mine ? 'items-end' : 'items-start'}`}>
                         {!mine && <span className="text-[11px] mb-0.5" style={{ color: 'var(--fg-tertiary)' }}>{m.senderName}</span>}
                         <div className="max-w-[75%] rounded-[10px] px-3 py-2 text-[13px]"
-                          style={{ backgroundColor: mine ? 'var(--accent)' : 'var(--bg-surface)', color: mine ? '#fff' : 'var(--fg-primary)', border: mine ? 'none' : '1px solid var(--border-subtle)' }}>
+                          style={{ backgroundColor: mine ? 'var(--brand-accent)' : 'var(--bg-surface)', color: mine ? 'var(--brand-accent-fg)' : 'var(--fg-primary)', border: mine ? 'none' : '1px solid var(--border-subtle)' }}>
                           {m.text}
                         </div>
+                        <span className="text-[10px] mt-0.5" style={{ color: 'var(--fg-quaternary)' }}>
+                          {fmtClock(m.createdAt)}
+                          {read && read.totalOthers > 0 && read.readByUids.length >= read.totalOthers ? ' · Read' : ''}
+                        </span>
                       </div>
                     );
                   })}
