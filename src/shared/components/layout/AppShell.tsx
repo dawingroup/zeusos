@@ -22,6 +22,14 @@ import {
   ChevronRight,
   ChevronDown,
   Palette,
+  Plus,
+  Briefcase,
+  Tag,
+  FileText,
+  Star as StarIcon,
+  ShoppingCart,
+  Megaphone,
+  Target,
 } from 'lucide-react';
 import { getIconByName } from '@/shared/utils/iconMap';
 import { Button } from '@/core/components/ui/button';
@@ -139,6 +147,25 @@ const SECTION_LABELS: Record<string, string> = {
   admin: 'System',
 };
 const SECTION_ORDER = ['main', 'commercial', 'work', 'ops', 'admin'];
+
+// Global quick-add menu (header "+" button). Each entry deep-links to a real
+// create route. `parentOnly` items (commercial creates) are filtered out for
+// subsidiary principals, matching the route guards.
+interface QuickAddItem {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  parentOnly?: boolean;
+}
+const QUICK_ADD_ITEMS: QuickAddItem[] = [
+  { label: 'New client',        href: '/clients/new',                         icon: Briefcase,    parentOnly: true },
+  { label: 'New quote',         href: '/pricing/quotes/new',                  icon: Tag,          parentOnly: true },
+  { label: 'New lead',          href: '/crm/new',                             icon: Target },
+  { label: 'New talent',        href: '/talent/new',                          icon: StarIcon },
+  { label: 'New media plan',    href: '/media/new',                           icon: Megaphone },
+  { label: 'New supplier',      href: '/suppliers/new',                       icon: ShoppingCart },
+  { label: 'New purchase order', href: '/procurement/purchase-orders/new',    icon: FileText,     parentOnly: true },
+];
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -676,6 +703,93 @@ export function AppShell({ children }: AppShellProps) {
               </span>
             )}
           </Button>
+
+          {/* Global quick-add (+) — dropdown of "create" deep-links. */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                aria-label="Quick add"
+                data-testid="global-quick-add"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-[var(--fg-tertiary)]">
+                Quick add
+              </div>
+              <DropdownMenuSeparator />
+              {QUICK_ADD_ITEMS.filter((it) => !it.parentOnly || isParentRoot).map((it) => {
+                const ItemIcon = it.icon;
+                return (
+                  <DropdownMenuItem key={it.href} asChild>
+                    <Link to={it.href}>
+                      <ItemIcon className="mr-2 h-3.5 w-3.5" /> {it.label}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* User avatar — rightmost. Account menu (Profile / Appearance /
+              Admin / Preferences / Sign out); mirrors the sidebar footer card. */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-8 w-8 ml-0.5"
+                aria-label="Account menu"
+                data-testid="header-account-menu"
+              >
+                <span
+                  className="inline-flex items-center justify-center rounded-full text-[11px] font-semibold text-white"
+                  style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #e63946, #b8222e)' }}
+                >
+                  {userInitials}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5">
+                <div className="text-[13px] font-medium text-[var(--fg-primary)] truncate">
+                  {user?.displayName || 'User'}
+                </div>
+                <div className="text-[11px] text-[var(--fg-tertiary)] truncate">{user?.email}</div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/profile">
+                  <User className="mr-2 h-3.5 w-3.5" /> Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/settings/appearance">
+                  <Palette className="mr-2 h-3.5 w-3.5" /> Appearance
+                </Link>
+              </DropdownMenuItem>
+              {adminNavItems.length > 0 && (
+                <DropdownMenuItem asChild>
+                  <Link to="/admin">
+                    <Settings className="mr-2 h-3.5 w-3.5" /> Admin
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              <PreferencesMenu />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => signOut()}
+                data-testid="header-logout-button"
+                className="text-[var(--rag-red)] focus:text-[var(--rag-red)]"
+              >
+                <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Row 2 — corporate service pills: "CORPORATE" label · module pills ·
