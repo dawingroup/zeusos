@@ -17,6 +17,16 @@ export interface WhatsAppConfig {
   enabled: boolean;
   activeProvider: 'meta' | 'zoko';
   allowedSenderRoles: string[];
+  /**
+   * Non-secret WhatsApp Cloud API identifiers, auto-wired from the API Keys
+   * page when the credentials are saved (the secret access token stays in
+   * Secret Manager — never copied here). `enabled` flips to true once the
+   * token + both IDs are all present. `autoWiredFrom: 'api-keys'` marks a
+   * doc that was derived rather than hand-edited.
+   */
+  phoneNumberId?: string | null;
+  businessAccountId?: string | null;
+  autoWiredFrom?: string;
 }
 
 export interface EmailConfig {

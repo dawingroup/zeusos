@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Button } from '@/core/components/ui/button';
@@ -84,7 +85,10 @@ export function MessagingSettingsPage() {
   const onSaveWa = async () => {
     if (!wa) return;
     setSaving('wa'); setError(null);
-    try { await saveWhatsAppConfig(wa); setSavedAt(new Date().toLocaleTimeString()); }
+    // Only the sender-roles are hand-edited here. `enabled` + the phone/business
+    // IDs are auto-wired from the credential write (Settings → API Keys) — never
+    // overwrite them from this form.
+    try { await saveWhatsAppConfig({ allowedSenderRoles: wa.allowedSenderRoles }); setSavedAt(new Date().toLocaleTimeString()); }
     catch (err) { setError(err instanceof Error ? err.message : 'Save failed'); }
     finally { setSaving(null); }
   };
@@ -115,11 +119,45 @@ export function MessagingSettingsPage() {
           <div className="flex items-center justify-center py-12"><Loader2 className="h-7 w-7 animate-spin" style={{ color: 'var(--accent)' }} /></div>
         ) : (
           <>
-            {/* WhatsApp */}
+            {/* WhatsApp — status is auto-wired from Settings → API Keys. The
+                channel flips live automatically once the access token +
+                phone-number ID + business-account ID are all saved there; this
+                card reflects that derived state (no manual enable toggle). */}
             <Card>
               <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-[14.5px]"><MessageSquare className="h-4 w-4" /> WhatsApp (Meta)</CardTitle></CardHeader>
               <CardContent className="space-y-3">
-                <Toggle on={wa.enabled} onChange={(v) => setWa({ ...wa, enabled: v })} label={wa.enabled ? 'Enabled' : 'Disabled (ships dark)'} />
+                <div className="flex items-center gap-2">
+                  <span
+                    className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium"
+                    style={{
+                      background: wa.enabled ? 'var(--rag-green-soft)' : 'var(--rag-amber-soft)',
+                      color: wa.enabled ? 'var(--rag-green)' : 'var(--rag-amber)',
+                    }}
+                    data-testid="wa-status-pill"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'currentColor' }} />
+                    {wa.enabled ? 'Connected — live' : 'Not connected'}
+                  </span>
+                  <span className="text-[11.5px]" style={{ color: 'var(--fg-tertiary)' }}>
+                    Auto-wired from API Keys
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[12px]">
+                  <div>
+                    <Label className="text-[10.5px]">Phone Number ID</Label>
+                    <div className="font-mono" style={{ color: wa.phoneNumberId ? 'var(--fg-primary)' : 'var(--fg-quaternary)' }}>
+                      {wa.phoneNumberId || 'not set'}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-[10.5px]">Business Account ID</Label>
+                    <div className="font-mono" style={{ color: wa.businessAccountId ? 'var(--fg-primary)' : 'var(--fg-quaternary)' }}>
+                      {wa.businessAccountId || 'not set'}
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <Label>Allowed sender roles (comma-separated)</Label>
                   <Input
@@ -127,11 +165,15 @@ export function MessagingSettingsPage() {
                     onChange={(e) => setWa({ ...wa, allowedSenderRoles: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })}
                   />
                 </div>
+
                 <p className="text-[11.5px]" style={{ color: 'var(--fg-tertiary)' }}>
-                  Requires the Meta secrets (access token, phone-number id, app secret) in Settings → API Keys, plus an approved phone number + templates.
+                  The channel goes live automatically once the WhatsApp access token,
+                  phone-number ID, and business-account ID are saved in{' '}
+                  <Link to="/admin/api-keys" className="underline" style={{ color: 'var(--rag-blue)' }}>Settings → API Keys</Link>.
+                  This card only edits the allowed sender roles.
                 </p>
                 <div className="flex justify-end">
-                  <Button size="sm" onClick={onSaveWa} disabled={saving === 'wa'}>{saving === 'wa' && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save WhatsApp</Button>
+                  <Button size="sm" onClick={onSaveWa} disabled={saving === 'wa'}>{saving === 'wa' && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save sender roles</Button>
                 </div>
               </CardContent>
             </Card>
