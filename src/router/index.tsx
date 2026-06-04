@@ -570,16 +570,19 @@ export const router = createBrowserRouter([
       // Comms — tabbed messaging module (ported from DawinOS). Everyone
       // communicates, so no org-kind guard; chatChannels rules enforce
       // membership and commsConfig rules gate the WhatsApp channel. Tabs:
-      // Team Chat (index) · WhatsApp · Unified Inbox · Templates · Broadcasts ·
-      // Settings. The WhatsApp-channel tabs render a "not configured" state
-      // until a Meta Business provider is enabled in commsConfig/whatsapp.
+      // Unified Inbox (index — loads first) · Team Chat · WhatsApp · Templates ·
+      // Broadcasts · Settings. The WhatsApp-channel tabs render a "not
+      // configured" state until a Meta Business provider is enabled in
+      // commsConfig/whatsapp.
       {
         path: 'comms',
         element: <PageWrapper><CommsLayout /></PageWrapper>,
         children: [
-          { index: true,            element: <TeamChatPage /> },
+          { index: true,            element: <UnifiedInboxPage /> },
+          { path: 'team',           element: <TeamChatPage /> },
           { path: 'whatsapp',       element: <WhatsAppHubPage /> },
-          { path: 'inbox',          element: <UnifiedInboxPage /> },
+          // Back-compat: the inbox used to live at /comms/inbox; redirect.
+          { path: 'inbox',          element: <Navigate to="/comms" replace /> },
           { path: 'templates',      element: <WATemplatesPage /> },
           { path: 'broadcasts',     element: <BroadcastsPage /> },
           { path: 'settings',       element: <MessagingSettingsPage /> },

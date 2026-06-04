@@ -3,8 +3,8 @@
  *
  * Ported from DawinOS `MessagingLayout`, adapted to ZeusOS routes + the
  * `ModuleTabNav` primitive. Renders a sticky tab strip; child routes render in
- * the outlet. Tabs:
- *   Team Chat · WhatsApp · Unified Inbox · Templates · Broadcasts · Settings
+ * the outlet. Tabs (Unified Inbox is the default landing surface, loads first):
+ *   Unified Inbox · Team Chat · WhatsApp · Templates · Broadcasts · Settings
  *
  * Team Chat + Settings are the ZeusOS-native surfaces that already shipped.
  * The WhatsApp-channel tabs (WhatsApp / Unified / Templates / Broadcasts) are
@@ -18,9 +18,10 @@ import { ModuleTabNav, type TabNavItem } from '@/core/components/navigation/Modu
 import { ModuleContentWrapper } from '@/shared/components/layout/ModuleContentWrapper';
 
 const COMMS_TABS: TabNavItem[] = [
-  { id: 'team-chat',  label: 'Team Chat',     path: '/comms',            icon: 'MessagesSquare', exact: true },
+  // Unified Inbox is the module's default landing surface (loads first).
+  { id: 'unified',    label: 'Unified Inbox', path: '/comms',            icon: 'Inbox', exact: true },
+  { id: 'team-chat',  label: 'Team Chat',     path: '/comms/team',       icon: 'MessagesSquare' },
   { id: 'whatsapp',   label: 'WhatsApp',      path: '/comms/whatsapp',   icon: 'MessageSquare' },
-  { id: 'unified',    label: 'Unified Inbox', path: '/comms/inbox',      icon: 'Inbox' },
   { id: 'templates',  label: 'Templates',     path: '/comms/templates',  icon: 'FileText' },
   { id: 'broadcasts', label: 'Broadcasts',    path: '/comms/broadcasts', icon: 'Megaphone' },
   { id: 'settings',   label: 'Settings',      path: '/comms/settings',   icon: 'Settings' },

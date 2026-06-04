@@ -1,9 +1,12 @@
 /**
- * UnifiedInboxPage — /comms/inbox.
+ * UnifiedInboxPage — the Comms module's default landing surface (index of
+ * /comms; the old /comms/inbox path redirects here).
  *
- * One queue across every channel. Today it merges all Team Chat conversations
- * (named channels + DMs) into a single recency-sorted inbox with a reading
- * pane + composer; WhatsApp threads fold in once the Meta provider is enabled
+ * One queue across every channel, split into three sections by message source:
+ *   All · Team Chat · WhatsApp
+ * Today it merges all Team Chat conversations (named channels + DMs) into a
+ * single recency-sorted inbox with a reading pane + composer; WhatsApp threads
+ * fold into the WhatsApp section once the Meta provider is enabled
  * (commsConfig/whatsapp.enabled) and the live WA subscription ports.
  *
  * Reuses the internalChatService + presence; member-gated by firestore.rules.
@@ -36,6 +39,17 @@ import {
   type ChatMessage,
   type PresenceDoc,
 } from '../types/internalChat';
+
+type InboxSection = 'all' | 'team' | 'whatsapp';
+type ConvoSource = 'team' | 'whatsapp';
+
+/** Which source a conversation belongs to. Team Chat channels/DMs are 'team';
+ *  WhatsApp threads (once they port in) carry their own discriminator. */
+function convoSource(c: ChatChannel): ConvoSource {
+  // WhatsApp threads will set type/source markers when they fold in; until then
+  // every chatChannels doc is an internal Team Chat conversation.
+  return (c as ChatChannel & { source?: ConvoSource }).source === 'whatsapp' ? 'whatsapp' : 'team';
+}
 
 function timeAgo(ts: { toMillis?: () => number } | null): string {
   const ms = ts?.toMillis?.();
@@ -75,7 +89,12 @@ export default function UnifiedInboxPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  // The Unified Inbox is segmented into three sections by message source:
+  //   all      — every conversation, recency-sorted (the unified queue)
+  //   team     — internal Team Chat (named channels + DMs)
+  //   whatsapp — client WhatsApp threads (live once the Meta provider is enabled)
+  const [section, setSection] = useState<InboxSection>('all');
+  const [unreadOnly, setUnreadOnly] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -100,20 +119,31 @@ export default function UnifiedInboxPage() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  // Recency-sorted conversation list. (WhatsApp threads merge in here once the
-  // live WA subscription ports — they share the same row shape.)
+  // Recency-sorted conversation list, filtered by the active section + unread
+  // toggle. (WhatsApp threads merge into `channels` once the live WA
+  // subscription ports — they share the same row shape, tagged source:'whatsapp'.)
   const conversations = useMemo(() => {
-    const list = [...channels];
+    let list = [...channels];
+    if (section !== 'all') list = list.filter((c) => convoSource(c) === section);
+    if (unreadOnly && me) list = list.filter((c) => isChannelUnread(c, me.uid));
     list.sort((a, b) => (b.lastMessageAt?.toMillis?.() ?? 0) - (a.lastMessageAt?.toMillis?.() ?? 0));
-    if (filter === 'unread' && me) return list.filter((c) => isChannelUnread(c, me.uid));
     return list;
-  }, [channels, filter, me]);
+  }, [channels, section, unreadOnly, me]);
 
   const active = channels.find((c) => c.id === activeId) || null;
-  const unreadTotal = useMemo(
-    () => (me ? channels.filter((c) => isChannelUnread(c, me.uid)).length : 0),
-    [channels, me],
-  );
+
+  // Per-section unread counts for the segmented control badges.
+  const sectionUnread = useMemo(() => {
+    const counts = { all: 0, team: 0, whatsapp: 0 } as Record<InboxSection, number>;
+    if (!me) return counts;
+    for (const c of channels) {
+      if (!isChannelUnread(c, me.uid)) continue;
+      counts.all += 1;
+      counts[convoSource(c)] += 1;
+    }
+    return counts;
+  }, [channels, me]);
+  const unreadTotal = sectionUnread.all;
 
   const onSend = async () => {
     if (!me || !activeId || !draft.trim()) return;
@@ -149,23 +179,57 @@ export default function UnifiedInboxPage() {
               {unreadTotal > 0 ? ` · ${unreadTotal} unread` : ''}.
             </p>
           </div>
-          <div className="flex gap-1">
-            {(['all', 'unread'] as const).map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFilter(f)}
-                className="px-3 h-8 rounded-md text-[12.5px]"
-                style={{
-                  background: filter === f ? 'var(--fg-primary)' : 'transparent',
-                  color: filter === f ? 'var(--bg-surface)' : 'var(--fg-secondary)',
-                  border: filter === f ? 'none' : '1px solid var(--border-default)',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {f}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            {/* Three sections by message source: All · Team Chat · WhatsApp */}
+            <div className="inline-flex rounded-md p-0.5" style={{ background: 'var(--bg-sunken)', border: '1px solid var(--border-subtle)' }} role="tablist" aria-label="Inbox sections">
+              {([
+                { id: 'all', label: 'All' },
+                { id: 'team', label: 'Team Chat' },
+                { id: 'whatsapp', label: 'WhatsApp' },
+              ] as const).map((s) => {
+                const activeSection = section === s.id;
+                const badge = sectionUnread[s.id];
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeSection}
+                    data-testid={`inbox-section-${s.id}`}
+                    onClick={() => setSection(s.id)}
+                    className="px-3 h-7 rounded-[5px] text-[12.5px] inline-flex items-center gap-1.5 transition-colors"
+                    style={{
+                      background: activeSection ? 'var(--bg-surface)' : 'transparent',
+                      color: activeSection ? 'var(--fg-primary)' : 'var(--fg-secondary)',
+                      fontWeight: activeSection ? 600 : 500,
+                      boxShadow: activeSection ? 'var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.06))' : 'none',
+                    }}
+                  >
+                    {s.label}
+                    {badge > 0 && (
+                      <span className="inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full text-[10px] font-semibold tabular-nums"
+                        style={{ background: 'var(--zeus-red)', color: '#fff' }}>
+                        {badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setUnreadOnly((v) => !v)}
+              aria-pressed={unreadOnly}
+              data-testid="inbox-unread-toggle"
+              className="px-3 h-8 rounded-md text-[12.5px]"
+              style={{
+                background: unreadOnly ? 'var(--fg-primary)' : 'transparent',
+                color: unreadOnly ? 'var(--bg-surface)' : 'var(--fg-secondary)',
+                border: unreadOnly ? 'none' : '1px solid var(--border-default)',
+              }}
+            >
+              Unread
+            </button>
           </div>
         </div>
 
@@ -181,7 +245,13 @@ export default function UnifiedInboxPage() {
           <div className="rounded-[10px] border overflow-y-auto" style={{ borderColor: 'var(--border-subtle)' }} data-testid="inbox-thread-list">
             {conversations.length === 0 && (
               <div className="p-6 text-center text-[13px]" style={{ color: 'var(--fg-tertiary)' }}>
-                {filter === 'unread' ? 'Nothing unread.' : 'No conversations yet.'}
+                {unreadOnly
+                  ? 'Nothing unread.'
+                  : section === 'whatsapp'
+                    ? (waConfig.enabled ? 'No WhatsApp threads yet.' : 'WhatsApp is not connected. Enable a Meta provider in Comms → Settings.')
+                    : section === 'team'
+                      ? 'No team conversations yet.'
+                      : 'No conversations yet.'}
               </div>
             )}
             {conversations.map((c) => {
