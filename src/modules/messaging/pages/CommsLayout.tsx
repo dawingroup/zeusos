@@ -3,8 +3,8 @@
  *
  * Ported from DawinOS `MessagingLayout`, adapted to ZeusOS routes + the
  * `ModuleTabNav` primitive. Renders a sticky tab strip; child routes render in
- * the outlet. Tabs:
- *   Team Chat · WhatsApp · Unified Inbox · Templates · Broadcasts · Settings
+ * the outlet. Tabs (Unified Inbox is the default landing surface, loads first):
+ *   Unified Inbox · Team Chat · WhatsApp · Templates · Broadcasts · Settings
  *
  * Team Chat + Settings are the ZeusOS-native surfaces that already shipped.
  * The WhatsApp-channel tabs (WhatsApp / Unified / Templates / Broadcasts) are
