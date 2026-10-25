@@ -21,12 +21,15 @@
  *                        `pending_assignment` until then.
  */
 
-const { FieldValue } = require('firebase-admin/firestore');
 const {
   evaluateAllConditions,
   interpolateTemplate,
   getByPath,
 } = require('./lib/expression');
+const { ASSIGNED_STATUS, normalisePriority, historyEntry } = require('./lib/taskModel');
+const { entityTypeForAggregate } = require('./lib/entityResolution');
+const { resolveKind } = require('./lib/taskKind');
+const { addWorkingHours } = require('./lib/workingTime');
 
 const TASKS_COLLECTION = 'generated_tasks';
 const DEFINITIONS_COLLECTION = 'event_definitions';
@@ -61,6 +64,15 @@ function resolveAssignment(assignTo, event) {
     default:
       return { userId: null };
   }
+}
+
+/** The record's human name, from whatever the payload calls it. */
+function subjectFor(payload) {
+  for (const key of ['entityName', 'title', 'name', 'code', 'iwoCode', 'jobCode', 'jobName', 'clientName', 'invoiceNumber', 'quoteNumber']) {
+    const v = payload && payload[key];
+    if (typeof v === 'string' && v.trim()) return v.trim().slice(0, 200);
+  }
+  return null;
 }
 
 /**
@@ -102,18 +114,35 @@ async function emitTasksForDefinition({ db, event, definition, nowIso }) {
     };
 
     const assignment = resolveAssignment(rule.assignTo, event);
-    const status = assignment.userId ? 'assigned' : 'pending_assignment';
+    const status = assignment.userId ? ASSIGNED_STATUS : 'pending_assignment';
 
+    // Due: `dueInHours` counts WORKING hours (08:00–17:00 Nairobi, Mon–Fri —
+    // lib/workingTime.js) so an evening event is not overdue by breakfast;
+    // `dueInDays` stays calendar days for open-ended work.
+    const emitMs = event.emittedAt && typeof event.emittedAt === 'string'
+      ? Date.parse(event.emittedAt)
+      : (event.emittedAt && typeof event.emittedAt.toMillis === 'function' ? event.emittedAt.toMillis() : Date.parse(nowIso));
     let dueAt = null;
-    if (typeof rule.dueInDays === 'number' && rule.dueInDays >= 0) {
-      const emit = event.emittedAt && typeof event.emittedAt === 'string'
-        ? Date.parse(event.emittedAt)
-        : Date.parse(nowIso);
-      dueAt = new Date(emit + rule.dueInDays * 24 * 60 * 60 * 1000).toISOString();
+    if (typeof rule.dueInHours === 'number' && rule.dueInHours >= 0) {
+      dueAt = new Date(addWorkingHours(emitMs, rule.dueInHours)).toISOString();
+    } else if (typeof rule.dueInDays === 'number' && rule.dueInDays >= 0) {
+      dueAt = new Date(emitMs + rule.dueInDays * 24 * 60 * 60 * 1000).toISOString();
     }
 
     const id = taskIdFor(definition.id, rule.id, event.id);
     const ref = db.collection(TASKS_COLLECTION).doc(id);
+
+    // Create, never overwrite: a replayed event must not reset a task someone
+    // has already started, blocked or finished. The id is the dedupe key.
+    const existing = await ref.get();
+    if (existing.exists) {
+      ids.push(id);
+      continue;
+    }
+
+    const payload = event.payload || {};
+    const entityType = entityTypeForAggregate(event.aggregateType);
+    const subject = subjectFor(payload);
 
     const taskDoc = {
       id,
@@ -121,31 +150,42 @@ async function emitTasksForDefinition({ db, event, definition, nowIso }) {
       sourceEventType: event.eventType,
       sourceDefinitionId: definition.id,
       sourceRuleId: rule.id,
+      sourceActorUserId: event.emittedByUserId || null,
+      sourceModule: rule.sourceModule || definition.module || entityType || 'events',
+      source: 'event',
       title,
       description,
-      priority: rule.priority || 'P2',
+      priority: normalisePriority(rule.priority),
+      kind: resolveKind(rule, event.eventType),
       status,
       dueAt,
       assignedToUserId: assignment.userId,
+      assignedToName: null,
+      assignedAt: assignment.userId ? nowIso : null,
+      assignedBy: assignment.userId ? 'system:event-task-engine' : null,
       pendingAssignmentRule: assignment.pendingRule || null,
-      history: [{
+      history: [historyEntry({
         fromStatus: null,
         toStatus: status,
-        actorUserId: 'system',
+        actorUserId: 'system:event-task-engine',
         notes: `created from ${event.eventType} via ${definition.id}/${rule.id}`,
-        occurredAt: nowIso,
-      }],
+        nowIso,
+      })],
+      entityType,
+      entityId: event.aggregateId || null,
+      entityName: subject,
+      rung: payload.toRung != null ? payload.toRung : null,
+      estimateMinutes: typeof rule.estimateMinutes === 'number' && rule.estimateMinutes > 0 ? rule.estimateMinutes : null,
       masterJobId: interpolatedTags.masterJobId,
       iwoId: interpolatedTags.iwoId,
       brandId: interpolatedTags.brandId,
       category: interpolatedTags.category,
       idempotencyKey: id,                   // task id IS the idempotency key
+      createdBy: 'system:event-task-engine',
       createdAt: nowIso,
       updatedAt: nowIso,
     };
 
-    // Idempotent set — re-processing the same (event, rule) writes
-    // the same content. Don't fail on conflict.
     await ref.set(taskDoc, { merge: false });
     ids.push(id);
   }
@@ -197,6 +237,7 @@ module.exports = {
   emitTasksForDefinition,
   resolveAssignment,
   taskIdFor,
+  subjectFor,
   TASKS_COLLECTION,
   DEFINITIONS_COLLECTION,
 };

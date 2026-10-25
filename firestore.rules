@@ -4012,7 +4012,28 @@ service cloud.firestore {
 
     match /generated_tasks/{taskId} {
       allow read: if isStaffAuth();
+      // Every person-driven transition goes through the `taskAction` /
+      // `createTask` callables (Phase 6.E), which check who may act and write
+      // the history[] row. Direct client writes stay admin-only.
       allow write: if isAdmin();
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Daily focus plans (Phase 6.E — Daily Plan). One doc per person per
+    // day, `${date}_${assigneeUid}`. Drafted 17:00, shaped by the manager,
+    // published 06:00, closed 20:00 (functions/src/event-task-engine/).
+    // Readable by the person it is for, the manager it names, and the
+    // parent org; written ONLY by the `dailyPlanAction` callable, which
+    // keeps the manager's writes (items, day goal, reviewed) and the
+    // assignee's (acknowledge, outcomes, wrap-up) apart.
+    // ────────────────────────────────────────────────────────────────
+    match /daily_plans/{planId} {
+      allow read: if isStaffAuth() && (
+        resource.data.assigneeUid == request.auth.uid
+        || resource.data.managerUid == request.auth.uid
+        || isParentOrgPrincipal()
+      );
+      allow write: if false;
     }
   }
 }
