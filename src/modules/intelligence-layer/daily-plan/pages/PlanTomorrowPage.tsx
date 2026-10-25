@@ -130,7 +130,7 @@ export default function PlanTomorrowPage() {
       {error && (
         <div className="rounded-[10px] px-3 py-2 flex items-start gap-2 text-[12.5px]" role="alert" style={{ backgroundColor: 'var(--rag-red-soft)', color: 'var(--rag-red)', border: '1px solid var(--rag-red)' }}>
           <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
-          <span>The team's plans could not be loaded: {error.message}. Check your access and reload.</span>
+          <span>The team's plans could not be loaded: {error.message.replace(/\.$/, '')}. Check your access and reload.</span>
         </div>
       )}
 
