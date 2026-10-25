@@ -112,6 +112,35 @@ export interface DailyPlanActionResponse {
 export const dailyPlanActionFn: HttpsCallable<DailyPlanActionRequest, DailyPlanActionResponse> =
   httpsCallable(functions, 'dailyPlanAction');
 
+// ─── draftTasksWithAi ────────────────────────────────────────────────────────
+
+export interface DraftTasksWithAiRequest {
+  /** What needs to happen, in the manager's words. */
+  intent: string;
+  /** Whose tasks. Omit for your own. A uid, an employee doc id or an email. */
+  assigneeUid?: string;
+  /** The plan date the drafts are for (YYYY-MM-DD). */
+  planDate?: string;
+  maxTasks?: number;
+}
+export interface AiTaskDraft {
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  kind: 'approval' | 'review' | 'action' | 'followup' | 'notify';
+  estimateMinutes: number;
+  dueDate: string | null;
+  why: string;
+}
+export interface DraftTasksWithAiResponse {
+  drafts: AiTaskDraft[];
+  assigneeUid: string;
+  model: string;
+}
+/** Dark without ANTHROPIC_API_KEY: the call then fails with `failed-precondition` and a sentence to show. */
+export const draftTasksWithAiFn: HttpsCallable<DraftTasksWithAiRequest, DraftTasksWithAiResponse> =
+  httpsCallable(functions, 'draftTasksWithAi');
+
 // ─── taskEngineRunNow (admin) ────────────────────────────────────────────────
 
 export interface TaskEngineRunNowRequest {
