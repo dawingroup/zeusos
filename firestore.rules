@@ -12,6 +12,14 @@ service cloud.firestore {
     // Helper Functions
     // ============================================
     
+    // `resource.data.foo` THROWS when the document or the field is absent — an
+    // opaque rule fault instead of a verdict. Every write gate guards the
+    // DISJUNCT that reads a stored field with has('foo') first
+    // (scripts/check-rules-null-safety.cjs keeps the class closed).
+    function has(field) {
+      return resource != null && field in resource.data;
+    }
+
     function isAuthenticated() {
       return request.auth != null;
     }
@@ -564,6 +572,12 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated(); // Allow authenticated users to create their profile
       allow update, delete: if request.auth.uid == userId || isAdmin();
+
+      // Per-user preferences (`users/{uid}/settings/preferences`, read by
+      // GlobalContext). The owner only — nothing in here is shared.
+      match /settings/{settingId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
     
     // ============================================
@@ -658,6 +672,25 @@ service cloud.firestore {
     }
 
     // Business Pivots (company-level, shared across reviews)
+    // Strategy aggregation sources (aggregation.service): KPI definitions,
+    // OKR objectives and strategy documents under the company. Same gate as
+    // strategy_reviews.
+    match /companies/{companyId}/kpiDefinitions/{kpiId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/okrObjectives/{objectiveId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/strategyDocuments/{documentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+
     match /companies/{companyId}/business_pivots/{pivotId} {
       allow read: if isAuthenticated();
       allow create, update: if isAuthenticated();
@@ -813,6 +846,46 @@ service cloud.firestore {
     }
 
     // Budget Spreadsheet (companies subcollection)
+    // Native-ledger finance collections (Phase 1 rebuild) that had no block:
+    // chart of accounts, journals, budget revisions, accountability reports,
+    // refund requests, the procurement-requirements pool the budget importer
+    // reads, and the QBO bank-balance mirror. Same gate as the sibling finance
+    // collections; deletes stay admin-only; the mirror is read-only here.
+    match /companies/{companyId}/accounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/journals/{journalId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/budgetRevisions/{revisionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/accountabilityReports/{reportId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/refundRequests/{requestId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/procurementRequirements/{requirementId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+    match /companies/{companyId}/qbo_bank_balances/{balanceId} {
+      // Written by the QuickBooks sync (Admin SDK); clients only read.
+      allow read: if isAuthenticated();
+    }
+
     match /companies/{companyId}/budgets/{budgetId} {
       allow read: if isAuthenticated();
       allow create, update: if isAuthenticated();
@@ -1363,6 +1436,18 @@ service cloud.firestore {
       allow create: if isAuthenticated();
       allow update: if isAuthenticated();
       allow delete: if isAdmin();
+
+      // Append-only change history written by contract.service.
+      match /audit/{auditId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+      }
+    }
+
+    match /contract_amendments/{amendmentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isAdmin();
     }
 
     // ============================================
@@ -1474,11 +1559,11 @@ service cloud.firestore {
     }
     
     function isCreator() {
-      return isAuthenticated() && resource.data.createdBy == request.auth.uid;
+      return isAuthenticated() && has('createdBy') && resource.data.createdBy == request.auth.uid;
     }
-    
+
     function hasValidTimestamps() {
-      return request.resource.data.createdAt == resource.data.createdAt &&
+      return has('createdAt') && request.resource.data.createdAt == resource.data.createdAt &&
              request.resource.data.updatedAt == request.time;
     }
     
@@ -1917,6 +2002,48 @@ service cloud.firestore {
     }
 
     // Competency Assessments
+    // Performance management (hr-central/performance): goals, reviews,
+    // improvement plans and feedback. Mirrors competency_assessments — HR and
+    // admins see everything; an employee and their manager see their own.
+    match /performance_goals/{goalId} {
+      allow read: if isAuthenticated() && (isAdmin() || isHR()
+        || (has('employeeId') && resource.data.employeeId == request.auth.uid)
+        || (has('managerId') && resource.data.managerId == request.auth.uid));
+      allow create: if isAuthenticated();
+      allow update: if isHR()
+        || (has('employeeId') && resource.data.employeeId == request.auth.uid)
+        || (has('managerId') && resource.data.managerId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    match /performance_reviews/{reviewId} {
+      allow read: if isAuthenticated() && (isAdmin() || isHR()
+        || (has('employeeId') && resource.data.employeeId == request.auth.uid)
+        || (has('managerId') && resource.data.managerId == request.auth.uid));
+      allow create: if isAuthenticated();
+      allow update: if isHR()
+        || (has('managerId') && resource.data.managerId == request.auth.uid)
+        || (has('createdBy') && resource.data.createdBy == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    match /performance_improvement_plans/{planId} {
+      allow read: if isAuthenticated() && (isAdmin() || isHR()
+        || (has('employeeId') && resource.data.employeeId == request.auth.uid)
+        || (has('managerId') && resource.data.managerId == request.auth.uid));
+      allow create: if isHR() || isAdmin();
+      allow update: if isHR()
+        || (has('managerId') && resource.data.managerId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    match /feedback/{feedbackId} {
+      allow read: if isAuthenticated() && (isAdmin() || isHR()
+        || (has('employeeId') && resource.data.employeeId == request.auth.uid)
+        || (has('createdBy') && resource.data.createdBy == request.auth.uid));
+      allow create: if isAuthenticated();
+      allow update: if isHR()
+        || (has('createdBy') && resource.data.createdBy == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
     match /competency_assessments/{assessmentId} {
       allow read: if isAuthenticated() && (
         isAdmin() || isHR() ||
@@ -2523,6 +2650,14 @@ service cloud.firestore {
     // Comms config (Phase 4.2) — kill-switches + provider config the webhook +
     // send path read. Staff read; parent-org admins write.
     match /commsConfig/{configId} {
+      allow read:  if isStaffAuth();
+      allow write: if isParentOrgPrincipal();
+    }
+
+    // Routing-engine configuration (Phase 6.A.2 EngineConfig: tier SLA policy,
+    // brandCapacityThreshold, icMarkupPctDefault). Read by the traffic and
+    // billing surfaces; written by parent-org admins.
+    match /engine_config/{configId} {
       allow read:  if isStaffAuth();
       allow write: if isParentOrgPrincipal();
     }
@@ -3186,10 +3321,10 @@ service cloud.firestore {
       return request.auth.uid in get(/databases/$(database)/documents/chatChannels/$(channelId)).data.memberIds;
     }
     function chatMembershipUnchanged() {
-      return request.resource.data.memberIds == resource.data.memberIds;
+      return has('memberIds') && request.resource.data.memberIds == resource.data.memberIds;
     }
     function chatIsOwnerOrAdmin() {
-      return isAdmin() || request.auth.uid == resource.data.createdBy;
+      return isAdmin() || (has('createdBy') && request.auth.uid == resource.data.createdBy);
     }
 
     match /chatChannels/{channelId} {
@@ -3234,6 +3369,39 @@ service cloud.firestore {
     // "why this matters · <AGENT>" task headers resolve from it); only admins
     // may create/update/delete. The dispatcher (Admin SDK) bypasses rules to
     // update locked `metrics`.
+    // Intelligence-layer feeds (anomalies, cross-module insights, predictions,
+    // suggestions). Written by Cloud Functions through the Admin SDK; staff
+    // read them and update status / acknowledgement from the dashboard.
+    match /intelligenceAnomalies/{anomalyId} {
+      allow read: if isStaffAuth();
+      allow update: if isStaffAuth();
+    }
+    match /intelligenceInsights/{insightId} {
+      allow read: if isStaffAuth();
+      allow update: if isStaffAuth();
+    }
+    match /intelligencePredictions/{predictionId} {
+      allow read: if isStaffAuth();
+      allow update: if isStaffAuth();
+    }
+    match /intelligenceSuggestions/{suggestionId} {
+      allow read: if isStaffAuth();
+      allow update: if isStaffAuth();
+    }
+
+    // Client-written audit trail of task assignments (taskAssignmentService) —
+    // append-only; admins read.
+    match /auditLog/{entryId} {
+      allow read: if isAdmin();
+      allow create: if isStaffAuth();
+    }
+
+    // Feedback on AI answers (knowledgeBaseService) — append-only; admins read.
+    match /ai_feedback/{feedbackId} {
+      allow read: if isAdmin();
+      allow create: if isStaffAuth();
+    }
+
     match /agents/{agentId} {
       allow read:   if isStaffAuth();
       allow create: if isAdmin();
@@ -3566,6 +3734,20 @@ service cloud.firestore {
     // Written transactionally by every Cloud Function via Admin SDK
     // (which bypasses these rules). The client SDK can READ for audit
     // and for the AM UI's event-log tab; it can never WRITE.
+    // Collection-group counterpart of internal_work_orders/{iwoId}/time_entries.
+    // The /time and /time/team pages query time_entries ACROSS every IWO, and a
+    // nested rule does not authorise a collection-group query — only a
+    // {path=**} rule does. Decided on the denormalised fields alone (no get():
+    // a group result set would trip the 20-access-call limit). A person always
+    // reads their own entries; a brand reads its own; the parent reads all.
+    // Writes stay CFn-only (postTimeEntry).
+    match /{path=**}/time_entries/{teId} {
+      allow read: if isParentOrgPrincipal()
+        || (isSubsidiaryOrgPrincipal() && resource.data.subsidiaryOrgId == callerHomeOrgId())
+        || (isStaffAuth() && resource.data.userId == request.auth.uid);
+      allow write: if false;
+    }
+
     match /domain_events/{eventId} {
       allow read: if isParentOrgPrincipal();
       allow write: if false;

@@ -91,3 +91,8 @@ tmp/
 .dawinos-sa-key.json
 *-firebase-adminsdk-*.json
 
+# Generated deployable rules — `firestore.rules` is the source of truth. Built
+# by scripts/build-firestore-rules.cjs (firebase.json predeploy): comments
+# stripped so the ruleset stays under the 256 KiB release limit.
+firestore.rules.deploy
+

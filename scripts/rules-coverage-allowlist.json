@@ -1,0 +1,169 @@
+{
+  "_comment": "Collections referenced in src/ that intentionally have NO firestore.rules match block. check-rules-coverage.cjs skips these. The default expectation is that a client-referenced collection HAS a module-aware rules block, so this list should stay SHORT; any entry must fall into one of the documented buckets below and carry a justification. Written 2026-10-25 when the gate was ported from DawinOS: every live ZeusOS collection it found (engine_config, users/*/settings, the intelligence* feeds, HR performance_*, feedback, contract_amendments, contracts/*/audit, auditLog, ai_feedback, the companies/* finance + strategy subcollections, the time_entries collection group) got a real match block in the same PR; only code that is not reachable from a routed page is listed here.",
+  "_buckets": {
+    "id-generation-idiom": "`doc(collection(db,'x')).id` only mints a random ID — never reads/writes the collection. The script detects and skips this idiom automatically, so no allowlist entry is needed.",
+    "extension-or-admin-sdk": "Written only by a Firebase Extension or a Cloud Function via the Admin SDK, which bypasses rules; clients never read/write directly. An entry here must name the writer.",
+    "dead-scaffolding": "DawinOS code that survives in the fork but belongs to a module ZeusOS removed in Phase 1 (the v6 compatibility API, the Firestore migration runner, design-manager and MES paths). Writing a match block would open data for a feature that does not exist. The right fix is to DELETE the code and the entry together; until then the collection stays denied.",
+    "unreferenced-scaffolding": "A service or hook references the collection, but no routed page imports it (checked 2026-10-25 against src/router/index.tsx: the hr-central organization / skills / succession trees, contract templates, the strategy aggregation + snapshot services and the legacy useSettings hook are exported from their module barrels and consumed by nothing that mounts). The access site cannot execute in a browser, so a match block would open data for a feature that does not exist. WHEN YOU WIRE THE FEATURE: remove the entry and add a real module-aware match block; the gate will fail until you do, which is the point.",
+    "test-harness": "src/testing seeders and runners — never bundled into the app; they run against the emulator with their own credentials.",
+    "known-denied": "LIVE code that reaches a path no rule covers, where the owner decided (or a follow-up must decide) to leave it refused rather than add a block. Every entry is FILE-scoped (allowSites) and carries a note naming the caller and why it stays denied. This is a backlog, not a pass: fix the caller and delete the entry."
+  },
+  "allow": [],
+  "_allowSites_note": "allowSites silences ONLY the listed files' access sites for a key, so a new caller of the same path still fails the gate. Keys are leaf collection paths with ids as * (companies/*/departments), **/name for a collection group, `invalid fn(path)` for a wrong-parity path. The checker warns about entries that no longer suppress anything — delete them when it does.",
+  "allowSites": {
+    "deprecationLogs": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS v6 compatibility API middleware; nothing in ZeusOS mounts src/api/compatibility.",
+      "files": ["src/api/compatibility/middleware/deprecation-logger.ts"]
+    },
+    "engagements": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS advisory engagements through the v6 compatibility adapters and the migration runner; advisory was removed in PR #20.",
+      "files": [
+        "src/api/compatibility/adapters/program-adapter.ts",
+        "src/api/compatibility/adapters/project-adapter.ts",
+        "src/migration/scripts/migrate-projects.ts"
+      ]
+    },
+    "v6_payments": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS v6 compatibility API; not mounted in ZeusOS.",
+      "files": ["src/api/compatibility/adapters/payment-adapter.ts"]
+    },
+    "v6_projects": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS v6 compatibility API and migration runner; not mounted in ZeusOS.",
+      "files": [
+        "src/api/compatibility/adapters/payment-adapter.ts",
+        "src/api/compatibility/adapters/program-adapter.ts",
+        "src/api/compatibility/adapters/project-adapter.ts",
+        "src/migration/scripts/migrate-payments.ts"
+      ]
+    },
+    "migrationBackups": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS Firestore migration runner (src/migration); never run from the ZeusOS app.",
+      "files": ["src/migration/utils/rollback-manager.ts"]
+    },
+    "migrationJobs": {
+      "bucket": "dead-scaffolding",
+      "note": "DawinOS Firestore migration runner (src/migration); never run from the ZeusOS app.",
+      "files": ["src/migration/utils/progress-tracker.ts", "src/migration/utils/rollback-manager.ts"]
+    },
+    "designProjects/*/designItems/*/deliverables": {
+      "bucket": "dead-scaffolding",
+      "note": "The shared file manager still carries the design-manager deliverables path; the designProjects rules were removed with the module in Phase 1. Delete the branch when the file manager is next touched.",
+      "files": ["src/shared/services/fileManager/fileManagerService.ts"]
+    },
+    "manufacturingOrders": {
+      "bucket": "dead-scaffolding",
+      "note": "kpiAutoMeasurement still has a manufacturing-orders KPI source from DawinOS; the MES was removed in Phase 1. Replace with an agency KPI source (stream K of the port map) and delete this entry.",
+      "files": ["src/modules/strategy/services/kpiAutoMeasurement.service.ts"]
+    },
+    "analytics_events": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "core/services/analyticsService has no importer at all; product analytics go through src/shared/services/firebase/analytics.ts (GA4).",
+      "files": ["src/core/services/analyticsService.ts"]
+    },
+    "userSettings": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "Legacy JS hook re-exported from core/settings; nothing calls useSettings(). Preferences live at users/{uid}/settings/preferences (ruled).",
+      "files": ["src/hooks/useSettings.js"]
+    },
+    "contract_templates": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "contract-template.service is exported from the hr-central barrel; no routed page imports it.",
+      "files": ["src/modules/hr-central/services/contract-template.service.ts"]
+    },
+    "companies/*/employees": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/organization (departments, positions, reporting lines) is not what /hr/org-structure renders (src/pages/hr/OrgStructurePage.tsx imports none of it). The staff file stays closed until the feature is wired.",
+      "files": [
+        "src/modules/hr-central/organization/hooks/useOrganization.ts",
+        "src/modules/hr-central/organization/services/department.service.ts",
+        "src/modules/hr-central/organization/services/position.service.ts",
+        "src/modules/hr-central/organization/services/reporting-line.service.ts"
+      ]
+    },
+    "companies/*/critical_roles": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/succession — SuccessionDashboard is not routed.",
+      "files": ["src/modules/hr-central/succession/services/successionService.ts"]
+    },
+    "companies/*/development_plans": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/succession — the routed /hr/performance/development-plans page uses performanceService, not this.",
+      "files": ["src/modules/hr-central/succession/services/successionService.ts"]
+    },
+    "companies/*/succession_plans": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/succession — SuccessionDashboard is not routed.",
+      "files": ["src/modules/hr-central/succession/services/successionService.ts"]
+    },
+    "companies/*/talent_pools": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/succession — SuccessionDashboard is not routed.",
+      "files": ["src/modules/hr-central/succession/services/successionService.ts"]
+    },
+    "companies/*/departments": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "strategy aggregation + snapshot services; their hooks (usePerformanceAggregation/Trends/Snapshot) are consumed by no routed page — the live strategy pages read okr_objectives / kpi_definitions (ruled).",
+      "files": ["src/modules/strategy/services/aggregation.service.ts", "src/modules/strategy/services/performanceSnapshot.service.ts"]
+    },
+    "companies/*/subsidiaries": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "strategy aggregation + snapshot services — see companies/*/departments.",
+      "files": ["src/modules/strategy/services/aggregation.service.ts", "src/modules/strategy/services/performanceSnapshot.service.ts"]
+    },
+    "companies/*/teams": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "strategy aggregation service — see companies/*/departments.",
+      "files": ["src/modules/strategy/services/aggregation.service.ts"]
+    },
+    "certifications": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — useSkills is consumed by no routed page (the /hr/performance pages use performanceService).",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "employee_skills": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "skill_requirements": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "skills": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "training_budgets": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "training_enrollments": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "training_programs": {
+      "bucket": "unreferenced-scaffolding",
+      "note": "hr-central/skills — see certifications.",
+      "files": ["src/modules/hr-central/skills/services/skillsService.ts"]
+    },
+    "kpis": {
+      "bucket": "test-harness",
+      "note": "Seeded by the emulator test harness only.",
+      "files": ["src/testing/hooks/useTestRunner.ts", "src/testing/seeders/testDataSeeder.ts"]
+    },
+    "okrs": {
+      "bucket": "test-harness",
+      "note": "Seeded by the emulator test harness only.",
+      "files": ["src/testing/hooks/useTestRunner.ts", "src/testing/seeders/testDataSeeder.ts"]
+    }
+  }
+}
