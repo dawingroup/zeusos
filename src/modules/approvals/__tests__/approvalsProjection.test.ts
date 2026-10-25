@@ -176,6 +176,25 @@ describe('supplier invoices', () => {
     expect(item.entity).toMatchObject({ type: 'talentInvoice', id: 't1', masterJobId: 'mj1' });
   });
 
+  it('shows how far a multi-signature plan has got, and nothing for a single-signature one', () => {
+    const base = { id: 't2', status: 'SUBMITTED', createdAt: daysAgo(0) };
+    expect(projectTalentInvoice({ ...base, approval: { pendingLevel: 1, signatures: [{ level: 1, label: 'Talent lead' }] } }, NOW)!.title).toBe('Talent invoice t2');
+    const two = projectTalentInvoice(
+      {
+        ...base,
+        approval: { pendingLevel: 2, signatures: [{ level: 1, label: 'Brand MD', approvedBy: 'u_md' }, { level: 2, label: 'Zeus Group CEO', approvedBy: null }] },
+      },
+      NOW,
+    )!;
+    expect(two.title).toBe('Talent invoice t2 — level 2 of 3 (Zeus Group CEO)'.replace('of 3', 'of 2'));
+    // No pendingLevel stamped yet: derive it from the first unsigned level.
+    const derived = projectTalentInvoice(
+      { ...base, approval: { signatures: [{ level: 1, label: 'Brand MD', approvedBy: 'u_md' }, { level: 2, label: 'CEO' }, { level: 3, label: 'Finance' }] } },
+      NOW,
+    )!;
+    expect(derived.title).toBe('Talent invoice t2 — level 2 of 3 (CEO)');
+  });
+
   it('surfaces SUBMITTED media invoices carrying the media plan for the route', () => {
     const item = projectMediaSupplierInvoice(
       { id: 'mi1', mediaPlanId: 'mp1', masterJobId: 'mj1', vehicleType: 'OOH', status: 'SUBMITTED', amountMinor: 9_000_000, currency: 'KES', createdBy: 'u_media', createdAt: daysAgo(0) },

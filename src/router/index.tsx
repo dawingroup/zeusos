@@ -102,6 +102,9 @@ const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pag
 // callables (ECD rungs, acceptInternal, approveSow, change orders, supplier
 // invoices). Dual-scope like /time/team; no org-kind guard.
 const ApprovalsInboxPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalsInboxPage'));
+// Settings → Approval routing (routing v2): the KES signature ladder for
+// supplier spend. Parent-org admins only.
+const ApprovalRoutingSettingsPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalRoutingSettingsPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -646,6 +649,8 @@ export const router = createBrowserRouter([
       { path: 'notification-settings',  element: <PageWrapper><NotificationSettingsPage /></PageWrapper> },
       // Phase 5 — per-user appearance preferences (theme / density / accent).
       { path: 'settings/appearance',    element: <PageWrapper><AppearanceSettingsPage /></PageWrapper> },
+      // Approval routing v2 — who signs supplier spend (port stream F part 2).
+      { path: 'settings/approval-routing', element: <PageWrapper><ParentOrgGuard><ApprovalRoutingSettingsPage /></ParentOrgGuard></PageWrapper> },
 
       // Admin
       // Org settings hub (General / Users / Access / Integrations / Modules / …).
