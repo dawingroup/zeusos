@@ -15,6 +15,7 @@ import { Loader2, Plus, Send, Hash, MessagesSquare, Settings } from 'lucide-reac
 import { Banner } from '@/shared/components/data-display';
 import { useAuth } from '@/core/hooks/useAuth';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import {
   subscribeToChannels,
   subscribeToChannelMessages,
@@ -74,10 +75,13 @@ export default function TeamChatPage() {
   const endRef = useRef<HTMLDivElement>(null);
 
   // Presence heartbeat + subscriptions.
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (!me) return;
     const stopBeat = startPresenceHeartbeat(me.uid, me.name);
-    const unsubP = subscribeToPresence(setPresence);
+    const unsubP = subscribeToPresence(
+      (byUid) => { setPresence(byUid); health.ok(); },
+      () => health.fail(),
+    );
     const unsubS = subscribeStaff(setStaff);
     return () => { stopBeat(); unsubP(); unsubS(); };
   }, [me]);

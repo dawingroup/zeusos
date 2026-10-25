@@ -57,6 +57,7 @@ import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
 import { GlobalTaskButton } from '@/modules/intelligence-layer/components/GlobalTaskButton';
 import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
 import { ActionCenter } from '@/modules/intelligence-layer/components/ActionCenter';
+import { ToastHost } from '@/shared/components/feedback/ToastHost';
 import {
   getAllCommandItems,
   AGENCY_NAVIGATION,
@@ -1247,6 +1248,9 @@ export function AppShell({ children }: AppShellProps) {
       <div className="hidden lg:block">
         <ActionCenter />
       </div>
+
+      {/* Toast bus + optimistic-write failure reporter (shared/components/feedback). */}
+      <ToastHost />
 
       {/* Global AI Assistant FAB */}
       <AIAssistantFAB

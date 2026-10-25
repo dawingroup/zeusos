@@ -1,16 +1,17 @@
 /**
  * FX rate service — looks up the effective rate at a given date.
  *
- * Reads `fx_rates/{YYYY-MM-DD}`. Falls back to seeded rates from the
- * finance module (EXCHANGE_RATES_TO_UGX) if the date doc is missing —
- * this keeps the standalone slice working without seeded FX data.
+ * Reads `fx_rates/{YYYY-MM-DD}`. Falls back to the ONE static table in
+ * `src/shared/utils/fxRates.ts` if the date doc is missing — and REFUSES
+ * (throws) for a currency that table does not know, instead of silently
+ * converting at 1.
  *
  * Phase 5 wires a real feed (Bank of Uganda / CBK / Open Exchange Rates).
  */
 
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase';
-import { EXCHANGE_RATES_TO_UGX } from '@/modules/finance/constants/currency.constants';
+import { crossRateViaFunctional } from '@/shared/utils/fxRates';
 import type { CurrencyCode } from '../types/money.types';
 import type { EffectiveFXRate, FXRateSnapshot } from '../types/fx-rate.types';
 import { COLLECTIONS } from '../constants/collections';
@@ -69,12 +70,14 @@ export async function getEffectiveRate(
     }
   }
 
-  // Fallback: cross via UGX using the seeded rate table.
-  const rate = crossViaUGX(from, to);
+  // Fallback: cross via the functional currency on the static table. A
+  // currency the table does not know is refused — never a rate of 1.
+  const cross = crossRateViaFunctional(from, to);
+  if (!cross.ok) throw new Error(`[fx-rate] ${cross.message}`);
   return {
     from,
     to,
-    rate,
+    rate: cross.rate,
     effectiveDate: date,
     source: 'manual',
   };
@@ -91,13 +94,6 @@ function resolveRateFromSnapshot(
   if (fromVsBase == null || toVsBase == null) return null;
   // 1 from = (toVsBase / fromVsBase) to.
   return toVsBase / fromVsBase;
-}
-
-function crossViaUGX(from: CurrencyCode, to: CurrencyCode): number {
-  const fromToUgx = EXCHANGE_RATES_TO_UGX[from] ?? 1;
-  const toToUgx   = EXCHANGE_RATES_TO_UGX[to]   ?? 1;
-  // 1 from = fromToUgx UGX = (fromToUgx / toToUgx) to.
-  return fromToUgx / toToUgx;
 }
 
 /**

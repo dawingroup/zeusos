@@ -44,17 +44,25 @@ vi.mock('../services/time-tracking.service', async () => {
   };
 });
 
-// Resolve uid → name deterministically in tests (avoids hitting Firestore).
-vi.mock('../services/user-directory.service', () => ({
-  resolveUserNames: (uids: string[]) =>
-    Promise.resolve(Object.fromEntries(uids.map((u) => [u, `Name(${u})`]))),
-}));
+// Names render through the shared people directory (<PersonName>), which
+// subscribes to Firestore lazily; stub the db module so importing it never
+// initialises Firestore under the unit mocks.
+vi.mock('@/shared/services/firebase/firestore', () => ({ db: {} }));
 
 vi.mock('@/core/settings', () => ({
   useCurrentDawinUser: () => mockUseUser(),
 }));
 
 import TeamTimePage from '../pages/TeamTimePage';
+import { primePeopleDirectory, resetPeopleDirectory } from '@/shared/people';
+
+// Deterministic names for the uids the fixtures use, without Firestore.
+beforeEach(() => {
+  resetPeopleDirectory();
+  primePeopleDirectory(
+    ['u_a', 'u_b', 'u_zed', 'u_admin', 'u_lead'].map((uid) => ({ name: `Name(${uid})`, uid, source: 'user' as const })),
+  );
+});
 
 // Org-context fixtures. The real `isParentOrgUser` / `resolveHomeSubsidiaryId`
 // helpers run against these (only the user hook is mocked).

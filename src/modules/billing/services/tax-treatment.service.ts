@@ -11,27 +11,26 @@
  */
 
 import type { TaxTreatment } from '../types/tax.types';
+import { VAT_RATE_BPS, type TaxJurisdiction } from '@/shared/constants/tax';
 
 /**
- * ISO-2 jurisdiction code derived from a subsidiary's base country.
- * Centralised so the per-organisation `base_country` field that lands
- * in Phase 3.A.5 has one canonical mapping site.
+ * ISO-2 jurisdiction code derived from a subsidiary's base country. The
+ * rate table itself lives in `src/shared/constants/tax.ts` so the invoice
+ * treatment and the tax arithmetic can never disagree.
  */
-export type Jurisdiction = 'UG' | 'KE' | 'TZ' | 'RW' | 'US' | 'OTHER';
+export type Jurisdiction = TaxJurisdiction;
 
 interface DomesticRate {
   rateBps: number;
   note: string;
 }
 
-const DOMESTIC_VAT: Record<Jurisdiction, DomesticRate | null> = {
-  UG: { rateBps: 1800, note: 'VAT 18% (UG domestic)' },
-  KE: { rateBps: 1600, note: 'VAT 16% (KE domestic)' },
-  TZ: { rateBps: 1800, note: 'VAT 18% (TZ domestic)' },
-  RW: { rateBps: 1800, note: 'VAT 18% (RW domestic)' },
-  US: { rateBps: 0,    note: 'No federal VAT (US)' },
-  OTHER: null,
-};
+function domesticVat(jurisdiction: Jurisdiction): DomesticRate | null {
+  if (jurisdiction === 'OTHER') return null;
+  const rateBps = VAT_RATE_BPS[jurisdiction];
+  if (rateBps === 0) return { rateBps: 0, note: jurisdiction === 'US' ? 'No federal VAT (US)' : 'Out of VAT scope' };
+  return { rateBps, note: `VAT ${rateBps / 100}% (${jurisdiction} domestic)` };
+}
 
 /**
  * Resolve the tax treatment for an invoice raised from `from` to `to`.
@@ -48,7 +47,7 @@ export function taxTreatmentFor(
   to: Jurisdiction,
 ): TaxTreatment {
   if (from === to) {
-    const domestic = DOMESTIC_VAT[from];
+    const domestic = domesticVat(from);
     if (domestic && domestic.rateBps > 0) {
       return {
         type: 'STANDARD_VAT',

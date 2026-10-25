@@ -30,6 +30,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { auth, db } from '@/shared/services/firebase';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import { createUser as createDawinUser, getUserByUid } from '@/core/settings/settingsService';
 import type {
   GlobalState,
@@ -468,11 +469,11 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // Notifications listener
-  useEffect(() => {
+  // Notifications listener. A listener that errors is closed for good by the
+  // SDK — useResilientSubscription re-attaches it (fresh token, capped
+  // backoff, and again on wake/online) so the bell survives a laptop sleep.
+  useResilientSubscription((health) => {
     if (!state.auth.userId || !state.currentOrganizationId) return;
-
-    let unsubscribe: (() => void) | undefined;
 
     try {
       const notificationsQuery = query(
@@ -483,7 +484,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         limit(50)
       );
 
-      unsubscribe = onSnapshot(
+      return onSnapshot(
         notificationsQuery,
         (snapshot) => {
           const notifications = snapshot.docs.map((d) => ({
@@ -492,14 +493,15 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
           })) as GlobalNotification[];
 
           dispatch({ type: 'SET_NOTIFICATIONS', payload: notifications });
+          health.ok();
         },
         (error) => {
           // Handle errors gracefully (e.g., index still building)
           console.warn('[GlobalContext] Notifications listener error:', error.message);
-          // Don't crash the app - just log the error and continue
           if (error.code === 'failed-precondition') {
             console.info('[GlobalContext] Firestore index is building. Notifications will load once index is ready.');
           }
+          health.fail();
         }
       );
     } catch (error) {
@@ -507,11 +509,8 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
       console.warn('[GlobalContext] Error setting up notifications listener:', error);
       // Initialize with empty array to prevent undefined state
       dispatch({ type: 'SET_NOTIFICATIONS', payload: [] });
+      return undefined;
     }
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
   }, [state.auth.userId, state.currentOrganizationId]);
 
   // Online/offline status

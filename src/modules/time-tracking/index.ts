@@ -20,6 +20,4 @@ export {
   type UserBucket,
 } from './services/time-tracking.service';
 
-export { resolveUserNames, type UserNameMap } from './services/user-directory.service';
-
 export { AddTimeEntryDialog } from './components/AddTimeEntryDialog';

@@ -5,6 +5,7 @@
 
 // Portal redesign primitives (Phase 7)
 export { RagBadge, type RagTone, type RagBadgeProps } from './RagBadge';
+export { EnumChip } from './EnumChip';
 export { Sparkline, type SparklineProps } from './Sparkline';
 export { KPICard, KPIGrid, type KPICardProps, type KPIGridProps, type Trend } from './KPICard';
 export { Banner, type BannerTone, type BannerProps } from './Banner';

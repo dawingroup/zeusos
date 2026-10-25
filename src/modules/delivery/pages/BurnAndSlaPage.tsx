@@ -33,9 +33,10 @@
  * mocked out per the existing pattern in IWOInboxPage's siblings).
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import type { InternalWorkOrder } from '@/modules/assignment';
 import type { SubsidiaryId } from '@/core/settings/types';
 import { subscribeIWOActive } from '../services/firestore';
@@ -122,15 +123,20 @@ export default function BurnAndSlaPage() {
   // within a render. The subscription firing also re-renders.
   const [now, setNow] = useState<number>(() => Date.now());
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (!homeSub) return;
     const u = subscribeIWOActive(
       homeSub,
       (next) => {
         setIwos(next);
         setNow(Date.now());
+        setErr(null);
+        health.ok();
       },
-      (e) => setErr(`Burn roll-up load failed: ${e.message}`),
+      (e) => {
+        setErr(`Burn roll-up load failed: ${e.message}`);
+        health.fail();
+      },
     );
     return () => u();
   }, [homeSub]);
