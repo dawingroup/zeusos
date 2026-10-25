@@ -26,6 +26,7 @@ import {
   useEmployeeTaskInbox,
   type EmployeeTask,
 } from '@/modules/intelligence-layer/hooks/useEmployeeTaskInbox';
+import { ActionCenterFocusStrip } from '@/modules/intelligence-layer/daily-plan/components/ActionCenterFocusStrip';
 
 const LS_DISMISSED = 'zeus_ac_dismissed_v1';
 const LS_OPEN = 'zeus_ac_open_v1';
@@ -185,6 +186,9 @@ export function ActionCenter() {
           <ChevronDown size={16} />
         </button>
       </div>
+
+      {/* Phase 6.E — today's plan in one line (3/7 done · day goal · wrap-up due). */}
+      <ActionCenterFocusStrip />
 
       {/* Body */}
       <div className="scroll" style={{ flex: 1, overflowY: 'auto', padding: 10, display: 'flex', flexDirection: 'column', gap: 8 }}>
