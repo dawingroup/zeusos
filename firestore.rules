@@ -4035,5 +4035,93 @@ service cloud.firestore {
       );
       allow write: if false;
     }
+
+    // ────────────────────────────────────────────────────────────────
+    // Memos (DawinOS stream G port — docs/PHASE_6_G_MEMOS.md). Written
+    // decision records: numbered at submit, routed through the people
+    // named under Through to the people named under To, signed, issued
+    // as a frozen snapshot. Drafts are the author's; EVERY later
+    // transition goes through the `memoAction` callable (submit / clear
+    // / decide / issue / filePdf / withdraw / reopen / acknowledge),
+    // which writes the statusHistory row and the step's task.
+    //
+    // Read: a participant (author, on the route, on the distribution)
+    // always; a non-confidential memo also by its brand's own staff and
+    // by parent-org principals; an admin reads everything. The list
+    // shapes the client uses are each provable per document:
+    //   subsidiaryId == X AND confidential == false   (register)
+    //   createdBy == uid | distributionUids ∋ uid | routeUids ∋ uid
+    // ────────────────────────────────────────────────────────────────
+    function memoParticipant(m) {
+      return m.createdBy == request.auth.uid
+        || request.auth.uid in m.get('distributionUids', [])
+        || request.auth.uid in m.get('routeUids', []);
+    }
+    function canReadMemoDoc(m) {
+      return isStaffAuth() && (
+        isAdmin()
+        || memoParticipant(m)
+        || (m.get('confidential', false) == false
+            && (m.subsidiaryId == callerHomeOrgId() || isParentOrgPrincipal()))
+      );
+    }
+
+    match /memos/{memoId} {
+      allow read: if canReadMemoDoc(resource.data);
+      // A draft is created by its author, unnumbered, at version 0, with
+      // nothing the callable later writes already on it.
+      allow create: if isStaffAuth()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.status == 'draft'
+        && request.resource.data.get('version', 0) == 0
+        && !('memoNumber' in request.resource.data)
+        && !('approval' in request.resource.data)
+        && !('decision' in request.resource.data)
+        && !('issuedSnapshot' in request.resource.data)
+        && !('routeUids' in request.resource.data);
+      // Only a draft is edited, only by its author (an admin may tidy one),
+      // and only the authored fields — status, number, version, route,
+      // approval, decision and the issued snapshot are the callable's.
+      allow update: if isStaffAuth()
+        && resource.data.status == 'draft'
+        && (resource.data.createdBy == request.auth.uid || isAdmin())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'type', 'category', 'impact', 'confidential', 'subject', 'externalRef', 'header',
+          'amountMinor', 'currency', 'sections', 'attachments', 'links', 'distribution',
+          'distributionUids', 'supersedes', 'updatedAt', 'updatedBy'
+        ]);
+      // Delete: a DRAFT only — anything submitted is withdrawn, never
+      // deleted, so the file keeps its trail. An admin may delete any draft;
+      // its author one that was NEVER submitted (no number, version 0).
+      allow delete: if isStaffAuth()
+        && resource.data.status == 'draft'
+        && (isAdmin()
+            || (resource.data.createdBy == request.auth.uid
+                && !('memoNumber' in resource.data)
+                && resource.data.get('version', 0) == 0));
+
+      // Discussion on the file. Post only as yourself; edit or retract only
+      // your own words. Readable by whoever can read the memo.
+      match /comments/{commentId} {
+        allow read: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data);
+        allow create: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data)
+          && request.resource.data.authorId == request.auth.uid;
+        allow update, delete: if isStaffAuth()
+          && (resource.data.authorId == request.auth.uid || isAdmin());
+      }
+      // What was submitted, each time — written by the callable only.
+      match /versions/{versionId} {
+        allow read: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data);
+        allow write: if false;
+      }
+    }
+
+    // Forward-only memo-number counters. The callable allocates inside its
+    // transaction; no client reads or writes them (the shared `counters`
+    // collection is client-writable for PO / employee numbering, so memos
+    // keep their own).
+    match /memo_counters/{counterId} {
+      allow read, write: if false;
+    }
   }
 }

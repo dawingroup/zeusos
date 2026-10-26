@@ -4804,3 +4804,12 @@ exports.onTaskWritten = onTaskWritten;
 //   Both dark until ANTHROPIC_API_KEY is set.
 const { draftTasksWithAi } = require('./src/event-task-engine/ai/draftTasksWithAi');
 exports.draftTasksWithAi = draftTasksWithAi;
+
+// ─── Memos (DawinOS stream G port — docs/PHASE_6_G_MEMOS.md) ────────────────
+// `memoAction` — the one write path for a memo leaving the author's hands:
+//   submit / clear / decide / issue / filePdf / withdraw / reopen / acknowledge.
+//   Drafts are the author's (client writes under the `memos` rules); every
+//   later transition lands here with a statusHistory row, and the step's task
+//   is written into `generated_tasks` in the same call (lib/memoTasks.js).
+const { memoAction } = require('./src/memos');
+exports.memoAction = memoAction;

@@ -101,6 +101,11 @@ const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pag
 // Phase 6.E — Daily Plan (DawinOS stream E port).
 const MyDayPage        = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/MyDayPage'));
 const PlanTomorrowPage = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/PlanTomorrowPage'));
+// Memos (DawinOS stream G port) — written decision records.
+const MemosLayout      = lazyWithRetry(() => import('@/modules/memos/components/MemosLayout'));
+const MemoRegisterPage = lazyWithRetry(() => import('@/modules/memos/pages/MemoRegisterPage'));
+const MemoEditorPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoEditorPage'));
+const MemoDetailPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoDetailPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -577,6 +582,23 @@ export const router = createBrowserRouter([
       // through the dailyPlanAction / taskAction callables.
       { path: 'tasks/today',         element: <PageWrapper><MyDayPage /></PageWrapper> },
       { path: 'tasks/review',        element: <PageWrapper><PlanTomorrowPage /></PageWrapper> },
+
+      // Memos (DawinOS stream G port) — the register, the author's own memos,
+      // what is waiting on me, the editor and the memo as filed. Everyone
+      // writes memos, so no org-kind guard: the `memos` rules decide who reads
+      // each one, and every transition goes through the memoAction callable.
+      {
+        path: 'memos',
+        element: <PageWrapper><MemosLayout /></PageWrapper>,
+        children: [
+          { index: true,              element: <MemoRegisterPage view="all" /> },
+          { path: 'mine',             element: <MemoRegisterPage view="mine" /> },
+          { path: 'awaiting',         element: <MemoRegisterPage view="awaiting" /> },
+          { path: 'new',              element: <MemoEditorPage /> },
+          { path: ':memoId',          element: <MemoDetailPage /> },
+          { path: ':memoId/edit',     element: <MemoEditorPage /> },
+        ],
+      },
 
       // Comms — tabbed messaging module (ported from DawinOS). Everyone
       // communicates, so no org-kind guard; chatChannels rules enforce

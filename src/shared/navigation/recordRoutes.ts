@@ -42,7 +42,8 @@ export type RecordEntityType =
   | 'assetCollection'
   | 'objective'
   | 'kpi'
-  | 'scorecard';
+  | 'scorecard'
+  | 'memo';
 
 export type RecordGuard = 'parent' | 'brand' | 'delivery' | 'staff';
 
@@ -125,6 +126,11 @@ export function resolveRecordTarget(type: RecordEntityType, params: RecordTarget
       return { path: `/strategy/kpis/active/${enc(id)}`, guard: 'staff' };
     case 'scorecard':
       return { path: `/strategy/kpis/scorecards/${enc(id)}`, guard: 'staff' };
+    case 'memo':
+      // Who may read a memo is decided per document (participants, the brand,
+      // parent org, admins) by the `memos` rules; the page shows its own
+      // "not found / no access" state.
+      return { path: `/memos/${enc(id)}`, guard: 'staff' };
     default:
       return { path: null, guard: 'staff' };
   }

@@ -61,6 +61,7 @@ export const RECORD_TYPE_NOUN: Record<LabelledRecordType, string> = {
   objective: 'Objective',
   kpi: 'KPI',
   scorecard: 'Scorecard',
+  memo: 'Memo',
 };
 
 const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
@@ -95,6 +96,7 @@ const BUILT_IN: Partial<Record<LabelledRecordType, [string, (d: DocumentData) =>
   purchaseOrder: ['purchase_orders', (d) => lab(str(d.poNumber) ?? str(d.code) ?? str(d.number), str(d.supplierName))],
   supplier: ['suppliers', (d) => lab(str(d.name) ?? str(d.companyName))],
   lead: ['crm_leads', (d) => lab(str(d.name) ?? str(d.companyName) ?? str(d.contactName), str(d.contactName))],
+  memo: ['memos', (d) => lab(str(d.memoNumber) ?? str(d.subject), str(d.memoNumber) ? str(d.subject) : undefined)],
 };
 
 const resolvers = new Map<LabelledRecordType, LabelResolver>();
