@@ -150,6 +150,9 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   // Team Plans is the evening review (a parent-org principal sees every plan).
   { moduleId: 'my-day',            label: 'My Day',                    icon: 'Target',          routePath: '/tasks/today' },
   { moduleId: 'team-plans',        label: 'Team Plans',                icon: 'ClipboardCheck',  routePath: '/tasks/review' },
+  // Memos (DawinOS stream G port) — written decision records, routed to the
+  // people they name and signed; universal, like Comms.
+  { moduleId: 'memos',             label: 'Memos',                     icon: 'FileText',        routePath: '/memos' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
   // API Keys: the integration-secrets surface where ANTHROPIC / GEMINI / Meta /
   // QBO keys are entered (Settings → Integrations also links here). Surfaced
@@ -193,6 +196,8 @@ export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
   // Comms, so the head's first four + the per-brand middle stay stable.
   { moduleId: 'my-day',         label: 'My Day',      icon: 'Target',         routePath: '/tasks/today' },
   { moduleId: 'team-plans',     label: 'Team Plans',  icon: 'ClipboardCheck', routePath: '/tasks/review' },
+  // Memos — universal, in the tail like Comms so the head's first four stay stable.
+  { moduleId: 'memos',          label: 'Memos',       icon: 'FileText',       routePath: '/memos' },
   // Burn & SLA is the per-brand reporting surface for subsidiary users.
   // The cross-brand Reports page (`/reports`) is parent-org-gated and
   // lives in `NAV_MANIFEST_PARENT`; subsidiary nav doesn't include it

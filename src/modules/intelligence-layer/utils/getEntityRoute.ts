@@ -52,6 +52,7 @@ const ENTITY_TYPES: Record<string, RecordEntityType> = {
   okr: 'objective',
   kpi: 'kpi',
   scorecard: 'scorecard',
+  memo: 'memo',
 };
 
 /** The record type a task's `entityType` names, or null when it is not one we route. */

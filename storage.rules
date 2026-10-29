@@ -461,5 +461,17 @@ service firebase.storage {
       allow read:  if isAuthenticated();
       allow write: if false; // Cloud Function only.
     }
+
+    // ============================================
+    // MEMOS (DawinOS stream G port)
+    // ============================================
+    // Path layout:
+    //   memos/{subsidiaryId}/{memoId}/attachments/{fileName}  ← the author's evidence (drafts)
+    //   memos/{subsidiaryId}/{memoId}/{fileName}.pdf          ← the issued PDF, filed once
+    // Firestore holds who may see the memo; the bucket trusts staff auth.
+    match /memos/{subsidiaryId}/{memoId}/{allPaths=**} {
+      allow read:  if isAuthenticated();
+      allow write: if isAuthenticated() && isValidSize();
+    }
   }
 }
