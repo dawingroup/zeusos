@@ -48,6 +48,7 @@ HOSTING_URL="${HOSTING_URL:-https://zeusos.web.app/}"
 mkdir -p "$STATE/gated" "$STATE/deploy-failed" "$LOGS"
 
 export PATH="/opt/homebrew/bin:/opt/homebrew/opt/openjdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+BASE_PATH="$PATH"
 
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
@@ -125,7 +126,8 @@ cd "$CLONE" || { log "no clone at $CLONE"; exit 1; }
 git fetch -q --prune origin main || { log "git fetch failed — skipping this tick"; exit 0; }
 
 # ── helpers ────────────────────────────────────────────────────────────────
-lock_hash() { cat package-lock.json functions/package-lock.json zeusos-mcp-server/package-lock.json 2>/dev/null | shasum | cut -d' ' -f1; }
+# The Node major is part of the install's identity: switching majors reinstalls.
+lock_hash() { { cat package-lock.json functions/package-lock.json zeusos-mcp-server/package-lock.json 2>/dev/null; node -p 'process.versions.node.split(".")[0]'; } | shasum | cut -d' ' -f1; }
 
 prepare_tree() { # sha kind(main|pr)
   if [ "$2" = main ]; then git checkout -q -f -B main "$1"; else git checkout -q -f --detach "$1"; fi || return 1
@@ -143,6 +145,10 @@ prepare_tree() { # sha kind(main|pr)
     git ls-files --error-unmatch -- "$nm" >/dev/null 2>&1 && git update-index --skip-worktree -- "$nm"
   done
   cp "$CANONICAL/.env" .env 2>/dev/null && sed -i '' 's/^VITE_DEV_BYPASS_AUTH=.*/VITE_DEV_BYPASS_AUTH=false/' .env
+  # Install (and, in ci-gate.sh, test) under the Node major this tree's ci.yml
+  # pins, when Homebrew has that keg — see "node-mismatch" in ci-gate.sh.
+  local ci_node; ci_node="$(grep -m1 -E '^[[:space:]]*NODE_VERSION:' .github/workflows/ci.yml 2>/dev/null | grep -oE '[0-9]+' | head -1)"
+  PATH="$BASE_PATH"; [ -x "/opt/homebrew/opt/node@${ci_node:-20}/bin/node" ] && PATH="/opt/homebrew/opt/node@${ci_node:-20}/bin:$PATH"; export PATH
   local want; want="$(lock_hash)"
   if [ "$(cat "$STATE/lock-hash" 2>/dev/null)" != "$want" ] || [ ! -d node_modules ]; then
     log "lockfiles changed — npm ci ×3"
@@ -159,6 +165,9 @@ docs_only() { # sha — true when every changed file is *.md or under docs/
   files="$(git diff --name-only "$base" "$1")"
   [ -n "$files" ] && ! echo "$files" | grep -qvE '(\.md$|^docs/)'
 }
+
+# " — on node v26.9.0 (CI pins 20)" when ci-gate.sh ran on another Node major than ci.yml pins; empty otherwise.
+node_note() { grep -m1 -oE 'runs node v[0-9.]+; ci\.yml pins [0-9]+' "$1" 2>/dev/null | sed 's/^runs/ — on/; s/; ci\.yml pins / (CI pins /; s/$/)/'; }
 
 run_gate() { # sha kind label  → 0 pass, 1 fail
   local sha="$1" kind="$2" label="$3" glog="$LOGS/${1:0:12}-gate.log" args=""
@@ -177,7 +186,7 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
     local crashed skipped
     crashed="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="PASS*"{print $1}' "$glog" | paste -sd, -)"
     skipped="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="SKIP"{print $1}' "$glog" | paste -sd, -)"
-    post_status "$sha" success local-ci/gate "passed locally in ${mins}m${args:+ (fast: no emulators, no build)}${skipped:+ — not run, tree predates #163: $skipped}${crashed:+ (CLI crashed at emulator shutdown after $crashed passed)}"
+    post_status "$sha" success local-ci/gate "passed locally in ${mins}m${args:+ (fast: no emulators, no build)}$(node_note "$glog")${skipped:+ — not run, tree predates #163: $skipped}${crashed:+ (CLI crashed at emulator shutdown after $crashed passed)}"
     echo pass > "$STATE/gated/$sha"; log "PASS $label ${sha:0:9} (${mins}m)${crashed:+ — CLI teardown crash in $crashed: $glog}"; return 0
   fi
   failed_steps() { awk '/^STEP +RESULT/{t=1;next} t && $2=="FAIL"{print $1}' "$1" | paste -sd, -; }
@@ -189,12 +198,24 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
     log "retrying $label ${sha:0:9}: $failed"
     if CI_GATE_ROOT="$CLONE" bash "$BIN/ci-gate.sh" --only "$failed" >"$glog.retry" 2>&1; then
       mins=$(( ($(date +%s) - start) / 60 ))
-      post_status "$sha" success local-ci/gate "passed locally in ${mins}m ($failed passed on a retry — flaky here, worth a look)"
+      post_status "$sha" success local-ci/gate "passed locally in ${mins}m ($failed passed on a retry — flaky here, worth a look)$(node_note "$glog")"
       echo "pass-after-retry:$failed" > "$STATE/gated/$sha"; log "PASS-ON-RETRY $label ${sha:0:9}: $failed (${mins}m)"; return 0
     fi
     failed="$(failed_steps "$glog.retry")"; mins=$(( ($(date +%s) - start) / 60 ))
   fi
-  post_status "$sha" failure local-ci/gate "FAILED: ${failed:-see log} (${mins}m) — reproduce: npm run gate -- --only ${failed:-<step>}"
+  # A rules-emulator FAIL whose cause is "port taken" is this Mac's doing
+  # (another session's emulators), not the commit's: ci-gate.sh already waited
+  # up to 10 min for the ports. Drop it from the verdict; if nothing else
+  # failed, record nothing so the next tick gates this commit again.
+  local busy=0 lastlog="$glog"; [ -f "$glog.retry" ] && lastlog="$glog.retry"
+  if [[ ",$failed," == *",rules-emulator,"* ]] && grep -q 'Could not start Firestore Emulator, port taken' "$lastlog"; then
+    busy=1; failed="$(echo "$failed" | tr ',' '\n' | grep -vx rules-emulator | paste -sd, -)"
+  fi
+  if [ "$busy" = 1 ] && [ -z "$failed" ]; then
+    post_status "$sha" pending local-ci/gate "deferred — emulator ports busy on this Mac (another session's emulators); every other step passed. Retried next tick."
+    log "DEFER $label ${sha:0:9}: emulator ports busy — $lastlog"; return 1
+  fi
+  post_status "$sha" failure local-ci/gate "FAILED: ${failed:-see log}${busy:+ (rules-emulator not run: ports busy)} (${mins}m)$(node_note "$glog") — reproduce: npm run gate -- --only ${failed:-<step>}"
   echo "fail:$failed" > "$STATE/gated/$sha"; log "FAIL $label ${sha:0:9}: $failed — $glog"; return 1
 }
 

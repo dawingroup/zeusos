@@ -128,6 +128,36 @@ wanted() {
   return 0
 }
 
+# ── the Node major CI runs on ──────────────────────────────────────────────
+# ci.yml pins NODE_VERSION. Node >= 22 changes the test environment (it has a
+# `localStorage` global that is undefined without --localstorage-file, so
+# vitest's jsdom leaves it in place — seen 2026-10-29, PR #173), so a gate on
+# another major can disagree with CI. Use Homebrew's keg of the pinned major
+# when it is installed; otherwise say so, loudly, in the log.
+CI_NODE="$(grep -m1 -E '^[[:space:]]*NODE_VERSION:' "$ROOT/.github/workflows/ci.yml" 2>/dev/null | grep -oE '[0-9]+' | head -1)"
+CI_NODE="${CI_NODE:-20}"
+if [ -x "/opt/homebrew/opt/node@$CI_NODE/bin/node" ]; then
+  export PATH="/opt/homebrew/opt/node@$CI_NODE/bin:$PATH"
+fi
+node_major=$(node -p 'process.versions.node.split(".")[0]')
+if [ "$node_major" = "$CI_NODE" ]; then
+  echo "node $(node --version) — the major ci.yml pins ($CI_NODE)"
+else
+  echo "⚠ node-mismatch: this gate runs node $(node --version); ci.yml pins $CI_NODE — a verdict here can differ from CI's. Fix: brew install node@$CI_NODE (picked up automatically)."
+fi
+
+# Another session on this Mac may be running the emulators right now (they
+# bind fixed ports). Wait for them to be free rather than fail a commit for it.
+wait_for_emulator_ports() {
+  local i
+  for i in $(seq 1 60); do
+    lsof -nP -iTCP:8080 -iTCP:9099 -sTCP:LISTEN >/dev/null 2>&1 || return 0
+    [ "$i" = 1 ] && echo "… emulator ports 8080/9099 are in use by another process on this Mac — waiting up to 10 min"
+    sleep 10
+  done
+  echo "⚠ emulator ports still busy after 10 min — running anyway (expect 'port taken')"
+}
+
 LOGDIR="${TMPDIR:-/tmp}/ci-gate/$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$LOGDIR"
 
@@ -154,7 +184,6 @@ fi
 if wanted rules-emulator 1 && ! command -v java >/dev/null 2>&1; then
   echo "⚠ no java on PATH — the emulator step will fail (brew install openjdk)."
 fi
-node_major=$(node -p 'process.versions.node.split(".")[0]')
 if wanted functions-tests 0 && [ "$node_major" -lt 20 ]; then
   echo "⚠ node $node_major: the functions run on node 20; a local failure there may be the runtime, not the code."
 fi
@@ -170,6 +199,7 @@ for s in "${STEPS[@]}"; do
     NAMES+=("$name"); RESULTS+=(SKIP); SECS+=(0)
     continue
   fi
+  [ "$name" = rules-emulator ] && wait_for_emulator_ports
   printf '\n━━ %s  ▶ %s\n' "$name" "$cmd"
   start=$(date +%s)
   # Each step's firebase CLI writes its debug log here instead of the tree
