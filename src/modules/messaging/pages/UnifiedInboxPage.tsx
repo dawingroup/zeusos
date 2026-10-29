@@ -20,6 +20,7 @@ import { Input } from '@/core/components/ui/input';
 import { Banner } from '@/shared/components/data-display';
 import { useAuth } from '@/core/hooks/useAuth';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import {
   subscribeToChannels,
   subscribeToChannelMessages,
@@ -97,10 +98,13 @@ export default function UnifiedInboxPage() {
   const [unreadOnly, setUnreadOnly] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (!me) return;
     const stopBeat = startPresenceHeartbeat(me.uid, me.name);
-    const unsubP = subscribeToPresence(setPresence);
+    const unsubP = subscribeToPresence(
+      (byUid) => { setPresence(byUid); health.ok(); },
+      () => health.fail(),
+    );
     return () => { stopBeat(); unsubP(); };
   }, [me]);
 

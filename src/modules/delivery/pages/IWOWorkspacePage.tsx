@@ -22,10 +22,11 @@
  * actually see" half.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/shared/hooks';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import type { InternalWorkOrder, HandoffPacket } from '@/modules/assignment';
 import type { TimeEntry, CostEntry, Deliverable } from '@/modules/delivery';
 import {
@@ -99,9 +100,13 @@ export default function IWOWorkspacePage() {
   const [delAssetIds, setDelAssetIds] = useState<string>('');
   const [delDesc, setDelDesc] = useState<string>('');
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (!id) return;
-    const u1 = subscribeIWO(id, setIwo, (e) => setErr(`IWO load failed: ${e.message}`));
+    const u1 = subscribeIWO(
+      id,
+      (next) => { setIwo(next); health.ok(); },
+      (e) => { setErr(`IWO load failed: ${e.message}`); health.fail(); },
+    );
     const u2 = subscribeHandoffPacket(id, setPacket, () => { /* packet may not exist yet */ });
     const u3 = subscribeTimeEntries(id, setTimeEntries, () => {});
     const u4 = subscribeCostEntries(id, setCostEntries, () => {});
