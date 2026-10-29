@@ -15,7 +15,7 @@ describe('manifest — Memos', () => {
 
   it.each(['zeus-the-agency', 'zeus-digital', 'labyrinth', 'odd-gorilla', 'house-of-zeus'] as const)('%s gets Memos after the head and the per-brand middle', (sub) => {
     const list = ids('SUBSIDIARY', sub);
-    expect(list.slice(0, 4)).toEqual(['delivery-inbox', 'ecd-review', 'my-time', 'team-time']);
+    expect(list.slice(0, 5)).toEqual(['delivery-inbox', 'ecd-review', 'approvals', 'my-time', 'team-time']);
     expect(list).toContain('memos');
     expect(list.indexOf('memos')).toBeGreaterThan(list.indexOf('team-plans'));
   });

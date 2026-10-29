@@ -3,9 +3,11 @@
  */
 
 import { useState } from 'react';
+import { useCurrentDawinUser } from '@/core/settings';
 import type { TalentInvoice } from '../types/talent-invoice.types';
 import {
   approveTalentInvoice,
+  describeApprovalProgress,
   rejectTalentInvoice,
 } from '../services/talent-invoice.service';
 
@@ -26,12 +28,19 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<string | null>(null);
+  // ADR-2026-10-25: the approver of record is a real person. Approval goes
+  // through the routing-v2 callable (the server reads the caller's uid);
+  // rejection is still a client write and must name the signed-in uid.
+  const { dawinUser } = useCurrentDawinUser();
+  const actorUid = dawinUser?.uid ?? null;
 
   async function handleApprove() {
     setLoading(true);
     setError(null);
     try {
-      await approveTalentInvoice(invoice.id, 'current-user');
+      const result = await approveTalentInvoice(invoice.id);
+      setProgress(result.complete ? null : describeApprovalProgress(result, invoice.id));
       onUpdated();
     } catch (err) {
       setError(String((err as Error).message));
@@ -42,10 +51,14 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
 
   async function handleReject() {
     if (!rejectionReason.trim()) return;
+    if (!actorUid) {
+      setError('Sign in to reject an invoice.');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      await rejectTalentInvoice(invoice.id, 'current-user', rejectionReason);
+      await rejectTalentInvoice(invoice.id, actorUid, rejectionReason);
       setShowRejectForm(false);
       onUpdated();
     } catch (err) {
@@ -125,6 +138,7 @@ export function InvoiceApprovalPanel({ invoice, onUpdated }: Props) {
       )}
 
       {error && <p className="text-sm text-destructive">{error}</p>}
+      {progress && <p className="text-sm text-muted-foreground" data-testid="invoice-approval-progress">{progress}</p>}
     </div>
   );
 }
