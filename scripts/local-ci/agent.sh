@@ -191,7 +191,10 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
     local crashed skipped
     crashed="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="PASS*"{print $1}' "$glog" | paste -sd, -)"
     skipped="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="SKIP"{print $1}' "$glog" | paste -sd, -)"
-    post_status "$sha" success local-ci/gate "passed locally in ${mins}m${args:+ (fast: no emulators, no build)}$(node_note "$glog")${skipped:+ — not run, tree predates #163: $skipped}${crashed:+ (CLI crashed at emulator shutdown after $crashed passed)}"
+    # GitHub shows 140 chars of a status description: count the skipped guard
+    # steps rather than list them (the names are in the gate log and the summary).
+    local nskipped=0; [ -n "$skipped" ] && nskipped="$(tr ',' '\n' <<<"$skipped" | grep -c .)"
+    post_status "$sha" success local-ci/gate "passed locally in ${mins}m${args:+ (fast: no emulators, no build)}$(node_note "$glog")${skipped:+ — $nskipped guard steps not run (tree predates #163)}${crashed:+ (CLI crashed at emulator shutdown after $crashed passed)}"
     echo pass > "$STATE/gated/$sha"; log "PASS $label ${sha:0:9} (${mins}m)${crashed:+ — CLI teardown crash in $crashed: $glog}"; return 0
   fi
   failed_steps() { awk '/^STEP +RESULT/{t=1;next} t && $2=="FAIL"{print $1}' "$1" | paste -sd, -; }

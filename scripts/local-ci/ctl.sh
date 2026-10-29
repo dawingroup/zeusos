@@ -28,9 +28,17 @@ CANONICAL="${CANONICAL:-/Users/danielonzimai/Developer/zeusos}"
 export PATH="/opt/homebrew/bin:$PATH"
 
 pin() {
+  # Atomic: bash reads a script as it runs it, so overwriting a pinned file in
+  # place while a tick is running would feed that tick garbage. Write beside
+  # and rename — the running tick keeps its old inode, the next tick gets the
+  # new file.
   mkdir -p "$LCI_HOME/bin"
-  cp "$HERE/agent.sh" "$SRC_ROOT/scripts/ci-gate.sh" "$LCI_HOME/bin/"
-  chmod +x "$LCI_HOME/bin/"*.sh
+  local f
+  for f in "$HERE/agent.sh" "$SRC_ROOT/scripts/ci-gate.sh"; do
+    cp "$f" "$LCI_HOME/bin/.$(basename "$f").tmp" && chmod +x "$LCI_HOME/bin/.$(basename "$f").tmp" \
+      && mv -f "$LCI_HOME/bin/.$(basename "$f").tmp" "$LCI_HOME/bin/$(basename "$f")"
+  done
+  [ -d "$LCI_HOME/agent.lock" ] && echo "(a tick is running on the previous copy; it finishes on that, the next tick uses this one)"
   git -C "$SRC_ROOT" rev-parse HEAD > "$LCI_HOME/bin/PINNED_FROM"
   echo "pinned agent.sh + ci-gate.sh from $(cut -c1-9 "$LCI_HOME/bin/PINNED_FROM") ($SRC_ROOT)"
 }
