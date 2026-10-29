@@ -101,6 +101,13 @@ const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pag
 // Phase 6.E — Daily Plan (DawinOS stream E port).
 const MyDayPage        = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/MyDayPage'));
 const PlanTomorrowPage = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/PlanTomorrowPage'));
+// Approvals — port stream F. Unified inbox over the existing approval
+// callables (ECD rungs, acceptInternal, approveSow, change orders, supplier
+// invoices). Dual-scope like /time/team; no org-kind guard.
+const ApprovalsInboxPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalsInboxPage'));
+// Settings → Approval routing (routing v2): the KES signature ladder for
+// supplier spend. Parent-org admins only.
+const ApprovalRoutingSettingsPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalRoutingSettingsPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -577,6 +584,12 @@ export const router = createBrowserRouter([
       // through the dailyPlanAction / taskAction callables.
       { path: 'tasks/today',         element: <PageWrapper><MyDayPage /></PageWrapper> },
       { path: 'tasks/review',        element: <PageWrapper><PlanTomorrowPage /></PageWrapper> },
+      // Approvals inbox (port stream F). Dual-scope: a parent-org principal
+      // sees every queue, a brand member sees their brand's IWO rows. The
+      // page resolves scope from the user and only opens the feeds that
+      // scope may read; the collections' rules enforce the same split, so
+      // NO ParentOrgGuard (it would block brand leads from their ECD rungs).
+      { path: 'approvals',           element: <PageWrapper><ApprovalsInboxPage /></PageWrapper> },
 
       // Comms — tabbed messaging module (ported from DawinOS). Everyone
       // communicates, so no org-kind guard; chatChannels rules enforce
@@ -646,6 +659,8 @@ export const router = createBrowserRouter([
       { path: 'notification-settings',  element: <PageWrapper><NotificationSettingsPage /></PageWrapper> },
       // Phase 5 — per-user appearance preferences (theme / density / accent).
       { path: 'settings/appearance',    element: <PageWrapper><AppearanceSettingsPage /></PageWrapper> },
+      // Approval routing v2 — who signs supplier spend (port stream F part 2).
+      { path: 'settings/approval-routing', element: <PageWrapper><ParentOrgGuard><ApprovalRoutingSettingsPage /></ParentOrgGuard></PageWrapper> },
 
       // Admin
       // Org settings hub (General / Users / Access / Integrations / Modules / …).
