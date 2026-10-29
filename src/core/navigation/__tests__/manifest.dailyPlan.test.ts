@@ -1,6 +1,7 @@
 /**
  * Phase 6.E — Daily Plan entries: My Day and Team Plans reach every org kind
- * without disturbing the subsidiary head's first four or the per-brand middle.
+ * without disturbing the subsidiary head (which stream F's Approvals entry
+ * joins at position three) or the per-brand middle.
  */
 import { describe, expect, it } from 'vitest';
 
@@ -22,7 +23,7 @@ describe('manifest — Daily Plan (Phase 6.E)', () => {
     '%s gets both, after the head and the per-brand middle',
     (sub) => {
       const list = ids('SUBSIDIARY', sub);
-      expect(list.slice(0, 4)).toEqual(['delivery-inbox', 'ecd-review', 'my-time', 'team-time']);
+      expect(list.slice(0, 5)).toEqual(['delivery-inbox', 'ecd-review', 'approvals', 'my-time', 'team-time']);
       expect(list).toContain('my-day');
       expect(list).toContain('team-plans');
       expect(list.indexOf('my-day')).toBeGreaterThan(list.indexOf('comms'));
