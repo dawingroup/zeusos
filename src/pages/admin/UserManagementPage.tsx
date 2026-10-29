@@ -18,6 +18,9 @@ import {
   Clock,
   XCircle,
   RefreshCw,
+  Link2,
+  Send,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Input } from '@/core/components/ui/input';
@@ -47,10 +50,18 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/core/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { useUsers, useUserMutations, useInvites } from '@/core/settings';
+import { buildInviteLink } from '@/core/settings/settingsService';
 import { GLOBAL_ROLE_DEFINITIONS } from '@/core/settings/types';
 import type { GlobalRole, DawinUser } from '@/core/settings/types';
+import { DEFAULT_SUBSIDIARIES } from '@/types/subsidiary';
 import { InviteUserDialog } from './components/InviteUserDialog';
 import { migrateGrantAllModules } from '@/core/settings/migrateUserAccess';
+
+// Canonical Zeus brand display names, keyed by SubsidiaryId. Lives here so
+// the users table shows the real brand label, not a legacy DawinOS placeholder.
+const SUBSIDIARY_LABELS: Record<string, string> = Object.fromEntries(
+  DEFAULT_SUBSIDIARIES.map(s => [s.id, s.name])
+);
 
 const ROLE_BADGE_VARIANT: Record<GlobalRole, 'default' | 'secondary' | 'destructive' | 'outline'> = {
   owner: 'default',
@@ -74,23 +85,19 @@ function formatDate(dateStr?: string | null): string {
 }
 
 function getSubsidiaryNames(user: DawinUser): string {
-  const active = user.subsidiaryAccess?.filter(s => s.hasAccess).map(s => {
-    const names: Record<string, string> = {
-      'zeus-the-agency': 'Finishes',
-      'zeus-digital': 'Advisory',
-      'labyrinth': 'Capital',
-      'odd-gorilla': 'Technology',
-    };
-    return names[s.subsidiaryId] || s.subsidiaryId;
-  });
+  const active = user.subsidiaryAccess
+    ?.filter(s => s.hasAccess)
+    .map(s => SUBSIDIARY_LABELS[s.subsidiaryId] || s.subsidiaryId);
   return active?.length ? active.join(', ') : '-';
 }
 
 export default function UserManagementPage() {
   const navigate = useNavigate();
   const { users, isLoading } = useUsers();
-  const { invites, isLoading: invitesLoading, revokeInvite } = useInvites();
+  const { invites, isLoading: invitesLoading, revokeInvite, resendInvite } = useInvites();
   const { deactivateUser, reactivateUser } = useUserMutations();
+  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
+  const [resendBanner, setResendBanner] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<GlobalRole | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
@@ -156,6 +163,27 @@ export default function UserManagementPage() {
       await revokeInvite(inviteId);
     } catch (err) {
       console.error('Failed to revoke invite:', err);
+    }
+  }
+
+  async function handleCopyInviteLink(inviteId: string) {
+    const link = buildInviteLink(inviteId);
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopiedInviteId(inviteId);
+      window.setTimeout(() => setCopiedInviteId(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy invite link:', err);
+    }
+  }
+
+  async function handleResendInvite(inviteId: string, email: string) {
+    try {
+      await resendInvite(inviteId);
+      setResendBanner(`Invite to ${email} refreshed — new 7-day link ready to share.`);
+      window.setTimeout(() => setResendBanner(null), 4000);
+    } catch (err) {
+      console.error('Failed to resend invite:', err);
     }
   }
 
@@ -403,6 +431,11 @@ export default function UserManagementPage() {
           </TabsContent>
 
           <TabsContent value="invites" className="space-y-4">
+            {resendBanner && (
+              <div className="rounded-md border border-[var(--rag-green)]/40 bg-[var(--rag-green-soft)] p-3 text-sm text-[var(--rag-green)]">
+                {resendBanner}
+              </div>
+            )}
             {invitesLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -424,39 +457,74 @@ export default function UserManagementPage() {
                       <TableHead>Role</TableHead>
                       <TableHead>Invited By</TableHead>
                       <TableHead>Expires</TableHead>
-                      <TableHead className="w-[50px]" />
+                      <TableHead className="w-[220px] text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {invites.map(inv => (
-                      <TableRow key={inv.id}>
-                        <TableCell className="font-medium">{inv.email}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {GLOBAL_ROLE_DEFINITIONS.find(r => r.role === inv.globalRole)?.name || inv.globalRole}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {inv.invitedByName}
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {formatDate(inv.expiresAt)}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-destructive"
-                            onClick={() => handleRevokeInvite(inv.id)}
-                          >
-                            <XCircle className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {invites.map(inv => {
+                      const isExpired = inv.expiresAt && new Date(inv.expiresAt) < new Date();
+                      return (
+                        <TableRow key={inv.id}>
+                          <TableCell className="font-medium">{inv.email}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {GLOBAL_ROLE_DEFINITIONS.find(r => r.role === inv.globalRole)?.name || inv.globalRole}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {inv.invitedByName}
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            <div className={`flex items-center gap-1 ${isExpired ? 'text-destructive' : 'text-muted-foreground'}`}>
+                              <Clock className="h-3 w-3" />
+                              {isExpired ? `Expired ${formatDate(inv.expiresAt)}` : formatDate(inv.expiresAt)}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1 px-2 text-xs"
+                                onClick={() => handleCopyInviteLink(inv.id)}
+                                title="Copy a shareable invite link"
+                              >
+                                {copiedInviteId === inv.id ? (
+                                  <>
+                                    <Check className="h-3.5 w-3.5" />
+                                    Copied
+                                  </>
+                                ) : (
+                                  <>
+                                    <Link2 className="h-3.5 w-3.5" />
+                                    Copy link
+                                  </>
+                                )}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 gap-1 px-2 text-xs"
+                                onClick={() => handleResendInvite(inv.id, inv.email)}
+                                title="Reset expiry and status to pending"
+                              >
+                                <Send className="h-3.5 w-3.5" />
+                                Resend
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0 text-destructive"
+                                onClick={() => handleRevokeInvite(inv.id)}
+                                title="Revoke invite"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>

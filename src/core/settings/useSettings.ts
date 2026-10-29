@@ -379,7 +379,21 @@ export function useInvites() {
     [orgId, loadInvites]
   );
 
-  return { invites, isLoading, error, createInvite, revokeInvite, reload: loadInvites };
+  const resendInvite = useCallback(
+    async (inviteId: string) => {
+      try {
+        const newExpiresAt = await settingsService.resendInvite(orgId, inviteId);
+        await loadInvites();
+        return newExpiresAt;
+      } catch (err) {
+        setError(err as Error);
+        throw err;
+      }
+    },
+    [orgId, loadInvites]
+  );
+
+  return { invites, isLoading, error, createInvite, revokeInvite, resendInvite, reload: loadInvites };
 }
 
 // ============================================================================
