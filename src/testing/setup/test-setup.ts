@@ -9,6 +9,42 @@ import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { server } from './mocks/server';
 
+// Node >= 22 exposes a `localStorage` global that is a lazy getter returning
+// undefined unless `--localstorage-file` is set. Because the key already
+// exists on the Node global, vitest's jsdom environment does not replace it
+// with jsdom's own Storage, so anything behind zustand's `persist`
+// middleware (uiStore) throws "Cannot read properties of undefined (reading
+// 'setItem')" on first write. CI pins Node 20 where the key is absent and
+// jsdom's Storage is used, which is why this only shows up locally. Install a
+// minimal in-memory Storage at module load — before any store module runs
+// `createJSONStorage(() => localStorage)`. Same polyfill as
+// src/testing/setup.ts (the root vitest.config.ts setup).
+if (
+  typeof globalThis.localStorage === 'undefined' ||
+  typeof globalThis.localStorage.setItem !== 'function'
+) {
+  const mem = new Map<string, string>();
+  Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    value: {
+      getItem: (k: string) => (mem.has(k) ? mem.get(k)! : null),
+      setItem: (k: string, v: string) => {
+        mem.set(k, String(v));
+      },
+      removeItem: (k: string) => {
+        mem.delete(k);
+      },
+      clear: () => {
+        mem.clear();
+      },
+      key: (i: number) => Array.from(mem.keys())[i] ?? null,
+      get length() {
+        return mem.size;
+      },
+    },
+  });
+}
+
 // Establish API mocking before all tests
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'warn' });

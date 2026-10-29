@@ -25,7 +25,10 @@ import {
   serverTimestamp,
   writeBatch,
 } from 'firebase/firestore';
+import { getFunctions, httpsCallable, type HttpsCallable } from 'firebase/functions';
 import { db } from '@/shared/services/firebase';
+import { app } from '@/core/services/firebase/config';
+import type { ApproveSupplierInvoiceResult } from '@/modules/talent/services/talent-invoice.service';
 import type {
   MediaSupplierInvoice,
   MediaSupplierInvoiceStatus,
@@ -90,24 +93,20 @@ export async function listMediaSupplierInvoices(filters: {
   return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<MediaSupplierInvoice, 'id'>) }));
 }
 
-export async function approveMediaSupplierInvoice(
-  invoiceId: string,
-  approvedBy: string,
-): Promise<void> {
-  const invoice = await getMediaSupplierInvoice(invoiceId);
-  if (!invoice) throw new Error(`[media-supplier-invoice] Invoice ${invoiceId} not found`);
-  if (invoice.status !== 'SUBMITTED') {
-    throw new Error(
-      `[media-supplier-invoice] Can only approve SUBMITTED invoices — current status: ${invoice.status}`,
-    );
-  }
+export const approveMediaSupplierInvoiceFn: HttpsCallable<
+  { invoiceId: string; note?: string; idempotencyKey?: string },
+  ApproveSupplierInvoiceResult
+> = httpsCallable(getFunctions(app, 'europe-west1'), 'approveMediaSupplierInvoice');
 
-  await updateDoc(doc(db, INVOICES_COLL, invoiceId), {
-    status: 'APPROVED' satisfies MediaSupplierInvoiceStatus,
-    approvedBy,
-    approvedAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+/**
+ * Approve (sign) a media-house invoice — a SERVER decision since routing v2 /
+ * ADR-2026-10-25 (same ladder as talent invoices, purpose `media`). The
+ * approver is the signed-in uid on the server; callers no longer pass it.
+ * The invoice reaches APPROVED only when its last signature level is signed.
+ */
+export async function approveMediaSupplierInvoice(invoiceId: string, note?: string): Promise<ApproveSupplierInvoiceResult> {
+  const res = await approveMediaSupplierInvoiceFn({ invoiceId, ...(note ? { note } : {}) });
+  return res.data;
 }
 
 export async function rejectMediaSupplierInvoice(
