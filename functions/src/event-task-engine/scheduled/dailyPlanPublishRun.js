@@ -102,8 +102,10 @@ async function runDailyPlanPublish(db, { now = Date.now(), logger = console, get
   // configured; otherwise the plans publish exactly as before. Best-effort.
   let briefs = 0;
   try {
-    const anthropic = getAnthropic || (() => require('../../ai/_anthropic').getAnthropic());
-    const resolver = typeof getAnthropic === 'function' ? getAnthropic : anthropic();
+    // The resolver is the FUNCTION, never a call: an eager `getAnthropic()`
+    // here ran the Secret Manager lookup detached from the awaited path and
+    // surfaced as an unhandled rejection once the run had returned.
+    const resolver = typeof getAnthropic === 'function' ? getAnthropic : require('../../ai/_anthropic').getAnthropic;
     briefs = await briefPlans(db, [...plans.values()], { getAnthropic: resolver, logger, nowIso, todayKey: key });
   } catch (err) {
     logger.warn('[dailyPlanPublish] briefs skipped', { error: err.message });
