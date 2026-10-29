@@ -146,6 +146,10 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   // covers their own work, and the cross-brand query is parent-org-only).
   { moduleId: 'my-time',           label: 'My Time',                   icon: 'Clock',           routePath: '/time' },
   { moduleId: 'team-time',         label: 'Team Time',                 icon: 'Users',           routePath: '/time/team' },
+  // Phase 6.E — Daily Plan. My Day is everyone's own contract for the day;
+  // Team Plans is the evening review (a parent-org principal sees every plan).
+  { moduleId: 'my-day',            label: 'My Day',                    icon: 'Target',          routePath: '/tasks/today' },
+  { moduleId: 'team-plans',        label: 'Team Plans',                icon: 'ClipboardCheck',  routePath: '/tasks/review' },
   { moduleId: 'admin',             label: 'Admin',                     icon: 'Settings',        routePath: '/admin/users' },
   // API Keys: the integration-secrets surface where ANTHROPIC / GEMINI / Meta /
   // QBO keys are entered (Settings → Integrations also links here). Surfaced
@@ -184,6 +188,11 @@ export const NAV_MANIFEST_SUBSIDIARY_TAIL: NavItem[] = [
   // tail (not head) so the head's first four + the per-brand middle ordering
   // stay stable. (Phase 4.1)
   { moduleId: 'comms',          label: 'Comms',       icon: 'MessagesSquare', routePath: '/comms' },
+  // Phase 6.E — Daily Plan: the person's own day, and the brand lead's
+  // evening review of the people who report to them. In the tail, like
+  // Comms, so the head's first four + the per-brand middle stay stable.
+  { moduleId: 'my-day',         label: 'My Day',      icon: 'Target',         routePath: '/tasks/today' },
+  { moduleId: 'team-plans',     label: 'Team Plans',  icon: 'ClipboardCheck', routePath: '/tasks/review' },
   // Burn & SLA is the per-brand reporting surface for subsidiary users.
   // The cross-brand Reports page (`/reports`) is parent-org-gated and
   // lives in `NAV_MANIFEST_PARENT`; subsidiary nav doesn't include it

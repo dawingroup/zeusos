@@ -98,6 +98,9 @@ const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/Bu
 const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
 const MyTimeThisWeekPage = lazyWithRetry(() => import('@/modules/time-tracking/pages/MyTimeThisWeekPage'));
 const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pages/TeamTimePage'));
+// Phase 6.E — Daily Plan (DawinOS stream E port).
+const MyDayPage        = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/MyDayPage'));
+const PlanTomorrowPage = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/PlanTomorrowPage'));
 // Approvals — port stream F. Unified inbox over the existing approval
 // callables (ECD rungs, acceptInternal, approveSow, change orders, supplier
 // invoices). Dual-scope like /time/team; no org-kind guard.
@@ -574,6 +577,13 @@ export const router = createBrowserRouter([
       // with no org scope falls into the page's "no scope" empty state.
       { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
 
+      // Phase 6.E — Daily Plan. /tasks/today is the person's own contract for
+      // the day; /tasks/review is the manager's evening review (dual-scope:
+      // a manager sees plans that name them, a parent-org principal sees all).
+      // No guard: the daily_plans rules scope reads, and every write goes
+      // through the dailyPlanAction / taskAction callables.
+      { path: 'tasks/today',         element: <PageWrapper><MyDayPage /></PageWrapper> },
+      { path: 'tasks/review',        element: <PageWrapper><PlanTomorrowPage /></PageWrapper> },
       // Approvals inbox (port stream F). Dual-scope: a parent-org principal
       // sees every queue, a brand member sees their brand's IWO rows. The
       // page resolves scope from the user and only opens the feeds that

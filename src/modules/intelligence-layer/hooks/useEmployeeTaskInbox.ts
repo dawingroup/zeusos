@@ -13,8 +13,95 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase/firestore';
 import { useAuth } from '@/integration/store';
-import { taskGenerationService } from '../services/taskGenerationService';
-import { useEmployeeDocId } from './useEmployeeDocId';
+import {
+  blockTask as blockTaskFn,
+  completeTask as completeTaskFn,
+  startTask as startTaskFn,
+  tickChecklist,
+} from '../daily-plan/services/tasksService';
+import { toMs } from '../daily-plan/format';
+
+/**
+ * Phase 6.E: the inbox reads `generated_tasks` (the one task collection,
+ * keyed by `assignedToUserId` = the sign-in uid) and acts through the
+ * `taskAction` callable. The DawinOS-era `generatedTasks` collection and the
+ * employee-doc-id dance are gone. Engine statuses are folded onto the five
+ * the inbox renders; `rawStatus` keeps the engine word.
+ */
+const TASKS_COLLECTION = 'generated_tasks';
+
+function displayStatus(raw: unknown): EmployeeTask['status'] {
+  switch (raw) {
+    case 'in_progress':
+    case 'pending_review':
+      return 'in_progress';
+    case 'completed':
+      return 'completed';
+    case 'cancelled':
+      return 'cancelled';
+    case 'blocked':
+      return 'blocked';
+    default:
+      return 'pending'; // assigned | pending | pending_assignment | escalated
+  }
+}
+
+function dateOf(value: unknown): Date | undefined {
+  const ms = toMs(value);
+  return ms == null ? undefined : new Date(ms);
+}
+
+/** A `generated_tasks` doc → the inbox's task shape. Exported for tests. */
+export function toInboxTask(id: string, data: Record<string, unknown>): EmployeeTask {
+  const d = data as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const checklist = Array.isArray(d.checklistItems) && d.checklistItems.length > 0 ? d.checklistItems : Array.isArray(d.aiChecklist) ? d.aiChecklist : [];
+  return {
+    id,
+    businessEventId: d.sourceEventId || d.businessEventId || '',
+    templateId: d.sourceRuleId || d.templateId || '',
+    title: d.title || '',
+    description: d.description || '',
+    priority: (['P0', 'P1', 'P2', 'P3'].includes(d.priority) ? d.priority : 'P2') as EmployeeTask['priority'],
+    status: displayStatus(d.status),
+    rawStatus: typeof d.status === 'string' ? d.status : 'assigned',
+    kind: d.kind,
+    assignedTo: d.assignedToUserId || d.assignedTo,
+    assignedToName: d.assignedToName,
+    assignedAt: dateOf(d.assignedAt),
+    dueDate: dateOf(d.dueAt ?? d.dueDate),
+    startedAt: dateOf(d.startedAt),
+    completedAt: dateOf(d.completedAt),
+    blockedReason: d.blockedReason || undefined,
+    escalatedAt: dateOf(d.escalatedAt),
+    checklistItems: checklist.map((item: any, idx: number) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
+      id: item.id || String(idx + 1),
+      title: item.title || item.text || '',
+      description: item.description || '',
+      isRequired: item.isRequired ?? false,
+      completed: item.completed ?? false,
+      completedAt: dateOf(item.completedAt),
+      completedBy: item.completedBy,
+    })),
+    checklistProgress: typeof d.checklistProgress === 'number' ? d.checklistProgress : 0,
+    sourceModule: d.sourceModule || '',
+    subsidiary: d.brandId || d.subsidiary || '',
+    entityType: d.entityType,
+    entityId: d.entityId,
+    entityName: d.entityName,
+    projectId: d.masterJobId || d.projectId,
+    projectName: d.masterJobName || d.projectName,
+    createdAt: dateOf(d.createdAt) || new Date(),
+    updatedAt: dateOf(d.updatedAt),
+    createdBy: d.createdBy || 'system',
+    notes: d.notes,
+    aiDescription: d.aiDescription,
+    aiChecklist: d.aiChecklist,
+    aiRelevantDocuments: d.aiRelevantDocuments,
+    aiUrgencyScore: d.aiUrgencyScore,
+    aiUrgencyReason: d.aiUrgencyReason,
+    urgencyScore: 0, // computed below
+  } as EmployeeTask;
+}
 
 // ============================================
 // Types
@@ -38,12 +125,18 @@ export interface EmployeeTask {
   description: string;
   priority: 'P0' | 'P1' | 'P2' | 'P3';
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'blocked';
+  /** The engine's own word (assigned, pending_assignment, pending_review, …). */
+  rawStatus?: string;
+  /** approval / review / action / followup / notify — decides the buttons. */
+  kind?: string;
   assignedTo?: string;
   assignedToName?: string;
   assignedAt?: Date;
   dueDate?: Date;
   startedAt?: Date;
   completedAt?: Date;
+  blockedReason?: string;
+  escalatedAt?: Date;
   checklistItems: TaskChecklistItem[];
   checklistProgress: number;
   sourceModule: string;
@@ -204,8 +297,10 @@ export interface SnapshotStats {
 // ============================================
 
 export function useEmployeeTaskInbox() {
-  const { user, userId: authUid, email: authEmail } = useAuth();
-  const { employeeDocId, loading: resolvingEmployee } = useEmployeeDocId(authUid, authEmail);
+  const { user, userId: authUid } = useAuth();
+  // Tasks are keyed by the sign-in uid; no employee-doc-id resolution needed.
+  const employeeDocId = authUid ?? null;
+  const resolvingEmployee = false;
   const [tasks, setTasks] = useState<EmployeeTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -235,78 +330,22 @@ export function useEmployeeTaskInbox() {
     setLoading(true);
     setError(null);
 
-    // Build query based on status filter.
-    // Use 'in' to match both employee doc ID and auth UID, because tasks
-    // assigned before the ID-resolution fix stored the auth UID directly.
-    const tasksRef = collection(db, 'generatedTasks');
-    const assigneeIds = employeeDocId === authUid
-      ? [employeeDocId]
-      : [employeeDocId, ...(authUid ? [authUid] : [])];
-
-    let constraints: any[] = [
-      where('assignedTo', 'in', assigneeIds),
-      orderBy('dueDate', 'asc'),
-    ];
-
-    // Only add status filter if not 'all'
-    if (filters.status !== 'all') {
-      constraints = [
-        where('assignedTo', 'in', assigneeIds),
-        where('status', '==', filters.status),
-        orderBy('dueDate', 'asc'),
-      ];
-    }
-
-    const q = query(tasksRef, ...constraints);
+    // One listener on the person's tasks, ordered by due date (undated last
+    // — `dueAt` is written as null, which Firestore sorts first; the urgency
+    // sort below puts it where it belongs). The status filter is applied in
+    // memory: the inbox shows five statuses the engine spells as seven.
+    const q = query(
+      collection(db, TASKS_COLLECTION),
+      where('assignedToUserId', '==', employeeDocId),
+      orderBy('dueAt', 'asc'),
+    );
 
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
-        const taskData = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            businessEventId: data.businessEventId || '',
-            templateId: data.templateId || '',
-            title: data.title || '',
-            description: data.description || '',
-            priority: data.priority || 'P2',
-            status: data.status || 'pending',
-            assignedTo: data.assignedTo,
-            assignedToName: data.assignedToName,
-            assignedAt: data.assignedAt?.toDate(),
-            dueDate: data.dueDate?.toDate(),
-            startedAt: data.startedAt?.toDate(),
-            completedAt: data.completedAt?.toDate(),
-            checklistItems: (data.checklistItems || []).map((item: any, idx: number) => ({
-              id: item.id || String(idx + 1),
-              title: item.title || item.text || '',
-              description: item.description || '',
-              isRequired: item.isRequired ?? false,
-              completed: item.completed ?? false,
-              completedAt: item.completedAt?.toDate?.() || item.completedAt,
-              completedBy: item.completedBy,
-            })),
-            checklistProgress: data.checklistProgress || 0,
-            sourceModule: data.sourceModule || '',
-            subsidiary: data.subsidiary || '',
-            entityType: data.entityType,
-            entityId: data.entityId,
-            entityName: data.entityName,
-            projectId: data.projectId,
-            projectName: data.projectName,
-            createdAt: data.createdAt?.toDate() || new Date(),
-            updatedAt: data.updatedAt?.toDate(),
-            createdBy: data.createdBy || 'system',
-            notes: data.notes,
-            aiDescription: data.aiDescription,
-            aiChecklist: data.aiChecklist,
-            aiRelevantDocuments: data.aiRelevantDocuments,
-            aiUrgencyScore: data.aiUrgencyScore,
-            aiUrgencyReason: data.aiUrgencyReason,
-            urgencyScore: 0, // computed below
-          } as EmployeeTask;
-        });
+        const taskData = snapshot.docs
+          .map((doc) => toInboxTask(doc.id, doc.data()))
+          .filter((t) => filters.status === 'all' || t.status === filters.status);
 
         // Compute urgency scores and sort by urgency descending
         taskData.forEach((t) => {
@@ -583,28 +622,30 @@ export function useEmployeeTaskInbox() {
     return groups;
   }, [filteredTasks, filters.groupBy]);
 
-  // Task actions
+  // Task actions — through the `taskAction` callable (Phase 6.E): every
+  // transition is checked and written server-side with a history row.
   const startTask = useCallback(async (taskId: string) => {
     try {
-      await taskGenerationService.updateTaskStatus(taskId, 'in_progress');
+      await startTaskFn(taskId);
     } catch (err) {
       console.error('Error starting task:', err);
       throw err;
     }
   }, []);
 
-  const completeTask = useCallback(async (taskId: string) => {
+  const completeTask = useCallback(async (taskId: string, note?: string) => {
     try {
-      await taskGenerationService.updateTaskStatus(taskId, 'completed');
+      await completeTaskFn(taskId, note);
     } catch (err) {
       console.error('Error completing task:', err);
       throw err;
     }
   }, []);
 
-  const blockTask = useCallback(async (taskId: string) => {
+  /** Mark blocked asks why — the reason is what reaches the person who can unblock it. */
+  const blockTask = useCallback(async (taskId: string, reason: string) => {
     try {
-      await taskGenerationService.updateTaskStatus(taskId, 'blocked');
+      await blockTaskFn(taskId, reason);
     } catch (err) {
       console.error('Error blocking task:', err);
       throw err;
@@ -613,15 +654,14 @@ export function useEmployeeTaskInbox() {
 
   const updateChecklistItem = useCallback(
     async (taskId: string, itemId: string, completed: boolean) => {
-      if (!employeeDocId) return;
       try {
-        await taskGenerationService.updateChecklistItem(taskId, itemId, completed, employeeDocId);
+        await tickChecklist(taskId, itemId, completed);
       } catch (err) {
         console.error('Error updating checklist item:', err);
         throw err;
       }
     },
-    [employeeDocId]
+    []
   );
 
   const updateFilters = useCallback((newFilters: Partial<TaskFilters>) => {
