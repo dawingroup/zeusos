@@ -14,6 +14,9 @@ const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');
 const { ALLOWED_ORIGINS } = require('../config/cors');
+// One notice shape, resolved to PEOPLE at write time (stream C): the old
+// `recipientRole: 'ADMIN'` docs named nobody the rules would let read them.
+const { notifyAudience } = require('../lib/noticeDelivery');
 
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
@@ -82,16 +85,18 @@ exports.hourlyDeadlineCheck = onSchedule(
       if (summary.overdueAccountabilities > 10 || summary.overdueInvestigations > 5) {
         logger.warn('[DeadlineMonitoring] HIGH NUMBER OF OVERDUE ITEMS:', summary);
 
-        await db.collection('notifications').add({
+        await notifyAudience(db, {
+          audience: { kind: 'role', role: 'admin' },
           type: 'system_alert',
-          severity: 'warning',
-          recipientRole: 'ADMIN',
-          subject: 'High Number of Overdue Items Detected',
-          message: `Deadline monitoring detected ${summary.overdueAccountabilities} overdue accountabilities ` +
-                   `and ${summary.overdueInvestigations} overdue investigations. ` +
-                   `Please review urgently.`,
-          createdAt: admin.firestore.Timestamp.now(),
-          read: false,
+          priority: 'warning',
+          title: 'High number of overdue items detected',
+          message: `Deadline monitoring found ${summary.overdueAccountabilities} overdue accountabilities ` +
+                   `and ${summary.overdueInvestigations} overdue investigations. Please review urgently.`,
+          module: 'finance',
+          actionUrl: '/finance/overview',
+          source: 'deadline-monitor',
+          // One alert per hour-slot per person; the same breach does not re-ring every run.
+          dedupeKey: `deadline-alert:${new Date().toISOString().slice(0, 13)}`,
           metadata: summary,
         });
       }
@@ -138,19 +143,22 @@ exports.dailyDeadlineSummary = onSchedule(
 
       // Send summary notification to finance team
       if (summary.overdueAccountabilities > 0 || summary.overdueInvestigations > 0 || summary.pendingReconciliations > 0) {
-        await db.collection('notifications').add({
+        // Finance in ZeusOS is the parent org (Account Management + group finance).
+        await notifyAudience(db, {
+          audience: { kind: 'parent_org' },
           type: 'daily_summary',
-          severity: 'info',
-          recipientRole: 'FINANCE',
-          subject: 'Daily Deadline Summary',
-          message: `Daily deadline status:\n\n` +
-                   `- Overdue Accountabilities: ${summary.overdueAccountabilities}\n` +
-                   `- Overdue Investigations: ${summary.overdueInvestigations}\n` +
-                   `- Pending Reconciliations: ${summary.pendingReconciliations}\n` +
-                   `- Upcoming Deadlines (3 days): ${summary.upcomingDeadlines}\n\n` +
-                   `Please review and take appropriate action.`,
-          createdAt: admin.firestore.Timestamp.now(),
-          read: false,
+          priority: 'info',
+          title: 'Daily deadline summary',
+          message: `Overdue accountabilities: ${summary.overdueAccountabilities} · ` +
+                   `overdue investigations: ${summary.overdueInvestigations} · ` +
+                   `pending reconciliations: ${summary.pendingReconciliations} · ` +
+                   `deadlines in the next 3 days: ${summary.upcomingDeadlines}.`,
+          module: 'finance',
+          actionUrl: '/finance/overview',
+          source: 'deadline-monitor',
+          dedupeKey: `deadline-summary:${new Date().toISOString().slice(0, 10)}`,
+          // Yesterday's summary is not news tomorrow.
+          expiresAt: new Date(Date.now() + 36 * 3600000).toISOString(),
           metadata: summary,
         });
       }
