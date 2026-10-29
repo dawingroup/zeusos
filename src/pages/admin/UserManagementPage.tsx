@@ -20,8 +20,8 @@ import {
   RefreshCw,
   Link2,
   Send,
-  Check,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/core/components/ui/button';
 import { Input } from '@/core/components/ui/input';
 import { Badge } from '@/core/components/ui/badge';
@@ -96,7 +96,6 @@ export default function UserManagementPage() {
   const { users, isLoading } = useUsers();
   const { invites, isLoading: invitesLoading, revokeInvite, resendInvite } = useInvites();
   const { deactivateUser, reactivateUser } = useUserMutations();
-  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
   const [resendBanner, setResendBanner] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState<GlobalRole | 'all'>('all');
@@ -170,10 +169,14 @@ export default function UserManagementPage() {
     const link = buildInviteLink(inviteId);
     try {
       await navigator.clipboard.writeText(link);
-      setCopiedInviteId(inviteId);
-      window.setTimeout(() => setCopiedInviteId(null), 2000);
+      toast.success('Invite link copied', {
+        description: 'Paste it into Slack, WhatsApp, or email.',
+      });
     } catch (err) {
       console.error('Failed to copy invite link:', err);
+      toast.error('Could not copy invite link', {
+        description: 'Your browser blocked clipboard access.',
+      });
     }
   }
 
@@ -489,17 +492,8 @@ export default function UserManagementPage() {
                                 onClick={() => handleCopyInviteLink(inv.id)}
                                 title="Copy a shareable invite link"
                               >
-                                {copiedInviteId === inv.id ? (
-                                  <>
-                                    <Check className="h-3.5 w-3.5" />
-                                    Copied
-                                  </>
-                                ) : (
-                                  <>
-                                    <Link2 className="h-3.5 w-3.5" />
-                                    Copy link
-                                  </>
-                                )}
+                                <Link2 className="h-3.5 w-3.5" />
+                                Copy link
                               </Button>
                               <Button
                                 variant="ghost"
