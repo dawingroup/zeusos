@@ -122,8 +122,8 @@ export default function ApprovalsInboxPage() {
     if (!action) return;
     setBusyId(item.id);
     try {
-      await action.run(item, { actorUserId });
-      pushToast(`${action.label}: ${item.entity.ref ?? item.title}`, { tone: 'success' });
+      const message = await action.run(item, { actorUserId });
+      pushToast(message || `${action.label}: ${item.entity.ref ?? item.title}`, { tone: 'success' });
     } catch (err) {
       pushToast(describeCallableError(err, `${action.label.toLowerCase()} ${item.entity.ref ?? 'this'}`), { tone: 'error' });
     } finally {
@@ -165,9 +165,16 @@ export default function ApprovalsInboxPage() {
           </span>
         }
         actions={
-          <button type="button" onClick={resubscribe} style={btn('ghost')} data-testid="approvals-refresh">
-            Refresh
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {scope.kind === 'parent' && (
+              <Link to="/settings/approval-routing" style={{ ...btn('ghost'), textDecoration: 'none' }} data-testid="approvals-routing-link">
+                Routing rules
+              </Link>
+            )}
+            <button type="button" onClick={resubscribe} style={btn('ghost')} data-testid="approvals-refresh">
+              Refresh
+            </button>
+          </div>
         }
       />
 

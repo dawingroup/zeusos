@@ -129,6 +129,16 @@ export interface QuoteInput {
   updatedAt?: unknown;
 }
 
+/**
+ * The routing-v2 plan frozen onto a supplier invoice by the approval
+ * callable — only the fields the projector reads to say how far the ladder
+ * has got ("level 2 of 3 · Zeus Group CEO").
+ */
+export interface ApprovalPlanInput {
+  pendingLevel?: number | null;
+  signatures?: Array<{ level: number; label?: string; approvedBy?: string | null }>;
+}
+
 export interface TalentInvoiceInput {
   id: string;
   talentProfileId?: string;
@@ -139,6 +149,7 @@ export interface TalentInvoiceInput {
   createdBy?: string;
   createdAt?: unknown;
   updatedAt?: unknown;
+  approval?: ApprovalPlanInput | null;
 }
 
 export interface MediaSupplierInvoiceInput {
@@ -153,6 +164,17 @@ export interface MediaSupplierInvoiceInput {
   createdBy?: string;
   createdAt?: unknown;
   updatedAt?: unknown;
+  approval?: ApprovalPlanInput | null;
+}
+
+/** " — level 2 of 3 (Zeus Group CEO)" once a multi-signature plan is under way; '' otherwise. */
+export function describePlanProgress(plan: ApprovalPlanInput | null | undefined): string {
+  const sigs = plan?.signatures ?? [];
+  if (sigs.length < 2) return '';
+  const pending = plan?.pendingLevel ?? sigs.find((s) => !s.approvedBy)?.level ?? null;
+  if (!pending) return '';
+  const next = sigs.find((s) => s.level === pending);
+  return ` — level ${pending} of ${sigs.length}${next?.label ? ` (${next.label})` : ''}`;
 }
 
 // ── labels ────────────────────────────────────────────────────────────────
@@ -335,7 +357,7 @@ export function projectTalentInvoice(inv: TalentInvoiceInput, nowMs: number): Ap
   return {
     id: `talent-inv:${inv.id}`,
     kind: 'talent_invoice',
-    title: `Talent invoice ${inv.id}`,
+    title: `Talent invoice ${inv.id}${describePlanProgress(inv.approval)}`,
     requiredAction: 'approve_talent_invoice',
     urgency: urgencyForAge(days, 'medium'),
     status: inv.status,
@@ -357,7 +379,7 @@ export function projectMediaSupplierInvoice(inv: MediaSupplierInvoiceInput, nowM
   return {
     id: `media-inv:${inv.id}`,
     kind: 'media_supplier_invoice',
-    title: `Media invoice ${inv.id}${inv.vehicleType ? ` — ${inv.vehicleType}` : ''}`,
+    title: `Media invoice ${inv.id}${inv.vehicleType ? ` — ${inv.vehicleType}` : ''}${describePlanProgress(inv.approval)}`,
     requiredAction: 'approve_media_supplier_invoice',
     urgency: urgencyForAge(days, 'medium'),
     status: inv.status,

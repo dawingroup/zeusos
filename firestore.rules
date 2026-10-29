@@ -49,6 +49,32 @@ service cloud.firestore {
       return isAuthenticated() && !isAnonymousAuth();
     }
 
+    // ── ADR-2026-10-25 — approvals need a human ──────────────────────
+    // The raiser is never the approver, and nobody records an approver
+    // other than themselves. Used on the supplier-spend collections whose
+    // approval moves money out of the group (talent / media invoices,
+    // manual purchase orders). Approval INTO the approved state goes
+    // through a Cloud Function (routing v2 signature ladder); these two
+    // helpers close the client-side door.
+
+    // True when this write moves the doc into APPROVED from some other state.
+    function isEnteringApproved() {
+      return request.resource.data.status == 'APPROVED'
+        && resource.data.status != 'APPROVED';
+    }
+
+    // If the write touches `approvedBy`, it must name the caller, and the
+    // caller must not be the person named in `raiserField` on the record
+    // (`createdBy` for invoices, `raisedBy` for manual POs). A write that
+    // leaves `approvedBy` alone passes.
+    function approverIsCallerNotRaiser(raiserField) {
+      return !('approvedBy' in request.resource.data.diff(resource.data).affectedKeys())
+        || (
+          request.resource.data.approvedBy == request.auth.uid
+          && !(raiserField in resource.data && resource.data[raiserField] == request.auth.uid)
+        );
+    }
+
     // Whitelist of fields an anonymous (portal) client may touch on a
     // ChangeOrder when responding to an approval request. Everything
     // else — line items, price impact, internal approval fields — is
@@ -3747,8 +3773,15 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       // Freelancers submit; admin can also submit on their behalf.
       allow create: if isStaffAuth();
-      // Approve/reject/pay: AM (parent-org principal) only.
-      allow update: if isParentOrgPrincipal();
+      // Reject / pay / edit: AM (parent-org principal) only. APPROVAL is
+      // not a client write any more — `approveTalentInvoice` (CFn) routes
+      // it through the signature ladder (port stream F / routing v2) and
+      // refuses the raiser. The client may not move the doc INTO
+      // APPROVED, nor stamp an approver who is not itself or who raised
+      // the invoice (ADR-2026-10-25).
+      allow update: if isParentOrgPrincipal()
+        && !isEnteringApproved()
+        && approverIsCallerNotRaiser('createdBy');
       allow delete: if false; // Invoices are immutable once submitted.
     }
 
@@ -3872,7 +3905,13 @@ service cloud.firestore {
     match /media_supplier_invoices/{invoiceId} {
       allow read: if isStaffAuth();
       allow create: if isStaffAuth();
-      allow update: if isParentOrgPrincipal();
+      // Same shape as talent_invoices: approval goes through the
+      // `approveMediaSupplierInvoice` CFn and its signature ladder; the
+      // client may reject / pay / edit but never enter APPROVED nor
+      // self-approve (ADR-2026-10-25).
+      allow update: if isParentOrgPrincipal()
+        && !isEnteringApproved()
+        && approverIsCallerNotRaiser('createdBy');
       allow delete: if isAdmin();
     }
 
@@ -3891,7 +3930,12 @@ service cloud.firestore {
     match /purchase_orders/{poId} {
       allow read: if isAdmin() || isParentOrgPrincipal();
       allow create: if isAdmin() && request.resource.data.kind == 'VENDOR_OTHER';
-      allow update: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
+      // A manual PO may be edited by an admin, but whoever is recorded as
+      // its approver must be the caller and must not be the person who
+      // raised it (ADR-2026-10-25 — the raiser is never the approver).
+      allow update: if isAdmin()
+        && resource.data.kind == 'VENDOR_OTHER'
+        && approverIsCallerNotRaiser('raisedBy');
       allow delete: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
     }
     match /journal_entries/{jeId} {

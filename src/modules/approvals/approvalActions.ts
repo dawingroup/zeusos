@@ -12,7 +12,11 @@
 import { advanceApprovalRungFn, rejectApprovalRungFn } from '@/modules/delivery/services/approval-ladder.service';
 import { acceptInternalFn, requestRevisionFn } from '@/modules/assignment/services/firebase';
 import { approveChangeOrderFn, approveSowFn, rejectChangeOrderFn } from '@/modules/contracts/services/firebase';
-import { approveTalentInvoice, rejectTalentInvoice } from '@/modules/talent/services/talent-invoice.service';
+import {
+  approveTalentInvoice,
+  describeApprovalProgress,
+  rejectTalentInvoice,
+} from '@/modules/talent/services/talent-invoice.service';
 import {
   approveMediaSupplierInvoice,
   rejectMediaSupplierInvoice,
@@ -25,7 +29,8 @@ export interface ApprovalActionContext {
 }
 
 export interface ApprovalActionSet {
-  approve?: { label: string; run: (item: ApprovalItem, ctx: ApprovalActionContext) => Promise<void> };
+  /** `run` may return a sentence for the toast (e.g. multi-signature progress); otherwise the page composes one. */
+  approve?: { label: string; run: (item: ApprovalItem, ctx: ApprovalActionContext) => Promise<string | void> };
   reject?: {
     label: string;
     /** Prompt shown above the required note. */
@@ -116,12 +121,16 @@ const ACTIONS: Record<ApprovalKind, ApprovalActionSet> = {
   },
   // The client decides a quote; the inbox only links to it.
   quote_awaiting_client: {},
+  // Supplier invoices: the callable plans the signature ladder, refuses the
+  // raiser and machine actors server-side, and signs the lowest level the
+  // caller may sign — the uid is read from the auth context, not passed.
   talent_invoice: {
     approve: {
       label: 'Approve',
       run: async (item, ctx) => {
         assertNotSelfApproval(item, ctx);
-        await approveTalentInvoice(item.entity.id, ctx.actorUserId);
+        const result = await approveTalentInvoice(item.entity.id);
+        return describeApprovalProgress(result, item.entity.ref ?? item.entity.id);
       },
     },
     reject: {
@@ -138,7 +147,8 @@ const ACTIONS: Record<ApprovalKind, ApprovalActionSet> = {
       label: 'Approve',
       run: async (item, ctx) => {
         assertNotSelfApproval(item, ctx);
-        await approveMediaSupplierInvoice(item.entity.id, ctx.actorUserId);
+        const result = await approveMediaSupplierInvoice(item.entity.id);
+        return describeApprovalProgress(result, item.entity.ref ?? item.entity.id);
       },
     },
     reject: {
