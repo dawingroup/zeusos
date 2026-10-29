@@ -69,6 +69,8 @@ import {
   type NavItem,
 } from '@/config/navigation.unified';
 import { adaptManifestToLegacyNavItem, resolveNav, type NavStatus } from '@/core/navigation/manifest';
+import { resolveApprovalsScope } from '@/modules/approvals/scope';
+import { useApprovalsInbox } from '@/modules/approvals/hooks/useApprovalsInbox';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import { isParentOrgPrincipal as resolveIsParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { SubsidiaryId } from '@/core/settings/types';
@@ -178,6 +180,10 @@ export function AppShell({ children }: AppShellProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
+  // Approvals pending-count badge (port stream F). Same scope rule as the
+  // /approvals page, so the number on the sidebar is the number on the page.
+  const approvalsScope = useMemo(() => resolveApprovalsScope(dawinUser), [dawinUser]);
+  const approvalsCount = useApprovalsInbox(approvalsScope).items.length;
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
   const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction, navScope, setNavScope } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
@@ -321,7 +327,9 @@ export function AppShell({ children }: AppShellProps) {
 
     // Filter manifest items the user can't access via the module-level
     // gate. Privileged accounts (super-user, module admin) bypass.
-    const filtered = filterNavigationByAccess(adapted, allAccessibleModuleIds, isPrivileged);
+    const filtered = filterNavigationByAccess(adapted, allAccessibleModuleIds, isPrivileged).map((item) =>
+      item.id === 'approvals' && approvalsCount > 0 ? { ...item, badge: approvalsCount } : item,
+    );
 
     // Admin gating — only show the Admin item if the user has an
     // admin-tier global role or is on the seed admin email list.
@@ -331,6 +339,7 @@ export function AppShell({ children }: AppShellProps) {
     if (hasAdminRole || isAdminEmail || isPrivileged) return filtered;
     return filtered.filter((item) => item.id !== 'admin' && item.id !== 'api-keys');
   }, [
+    approvalsCount,
     allAccessibleModuleIds,
     isPrivileged,
     isParentOrgPrincipal,

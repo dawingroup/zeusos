@@ -21,13 +21,13 @@ import {
   where,
   orderBy,
   serverTimestamp,
-  writeBatch,
 } from 'firebase/firestore';
+import { getFunctions, httpsCallable, type HttpsCallable } from 'firebase/functions';
 import { db } from '@/shared/services/firebase';
+import { app } from '@/core/services/firebase/config';
 import type { TalentInvoice, TalentInvoiceStatus } from '../types/talent-invoice.types';
 
 const INVOICES_COLL    = 'talent_invoices';
-const DOMAIN_EVENTS    = 'domain_events';
 
 export async function submitTalentInvoice(
   input: Omit<TalentInvoice, 'id' | 'status' | 'linkedPoId' | 'approvedBy' | 'approvedAt' | 'rejectedBy' | 'rejectedAt' | 'rejectionReason' | 'paidAt' | 'createdAt' | 'updatedAt'>,
@@ -66,51 +66,44 @@ export async function listTalentInvoices(filters: {
   return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<TalentInvoice, 'id'>) }));
 }
 
-export async function approveTalentInvoice(
-  invoiceId: string,
-  approvedBy: string,
-): Promise<void> {
-  const invoice = await getTalentInvoice(invoiceId);
-  if (!invoice) throw new Error(`[talent-invoice] Invoice ${invoiceId} not found`);
-  if (invoice.status !== 'SUBMITTED') {
-    throw new Error(
-      `[talent-invoice] Can only approve SUBMITTED invoices — current status: ${invoice.status}`,
-    );
-  }
+/** What the approval callables return — one signature taken, or the record already approved. */
+export interface ApproveSupplierInvoiceResult {
+  id: string;
+  status: 'APPROVED' | 'SUBMITTED' | 'PAID';
+  /** The level this call signed (absent on an idempotent no-op). */
+  level?: number;
+  complete: boolean;
+  pendingLevel?: number | null;
+  bandId?: string;
+  signaturesRequired?: number;
+  skip?: 'already_approved';
+}
 
-  const batch = writeBatch(db);
+export const approveTalentInvoiceFn: HttpsCallable<
+  { invoiceId: string; note?: string; idempotencyKey?: string },
+  ApproveSupplierInvoiceResult
+> = httpsCallable(getFunctions(app, 'europe-west1'), 'approveTalentInvoice');
 
-  // Update invoice status
-  batch.update(doc(db, INVOICES_COLL, invoiceId), {
-    status: 'APPROVED' satisfies TalentInvoiceStatus,
-    approvedBy,
-    approvedAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+/**
+ * Approve (sign) a talent invoice — a SERVER decision since routing v2 /
+ * ADR-2026-10-25. The callable plans the signature ladder on first touch,
+ * refuses the raiser and any machine actor, signs the lowest level the
+ * caller may sign, and only moves the invoice to APPROVED (emitting
+ * `TalentInvoiceApproved` for the PO consumer) when the last level lands.
+ * Until then the invoice stays SUBMITTED with `approval.pendingLevel` set.
+ *
+ * The approver is the signed-in uid on the server — callers no longer pass it.
+ */
+export async function approveTalentInvoice(invoiceId: string, note?: string): Promise<ApproveSupplierInvoiceResult> {
+  const res = await approveTalentInvoiceFn({ invoiceId, ...(note ? { note } : {}) });
+  return res.data;
+}
 
-  // Emit domain event for Phase 4.1 procurement consumer (onTalentInvoiceApproved).
-  // The Cloud Function will read this event and create a linked PO in Procurement.
-  const eventRef = doc(collection(db, DOMAIN_EVENTS));
-  batch.set(eventRef, {
-    id: eventRef.id,
-    eventType: 'TalentInvoiceApproved',
-    aggregateType: 'TalentInvoice',
-    aggregateId: invoiceId,
-    payload: {
-      talentInvoiceId: invoiceId,
-      talentProfileId: invoice.talentProfileId,
-      masterJobId: invoice.masterJobId,
-      amountMinor: invoice.amountMinor,
-      currency: invoice.currency,
-      orgId: invoice.orgId,
-    },
-    emittedByUserId: approvedBy,
-    emittedAt: serverTimestamp(),
-    processed: false,
-    processedBy: [],
-  });
-
-  await batch.commit();
+/** One line for a toast after a signature: "Approved" or how far the ladder got. */
+export function describeApprovalProgress(r: ApproveSupplierInvoiceResult, ref: string): string {
+  if (r.complete) return `Approved: ${ref}`;
+  const total = r.signaturesRequired ?? '?';
+  return `Signed level ${r.level ?? '?'} of ${total} for ${ref} — awaiting level ${r.pendingLevel ?? '?'}.`;
 }
 
 export async function rejectTalentInvoice(

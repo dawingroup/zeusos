@@ -4684,6 +4684,14 @@ exports.onTalentInvoiceApproved = onTalentInvoiceApproved;
 exports.onMediaSupplierInvoicePaid = onMediaSupplierInvoicePaid;
 exports.postJournalEntryOnInvoicePaid = postJournalEntryOnInvoicePaid;
 
+// Approval routing v2 (port stream F / ADR-2026-10-25). The only door into
+// APPROVED for supplier invoices: purpose × KES band × signature ladder,
+// raiser never signs, a person always does. Emits TalentInvoiceApproved
+// for the PO consumer above once the last signature lands.
+const approvals = require('./src/approvals');
+exports.approveTalentInvoice = approvals.approveTalentInvoice;
+exports.approveMediaSupplierInvoice = approvals.approveMediaSupplierInvoice;
+
 // ============================================================
 // Finance — Group consolidation rollup (Phase 1.2)
 // ============================================================
