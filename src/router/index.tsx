@@ -106,6 +106,8 @@ const MemosLayout      = lazyWithRetry(() => import('@/modules/memos/components/
 const MemoRegisterPage = lazyWithRetry(() => import('@/modules/memos/pages/MemoRegisterPage'));
 const MemoEditorPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoEditorPage'));
 const MemoDetailPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoDetailPage'));
+// AI usage & cost (DawinOS stream D port) — the ledger's rollups and the spend policy.
+const AiUsagePage      = lazyWithRetry(() => import('@/modules/admin/pages/AiUsagePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -680,6 +682,7 @@ export const router = createBrowserRouter([
       { path: 'admin/audit-log',     element: <PageWrapper><AuditLogPage /></PageWrapper> },
       { path: 'admin/design-system', element: <PageWrapper><DesignSystemPage /></PageWrapper> },
       { path: 'admin/api-keys',      element: <PageWrapper><ServiceCredentialsPage /></PageWrapper> },
+      { path: 'admin/ai-usage',      element: <PageWrapper><ParentOrgGuard><AiUsagePage /></ParentOrgGuard></PageWrapper> },
 
       // ── Media Plan & Buying — Phase 4 ─────────────────────────────────────
       // Gated: parent-org users for plan creation; subsidiary buyers can post

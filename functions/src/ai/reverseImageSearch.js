@@ -3,7 +3,8 @@
  * Uses Google Vision API to perform reverse image search
  */
 
-const { onCall } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const vision = require('@google-cloud/vision');
 const { logger } = require('firebase-functions/v2');
 

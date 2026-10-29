@@ -5,8 +5,11 @@
  * stores in Firestore + BigQuery, and enriches with Gemini AI analysis.
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
-const { onSchedule } = require('firebase-functions/v2/scheduler');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
+// Attributed schedule (stream D): every model call beneath it is recorded as trigger 'scheduled'.
+const { onAiSchedule: onSchedule } = require('../utils/aiScheduled');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');

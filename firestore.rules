@@ -4140,5 +4140,29 @@ service cloud.firestore {
     match /memo_counters/{counterId} {
       allow read, write: if false;
     }
+
+    // ────────────────────────────────────────────────────────────────
+    // AI platform layer (DawinOS stream D port — docs/AI_PLATFORM_LAYER.md).
+    // `ai_usage_events` is the raw ledger every model call writes (server
+    // only; TTL-reaped); `ai_usage_daily` / `ai_usage_monthly` are the
+    // rollups the AI usage page reads; `ai_policy/global` holds the budgets
+    // and the pause switches an admin edits.
+    // ────────────────────────────────────────────────────────────────
+    match /ai_usage_events/{eventId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
+    }
+    match /ai_usage_daily/{dayId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
+    }
+    match /ai_usage_monthly/{monthId} {
+      allow read: if isAdmin() || isParentOrgPrincipal();
+      allow write: if false;
+    }
+    match /ai_policy/{policyId} {
+      allow read: if isStaffAuth();
+      allow write: if isAdmin();
+    }
   }
 }

@@ -12,7 +12,8 @@
  * The DawinOS construction-specific `computeImpact`/`recomputeImpact` chain is
  * intentionally NOT ported (no supply-chain analog in the marketing domain).
  */
-const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+// Attributed trigger (stream D): every model call beneath it is recorded as trigger 'event'.
+const { onAiDocumentCreated: onDocumentCreated } = require('../utils/aiFirestore');
 const { defineSecret } = require('firebase-functions/params');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');

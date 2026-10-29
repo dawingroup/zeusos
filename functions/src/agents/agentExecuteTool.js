@@ -4,7 +4,9 @@
  * gating + audit, then routes to the handler. Auth: any signed-in staff user
  * (recorded on the audit row as the human who invoked the agent).
  */
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { logger } = require('firebase-functions');
 const { dispatch, DispatcherError } = require('./dispatcher');
 const { getToolSchema, validateAgainstSchema } = require('./toolCatalog');
