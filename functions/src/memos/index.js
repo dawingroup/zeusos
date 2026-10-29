@@ -3,5 +3,6 @@
  * See docs/PHASE_6_G_MEMOS.md.
  */
 const { memoAction } = require('./callables/memoAction');
+const { draftMemoSection } = require('./ai/draftMemoSection');
 
-module.exports = { memoAction };
+module.exports = { memoAction, draftMemoSection };

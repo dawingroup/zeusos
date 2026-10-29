@@ -65,3 +65,30 @@ export const fileMemoPdf = (memoId: string, storagePath: string, url: string) =>
 export const withdrawMemo = (memoId: string, note?: string) => call({ action: 'withdraw', memoId, note });
 export const reopenMemo = (memoId: string) => call({ action: 'reopen', memoId });
 export const acknowledgeMemo = (memoId: string) => call({ action: 'acknowledge', memoId });
+
+// ─── draftMemoSection ─────────────────────────────────────────────────────────
+
+export interface DraftMemoSectionRequest {
+  memoId: string;
+  sectionKey: string;
+  /** The section template's hint and the memo type's hint, for grounding. */
+  hint?: string;
+  typeHint?: string;
+  /** Anything the author wants the draft to take into account. */
+  instruction?: string;
+}
+export interface DraftMemoSectionResponse {
+  sectionKey: string;
+  content: string;
+  characters: number;
+  linkedRecordsUsed: number;
+  model: string;
+}
+/**
+ * "Draft with AI" — one section at a time, from the memo's own header, the
+ * other sections and the linked records. Returned, never written: the author
+ * lands it in the editor and decides. Dark without ANTHROPIC_API_KEY: the
+ * call then fails with `failed-precondition` and a sentence to show.
+ */
+export const draftMemoSectionFn: HttpsCallable<DraftMemoSectionRequest, DraftMemoSectionResponse> = httpsCallable(functions, 'draftMemoSection');
+export const draftMemoSection = (req: DraftMemoSectionRequest) => draftMemoSectionFn(req).then((r) => r.data);

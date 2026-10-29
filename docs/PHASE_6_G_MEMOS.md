@@ -49,6 +49,10 @@ Statuses: `draft → submitted → approved | rejected | modified → issued →
 
 The PDF is rendered client-side (`@react-pdf/renderer`, `src/modules/memos/pdf/`, imported lazily), uploaded to `memos/{sub}/{memoId}/{memoNumber}-v{n}.pdf`, and recorded with `filePdf` — best effort; the memo IS issued either way and the page offers "Render & file PDF" to retry.
 
+## Draft with AI
+
+`draftMemoSection` (`functions/src/memos/ai/draftMemoSection.js`, europe-west1) drafts ONE section of a DRAFT memo from the memo's own context — its header, what the author has written in the other sections, the scalar fields of the records it links to (through the record registry: IWO, master job, client, SOW, PO, supplier, …) and the section's template hint — and returns the text; it never writes. The author lands it in the editor and keeps, edits or drops it ("Draft with AI" / "Improve with AI" under each section card, with an optional one-line instruction; unsaved edits are saved first so the model reads the current draft). The model is told to leave a bracketed placeholder for any fact it was not given. Author (or admin) only; draft only. Dark until `ANTHROPIC_API_KEY` is set: the callable refuses with `failed-precondition` and the editor shows the sentence in place. One `agent_audit_entries` row per draft (`ZA-011` / `memo.draft_section`).
+
 ## Tasks
 
 `functions/src/memos/lib/memoTasks.js` runs after every transition (never fails the memo write). One task per person per step, deterministic id `memoTaskId(key)` = `memo__<key with : → __>`:
@@ -74,14 +78,14 @@ A step's task completes by the same key when the memo moves on; a returned memo 
 
 - `functions/__tests__/memos/memoRouting.test.js` — planner, tier (floors, v2 band, raise-only across every combination), numbers, hash, model, keys.
 - `functions/__tests__/memos/memoAction.test.js` — the callable against the in-memory Firestore: the whole route, numbering across a return, no-decision memos, role fallback and unroutable, admin cover and junior signer, withdraw, band from `systemSettings/approvalRouting`, supersede, task-sync failure isolation.
-- `src/modules/memos/__tests__/` — lockstep (route, tier, keys, templates, codes, transitions against the CFn copies), prose / deletion / prefill / actor, PDF document model, register and detail page renders; `src/core/navigation/__tests__/manifest.memos.test.ts`.
+- `functions/__tests__/memos/memoAi.test.js` — `draftMemoSection`: dark without a key, grounded prompt (other sections, linked record scalars, attachments, instruction), author / draft / section gates, never written.
+- `src/modules/memos/__tests__/` — lockstep (route, tier, keys, templates, codes, transitions against the CFn copies), prose / deletion / prefill / actor, PDF document model, register, editor (Draft with AI lands in the card; the no-key sentence shows in place) and detail page renders; `src/core/navigation/__tests__/manifest.memos.test.ts`.
 
 ## Not ported / follow-ups
 
 - **Payables, closure, finance actions, services sales orders** (`memoPayable`, `memoClosure`, `financeActions`, the adjustments ledger) — DawinOS-finance-specific; a decided memo in ZeusOS records the decision and stops. Revisit with stream M (finance) if a memo should raise a `purchase_orders` / journal entry.
 - **Drive mirror** of the issued PDF — Google Drive stays disabled per plan §3.
-- **AI section drafting** (`draftMemoSection`) — easy to add on the E pattern (dark without `ANTHROPIC_API_KEY`); left out to keep the PR to the decision record itself.
 - **Electronic signature capture** — ZeusOS has no signature component; decisions are signed by typed name. A drawn signature can be added later as `signatureMethod: 'electronic'` + `signatureUrl` without changing the model.
 - **Approvals inbox feed** (`/approvals`) for memo decisions — once stream F lands, a `memo_decision` kind can project `memo_approval:*` tasks; today they appear in the task inbox and My Day.
 - **Memo amount ladder UI** — Settings → Approval routing (stream F) edits `supplier_spend`; adding `memo_finance` / `memo_admin` / `memo_operations` modules there is a config change, not code.
-- Deploy: rules (`memos`, `memo_counters`, storage path), functions (`memoAction`). CI is dead — deploy locally once merged.
+- Deploy: rules (`memos`, `memo_counters`, storage path), functions (`memoAction`, `draftMemoSection`). CI is dead — deploy locally once merged.

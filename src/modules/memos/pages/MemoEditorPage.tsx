@@ -20,9 +20,10 @@ import { useMemoDoc } from '../hooks/useMemoDoc';
 import { useMemoActor } from '../hooks/useMemoActor';
 import type { Memo, MemoLink, MemoRecipient, MemoSection } from '../types/memo';
 import { DEFAULT_MEMO_CURRENCY, MEMO_TYPE_HINTS, MEMO_TYPE_LABELS, missingRequiredSections, retargetSections, sectionsForType, templateFor } from '../constants/memoTemplates';
+import { DraftSectionWithAi } from '../components/DraftSectionWithAi';
 import { isEditableStatus } from '../constants/memoStatus';
 import { addMemoAttachment, createMemoDraft, removeMemoAttachment, updateMemoDraft } from '../services/memoService';
-import { submitMemo } from '../services/memoActions';
+import { draftMemoSection, submitMemo } from '../services/memoActions';
 import { MemoHeaderForm, type MemoHeaderValues } from '../components/MemoHeaderForm';
 import { MemoLinksEditor } from '../components/MemoLinksEditor';
 import { MemoDistributionEditor } from '../components/MemoDistributionEditor';
@@ -201,6 +202,20 @@ export default function MemoEditorPage() {
     setState((prev) => (prev ? { ...prev, sections: prev.sections.map((s) => (s.key === key ? { ...s, ...change } : s)) } : prev));
   };
 
+  /** Ask the model for one section; the text lands in the card unsaved. The saved draft is what the model reads, so unsaved edits go first. */
+  const draftWithAi = async (sectionKey: string, instruction?: string) => {
+    if (!memoId || !state) return;
+    if (dirtyRef.current) await persist(state);
+    const res = await draftMemoSection({
+      memoId,
+      sectionKey,
+      hint: templateFor(state.type, sectionKey)?.hint,
+      typeHint: MEMO_TYPE_HINTS[state.type],
+      instruction: instruction?.trim() || undefined,
+    });
+    setSection(sectionKey, { content: res.content, enabled: true });
+  };
+
   const missing = useMemo(() => (state ? missingRequiredSections(state.type, state.sections) : []), [state]);
   const requiredTotal = useMemo(() => (state ? state.sections.filter((s) => templateFor(state.type, s.key)?.required).length : 0), [state]);
   const amountMinor = state ? amountMinorFromInput(state.amount, state.currency) : null;
@@ -343,7 +358,7 @@ export default function MemoEditorPage() {
 
       <div className="space-y-3" style={{ marginBottom: 16 }}>
         {error && <Banner tone="danger" title="Could not save" message={error} onDismiss={() => setError(null)} />}
-        {!memoId && <Banner tone="info" title="Save the draft first" message="Give the memo a subject and save it; attachments and submission unlock once it exists." />}
+        {!memoId && <Banner tone="info" title="Save the draft first" message="Give the memo a subject and save it; attachments, AI drafting and submission unlock once it exists." />}
         <Banner tone={routing.required || routePlan.route.clearance.length ? 'info' : 'success'} title="Where it goes" message={routeLine} />
       </div>
 
@@ -399,7 +414,12 @@ export default function MemoEditorPage() {
                   placeholder={s.enabled ? 'Write in plain prose. Blank line = new paragraph; "- " = bullet; "1. " = numbered; "## " = sub-heading.' : 'Section excluded — tick Include to write it.'}
                   onChange={(e) => setSection(s.key, { content: e.target.value })}
                 />
-                <div className="mt-1 text-right text-xs" style={{ color: 'var(--fg-tertiary)' }}>{sectionWords} words</div>
+                <div className="mt-1 flex items-center justify-between gap-2">
+                  {memoId && s.enabled ? (
+                    <DraftSectionWithAi hasText={Boolean(s.content.trim())} onDraft={(instruction) => draftWithAi(s.key, instruction)} />
+                  ) : <span />}
+                  <span className="text-xs" style={{ color: 'var(--fg-tertiary)' }}>{sectionWords} words</span>
+                </div>
               </DocCard>
             </DocSection>
           );

@@ -4811,5 +4811,9 @@ exports.draftTasksWithAi = draftTasksWithAi;
 //   Drafts are the author's (client writes under the `memos` rules); every
 //   later transition lands here with a statusHistory row, and the step's task
 //   is written into `generated_tasks` in the same call (lib/memoTasks.js).
-const { memoAction } = require('./src/memos');
+// `draftMemoSection` — "Draft with AI" on one section of a DRAFT memo, from
+//   the memo's own header, sections and linked records; returned, never
+//   written. Dark until ANTHROPIC_API_KEY is set.
+const { memoAction, draftMemoSection } = require('./src/memos');
 exports.memoAction = memoAction;
+exports.draftMemoSection = draftMemoSection;
