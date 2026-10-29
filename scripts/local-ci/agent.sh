@@ -206,7 +206,11 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
     log "retrying $label ${sha:0:9}: $failed"
     if CI_GATE_ROOT="$CLONE" bash "$BIN/ci-gate.sh" --only "$failed" >"$glog.retry" 2>&1; then
       mins=$(( ($(date +%s) - start) / 60 ))
-      post_status "$sha" success local-ci/gate "passed locally in ${mins}m ($failed passed on a retry — flaky here, worth a look)$(node_note "$glog")"
+      # Name the cause when it was this Mac's: a first-run "port taken" is
+      # another session's emulators, not flakiness in the commit.
+      local why="flaky here, worth a look"
+      grep -q 'Could not start Firestore Emulator, port taken' "$glog" && why="emulator ports were busy on this Mac the first time"
+      post_status "$sha" success local-ci/gate "passed locally in ${mins}m ($failed passed on a retry — $why)$(node_note "$glog")"
       echo "pass-after-retry:$failed" > "$STATE/gated/$sha"; log "PASS-ON-RETRY $label ${sha:0:9}: $failed (${mins}m)"; return 0
     fi
     failed="$(failed_steps "$glog.retry")"; mins=$(( ($(date +%s) - start) / 60 ))
