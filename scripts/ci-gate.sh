@@ -148,11 +148,17 @@ fi
 
 # Another session on this Mac may be running the emulators right now (they
 # bind fixed ports). Wait for them to be free rather than fail a commit for it.
+# The hub (4400) and logging (4500) emulators come up seconds BEFORE the
+# Firestore one binds 8080, so a session that has just started its emulators
+# shows on 4400 first; checking 8080 alone lost that race twice on 2026-10-29.
+emulator_ports_busy() { lsof -nP -iTCP:8080 -iTCP:9099 -iTCP:4400 -iTCP:4500 -sTCP:LISTEN >/dev/null 2>&1; }
 wait_for_emulator_ports() {
   local i
   for i in $(seq 1 60); do
-    lsof -nP -iTCP:8080 -iTCP:9099 -sTCP:LISTEN >/dev/null 2>&1 || return 0
-    [ "$i" = 1 ] && echo "… emulator ports 8080/9099 are in use by another process on this Mac — waiting up to 10 min"
+    if ! emulator_ports_busy; then
+      sleep 3; emulator_ports_busy || return 0     # free twice, 3 s apart
+    fi
+    [ "$i" = 1 ] && echo "… emulator ports (8080/9099, or the hub on 4400) are in use by another process on this Mac — waiting up to 10 min"
     sleep 10
   done
   echo "⚠ emulator ports still busy after 10 min — running anyway (expect 'port taken')"
