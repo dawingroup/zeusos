@@ -86,10 +86,15 @@ post_status() { # sha state context description
 # runs are enough to tell, and few enough to ask about every tick.
 runs="$(gh api "repos/$REPO/actions/runs?per_page=6" --jq '.workflow_runs[] | "\(.id) \(.status) \(.conclusion // "none")"' 2>/dev/null)"
 if [ -z "$runs" ]; then log "cannot reach the GitHub API — skipping this tick"; exit 0; fi
+# A run's status alone is not evidence: a billing-locked run sits `queued` for
+# a few seconds after every push before its zero-step jobs fail, and a tick in
+# that window would (did, 2026-10-29) take Actions for alive, skip the PRs and
+# record main's stale GitHub verdict. Only a job that has run a step counts —
+# in progress or completed. A genuinely queued run that has not started yet is
+# gated locally once more, which is the safe direction.
 alive=0
 while read -r rid rstatus rconcl; do
   [ -z "$rid" ] && continue
-  case "$rstatus" in in_progress|queued|waiting|requested|pending) alive=1; break ;; esac
   [ "$rconcl" = startup_failure ] && continue
   stepped="$(gh api "repos/$REPO/actions/runs/$rid/jobs?per_page=50" --jq '[.jobs[] | select((.steps|length) > 0)] | length' 2>/dev/null || echo 0)"
   [ "${stepped:-0}" != 0 ] && { alive=1; break; }
