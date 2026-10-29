@@ -337,6 +337,8 @@ async function isParentOrgUser(userId) {
 
 module.exports = {
   PARENT_ORG_ID,
+  SUPER_EMAILS,
+  isSuper,
   assertParentOrgPrincipal,
   assertCommercialPrincipal,
   assertCommercialPrincipalForResource,

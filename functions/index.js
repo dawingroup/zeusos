@@ -564,6 +564,10 @@ exports.fetchSocialPosts = fetchSocialPosts;
 exports.analyzeSocialStrategy = analyzeSocialStrategy;
 exports.triggerSocialSync = triggerSocialSync;
 
+// Market Intelligence - competitor hard-delete cascade (audit 2026-10, D-3)
+const { onCompetitorDeleted } = require('./src/intelligence/competitorCascadeTrigger');
+exports.onCompetitorDeleted = onCompetitorDeleted;
+
 // Marketing - Social Account registry bridge + analytics
 const { onSocialMediaAccountWritten } = require('./src/marketing/registerOwnDigitalProfile');
 const {

@@ -6,6 +6,7 @@
 // ============================================================================
 
 const { HttpsError } = require('firebase-functions/v2/https');
+const { assertMarketIntelCaller } = require('../lib/marketIntelGate');
 // Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
 const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
@@ -89,9 +90,7 @@ const discoverDigitalProfiles = onCall({
   timeoutSeconds: 120,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'discover digital profiles' });
 
   const { competitorName, website, competitorId } = request.data;
   if (!competitorName) {
@@ -256,9 +255,7 @@ const scanTopicMentions = onCall({
   timeoutSeconds: 180,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'scan topic mentions' });
 
   const { topicId } = request.data;
   if (!topicId) {
