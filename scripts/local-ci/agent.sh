@@ -7,8 +7,9 @@
 # few minutes; it asks GitHub (plain REST — not Actions) for the tip of `main`
 # and open PR heads, then:
 #
-#   · GATE — when Actions is not running jobs (a billing block: every run
-#     `startup_failure`, zero jobs) it runs the SAME gate CI runs
+#   · GATE — when Actions is not running jobs (a billing block: runs end
+#     `startup_failure` with no jobs, or `failure` with zero-step jobs) it runs
+#     the SAME gate CI runs
 #     (scripts/ci-gate.sh) in its own clone and posts the verdict on the commit
 #     as the status `local-ci/gate`. While Actions is alive it takes main's
 #     verdict from the CI workflow run instead and gates no PRs.
@@ -75,10 +76,24 @@ post_status() { # sha state context description
 }
 
 # ── is Actions running jobs? ───────────────────────────────────────────────
-alive="$(gh api "repos/$REPO/actions/runs?per_page=15" \
-  --jq '[.workflow_runs[] | select(.status=="in_progress" or (.conclusion != null and .conclusion != "startup_failure"))] | length' 2>/dev/null)"
-if [ -z "$alive" ]; then log "cannot reach the GitHub API — skipping this tick"; exit 0; fi
-ACTIONS_ALIVE=0; [ "$alive" != 0 ] && ACTIONS_ALIVE=1
+# "Alive" means jobs actually EXECUTE. A billing block shows up two ways: runs
+# that end `startup_failure` with no jobs, and (seen 2026-10-25) runs that end
+# `failure` whose every job completed in ~2 s with ZERO steps and the
+# annotation "The job was not started because your account is locked due to a
+# billing issue". Neither is a verdict on the commit. So a run counts only when
+# it is in progress or one of its jobs ran at least one step; the six newest
+# runs are enough to tell, and few enough to ask about every tick.
+runs="$(gh api "repos/$REPO/actions/runs?per_page=6" --jq '.workflow_runs[] | "\(.id) \(.status) \(.conclusion // "none")"' 2>/dev/null)"
+if [ -z "$runs" ]; then log "cannot reach the GitHub API — skipping this tick"; exit 0; fi
+alive=0
+while read -r rid rstatus rconcl; do
+  [ -z "$rid" ] && continue
+  case "$rstatus" in in_progress|queued|waiting|requested|pending) alive=1; break ;; esac
+  [ "$rconcl" = startup_failure ] && continue
+  stepped="$(gh api "repos/$REPO/actions/runs/$rid/jobs?per_page=50" --jq '[.jobs[] | select((.steps|length) > 0)] | length' 2>/dev/null || echo 0)"
+  [ "${stepped:-0}" != 0 ] && { alive=1; break; }
+done <<<"$runs"
+ACTIONS_ALIVE=$alive
 GATE_LOCALLY=1
 if [ "$ACTIONS_ALIVE" = 1 ] && [ "${LOCAL_CI_FORCE:-0}" != 1 ]; then
   GATE_LOCALLY=0
@@ -147,8 +162,10 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
   CI_GATE_ROOT="$CLONE" bash "$BIN/ci-gate.sh" $args >"$glog" 2>&1
   local rc=$? mins=$(( ($(date +%s) - start) / 60 ))
   if [ $rc = 0 ]; then
-    local crashed; crashed="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="PASS*"{print $1}' "$glog" | paste -sd, -)"
-    post_status "$sha" success local-ci/gate "all CI checks passed locally in ${mins}m${args:+ (fast: no emulators, no build)}${crashed:+ (firebase CLI crashed at emulator shutdown after $crashed passed)}"
+    local crashed skipped
+    crashed="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="PASS*"{print $1}' "$glog" | paste -sd, -)"
+    skipped="$(awk '/^STEP +RESULT/{t=1;next} t && $2=="SKIP"{print $1}' "$glog" | paste -sd, -)"
+    post_status "$sha" success local-ci/gate "passed locally in ${mins}m${args:+ (fast: no emulators, no build)}${skipped:+ — not run, tree predates #163: $skipped}${crashed:+ (CLI crashed at emulator shutdown after $crashed passed)}"
     echo pass > "$STATE/gated/$sha"; log "PASS $label ${sha:0:9} (${mins}m)${crashed:+ — CLI teardown crash in $crashed: $glog}"; return 0
   fi
   failed_steps() { awk '/^STEP +RESULT/{t=1;next} t && $2=="FAIL"{print $1}' "$1" | paste -sd, -; }
@@ -278,9 +295,11 @@ fi
 [ "$DRY" = 1 ] && log "DRY would deploy main ${MAIN_SHA:0:9} if green and not yet live (infra/functions/hosting pointers: $(cut -c1-9 "$STATE/deployed-infra" 2>/dev/null || echo -)/$(cut -c1-9 "$STATE/deployed-functions" 2>/dev/null || echo -)/$(cut -c1-9 "$STATE/deployed-hosting" 2>/dev/null || echo -))"
 
 # ── then open PRs — only when Actions cannot gate them itself ──────────────
+# Every open PR whatever its base: a stacked PR (a port stream on top of the
+# one it needs) is gated by its head commit, which carries the whole chain.
 # Oldest updatedAt first, gated heads skipped: a first-in-first-out queue.
 [ "$GATE_LOCALLY" = 1 ] || exit 0
-gh pr list --repo "$REPO" --state open --base main --limit 100 \
+gh pr list --repo "$REPO" --state open --limit 100 \
   --json number,headRefOid,isDraft,isCrossRepository,updatedAt \
   --jq "sort_by(.updatedAt) | .[] | select(.isDraft|not) | select(.isCrossRepository|not) | select(.updatedAt >= \"${PR_SINCE:-1970}\") | \"\(.number) \(.headRefOid)\"" 2>/dev/null \
 | while read -r num sha; do

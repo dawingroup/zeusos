@@ -78,28 +78,46 @@ for arg in "$@"; do
   esac
 done
 
-# name | slow? | command            (slow steps are skipped by --fast)
+# name | slow? | requires | command      (slow steps are skipped by --fast)
+# `requires` names what the TREE UNDER TEST must carry for the step to mean
+# anything: a file path, or `npm:<dir>:<script>` for an npm script. A tree
+# that predates the guards (every head cut before PR #163) has no
+# scripts/check-rules-*.cjs — running them there would be a false red, so
+# such a step is reported SKIP, named in the summary, and never counted as a
+# pass of that check. Empty = always runnable.
 # `lint` is advisory until the inherited ESLint backlog is paid down — the same
 # `|| true` ci.yml uses — so it reports but never fails the gate.
 STEPS=(
-  "lint|0|npm run lint || echo '(lint is advisory — see CLAUDE.md)'"
-  "functions-exports|0|npm run check:functions-exports"
-  "deploy-params|0|npm run check:deploy-params"
-  "typecheck|0|npx tsc --noEmit"
-  "unit|0|npm run test:unit -- --run"
-  "functions-tests|0|cd functions && npm test"
-  "mcp-lint|0|cd zeusos-mcp-server && npm run lint"
-  "mcp-vendor|0|npm run check:mcp-vendor"
-  "rules-coverage|0|node scripts/check-rules-coverage.cjs"
-  "rules-null-safety|0|node scripts/check-rules-null-safety.cjs"
-  "rules-complexity|0|node scripts/check-rules-complexity.cjs"
-  "rules-size|0|node scripts/build-firestore-rules.cjs"
-  "rules-emulator|1|npm run test:rules:emulated"
-  "build|1|npm run build"
+  "lint|0||npm run lint || echo '(lint is advisory — see CLAUDE.md)'"
+  "functions-exports|0|scripts/check-functions-exports.cjs|npm run check:functions-exports"
+  "deploy-params|0|scripts/check-deploy-params.cjs|npm run check:deploy-params"
+  "typecheck|0||npx tsc --noEmit"
+  "unit|0||npm run test:unit -- --run"
+  "functions-tests|0||cd functions && npm test"
+  "mcp-lint|0|npm:zeusos-mcp-server:lint|cd zeusos-mcp-server && npm run lint"
+  "mcp-vendor|0|scripts/check-mcp-vendor-fresh.sh|npm run check:mcp-vendor"
+  "rules-coverage|0|scripts/check-rules-coverage.cjs|node scripts/check-rules-coverage.cjs"
+  "rules-null-safety|0|scripts/check-rules-null-safety.cjs|node scripts/check-rules-null-safety.cjs"
+  "rules-complexity|0|scripts/check-rules-complexity.cjs|node scripts/check-rules-complexity.cjs"
+  "rules-size|0|scripts/build-firestore-rules.cjs|node scripts/build-firestore-rules.cjs"
+  "rules-emulator|1||npm run test:rules:emulated"
+  "build|1||npm run build"
 )
 
+# Does the tree under test carry what a step needs? (see `requires` above)
+has_requirement() {
+  local req="$1"
+  [ -z "$req" ] && return 0
+  case "$req" in
+    npm:*) local rest dir script
+           rest="${req#npm:}"; dir="${rest%%:*}"; script="${rest#*:}"
+           [ -f "$ROOT/$dir/package.json" ] && node -e 'const p=require(process.argv[1]);process.exit(p.scripts&&p.scripts[process.argv[2]]?0:1)' "$ROOT/$dir/package.json" "$script" ;;
+    *)     [ -e "$ROOT/$req" ] ;;
+  esac
+}
+
 if [ "$LIST" = 1 ]; then
-  for s in "${STEPS[@]}"; do IFS='|' read -r name slow cmd <<<"$s"; printf '%-18s %s%s\n' "$name" "$cmd" "$([ "$slow" = 1 ] && echo '   (skipped by --fast)')"; done
+  for s in "${STEPS[@]}"; do IFS='|' read -r name slow req cmd <<<"$s"; printf '%-18s %s%s%s\n' "$name" "$cmd" "$([ "$slow" = 1 ] && echo '   (skipped by --fast)')" "$([ -n "$req" ] && echo "   (needs $req)")"; done
   exit 0
 fi
 
@@ -145,8 +163,13 @@ fi
 declare -a NAMES RESULTS SECS
 overall=0
 for s in "${STEPS[@]}"; do
-  IFS='|' read -r name slow cmd <<<"$s"
+  IFS='|' read -r name slow req cmd <<<"$s"
   wanted "$name" "$slow" || continue
+  if ! has_requirement "$req"; then
+    printf '\n━━ %s  ▶ SKIP — this tree has no %s (it predates the guards in PR #163); the check did not run\n' "$name" "$req"
+    NAMES+=("$name"); RESULTS+=(SKIP); SECS+=(0)
+    continue
+  fi
   printf '\n━━ %s  ▶ %s\n' "$name" "$cmd"
   start=$(date +%s)
   # Each step's firebase CLI writes its debug log here instead of the tree
@@ -180,6 +203,9 @@ for i in "${!NAMES[@]}"; do printf '%-18s %-5s %6s\n' "${NAMES[$i]}" "${RESULTS[
 echo
 if printf '%s\n' "${RESULTS[@]}" | grep -qxF 'PASS*'; then
   echo "PASS* = tests passed, then the firebase CLI crashed stopping the emulators (see the stack above)."
+fi
+if printf '%s\n' "${RESULTS[@]}" | grep -qxF 'SKIP'; then
+  echo "SKIP = the tree under test lacks what that step needs (it predates the guards in PR #163) — not a pass of that check."
 fi
 if [ "$overall" = 0 ]; then
   echo "✔ gate passed — this is what a green CI run would have said. Logs: $LOGDIR"
