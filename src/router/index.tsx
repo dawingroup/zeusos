@@ -98,6 +98,10 @@ const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/Bu
 const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
 const MyTimeThisWeekPage = lazyWithRetry(() => import('@/modules/time-tracking/pages/MyTimeThisWeekPage'));
 const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pages/TeamTimePage'));
+// Approvals — port stream F. Unified inbox over the existing approval
+// callables (ECD rungs, acceptInternal, approveSow, change orders, supplier
+// invoices). Dual-scope like /time/team; no org-kind guard.
+const ApprovalsInboxPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalsInboxPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -566,6 +570,13 @@ export const router = createBrowserRouter([
       // it, so NO ParentOrgGuard (it would block subsidiary leads). A user
       // with no org scope falls into the page's "no scope" empty state.
       { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
+
+      // Approvals inbox (port stream F). Dual-scope: a parent-org principal
+      // sees every queue, a brand member sees their brand's IWO rows. The
+      // page resolves scope from the user and only opens the feeds that
+      // scope may read; the collections' rules enforce the same split, so
+      // NO ParentOrgGuard (it would block brand leads from their ECD rungs).
+      { path: 'approvals',           element: <PageWrapper><ApprovalsInboxPage /></PageWrapper> },
 
       // Comms — tabbed messaging module (ported from DawinOS). Everyone
       // communicates, so no org-kind guard; chatChannels rules enforce

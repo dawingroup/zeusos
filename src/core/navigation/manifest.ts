@@ -17,7 +17,7 @@
  *     Asset Library, Admin
  *
  *   SUBSIDIARY — universal head
- *     Inbox, ECD Review, Active Work
+ *     Inbox, ECD Review, Approvals, My Time, Team Time
  *
  *   SUBSIDIARY — capability-ordered middle (per brand)
  *     labyrinth         Production, Asset Library, Talent, Campaigns, CRM
@@ -107,6 +107,11 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   { moduleId: 'dashboard',         label: 'Dashboard',                 icon: 'LayoutDashboard', routePath: '/' },
   { moduleId: 'account-management', label: 'Account Mgmt',             icon: 'Briefcase',       routePath: '/clients' },
   { moduleId: 'traffic',           label: 'Traffic',                   icon: 'Workflow',        routePath: '/traffic' },
+  // Approvals (port stream F): the unified inbox of everything awaiting a
+  // decision — ECD rungs, internal acceptance, SOWs, change orders, quotes
+  // out with clients, supplier invoices. Parent-org sees every queue; the
+  // same entry sits in the subsidiary head scoped to the brand's IWO rows.
+  { moduleId: 'approvals',         label: 'Approvals',                 icon: 'ClipboardCheck',  routePath: '/approvals' },
   { moduleId: 'pricing',           label: 'Pricing & Quotes',          icon: 'Tag',             routePath: '/pricing/rate-cards' },
   { moduleId: 'billing',           label: 'Billing & Inter-Co',        icon: 'Receipt',         routePath: '/billing/client-invoices' },
   { moduleId: 'conflict-firewall', label: 'Conflict Firewall',         icon: 'Shield',          routePath: '/conflict-firewall/categories' },
@@ -162,6 +167,10 @@ export const NAV_MANIFEST_SUBSIDIARY_HEAD: NavItem[] = [
   // for any deep-links that survived.
   { moduleId: 'delivery-inbox', label: 'Inbox',       icon: 'Inbox',          routePath: '/delivery/inbox',      subsidiaryOnly: true },
   { moduleId: 'ecd-review',     label: 'ECD Review',  icon: 'ClipboardCheck', routePath: '/delivery/ecd-review', subsidiaryOnly: true },
+  // Port stream F — the brand's own approvals inbox: its DELIVERED IWOs
+  // awaiting an ECD rung or internal acceptance. The page resolves scope
+  // from the user and the IWO rules enforce it.
+  { moduleId: 'approvals',      label: 'Approvals',   icon: 'ListChecks',     routePath: '/approvals',           subsidiaryOnly: true },
   // Phase 5.D — cross-IWO "My Time This Week" read view. Posting still
   // happens from /delivery/iwo/:id; this is the staff-side visibility.
   { moduleId: 'my-time',        label: 'My Time',     icon: 'Clock',          routePath: '/time',                subsidiaryOnly: true },

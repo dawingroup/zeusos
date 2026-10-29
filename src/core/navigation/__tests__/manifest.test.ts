@@ -93,8 +93,8 @@ describe('resolveNav — SUBSIDIARY: per-brand ordering', () => {
     // Universal head (Inbox + ECD Review + My Time + Team Time) first,
     // then Campaigns leads the per-brand middle. (Active Work was dropped
     // in the Phase 6.UI close-out; My Time + Team Time added in Phase 5.D.)
-    expect(ids.slice(0, 4)).toEqual(['delivery-inbox', 'ecd-review', 'my-time', 'team-time']);
-    expect(ids[4]).toBe('campaigns');
+    expect(ids.slice(0, 5)).toEqual(['delivery-inbox', 'ecd-review', 'approvals', 'my-time', 'team-time']);
+    expect(ids[5]).toBe('campaigns');
   });
 });
 
@@ -110,7 +110,7 @@ describe('resolveNav — SUBSIDIARY: head + tail are universal', () => {
     // Universal head: Inbox + ECD Review + My Time + Team Time. (Active
     // Work was dropped in Phase 6.UI close-out; My Time + Team Time added
     // in Phase 5.D.)
-    expect(ids.slice(0, 4)).toEqual(['delivery-inbox', 'ecd-review', 'my-time', 'team-time']);
+    expect(ids.slice(0, 5)).toEqual(['delivery-inbox', 'ecd-review', 'approvals', 'my-time', 'team-time']);
     // Universal tail: Burn & SLA (per-brand) + HR. Reports is parent-org
     // only — subsidiaries use Burn & SLA as their reporting surface.
     expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);
@@ -140,7 +140,7 @@ describe('resolveNav — SUBSIDIARY_SELLING (ADR §3.2 step 5)', () => {
     const ids = moduleIds(resolveNav('SUBSIDIARY_SELLING', 'zeus-the-agency'));
     // Delivery head still leads (Inbox + ECD Review + My Time + Team
     // Time). See SUBSIDIARY tests above for the rationale.
-    expect(ids.slice(0, 4)).toEqual(['delivery-inbox', 'ecd-review', 'my-time', 'team-time']);
+    expect(ids.slice(0, 5)).toEqual(['delivery-inbox', 'ecd-review', 'approvals', 'my-time', 'team-time']);
     // Universal tail still trails (Burn & SLA + HR — Reports is
     // parent-org only).
     expect(ids.slice(-2)).toEqual(['burn-sla', 'hr']);
