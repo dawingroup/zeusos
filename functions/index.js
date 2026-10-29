@@ -4777,3 +4777,32 @@ exports.agentReason = agentReason;
 // ANTHROPIC_API_KEY is set; never blocks task creation.
 const { enrichTaskOnCreate } = require('./src/event-task-engine/enrichTaskOnCreate');
 exports.enrichTaskOnCreate = enrichTaskOnCreate;
+
+// ============================================================================
+// Phase 6.E — Daily Plan + task hardening (DawinOS port, stream E).
+// The task engine's clock (all Africa/Nairobi, europe-west1):
+//   06:00 dailyPlanPublishRun · 17:00 dailyPlanDraftRun · 20:00 dailyPlanCloseRun
+//   02:30 staleTaskSweep · every 30 min taskHygieneRun (owners for pending
+//   work, auto-close on resolved records, overdue escalation, due-soon
+//   reminders). `taskEngineRunNow` (admin) runs any of them on demand.
+// `taskAction` / `createTask` — the one write path for a person acting on a
+//   `generated_tasks` row (rules are admin-write; every transition is in
+//   history[]). `dailyPlanAction` — the one writer of `daily_plans`.
+// `onTaskWritten` — bell notices for assigned / reassigned / reopened /
+//   escalated / blocked.
+const {
+  dailyPlanPublishRun, dailyPlanDraftRun, dailyPlanCloseRun, staleTaskSweep, taskHygieneRun, taskEngineRunNow,
+} = require('./src/event-task-engine/scheduled');
+exports.dailyPlanPublishRun = dailyPlanPublishRun;
+exports.dailyPlanDraftRun = dailyPlanDraftRun;
+exports.dailyPlanCloseRun = dailyPlanCloseRun;
+exports.staleTaskSweep = staleTaskSweep;
+exports.taskHygieneRun = taskHygieneRun;
+exports.taskEngineRunNow = taskEngineRunNow;
+const { taskAction, createTask } = require('./src/event-task-engine/callables/taskActions');
+exports.taskAction = taskAction;
+exports.createTask = createTask;
+const { dailyPlanAction } = require('./src/event-task-engine/callables/dailyPlanActions');
+exports.dailyPlanAction = dailyPlanAction;
+const { onTaskWritten } = require('./src/event-task-engine/triggers/onTaskWritten');
+exports.onTaskWritten = onTaskWritten;

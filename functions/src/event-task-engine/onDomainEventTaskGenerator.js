@@ -16,6 +16,8 @@
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
 const { getFirestore, FieldValue } = require('firebase-admin/firestore');
 const { generateTasksForEvent } = require('./generateTasksForEvent');
+const { closeResolvedTasksForEntity } = require('./lib/taskAutoClose');
+const { entityTypeForAggregate } = require('./lib/entityResolution');
 
 const DOMAIN_EVENTS_COLLECTION = 'domain_events';
 
@@ -45,10 +47,25 @@ const onDomainEventTaskGenerator = onDocumentCreated(
         `definitions=${matchedDefinitions} tasks=${taskIds.length}`,
       );
 
+      // The event may ALSO mean a record was dealt with (an IWO accepted, an
+      // invoice paid): close the open tasks on it now, not at the next sweep.
+      let autoClosed = 0;
+      try {
+        autoClosed = await closeResolvedTasksForEntity(db, {
+          entityType: entityTypeForAggregate(businessEvent.aggregateType),
+          entityId: businessEvent.aggregateId,
+          trigger: 'domain_event',
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn(`[task-generator] auto-close on ${businessEvent.aggregateType}:${businessEvent.aggregateId} failed`, err);
+      }
+
       await db.collection(DOMAIN_EVENTS_COLLECTION).doc(event.params.eventId).update({
         processedBy: FieldValue.arrayUnion('task-generator'),
         taskGeneratorRanAt: FieldValue.serverTimestamp(),
         taskGeneratorTaskCount: taskIds.length,
+        taskGeneratorAutoClosed: autoClosed,
       });
     } catch (err) {
       // eslint-disable-next-line no-console
