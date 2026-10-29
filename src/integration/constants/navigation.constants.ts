@@ -123,7 +123,7 @@ export const MAIN_NAVIGATION: NavItem[] = [
       { id: 'dashboard', label: 'Intelligence Dashboard', path: '/market-intel' },
       { id: 'competitors', label: 'Competitors', path: '/market-intel/competitors' },
       { id: 'research', label: 'Market Research', path: '/market-intel/market' },
-      { id: 'scanning', label: 'Environment Scanning', path: '/market-intel/ai-scan' },
+      { id: 'scanning', label: 'AI Scan', path: '/market-intel/ai-scan' },
       { id: 'insights', label: 'Insights', path: '/market-intel/insights' },
     ],
     permissions: ['view:market'],
@@ -333,7 +333,6 @@ export const SEARCH_CONFIGS: SearchConfig[] = [
     subtitleField: 'industry',
     icon: 'Users',
     urlTemplate: '/market-intel/competitors/{id}',
-    scopeField: 'organizationId',
   },
   {
     module: 'market_intelligence',

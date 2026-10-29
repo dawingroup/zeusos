@@ -178,6 +178,8 @@ export interface Insight {
   
   generatedBy: 'ai' | 'manual' | 'hybrid';
   modelVersion?: string;
+  /** Stored by generateMarketInsights (audit 2026-10, C6). */
+  createdBy?: string;
   
   status: 'new' | 'reviewed' | 'actioned' | 'dismissed';
   reviewedBy?: string;

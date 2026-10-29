@@ -38,7 +38,7 @@ test('the audited list is the owned collections followed by the retired ones', (
 test('a clean world: counts, vocabulary distribution, sentinels noted, no defects', () => {
   const r = auditMarketIntel(cleanWorld(), { measuredAt: '2026-10-29T09:00:00.000Z' });
   assert.equal(hasDefects(r), false);
-  assert.equal(r.summary.totalDocs, 12);
+  assert.equal(r.summary.totalDocs, 11);
   assert.equal(r.collections.competitors.docs, 1);
   assert.equal(r.collections.market_insights.docs, 0);
   assert.equal(r.collections.market_insights.retired, true);

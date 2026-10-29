@@ -35,6 +35,7 @@ import {
   MoveFilters,
   WinLossFilters,
 } from '../types/competitor.types';
+import { archiveFields, RESTORE_FIELDS, visibleCompetitors } from '../utils/competitorArchive';
 import {
   ThreatLevel,
   CompetitorType,
@@ -144,6 +145,9 @@ export const competitorService = {
       id: doc.id,
       ...doc.data(),
     })) as Competitor[];
+
+    // D-3: archived competitors leave every list unless asked for.
+    competitors = visibleCompetitors(competitors, filters?.includeArchived);
     
     // Client-side filtering for array fields
     if (filters?.industry) {
@@ -310,14 +314,29 @@ export const competitorService = {
   // DELETE
   // --------------------------------------------------------------------------
   
+  /**
+   * Hard delete — ADMIN tooling only (firestore.rules `isAdmin()`); the
+   * `onCompetitorDeleted` trigger cascades through every child collection.
+   * The UI never calls this: it archives (audit 2026-10, D-3).
+   */
   async deleteCompetitor(id: string): Promise<void> {
     await deleteDoc(doc(db, COMPETITORS_COLLECTION, id));
   },
-  
-  async archiveCompetitor(id: string, reason: string): Promise<void> {
+
+  /** Soft archive (D-3): the record stays, lists hide it, nothing cascades. */
+  async archiveCompetitor(id: string, reason: string, actor?: { id: string; name?: string | null }): Promise<void> {
     await updateDoc(doc(db, COMPETITORS_COLLECTION, id), {
+      ...archiveFields(reason, actor),
+      archivedAt: Timestamp.now(),
       status: 'inactive' as CompetitorStatus,
-      notes: reason,
+      updatedAt: Timestamp.now(),
+    });
+  },
+
+  async restoreCompetitor(id: string): Promise<void> {
+    await updateDoc(doc(db, COMPETITORS_COLLECTION, id), {
+      ...RESTORE_FIELDS,
+      status: 'active' as CompetitorStatus,
       updatedAt: Timestamp.now(),
     });
   },
@@ -616,7 +635,7 @@ export const winLossService = {
       bidTeam: [],
       geographies: [],
       industries: [],
-      dawinSubsidiary: input.dawinSubsidiary,
+      subsidiaryId: input.subsidiaryId,
       dealStage: 'closed',
       recordedBy: userId,
       createdAt: now,
@@ -654,7 +673,7 @@ export const winLossService = {
     }
     
     if (filters?.subsidiaryId) {
-      q = query(q, where('dawinSubsidiary', '==', filters.subsidiaryId));
+      q = query(q, where('subsidiaryId', '==', filters.subsidiaryId));
     }
     
     const snapshot = await getDocs(q);

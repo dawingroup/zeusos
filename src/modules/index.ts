@@ -66,13 +66,6 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     dependencies: ['intelligence'],
   },
   {
-    id: 'market-intelligence',
-    name: 'Market Intelligence',
-    version: '2.0.0',
-    enabled: true,
-    dependencies: ['intelligence'],
-  },
-  {
     id: 'capital-hub',
     name: 'Capital Hub',
     version: '2.0.0',

@@ -417,7 +417,7 @@ const CompetitorDetailPage: React.FC = () => {
               className="text-[var(--rag-red)] border-[var(--rag-red)] hover:bg-[var(--rag-red-soft)]"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              Archive
             </Button>
           </div>
         </div>
@@ -705,9 +705,9 @@ const CompetitorDetailPage: React.FC = () => {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Competitor</AlertDialogTitle>
+            <AlertDialogTitle>Archive Competitor</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <strong>{competitor?.name}</strong>? This action cannot be undone and will remove all associated data.
+              Archive <strong>{competitor?.name}</strong>? It leaves every list and report; nothing is deleted. Its SWOTs, moves, profiles and social history stay in place and an administrator can restore it.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -718,16 +718,16 @@ const CompetitorDetailPage: React.FC = () => {
               onClick={async () => {
                 setDeleting(true);
                 try {
-                  await competitorService.deleteCompetitor(competitor!.id);
+                  await competitorService.archiveCompetitor(competitor!.id, 'Archived from the competitor page');
                   navigate('/market-intel/competitors');
                 } catch (err) {
-                  console.error('Delete error:', err);
+                  console.error('Archive error:', err);
                 } finally {
                   setDeleting(false);
                 }
               }}
             >
-              {deleting ? 'Deleting...' : 'Delete'}
+              {deleting ? 'Archiving...' : 'Archive'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

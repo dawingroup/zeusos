@@ -45,7 +45,8 @@ interface UseCompetitorReturn extends UseCompetitorState {
   loadCompetitor: (id: string) => Promise<void>;
   createCompetitor: (input: CompetitorFormInput, userId: string) => Promise<string>;
   updateCompetitor: (id: string, updates: Partial<CompetitorFormInput>) => Promise<void>;
-  deleteCompetitor: (id: string) => Promise<void>;
+  /** Soft archive (D-3) — nothing is deleted. */
+  archiveCompetitor: (id: string, reason?: string) => Promise<void>;
   searchCompetitors: (term: string) => Promise<Competitor[]>;
   updateThreatLevel: (id: string, level: ThreatLevel, reason: string, userId: string) => Promise<void>;
   
@@ -147,10 +148,10 @@ export function useCompetitor(): UseCompetitorReturn {
     }
   }, []);
   
-  const deleteCompetitor = useCallback(async (id: string) => {
+  const archiveCompetitor = useCallback(async (id: string, reason = 'Archived') => {
     setLoading(true);
     try {
-      await competitorService.deleteCompetitor(id);
+      await competitorService.archiveCompetitor(id, reason);
       setState(prev => ({
         ...prev,
         competitors: prev.competitors.filter(c => c.id !== id),
@@ -158,7 +159,7 @@ export function useCompetitor(): UseCompetitorReturn {
         isLoading: false,
       }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete competitor');
+      setError(err instanceof Error ? err.message : 'Failed to archive competitor');
       throw err;
     }
   }, []);
@@ -346,7 +347,7 @@ export function useCompetitor(): UseCompetitorReturn {
     loadCompetitor,
     createCompetitor,
     updateCompetitor,
-    deleteCompetitor,
+    archiveCompetitor,
     searchCompetitors,
     updateThreatLevel,
     loadSWOTAnalyses,

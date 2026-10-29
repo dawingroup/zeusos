@@ -1697,20 +1697,6 @@
       ]
     },
     {
-      "collectionGroup": "market_insights",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "sector",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "publishedAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "clientQuotes",
       "queryScope": "COLLECTION",
       "fields": [
@@ -1794,20 +1780,6 @@
         },
         {
           "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_insights",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "publishedAt",
           "order": "DESCENDING"
         }
       ]
@@ -3819,56 +3791,6 @@
       ]
     },
     {
-      "collectionGroup": "competitors",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "competitors",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "competitors",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "threatLevel",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "competitor_swot",
       "queryScope": "COLLECTION",
       "fields": [
@@ -3948,74 +3870,6 @@
         },
         {
           "fieldPath": "decisionDate",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_signals",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "signalDate",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_signals",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "competitorId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "signalDate",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_signals",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "impactLevel",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "signalDate",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_signals",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "companyId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "requiresAction",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "signalDate",
           "order": "DESCENDING"
         }
       ]
@@ -4130,20 +3984,6 @@
         },
         {
           "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "market_share_data",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "competitorId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "period",
           "order": "DESCENDING"
         }
       ]

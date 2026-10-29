@@ -101,6 +101,8 @@ export const NEWS_CATEGORIES = [
 export const INSIGHT_TYPES = [
   { id: 'opportunity', label: 'Opportunity', color: '#4caf50' },
   { id: 'threat', label: 'Threat', color: '#f44336' },
+  // generateMarketInsights stores whatever type the model names; 'risk' is one (audit 2026-10, C6).
+  { id: 'risk', label: 'Risk', color: '#e65100' },
   { id: 'trend', label: 'Trend', color: '#2196f3' },
   { id: 'anomaly', label: 'Anomaly', color: '#ff9800' },
   { id: 'recommendation', label: 'Recommendation', color: '#9c27b0' },

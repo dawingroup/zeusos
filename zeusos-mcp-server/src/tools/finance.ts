@@ -338,11 +338,13 @@ After generating, use \`zeusos_get_spend_plan\` (without an ID) to see the full 
   // ─── zeusos_market_intelligence ─────────────────────────────────────────────
   server.registerTool('zeusos_market_intelligence', {
     title: 'Market Intelligence Reports',
-    description: `Retrieve AI-generated market intelligence reports for ZeusOS subsidiaries. Each report contains competitor analyses, threat assessments, emerging industry trends, and strategic pricing/positioning recommendations based on live web data.
+    description: `Retrieve AI-generated market intelligence reports for a Zeus brand. Each report contains competitor analyses, threat assessments, emerging industry trends, and strategic pricing/positioning recommendations based on live web data.
 
-Subsidiary IDs: finishes | technology | capital`,
+Subsidiary IDs (MARKET_INTEL_SUBSIDIARY_IDS): zeus-the-agency | zeus-digital | labyrinth | odd-gorilla | house-of-zeus`,
     inputSchema: {
-      subsidiary_id: z.enum(['finishes', 'technology', 'capital'])
+      // Lockstep with functions/src/lib/marketIntelVocabulary.js (pinned by
+      // src/modules/intelligence/__tests__/marketIntelVocabulary.lockstep.test.ts).
+      subsidiary_id: z.enum(['zeus-the-agency', 'zeus-digital', 'labyrinth', 'odd-gorilla', 'house-of-zeus'])
         .describe('Which subsidiary to get intelligence for'),
       limit: z.number().int().min(1).max(10).optional()
         .describe('Number of recent reports (default: 3)'),
@@ -354,6 +356,7 @@ Subsidiary IDs: finishes | technology | capital`,
         success: boolean;
         reports: Array<{
           id: string;
+          title: string | null;
           reportTitle: string;
           generatedAt: string;
           subsidiaryName: string;
@@ -386,7 +389,7 @@ Subsidiary IDs: finishes | technology | capital`,
 
       for (const report of result.reports) {
         lines.push(
-          `# ${report.reportTitle}`,
+          `# ${report.title ?? report.reportTitle}`,
           `Generated: ${report.generatedAt}  |  ${report.subsidiaryName}`,
           `Threat Level: **${report.overallThreatLevel}**  |  Sentiment: ${report.marketSentiment}`,
           `${report.metadata?.competitorsAnalyzed ?? 0} competitors  |  ${report.metadata?.totalFindings ?? 0} findings  |  Confidence: ${((report.metadata?.confidenceScore ?? 0) * 100).toFixed(0)}%`,
