@@ -130,6 +130,18 @@ lock_hash() { cat package-lock.json functions/package-lock.json zeusos-mcp-serve
 prepare_tree() { # sha kind(main|pr)
   if [ "$2" = main ]; then git checkout -q -f -B main "$1"; else git checkout -q -f --detach "$1"; fi || return 1
   git clean -fdq                                  # ignored files (node_modules, .env, dist) survive
+  # The tree still COMMITS node_modules and functions/node_modules as symlinks
+  # into the canonical checkout (mode 120000 — CLAUDE.md, "node_modules
+  # self-symlink trap"). Left alone, `checkout -f` restores them over this
+  # clone's real installs on every gate, and the gate then runs on whatever
+  # the canonical checkout happens to have installed. Drop the links and mark
+  # the two paths skip-worktree, so from then on checkout leaves the clone's
+  # own installs alone and `-d node_modules` below tells the truth.
+  local nm
+  for nm in node_modules functions/node_modules; do
+    [ -L "$nm" ] && rm -f "$nm"
+    git ls-files --error-unmatch -- "$nm" >/dev/null 2>&1 && git update-index --skip-worktree -- "$nm"
+  done
   cp "$CANONICAL/.env" .env 2>/dev/null && sed -i '' 's/^VITE_DEV_BYPASS_AUTH=.*/VITE_DEV_BYPASS_AUTH=false/' .env
   local want; want="$(lock_hash)"
   if [ "$(cat "$STATE/lock-hash" 2>/dev/null)" != "$want" ] || [ ! -d node_modules ]; then
