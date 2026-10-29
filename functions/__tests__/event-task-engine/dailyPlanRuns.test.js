@@ -14,6 +14,8 @@ const { runDailyPlanClose } = require('../../src/event-task-engine/scheduled/dai
 const { reviewTaskId, planId } = require('../../src/event-task-engine/lib/dailyPlan');
 
 const quiet = { info() {}, warn() {}, error() {} };
+// No Anthropic key in tests: the brief is skipped and no Secret Manager lookup runs.
+const noKey = async () => { const e = new Error('no key'); e.code = 'NOT_CONFIGURED'; throw e; };
 
 // Monday 2026-10-26. Draft at 17:00 EAT = 14:00Z; publish Tue 06:00 EAT = 03:00Z; close Tue 20:00 EAT = 17:00Z.
 const DRAFT_AT = Date.parse('2026-10-26T14:00:00Z');
@@ -127,7 +129,7 @@ test('06:00 publish: drafts publish (reviewed or not), the unplanned are backfil
   db._seed(`daily_plans/${planId('2026-10-23', 'uid-owner')}`, { date: '2026-10-23', assigneeUid: 'uid-owner', status: 'closed', items: [{ taskId: 'o0', order: 0, title: 'Old', priority: 'P2', outcome: 'carried' }], wrapUp: { carriedTaskIds: ['o0'], closedBy: 'staff' } });
   db._seed('generated_tasks/o0', { id: 'o0', title: 'Old', status: 'assigned', priority: 'P2', assignedToUserId: 'uid-owner', history: [], createdAt: '2026-10-20T08:00:00Z' });
 
-  const summary = await runDailyPlanPublish(db, { now: PUBLISH_AT, logger: quiet });
+  const summary = await runDailyPlanPublish(db, { now: PUBLISH_AT, logger: quiet, getAnthropic: noKey });
   assert.equal(summary.published, 3);
   assert.equal(summary.backfilled, 1);
   const amina = db._store.get(`daily_plans/${planId('2026-10-27', 'uid-amina')}`);
@@ -140,7 +142,7 @@ test('06:00 publish: drafts publish (reviewed or not), the unplanned are backfil
   assert.equal(notices.length, 4);
   assert.match(notices.find((n) => n.userId === 'uid-amina').message, /not yet reviewed/);
   assert.equal(notices[0].actionUrl, '/tasks/today');
-  await runDailyPlanPublish(db, { now: PUBLISH_AT + 60000, logger: quiet });
+  await runDailyPlanPublish(db, { now: PUBLISH_AT + 60000, logger: quiet, getAnthropic: noKey });
   assert.equal(db._dump_prefix('notifications').filter((n) => n.data.type === 'daily_plan').length, 4, 'idempotent');
 });
 
@@ -150,7 +152,7 @@ test('06:00 publish closes a system draft for a non-working day instead of publi
   db._seed(`daily_plans/${planId('2026-10-31', 'uid-amina')}`, { date: '2026-10-31', assigneeUid: 'uid-amina', status: 'draft', source: 'system', items: [{ taskId: 'a1', order: 0, title: 'x', priority: 'P2' }] });
   db._seed(`daily_plans/${planId('2026-10-31', 'uid-ben')}`, { date: '2026-10-31', assigneeUid: 'uid-ben', status: 'draft', source: 'system', items: [{ taskId: 'b1', order: 0, title: 'x', priority: 'P2' }] });
   const saturday = Date.parse('2026-10-31T03:00:00Z');
-  const summary = await runDailyPlanPublish(db, { now: saturday, logger: quiet });
+  const summary = await runDailyPlanPublish(db, { now: saturday, logger: quiet, getAnthropic: noKey });
   assert.equal(summary.nonWorkingDayClosed, 1);
   assert.equal(db._store.get(`daily_plans/${planId('2026-10-31', 'uid-amina')}`).nonWorkingDay, true);
   assert.equal(db._store.get(`daily_plans/${planId('2026-10-31', 'uid-ben')}`).status, 'published');
@@ -160,7 +162,7 @@ test('20:00 close: blanks resolve from the live task, a wrap-up stands, tomorrow
   const { db } = makeFirestore();
   seed(db);
   await runDailyPlanDraft(db, { now: DRAFT_AT, logger: quiet });
-  await runDailyPlanPublish(db, { now: PUBLISH_AT, logger: quiet });
+  await runDailyPlanPublish(db, { now: PUBLISH_AT, logger: quiet, getAnthropic: noKey });
   // During the day: a1 completed on its record, a2 untouched, Ben blocked b1 himself.
   db._store.set('generated_tasks/a1', { ...db._store.get('generated_tasks/a1'), status: 'completed' });
   db._store.set('generated_tasks/b1', { ...db._store.get('generated_tasks/b1'), status: 'blocked', blockedReason: 'Waiting on copy' });

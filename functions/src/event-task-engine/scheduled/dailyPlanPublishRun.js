@@ -18,11 +18,12 @@ const { PLANS_COLLECTION, MAX_PLAN_ITEMS, planId, composePlanItems, dayStartMs, 
 const { loadDirectory, groupByAssignee } = require('../lib/peopleDirectory');
 const { fetchOpenTasks, latestPlanBefore, fetchPlansForDate } = require('../lib/dailyPlanData');
 const { notifyUser } = require('../lib/notices');
+const { briefPlans } = require('../ai/dailyBrief');
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const MY_DAY_URL = '/tasks/today';
 
-async function runDailyPlanPublish(db, { now = Date.now(), logger = console } = {}) {
+async function runDailyPlanPublish(db, { now = Date.now(), logger = console, getAnthropic = null } = {}) {
   const nowMs = toMillis(now) ?? Date.now();
   const nowIso = new Date(nowMs).toISOString();
   const key = dateKey(nowMs);
@@ -97,7 +98,20 @@ async function runDailyPlanPublish(db, { now = Date.now(), logger = console } = 
     backfilled++;
   }
 
-  // ── 3. Tell each person their day is ready ─────────────────────────────
+  // ── 3. The morning brief (Phase 6.E PR 3) — only when an Anthropic key is
+  // configured; otherwise the plans publish exactly as before. Best-effort.
+  let briefs = 0;
+  try {
+    // The resolver is the FUNCTION, never a call: an eager `getAnthropic()`
+    // here ran the Secret Manager lookup detached from the awaited path and
+    // surfaced as an unhandled rejection once the run had returned.
+    const resolver = typeof getAnthropic === 'function' ? getAnthropic : require('../../ai/_anthropic').getAnthropic;
+    briefs = await briefPlans(db, [...plans.values()], { getAnthropic: resolver, logger, nowIso, todayKey: key });
+  } catch (err) {
+    logger.warn('[dailyPlanPublish] briefs skipped', { error: err.message });
+  }
+
+  // ── 4. Tell each person their day is ready ─────────────────────────────
   let notified = 0;
   let teams = new Set();
   let teamsReviewed = new Set();
@@ -132,7 +146,7 @@ async function runDailyPlanPublish(db, { now = Date.now(), logger = console } = 
   }
 
   const summary = {
-    date: key, people: plans.size, published, backfilled, nonWorkingDayClosed, notified,
+    date: key, people: plans.size, published, backfilled, nonWorkingDayClosed, notified, briefs,
     teamsReviewed: `${teamsReviewed.size}/${teams.size}`,
   };
   logger.info('[dailyPlanPublish] Done', summary);

@@ -4806,3 +4806,9 @@ const { dailyPlanAction } = require('./src/event-task-engine/callables/dailyPlan
 exports.dailyPlanAction = dailyPlanAction;
 const { onTaskWritten } = require('./src/event-task-engine/triggers/onTaskWritten');
 exports.onTaskWritten = onTaskWritten;
+// `draftTasksWithAi` — "Draft with AI" in the plan editor: the manager's
+//   intent → 1–5 editable drafts (never written here; `createTask` does that
+//   after review). The morning brief rides inside `dailyPlanPublishRun`.
+//   Both dark until ANTHROPIC_API_KEY is set.
+const { draftTasksWithAi } = require('./src/event-task-engine/ai/draftTasksWithAi');
+exports.draftTasksWithAi = draftTasksWithAi;

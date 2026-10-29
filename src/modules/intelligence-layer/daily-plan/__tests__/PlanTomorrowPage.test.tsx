@@ -21,6 +21,7 @@ const mockSaveNotes = vi.fn();
 const mockCreateEmpty = vi.fn();
 const mockFetchPlan = vi.fn();
 const mockFetchOpen = vi.fn();
+const mockDraftAi = vi.fn();
 
 vi.mock('../hooks/useTeamPlans', () => ({ useTeamPlans: (date: string) => mockUseTeamPlans(date) }));
 vi.mock('../hooks/useUnassignedWork', () => ({ useUnassignedWork: () => mockUseUnassigned() }));
@@ -29,6 +30,7 @@ vi.mock('../services/taskEngineFunctions', () => ({
   createTaskFn: vi.fn(),
   dailyPlanActionFn: vi.fn(),
   taskEngineRunNowFn: vi.fn(),
+  draftTasksWithAiFn: (...a: unknown[]) => mockDraftAi(...a),
 }));
 vi.mock('../services/dailyPlanService', () => ({
   fetchPlan: (...a: unknown[]) => mockFetchPlan(...a),
@@ -73,6 +75,7 @@ beforeEach(() => {
   mockCreateEmpty.mockReset();
   mockFetchPlan.mockReset();
   mockFetchOpen.mockReset();
+  mockDraftAi.mockReset();
   mockUseTeamPlans.mockReturnValue({ rows: ROWS, isFallback: false, isParentOrg: false, managerUid: 'm1', loading: false, error: null, total: 2, reviewed: 1, pending: 1, reload: vi.fn() });
   mockUseUnassigned.mockReturnValue({ summary: { total: 3, topSources: [{ sourceModule: 'iwo', count: 2 }], sampleTitles: [] }, loading: false, error: null, reload: vi.fn() });
   mockFetchPlan.mockResolvedValue(null);
@@ -150,5 +153,39 @@ describe('PlanTomorrowPage', () => {
     mockUseTeamPlans.mockReturnValue({ rows: ROWS, isFallback: true, isParentOrg: true, managerUid: 'm1', loading: false, error: null, total: 2, reviewed: 1, pending: 1, reload: vi.fn() });
     renderPage();
     await waitFor(() => expect(screen.getByTestId('fallback-notice')).toBeTruthy());
+  });
+});
+
+describe('PlanTomorrowPage — Draft with AI (PR 3)', () => {
+  it('turns the intent into editable suggestions; picking one fills the form', async () => {
+    mockDraftAi.mockResolvedValue({ data: { assigneeUid: 'u-amina', model: 'claude-test', drafts: [
+      { title: 'Send the Q4 deck to the ECD', description: 'Attach v3, ask for sign-off by Thursday.', priority: 'P1', kind: 'action', estimateMinutes: 45, dueDate: DATE, why: 'Unblocks the client presentation' },
+    ] } });
+    renderPage();
+    await waitFor(() => expect(screen.getByTestId('plan-editor')).toBeTruthy());
+    fireEvent.click(screen.getByText(/Draft a new task for Amina/));
+    const intent = await screen.findByTestId('draft-task-intent');
+    fireEvent.change(intent, { target: { value: 'Deck to the ECD by Thursday' } });
+    fireEvent.click(screen.getByTestId('draft-task-ai'));
+    await waitFor(() => expect(mockDraftAi).toHaveBeenCalledWith({ intent: 'Deck to the ECD by Thursday', assigneeUid: 'u-amina', planDate: DATE }));
+    const pick = await screen.findByTestId('draft-task-suggestion-0');
+    expect(pick.textContent).toContain('Send the Q4 deck to the ECD');
+    expect(pick.textContent).toContain('High · 45m');
+    fireEvent.click(pick);
+    expect((screen.getByTestId('draft-task-title') as HTMLInputElement).value).toBe('Send the Q4 deck to the ECD');
+    expect((screen.getByTestId('draft-task-intent') as HTMLTextAreaElement).value).toBe('Attach v3, ask for sign-off by Thursday.');
+  });
+
+  it('without an Anthropic key the form says so and still works by hand', async () => {
+    mockDraftAi.mockRejectedValue(Object.assign(new Error('AI drafting needs an Anthropic key — set ANTHROPIC_API_KEY in Settings → API Keys. You can still draft the task by hand.'), { code: 'functions/failed-precondition' }));
+    renderPage();
+    await waitFor(() => expect(screen.getByTestId('plan-editor')).toBeTruthy());
+    fireEvent.click(screen.getByText(/Draft a new task for Amina/));
+    const title = await screen.findByTestId('draft-task-title');
+    fireEvent.change(title, { target: { value: 'Raise the invoice' } });
+    fireEvent.click(screen.getByTestId('draft-task-ai'));
+    const note = await screen.findByTestId('draft-task-ai-note');
+    expect(note.textContent).toContain('ANTHROPIC_API_KEY');
+    expect((screen.getByTestId('draft-task-submit') as HTMLButtonElement).disabled).toBe(false);
   });
 });

@@ -64,8 +64,21 @@ the three plan runs end to end on the Firestore stub, hygiene, callables, genera
 > real dependencies on the require path: `npm ci` into a scratch folder from `functions/package.json`
 > and run with `NODE_PATH=<that>/node_modules`.
 
+## AI (PR 3 — dark without `ANTHROPIC_API_KEY`)
+
+- `draftTasksWithAi { intent, assigneeUid?, planDate?, maxTasks? }` — "Draft with AI" in the plan
+  editor. Claude sees the person's open work and returns 1–5 editable drafts
+  (`title · description · priority · kind · estimateMinutes · dueDate · why`); nothing is written until
+  the manager confirms through `createTask`. Without a key it refuses with `failed-precondition` and a
+  sentence the form shows; the form still works by hand. One `agent_audit_entries` row per run (ZA-010).
+- The morning brief — `functions/src/event-task-engine/ai/dailyBrief.js`, called inside the 06:00
+  publish for every published plan with work on it: two or three sentences built only from the plan
+  (first thing and why, what is carried or overdue, what to protect time for), stored as
+  `plan.brief` / `briefAt` / `briefDate` / `briefModel` and shown on My Day. Best-effort, once per day,
+  capped per run; without a key the publish is unchanged.
+
 ## Not ported (deliberately)
 
 Google Chat nudges, the DawinOS `dailyDigests` derived doc, entity write-back propagation
 (ZeusOS records are decided on-record through their own callables), orientation sessions,
-`personalTaskMirror` (ZeusOS has `createTask` instead), AI drafting (Phase 6.E PR 3).
+`personalTaskMirror` (ZeusOS has `createTask` instead), the DawinOS CEO-lens manager reviews.

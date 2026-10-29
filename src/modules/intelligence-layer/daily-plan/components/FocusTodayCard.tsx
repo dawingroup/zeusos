@@ -250,6 +250,12 @@ export function FocusTodayCard({ nowMs = Date.now() }: { nowMs?: number }) {
           </div>
         )}
 
+        {plan?.brief && (
+          <p className="m-0 text-[12.5px] rounded-[8px] px-3 py-2" style={{ color: 'var(--fg-secondary)', background: 'var(--bg-sunken)' }} data-testid="plan-brief">
+            {plan.brief}
+          </p>
+        )}
+
         {reviewed ? (
           <div className="flex items-start gap-2 text-[12.5px]" data-testid="plan-reviewed">
             <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[9.5px] font-bold text-white" style={{ background: 'var(--accent)' }} aria-hidden="true">

@@ -150,4 +150,11 @@ describe('MyDayPage', () => {
     await waitFor(() => expect(screen.getByTestId('plan-problem-load_failed')).toBeTruthy());
     expect(screen.getByTestId('plan-problem-load_failed').textContent).toContain('not allowed to read it');
   });
+
+  it('shows the morning brief when the publish wrote one', async () => {
+    mockSubscribeToPlan.mockImplementation((_d, _u, cb) => { cb({ ...PLAN, brief: 'Start with the IWO — it unblocks the deck. Then the deck itself.' }); return () => {}; });
+    renderPage();
+    await waitFor(() => expect(screen.getByTestId('plan-brief')).toBeTruthy());
+    expect(screen.getByTestId('plan-brief').textContent).toContain('Start with the IWO');
+  });
 });

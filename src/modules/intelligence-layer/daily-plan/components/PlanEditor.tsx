@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, CheckCircle2, ClipboardCheck, Clock, Info, PenLine, Plus, Save, Search, Target, Undo2, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, CheckCircle2, ClipboardCheck, Clock, Info, PenLine, Plus, Save, Search, Sparkles, Target, Undo2, X } from 'lucide-react';
 
 import { Button } from '@/core/components/ui/button';
 import { Input } from '@/core/components/ui/input';
@@ -27,7 +27,7 @@ import {
 import type { DirectReport } from '../hooks/useDirectReports';
 import { createEmptyPlan, markReviewed, savePlanItems, savePlanNotes } from '../services/dailyPlanService';
 import { fetchAssigneeOpenTasks } from '../services/tasksService';
-import { createTaskFn } from '../services/taskEngineFunctions';
+import { createTaskFn, draftTasksWithAiFn, type AiTaskDraft } from '../services/taskEngineFunctions';
 import type { DailyPlan, DailyPlanItem, FocusReason, TaskPriority, TaskRecord } from '../types';
 
 const TIMEBOX_CHOICES = [15, 30, 45, 60, 90, 120, 180, 240];
@@ -401,7 +401,11 @@ function AddTaskPicker({ uid, excludeTaskIds, onAdd, disabled }: {
   );
 }
 
-/** Write a new task during the review and put it straight on the plan. */
+/**
+ * Write a new task during the review and put it straight on the plan.
+ * "Draft with AI" turns the intent into editable suggestions (dark without an
+ * Anthropic key — the form still works by hand).
+ */
 function DraftTaskForm({ person, planDate, onClose, onDrafted }: {
   person: DirectReport;
   planDate: string;
@@ -414,6 +418,34 @@ function DraftTaskForm({ person, planDate, onClose, onDrafted }: {
   const [timebox, setTimebox] = useState<number | undefined>(60);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestions, setSuggestions] = useState<AiTaskDraft[] | null>(null);
+  const [aiNote, setAiNote] = useState<string | null>(null);
+
+  const suggest = async () => {
+    const text = [title.trim(), intent.trim()].filter(Boolean).join(' — ');
+    if (!text || !person.uid) return;
+    setSuggesting(true);
+    setAiNote(null);
+    try {
+      const res = await draftTasksWithAiFn({ intent: text, assigneeUid: person.uid, planDate });
+      setSuggestions(res.data.drafts);
+      if (res.data.drafts.length === 0) setAiNote('Nothing came back — try saying what done looks like.');
+    } catch (err) {
+      setSuggestions(null);
+      setAiNote(describeCallableError(err, 'draft with AI'));
+    } finally {
+      setSuggesting(false);
+    }
+  };
+
+  const useSuggestion = (d: AiTaskDraft) => {
+    setTitle(d.title);
+    setIntent(d.description || '');
+    setPriority(d.priority);
+    setTimebox(d.estimateMinutes || undefined);
+    setSuggestions(null);
+  };
 
   const draft = async () => {
     const cleanTitle = title.trim();
@@ -452,8 +484,8 @@ function DraftTaskForm({ person, planDate, onClose, onDrafted }: {
     <div className="rounded-[8px] p-3 space-y-2" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--accent)' }} data-testid="draft-task-form">
       <div className="text-[12.5px] font-semibold" style={{ color: 'var(--fg-primary)' }}>Draft a task for {person.name}</div>
       <Input autoFocus value={title} onChange={(e) => setTitle(e.target.value)} placeholder="What needs to happen" className="h-8 text-[12.5px]" data-testid="draft-task-title" />
-      <Textarea value={intent} onChange={(e) => setIntent(e.target.value)} rows={2} className="text-[12.5px]" placeholder="Why it matters — what it unblocks, who is waiting (optional)" />
-      <div className="flex gap-2">
+      <Textarea value={intent} onChange={(e) => setIntent(e.target.value)} rows={2} className="text-[12.5px]" placeholder="Why it matters — what it unblocks, who is waiting (optional)" data-testid="draft-task-intent" />
+      <div className="flex gap-2 flex-wrap">
         <select value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)} className="h-8 rounded-md border px-2 text-[12.5px]" style={{ borderColor: 'var(--border-default)', background: 'var(--bg-surface)', color: 'var(--fg-primary)' }} aria-label="Priority">
           <option value="P0">Critical — today, ahead of everything</option>
           <option value="P1">High — should land that day</option>
@@ -464,7 +496,24 @@ function DraftTaskForm({ person, planDate, onClose, onDrafted }: {
           <option value="none">No timebox</option>
           {TIMEBOX_CHOICES.map((m) => <option key={m} value={String(m)}>{m < 60 ? `${m}m` : `${m / 60}h`}</option>)}
         </select>
+        <Button variant="outline" size="sm" className="gap-1.5" onClick={() => void suggest()} disabled={suggesting || saving || !(title.trim() || intent.trim())} title="Turn the intent into one to five editable drafts" data-testid="draft-task-ai">
+          <Sparkles className="h-3.5 w-3.5" /> {suggesting ? 'Drafting…' : 'Draft with AI'}
+        </Button>
       </div>
+      {aiNote && <p className="text-[12px] m-0" style={{ color: 'var(--fg-tertiary)' }} data-testid="draft-task-ai-note">{aiNote}</p>}
+      {suggestions && suggestions.length > 0 && (
+        <div className="space-y-1" data-testid="draft-task-suggestions">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--fg-tertiary)' }}>Suggested — pick one to edit</div>
+          {suggestions.map((d, i) => (
+            <button key={i} type="button" onClick={() => useSuggestion(d)} className="w-full text-left px-2.5 py-1.5 rounded-[6px] border-0 cursor-pointer hover:bg-[var(--bg-sunken)]" style={{ background: 'var(--bg-app)' }} data-testid={`draft-task-suggestion-${i}`}>
+              <span className="block text-[12.5px] font-medium" style={{ color: 'var(--fg-primary)' }}>{d.title}</span>
+              <span className="block text-[11.5px]" style={{ color: 'var(--fg-tertiary)' }}>
+                {priorityLabel(d.priority)} · {fmtMins(d.estimateMinutes)}{d.why ? ` · ${d.why}` : ''}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
       {error && <p role="alert" className="text-[12px] m-0" style={{ color: 'var(--rag-red)' }}>{error}</p>}
       <div className="flex justify-end gap-2">
         <Button variant="ghost" size="sm" onClick={onClose} disabled={saving}>Cancel</Button>
