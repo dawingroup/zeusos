@@ -58,11 +58,13 @@ export function GlobalTaskButton() {
   useEffect(() => {
     if (!userId) return;
 
-    const tasksRef = collection(db, 'generatedTasks');
+    // Phase 6.E: `generated_tasks`, keyed by the sign-in uid; the engine
+    // spells "not started" as `assigned` (legacy `pending` still read).
+    const tasksRef = collection(db, 'generated_tasks');
     const q = query(
       tasksRef,
-      where('assignedTo', '==', userId),
-      where('status', 'in', ['pending', 'in_progress'])
+      where('assignedToUserId', '==', userId),
+      where('status', 'in', ['assigned', 'pending', 'in_progress', 'pending_review'])
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -75,11 +77,12 @@ export function GlobalTaskButton() {
 
       const taskData: TaskSummary[] = snapshot.docs.map((doc) => {
         const data = doc.data();
-        const dueDate = data.dueDate?.toDate();
+        const dueMs = typeof data.dueAt === 'string' ? Date.parse(data.dueAt) : data.dueDate?.toDate?.()?.getTime();
+        const dueDate = dueMs && !Number.isNaN(dueMs) ? new Date(dueMs) : undefined;
 
         // Count stats
-        if (data.status === 'pending') pending++;
-        if (data.status === 'in_progress') inProgress++;
+        if (data.status === 'assigned' || data.status === 'pending') pending++;
+        if (data.status === 'in_progress' || data.status === 'pending_review') inProgress++;
         if (dueDate && dueDate < today && data.status !== 'completed') {
           overdue++;
         }

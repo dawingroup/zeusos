@@ -30,6 +30,8 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { auth, db } from '@/shared/services/firebase';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
+import { toInAppNotice } from '@/core/services/inAppNotice';
 import { createUser as createDawinUser, getUserByUid } from '@/core/settings/settingsService';
 import type {
   GlobalState,
@@ -446,6 +448,16 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
             },
           });
         }
+
+        // The person's saved preferences (`users/{uid}/settings/preferences`)
+        // — written by updatePreferences, and until stream C never read back,
+        // so a muted module forgot itself on the next sign-in.
+        try {
+          const stored = await loadUserPreferences(firebaseUser.uid);
+          if (stored) dispatch({ type: 'SET_PREFERENCES', payload: stored });
+        } catch (err) {
+          console.warn('[GlobalContext] could not load saved preferences', err);
+        }
       } else {
         dispatch({
           type: 'SET_AUTH',
@@ -468,11 +480,11 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // Notifications listener
-  useEffect(() => {
+  // Notifications listener. A listener that errors is closed for good by the
+  // SDK — useResilientSubscription re-attaches it (fresh token, capped
+  // backoff, and again on wake/online) so the bell survives a laptop sleep.
+  useResilientSubscription((health) => {
     if (!state.auth.userId || !state.currentOrganizationId) return;
-
-    let unsubscribe: (() => void) | undefined;
 
     try {
       const notificationsQuery = query(
@@ -483,23 +495,26 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         limit(50)
       );
 
-      unsubscribe = onSnapshot(
+      return onSnapshot(
         notificationsQuery,
         (snapshot) => {
-          const notifications = snapshot.docs.map((d) => ({
-            id: d.id,
-            ...(d.data() as Record<string, unknown>),
-          })) as GlobalNotification[];
+          // Every doc through the one reader (core/services/inAppNotice):
+          // legacy spellings (`read`, `link`, `body`, `subject`, `severity`)
+          // still show, and the bell ranks on one priority ladder.
+          const notifications: GlobalNotification[] = snapshot.docs.map((d) =>
+            toInAppNotice(d.id, d.data() as Record<string, unknown>),
+          );
 
           dispatch({ type: 'SET_NOTIFICATIONS', payload: notifications });
+          health.ok();
         },
         (error) => {
           // Handle errors gracefully (e.g., index still building)
           console.warn('[GlobalContext] Notifications listener error:', error.message);
-          // Don't crash the app - just log the error and continue
           if (error.code === 'failed-precondition') {
             console.info('[GlobalContext] Firestore index is building. Notifications will load once index is ready.');
           }
+          health.fail();
         }
       );
     } catch (error) {
@@ -507,11 +522,8 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
       console.warn('[GlobalContext] Error setting up notifications listener:', error);
       // Initialize with empty array to prevent undefined state
       dispatch({ type: 'SET_NOTIFICATIONS', payload: [] });
+      return undefined;
     }
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
   }, [state.auth.userId, state.currentOrganizationId]);
 
   // Online/offline status
@@ -829,6 +841,27 @@ async function batchMarkNotificationsRead(notificationIds: string[]): Promise<vo
   } catch (error) {
     console.error('[GlobalContext] Failed to batch update notifications:', error);
   }
+}
+
+/**
+ * The stored preferences, merged over the defaults so a partial doc (one
+ * saved before a field existed) still yields a complete set. Null when
+ * nothing is stored.
+ */
+async function loadUserPreferences(userId: string): Promise<Partial<UserPreferences> | null> {
+  const snap = await getDoc(doc(db, 'users', userId, 'settings', 'preferences'));
+  if (!snap.exists()) return null;
+  const raw = snap.data() as Partial<UserPreferences> & { notificationSettings?: Partial<UserPreferences['notificationSettings']> };
+  const ns: Partial<UserPreferences['notificationSettings']> =
+    raw.notificationSettings && typeof raw.notificationSettings === 'object' ? raw.notificationSettings : {};
+  return {
+    ...raw,
+    notificationSettings: {
+      ...initialPreferences.notificationSettings,
+      ...ns,
+      mutedModules: Array.isArray(ns.mutedModules) ? ns.mutedModules.filter((m: unknown): m is string => typeof m === 'string') : [],
+    },
+  };
 }
 
 async function saveUserPreferences(

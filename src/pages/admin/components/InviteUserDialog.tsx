@@ -89,8 +89,10 @@ export function InviteUserDialog({ open, onOpenChange }: InviteUserDialogProps) 
         <DialogHeader>
           <DialogTitle>Invite User</DialogTitle>
           <DialogDescription>
-            Send an invitation to a new team member. They will gain access when
-            they sign in with Google.
+            Create a pending invite for a teammate. After saving, copy the
+            share link from the Pending Invites tab and send it to them —
+            they'll gain access the first time they sign in with Google using
+            this email.
           </DialogDescription>
         </DialogHeader>
 

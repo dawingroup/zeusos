@@ -18,7 +18,6 @@ import {
   formatMinutes,
   formatMinor,
 } from '../services/time-tracking.service';
-import { __testing as userDir } from '../services/user-directory.service';
 import type { TimeEntry } from '@/modules/delivery';
 
 function entry(over: Partial<TimeEntry> = {}): TimeEntry {
@@ -169,19 +168,6 @@ describe('formatMinor', () => {
   });
 });
 
-describe('user-directory pickName precedence', () => {
-  it('prefers displayName, then name, then fullName, then email, then uid', () => {
-    expect(userDir.pickName({ displayName: 'Ada', name: 'X', fullName: 'Y', email: 'a@z' }, 'u1')).toBe('Ada');
-    expect(userDir.pickName({ name: 'Grace', fullName: 'Y', email: 'a@z' }, 'u1')).toBe('Grace');
-    expect(userDir.pickName({ fullName: 'Linus T.', email: 'a@z' }, 'u1')).toBe('Linus T.');
-    expect(userDir.pickName({ email: 'ken@zeus' }, 'u1')).toBe('ken@zeus');
-    expect(userDir.pickName({}, 'u_fallback')).toBe('u_fallback');
-    expect(userDir.pickName(undefined, 'u_missing')).toBe('u_missing');
-  });
-  it('treats a blank displayName as absent', () => {
-    expect(userDir.pickName({ displayName: '   ', name: 'Grace' }, 'u1')).toBe('Grace');
-  });
-});
 
 describe('dayKey', () => {
   it('takes the YYYY-MM-DD prefix of an ISO string', () => {

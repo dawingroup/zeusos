@@ -15,6 +15,15 @@ import type { TalentInvoice } from '../types/talent-invoice.types';
 // ─────────────────────────────────────────────────────────────────
 
 vi.mock('@/shared/services/firebase', () => ({ db: {} }));
+vi.mock('@/core/services/firebase/config', () => ({ app: {} }));
+
+// Approval is a callable since routing v2 / ADR-2026-10-25 — the client no
+// longer writes APPROVED. `httpsCallable` hands back this spy.
+const mockApproveCallable = vi.fn();
+vi.mock('firebase/functions', () => ({
+  getFunctions: vi.fn(() => ({})),
+  httpsCallable: vi.fn(() => mockApproveCallable),
+}));
 
 const mockGetDoc = vi.fn();
 const mockUpdateDoc = vi.fn().mockResolvedValue(undefined);
@@ -87,47 +96,38 @@ describe('approveTalentInvoice', () => {
     });
   });
 
-  it('transitions SUBMITTED → APPROVED and emits domain event', async () => {
-    mockGetInvoice(makeInvoice('SUBMITTED'));
+  it('is a server decision: calls the approveTalentInvoice callable and writes nothing from the client', async () => {
+    mockApproveCallable.mockResolvedValueOnce({ data: { id: 'inv-001', status: 'APPROVED', level: 1, complete: true, pendingLevel: null, bandId: 'lead', signaturesRequired: 1 } });
 
     const { approveTalentInvoice } = await import('../services/talent-invoice.service');
-    await approveTalentInvoice('inv-001', 'am-user');
+    const result = await approveTalentInvoice('inv-001', 'looks right');
 
-    // approveTalentInvoice uses writeBatch for atomic status + event write.
-    expect(mockWriteBatch).toHaveBeenCalledOnce();
-    expect(mockBatchCommit).toHaveBeenCalledOnce();
-
-    // Invoice status update via batch.update.
-    expect(mockBatchUpdate).toHaveBeenCalledOnce();
-    const [, updatePayload] = mockBatchUpdate.mock.calls[0];
-    expect(updatePayload.status).toBe('APPROVED');
-    expect(updatePayload.approvedBy).toBe('am-user');
-
-    // Domain event written via batch.set.
-    expect(mockBatchSet).toHaveBeenCalledOnce();
-    const [, eventPayload] = mockBatchSet.mock.calls[0];
-    expect(eventPayload.eventType).toBe('TalentInvoiceApproved');
-    expect(eventPayload.aggregateType).toBe('TalentInvoice');
-    expect(eventPayload.aggregateId).toBe('inv-001');
-  });
-
-  it('throws when invoice is APPROVED (not SUBMITTED)', async () => {
-    mockGetInvoice(makeInvoice('APPROVED'));
-
-    const { approveTalentInvoice } = await import('../services/talent-invoice.service');
-    await expect(approveTalentInvoice('inv-001', 'am-user')).rejects.toThrow(
-      /Can only approve SUBMITTED/,
-    );
+    expect(mockApproveCallable).toHaveBeenCalledWith({ invoiceId: 'inv-001', note: 'looks right' });
+    expect(result.status).toBe('APPROVED');
+    expect(result.complete).toBe(true);
+    // ADR-2026-10-25: no client write enters APPROVED, no client-emitted outbox event.
+    expect(mockWriteBatch).not.toHaveBeenCalled();
     expect(mockUpdateDoc).not.toHaveBeenCalled();
+    expect(mockGetDoc).not.toHaveBeenCalled();
   });
 
-  it('throws when invoice is REJECTED', async () => {
-    mockGetInvoice(makeInvoice('REJECTED'));
+  it('reports a partial signature for a multi-level plan', async () => {
+    mockApproveCallable.mockResolvedValueOnce({ data: { id: 'inv-001', status: 'SUBMITTED', level: 1, complete: false, pendingLevel: 2, bandId: 'group', signaturesRequired: 2 } });
+
+    const { approveTalentInvoice, describeApprovalProgress } = await import('../services/talent-invoice.service');
+    const result = await approveTalentInvoice('inv-001');
+    expect(mockApproveCallable).toHaveBeenCalledWith({ invoiceId: 'inv-001' });
+    expect(result.complete).toBe(false);
+    expect(describeApprovalProgress(result, 'inv-001')).toBe('Signed level 1 of 2 for inv-001 — awaiting level 2.');
+    expect(describeApprovalProgress({ id: 'x', status: 'APPROVED', complete: true }, 'inv-001')).toBe('Approved: inv-001');
+  });
+
+  it('surfaces the server refusal (raiser, under tier, wrong status) as the thrown error', async () => {
+    mockApproveCallable.mockRejectedValueOnce(Object.assign(new Error('You raised this — someone else has to approve it.'), { code: 'functions/permission-denied' }));
 
     const { approveTalentInvoice } = await import('../services/talent-invoice.service');
-    await expect(approveTalentInvoice('inv-001', 'am-user')).rejects.toThrow(
-      /Can only approve SUBMITTED/,
-    );
+    await expect(approveTalentInvoice('inv-001')).rejects.toThrow(/You raised this/);
+    expect(mockUpdateDoc).not.toHaveBeenCalled();
   });
 });
 

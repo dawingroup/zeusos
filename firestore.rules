@@ -57,6 +57,32 @@ service cloud.firestore {
       return isAuthenticated() && !isAnonymousAuth();
     }
 
+    // ── ADR-2026-10-25 — approvals need a human ──────────────────────
+    // The raiser is never the approver, and nobody records an approver
+    // other than themselves. Used on the supplier-spend collections whose
+    // approval moves money out of the group (talent / media invoices,
+    // manual purchase orders). Approval INTO the approved state goes
+    // through a Cloud Function (routing v2 signature ladder); these two
+    // helpers close the client-side door.
+
+    // True when this write moves the doc into APPROVED from some other state.
+    function isEnteringApproved() {
+      return request.resource.data.status == 'APPROVED'
+        && resource.data.get('status', null) != 'APPROVED';
+    }
+
+    // If the write touches `approvedBy`, it must name the caller, and the
+    // caller must not be the person named in `raiserField` on the record
+    // (`createdBy` for invoices, `raisedBy` for manual POs). A write that
+    // leaves `approvedBy` alone passes.
+    function approverIsCallerNotRaiser(raiserField) {
+      return !('approvedBy' in request.resource.data.diff(resource.data).affectedKeys())
+        || (
+          request.resource.data.approvedBy == request.auth.uid
+          && !(raiserField in resource.data && resource.data[raiserField] == request.auth.uid)
+        );
+    }
+
     // Whitelist of fields an anonymous (portal) client may touch on a
     // ChangeOrder when responding to an approval request. Everything
     // else — line items, price impact, internal approval fields — is
@@ -573,10 +599,12 @@ service cloud.firestore {
       allow create: if isAuthenticated(); // Allow authenticated users to create their profile
       allow update, delete: if request.auth.uid == userId || isAdmin();
 
-      // Per-user preferences (`users/{uid}/settings/preferences`, read by
-      // GlobalContext). The owner only — nothing in here is shared.
+      // A person's own settings — `settings/preferences` carries the UI
+      // preferences GlobalContext saves and the `notificationSettings` the
+      // bell honours (stream C). Theirs to read and write; an admin may read.
       match /settings/{settingId} {
-        allow read, write: if request.auth.uid == userId;
+        allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+        allow write: if isAuthenticated() && request.auth.uid == userId;
       }
     }
     
@@ -2412,13 +2440,22 @@ service cloud.firestore {
     }
 
     // Root-level notifications collection (used by GlobalContext)
+    // In-app notices — ONE shape, written by the server only
+    // (functions/src/lib/inAppNotice.js + noticeDelivery.js, stream C):
+    // a notice names one person in `userId`, is unread while `isRead` is
+    // false, and goes where `actionUrl` says. A reader may mark their own
+    // read / archived and nothing else; no client creates a notice for
+    // somebody else (that was an open door for anyone signed in).
     match /notifications/{notificationId} {
       allow read: if isAuthenticated() && (
         resource.data.userId == request.auth.uid || isAdmin()
       );
-      allow create: if isAuthenticated();
+      allow create: if isAdmin();
       allow update: if isAuthenticated() && (
-        resource.data.userId == request.auth.uid || isAdmin()
+        (has('userId') && resource.data.userId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['isRead', 'isArchived', 'readAt', 'archivedAt', 'updatedAt']))
+        || isAdmin()
       );
       allow delete: if isAuthenticated() && (
         resource.data.userId == request.auth.uid || isAdmin()
@@ -3929,8 +3966,15 @@ service cloud.firestore {
       allow read: if isStaffAuth();
       // Freelancers submit; admin can also submit on their behalf.
       allow create: if isStaffAuth();
-      // Approve/reject/pay: AM (parent-org principal) only.
-      allow update: if isParentOrgPrincipal();
+      // Reject / pay / edit: AM (parent-org principal) only. APPROVAL is
+      // not a client write any more — `approveTalentInvoice` (CFn) routes
+      // it through the signature ladder (port stream F / routing v2) and
+      // refuses the raiser. The client may not move the doc INTO
+      // APPROVED, nor stamp an approver who is not itself or who raised
+      // the invoice (ADR-2026-10-25).
+      allow update: if isParentOrgPrincipal()
+        && !isEnteringApproved()
+        && approverIsCallerNotRaiser('createdBy');
       allow delete: if false; // Invoices are immutable once submitted.
     }
 
@@ -4054,7 +4098,13 @@ service cloud.firestore {
     match /media_supplier_invoices/{invoiceId} {
       allow read: if isStaffAuth();
       allow create: if isStaffAuth();
-      allow update: if isParentOrgPrincipal();
+      // Same shape as talent_invoices: approval goes through the
+      // `approveMediaSupplierInvoice` CFn and its signature ladder; the
+      // client may reject / pay / edit but never enter APPROVED nor
+      // self-approve (ADR-2026-10-25).
+      allow update: if isParentOrgPrincipal()
+        && !isEnteringApproved()
+        && approverIsCallerNotRaiser('createdBy');
       allow delete: if isAdmin();
     }
 
@@ -4073,7 +4123,12 @@ service cloud.firestore {
     match /purchase_orders/{poId} {
       allow read: if isAdmin() || isParentOrgPrincipal();
       allow create: if isAdmin() && request.resource.data.kind == 'VENDOR_OTHER';
-      allow update: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
+      // A manual PO may be edited by an admin, but whoever is recorded as
+      // its approver must be the caller and must not be the person who
+      // raised it (ADR-2026-10-25 — the raiser is never the approver).
+      allow update: if isAdmin()
+        && has('kind') && resource.data.kind == 'VENDOR_OTHER'
+        && approverIsCallerNotRaiser('raisedBy');
       allow delete: if isAdmin() && resource.data.kind == 'VENDOR_OTHER';
     }
     match /journal_entries/{jeId} {
@@ -4194,7 +4249,116 @@ service cloud.firestore {
 
     match /generated_tasks/{taskId} {
       allow read: if isStaffAuth();
+      // Every person-driven transition goes through the `taskAction` /
+      // `createTask` callables (Phase 6.E), which check who may act and write
+      // the history[] row. Direct client writes stay admin-only.
       allow write: if isAdmin();
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Daily focus plans (Phase 6.E — Daily Plan). One doc per person per
+    // day, `${date}_${assigneeUid}`. Drafted 17:00, shaped by the manager,
+    // published 06:00, closed 20:00 (functions/src/event-task-engine/).
+    // Readable by the person it is for, the manager it names, and the
+    // parent org; written ONLY by the `dailyPlanAction` callable, which
+    // keeps the manager's writes (items, day goal, reviewed) and the
+    // assignee's (acknowledge, outcomes, wrap-up) apart.
+    // ────────────────────────────────────────────────────────────────
+    match /daily_plans/{planId} {
+      allow read: if isStaffAuth() && (
+        resource.data.assigneeUid == request.auth.uid
+        || resource.data.managerUid == request.auth.uid
+        || isParentOrgPrincipal()
+      );
+      allow write: if false;
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // Memos (DawinOS stream G port — docs/PHASE_6_G_MEMOS.md). Written
+    // decision records: numbered at submit, routed through the people
+    // named under Through to the people named under To, signed, issued
+    // as a frozen snapshot. Drafts are the author's; EVERY later
+    // transition goes through the `memoAction` callable (submit / clear
+    // / decide / issue / filePdf / withdraw / reopen / acknowledge),
+    // which writes the statusHistory row and the step's task.
+    //
+    // Read: a participant (author, on the route, on the distribution)
+    // always; a non-confidential memo also by its brand's own staff and
+    // by parent-org principals; an admin reads everything. The list
+    // shapes the client uses are each provable per document:
+    //   subsidiaryId == X AND confidential == false   (register)
+    //   createdBy == uid | distributionUids ∋ uid | routeUids ∋ uid
+    // ────────────────────────────────────────────────────────────────
+    function memoParticipant(m) {
+      return m.createdBy == request.auth.uid
+        || request.auth.uid in m.get('distributionUids', [])
+        || request.auth.uid in m.get('routeUids', []);
+    }
+    function canReadMemoDoc(m) {
+      return isStaffAuth() && (
+        isAdmin()
+        || memoParticipant(m)
+        || (m.get('confidential', false) == false
+            && (m.subsidiaryId == callerHomeOrgId() || isParentOrgPrincipal()))
+      );
+    }
+
+    match /memos/{memoId} {
+      allow read: if canReadMemoDoc(resource.data);
+      // A draft is created by its author, unnumbered, at version 0, with
+      // nothing the callable later writes already on it.
+      allow create: if isStaffAuth()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.status == 'draft'
+        && request.resource.data.get('version', 0) == 0
+        && !('memoNumber' in request.resource.data)
+        && !('approval' in request.resource.data)
+        && !('decision' in request.resource.data)
+        && !('issuedSnapshot' in request.resource.data)
+        && !('routeUids' in request.resource.data);
+      // Only a draft is edited, only by its author (an admin may tidy one),
+      // and only the authored fields — status, number, version, route,
+      // approval, decision and the issued snapshot are the callable's.
+      allow update: if isStaffAuth()
+        && has('status') && resource.data.status == 'draft'
+        && ((has('createdBy') && resource.data.createdBy == request.auth.uid) || isAdmin())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'type', 'category', 'impact', 'confidential', 'subject', 'externalRef', 'header',
+          'amountMinor', 'currency', 'sections', 'attachments', 'links', 'distribution',
+          'distributionUids', 'supersedes', 'updatedAt', 'updatedBy'
+        ]);
+      // Delete: a DRAFT only — anything submitted is withdrawn, never
+      // deleted, so the file keeps its trail. An admin may delete any draft;
+      // its author one that was NEVER submitted (no number, version 0).
+      allow delete: if isStaffAuth()
+        && has('status') && resource.data.status == 'draft'
+        && (isAdmin()
+            || (has('createdBy') && resource.data.createdBy == request.auth.uid
+                && !('memoNumber' in resource.data)
+                && resource.data.get('version', 0) == 0));
+
+      // Discussion on the file. Post only as yourself; edit or retract only
+      // your own words. Readable by whoever can read the memo.
+      match /comments/{commentId} {
+        allow read: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data);
+        allow create: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data)
+          && request.resource.data.authorId == request.auth.uid;
+        allow update, delete: if isStaffAuth()
+          && ((has('authorId') && resource.data.authorId == request.auth.uid) || isAdmin());
+      }
+      // What was submitted, each time — written by the callable only.
+      match /versions/{versionId} {
+        allow read: if canReadMemoDoc(get(/databases/$(database)/documents/memos/$(memoId)).data);
+        allow write: if false;
+      }
+    }
+
+    // Forward-only memo-number counters. The callable allocates inside its
+    // transaction; no client reads or writes them (the shared `counters`
+    // collection is client-writable for PO / employee numbering, so memos
+    // keep their own).
+    match /memo_counters/{counterId} {
+      allow read, write: if false;
     }
   }
 }

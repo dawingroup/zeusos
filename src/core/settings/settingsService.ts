@@ -827,6 +827,51 @@ export async function revokeInvite(orgId: string, inviteId: string): Promise<voi
   });
 }
 
+/**
+ * Resend an invite: bump the expiry out seven days and reset status to
+ * 'pending'. Lets an admin un-expire a stale invite or re-arm a revoked one
+ * without starting from scratch. The acceptance CFn (`processNewUserInvite`)
+ * still gates on `status === 'pending'` and `expiresAt > now`, so this
+ * suffices without needing a server-side callable.
+ */
+export async function resendInvite(orgId: string, inviteId: string): Promise<string> {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
+  await updateDoc(doc(getInvitesRef(orgId), inviteId), {
+    status: 'pending',
+    expiresAt: expiresAt.toISOString(),
+  });
+  return expiresAt.toISOString();
+}
+
+/**
+ * Build a shareable invite URL. Admins paste this into Slack/email so the
+ * invitee lands on `/accept-invite`, which explains the next step
+ * (sign in with Google) and triggers the existing acceptance flow.
+ */
+export function buildInviteLink(inviteId: string, origin: string = window.location.origin): string {
+  return `${origin}/accept-invite?inviteId=${encodeURIComponent(inviteId)}`;
+}
+
+/**
+ * Fetch one invite by id. Used by the AcceptInvitePage to show the
+ * recipient the role they've been offered. Returns null if missing.
+ */
+export async function getInviteById(
+  orgId: string,
+  inviteId: string
+): Promise<UserInvite | null> {
+  const snap = await getDoc(doc(getInvitesRef(orgId), inviteId));
+  if (!snap.exists()) return null;
+  const data = snap.data();
+  return {
+    ...data,
+    id: snap.id,
+    createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+    expiresAt: data.expiresAt?.toDate?.()?.toISOString() || data.expiresAt,
+  } as UserInvite;
+}
+
 // ============================================================================
 // AUDIT LOG
 // ============================================================================

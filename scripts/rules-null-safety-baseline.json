@@ -1,6 +1,6 @@
 {
   "_comment": "Write gates and helper functions in firestore.rules that read resource.data.<field> with no has() guard, inherited with the fork. Keyed by gate text so unrelated edits do not move them. The check fails on any site NOT listed here; fix these down to zero. Rewrite only with `node scripts/check-rules-null-safety.cjs --update` after a deliberate review.",
-  "count": 46,
+  "count": 45,
   "sites": [
     "update [status, createdBy] isAuthenticated() && ( isAdmin() || !(request.resource.data.status == 'approved' && resource.data.st",
     "update [uploadedBy, status] isAuthenticated() && (resource.data.uploadedBy == request.auth.uid || isAdmin()) && (resource.data.s",
@@ -45,7 +45,6 @@
     "update [memberIds, createdBy] isStaffAuth() && request.auth.uid in resource.data.memberIds && request.resource.data.createdBy == r",
     "update [resource.data passed to a function] isAdmin() || ( isStaffAuth() && !('bankDetails' in request.resource.data.diff(resource.data).affecte",
     "update [resource.data passed to a function] isStaffAuth() && resource.data.createdBy == request.auth.uid && request.resource.data.diff(resource.",
-    "update [kind] isAdmin() && resource.data.kind == 'VENDOR_OTHER'",
     "delete [kind] isAdmin() && resource.data.kind == 'VENDOR_OTHER'",
     "function isPortalCOResponse() [portalTokenId] let changed = request.resource.data.diff(resource.data).affectedKeys(); let hasToken = resource.data"
   ]

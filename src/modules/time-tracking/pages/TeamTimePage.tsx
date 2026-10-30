@@ -26,8 +26,9 @@
  * the brand view until backfilled.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import { isParentOrgUser, resolveHomeSubsidiaryId } from '@/modules/delivery/components/deliveryAccess';
 import type { TimeEntry } from '@/modules/delivery';
 import {
@@ -39,7 +40,7 @@ import {
   formatMinutes,
   formatMinor,
 } from '../services/time-tracking.service';
-import { resolveUserNames, type UserNameMap } from '../services/user-directory.service';
+import { PersonName } from '@/shared/people';
 import { PageHero } from '@/shared/components/refresh';
 
 function fmtWeek(from: Date): string {
@@ -54,7 +55,6 @@ export default function TeamTimePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [err, setErr] = useState<string | null>(null);
-  const [names, setNames] = useState<UserNameMap>({});
 
   const { from, to } = useMemo(() => weekRange(new Date(), weekOffset), [weekOffset]);
 
@@ -67,13 +67,14 @@ export default function TeamTimePage() {
     return homeOrg ? { kind: 'brand', orgId: homeOrg } : { kind: 'none' };
   }, [dawinUser]);
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     setErr(null);
     if (scope.kind === 'none') { setEntries([]); return; }
-    const onErr = (e: Error) => setErr(`Team time load failed: ${e.message}`);
+    const onData = (rows: TimeEntry[]) => { setEntries(rows); health.ok(); };
+    const onErr = (e: Error) => { setErr(`Team time load failed: ${e.message}`); health.fail(); };
     const u = scope.kind === 'parent'
-      ? subscribeTeamTimeEntries(from, to, setEntries, onErr)
-      : subscribeTeamTimeEntriesByBrand(scope.orgId, from, to, setEntries, onErr);
+      ? subscribeTeamTimeEntries(from, to, onData, onErr)
+      : subscribeTeamTimeEntriesByBrand(scope.orgId, from, to, onData, onErr);
     return () => u();
   }, [scope, from, to]);
 
@@ -85,17 +86,6 @@ export default function TeamTimePage() {
   );
   // The dominant currency in the window (entries within one brand share it).
   const currency = entries[0]?.currency ?? 'USD';
-
-  // Resolve uid → display name whenever the member set changes.
-  useEffect(() => {
-    const uids = members.map((m) => m.userId);
-    if (uids.length === 0) return;
-    let cancelled = false;
-    resolveUserNames(uids).then((map) => {
-      if (!cancelled) setNames(map);
-    });
-    return () => { cancelled = true; };
-  }, [members]);
 
   return (
     <div style={{ padding: 'var(--pad-page)' }} data-testid="team-time-page">
@@ -211,7 +201,7 @@ export default function TeamTimePage() {
                   data-testid={`team-time-member-${m.userId}-name`}
                   style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}
                 >
-                  {names[m.userId] ?? m.userId}
+                  <PersonName id={m.userId} />
                 </span>
                 <div style={{ marginTop: 2, color: '#64748b', fontSize: 12 }}>
                   {m.iwoCount} {m.iwoCount === 1 ? 'IWO' : 'IWOs'} · {m.entries.length} {m.entries.length === 1 ? 'entry' : 'entries'}

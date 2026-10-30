@@ -81,7 +81,8 @@ export interface NotificationPreferences {
   push: boolean;
   inApp: boolean;
   digest: 'none' | 'daily' | 'weekly';
-  mutedModules: ModuleId[];
+  /** Notice modules hidden from the bell (see NOTICE_MODULE_CATALOG in core/services/inAppNotice). */
+  mutedModules: string[];
   quietHoursStart?: string;
   quietHoursEnd?: string;
 }
@@ -139,19 +140,35 @@ export interface NotificationState {
   hasMore: boolean;
 }
 
+/** The bell's ladder — mirror of functions/src/lib/inAppNotice.js. */
+export type NotificationPriority = 'critical' | 'high' | 'medium' | 'low';
+
+/**
+ * One in-app notice as the bell reads it (core/services/inAppNotice.ts
+ * normalises every `notifications` doc into this). The server writes ONE
+ * shape (functions/src/lib/inAppNotice.js): a notice names one person in
+ * `userId`, is unread while `isRead` is false, and goes where `actionUrl` says.
+ */
 export interface GlobalNotification {
   id: string;
   type: string;
   title: string;
   message: string;
-  module: ModuleId;
+  /** The writing module ('intelligence', 'memos', 'agents', …); '' when unknown. */
+  module: string;
+  priority: NotificationPriority;
+  /** Derived from `priority` for consumers that still rank by severity. */
   severity: 'info' | 'warning' | 'error' | 'success';
   isRead: boolean;
+  isArchived: boolean;
+  entityType?: string;
+  entityId?: string;
+  /** An in-app path, never an external URL. */
   actionUrl?: string;
   actionLabel?: string;
   metadata?: Record<string, unknown>;
-  createdAt: Timestamp;
-  expiresAt?: Timestamp;
+  createdAt: Timestamp | string | null;
+  expiresAt?: Timestamp | string | null;
 }
 
 // ----------------------------------------------------------------------------

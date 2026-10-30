@@ -29,10 +29,11 @@
  * extra UI guard.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import { Button } from '@/core/components/ui/button';
 import { PageHero } from '@/shared/components/refresh';
 import type { TimeEntry } from '@/modules/delivery';
@@ -70,15 +71,15 @@ export default function MyTimeThisWeekPage() {
     [weekOffset],
   );
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (!uid) return;
     setErr(null);
     const u = subscribeMyTimeEntries(
       uid,
       from,
       to,
-      setEntries,
-      (e) => setErr(`Time entries load failed: ${e.message}`),
+      (rows) => { setEntries(rows); health.ok(); },
+      (e) => { setErr(`Time entries load failed: ${e.message}`); health.fail(); },
     );
     return () => u();
   }, [uid, from, to]);

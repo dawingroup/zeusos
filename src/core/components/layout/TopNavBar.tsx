@@ -167,9 +167,12 @@ export function TopNavBar({
               <Bell className="h-4 w-4" />
               {unreadCount > 0 && (
                 <span
-                  className="absolute top-1 right-1 h-2 w-2 rounded-full ring-2 ring-[var(--bg-surface)]"
+                  data-testid="notification-bell-count"
+                  className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-medium text-white ring-2 ring-[var(--bg-surface)]"
                   style={{ backgroundColor: 'var(--rag-red)' }}
-                />
+                >
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
               )}
             </Button>
           </TooltipTrigger>

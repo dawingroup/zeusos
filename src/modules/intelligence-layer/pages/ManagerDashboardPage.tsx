@@ -55,6 +55,36 @@ import { TaskAssignmentDialog } from '../components/manager/TaskAssignmentDialog
 import { getEntityRoute, getProjectRoute } from '../utils/getEntityRoute';
 import { useEmployeeDocId } from '../hooks/useEmployeeDocId';
 
+/**
+ * Phase 6.E: a `generated_tasks` doc in the shape this page's reducers were
+ * written for (`assignedTo`, `dueDate.toDate()`, five display statuses).
+ * ISO strings are the engine's timestamp convention; legacy Timestamps pass
+ * through untouched.
+ */
+function normaliseTaskDoc(data: Record<string, any>): Record<string, any> { // eslint-disable-line @typescript-eslint/no-explicit-any
+  const asStamp = (v: unknown) => {
+    if (typeof v === 'string') {
+      const ms = Date.parse(v);
+      return Number.isNaN(ms) ? undefined : { toDate: () => new Date(ms) };
+    }
+    return v;
+  };
+  const status = data.status === 'in_progress' || data.status === 'pending_review' ? 'in_progress'
+    : data.status === 'completed' || data.status === 'cancelled' || data.status === 'blocked' ? data.status
+      : 'pending';
+  return {
+    ...data,
+    status,
+    assignedTo: data.assignedToUserId ?? data.assignedTo,
+    dueDate: asStamp(data.dueAt ?? data.dueDate),
+    completedAt: asStamp(data.completedAt),
+    updatedAt: asStamp(data.updatedAt),
+    createdAt: asStamp(data.createdAt),
+    projectId: data.masterJobId ?? data.projectId,
+  };
+}
+
+
 // ============================================
 // Types
 // ============================================
@@ -195,18 +225,19 @@ export default function ManagerDashboardPage() {
       const uniqueQueryIds = [...new Set(allQueryIds)];
       const tasksByEmployee = new Map<string, any[]>();
 
-      const tasksRef = collection(db, 'generatedTasks');
+      // Phase 6.E: `generated_tasks`, keyed by the sign-in uid.
+      const tasksRef = collection(db, 'generated_tasks');
       for (let i = 0; i < uniqueQueryIds.length; i += 30) {
         const batch = uniqueQueryIds.slice(i, i + 30);
         const batchQuery = query(
           tasksRef,
-          where('assignedTo', 'in', batch),
+          where('assignedToUserId', 'in', batch),
           limit(500)
         );
         const batchSnapshot = await getDocs(batchQuery);
 
         batchSnapshot.docs.forEach((taskDoc) => {
-          const task = taskDoc.data();
+          const task = normaliseTaskDoc(taskDoc.data());
           const assignee = task.assignedTo;
           // Map back to the canonical employee doc ID
           const canonicalId = idToEmployeeDocId.get(assignee) || assignee;
@@ -284,14 +315,14 @@ export default function ManagerDashboardPage() {
 
       // Fetch recent team tasks
       const allTasksQuery = query(
-        collection(db, 'generatedTasks'),
+        collection(db, 'generated_tasks'),
         orderBy('createdAt', 'desc'),
         limit(20)
       );
       const allTasksSnapshot = await getDocs(allTasksQuery);
 
       const tasks: TeamTask[] = allTasksSnapshot.docs.map((doc) => {
-        const data = doc.data();
+        const data = normaliseTaskDoc(doc.data());
         return {
           id: doc.id,
           title: data.title,
@@ -331,9 +362,9 @@ export default function ManagerDashboardPage() {
     setMemberTasksLoading(true);
 
     try {
-      const tasksRef = collection(db, 'generatedTasks');
+      const tasksRef = collection(db, 'generated_tasks');
 
-      // Find the employee's auth UID too (for dual-ID matching)
+      // Find the employee's login uid (tasks are keyed by it)
       const empDoc = await getDocs(query(
         collection(db, 'employees'),
         where('__name__', '==', member.id),
@@ -348,14 +379,14 @@ export default function ManagerDashboardPage() {
 
       const memberQuery = query(
         tasksRef,
-        where('assignedTo', 'in', assigneeIds),
-        orderBy('dueDate', 'asc'),
+        where('assignedToUserId', 'in', assigneeIds),
+        orderBy('dueAt', 'asc'),
         limit(100)
       );
       const snapshot = await getDocs(memberQuery);
 
       const tasks: TeamTask[] = snapshot.docs.map((doc) => {
-        const data = doc.data();
+        const data = normaliseTaskDoc(doc.data());
         return {
           id: doc.id,
           title: data.title,

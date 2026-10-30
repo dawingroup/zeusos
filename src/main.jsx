@@ -18,6 +18,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from 'sonner'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 import { ConfigProvider } from './contexts/ConfigContext.jsx'
 import { OffcutProvider } from './contexts/OffcutContext.jsx'
@@ -116,6 +117,7 @@ function MainApp() {
                 <OffcutProvider>
                   <WorkInstanceProvider>
                     <AppRouter />
+                    <Toaster position="top-right" richColors closeButton />
                   </WorkInstanceProvider>
                 </OffcutProvider>
               </ConfigProvider>

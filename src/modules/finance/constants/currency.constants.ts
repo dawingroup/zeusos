@@ -9,6 +9,8 @@
  * Primary: UGX (Uganda Shilling)
  * Common: USD, EUR, GBP, KES
  */
+import { DEFAULT_RATES_TO_FUNCTIONAL, amountToFunctional } from '@/shared/utils/fxRates';
+
 export const CURRENCIES = {
   UGX: 'UGX',
   USD: 'USD',
@@ -193,31 +195,24 @@ export function parseCurrency(value: string, currencyCode: CurrencyCode = DEFAUL
 }
 
 /**
- * Default exchange rates to functional currency (UGX).
- * Centralised source of truth — replaces scattered hardcoded rates
- * in PartsTab, capital/constants, useMarketData, etc.
+ * Default exchange rates to the functional currency (UGX). The ONE static
+ * table lives in `src/shared/utils/fxRates.ts` (with sane-range bounds);
+ * this name is kept for finance callers.
  */
-export const EXCHANGE_RATES_TO_UGX: Record<string, number> = {
-  UGX: 1,
-  USD: 3700,
-  EUR: 4000,
-  GBP: 4600,
-  AED: 1000,
-  CNY: 510,
-  KES: 29,
-  ZAR: 205,
-};
+export const EXCHANGE_RATES_TO_UGX: Readonly<Record<string, number>> = DEFAULT_RATES_TO_FUNCTIONAL;
 
 /**
  * Convert an amount from any supported currency to the functional currency (UGX).
- * Returns both the converted amount and the rate used.
+ * Returns both the converted amount and the rate used. REFUSES (throws) for a
+ * currency the table does not know — never a silent rate of 1.
  */
 export function convertToFunctionalCurrency(
   amount: number,
   fromCurrency: string,
 ): { amountUGX: number; rate: number } {
-  const rate = EXCHANGE_RATES_TO_UGX[fromCurrency] ?? 1;
-  return { amountUGX: Math.round(amount * rate), rate };
+  const converted = amountToFunctional(amount, fromCurrency);
+  if (!converted.ok) throw new Error(converted.message);
+  return { amountUGX: Math.round(converted.amountFunctional), rate: converted.rate };
 }
 
 /**

@@ -4684,6 +4684,14 @@ exports.onTalentInvoiceApproved = onTalentInvoiceApproved;
 exports.onMediaSupplierInvoicePaid = onMediaSupplierInvoicePaid;
 exports.postJournalEntryOnInvoicePaid = postJournalEntryOnInvoicePaid;
 
+// Approval routing v2 (port stream F / ADR-2026-10-25). The only door into
+// APPROVED for supplier invoices: purpose × KES band × signature ladder,
+// raiser never signs, a person always does. Emits TalentInvoiceApproved
+// for the PO consumer above once the last signature lands.
+const approvals = require('./src/approvals');
+exports.approveTalentInvoice = approvals.approveTalentInvoice;
+exports.approveMediaSupplierInvoice = approvals.approveMediaSupplierInvoice;
+
 // ============================================================
 // Finance — Group consolidation rollup (Phase 1.2)
 // ============================================================
@@ -4769,3 +4777,51 @@ exports.agentReason = agentReason;
 // ANTHROPIC_API_KEY is set; never blocks task creation.
 const { enrichTaskOnCreate } = require('./src/event-task-engine/enrichTaskOnCreate');
 exports.enrichTaskOnCreate = enrichTaskOnCreate;
+
+// ============================================================================
+// Phase 6.E — Daily Plan + task hardening (DawinOS port, stream E).
+// The task engine's clock (all Africa/Nairobi, europe-west1):
+//   06:00 dailyPlanPublishRun · 17:00 dailyPlanDraftRun · 20:00 dailyPlanCloseRun
+//   02:30 staleTaskSweep · every 30 min taskHygieneRun (owners for pending
+//   work, auto-close on resolved records, overdue escalation, due-soon
+//   reminders). `taskEngineRunNow` (admin) runs any of them on demand.
+// `taskAction` / `createTask` — the one write path for a person acting on a
+//   `generated_tasks` row (rules are admin-write; every transition is in
+//   history[]). `dailyPlanAction` — the one writer of `daily_plans`.
+// `onTaskWritten` — bell notices for assigned / reassigned / reopened /
+//   escalated / blocked.
+const {
+  dailyPlanPublishRun, dailyPlanDraftRun, dailyPlanCloseRun, staleTaskSweep, taskHygieneRun, taskEngineRunNow,
+} = require('./src/event-task-engine/scheduled');
+exports.dailyPlanPublishRun = dailyPlanPublishRun;
+exports.dailyPlanDraftRun = dailyPlanDraftRun;
+exports.dailyPlanCloseRun = dailyPlanCloseRun;
+exports.staleTaskSweep = staleTaskSweep;
+exports.taskHygieneRun = taskHygieneRun;
+exports.taskEngineRunNow = taskEngineRunNow;
+const { taskAction, createTask } = require('./src/event-task-engine/callables/taskActions');
+exports.taskAction = taskAction;
+exports.createTask = createTask;
+const { dailyPlanAction } = require('./src/event-task-engine/callables/dailyPlanActions');
+exports.dailyPlanAction = dailyPlanAction;
+const { onTaskWritten } = require('./src/event-task-engine/triggers/onTaskWritten');
+exports.onTaskWritten = onTaskWritten;
+// `draftTasksWithAi` — "Draft with AI" in the plan editor: the manager's
+//   intent → 1–5 editable drafts (never written here; `createTask` does that
+//   after review). The morning brief rides inside `dailyPlanPublishRun`.
+//   Both dark until ANTHROPIC_API_KEY is set.
+const { draftTasksWithAi } = require('./src/event-task-engine/ai/draftTasksWithAi');
+exports.draftTasksWithAi = draftTasksWithAi;
+
+// ─── Memos (DawinOS stream G port — docs/PHASE_6_G_MEMOS.md) ────────────────
+// `memoAction` — the one write path for a memo leaving the author's hands:
+//   submit / clear / decide / issue / filePdf / withdraw / reopen / acknowledge.
+//   Drafts are the author's (client writes under the `memos` rules); every
+//   later transition lands here with a statusHistory row, and the step's task
+//   is written into `generated_tasks` in the same call (lib/memoTasks.js).
+// `draftMemoSection` — "Draft with AI" on one section of a DRAFT memo, from
+//   the memo's own header, sections and linked records; returned, never
+//   written. Dark until ANTHROPIC_API_KEY is set.
+const { memoAction, draftMemoSection } = require('./src/memos');
+exports.memoAction = memoAction;
+exports.draftMemoSection = draftMemoSection;

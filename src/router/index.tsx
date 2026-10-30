@@ -37,6 +37,7 @@ const LoginPage = lazyWithRetry(() => import('@/pages/auth/LoginPage'));
 const ForgotPasswordPage = lazyWithRetry(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPasswordPage'));
 const VerifyEmailPage = lazyWithRetry(() => import('@/pages/auth/VerifyEmailPage'));
+const AcceptInvitePage = lazyWithRetry(() => import('@/pages/auth/AcceptInvitePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Account Management — Phase 3.D commercial core (Clients, MSAs, SOWs,
@@ -98,6 +99,21 @@ const BurnAndSlaPage   = lazyWithRetry(() => import('@/modules/delivery/pages/Bu
 const IwoHealthPage    = lazyWithRetry(() => import('@/modules/reports/pages/IwoHealthPage'));
 const MyTimeThisWeekPage = lazyWithRetry(() => import('@/modules/time-tracking/pages/MyTimeThisWeekPage'));
 const TeamTimePage     = lazyWithRetry(() => import('@/modules/time-tracking/pages/TeamTimePage'));
+// Phase 6.E — Daily Plan (DawinOS stream E port).
+const MyDayPage        = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/MyDayPage'));
+const PlanTomorrowPage = lazyWithRetry(() => import('@/modules/intelligence-layer/daily-plan/pages/PlanTomorrowPage'));
+// Memos (DawinOS stream G port) — written decision records.
+const MemosLayout      = lazyWithRetry(() => import('@/modules/memos/components/MemosLayout'));
+const MemoRegisterPage = lazyWithRetry(() => import('@/modules/memos/pages/MemoRegisterPage'));
+const MemoEditorPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoEditorPage'));
+const MemoDetailPage   = lazyWithRetry(() => import('@/modules/memos/pages/MemoDetailPage'));
+// Approvals — port stream F. Unified inbox over the existing approval
+// callables (ECD rungs, acceptInternal, approveSow, change orders, supplier
+// invoices). Dual-scope like /time/team; no org-kind guard.
+const ApprovalsInboxPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalsInboxPage'));
+// Settings → Approval routing (routing v2): the KES signature ladder for
+// supplier spend. Parent-org admins only.
+const ApprovalRoutingSettingsPage = lazyWithRetry(() => import('@/modules/approvals/pages/ApprovalRoutingSettingsPage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Traffic — Phase 6.UI.B (parent-org only; ParentOrgGuard wraps the layout).
@@ -346,6 +362,11 @@ export const router = createBrowserRouter([
     ],
   },
   { path: '/login', element: <Navigate to="/auth/login" replace /> },
+  // Public invite-acceptance landing page. Signed-out users arriving from a
+  // shared invite link see context + a Google sign-in button; after sign-in
+  // GlobalContext's auth listener runs processNewUserInvite and matches the
+  // pending invite by email.
+  { path: '/accept-invite', element: <PageWrapper><AcceptInvitePage /></PageWrapper> },
   { path: '/privacy', element: <PageWrapper><PrivacyPolicyPage /></PageWrapper> },
   { path: '/mcp/pair', element: <PageWrapper><MCPPairingPage /></PageWrapper> },
   // Phase 5.C — public asset/collection share viewer. The resolver
@@ -567,6 +588,37 @@ export const router = createBrowserRouter([
       // with no org scope falls into the page's "no scope" empty state.
       { path: 'time/team',           element: <PageWrapper><TeamTimePage /></PageWrapper> },
 
+      // Phase 6.E — Daily Plan. /tasks/today is the person's own contract for
+      // the day; /tasks/review is the manager's evening review (dual-scope:
+      // a manager sees plans that name them, a parent-org principal sees all).
+      // No guard: the daily_plans rules scope reads, and every write goes
+      // through the dailyPlanAction / taskAction callables.
+      { path: 'tasks/today',         element: <PageWrapper><MyDayPage /></PageWrapper> },
+      { path: 'tasks/review',        element: <PageWrapper><PlanTomorrowPage /></PageWrapper> },
+      // Approvals inbox (port stream F). Dual-scope: a parent-org principal
+      // sees every queue, a brand member sees their brand's IWO rows. The
+      // page resolves scope from the user and only opens the feeds that
+      // scope may read; the collections' rules enforce the same split, so
+      // NO ParentOrgGuard (it would block brand leads from their ECD rungs).
+      { path: 'approvals',           element: <PageWrapper><ApprovalsInboxPage /></PageWrapper> },
+
+      // Memos (DawinOS stream G port) — the register, the author's own memos,
+      // what is waiting on me, the editor and the memo as filed. Everyone
+      // writes memos, so no org-kind guard: the `memos` rules decide who reads
+      // each one, and every transition goes through the memoAction callable.
+      {
+        path: 'memos',
+        element: <PageWrapper><MemosLayout /></PageWrapper>,
+        children: [
+          { index: true,              element: <MemoRegisterPage view="all" /> },
+          { path: 'mine',             element: <MemoRegisterPage view="mine" /> },
+          { path: 'awaiting',         element: <MemoRegisterPage view="awaiting" /> },
+          { path: 'new',              element: <MemoEditorPage /> },
+          { path: ':memoId',          element: <MemoDetailPage /> },
+          { path: ':memoId/edit',     element: <MemoEditorPage /> },
+        ],
+      },
+
       // Comms — tabbed messaging module (ported from DawinOS). Everyone
       // communicates, so no org-kind guard; chatChannels rules enforce
       // membership and commsConfig rules gate the WhatsApp channel. Tabs:
@@ -635,6 +687,8 @@ export const router = createBrowserRouter([
       { path: 'notification-settings',  element: <PageWrapper><NotificationSettingsPage /></PageWrapper> },
       // Phase 5 — per-user appearance preferences (theme / density / accent).
       { path: 'settings/appearance',    element: <PageWrapper><AppearanceSettingsPage /></PageWrapper> },
+      // Approval routing v2 — who signs supplier spend (port stream F part 2).
+      { path: 'settings/approval-routing', element: <PageWrapper><ParentOrgGuard><ApprovalRoutingSettingsPage /></ParentOrgGuard></PageWrapper> },
 
       // Admin
       // Org settings hub (General / Users / Access / Integrations / Modules / …).

@@ -5,7 +5,8 @@
  * Employee-facing page for viewing and managing assigned tasks
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   ClipboardList,
   Clock,
@@ -30,7 +31,10 @@ import {
   SelectValue,
 } from '@/core/components/ui/select';
 
+import { pushToast } from '@/shared/components/feedback/toastBus';
+import { describeCallableError } from '@/shared/utils/callableError';
 import { MODULE_COLOR } from '../constants';
+import { BlockedDialog } from '../daily-plan/components/FocusDialogs';
 import { TaskCard } from '../components/employee-inbox/TaskCard';
 import { TaskDetailDialog } from '../components/employee-inbox/TaskDetailDialog';
 import { SnapshotStrip } from '../components/employee-inbox/SnapshotStrip';
@@ -96,11 +100,29 @@ export default function EmployeeTaskInboxPage() {
 
   const [selectedTask, setSelectedTask] = useState<EmployeeTask | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  // Mark blocked asks why (Phase 6.E): the reason is what reaches the manager.
+  const [blockFor, setBlockFor] = useState<EmployeeTask | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleViewDetails = (task: EmployeeTask) => {
     setSelectedTask(task);
     setIsDetailOpen(true);
   };
+
+  // `?task=<id>` — every bell notice and plan item deep-links here.
+  const linkedTaskId = searchParams.get('task');
+  useEffect(() => {
+    if (!linkedTaskId || loading) return;
+    const task = tasks.find((t) => t.id === linkedTaskId);
+    if (task) {
+      setSelectedTask(task);
+      setIsDetailOpen(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete('task');
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedTaskId, loading, tasks]);
 
   const handleStartTask = async (taskId: string) => {
     try {
@@ -118,11 +140,19 @@ export default function EmployeeTaskInboxPage() {
     }
   };
 
-  const handleBlockTask = async (taskId: string) => {
+  const handleBlockTask = (taskId: string) => {
+    const task = tasks.find((t) => t.id === taskId) || (selectedTask?.id === taskId ? selectedTask : null);
+    setBlockFor(task ?? ({ id: taskId, title: 'this task' } as EmployeeTask));
+  };
+
+  const submitBlock = async (reason: string) => {
+    if (!blockFor) return;
     try {
-      await blockTask(taskId);
+      await blockTask(blockFor.id, reason);
     } catch (err) {
       console.error('Failed to block task:', err);
+      pushToast(`Couldn't mark it blocked: ${describeCallableError(err, 'block the task')}`, { tone: 'error' });
+      throw err;
     }
   };
 
@@ -385,6 +415,14 @@ export default function EmployeeTaskInboxPage() {
         onComplete={handleCompleteTask}
         onBlock={handleBlockTask}
         onChecklistItemChange={handleChecklistChange}
+      />
+
+      <BlockedDialog
+        open={Boolean(blockFor)}
+        title={blockFor?.title}
+        hasManager
+        onClose={() => setBlockFor(null)}
+        onSubmit={submitBlock}
       />
     </div>
   );

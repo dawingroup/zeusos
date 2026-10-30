@@ -33,7 +33,11 @@ async function handleCreateTask(input, context) {
     title: input.title,
     description: input.description,
     priority: input.priority || 'P2',
-    status: 'pending',
+    // One status vocabulary (event-task-engine/lib/taskModel.js): on a person
+    // → assigned; nobody yet → pending_assignment, and the hygiene run finds an
+    // owner. `pending` was DawinOS's word and is only read as legacy now.
+    status: input.assignedToUserId ? 'assigned' : 'pending_assignment',
+    kind: input.kind || 'action',
     dueAt: input.dueAt || null,
     assignedToUserId: input.assignedToUserId || null,
     masterJobId: input.masterJobId || null,
@@ -42,7 +46,8 @@ async function handleCreateTask(input, context) {
     sourceModule: input.sourceModule || 'agents',
     source: 'agent',
     sourceAgentId: agentId,
-    history: [{ fromStatus: null, toStatus: 'pending', actorUserId: `agent:${agentId}`, notes: 'drafted by agent', occurredAt: nowIso() }],
+    history: [{ fromStatus: null, toStatus: input.assignedToUserId ? 'assigned' : 'pending_assignment', actorUserId: `agent:${agentId}`, notes: 'drafted by agent', occurredAt: nowIso() }],
+    createdBy: `agent:${agentId}`,
     idempotencyKey: id,
     createdAt: nowIso(),
     updatedAt: nowIso(),

@@ -22,6 +22,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Shield, Inbox, Plus } from 'lucide-react';
 import { useCurrentDawinUser } from '@/core/settings';
+import { useResilientSubscription } from '@/shared/hooks/useResilientSubscription';
 import { useAuth } from '@/shared/hooks';
 import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import type { SubsidiaryId } from '@/core/settings/types';
@@ -286,11 +287,19 @@ function SubsidiaryDashboard({ today, brandId }: { today: string; brandId: Subsi
   const [active, setActive] = useState<InternalWorkOrder[]>([]);
   const nowMs = useMemo(() => Date.now(), [issued, active]);
 
-  useEffect(() => {
+  useResilientSubscription((health) => {
     if (brandId === 'zeus-group') return;
     const unsubs: Array<() => void> = [];
-    unsubs.push(subscribeIWOInbox(brandId, setIssued, () => setIssued([])));
-    unsubs.push(subscribeIWOActive(brandId, setActive, () => setActive([])));
+    unsubs.push(subscribeIWOInbox(
+      brandId,
+      (rows) => { setIssued(rows); health.ok(); },
+      () => { setIssued([]); health.fail(); },
+    ));
+    unsubs.push(subscribeIWOActive(
+      brandId,
+      (rows) => { setActive(rows); health.ok(); },
+      () => { setActive([]); health.fail(); },
+    ));
     return () => unsubs.forEach((u) => u());
   }, [brandId]);
 
