@@ -219,7 +219,7 @@ run_gate() { # sha kind label  → 0 pass, 1 fail
   # (another session's emulators), not the commit's: ci-gate.sh already waited
   # up to 10 min for the ports. Drop it from the verdict; if nothing else
   # failed, record nothing so the next tick gates this commit again.
-  local busy=0 lastlog="$glog"; [ -f "$glog.retry" ] && lastlog="$glog.retry"
+  local busy="" lastlog="$glog"; [ -f "$glog.retry" ] && lastlog="$glog.retry"
   if [[ ",$failed," == *",rules-emulator,"* ]] && grep -q 'Could not start Firestore Emulator, port taken' "$lastlog"; then
     busy=1; failed="$(echo "$failed" | tr ',' '\n' | grep -vx rules-emulator | paste -sd, -)"
   fi
