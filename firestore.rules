@@ -2987,6 +2987,7 @@ service cloud.firestore {
       allow create: if canWriteMarketIntel();
       allow update: if canWriteMarketIntel()
         || (canReadMarketIntel()
+            && resource != null
             && request.resource.data.diff(resource.data).affectedKeys()
                  .hasOnly(['isRead', 'isBookmarked', 'isFlagged', 'readBy', 'bookmarkedBy', 'updatedAt']));
       allow delete: if isAdmin();
