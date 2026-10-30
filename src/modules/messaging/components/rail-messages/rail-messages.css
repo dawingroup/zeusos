@@ -1,0 +1,96 @@
+/* ==========================================================================
+   MESSAGES — the context rail's Messages segment (RailMessages).
+   Rows only: the rail supplies the header, sub line and footer.
+   ========================================================================== */
+.rail-list { padding: 4px 6px 12px; display: flex; flex-direction: column; }
+
+.rail-msg {
+  display: flex; gap: 10px; width: 100%; padding: 9px 8px; border-radius: 8px;
+  border: 0; background: transparent; cursor: pointer; text-align: left;
+  font: inherit; color: inherit; transition: background 120ms;
+}
+.rail-msg:hover { background: var(--bg-sunken); }
+.rail-msg:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.rail-msg-avatar {
+  display: grid; place-items: center; width: 30px; height: 30px; flex-shrink: 0;
+  border-radius: 50%; color: #fff; font-size: 10.5px; font-weight: 600;
+}
+.rail-msg-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rail-msg-top { display: flex; align-items: baseline; gap: 8px; }
+.rail-msg-name {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 12.5px; font-weight: 500; color: var(--fg-primary);
+}
+.rail-msg-name[data-unread] { font-weight: 600; }
+.rail-msg-when { flex-shrink: 0; font-size: 10.5px; color: var(--fg-tertiary); font-variant-numeric: tabular-nums; }
+.rail-msg-snip {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 11.5px; color: var(--fg-secondary);
+}
+.rail-msg-tags { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+.rail-msg-pill {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+  padding: 1px 7px; border-radius: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 10px; color: var(--fg-secondary);
+  background: var(--bg-sunken); border: 1px solid var(--border-subtle);
+}
+.rail-msg-unread { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.rail-msg-empty { padding: 28px 12px; text-align: center; font-size: 12px; color: var(--fg-tertiary); }
+
+/* ── Layout: the segment owns its scrolling so the composer stays pinned ── */
+.rail-list-view, .rail-thread-view { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.rail-list-view > .rail-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+
+.rail-search {
+  display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+  margin: 6px 10px 2px; padding: 0 9px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border-default); background: var(--bg-app); color: var(--fg-tertiary);
+}
+.rail-search:focus-within { border-color: var(--accent); }
+.rail-search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 12px; color: var(--fg-primary); }
+.rail-search-input::placeholder { color: var(--fg-quaternary); }
+
+/* ── Thread ── */
+.rail-thread-head {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 6px 8px; border-bottom: 1px solid var(--border-subtle);
+}
+.rail-thread-title { flex: 1; min-width: 0; }
+.rail-thread-name { font-size: 12.5px; font-weight: 600; color: var(--fg-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-thread-sub { font-size: 10.5px; color: var(--fg-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-iconbtn {
+  display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0;
+  border: 0; border-radius: 7px; background: transparent; color: var(--fg-tertiary); cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.rail-iconbtn:hover { background: var(--bg-sunken); color: var(--fg-primary); }
+.rail-iconbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.rail-thread { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 10px 12px; scrollbar-gutter: stable; }
+.rail-bubble { max-width: 86%; margin-bottom: 7px; padding: 6px 9px; border-radius: 12px; }
+.rail-bubble.them { background: var(--bg-sunken); border-bottom-left-radius: 4px; }
+.rail-bubble.me { margin-left: auto; background: var(--accent); color: var(--accent-fg); border-bottom-right-radius: 4px; }
+.rail-bubble-name { font-size: 10.5px; font-weight: 600; margin-bottom: 2px; }
+.rail-bubble-body { font-size: 12.5px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+.rail-bubble-media { font-style: normal; opacity: .75; }
+.rail-bubble-meta { font-size: 9.5px; opacity: .7; margin-top: 2px; text-align: right; }
+
+.rail-notice { flex-shrink: 0; margin: 0 10px 6px; padding: 7px 9px; border-radius: 8px; font-size: 11.5px; background: var(--bg-sunken); color: var(--fg-secondary); }
+.rail-notice.is-error { background: var(--rag-red-soft); color: var(--rag-red); }
+
+.rail-composer { flex-shrink: 0; padding: 8px 10px 10px; border-top: 1px solid var(--border-subtle); }
+.rail-composer-input {
+  display: block; width: 100%; resize: none; max-height: 140px; field-sizing: content; min-height: 44px;
+  padding: 7px 9px; border-radius: 8px; border: 1px solid var(--border-default); background: var(--bg-app);
+  font: inherit; font-size: 12.5px; line-height: 1.45; color: var(--fg-primary); outline: 0;
+}
+.rail-composer-input:focus { border-color: var(--accent); }
+.rail-composer-input:disabled { opacity: .55; cursor: not-allowed; }
+.rail-composer-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.rail-composer-hint { flex: 1; min-width: 0; font-size: 10px; color: var(--fg-quaternary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-send {
+  flex-shrink: 0; height: 26px; padding: 0 12px; border: 0; border-radius: 7px;
+  background: var(--accent); color: var(--accent-fg); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.rail-send:disabled { opacity: .45; cursor: not-allowed; }
+.rail-send:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

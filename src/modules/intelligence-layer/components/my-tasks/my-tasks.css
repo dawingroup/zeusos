@@ -1,0 +1,123 @@
+/* ==========================================================================
+   MY TASKS — the context rail's Tasks segment (RailTasks).
+   --------------------------------------------------------------------------
+   Body rows only: the rail supplies the header, sub line and footer, and its
+   `.rail-body` is the scroller. Rows follow the rail's row spec — 8px radius,
+   sunken hover, 12.5px titles, 11px meta, 10.5px uppercase group labels.
+   ========================================================================== */
+.mt-body { padding: 6px 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.mt-now {
+  padding: 10px 12px; border-radius: 11px;
+  background: var(--accent-soft); border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+}
+.mt-now-kicker {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+}
+.mt-now-title { margin-top: 3px; font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--fg-primary); }
+.mt-now-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.mt-now-go {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+  height: 26px; padding: 0 10px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--accent); color: var(--accent-fg); font: inherit; font-size: 12px; font-weight: 600;
+}
+.mt-now-go:hover { filter: brightness(1.05); }
+.mt-chip {
+  font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px;
+  background: var(--bg-surface); color: var(--fg-secondary); border: 1px solid var(--border-subtle);
+}
+
+.mt-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 4px 8px 4px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--fg-tertiary);
+}
+.mt-section-meta { font-size: 10.5px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--fg-tertiary); }
+.mt-progress {
+  height: 4px; margin: 0 8px 8px; border-radius: 999px; background: var(--bg-sunken); overflow: hidden;
+}
+.mt-progress > span { display: block; height: 100%; background: var(--rag-green); border-radius: inherit; transition: width 240ms ease; }
+
+.mt-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.mt-row {
+  display: flex; align-items: center; gap: 6px;
+  border-radius: 8px; border: 1px solid transparent;
+  transition: background 120ms, border-color 120ms;
+}
+.mt-row:hover { background: var(--bg-sunken); }
+.mt-row[data-current] { background: var(--bg-app); border-color: color-mix(in oklab, var(--accent) 35%, transparent); }
+.mt-row.is-muted { padding: 7px 10px; gap: 9px; color: var(--fg-tertiary); }
+.mt-row.is-muted:hover { background: transparent; border-color: transparent; }
+.mt-row[data-done] .mt-row-title { text-decoration: line-through; }
+.mt-row-state { display: grid; place-items: center; width: 14px; flex-shrink: 0; color: var(--fg-quaternary); }
+.mt-row[data-done] .mt-row-state { color: var(--rag-green); }
+/* Done box — only on rows that may close in one click
+   (canCompleteFromList). 18px, radius 6, per the rail spec. */
+.mt-done {
+  display: grid; place-items: center; width: 18px; height: 18px; flex-shrink: 0; margin-left: 8px; padding: 0;
+  border-radius: 6px; border: 1.5px solid var(--border-strong); background: var(--bg-surface);
+  color: transparent; cursor: pointer; transition: background 120ms, border-color 120ms, color 120ms;
+}
+.mt-done:hover:not(:disabled) { border-color: var(--rag-green); color: var(--rag-green); }
+.mt-done:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mt-done:disabled { cursor: default; }
+.mt-row[data-done] .mt-done { background: var(--rag-green); border-color: var(--rag-green); color: #fff; }
+.mt-row[data-done] .mt-row-title { color: var(--fg-tertiary); }
+.mt-row .mt-done + .mt-row-open { padding-left: 2px; }
+.mt-now-done {
+  display: inline-flex; align-items: center; gap: 4px; margin-left: auto;
+  height: 26px; padding: 0 10px; border-radius: 999px; cursor: pointer;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent); background: var(--bg-surface);
+  color: var(--accent); font: inherit; font-size: 12px; font-weight: 600;
+}
+.mt-now-done:hover:not(:disabled) { border-color: var(--rag-green); color: var(--rag-green); }
+.mt-now-done:disabled { opacity: .6; cursor: default; }
+.mt-now-done + .mt-now-go { margin-left: 0; }
+.mt-row-open {
+  flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: 9px;
+  padding: 7px 4px 7px 10px; border: 0; background: transparent; cursor: pointer;
+  text-align: left; font: inherit; color: inherit; border-radius: 8px;
+}
+.mt-row-open:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.mt-dot { width: 7px; height: 7px; margin-top: 5px; flex-shrink: 0; border-radius: 2px; background: var(--rag-blue); }
+.mt-dot[data-tone="high"] { background: var(--rag-red); }
+.mt-dot[data-tone="low"] { background: var(--fg-quaternary); }
+.mt-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mt-row-title {
+  font-size: 12.5px; font-weight: 500; line-height: 1.3; color: var(--fg-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.mt-row.is-muted .mt-row-title { color: var(--fg-tertiary); font-weight: 500; }
+.mt-row-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--fg-tertiary); }
+.mt-row-entity { color: var(--fg-tertiary); }
+.mt-due[data-due="overdue"] { color: var(--rag-red); font-weight: 600; }
+.mt-due[data-due="today"] { color: var(--rag-amber); font-weight: 600; }
+.mt-tag {
+  font-size: 9.5px; font-weight: 700; padding: 0 6px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.6;
+}
+.mt-tag.is-progress { background: var(--rag-blue-soft); color: var(--rag-blue); }
+.mt-tag.is-blocked { background: var(--rag-red-soft); color: var(--rag-red); }
+
+.mt-start {
+  display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; margin-right: 6px;
+  height: 26px; padding: 0 9px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--fg-secondary);
+  font: inherit; font-size: 11.5px; font-weight: 600;
+  transition: border-color 120ms, color 120ms;
+}
+.mt-start:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.mt-start:disabled { opacity: .6; cursor: default; }
+
+.mt-more { padding: 6px 10px 0; font-size: 11px; color: var(--fg-tertiary); }
+.mt-error {
+  padding: 8px 10px; border-radius: 9px; font-size: 12px;
+  background: var(--rag-red-soft); color: var(--rag-red);
+}
+.mt-empty { text-align: center; padding: 34px 16px; color: var(--fg-tertiary); }
+.mt-empty-tile {
+  display: inline-flex; width: 42px; height: 42px; border-radius: 50%;
+  background: var(--rag-green-soft); color: var(--rag-green);
+  align-items: center; justify-content: center; margin-bottom: 10px;
+}
+.mt-empty-title { font-size: 13px; font-weight: 600; color: var(--fg-secondary); }

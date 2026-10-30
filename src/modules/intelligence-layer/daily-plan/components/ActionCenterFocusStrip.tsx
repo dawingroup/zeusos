@@ -10,13 +10,14 @@
 import { useNavigate } from 'react-router-dom';
 import { Clock, Target } from 'lucide-react';
 
-import { useTodayPlan } from '../hooks/useTodayPlan';
+import { useMyTasks } from '../../context/MyTasksContext';
 import { isWrapUpDue } from '../format';
 
 export function ActionCenterFocusStrip({ nowMs = Date.now() }: { nowMs?: number }) {
   const navigate = useNavigate();
-  const { plan, hasPlan, loading, doneCount, total, reviewed } = useTodayPlan();
-  if (loading || !hasPlan || !plan) return null;
+  const { today } = useMyTasks();
+  if (!today || today.loading || !today.hasPlan || !today.plan) return null;
+  const { plan, doneCount, total, reviewed } = today;
   const due = isWrapUpDue(plan, nowMs);
   return (
     <button

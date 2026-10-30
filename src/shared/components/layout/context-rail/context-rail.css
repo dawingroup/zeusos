@@ -1,0 +1,115 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Context rail — the shell's single right column (Actions · Tasks · Messages
+   · Ask). Chrome, not content: flat surface, one border-left. Fixed under the
+   top bar like the sidebar beside the canvas: >=1440 the canvas gives up a
+   margin (push), below that it slides over the canvas (overlay).
+   ════════════════════════════════════════════════════════════════════════ */
+:root { --rail-w: 340px; }
+
+.context-rail {
+  position: fixed; top: var(--shell-top, 56px); right: 0; bottom: 0; z-index: 45;
+  width: var(--rail-w); max-width: 100vw; min-height: 0;
+  display: flex; flex-direction: column;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border-default);
+  animation: railIn 180ms cubic-bezier(.2, .9, .2, 1) both;
+}
+@keyframes railIn { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.context-rail[data-mode="overlay"] { box-shadow: -16px 0 40px -18px rgba(20, 12, 24, 0.28); }
+.rail-scrim {
+  position: fixed; top: var(--shell-top, 56px); left: 0; right: 0; bottom: 0; z-index: 44;
+  border: 0; padding: 0; cursor: default;
+  background: rgba(20, 20, 22, 0.10); animation: railFade 160ms ease both;
+}
+@keyframes railFade { from { opacity: 0; } to { opacity: 1; } }
+
+.rail-head {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 8px 8px 8px 10px; border-bottom: 1px solid var(--border-subtle);
+  min-height: 48px;
+}
+.rail-segs { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.rail-segs::-webkit-scrollbar { display: none; }
+.rail-seg {
+  display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+  height: 30px; padding: 0 9px; border-radius: 8px; border: 0;
+  background: transparent; color: var(--fg-secondary);
+  font: inherit; font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.rail-seg:hover { background: var(--bg-sunken); color: var(--fg-primary); }
+.rail-seg:focus-visible, .rail-close:focus-visible, .rail-trigger:focus-visible, .rail-foot-btn:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: -2px;
+}
+.rail-seg.active { background: var(--accent-soft); color: var(--accent); }
+/* The segments fit in 340px because only the active one spells itself out. */
+.rail-seg:not(.active) { padding: 0 8px; }
+.rail-seg:not(.active) > span { display: none; }
+.rail-seg em {
+  font-style: normal; font-size: 10px; font-weight: 600; line-height: 1;
+  min-width: 16px; height: 16px; padding: 0 4px; border-radius: 100px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg-sunken); color: var(--fg-secondary); font-variant-numeric: tabular-nums;
+}
+.rail-seg.active em { background: var(--accent); color: var(--accent-fg); }
+.rail-seg em.hot { background: var(--rag-red); color: #fff; }
+.rail-close {
+  flex-shrink: 0; display: grid; place-items: center; width: 30px; height: 30px;
+  border: 0; border-radius: 8px; background: transparent; color: var(--fg-tertiary); cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.rail-close:hover { background: var(--bg-sunken); color: var(--fg-secondary); }
+
+.rail-sub { flex-shrink: 0; padding: 10px 14px 4px; font-size: 11.5px; color: var(--fg-tertiary); }
+.rail-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.rail-body.rail-actions { padding: 6px 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.rail-foot {
+  flex-shrink: 0; margin-top: auto; display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-top: 1px solid var(--border-subtle);
+}
+.rail-foot > span { font-size: 11px; color: var(--fg-tertiary); }
+.rail-foot-links { display: inline-flex; align-items: center; gap: 2px; }
+.rail-foot-btn {
+  display: inline-flex; align-items: center; gap: 3px;
+  border: 0; background: transparent; cursor: pointer; font: inherit;
+  font-size: 11.5px; font-weight: 500; color: var(--fg-secondary); padding: 4px 6px; border-radius: 6px;
+}
+.rail-foot-btn:hover { color: var(--fg-primary); background: var(--bg-sunken); }
+
+/* Messages segment — the list or the thread fills the body and scrolls itself,
+   so the thread's composer stays pinned at the bottom. */
+.rail-body.rail-messages { display: flex; flex-direction: column; overflow: hidden; }
+/* An open thread needs the height: its header has "open in Comms" already. */
+.context-rail:has(.rail-thread-view) .rail-sub,
+.context-rail:has(.rail-thread-view) .rail-foot { display: none; }
+
+/* Ask segment — the assistant panel fills the rail body and scrolls itself. */
+.rail-body.rail-ask { display: flex; flex-direction: column; overflow: hidden; }
+
+/* Top-bar trigger */
+.rail-trigger {
+  display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 10px 0 9px; flex-shrink: 0;
+  border-radius: 8px; border: 1px solid var(--border-default); background: var(--bg-surface);
+  color: var(--fg-secondary); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+.rail-trigger:hover { background: var(--bg-sunken); color: var(--fg-primary); }
+.rail-trigger.open { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+.rail-trigger[data-blocking="true"]:not(.open) {
+  color: var(--rag-red); border-color: color-mix(in oklab, var(--rag-red) 35%, transparent);
+}
+.rail-trigger em {
+  font-style: normal; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 100px;
+  background: var(--fg-primary); color: var(--bg-surface); font-size: 10.5px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums;
+}
+.rail-trigger[data-blocking="true"] em { background: var(--rag-red); color: #fff; }
+.rail-trigger.open em { background: var(--accent); color: var(--accent-fg); }
+@media (max-width: 1180px) {
+  .rail-trigger-label { display: none; }
+  .rail-trigger { padding: 0 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .context-rail, .rail-scrim { animation: none; }
+}

@@ -4,4 +4,3 @@
 // ============================================================================
 
 export { AIAssistantPanel } from './AIAssistantPanel';
-export { AIAssistantFAB } from './AIAssistantFAB';

@@ -4,7 +4,7 @@
 // Main dashboard for AI intelligence features
 // ============================================================================
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import {
   Brain,
   Lightbulb,
@@ -34,7 +34,7 @@ import { NaturalLanguageSearch } from '../components/query/NaturalLanguageSearch
 import { SuggestionCard } from '../components/shared/SuggestionCard';
 import { AnomalyAlert } from '../components/shared/AnomalyAlert';
 import { PredictionCard } from '../components/predictions/PredictionCard';
-import { AIAssistantFAB } from '../components/assistant/AIAssistantFAB';
+import { useRailStore } from '@/shared/stores/railStore';
 import { naturalLanguageQueryService } from '../services/naturalLanguageQueryService';
 
 type TabView = 'overview' | 'suggestions' | 'anomalies' | 'predictions';
@@ -64,6 +64,13 @@ const IntelligenceLayerDashboardPage: React.FC = () => {
       predictions: predictions.slice(0, 3).map((p) => `${p.title} (${Math.round(p.confidence * 100)}% confidence)`),
     },
   }), [activeTab, suggestions, anomalies, predictions, insights]);
+
+  // The rail's Ask segment is the one assistant; this page hands it its signals.
+  const setAskContext = useRailStore((s) => s.setAskContext);
+  useEffect(() => {
+    setAskContext(assistantContext);
+    return () => setAskContext(null);
+  }, [assistantContext, setAskContext]);
 
   const handleNLQuery = useCallback(async (queryText: string) => {
     return naturalLanguageQueryService.processQuery(queryText);
@@ -355,9 +362,6 @@ const IntelligenceLayerDashboardPage: React.FC = () => {
           {renderPredictionsTab()}
         </TabsContent>
       </Tabs>
-
-      {/* AI Assistant FAB */}
-      <AIAssistantFAB context={assistantContext} />
     </div>
   );
 };
