@@ -55,8 +55,9 @@ import { useNavigationStore } from '@/shared/stores/navigationStore';
 import { CommandPalette } from '@/core/components/navigation/CommandPalette';
 import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
 import { GlobalTaskButton } from '@/modules/intelligence-layer/components/GlobalTaskButton';
-import { AIAssistantFAB } from '@/modules/intelligence-layer/components/assistant/AIAssistantFAB';
-import { ActionCenter } from '@/modules/intelligence-layer/components/ActionCenter';
+import { ActionQueueProvider, useActionQueue } from '@/modules/intelligence-layer/components/action-center';
+import { ContextRail, RailTrigger, useRailMode, useRailShortcut, useShellTop } from './context-rail';
+import { useRailStore } from '@/shared/stores/railStore';
 import { ToastHost } from '@/shared/components/feedback/ToastHost';
 import {
   getAllCommandItems,
@@ -175,7 +176,19 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
+/**
+ * The shell is wrapped in the provider the context rail reads: the trigger, the
+ * Actions segment and the first-run default share ONE action queue.
+ */
 export function AppShell({ children }: AppShellProps) {
+  return (
+    <ActionQueueProvider>
+      <AppShellFrame>{children}</AppShellFrame>
+    </ActionQueueProvider>
+  );
+}
+
+function AppShellFrame({ children }: AppShellProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -249,6 +262,28 @@ export function AppShell({ children }: AppShellProps) {
     ];
     return () => unsubs.forEach((unsub) => unsub());
   }, [whatsappEnabled]);
+
+  // The context rail — what needs you, and the assistant, in ONE collapsible
+  // right column (see context-rail/ContextRail.tsx). It replaced the floating
+  // Action Center panel and the assistant FAB that sat over row actions.
+  const railOpen = useRailStore((s) => s.open);
+  const railInitialised = useRailStore((s) => s.initialised);
+  const setRailOpen = useRailStore((s) => s.setOpen);
+  const applyRailFirstRun = useRailStore((s) => s.applyFirstRun);
+  const railMode = useRailMode();
+  const actionQueue = useActionQueue();
+  useRailShortcut();
+  const desktopHeaderRef = React.useRef<HTMLElement>(null);
+  const mobileHeaderRef = React.useRef<HTMLElement>(null);
+  useShellTop([desktopHeaderRef, mobileHeaderRef]);
+
+  // First load only: the rail opens by itself when something is BLOCKING, and
+  // stays shut otherwise. Decided once the queue has loaded; after that (or
+  // after the person touches the rail) its state is theirs and persists.
+  useEffect(() => {
+    if (railInitialised || actionQueue.loading) return;
+    applyRailFirstRun(actionQueue.blockingCount);
+  }, [railInitialised, actionQueue.loading, actionQueue.blockingCount, applyRailFirstRun]);
 
   // Track desktop breakpoint for sidebar rail behavior
   const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
@@ -662,6 +697,7 @@ export function AppShell({ children }: AppShellProps) {
           Row 2: corporate service pills. On lg+, left-padded to start at the
           sidebar's right edge (sidebar: w-16 collapsed, w-60 expanded). */}
       <header
+        ref={desktopHeaderRef}
         className={cn(
           'hidden lg:flex sticky top-0 z-40 flex-col transition-shadow duration-200',
           'border-b border-[var(--border-default)] bg-[var(--bg-surface)]',
@@ -695,11 +731,6 @@ export function AppShell({ children }: AppShellProps) {
             subsidiaryId={currentSubsidiary?.id}
           />
 
-          {/* (Tasks quick-access removed from the desktop header — the
-              floating Action Center now surfaces "needs a person now" work.
-              Mobile keeps its GlobalTaskButton since the Action Center is
-              desktop-only.) */}
-
           {/* Messaging — internal team chat (/comms). Always available; WhatsApp
               folds into the same surface once enabled. (/whatsapp is not routed.) */}
           <Button
@@ -716,6 +747,9 @@ export function AppShell({ children }: AppShellProps) {
               </span>
             )}
           </Button>
+
+          {/* The context rail's door: what needs you. */}
+          <RailTrigger unread={totalMessagingUnread} />
 
           {/* Global quick-add (+) — dropdown of "create" deep-links. */}
           <DropdownMenu>
@@ -824,7 +858,8 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Mobile Header */}
-      <header className={cn(
+      <header
+        ref={mobileHeaderRef} className={cn(
         "lg:hidden sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 transition-shadow duration-200",
         isScrolled && "shadow-sm"
       )}>
@@ -851,6 +886,7 @@ export function AppShell({ children }: AppShellProps) {
         {/* AI Intelligence + Tasks - Mobile */}
         <AIIntelligenceMenu />
         <GlobalTaskButton />
+        <RailTrigger unread={totalMessagingUnread} />
 
         {/* Messaging - Mobile — internal team chat (/comms), always available. */}
         <Button
@@ -1246,27 +1282,29 @@ export function AppShell({ children }: AppShellProps) {
             'flex-1 min-w-0',
             sidebarExpanded ? 'lg:ml-60' : 'lg:ml-16'
           )}
+          style={railOpen && railMode === 'push' ? { marginRight: 'var(--rail-w)' } : undefined}
         >
           {children}
         </main>
       </div>
 
-      {/* UI Refresh v3 — Action Center: floating "needs a person now" panel,
-          wired to the real AI task inbox. Renders nothing when the inbox is
-          empty, so it never adds chrome. Desktop only (lg+). */}
-      <div className="hidden lg:block">
-        <ActionCenter />
-      </div>
+      {/* The context rail. Overlay mode gets a scrim that closes it. */}
+      {railOpen && railMode === 'overlay' && (
+        <button
+          type="button"
+          className="rail-scrim"
+          aria-label="Close the context rail"
+          tabIndex={-1}
+          onClick={() => setRailOpen(false)}
+        />
+      )}
+      <ContextRail
+        mode={railMode}
+        assistantContext={{ currentModule: location.pathname.split('/')[1] || 'general' }}
+      />
 
       {/* Toast bus + optimistic-write failure reporter (shared/components/feedback). */}
       <ToastHost />
-
-      {/* Global AI Assistant FAB */}
-      <AIAssistantFAB
-        context={{
-          currentModule: location.pathname.split('/')[1] || 'general',
-        }}
-      />
     </div>
   );
 }

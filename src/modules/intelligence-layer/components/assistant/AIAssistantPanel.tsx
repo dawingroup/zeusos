@@ -7,8 +7,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Send,
-  X,
-  Minimize2,
   Copy,
   BarChart3,
   Briefcase,
@@ -49,13 +47,12 @@ import type { AssistantMessage } from '../../types';
 interface AIAssistantPanelProps {
   open: boolean;
   onClose: () => void;
-  onMinimize?: () => void;
   initialMode?: AssistantModeId;
   context?: Record<string, any>;
   companyId?: string;
-  /** 'floating' = the bottom-right FAB drawer (default); 'full' = embedded
-   *  full-height page surface (AIAssistantPage). (Phase 3.1) */
-  variant?: 'floating' | 'full';
+  /** 'rail' = inline in the shell's context rail (default); 'full' = embedded
+   *  full-height page surface (AIAssistantPage). */
+  variant?: 'rail' | 'full';
 }
 
 const modeIcons: Record<AssistantModeId, React.ReactNode> = {
@@ -68,12 +65,11 @@ const modeIcons: Record<AssistantModeId, React.ReactNode> = {
 
 export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
   open,
-  onClose,
-  onMinimize,
+  onClose: _onClose,
   initialMode = 'general',
   context,
   companyId: propCompanyId,
-  variant = 'floating',
+  variant = 'rail',
 }) => {
   const { user } = useAuth();
   // Default scope is the group brain (zeus-group) — the assistant spans all
@@ -317,7 +313,7 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
       className={
         variant === 'full'
           ? 'flex flex-col w-full h-[calc(100vh-8rem)] rounded-xl overflow-hidden bg-background border'
-          : 'fixed bottom-6 right-6 w-96 max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] flex flex-col rounded-xl shadow-2xl overflow-hidden z-50 bg-background border'
+          : 'flex flex-col flex-1 min-h-0 overflow-hidden bg-background'
       }
     >
       {/* Header */}
@@ -379,30 +375,6 @@ export const AIAssistantPanel: React.FC<AIAssistantPanelProps> = ({
             <TooltipContent>New Conversation</TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        {onMinimize && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onMinimize}>
-                  <Minimize2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Minimize</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-        {variant !== 'full' && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-card/20" onClick={onClose}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Close</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
       </div>
 
       {/* Messages */}

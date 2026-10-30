@@ -1,8 +1,8 @@
 /**
- * ActionCenter — urgency derivation tests (UI Refresh v3).
+ * Action queue — urgency derivation and ordering.
  */
 import { describe, expect, it } from 'vitest';
-import { urgencyOf } from '../ActionCenter';
+import { buildActionItems, urgencyOf } from '../config';
 import type { EmployeeTask } from '@/modules/intelligence-layer/hooks/useEmployeeTaskInbox';
 
 const NOW = 1_700_000_000_000;
@@ -54,5 +54,35 @@ describe('ActionCenter urgencyOf', () => {
 
   it('no due date + low priority is for-info', () => {
     expect(urgencyOf(task({ priority: 'P2' }), NOW)).toBe('info');
+  });
+});
+
+describe('buildActionItems', () => {
+  it('drops closed and dismissed tasks and puts the worst first', () => {
+    const items = buildActionItems(
+      [
+        task({ id: 'info', priority: 'P3' }),
+        task({ id: 'done', status: 'completed' }),
+        task({ id: 'gone', priority: 'P0' }),
+        task({ id: 'block', priority: 'P0' }),
+        task({ id: 'urgent', priority: 'P1' }),
+      ],
+      new Set(['gone']),
+      NOW,
+    );
+    expect(items.map((i) => i.task.id)).toEqual(['block', 'urgent', 'info']);
+  });
+
+  it('orders within a band by the soonest due date, undated last', () => {
+    const items = buildActionItems(
+      [
+        task({ id: 'undated', priority: 'P1' }),
+        task({ id: 'later', priority: 'P1', dueDate: new Date(NOW + 9e7) }),
+        task({ id: 'sooner', priority: 'P1', dueDate: new Date(NOW + 9e6) }),
+      ],
+      new Set(),
+      NOW,
+    );
+    expect(items.map((i) => i.task.id)).toEqual(['sooner', 'later', 'undated']);
   });
 });
