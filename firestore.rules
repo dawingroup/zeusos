@@ -316,26 +316,6 @@ service cloud.firestore {
         );
     }
 
-    function isProjectMember(projectId) {
-      // Admin check FIRST — short-circuits before we read the project
-      // doc. Previously a missing / unreadable project caused the whole
-      // function to throw (Firestore evaluates the `let` eagerly) even
-      // for admins, surfacing as "Missing or insufficient permissions"
-      // on flows like Design Studio → DesignItem parts sync.
-      return isAuthenticated() && (
-        isAdmin()
-        || (
-          exists(/databases/$(database)/documents/designProjects/$(projectId))
-          && (
-            get(/databases/$(database)/documents/designProjects/$(projectId)).data.createdBy == request.auth.uid
-            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.createdBy == request.auth.token.email
-            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.assignedDesigner == request.auth.token.email
-            || get(/databases/$(database)/documents/designProjects/$(projectId)).data.assignedEngineer == request.auth.token.email
-          )
-        )
-      );
-    }
-    
     // ============================================
     // Cutlist Processor Collections
     // ============================================
@@ -1452,28 +1432,6 @@ service cloud.firestore {
       return isAuthenticated() && getUserOrg() == orgId;
     }
     
-    // Helper: Check if user is MatFlow project member
-    function isMatFlowProjectMember(orgId, projectId) {
-      let project = get(/databases/$(database)/documents/organizations/$(orgId)/matflow_projects/$(projectId)).data;
-      let userId = request.auth.uid;
-      let userEmail = request.auth.token.email;
-      
-      return isOrgMember(orgId) && (
-        project.createdBy == userId ||
-        userId in project.memberIds
-      );
-    }
-    
-    // Helper: Check MatFlow capability
-    function hasMatFlowCapability(orgId, projectId, capability) {
-      let project = get(/databases/$(database)/documents/organizations/$(orgId)/matflow_projects/$(projectId)).data;
-      let userId = request.auth.uid;
-      
-      // Check if user has capability in their member entry
-      return userId in project.memberCapabilities && 
-        capability in project.memberCapabilities[userId];
-    }
-    
     // ----------------------------------------
     // Shared Helper Functions
     // Retained from the (now-removed) advisory platform — still used by
@@ -1501,10 +1459,6 @@ service cloud.firestore {
       return request.auth.token;
     }
     
-    function hasRole(role) {
-      return isAuthenticated() && getClaims().role == role;
-    }
-
     function hasAnyRole(roles) {
       return isAuthenticated() && (
         getClaims().role in roles
@@ -1561,15 +1515,6 @@ service cloud.firestore {
       );
     }
     
-    function hasSubsidiaryAccess(subsidiaryId) {
-      return isAdmin() || isExecutive() || belongsToSubsidiary(subsidiaryId);
-    }
-    
-    function hasSubsidiaryWriteAccess(subsidiaryId) {
-      return isAdmin() || (belongsToSubsidiary(subsidiaryId) && 
-        hasAnyRole(['subsidiary_admin', 'manager', 'team_lead']));
-    }
-    
     function isOwner(ownerId) {
       return isAuthenticated() && request.auth.uid == ownerId;
     }
@@ -1578,11 +1523,6 @@ service cloud.firestore {
       return isAuthenticated() && has('createdBy') && resource.data.createdBy == request.auth.uid;
     }
 
-    function hasValidTimestamps() {
-      return has('createdAt') && request.resource.data.createdAt == resource.data.createdAt &&
-             request.resource.data.updatedAt == request.time;
-    }
-    
     // Note: hasRequiredFields is already defined above at line ~520
     // Use hasRequiredFields(request.resource.data, fields) for v2.0 rules
     
