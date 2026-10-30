@@ -31,7 +31,10 @@ async function getAnthropic(model) {
   }
   const AnthropicModule = require('@anthropic-ai/sdk');
   const Anthropic = AnthropicModule.default || AnthropicModule;
-  return { client: new Anthropic({ apiKey: key }), model: model || DEFAULT_MODEL };
+  // The one boundary (utils/claudeClient.wrapClientForApiSafety): sanitised,
+  // policy-checked, recorded to the usage ledger, provider errors translated.
+  const { wrapClientForApiSafety } = require('../utils/claudeClient');
+  return { client: wrapClientForApiSafety(new Anthropic({ apiKey: key })), model: model || DEFAULT_MODEL };
 }
 
 module.exports = { getAnthropic, DEFAULT_MODEL };

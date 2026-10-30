@@ -13,8 +13,11 @@
  * callable `runAgentWatchersNow` for manual runs / verification.
  */
 const admin = require('firebase-admin');
-const { onSchedule } = require('firebase-functions/v2/scheduler');
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+// Attributed schedule (stream D): every model call beneath it is recorded as trigger 'scheduled'.
+const { onAiSchedule: onSchedule } = require('../../utils/aiScheduled');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../../utils/aiCallable');
 const { logger } = require('firebase-functions');
 
 const { dispatch } = require('../dispatcher');

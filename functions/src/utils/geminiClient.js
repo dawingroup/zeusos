@@ -83,7 +83,7 @@ const MODEL_CONFIGS = {
  * @param {object} overrides - Optional config overrides
  * @returns {GenerativeModel}
  */
-function getModel(apiKey, preset = 'flash', overrides = {}) {
+function getModelUnwrapped(apiKey, preset = 'flash', overrides = {}) {
   const genAI = getGenAI(apiKey);
   if (!genAI) {
     throw new Error('Gemini API key not provided');
@@ -99,6 +99,42 @@ function getModel(apiKey, preset = 'flash', overrides = {}) {
     },
   });
 }
+
+/**
+ * The Gemini boundary (stream D): every `generateContent` is RECORDED to the
+ * usage ledger (tokens incl. thinking, cost, outcome, latency) and a provider
+ * failure is translated into a sentence the caller can act on. A prompt-level
+ * failure is returned untouched.
+ */
+function instrumentModel(model, modelName, deps = {}) {
+  if (!model || typeof model.generateContent !== 'function' || model.__aiInstrumented) return model;
+  const generate = model.generateContent.bind(model);
+  model.generateContent = async (...args) => {
+    const ledger = require('./aiUsageLedger');
+    const { mapGoogleError } = require('./aiProviderErrors');
+    const started = Date.now();
+    try {
+      const result = await generate(...args);
+      const response = result && result.response;
+      let outcome = 'ok';
+      try { if (response && typeof response.text === 'function' && !String(response.text() || '').trim()) outcome = 'empty'; } catch { outcome = 'empty'; }
+      void ledger.recordAiUsage({ provider: 'google', model: modelName, outcome, latencyMs: Date.now() - started, usage: ledger.usageFromGemini(response) }, deps);
+      return result;
+    } catch (err) {
+      void ledger.recordAiUsage({ provider: 'google', model: modelName, outcome: ledger.classifyError(err), latencyMs: Date.now() - started, errorMessage: err && err.message, usage: {} }, deps);
+      throw mapGoogleError(err);
+    }
+  };
+  model.__aiInstrumented = true;
+  return model;
+}
+
+function getModel(apiKey, preset = 'flash', overrides = {}) {
+  const model = getModelUnwrapped(apiKey, preset, overrides);
+  const config = MODEL_CONFIGS[preset] || MODEL_CONFIGS.flash;
+  return instrumentModel(model, overrides.model || config.model);
+}
+
 
 /**
  * Select model complexity based on task
@@ -212,6 +248,7 @@ async function* streamContent(model, prompt) {
 module.exports = {
   getGenAI,
   getModel,
+  instrumentModel,
   selectModelByComplexity,
   parseJsonResponse,
   generateWithRetry,

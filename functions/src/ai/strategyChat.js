@@ -15,7 +15,9 @@
  * rewrite a single stored document_section by id.
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');

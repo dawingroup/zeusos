@@ -4825,3 +4825,13 @@ exports.draftTasksWithAi = draftTasksWithAi;
 const { memoAction, draftMemoSection } = require('./src/memos');
 exports.memoAction = memoAction;
 exports.draftMemoSection = draftMemoSection;
+
+// ─── AI platform layer (DawinOS stream D port — docs/AI_PLATFORM_LAYER.md) ───
+// Every model call is recorded to `ai_usage_events` at the client boundaries
+// (utils/claudeClient, ai/_anthropic, utils/geminiClient) and attributed by
+// the entry-point wrappers (onAiCall / onAiSchedule / onAiDocument*). These
+// two jobs roll the ledger into `ai_usage_daily` / `ai_usage_monthly` and
+// raise budget alerts from `ai_policy/global`.
+const { aiUsageRollupHourly, aiUsageRollupDaily } = require('./src/ai-usage/rollup');
+exports.aiUsageRollupHourly = aiUsageRollupHourly;
+exports.aiUsageRollupDaily = aiUsageRollupDaily;
