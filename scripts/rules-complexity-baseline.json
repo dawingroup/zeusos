@@ -1,9 +1,9 @@
 {
   "_comment": "Measurements of a firestore.rules that RELEASED and was verified live by content. A high-water mark, not the current size. Move it only per scripts/check-rules-complexity.cjs.",
-  "releasedAt": "Port B ruleset (2026-10-25), measured BEFORE its first release — the rules deploy of that PR is the verification; the previous main (ddf6f03, live) measured bytes 86589 / allowStatements 1112 / functions 40 / documentReads 37 / storedDocumentReads 129. Once this ruleset is live, this note should name the commit.",
-  "bytes": 92140,
-  "allowStatements": 1178,
-  "functions": 41,
-  "documentReads": 37,
-  "storedDocumentReads": 146
+  "releasedAt": "4ebd3be (port-b-repo-guards = main through #174 + Port B), released 2026-10-30 09:21 EAT via `firebase-safe.sh deploy --only firestore:rules`, verified live by content (byte-identical to firestore.rules.deploy, 94094 bytes). The deploy listed 7 unused functions (isProjectMember, isMatFlowProjectMember, hasMatFlowCapability, hasRole, hasSubsidiaryAccess, hasSubsidiaryWriteAccess, hasValidTimestamps) and 26 compiler warnings, all inside them — delete those first when the next change needs room. Previous high-water mark: 92140 bytes / 1178 allow / 41 functions / 37 reads / 146 stored reads (2026-10-25, unreleased).",
+  "bytes": 94094,
+  "allowStatements": 1127,
+  "functions": 49,
+  "documentReads": 44,
+  "storedDocumentReads": 163
 }
