@@ -803,14 +803,16 @@ export async function createInvite(
 }
 
 export async function getPendingInvites(orgId: string = DEFAULT_ORG_ID): Promise<UserInvite[]> {
-  const q = query(
-    getInvitesRef(orgId),
-    where('status', '==', 'pending'),
-    orderBy('createdAt', 'desc')
-  );
+  // Single-field `where` only — no composite index required. We sort newest
+  // first in JS because the invite list is tiny (admin-only). A previous
+  // version added `orderBy('createdAt', 'desc')`, which turns this into a
+  // composite query and silently returned nothing on `zeusos` production
+  // where the (status, createdAt) index was never provisioned — so freshly
+  // created invites never showed up in the Pending Invites tab.
+  const q = query(getInvitesRef(orgId), where('status', '==', 'pending'));
   const snapshot = await getDocs(q);
-  
-  return snapshot.docs.map((doc) => {
+
+  const invites = snapshot.docs.map((doc) => {
     const data = doc.data();
     return {
       ...data,
@@ -819,6 +821,9 @@ export async function getPendingInvites(orgId: string = DEFAULT_ORG_ID): Promise
       expiresAt: data.expiresAt?.toDate?.()?.toISOString() || data.expiresAt,
     } as UserInvite;
   });
+
+  invites.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  return invites;
 }
 
 export async function revokeInvite(orgId: string, inviteId: string): Promise<void> {
