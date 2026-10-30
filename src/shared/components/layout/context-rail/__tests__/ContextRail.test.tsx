@@ -56,7 +56,7 @@ const rail = () => useRailStore.getState();
 
 beforeEach(() => {
   setQueue(0);
-  act(() => useRailStore.setState({ ...RAIL_DEFAULT, askPrefill: null, askContext: null }));
+  act(() => useRailStore.setState({ ...RAIL_DEFAULT, askContext: null }));
 });
 
 describe('the rail', () => {
@@ -111,6 +111,15 @@ describe('the rail', () => {
     act(() => rail().setOpen(true));
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(rail().open).toBe(false);
+  });
+});
+
+describe('the Ask segment', () => {
+  it('keeps Esc in an overlay rail, so a half-written question survives', () => {
+    act(() => rail().setSeg('ask'));
+    render(<ContextRail mode="overlay" unread={0} />);
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(rail().open).toBe(true);
   });
 });
 

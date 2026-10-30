@@ -1,7 +1,8 @@
 /**
- * AI Assistant Chat - DawinOS v2.0
+ * AI Assistant Chat - ZeusOS
  * Cloud Function to power the Intelligence Layer AI assistant
- * Uses Gemini 1.5 Flash for conversational AI responses
+ * Uses Gemini through utils/geminiClient, so every call is sanitised, checked
+ * against the AI policy and recorded on the ledger (docs/AI_PLATFORM_LAYER.md).
  * 
  * Enhanced with:
  * - Server-side conversation persistence (ai_conversations collection)
@@ -14,6 +15,8 @@ const { HttpsError } = require('firebase-functions/v2/https');
 const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { getModel } = require('../utils/geminiClient');
+const { ACTION_PROPOSAL_PROMPT, groundingBlock } = require('./assistantPrompts');
 
 const admin = require('firebase-admin');
 const { getMemoryContext } = require('../utils/memoryLoader');
@@ -93,26 +96,31 @@ async function checkRateLimit(userId) {
 // System Prompts by Mode
 // ============================================
 
+const ZEUS_CONTEXT = `Zeus Group is an East African marketing consortium of five sibling brands: Zeus The Agency, Zeus Digital, Labyrinth, Odd Gorilla and House of Zeus. Work runs as master jobs (the client engagement) and internal work orders, IWOs (what a brand delivers).`;
+
 const SYSTEM_PROMPTS = {
-  general: `You are DawinOS Assistant, an AI helper for Dawin Group — a custom millwork and furniture manufacturing company in East Africa.
-You help employees navigate the DawinOS platform, answer questions about workflows, and provide general business guidance.
-Keep responses concise, professional, and actionable. If you don't know something specific about the company's data, say so honestly.
-Focus on being helpful with: task management, design workflow questions, project status, and general business operations.`,
+  general: `You are the ZeusOS Assistant, an AI helper for Zeus Group staff.
+${ZEUS_CONTEXT}
+You help people navigate ZeusOS, answer questions about workflows, and give general business guidance.
+Keep responses concise, professional and actionable. If you don't know something specific about the company's data, say so honestly.
+Focus on: task management, campaign and job workflow, approvals, and day-to-day agency operations.`,
 
-  data_analyst: `You are DawinOS Data Analyst, specialized in analyzing business metrics for Dawin Group.
-You help interpret data trends, identify patterns, and provide data-driven recommendations.
-When analyzing, consider: production efficiency, project timelines, resource utilization, financial metrics, and quality indicators.
-Present insights clearly with specific numbers when possible. Suggest actionable next steps based on the data.`,
+  data_analyst: `You are the ZeusOS Data Analyst, specialised in the business metrics of Zeus Group.
+${ZEUS_CONTEXT}
+You help interpret trends, identify patterns and give data-driven recommendations.
+Consider: budget burn, SLA performance, brand capacity, media spend, margins and client profitability.
+Present insights clearly, with specific numbers when you have them, and suggest actionable next steps. Never invent a number.`,
 
-  strategic_advisor: `You are DawinOS Strategic Advisor for Dawin Group, a custom millwork and furniture manufacturing company in East Africa.
-You provide strategic guidance on: market positioning, operational efficiency, growth opportunities, competitive analysis, and long-term planning.
-Consider the East African market context, manufacturing industry trends, and the company's focus on custom millwork.
-Give balanced perspectives with clear pros and cons for any strategic recommendation.`,
+  strategic_advisor: `You are the ZeusOS Strategic Advisor for Zeus Group.
+${ZEUS_CONTEXT}
+You give strategic guidance on market positioning, operational efficiency, growth opportunities, competitive analysis and long-term planning.
+Consider the East African market and the economics of a multi-brand agency group, including conflicts between competing clients.
+Give balanced perspectives, with clear pros and cons for any recommendation.`,
 
-  document_expert: `You are DawinOS Document Expert, specialized in document review and creation for Dawin Group.
-You help with: design documentation, technical specifications, project proposals, reports, and process documentation.
-Focus on clarity, completeness, and adherence to industry standards for furniture manufacturing.
-Provide specific suggestions for improvement and flag any missing critical information.`,
+  document_expert: `You are the ZeusOS Document Expert, specialised in document review and creation for Zeus Group.
+${ZEUS_CONTEXT}
+You help with creative briefs, proposals, statements of work, reports and process documentation.
+Focus on clarity and completeness. Give specific suggestions and flag any missing critical information.`,
 };
 
 // ============================================
@@ -203,7 +211,7 @@ async function persistConversation(conversationId, companyId, userId, mode, user
 // Memory Extraction Trigger
 // ============================================
 
-const EXTRACTION_SYSTEM_PROMPT = `You are a business knowledge extraction system for Dawin Group, a custom millwork and furniture manufacturing company in East Africa.
+const EXTRACTION_SYSTEM_PROMPT = `You are a business knowledge extraction system for Zeus Group, an East African marketing consortium of five sibling brands.
 
 Analyze the conversation and extract persistent business knowledge that would be valuable to remember for future interactions.
 
@@ -240,8 +248,7 @@ const DEDUP_SIMILARITY_THRESHOLD = 0.75;
 async function triggerMemoryExtraction(conversationId, companyId, userId, messages) {
   try {
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY.value());
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+    const model = getModel(GEMINI_API_KEY.value(), 'flash', {
       generationConfig: {
         maxOutputTokens: 2048,
         temperature: 0.3,
@@ -406,7 +413,7 @@ const assistantChat = onCall(
     const assistantMode = VALID_MODES.includes(request.data.mode)
       ? request.data.mode
       : 'general';
-    let systemPrompt = SYSTEM_PROMPTS[assistantMode];
+    let systemPrompt = SYSTEM_PROMPTS[assistantMode] + ACTION_PROPOSAL_PROMPT + groundingBlock(request.data.context);
 
     // Load and inject business memory into system prompt (using shared loader)
     const memModule = MODE_TO_MODULE[assistantMode] || 'assistant';
@@ -416,33 +423,28 @@ const assistantChat = onCall(
     }
 
     try {
-      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY.value());
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
-        generationConfig: {
-          maxOutputTokens: 2048,
-          temperature: 0.7,
-        },
+      const model = getModel(GEMINI_API_KEY.value(), 'flash', {
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.7 },
       });
 
-      // Build conversation history for context
       // Gemini requires history to start with 'user' role — drop leading assistant messages
       const trimmedHistory = conversationHistory.slice();
       while (trimmedHistory.length > 0 && trimmedHistory[0].role === 'assistant') {
         trimmedHistory.shift();
       }
-      const history = trimmedHistory
-        .map((m) => ({
+      const contents = [
+        ...trimmedHistory.map((m) => ({
           role: m.role === 'assistant' ? 'model' : 'user',
           parts: [{ text: m.content }],
-        }));
+        })),
+        { role: 'user', parts: [{ text: message }] },
+      ];
 
-      const chat = model.startChat({
-        history,
-        systemInstruction: systemPrompt,
+      // generateContent, not startChat: the ledger and the policy check wrap this call.
+      const result = await model.generateContent({
+        contents,
+        systemInstruction: { role: 'system', parts: [{ text: systemPrompt }] },
       });
-
-      const result = await chat.sendMessage(message);
       const responseText = result.response.text();
 
       // Persist conversation server-side (fire and forget)
@@ -495,6 +497,8 @@ const assistantChat = onCall(
       };
     } catch (error) {
       console.error('Gemini API error:', error);
+      // The boundary already words policy refusals and provider failures.
+      if (error instanceof HttpsError) throw error;
       throw new HttpsError(
         'internal',
         'Failed to generate AI response. Please try again.'

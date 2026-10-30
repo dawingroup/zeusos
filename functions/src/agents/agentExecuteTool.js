@@ -10,6 +10,7 @@ const { onAiCall: onCall } = require('../utils/aiCallable');
 const { logger } = require('firebase-functions');
 const { dispatch, DispatcherError } = require('./dispatcher');
 const { getToolSchema, validateAgainstSchema } = require('./toolCatalog');
+const { assertToolCapability, withChipDefaults } = require('./toolCapabilities');
 
 exports.agentExecuteTool = onCall(
   { region: 'europe-west1', timeoutSeconds: 60, memory: '256MiB' },
@@ -17,10 +18,13 @@ exports.agentExecuteTool = onCall(
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Sign in to invoke an agent tool.');
     }
-    const { agentId, toolId, input } = request.data || {};
+    const { agentId, toolId, input: rawInput } = request.data || {};
     if (!agentId || !toolId) {
       throw new HttpsError('invalid-argument', 'agentId and toolId are required');
     }
+    // onAiCall has already refused anyone who is not staff.
+    await assertToolCapability(request.auth, toolId);
+    const input = withChipDefaults(toolId, rawInput, request.auth.uid);
 
     const schemaEntry = getToolSchema(toolId);
     if (schemaEntry) {
