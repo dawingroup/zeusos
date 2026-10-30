@@ -37,6 +37,7 @@ const LoginPage = lazyWithRetry(() => import('@/pages/auth/LoginPage'));
 const ForgotPasswordPage = lazyWithRetry(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPasswordPage'));
 const VerifyEmailPage = lazyWithRetry(() => import('@/pages/auth/VerifyEmailPage'));
+const AcceptInvitePage = lazyWithRetry(() => import('@/pages/auth/AcceptInvitePage'));
 
 // ──────────────────────────────────────────────────────────────────────────
 // Account Management — Phase 3.D commercial core (Clients, MSAs, SOWs,
@@ -361,6 +362,11 @@ export const router = createBrowserRouter([
     ],
   },
   { path: '/login', element: <Navigate to="/auth/login" replace /> },
+  // Public invite-acceptance landing page. Signed-out users arriving from a
+  // shared invite link see context + a Google sign-in button; after sign-in
+  // GlobalContext's auth listener runs processNewUserInvite and matches the
+  // pending invite by email.
+  { path: '/accept-invite', element: <PageWrapper><AcceptInvitePage /></PageWrapper> },
   { path: '/privacy', element: <PageWrapper><PrivacyPolicyPage /></PageWrapper> },
   { path: '/mcp/pair', element: <PageWrapper><MCPPairingPage /></PageWrapper> },
   // Phase 5.C — public asset/collection share viewer. The resolver
