@@ -590,6 +590,14 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated(); // Allow authenticated users to create their profile
       allow update, delete: if request.auth.uid == userId || isAdmin();
+
+      // A person's own settings — `settings/preferences` carries the UI
+      // preferences GlobalContext saves and the `notificationSettings` the
+      // bell honours (stream C). Theirs to read and write; an admin may read.
+      match /settings/{settingId} {
+        allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+        allow write: if isAuthenticated() && request.auth.uid == userId;
+      }
     }
     
     // ============================================
@@ -2311,13 +2319,22 @@ service cloud.firestore {
     }
 
     // Root-level notifications collection (used by GlobalContext)
+    // In-app notices — ONE shape, written by the server only
+    // (functions/src/lib/inAppNotice.js + noticeDelivery.js, stream C):
+    // a notice names one person in `userId`, is unread while `isRead` is
+    // false, and goes where `actionUrl` says. A reader may mark their own
+    // read / archived and nothing else; no client creates a notice for
+    // somebody else (that was an open door for anyone signed in).
     match /notifications/{notificationId} {
       allow read: if isAuthenticated() && (
         resource.data.userId == request.auth.uid || isAdmin()
       );
-      allow create: if isAuthenticated();
+      allow create: if isAdmin();
       allow update: if isAuthenticated() && (
-        resource.data.userId == request.auth.uid || isAdmin()
+        (resource.data.userId == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['isRead', 'isArchived', 'readAt', 'archivedAt', 'updatedAt']))
+        || isAdmin()
       );
       allow delete: if isAuthenticated() && (
         resource.data.userId == request.auth.uid || isAdmin()
