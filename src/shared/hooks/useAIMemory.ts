@@ -58,6 +58,7 @@ interface UseAIConversationReturn {
   conversationId: string | null;
   recentConversations: AIConversation[];
   loadConversation: (conversationId: string) => void;
+  refreshRecent: () => Promise<void>;
 }
 
 export function useAIConversation(options: UseAIConversationOptions): UseAIConversationReturn {
@@ -189,8 +190,10 @@ export function useAIConversation(options: UseAIConversationOptions): UseAIConve
 
     try {
       setIsLoading(true);
+      // Null, not the current id: starting a new chat must not archive the old
+      // one, or it vanishes from the history it was just added to.
       const newConv = await startNewConversation(
-        conversation?.id || null,
+        null,
         buildFormData(),
         companyId,
         userId
@@ -204,6 +207,11 @@ export function useAIConversation(options: UseAIConversationOptions): UseAIConve
       setIsLoading(false);
     }
   }, [companyId, userId, conversation?.id, buildFormData]);
+
+  const refreshRecent = useCallback(async () => {
+    if (!companyId || !userId) return;
+    setRecentConversations(await getRecentConversations(userId, companyId, module, 10));
+  }, [companyId, userId, module]);
 
   // Load a specific conversation by ID
   const loadConversation = useCallback((conversationId: string) => {
@@ -224,6 +232,7 @@ export function useAIConversation(options: UseAIConversationOptions): UseAIConve
     conversationId: conversation?.id || null,
     recentConversations,
     loadConversation,
+    refreshRecent,
   };
 }
 

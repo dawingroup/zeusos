@@ -7,8 +7,8 @@
  *   setOpen(open)     never changes the segment
  *   setSeg(seg)       a PERSON picked a segment — also opens the rail
  *
- * `open` / `seg` / `initialised` persist; the assistant prefill and the page's
- * extra grounding are per-session and are partialized out. The transitions are
+ * `open` / `seg` / `initialised` persist; the page's extra grounding for the
+ * assistant is per-session and are partialized out. The transitions are
  * pure so they can be pinned without React (`railStore.test.ts`).
  */
 import { create } from 'zustand';
@@ -72,16 +72,12 @@ export const railApplyFirstRun = (s: RailCore, blockingCount: number): RailCore 
   s.initialised ? s : { ...s, open: blockingCount > 0, seg: 'actions', initialised: true };
 
 interface RailState extends RailCore {
-  /** Text the Ask segment should start with. */
-  askPrefill: string | null;
   /** Extra grounding a page hands the assistant on top of the shell's own. */
   askContext: Record<string, unknown> | null;
   setOpen: (open: boolean) => void;
   toggle: () => void;
   setSeg: (seg: RailSeg) => void;
   applyFirstRun: (blockingCount: number) => void;
-  openAsk: (prefill?: string) => void;
-  clearAskPrefill: () => void;
   setAskContext: (ctx: Record<string, unknown> | null) => void;
 }
 
@@ -89,15 +85,11 @@ export const useRailStore = create<RailState>()(
   persist(
     (set) => ({
       ...RAIL_DEFAULT,
-      askPrefill: null,
       askContext: null,
       setOpen: (open) => set((s) => railSetOpen(s, open)),
       toggle: () => set((s) => railSetOpen(s, !s.open)),
       setSeg: (seg) => set((s) => railSetSeg(s, seg)),
       applyFirstRun: (blockingCount) => set((s) => railApplyFirstRun(s, blockingCount)),
-      openAsk: (prefill) =>
-        set((s) => ({ ...railSetSeg(s, 'ask'), askPrefill: prefill?.trim() ? prefill : null })),
-      clearAskPrefill: () => set({ askPrefill: null }),
       setAskContext: (askContext) => set({ askContext }),
     }),
     {

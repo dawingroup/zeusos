@@ -1048,17 +1048,21 @@ service cloud.firestore {
     // brand-scoped memories match the caller's home org. `default` retained for
     // backward-compat with pre-rebrand data.
     match /ai_memory/{memoryId} {
-      allow read: if isAuthenticated() && (
+      // Staff only: these rows are appended to the assistant's system prompt, so
+      // an anonymous portal session must never be able to plant one.
+      allow read: if isStaffAuth() && (
         resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg() || isAdmin()
       );
-      allow create: if isAuthenticated() && (
+      allow create: if isStaffAuth() && (
         request.resource.data.companyId in ['default', 'zeus-group'] || request.resource.data.companyId == getUserOrg() || isAdmin()
       );
-      allow update: if isAuthenticated() && (
-        resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg() || isAdmin()
+      allow update: if isStaffAuth() && (
+        (has('companyId') && (resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg()))
+        || isAdmin()
       );
-      allow delete: if isAuthenticated() && (
-        (resource.data.createdBy == request.auth.uid && (resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg()))
+      allow delete: if isStaffAuth() && (
+        (has('createdBy') && has('companyId') && resource.data.createdBy == request.auth.uid
+          && (resource.data.companyId in ['default', 'zeus-group'] || resource.data.companyId == getUserOrg()))
         || isAdmin()
       );
     }
@@ -2542,9 +2546,11 @@ service cloud.firestore {
     // ----------------------------------------
     
     match /generatedTasks/{taskId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      // Legacy: the analytics readers still read it. Agents read tasks back, so
+      // a portal session must not be able to read or plant one.
+      allow read: if isStaffAuth();
+      allow create: if isStaffAuth();
+      allow update: if isStaffAuth();
       allow delete: if isAdmin();
     }
     

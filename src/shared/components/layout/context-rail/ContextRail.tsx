@@ -51,13 +51,14 @@ export function ContextRail({ mode, unread, assistantContext }: ContextRailProps
   const activeSeg: RailSeg = RAIL_SEGS.some((s) => s.id === seg) ? seg : 'actions';
 
   useEffect(() => {
-    if (!open || mode !== 'overlay') return;
+    // The Ask segment keeps Esc: closing would unmount a half-written question.
+    if (!open || mode !== 'overlay' || activeSeg === 'ask') return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !e.defaultPrevented) setOpen(false);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, mode, setOpen]);
+  }, [open, mode, activeSeg, setOpen]);
 
   if (!open) return null;
 

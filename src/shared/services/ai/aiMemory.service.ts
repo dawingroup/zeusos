@@ -558,6 +558,11 @@ export function subscribeToConversation(
 /**
  * Archive a conversation
  */
+/** Name a thread, so the history list says what it was about. */
+export async function updateConversationTitle(conversationId: string, title: string): Promise<void> {
+  await updateDoc(doc(conversationRef, conversationId), { title });
+}
+
 export async function archiveConversation(
   conversationId: string
 ): Promise<void> {
