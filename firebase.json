@@ -3,8 +3,11 @@
     "rules": "storage.rules"
   },
   "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "firestore.rules.deploy",
+    "indexes": "firestore.indexes.json",
+    "predeploy": [
+      "node scripts/build-firestore-rules.cjs"
+    ]
   },
   "functions": [
     {
@@ -12,7 +15,8 @@
       "runtime": "nodejs20",
       "codebase": "default",
       "predeploy": [
-        "cd zeusos-mcp-server && npm ci --prefer-offline && npm run build && mkdir -p ../functions/vendor/zeusos-mcp-server && cp -r dist/* ../functions/vendor/zeusos-mcp-server/ && cp package.json ../functions/vendor/zeusos-mcp-server/"
+        "bash scripts/deploy-functions-guard.sh",
+        "bash scripts/refresh-mcp-vendor.sh --ci"
       ]
     }
   ],
@@ -42,6 +46,7 @@
   "hosting": {
     "public": "dist",
     "predeploy": [
+      "bash scripts/deploy-branch-guard.sh",
       "bash scripts/firebase-hosting-predeploy.sh"
     ],
     "ignore": [

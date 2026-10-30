@@ -108,6 +108,41 @@ jobs:
         run: npx tsc --noEmit
 
   # ===========================================================================
+  # REPO GUARDS — rules coverage / null-safety / complexity / size, functions
+  # export integrity, deploy params. Cheap static checks (no emulators).
+  # Mirrors `npm run gate`'s rules-* and functions-exports steps.
+  # ===========================================================================
+  rules-checks:
+    name: Rules & Deploy Guards
+    runs-on: ubuntu-latest
+    needs: install
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Restore node_modules
+        uses: actions/cache@v5.0.5
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Firestore rules coverage, null-safety, complexity and size
+        run: npm run check:rules
+
+      - name: Cloud Functions export integrity
+        run: npm run check:functions-exports
+
+      - name: Deploy params vs functions/.env.zeusos
+        run: npm run check:deploy-params
+
+  # ===========================================================================
   # UNIT TESTS
   # ===========================================================================
   test:
@@ -150,7 +185,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test]
+    needs: [lint, typecheck, test, rules-checks]
     
     steps:
       - name: Checkout repository
