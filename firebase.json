@@ -12,7 +12,7 @@
   "functions": [
     {
       "source": "functions",
-      "runtime": "nodejs20",
+      "runtime": "nodejs22",
       "codebase": "default",
       "predeploy": [
         "bash scripts/deploy-functions-guard.sh",
