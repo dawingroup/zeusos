@@ -232,8 +232,8 @@ export const COMMERCIAL_NAVIGATION: NavItem[] = [
 // ============================================================================
 // SHARED UTILITY NAVIGATION (command-palette indexing only)
 // ============================================================================
-// AI Intelligence + My Tasks live in the header (AIIntelligenceMenu +
-// GlobalTaskButton); they are not in the sidebar.
+// AI Intelligence lives in the header (AIIntelligenceMenu), My Tasks in the
+// context rail; they are not in the sidebar.
 
 export const UTILITY_NAVIGATION: NavItem[] = [
   {

@@ -54,7 +54,7 @@ import { useSubsidiary } from '@/contexts/SubsidiaryContext';
 import { useNavigationStore } from '@/shared/stores/navigationStore';
 import { CommandPalette } from '@/core/components/navigation/CommandPalette';
 import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
-import { GlobalTaskButton } from '@/modules/intelligence-layer/components/GlobalTaskButton';
+import { MyTasksProvider } from '@/modules/intelligence-layer/context/MyTasksContext';
 import { ActionQueueProvider, useActionQueue } from '@/modules/intelligence-layer/components/action-center';
 import { ContextRail, RailTrigger, useRailMode, useRailShortcut, useShellTop } from './context-rail';
 import { useRailStore } from '@/shared/stores/railStore';
@@ -177,14 +177,17 @@ interface AppShellProps {
 }
 
 /**
- * The shell is wrapped in the provider the context rail reads: the trigger, the
- * Actions segment and the first-run default share ONE action queue.
+ * The shell is wrapped in the providers the context rail reads: ONE task feed
+ * and ONE action queue, shared by the trigger, the segments and the first-run
+ * default.
  */
 export function AppShell({ children }: AppShellProps) {
   return (
-    <ActionQueueProvider>
-      <AppShellFrame>{children}</AppShellFrame>
-    </ActionQueueProvider>
+    <MyTasksProvider>
+      <ActionQueueProvider>
+        <AppShellFrame>{children}</AppShellFrame>
+      </ActionQueueProvider>
+    </MyTasksProvider>
   );
 }
 
@@ -885,7 +888,6 @@ function AppShellFrame({ children }: AppShellProps) {
         </div>
         {/* AI Intelligence + Tasks - Mobile */}
         <AIIntelligenceMenu />
-        <GlobalTaskButton />
         <RailTrigger unread={totalMessagingUnread} />
 
         {/* Messaging - Mobile — internal team chat (/comms), always available. */}

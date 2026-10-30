@@ -219,7 +219,7 @@ const PRIORITY_WEIGHTS: Record<string, number> = {
   P3: 10,
 };
 
-function computeUrgencyScore(task: {
+export function computeUrgencyScore(task: {
   priority: string;
   status: string;
   dueDate?: Date;

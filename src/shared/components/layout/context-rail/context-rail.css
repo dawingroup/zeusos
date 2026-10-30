@@ -68,6 +68,7 @@
   padding: 8px 12px; border-top: 1px solid var(--border-subtle);
 }
 .rail-foot > span { font-size: 11px; color: var(--fg-tertiary); }
+.rail-foot-links { display: inline-flex; align-items: center; gap: 2px; }
 .rail-foot-btn {
   display: inline-flex; align-items: center; gap: 3px;
   border: 0; background: transparent; cursor: pointer; font: inherit;

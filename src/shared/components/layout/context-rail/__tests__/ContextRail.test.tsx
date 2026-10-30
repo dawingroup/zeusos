@@ -10,7 +10,15 @@ import { render, screen, fireEvent, act, renderHook } from '@testing-library/rea
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
-const { queue } = vi.hoisted(() => ({ queue: { current: null as unknown } }));
+const { queue, navigate } = vi.hoisted(() => ({ queue: { current: null as unknown }, navigate: vi.fn() }));
+
+vi.mock('react-router-dom', () => ({ useNavigate: () => navigate }));
+vi.mock('@/modules/intelligence-layer/components/my-tasks/RailTasks', () => ({
+  RailTasks: () => <div>tasks body</div>,
+}));
+vi.mock('@/modules/intelligence-layer/context/MyTasksContext', () => ({
+  useMyTasks: () => ({ counts: { open: 4, overdue: 1 } }),
+}));
 
 vi.mock('@/modules/intelligence-layer/components/action-center', () => ({
   useActionQueue: () => queue.current,
@@ -99,6 +107,19 @@ describe('the rail', () => {
 
     act(() => rail().setOpen(true));
     fireEvent.keyDown(window, { key: 'Escape' });
+    expect(rail().open).toBe(false);
+  });
+});
+
+describe('the Tasks segment', () => {
+  it('counts open work and offers the full views', () => {
+    act(() => rail().setSeg('tasks'));
+    render(<ContextRail mode="overlay" />);
+    expect(screen.getByRole('tab', { name: 'Tasks — 4' })).toBeInTheDocument();
+    expect(screen.getByText('tasks body')).toBeInTheDocument();
+    expect(screen.getByText('4 open · 1 overdue')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'My Day' }));
+    expect(navigate).toHaveBeenCalledWith('/tasks/today');
     expect(rail().open).toBe(false);
   });
 });

@@ -25,15 +25,16 @@ import {
 import {
   collection,
   query,
-  where,
   orderBy,
   limit,
   onSnapshot,
-  doc,
-  updateDoc,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/shared/services/firebase/firestore';
+import { pushToast } from '@/shared/components/feedback';
+import { describeCallableError } from '@/shared/utils/callableError';
+import { blockTask, completeTask, startTask, tickChecklist } from '../../daily-plan/services/tasksService';
+import { toPanelTask } from '../../utils/adminTaskRow';
 import { INTELLIGENCE_SOURCE_MODULES } from '@/modules/intelligence-layer/constants/shared';
 import { getEntityRoute, getProjectRoute } from '../../utils/getEntityRoute';
 
@@ -127,46 +128,22 @@ export function TaskManagementPanel() {
   useEffect(() => {
     setLoading(true);
 
-    const tasksRef = collection(db, 'generatedTasks');
-    let constraints: any[] = [orderBy('createdAt', 'desc'), limit(200)];
-
-    // Status filter
-    if (statusFilter !== 'all') {
-      constraints = [where('status', '==', statusFilter), ...constraints];
-    }
-
-    // Priority filter
-    if (priorityFilter !== 'all') {
-      constraints = [where('priority', '==', priorityFilter), ...constraints];
-    }
-
-    // Module filter
-    if (moduleFilter !== 'all') {
-      constraints = [where('sourceModule', '==', moduleFilter), ...constraints];
-    }
+    // The newest tasks, filtered in memory: the panel's status words are the
+    // inbox's five, which the engine spells as seven.
+    const tasksRef = collection(db, 'generated_tasks');
+    const constraints = [orderBy('createdAt', 'desc'), limit(200)];
 
     const q = query(tasksRef, ...constraints);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const taskData = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          checklistItems: (data.checklistItems || []).map((item: any, idx: number) => ({
-            id: item.id || String(idx + 1),
-            title: item.title || item.text || '',
-            description: item.description || '',
-            isRequired: item.isRequired ?? false,
-            isCompleted: item.isCompleted ?? item.completed ?? false,
-            completedAt: item.completedAt,
-            completedBy: item.completedBy,
-          })),
-        };
-      }) as GeneratedTask[];
+      const taskData = snapshot.docs.map((d) => toPanelTask(d.id, d.data())) as GeneratedTask[];
 
       // Client-side filters
       let filtered = taskData;
+
+      if (statusFilter !== 'all') filtered = filtered.filter((t) => t.status === statusFilter);
+      if (priorityFilter !== 'all') filtered = filtered.filter((t) => t.priority === priorityFilter);
+      if (moduleFilter !== 'all') filtered = filtered.filter((t) => t.sourceModule === moduleFilter);
 
       // Search filter
       if (searchQuery) {
@@ -196,48 +173,28 @@ export function TaskManagementPanel() {
     return () => unsubscribe();
   }, [statusFilter, priorityFilter, moduleFilter, searchQuery, assigneeFilter]);
 
-  // Update task status
-  const updateTaskStatus = async (taskId: string, newStatus: string) => {
+  // Every transition goes through `taskAction`, which checks who may act and
+  // writes the history row (Phase 6.E).
+  const updateTaskStatus = async (taskId: string, newStatus: 'in_progress' | 'completed' | 'blocked') => {
     try {
-      const taskRef = doc(db, 'generatedTasks', taskId);
-      const updates: Record<string, any> = {
-        status: newStatus,
-        updatedAt: Timestamp.now(),
-      };
-
-      if (newStatus === 'completed') {
-        updates.completedAt = Timestamp.now();
+      if (newStatus === 'in_progress') await startTask(taskId);
+      else if (newStatus === 'completed') await completeTask(taskId);
+      else {
+        // The reason is what reaches the person who can unblock it.
+        const reason = window.prompt('Why is this task blocked?')?.trim();
+        if (!reason) return;
+        await blockTask(taskId, reason);
       }
-
-      await updateDoc(taskRef, updates);
     } catch (error) {
-      console.error('Error updating task:', error);
+      pushToast(describeCallableError(error, 'update the task'), { tone: 'error' });
     }
   };
 
-  // Update checklist item
   const updateChecklistItem = async (taskId: string, itemId: string, isCompleted: boolean) => {
     try {
-      const task = tasks.find(t => t.id === taskId);
-      if (!task) return;
-
-      const updatedChecklist = task.checklistItems.map(item =>
-        item.id === itemId
-          ? {
-              ...item,
-              isCompleted,
-              completedAt: isCompleted ? Timestamp.now() : undefined,
-            }
-          : item
-      );
-
-      const taskRef = doc(db, 'generatedTasks', taskId);
-      await updateDoc(taskRef, {
-        checklistItems: updatedChecklist,
-        updatedAt: Timestamp.now(),
-      });
+      await tickChecklist(taskId, itemId, isCompleted);
     } catch (error) {
-      console.error('Error updating checklist:', error);
+      pushToast(describeCallableError(error, 'update the checklist'), { tone: 'error' });
     }
   };
 

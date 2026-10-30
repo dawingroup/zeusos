@@ -11,16 +11,20 @@
  */
 
 import { useEffect } from 'react';
-import { Bell, ChevronRight, Sparkles, type LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, ChevronRight, ListChecks, Sparkles, type LucideIcon } from 'lucide-react';
 
 import { ActionCenterList, useActionQueue } from '@/modules/intelligence-layer/components/action-center';
 import { AIAssistantPanel } from '@/modules/intelligence-layer/components/assistant/AIAssistantPanel';
+import { RailTasks } from '@/modules/intelligence-layer/components/my-tasks/RailTasks';
+import { useMyTasks } from '@/modules/intelligence-layer/context/MyTasksContext';
 import { useRailStore, type RailSeg } from '@/shared/stores/railStore';
 import type { RailMode } from './useRailMode';
 import './context-rail.css';
 
 const RAIL_SEGS: { id: RailSeg; label: string; icon: LucideIcon }[] = [
   { id: 'actions', label: 'Actions', icon: Bell },
+  { id: 'tasks', label: 'Tasks', icon: ListChecks },
   { id: 'ask', label: 'Ask', icon: Sparkles },
 ];
 
@@ -31,6 +35,7 @@ export interface ContextRailProps {
 }
 
 export function ContextRail({ mode, assistantContext }: ContextRailProps) {
+  const navigate = useNavigate();
   const open = useRailStore((s) => s.open);
   const seg = useRailStore((s) => s.seg);
   const setSeg = useRailStore((s) => s.setSeg);
@@ -38,6 +43,7 @@ export function ContextRail({ mode, assistantContext }: ContextRailProps) {
   const askContext = useRailStore((s) => s.askContext);
 
   const queue = useActionQueue();
+  const { counts: taskCounts } = useMyTasks();
   const activeSeg: RailSeg = RAIL_SEGS.some((s) => s.id === seg) ? seg : 'actions';
 
   useEffect(() => {
@@ -56,7 +62,12 @@ export function ContextRail({ mode, assistantContext }: ContextRailProps) {
     if (mode === 'overlay') setOpen(false);
   };
 
-  const counts: Partial<Record<RailSeg, number>> = { actions: queue.visible.length };
+  const go = (to: string) => {
+    navigate(to);
+    closeIfOverlay();
+  };
+
+  const counts: Partial<Record<RailSeg, number>> = { actions: queue.visible.length, tasks: taskCounts.open };
 
   return (
     <aside className="context-rail" data-mode={mode} role="complementary" aria-label="Context rail" data-testid="context-rail">
@@ -111,6 +122,28 @@ export function ContextRail({ mode, assistantContext }: ContextRailProps) {
               </button>
             </div>
           )}
+        </>
+      )}
+
+      {activeSeg === 'tasks' && (
+        <>
+          <div className="rail-sub">What you're on · today · everything else open</div>
+          <div className="rail-body">
+            <RailTasks onNavigate={closeIfOverlay} />
+          </div>
+          <div className="rail-foot">
+            <span>
+              {taskCounts.open} open{taskCounts.overdue ? ` · ${taskCounts.overdue} overdue` : ''}
+            </span>
+            <span className="rail-foot-links">
+              <button type="button" className="rail-foot-btn" onClick={() => go('/tasks/today')}>
+                My Day
+              </button>
+              <button type="button" className="rail-foot-btn" onClick={() => go('/intelligence/inbox')}>
+                Open inbox <ChevronRight size={11} aria-hidden="true" />
+              </button>
+            </span>
+          </div>
         </>
       )}
 

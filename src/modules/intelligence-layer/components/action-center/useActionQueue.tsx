@@ -2,14 +2,14 @@
  * The action queue — one owner for "what needs this person now".
  *
  * The top-bar trigger, the rail's Actions segment and the shell's first-run
- * default all read the same queue. It lives in a provider because the task feed
- * opens a Firestore listener per call: two readers calling it directly would
- * double it. Outside the provider it returns an empty queue, so a surface
+ * default all read the same queue. It reads the shell's one task feed (MyTasksContext)
+ * and holds the per-device dismissals, so two readers do not each hold their own
+ * copy. Outside the provider it returns an empty queue, so a surface
  * rendered in isolation degrades rather than crashes.
  */
 import * as React from 'react';
 
-import { useEmployeeTaskInbox } from '@/modules/intelligence-layer/hooks/useEmployeeTaskInbox';
+import { useMyTasks } from '@/modules/intelligence-layer/context/MyTasksContext';
 import { buildActionItems, type ActionItem } from './config';
 
 const LS_DISMISSED = 'zeus_ac_dismissed_v1';
@@ -67,7 +67,7 @@ export function useActionQueue(): ActionQueue {
 }
 
 export function ActionQueueProvider({ children }: { children: React.ReactNode }) {
-  const { tasks, loading, completeTask } = useEmployeeTaskInbox();
+  const { openTasks: tasks, loading, completeTask } = useMyTasks();
   const [dismissed, setDismissed] = React.useState<Set<string>>(loadDismissed);
   const [leavingId, setLeavingId] = React.useState<string | null>(null);
 
