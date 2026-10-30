@@ -12,7 +12,6 @@
 export * from './strategy-command';
 
 // Market Intelligence
-export * from './market-intelligence';
 
 // Capital Hub
 export * from './capital-hub';

@@ -140,27 +140,6 @@ export interface DigitalProfile {
 // DIGITAL PROFILE SNAPSHOT (point-in-time metrics)
 // ----------------------------------------------------------------------------
 
-export interface ProfileSnapshot {
-  id: string;
-  profileId: string;
-  competitorId: string;
-  platform: DigitalPlatform;
-
-  // Metrics at time of snapshot
-  followers?: number;
-  following?: number;
-  posts?: number;
-  engagement?: number;
-  rating?: number;
-  reviewCount?: number;
-
-  // Content summary
-  recentPostCount?: number;
-  topContent?: string[];
-
-  capturedAt: Timestamp;
-}
-
 // ----------------------------------------------------------------------------
 // SEARCH DISCOVERY RESULT
 // ----------------------------------------------------------------------------

@@ -731,5 +731,4 @@ export const COMPETITORS_COLLECTION = 'competitors';
 export const SWOT_COLLECTION = 'competitor_swot';
 export const MOVES_COLLECTION = 'competitive_moves';
 export const WIN_LOSS_COLLECTION = 'win_loss_records';
-export const MARKET_SHARE_COLLECTION = 'market_share_data';
 export const PRICING_COLLECTION = 'pricing_intelligence';

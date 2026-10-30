@@ -4,7 +4,10 @@
  * Uses Gemini 2.0 Flash with Google Search grounding
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+const { assertMarketIntelCaller } = require('../lib/marketIntelGate');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');
@@ -33,9 +36,7 @@ const enhanceCompetitorProfile = onCall({
   timeoutSeconds: 120,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'enhance a competitor profile' });
 
   const { competitorId } = request.data;
   if (!competitorId) {
@@ -185,9 +186,7 @@ const scanMarketNews = onCall({
   timeoutSeconds: 180,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'scan market news' });
 
   const { sector, region, competitorNames, limit: articleLimit } = request.data;
   const maxArticles = articleLimit || 15;
@@ -338,9 +337,7 @@ const generateMarketInsights = onCall({
   timeoutSeconds: 180,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'generate market insights' });
 
   const { sector, topic, competitorContext } = request.data;
   const targetSector = sector || 'general business';
@@ -497,9 +494,7 @@ const analyzeMarketSector = onCall({
   timeoutSeconds: 180,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'analyse a market sector' });
 
   const { sector, region } = request.data;
   const targetSector = sector || 'general business';
@@ -624,9 +619,7 @@ const discoverCompetitors = onCall({
   timeoutSeconds: 180,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'discover competitors' });
 
   const {
     companyName,

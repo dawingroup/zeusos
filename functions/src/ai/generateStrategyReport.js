@@ -6,7 +6,9 @@
  * Using v2 API (firebase-functions v4.x)
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');

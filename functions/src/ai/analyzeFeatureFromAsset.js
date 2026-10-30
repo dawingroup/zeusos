@@ -3,7 +3,9 @@
  * Uses Gemini 2.0 Pro Vision to analyze jig/setup photos and identify design features
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { ALLOWED_ORIGINS } = require('../config/cors');

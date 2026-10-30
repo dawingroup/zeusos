@@ -5,7 +5,8 @@
  * with analysisStatus: 'pending'
  */
 
-const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+// Attributed trigger (stream D): every model call beneath it is recorded as trigger 'event'.
+const { onAiDocumentCreated: onDocumentCreated } = require('../utils/aiFirestore');
 const { defineString } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');

@@ -158,6 +158,8 @@ export const NAV_MANIFEST_PARENT: NavItem[] = [
   // QBO keys are entered (Settings → Integrations also links here). Surfaced
   // directly because it was hard to find buried under Settings. Admin-gated in
   // AppShell (same filter as the Admin item).
+  // AI usage & cost (stream D): what the platform spends on AI, by feature / model / agent / trigger / brand / user; budgets and pause switches.
+  { moduleId: 'ai-usage',          label: 'AI Usage',                  icon: 'Gauge',           routePath: '/admin/ai-usage' },
   { moduleId: 'api-keys',          label: 'API Keys',                  icon: 'KeyRound',        routePath: '/admin/api-keys' },
 ];
 

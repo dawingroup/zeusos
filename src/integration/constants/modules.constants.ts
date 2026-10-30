@@ -114,7 +114,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     description: 'Competitor analysis, market research, and environment scanning',
     icon: 'Globe',
     color: '#0EA5E9',
-    basePath: '/market-intelligence',
+    basePath: '/market-intel',
     permissions: ['view:market', 'manage:market'],
     features: ['competitors', 'research', 'scanning', 'dashboard'],
     order: 7,
@@ -423,7 +423,7 @@ export const QUICK_ACTIONS: QuickAction[] = [
   { id: 'log_interaction', label: 'Log Investor Interaction', icon: 'MessageSquare', module: 'capital_hub', path: '/capital/interactions/new', permissions: ['manage:capital'] },
 
   // Market Intel Actions
-  { id: 'add_insight', label: 'Add Insight', icon: 'Lightbulb', module: 'market_intelligence', path: '/market-intelligence/insights/new', shortcut: 'Alt+I', permissions: ['manage:market'] },
+  { id: 'add_insight', label: 'Add Insight', icon: 'Lightbulb', module: 'market_intelligence', path: '/market-intel/insights', shortcut: 'Alt+I', permissions: ['manage:market'] },
 ];
 
 // ----------------------------------------------------------------------------

@@ -5,8 +5,14 @@
  * stores in Firestore + BigQuery, and enriches with Gemini AI analysis.
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
-const { onSchedule } = require('firebase-functions/v2/scheduler');
+const { HttpsError } = require('firebase-functions/v2/https');
+const { assertMarketIntelCaller } = require('../lib/marketIntelGate');
+// D-4: a post needs a natural platform id, the doc id is {platform}_{postId}, zero metrics are not stored.
+const { naturalPostId, socialPostDocId, isInformationFreeMetrics } = require('../lib/socialPostKeys');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
+// Attributed schedule (stream D): every model call beneath it is recorded as trigger 'scheduled'.
+const { onAiSchedule: onSchedule } = require('../utils/aiScheduled');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');
@@ -226,7 +232,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
       case 'instagram':
         return {
           ...base,
-          postId: item.id || item.shortCode || `ig_${Date.now()}_${Math.random()}`,
+          postId: naturalPostId(item.id, item.shortCode),
           contentText: item.caption || '',
           contentType: item.type || 'image',
           mediaUrls: item.displayUrl ? [item.displayUrl] : [],
@@ -245,7 +251,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
         // view_count, bookmark_count, created_at, extended_entities.media, entities.hashtags/user_mentions
         return {
           ...base,
-          postId:      item.id || item.tweetId || `tw_${Date.now()}_${Math.random()}`,
+          postId:      naturalPostId(item.id, item.tweetId),
           contentText: item.full_text || item.text || '',
           contentType: 'text',
           mediaUrls:   (item.extended_entities?.media || item.entities?.media || [])
@@ -267,7 +273,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
         // video.downloadAddr for video URL, createTime (unix seconds)
         return {
           ...base,
-          postId:      item.id || `tt_${Date.now()}_${Math.random()}`,
+          postId:      naturalPostId(item.id),
           contentText: item.desc || item.text || '',
           contentType: 'video',
           mediaUrls:   item.video?.downloadAddr
@@ -290,7 +296,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
         // commentsCount, sharesCount, viewsCount, postId, media array, time (unix seconds)
         return {
           ...base,
-          postId:      item.postId || item.id || `fb_${Date.now()}_${Math.random()}`,
+          postId:      naturalPostId(item.postId, item.id),
           contentText: item.text || item.message || item.caption || '',
           contentType: item.media?.length ? 'image' : 'text',
           mediaUrls:   (item.media || []).map(m => m.url || m.thumbnail).filter(Boolean),
@@ -308,7 +314,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
       case 'youtube':
         return {
           ...base,
-          postId: item.id || item.videoId || `yt_${Date.now()}_${Math.random()}`,
+          postId: naturalPostId(item.id, item.videoId),
           contentText: item.title || '',
           contentType: 'video',
           mediaUrls: item.thumbnailUrl ? [item.thumbnailUrl] : [],
@@ -325,7 +331,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
       default:
         return {
           ...base,
-          postId: item.id || `post_${Date.now()}_${Math.random()}`,
+          postId: naturalPostId(item.id),
           contentText: item.text || item.content || item.caption || '',
           contentType: item.type || 'text',
           mediaUrls: [],
@@ -345,7 +351,7 @@ function normalizePosts(platform, rawData, competitorId, profileId, ownership = 
 /**
  * Extract account-level metrics from scraped data
  */
-function extractAccountMetrics(platform, rawData, competitorId, profileId, profileHandle, ownership = null) {
+function extractAccountMetricsRaw(platform, rawData, competitorId, profileId, profileHandle, ownership = null) {
   if (!rawData || (Array.isArray(rawData) && rawData.length === 0)) return null;
 
   // Some platforms return profile info in the first item or separately
@@ -430,6 +436,15 @@ function extractAccountMetrics(platform, rawData, competitorId, profileId, profi
         avgViewsPerPost: 0,
       };
   }
+}
+
+/**
+ * D-4: an account row whose every count is zero measured nothing — refuse it
+ * rather than mirror a shell to Firestore and BigQuery.
+ */
+function extractAccountMetrics(...args) {
+  const metrics = extractAccountMetricsRaw(...args);
+  return metrics && !isInformationFreeMetrics(metrics) ? metrics : null;
 }
 
 /**
@@ -575,7 +590,7 @@ async function savePostsWithDeduplication(posts) {
     if (!post.postId || !post.competitorId || !post.profileId) {
       failed.push({
         post: post.postId || 'unknown',
-        reason: 'Missing required fields (postId, competitorId, or profileId)',
+        reason: 'Missing required fields (postId, competitorId, or profileId) — a post without a natural platform id is a shell and is not stored',
       });
       continue;
     }
@@ -584,7 +599,7 @@ async function savePostsWithDeduplication(posts) {
       const existingRef = existingPosts.get(post.postId);
 
       if (!existingRef) {
-        const newRef = db.collection(SOCIAL_POSTS_COLLECTION).doc();
+        const newRef = db.collection(SOCIAL_POSTS_COLLECTION).doc(socialPostDocId(post.platform, post.postId));
         batch.set(newRef, cleanUndefined(post));
         created++;
       } else {
@@ -812,9 +827,7 @@ const fetchSocialPosts = onCall({
   timeoutSeconds: 120,
   memory: '256MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'fetch social posts' });
 
   const { profileId } = request.data;
   if (!profileId) {
@@ -907,9 +920,7 @@ const analyzeSocialStrategy = onCall({
   timeoutSeconds: 120,
   memory: '256MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'analyse social strategy' });
 
   const { postIds, competitorId, competitorName } = request.data;
 
@@ -1055,9 +1066,7 @@ const triggerSocialSync = onCall({
   timeoutSeconds: 300,
   memory: '512MiB',
 }, async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'Authentication required');
-  }
+  await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'sync social accounts' });
 
   const { competitorId } = request.data;
 

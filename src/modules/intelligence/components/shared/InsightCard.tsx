@@ -43,6 +43,7 @@ interface InsightCardProps {
 const INSIGHT_ICONS: Record<InsightType, React.ReactNode> = {
   opportunity: <Lightbulb className="h-5 w-5" />,
   threat: <AlertTriangle className="h-5 w-5" />,
+  risk: <AlertTriangle className="h-5 w-5" />,
   trend: <TrendingUp className="h-5 w-5" />,
   anomaly: <AlertCircle className="h-5 w-5" />,
   recommendation: <ThumbsUp className="h-5 w-5" />,

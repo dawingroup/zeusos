@@ -1,13 +1,16 @@
 /**
  * Market Intelligence Cloud Function (Gen 2)
  * AI-driven competitive intelligence that scrubs digital profiles of
- * identified competitors for each Dawin Group subsidiary, returning
+ * identified competitors for each Zeus brand, returning
  * detailed assessments, trend analysis, and strategic recommendations.
  *
  * Uses Gemini with Google Search grounding for real-time web intelligence.
  */
 
-const { onCall, HttpsError } = require('firebase-functions/v2/https');
+const { HttpsError } = require('firebase-functions/v2/https');
+const { assertMarketIntelCaller } = require('../lib/marketIntelGate');
+// Attributed callable (stream D): every model call beneath it is recorded as trigger 'user' + uid.
+const { onAiCall: onCall } = require('../utils/aiCallable');
 const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const admin = require('firebase-admin');
@@ -27,39 +30,18 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-// Dawin Group subsidiaries context
-const SUBSIDIARY_CONTEXT = {
-  finishes: {
-    name: 'Dawin Finishes',
-    description: 'Custom millwork, furniture manufacturing, and interior fit-out for hospitality, residential, and commercial projects in East Africa.',
-    industries: ['manufacturing', 'construction', 'real_estate', 'hospitality'],
-    competitorKeywords: ['custom furniture', 'millwork', 'interior fit-out', 'joinery', 'cabinet making', 'hospitality furniture'],
-  },
-  advisory: {
-    name: 'Dawin Advisory',
-    description: 'Strategic advisory, project management, procurement consulting, and professional services across infrastructure, real estate, and development sectors in East Africa.',
-    industries: ['advisory', 'construction', 'infrastructure', 'procurement'],
-    competitorKeywords: ['management consulting', 'project management', 'procurement advisory', 'infrastructure advisory', 'development consulting'],
-  },
-  technology: {
-    name: 'Dawin Technology',
-    description: 'Technology solutions, digital transformation, and software development for enterprises in East Africa.',
-    industries: ['technology', 'fintech', 'digital'],
-    competitorKeywords: ['enterprise software', 'digital transformation', 'fintech', 'SaaS', 'IT services'],
-  },
-  capital: {
-    name: 'Dawin Capital',
-    description: 'Investment management, private equity, venture capital, and financial services across East African markets.',
-    industries: ['investment', 'financial_services', 'private_equity'],
-    competitorKeywords: ['private equity', 'venture capital', 'investment management', 'fund management', 'impact investing'],
-  },
-};
+// The five brands a scan can be run for, with what each competes as
+// (docs/MARKET_INTELLIGENCE_DATA_MODEL_AUDIT_2026_10.md, D-1) — one registry
+// shared with the client, the MCP tool and the integrity audit.
+const { SUBSIDIARY_CONTEXT, isMarketIntelSubsidiaryId } = require('../lib/marketIntelVocabulary');
+// The one stored report shape (A2 / WP3).
+const { scanReportCore, toReportWire } = require('../lib/marketIntelReportShape');
 
 /**
  * Scan competitor digital profiles and generate market intelligence report.
  *
  * Input: {
- *   subsidiaryId: string ('finishes' | 'advisory' | 'technology' | 'capital'),
+ *   subsidiaryId: string (one of MARKET_INTEL_SUBSIDIARY_IDS — a Zeus brand),
  *   competitorIds?: string[] (optional - specific competitors, else fetch all for subsidiary),
  *   focusAreas?: string[] (optional - e.g. ['pricing', 'new_products', 'partnerships']),
  *   timeHorizon?: string (optional - 'last_month' | 'last_quarter' | 'last_6_months' | 'last_year'),
@@ -74,10 +56,7 @@ exports.marketIntelligenceScan = onCall(
     cors: ALLOWED_ORIGINS,
   },
   async (request) => {
-    // Require authentication
-    if (!request.auth) {
-      throw new HttpsError('unauthenticated', 'Authentication required');
-    }
+    await assertMarketIntelCaller(request.auth, { need: 'edit', action: 'run a market intelligence scan' });
 
     const apiKey = GEMINI_API_KEY.value();
     const userId = request.auth.uid;
@@ -507,7 +486,14 @@ Return ONLY valid JSON matching this exact schema:
       // Save the report to Firestore
       const reportDoc = {
         ...reportData,
-        subsidiaryId,
+        // WP3: the server stamps the core — title, type, brand, a Timestamp
+        // generatedAt — over whatever the model wrote.
+        ...scanReportCore({
+          reportTitle: reportData.reportTitle,
+          subsidiaryName: subsidiary.name,
+          subsidiaryId,
+          generatedAt: admin.firestore.Timestamp.now(),
+        }),
         subsidiaryName: subsidiary.name,
         status: 'completed',
         createdBy: userId,
@@ -628,14 +614,15 @@ exports.getMarketIntelligenceReports = onCall(
     cors: ALLOWED_ORIGINS,
   },
   async (request) => {
-    if (!request.auth) {
-      throw new HttpsError('unauthenticated', 'Authentication required');
-    }
+    await assertMarketIntelCaller(request.auth, { need: 'view', action: 'read market intelligence reports' });
 
     const { subsidiaryId, limit: queryLimit = 10 } = request.data;
 
-    if (!subsidiaryId) {
-      throw new HttpsError('invalid-argument', 'subsidiaryId is required');
+    if (!isMarketIntelSubsidiaryId(subsidiaryId)) {
+      throw new HttpsError(
+        'invalid-argument',
+        `subsidiaryId must be one of: ${Object.keys(SUBSIDIARY_CONTEXT).join(', ')}`
+      );
     }
 
     try {
@@ -646,12 +633,7 @@ exports.getMarketIntelligenceReports = onCall(
         .limit(queryLimit)
         .get();
 
-      const reports = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || null,
-        updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || null,
-      }));
+      const reports = snapshot.docs.map(doc => toReportWire(doc.id, doc.data()));
 
       return { success: true, reports };
     } catch (error) {

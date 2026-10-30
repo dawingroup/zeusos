@@ -5,6 +5,7 @@
 // ============================================================================
 
 import { z } from 'zod';
+import { MARKET_INTEL_SUBSIDIARY_IDS } from '../constants/marketIntelVocabulary';
 import {
   COMPETITOR_TYPES,
   THREAT_LEVELS,
@@ -280,7 +281,7 @@ export const competitorFormInputSchema = z.object({
     .optional(),
   products: z.array(z.string().max(100)),
   services: z.array(z.string().max(100)),
-  subsidiariesCompeting: z.array(z.string()),
+  subsidiariesCompeting: z.array(z.enum(MARKET_INTEL_SUBSIDIARY_IDS)),
   monitoringFrequency: z.enum(['weekly', 'monthly', 'quarterly']),
 });
 
@@ -343,7 +344,7 @@ export const competitiveMoveFormInputSchema = z.object({
   impactSignificance: impactSignificanceSchema,
   impactedMarkets: z.array(geographySchema),
   impactedIndustries: z.array(industrySchema),
-  impactedSubsidiaries: z.array(z.string()),
+  impactedSubsidiaries: z.array(z.enum(MARKET_INTEL_SUBSIDIARY_IDS)),
   strategicImplications: z.array(z.string().min(10).max(500)),
 });
 
@@ -378,80 +379,8 @@ export const winLossFormInputSchema = z.object({
   clientFeedback: z.string().max(2000).optional(),
   internalLessons: z.array(z.string().min(10).max(500)),
   improvementActions: z.array(z.string().min(10).max(500)),
-  dawinSubsidiary: z.string().min(1, 'Subsidiary is required'),
+  subsidiaryId: z.enum(MARKET_INTEL_SUBSIDIARY_IDS, { message: 'Subsidiary is required' }),
 });
-
-// ----------------------------------------------------------------------------
-// MARKET SHARE SCHEMAS
-// ----------------------------------------------------------------------------
-
-export const marketShareEntrySchema = z.object({
-  companyName: z.string().min(1).max(200),
-  competitorId: z.string().optional(),
-  marketShare: z.number().min(0).max(100),
-  revenue: z.number().positive().optional(),
-  rank: z.number().int().positive(),
-  isEstimate: z.boolean(),
-  notes: z.string().max(500).optional(),
-});
-
-export const marketShareFormInputSchema = z.object({
-  marketName: z.string().min(1).max(200),
-  industry: industrySchema,
-  geography: geographySchema,
-  year: z.number().int().min(2000).max(2100),
-  quarter: z.number().int().min(1).max(4).optional(),
-  totalMarketSize: z.number().positive(),
-  marketSizeCurrency: z.string().default('USD'),
-  marketGrowthRate: z.number(),
-  shares: z.array(marketShareEntrySchema)
-    .min(2, 'Add at least 2 market share entries'),
-  methodology: z.string().min(20).max(1000),
-  confidence: z.number().min(0).max(100),
-}).refine(
-  (data) => {
-    const totalShare = data.shares.reduce((sum, s) => sum + s.marketShare, 0);
-    return totalShare <= 100;
-  },
-  {
-    message: 'Total market share cannot exceed 100%',
-    path: ['shares'],
-  }
-);
-
-// ----------------------------------------------------------------------------
-// PRICING INTELLIGENCE SCHEMAS
-// ----------------------------------------------------------------------------
-
-export const pricingIntelligenceFormInputSchema = z.object({
-  competitorId: z.string().min(1),
-  productService: z.string().min(1).max(200),
-  category: z.string().min(1).max(100),
-  pricePoint: z.number().positive(),
-  currency: z.string().default('USD'),
-  pricingModel: z.enum([
-    'fixed', 'hourly', 'daily', 'project', 
-    'retainer', 'subscription', 'cost_plus', 'value_based'
-  ]),
-  priceUnit: z.string().max(50).optional(),
-  priceRangeLow: z.number().positive().optional(),
-  priceRangeHigh: z.number().positive().optional(),
-  ourPrice: z.number().positive().optional(),
-  volumeDiscounts: z.string().max(500).optional(),
-  paymentTerms: z.string().max(500).optional(),
-  inclusions: z.array(z.string().max(200)),
-  exclusions: z.array(z.string().max(200)),
-  source: intelligenceSourceSchema,
-  sourceDetails: z.string().max(500).optional(),
-  confidence: z.number().min(0).max(100),
-}).refine(
-  (data) => !data.priceRangeLow || !data.priceRangeHigh || 
-    data.priceRangeLow <= data.priceRangeHigh,
-  {
-    message: 'Price range low must be less than or equal to high',
-    path: ['priceRangeLow'],
-  }
-);
 
 // ----------------------------------------------------------------------------
 // INTELLIGENCE ITEM SCHEMA
@@ -476,8 +405,5 @@ export type SWOTFormInputSchema = z.infer<typeof swotFormInputSchema>;
 export type SWOTFactorInputSchema = z.infer<typeof swotFactorInputSchema>;
 export type CompetitiveMoveFormInputSchema = z.infer<typeof competitiveMoveFormInputSchema>;
 export type WinLossFormInputSchema = z.infer<typeof winLossFormInputSchema>;
-export type MarketShareFormInputSchema = z.infer<typeof marketShareFormInputSchema>;
-export type MarketShareEntrySchema = z.infer<typeof marketShareEntrySchema>;
-export type PricingIntelligenceFormInputSchema = z.infer<typeof pricingIntelligenceFormInputSchema>;
 export type IntelligenceItemSchema = z.infer<typeof intelligenceItemSchema>;
 export type KeyExecutiveSchema = z.infer<typeof keyExecutiveSchema>;
