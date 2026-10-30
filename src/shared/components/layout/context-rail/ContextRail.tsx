@@ -12,12 +12,13 @@
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, ChevronRight, ListChecks, Sparkles, type LucideIcon } from 'lucide-react';
+import { Bell, ChevronRight, ListChecks, MessagesSquare, Sparkles, type LucideIcon } from 'lucide-react';
 
 import { ActionCenterList, useActionQueue } from '@/modules/intelligence-layer/components/action-center';
 import { AIAssistantPanel } from '@/modules/intelligence-layer/components/assistant/AIAssistantPanel';
 import { RailTasks } from '@/modules/intelligence-layer/components/my-tasks/RailTasks';
 import { useMyTasks } from '@/modules/intelligence-layer/context/MyTasksContext';
+import { RailMessages } from '@/modules/messaging/components/rail-messages/RailMessages';
 import { useRailStore, type RailSeg } from '@/shared/stores/railStore';
 import type { RailMode } from './useRailMode';
 import './context-rail.css';
@@ -25,16 +26,19 @@ import './context-rail.css';
 const RAIL_SEGS: { id: RailSeg; label: string; icon: LucideIcon }[] = [
   { id: 'actions', label: 'Actions', icon: Bell },
   { id: 'tasks', label: 'Tasks', icon: ListChecks },
+  { id: 'messages', label: 'Messages', icon: MessagesSquare },
   { id: 'ask', label: 'Ask', icon: Sparkles },
 ];
 
 export interface ContextRailProps {
   mode: RailMode;
+  /** Unread conversations. */
+  unread: number;
   /** Page grounding the assistant sends with each turn. */
   assistantContext?: Record<string, unknown>;
 }
 
-export function ContextRail({ mode, assistantContext }: ContextRailProps) {
+export function ContextRail({ mode, unread, assistantContext }: ContextRailProps) {
   const navigate = useNavigate();
   const open = useRailStore((s) => s.open);
   const seg = useRailStore((s) => s.seg);
@@ -67,7 +71,7 @@ export function ContextRail({ mode, assistantContext }: ContextRailProps) {
     closeIfOverlay();
   };
 
-  const counts: Partial<Record<RailSeg, number>> = { actions: queue.visible.length, tasks: taskCounts.open };
+  const counts: Partial<Record<RailSeg, number>> = { actions: queue.visible.length, tasks: taskCounts.open, messages: unread };
 
   return (
     <aside className="context-rail" data-mode={mode} role="complementary" aria-label="Context rail" data-testid="context-rail">
@@ -143,6 +147,21 @@ export function ContextRail({ mode, assistantContext }: ContextRailProps) {
                 Open inbox <ChevronRight size={11} aria-hidden="true" />
               </button>
             </span>
+          </div>
+        </>
+      )}
+
+      {activeSeg === 'messages' && (
+        <>
+          <div className="rail-sub">{unread} unread in Team Chat</div>
+          <div className="rail-body rail-messages">
+            <RailMessages onNavigate={closeIfOverlay} />
+          </div>
+          <div className="rail-foot">
+            <span>Recent conversations</span>
+            <button type="button" className="rail-foot-btn" onClick={() => go('/comms')}>
+              Open Comms <ChevronRight size={11} aria-hidden="true" />
+            </button>
           </div>
         </>
       )}

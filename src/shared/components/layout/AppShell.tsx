@@ -16,7 +16,6 @@ import {
   LucideIcon,
   Building2,
   Settings,
-  MessageSquare,
   PanelLeftOpen,
   PanelLeftClose,
   ChevronRight,
@@ -55,6 +54,8 @@ import { useNavigationStore } from '@/shared/stores/navigationStore';
 import { CommandPalette } from '@/core/components/navigation/CommandPalette';
 import { SearchIndexMount } from '@/core/components/search/SearchIndexMount';
 import { MyTasksProvider } from '@/modules/intelligence-layer/context/MyTasksContext';
+import { TeamChannelsProvider, useTeamChannels } from '@/modules/messaging/context/TeamChannelsContext';
+import { ChatDock, ChatDockProvider, dockReservedRight, useChatDock } from '@/modules/messaging/components/chat-dock';
 import { ActionQueueProvider, useActionQueue } from '@/modules/intelligence-layer/components/action-center';
 import { ContextRail, RailTrigger, useRailMode, useRailShortcut, useShellTop } from './context-rail';
 import { useRailStore } from '@/shared/stores/railStore';
@@ -78,12 +79,9 @@ import type { SubsidiaryId } from '@/core/settings/types';
 import { useUserModules } from '@/hooks/useUserModules';
 import { AIIntelligenceMenu } from '@/modules/intelligence-layer/components/AIIntelligenceMenu';
 import { cn } from '@/shared/lib/utils';
-import { useFeatureFlag } from '@/shared/hooks/useFeatureFlag';
 import { useBranding } from '@/shared/hooks/useBranding';
 // WhatsApp + GChat modules removed in Phase 1.C — stub subscriptions.
 // TODO Phase 4: rebuild client comms (WhatsApp/Slack) for marketing-agency context.
-const subscribeToUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
-const subscribeToGChatUnreadCount = (_setter: (n: number) => void): (() => void) => () => {};
 import { GroupNavPills } from '@/core/components/layout/GroupNavPills';
 import { PreferencesMenu } from '@/core/components/layout/PreferencesMenu';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
@@ -177,15 +175,19 @@ interface AppShellProps {
 }
 
 /**
- * The shell is wrapped in the providers the context rail reads: ONE task feed
- * and ONE action queue, shared by the trigger, the segments and the first-run
- * default.
+ * The shell is wrapped in the providers the context rail reads: ONE task feed,
+ * ONE action queue and ONE channel list, shared by the trigger, the segments,
+ * the chat dock and the first-run default.
  */
 export function AppShell({ children }: AppShellProps) {
   return (
     <MyTasksProvider>
       <ActionQueueProvider>
-        <AppShellFrame>{children}</AppShellFrame>
+        <TeamChannelsProvider>
+          <ChatDockProvider>
+            <AppShellFrame>{children}</AppShellFrame>
+          </ChatDockProvider>
+        </TeamChannelsProvider>
       </ActionQueueProvider>
     </MyTasksProvider>
   );
@@ -251,20 +253,8 @@ function AppShellFrame({ children }: AppShellProps) {
     document.documentElement.setAttribute('data-brand', brandId);
   }, [currentSubsidiary?.id]);
 
-  // Messaging (WhatsApp + Google Chat combined)
-  const whatsappEnabled = useFeatureFlag('WHATSAPP_ENABLED');
-  const [waUnread, setWaUnread] = useState(0);
-  const [gchatUnread, setGchatUnread] = useState(0);
-  const totalMessagingUnread = waUnread + gchatUnread;
-
-  React.useEffect(() => {
-    if (!whatsappEnabled) return;
-    const unsubs = [
-      subscribeToUnreadCount(setWaUnread),
-      subscribeToGChatUnreadCount(setGchatUnread),
-    ];
-    return () => unsubs.forEach((unsub) => unsub());
-  }, [whatsappEnabled]);
+  // Unread conversations, for the rail's door and its Messages segment.
+  const { teamUnread: totalMessagingUnread } = useTeamChannels();
 
   // The context rail — what needs you, and the assistant, in ONE collapsible
   // right column (see context-rail/ContextRail.tsx). It replaced the floating
@@ -272,9 +262,11 @@ function AppShellFrame({ children }: AppShellProps) {
   const railOpen = useRailStore((s) => s.open);
   const railInitialised = useRailStore((s) => s.initialised);
   const setRailOpen = useRailStore((s) => s.setOpen);
+  const setRailSeg = useRailStore((s) => s.setSeg);
   const applyRailFirstRun = useRailStore((s) => s.applyFirstRun);
   const railMode = useRailMode();
   const actionQueue = useActionQueue();
+  const { collapseAll: collapseDock } = useChatDock();
   useRailShortcut();
   const desktopHeaderRef = React.useRef<HTMLElement>(null);
   const mobileHeaderRef = React.useRef<HTMLElement>(null);
@@ -287,6 +279,15 @@ function AppShellFrame({ children }: AppShellProps) {
     if (railInitialised || actionQueue.loading) return;
     applyRailFirstRun(actionQueue.blockingCount);
   }, [railInitialised, actionQueue.loading, actionQueue.blockingCount, applyRailFirstRun]);
+
+  // A rail sliding OVER the canvas would cover docked chat windows: fold them to
+  // their title bars rather than closing them, so nothing is lost.
+  const railOverlaying = railOpen && railMode === 'overlay';
+  useEffect(() => {
+    if (railOverlaying) collapseDock();
+    // collapseDock is rebuilt on every dock change; only the rail's move triggers this.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [railOverlaying]);
 
   // Track desktop breakpoint for sidebar rail behavior
   const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024);
@@ -734,23 +735,6 @@ function AppShellFrame({ children }: AppShellProps) {
             subsidiaryId={currentSubsidiary?.id}
           />
 
-          {/* Messaging — internal team chat (/comms). Always available; WhatsApp
-              folds into the same surface once enabled. (/whatsapp is not routed.) */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/comms')}
-            className="relative h-8 w-8"
-            aria-label="Messages"
-          >
-            <MessageSquare className="h-4 w-4" />
-            {totalMessagingUnread > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-                {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-              </span>
-            )}
-          </Button>
-
           {/* The context rail's door: what needs you. */}
           <RailTrigger unread={totalMessagingUnread} />
 
@@ -890,21 +874,6 @@ function AppShellFrame({ children }: AppShellProps) {
         <AIIntelligenceMenu />
         <RailTrigger unread={totalMessagingUnread} />
 
-        {/* Messaging - Mobile — internal team chat (/comms), always available. */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/comms')}
-          className="relative"
-          aria-label="Messages"
-        >
-          <MessageSquare className="h-5 w-5" />
-          {totalMessagingUnread > 0 && (
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[var(--rag-green)] text-[10px] font-medium text-white flex items-center justify-center">
-              {totalMessagingUnread > 9 ? '9+' : totalMessagingUnread}
-            </span>
-          )}
-        </Button>
         {/* Zeus Group dropdown for mobile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -1291,7 +1260,7 @@ function AppShellFrame({ children }: AppShellProps) {
       </div>
 
       {/* The context rail. Overlay mode gets a scrim that closes it. */}
-      {railOpen && railMode === 'overlay' && (
+      {railOverlaying && (
         <button
           type="button"
           className="rail-scrim"
@@ -1302,8 +1271,13 @@ function AppShellFrame({ children }: AppShellProps) {
       )}
       <ContextRail
         mode={railMode}
+        unread={totalMessagingUnread}
         assistantContext={{ currentModule: location.pathname.split('/')[1] || 'general' }}
       />
+
+      {/* Docked chat windows. No launcher of their own: the rail's Messages
+          segment opens them, and they keep clear of the lane the rail holds. */}
+      <ChatDock onBrowseAll={() => setRailSeg('messages')} reservedRight={dockReservedRight(railOpen)} />
 
       {/* Toast bus + optimistic-write failure reporter (shared/components/feedback). */}
       <ToastHost />

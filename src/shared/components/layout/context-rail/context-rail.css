@@ -76,6 +76,13 @@
 }
 .rail-foot-btn:hover { color: var(--fg-primary); background: var(--bg-sunken); }
 
+/* Messages segment — the list or the thread fills the body and scrolls itself,
+   so the thread's composer stays pinned at the bottom. */
+.rail-body.rail-messages { display: flex; flex-direction: column; overflow: hidden; }
+/* An open thread needs the height: its header has "open in Comms" already. */
+.context-rail:has(.rail-thread-view) .rail-sub,
+.context-rail:has(.rail-thread-view) .rail-foot { display: none; }
+
 /* Ask segment — the assistant panel fills the rail body and scrolls itself. */
 .rail-body.rail-ask { display: flex; flex-direction: column; overflow: hidden; }
 

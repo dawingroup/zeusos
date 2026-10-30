@@ -16,6 +16,9 @@ vi.mock('react-router-dom', () => ({ useNavigate: () => navigate }));
 vi.mock('@/modules/intelligence-layer/components/my-tasks/RailTasks', () => ({
   RailTasks: () => <div>tasks body</div>,
 }));
+vi.mock('@/modules/messaging/components/rail-messages/RailMessages', () => ({
+  RailMessages: () => <div>messages body</div>,
+}));
 vi.mock('@/modules/intelligence-layer/context/MyTasksContext', () => ({
   useMyTasks: () => ({ counts: { open: 4, overdue: 1 } }),
 }));
@@ -58,20 +61,20 @@ beforeEach(() => {
 
 describe('the rail', () => {
   it('renders nothing while closed', () => {
-    const { container } = render(<ContextRail mode="push" />);
+    const { container } = render(<ContextRail mode="push" unread={0} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it('falls back to Actions when the remembered segment is not on the rail', () => {
     act(() => useRailStore.setState({ open: true, initialised: true, seg: 'nope' as never }));
-    render(<ContextRail mode="push" />);
+    render(<ContextRail mode="push" unread={0} />);
     expect(screen.getByText('open an action')).toBeInTheDocument();
   });
 
   it('shows the count and a blocking count in the sub line', () => {
     setQueue(3, 1);
     act(() => rail().setSeg('actions'));
-    render(<ContextRail mode="push" />);
+    render(<ContextRail mode="push" unread={0} />);
     expect(screen.getByText('3 need you · 1 blocking')).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Actions — 3' })).toBeInTheDocument();
   });
@@ -79,7 +82,7 @@ describe('the rail', () => {
   it('Clear all empties the queue', () => {
     const q = setQueue(2);
     act(() => rail().setSeg('actions'));
-    render(<ContextRail mode="push" />);
+    render(<ContextRail mode="push" unread={0} />);
     fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
     expect(q.clearAll).toHaveBeenCalledOnce();
   });
@@ -89,19 +92,19 @@ describe('the rail', () => {
       rail().setSeg('ask');
       rail().setAskContext({ currentTab: 'overview' });
     });
-    render(<ContextRail mode="push" assistantContext={{ currentModule: 'intelligence' }} />);
+    render(<ContextRail mode="push" unread={0} assistantContext={{ currentModule: 'intelligence' }} />);
     expect(screen.getByTestId('ask')).toHaveTextContent('"currentModule":"intelligence"');
     expect(screen.getByTestId('ask')).toHaveTextContent('"currentTab":"overview"');
   });
 
   it('closes on Esc and after navigating only as an overlay', () => {
     act(() => rail().setSeg('actions'));
-    const { rerender } = render(<ContextRail mode="push" />);
+    const { rerender } = render(<ContextRail mode="push" unread={0} />);
     fireEvent.keyDown(window, { key: 'Escape' });
     fireEvent.click(screen.getByText('open an action'));
     expect(rail().open).toBe(true);
 
-    rerender(<ContextRail mode="overlay" />);
+    rerender(<ContextRail mode="overlay" unread={0} />);
     fireEvent.click(screen.getByText('open an action'));
     expect(rail().open).toBe(false);
 
@@ -114,13 +117,25 @@ describe('the rail', () => {
 describe('the Tasks segment', () => {
   it('counts open work and offers the full views', () => {
     act(() => rail().setSeg('tasks'));
-    render(<ContextRail mode="overlay" />);
+    render(<ContextRail mode="overlay" unread={0} />);
     expect(screen.getByRole('tab', { name: 'Tasks — 4' })).toBeInTheDocument();
     expect(screen.getByText('tasks body')).toBeInTheDocument();
     expect(screen.getByText('4 open · 1 overdue')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'My Day' }));
     expect(navigate).toHaveBeenCalledWith('/tasks/today');
     expect(rail().open).toBe(false);
+  });
+});
+
+describe('the Messages segment', () => {
+  it('counts unread and offers Comms', () => {
+    act(() => rail().setSeg('messages'));
+    render(<ContextRail mode="push" unread={3} />);
+    expect(screen.getByRole('tab', { name: 'Messages — 3' })).toBeInTheDocument();
+    expect(screen.getByText('messages body')).toBeInTheDocument();
+    expect(screen.getByText('3 unread in Team Chat')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Open Comms/ }));
+    expect(navigate).toHaveBeenCalledWith('/comms');
   });
 });
 
