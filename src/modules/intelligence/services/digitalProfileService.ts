@@ -21,13 +21,11 @@ import { db } from '../../../shared/services/firebase/firestore';
 import {
   DigitalProfile,
   DigitalProfileFormInput,
-  ProfileSnapshot,
   ProfileDiscoveryResult,
   DigitalPlatform,
 } from '../types/digitalProfile.types';
 
 const PROFILES_COLLECTION = 'digital_profiles';
-const SNAPSHOTS_COLLECTION = 'profile_snapshots';
 
 // ----------------------------------------------------------------------------
 // PLATFORM DETECTION PATTERNS
@@ -247,28 +245,6 @@ export const digitalProfileService = {
 
   async deleteProfile(id: string): Promise<void> {
     await deleteDoc(doc(db, PROFILES_COLLECTION, id));
-  },
-
-  // --------------------------------------------------------------------------
-  // SNAPSHOTS
-  // --------------------------------------------------------------------------
-
-  async saveSnapshot(snapshot: Omit<ProfileSnapshot, 'id'>): Promise<string> {
-    const docRef = await addDoc(collection(db, SNAPSHOTS_COLLECTION), snapshot);
-    return docRef.id;
-  },
-
-  async getSnapshots(profileId: string, limit = 30): Promise<ProfileSnapshot[]> {
-    const q = query(
-      collection(db, SNAPSHOTS_COLLECTION),
-      where('profileId', '==', profileId),
-      orderBy('capturedAt', 'desc')
-    );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.slice(0, limit).map(d => ({
-      id: d.id,
-      ...d.data(),
-    })) as ProfileSnapshot[];
   },
 
   // --------------------------------------------------------------------------

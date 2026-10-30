@@ -51,7 +51,7 @@ const MODULE_COLLECTIONS: Record<SourceModuleId, string[]> = {
   financial: ['budgets', 'expenses'],
   staff_performance: ['goals', 'reviews'],
   capital_hub: ['deals', 'portfolios'],
-  market_intelligence: ['market_insights', 'competitors'],
+  market_intelligence: ['ai_insights', 'competitors'], // D-6: ai_insights is the one insight collection
   advisory: ['engagements'],
   compliance: ['compliance_documents', 'compliance_obligations'],
 };

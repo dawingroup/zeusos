@@ -169,6 +169,8 @@ Wire the service layer to honour `agent.model` + `fallbackModel` before relying 
 
 Decide: merge [`src/modules/intelligence`](../src/modules/intelligence) and [`src/modules/intelligence-layer`](../src/modules/intelligence-layer) into one; or keep referencing as DawinOS does (with a `README` explaining the boundary).
 
+**Resolved 2026-10-29 — bounded, not merged** (market-intelligence audit D-13, [`MARKET_INTELLIGENCE_DATA_MODEL_AUDIT_2026_10.md`](MARKET_INTELLIGENCE_DATA_MODEL_AUDIT_2026_10.md) §4): `intelligence` owns the market-intelligence domain (the routed `/market-intel/*` surface and `MARKET_INTEL_COLLECTIONS`); `intelligence-layer` owns the event/task engine, agents and daily plan and never reads a market collection; the unrouted `market-intelligence` submodules and the `executive/market-intelligence` stubs are retired. The Smart Task Core / role-profile services still inside `intelligence` belong to the intelligence-layer boundary and move in a follow-up PR.
+
 ### 6.F.7 — Carried agents adapted (one PR each)
 
 - ZA-005 Finance Sentinel (`draft_only` initially — never posts journals)

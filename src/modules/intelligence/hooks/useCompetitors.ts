@@ -22,7 +22,8 @@ interface UseCompetitorsReturn {
   error: Error | null;
   refresh: () => Promise<void>;
   addCompetitor: (input: CompetitorFormInput, userId: string) => Promise<string>;
-  removeCompetitor: (id: string) => Promise<void>;
+  /** Soft archive (D-3) — the row leaves the list, nothing is deleted. */
+  archiveCompetitor: (id: string, reason?: string) => Promise<void>;
   toggleTracking: (competitorId: string) => Promise<void>;
   toggleAlerts: (competitorId: string) => Promise<void>;
 }
@@ -65,8 +66,8 @@ export const useCompetitors = (options: UseCompetitorsOptions = {}): UseCompetit
     return id;
   }, [fetchCompetitors]);
 
-  const removeCompetitor = useCallback(async (id: string) => {
-    await competitorService.deleteCompetitor(id);
+  const archiveCompetitor = useCallback(async (id: string, reason = 'Archived from the competitor list') => {
+    await competitorService.archiveCompetitor(id, reason);
     setCompetitors(prev => prev.filter(c => c.id !== id));
   }, []);
 
@@ -104,7 +105,7 @@ export const useCompetitors = (options: UseCompetitorsOptions = {}): UseCompetit
     error,
     refresh: fetchCompetitors,
     addCompetitor,
-    removeCompetitor,
+    archiveCompetitor,
     toggleTracking,
     toggleAlerts,
   };

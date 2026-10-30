@@ -53,6 +53,7 @@ import type {
   IndustryTrend,
   StoredMarketIntelligenceReport,
 } from '../types/market-intelligence.types';
+import { MARKET_INTEL_SUBSIDIARY_IDS } from '../constants/marketIntelVocabulary';
 import {
   SUBSIDIARY_OPTIONS,
   FOCUS_AREA_OPTIONS,
@@ -121,7 +122,7 @@ function ScanConfigPanel({ onScan, isScanning }: {
   }) => void;
   isScanning: boolean;
 }) {
-  const [subsidiaryId, setSubsidiaryId] = useState<MarketIntelSubsidiaryId>('finishes');
+  const [subsidiaryId, setSubsidiaryId] = useState<MarketIntelSubsidiaryId>(MARKET_INTEL_SUBSIDIARY_IDS[0]);
   const [focusAreas, setFocusAreas] = useState<FocusArea[]>([]);
   const [timeHorizon, setTimeHorizon] = useState<TimeHorizon>('last_quarter');
   const [depth, setDepth] = useState<ScanDepth>('standard');
@@ -760,7 +761,7 @@ export function MarketIntelligenceScanPage() {
   } = useMarketIntelligenceScan();
 
   const [showHistory, setShowHistory] = useState(false);
-  const [selectedSubsidiary, setSelectedSubsidiary] = useState<MarketIntelSubsidiaryId>('finishes');
+  const [selectedSubsidiary, setSelectedSubsidiary] = useState<MarketIntelSubsidiaryId>(MARKET_INTEL_SUBSIDIARY_IDS[0]);
 
   // Load reports when subsidiary changes and history is open
   useEffect(() => {

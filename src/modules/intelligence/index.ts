@@ -58,8 +58,6 @@ export type {
   SWOTAnalysis,
   CompetitiveMove,
   WinLossRecord,
-  MarketShareData,
-  PricingIntelligence,
   CompetitorAnalytics,
   CompetitorFormInput,
   SWOTFormInput,
@@ -77,8 +75,6 @@ export {
   swotFactorInputSchema,
   competitiveMoveFormInputSchema,
   winLossFormInputSchema,
-  marketShareFormInputSchema,
-  pricingIntelligenceFormInputSchema,
 } from './schemas/competitor.schemas';
 
 // Competitor Services
@@ -110,7 +106,6 @@ export {
 export type {
   DigitalProfile,
   DigitalPlatform,
-  ProfileSnapshot,
   ProfileDiscoveryResult,
   DigitalProfileFormInput,
 } from './types/digitalProfile.types';

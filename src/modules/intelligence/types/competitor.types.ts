@@ -22,6 +22,7 @@ import {
   PositioningDimension,
   AnalysisPeriod,
 } from '../constants/competitor.constants';
+import type { MarketIntelSubsidiaryId } from '../constants/marketIntelVocabulary';
 
 // ----------------------------------------------------------------------------
 // CORE COMPETITOR TYPES
@@ -78,8 +79,8 @@ export interface Competitor {
   nextAnalysisAt?: Timestamp;
   assignedAnalysts: string[];
   
-  // Dawin Context
-  subsidiariesCompeting: string[];
+  // Zeus context — the brands this competitor competes with (MARKET_INTEL_SUBSIDIARY_IDS, audit 2026-10 D-1)
+  subsidiariesCompeting: MarketIntelSubsidiaryId[];
   overlapAreas: string[];
   
   // Social / Digital Presence
@@ -96,6 +97,13 @@ export interface Competitor {
   intelligenceSources: IntelligenceItem[];
   tags: string[];
   notes?: string;
+
+  // Archive (audit 2026-10, D-3) — the client never hard-deletes; lists hide archived rows.
+  archived?: boolean;
+  archivedAt?: Timestamp | null;
+  archivedBy?: string | null;
+  archivedByName?: string | null;
+  archiveReason?: string | null;
   
   // Metadata
   createdBy: string;
@@ -220,7 +228,7 @@ export interface CompetitiveMove {
   impactSignificance: ImpactSignificance;
   impactedMarkets: Geography[];
   impactedIndustries: Industry[];
-  impactedSubsidiaries: string[];
+  impactedSubsidiaries: MarketIntelSubsidiaryId[];
   
   // Analysis
   ourResponse?: string;
@@ -287,116 +295,12 @@ export interface WinLossRecord {
   industries: Industry[];
   
   // Related
-  dawinSubsidiary: string;
+  subsidiaryId: MarketIntelSubsidiaryId;
   dealStage: string;
   bidSubmissionDate?: Timestamp;
   
   // Metadata
   recordedBy: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-// ----------------------------------------------------------------------------
-// MARKET SHARE
-// ----------------------------------------------------------------------------
-
-export interface MarketShareData {
-  id: string;
-  
-  // Market Definition
-  marketName: string;
-  industry: Industry;
-  geography: Geography;
-  year: number;
-  quarter?: number;
-  
-  // Total Market
-  totalMarketSize: number;
-  marketSizeCurrency: string;
-  marketGrowthRate: number;
-  
-  // Shares
-  shares: MarketShareEntry[];
-  
-  // Analysis
-  concentrationIndex: number;
-  top3Share: number;
-  top5Share: number;
-  
-  // Trends
-  yearOverYearChange: MarketShareTrend[];
-  
-  // Sources
-  sources: IntelligenceItem[];
-  methodology: string;
-  confidence: number;
-  
-  // Metadata
-  analyzedBy: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-export interface MarketShareEntry {
-  companyName: string;
-  competitorId?: string;
-  marketShare: number;
-  revenue?: number;
-  rank: number;
-  isEstimate: boolean;
-  notes?: string;
-}
-
-export interface MarketShareTrend {
-  period: string;
-  companyName: string;
-  share: number;
-  change: number;
-}
-
-// ----------------------------------------------------------------------------
-// PRICING INTELLIGENCE
-// ----------------------------------------------------------------------------
-
-export interface PricingIntelligence {
-  id: string;
-  competitorId: string;
-  competitorName: string;
-  
-  // Product/Service
-  productService: string;
-  category: string;
-  
-  // Pricing
-  pricePoint: number;
-  currency: string;
-  pricingModel: 'fixed' | 'hourly' | 'daily' | 'project' | 'retainer' | 'subscription' | 'cost_plus' | 'value_based';
-  priceUnit?: string;
-  
-  // Range
-  priceRangeLow?: number;
-  priceRangeHigh?: number;
-  
-  // Comparison
-  ourPrice?: number;
-  priceDifferential?: number;
-  
-  // Context
-  volumeDiscounts?: string;
-  paymentTerms?: string;
-  inclusions: string[];
-  exclusions: string[];
-  
-  // Intelligence
-  source: IntelligenceSource;
-  sourceDetails?: string;
-  confidence: number;
-  validAsOf: Timestamp;
-  expiresAt?: Timestamp;
-  
-  // Metadata
-  collectedBy: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -484,7 +388,7 @@ export interface CompetitorFormInput {
   foundedYear?: number;
   products: string[];
   services: string[];
-  subsidiariesCompeting: string[];
+  subsidiariesCompeting: MarketIntelSubsidiaryId[];
   monitoringFrequency: 'weekly' | 'monthly' | 'quarterly';
 }
 
@@ -517,7 +421,7 @@ export interface CompetitiveMoveFormInput {
   impactSignificance: ImpactSignificance;
   impactedMarkets: Geography[];
   impactedIndustries: Industry[];
-  impactedSubsidiaries: string[];
+  impactedSubsidiaries: MarketIntelSubsidiaryId[];
   strategicImplications: string[];
 }
 
@@ -538,7 +442,7 @@ export interface WinLossFormInput {
   clientFeedback?: string;
   internalLessons: string[];
   improvementActions: string[];
-  dawinSubsidiary: string;
+  subsidiaryId: MarketIntelSubsidiaryId;
 }
 
 // ----------------------------------------------------------------------------
@@ -551,15 +455,17 @@ export interface CompetitorFilters {
   industry?: Industry;
   geography?: Geography;
   status?: CompetitorStatus;
-  subsidiaryId?: string;
+  subsidiaryId?: MarketIntelSubsidiaryId;
   searchTerm?: string;
+  /** Archived rows are hidden unless asked for (D-3). */
+  includeArchived?: boolean;
 }
 
 export interface MoveFilters {
   competitorId?: string;
   moveType?: CompetitiveMoveType;
   status?: CompetitiveMove['status'];
-  impactedSubsidiary?: string;
+  impactedSubsidiary?: MarketIntelSubsidiaryId;
   startDate?: Date;
   endDate?: Date;
 }
@@ -567,7 +473,7 @@ export interface MoveFilters {
 export interface WinLossFilters {
   outcome?: WinLossOutcome;
   competitorId?: string;
-  subsidiaryId?: string;
+  subsidiaryId?: MarketIntelSubsidiaryId;
   startDate?: Date;
   endDate?: Date;
 }

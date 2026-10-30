@@ -8,7 +8,13 @@
 // INPUT TYPES
 // ----------------------------------------------------------------------------
 
-export type MarketIntelSubsidiaryId = 'finishes' | 'advisory' | 'technology' | 'capital';
+import {
+  MARKET_INTEL_SUBSIDIARY_OPTIONS,
+  type MarketIntelSubsidiaryId,
+} from '../constants/marketIntelVocabulary';
+
+/** A Zeus brand — one of MARKET_INTEL_SUBSIDIARY_IDS (audit 2026-10, D-1). */
+export type { MarketIntelSubsidiaryId };
 
 export type ScanDepth = 'quick' | 'standard' | 'deep';
 
@@ -219,6 +225,11 @@ export interface MarketIntelligenceReportsResponse {
 
 export interface StoredMarketIntelligenceReport extends MarketIntelligenceReport {
   id: string;
+  /** WP3 core (functions/src/lib/marketIntelReportShape.js): one shape on the wire. */
+  title: string | null;
+  reportType: string | null;
+  source: 'ai_scan' | null;
+  organizationId: string;
   status: 'completed' | 'failed';
   createdBy: string;
   createdByEmail: string;
@@ -230,12 +241,8 @@ export interface StoredMarketIntelligenceReport extends MarketIntelligenceReport
 // UI CONSTANTS
 // ----------------------------------------------------------------------------
 
-export const SUBSIDIARY_OPTIONS: Array<{ id: MarketIntelSubsidiaryId; name: string; description: string }> = [
-  { id: 'finishes', name: 'Zeus Group', description: 'Custom millwork, furniture & interior fit-out' },
-  { id: 'advisory', name: 'Zeus Group', description: 'Strategic advisory & project management' },
-  { id: 'technology', name: 'Zeus Technology', description: 'Technology solutions & digital transformation' },
-  { id: 'capital', name: 'Zeus Capital', description: 'Investment management & financial services' },
-];
+/** Picker rows — derived from the vocabulary registry, never typed here. */
+export const SUBSIDIARY_OPTIONS = MARKET_INTEL_SUBSIDIARY_OPTIONS;
 
 export const FOCUS_AREA_OPTIONS: Array<{ id: FocusArea; label: string }> = [
   { id: 'pricing', label: 'Pricing Changes' },

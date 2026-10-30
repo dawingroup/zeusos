@@ -959,51 +959,10 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // ============================================
-    // Market Intelligence / Environment Scanning
-    // ============================================
-
-    match /environment_signals/{signalId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /pestel_analyses/{analysisId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /scenarios/{scenarioId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /regulatory_items/{itemId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /tracked_indicators/{indicatorId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /early_warning_alerts/{alertId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-
-    match /alert_triggers/{triggerId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
+    // The environment-scanning collections (environment_signals, pestel_analyses,
+    // scenarios, regulatory_items, tracked_indicators, early_warning_alerts,
+    // alert_triggers) were retired by the market-intelligence audit (2026-10, D-5):
+    // no route, no writer, no document. Default deny applies.
 
     // Feature Library
     match /featureLibrary/{featureId} {
@@ -1478,6 +1437,35 @@ service cloud.firestore {
       return hasAnyRole(['platform_admin', 'ceo', 'executive', 'director']);
     }
 
+    // ── Market Intelligence (audit 2026-10, WP1) ─────────────────────────
+    // Mirrors functions/src/lib/marketIntelGate.js so a person who can do a
+    // thing on the screen can do it through the callable and nobody else can:
+    // reading needs an active staff profile (or an executive claim); writing
+    // additionally refuses the `viewer` globalRole; a hard delete of a parent
+    // record stays admin-only. Portal (anonymous) identities never pass.
+    function callerStaffDoc() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+        : (exists(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid))
+            ? get(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid)).data
+            : null);
+    }
+
+    function isActiveStaff() {
+      return isStaffAuth()
+        && callerStaffDoc() != null
+        && callerStaffDoc().get('isActive', true) != false;
+    }
+
+    function canReadMarketIntel() {
+      return isAdmin() || isExecutive() || isActiveStaff();
+    }
+
+    function canWriteMarketIntel() {
+      return isAdmin() || isExecutive()
+        || (isActiveStaff() && callerStaffDoc().get('globalRole', 'member') != 'viewer');
+    }
+
     function isHR() {
       return hasAnyRole(['platform_admin', 'hr_admin', 'hr_manager']);
     }
@@ -1565,13 +1553,6 @@ service cloud.firestore {
     // KPIs
     match /executive/strategy/kpis/{kpiId} {
       allow read: if isAuthenticated();
-      allow create, update: if isExecutive();
-      allow delete: if isAdmin();
-    }
-    
-    // Market Intelligence
-    match /executive/market_intelligence/{collection}/{docId} {
-      allow read: if isExecutive();
       allow create, update: if isExecutive();
       allow delete: if isAdmin();
     }
@@ -2163,13 +2144,6 @@ service cloud.firestore {
     match /investment_committee_meetings/{meetingId} {
       allow read: if isAuthenticated();
       allow create, update: if isExecutive() || isAdmin();
-      allow delete: if isAdmin();
-    }
-    
-    // Market Insights
-    match /market_insights/{insightId} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
       allow delete: if isAdmin();
     }
     
@@ -2824,165 +2798,94 @@ service cloud.firestore {
 
     // ============================================
     // MARKET INTELLIGENCE MODULE
-    // Competitors, Signals, SWOT, Moves, Win/Loss
+    // docs/MARKET_INTELLIGENCE_DATA_MODEL_AUDIT_2026_10.md (WP1). The owned
+    // collections are MARKET_INTEL_COLLECTIONS in
+    // functions/src/lib/marketIntelVocabulary.js — one block each, nothing
+    // else. Read: canReadMarketIntel(). Write: canWriteMarketIntel(). A hard
+    // delete of a parent record (competitors) is admin-only and cascades
+    // server-side (onCompetitorDeleted); the client archives instead. Child
+    // rows a writer may delete ("stop tracking") say so. Collections not
+    // listed here were retired by the audit (D-5) and fall to default deny.
     // ============================================
-    
-    // Competitors (shared by intelligence + market modules)
+
     match /competitors/{competitorId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update: if canWriteMarketIntel();
       allow delete: if isAdmin();
     }
-    
-    // Competitor SWOT Analyses
+
     match /competitor_swot/{swotId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
-    
-    // Competitive Moves
+
     match /competitive_moves/{moveId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
-    
-    // Win/Loss Records
+
     match /win_loss_records/{recordId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
-    
-    // Market Share Data
-    match /market_share_data/{dataId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-    
-    // Pricing Intelligence
-    match /pricing_intelligence/{pricingId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-    
-    // Market Signals
-    match /market_signals/{signalId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
-    }
-    
-    // Market Reports
-    match /market_reports/{reportId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-    
-    // Intelligence Items
-    match /intelligence_items/{itemId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
-    }
-    
-    // SWOT Analyses (market module)
-    match /swot_analyses/{swotId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAdmin();
-    }
-    
-    // AI Market Intelligence Reports (generated by cloud function)
+
+    // Written by the marketIntelligenceScan callable only (one shape, WP3).
     match /market_intelligence_reports/{reportId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update: if false;
       allow delete: if isAdmin();
     }
-    
-    // Digital Profiles (competitor online presence tracking)
+
+    // "Stop tracking" in the UI deletes a profile; a writer may.
     match /digital_profiles/{profileId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
-    
-    // Profile Snapshots (point-in-time metrics)
-    match /profile_snapshots/{snapshotId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if false;
-      allow delete: if isAdmin();
-    }
-    
-    // Tracked Topics (discussion monitoring)
+
     match /tracked_topics/{topicId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
-    
-    // Topic Mentions (discovered discussions)
+
     match /topic_mentions/{mentionId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-      allow delete: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update, delete: if canWriteMarketIntel();
     }
 
-    // News Articles (AI-scanned market news)
+    // A reader may mark an article read / bookmarked / flagged; nothing else.
     match /news_articles/{articleId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create: if canWriteMarketIntel();
+      allow update: if canWriteMarketIntel()
+        || (canReadMarketIntel()
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['isRead', 'isBookmarked', 'isFlagged', 'readBy', 'bookmarkedBy', 'updatedAt']));
       allow delete: if isAdmin();
     }
 
-    // Market Analyses (AI-generated market research)
     match /market_analyses/{analysisId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update: if canWriteMarketIntel();
       allow delete: if isAdmin();
     }
 
-    // AI Insights (AI-generated market insights)
+    // The one insight collection (D-6); market_insights and
+    // market_intelligence_insights are retired.
     match /ai_insights/{insightId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update: if canWriteMarketIntel();
       allow delete: if isAdmin();
     }
 
-    // Social Posts (competitor social media posts)
     match /social_posts/{postId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create, update: if canWriteMarketIntel();
       allow delete: if isAdmin();
     }
 
-    // Social Metrics (account-level social media metrics)
     match /social_metrics/{metricId} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
+      allow read: if canReadMarketIntel();
+      allow create: if canWriteMarketIntel();
       allow update: if false;
       allow delete: if isAdmin();
     }

@@ -11,6 +11,7 @@ import type { Asset } from '@/shared/types';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../../shared/services/firebase/firestore';
 import type { BusinessPivot } from '../types/strategy.types';
+import { reportTitleOf, reportTypeOf } from '@/modules/intelligence/utils/reportShape';
 
 // ----------------------------------------------------------------------------
 // Aggregated Data Types
@@ -261,6 +262,11 @@ function formatCurrency(amount: number): string {
 // ----------------------------------------------------------------------------
 
 async function fetchMarketIntelData(): Promise<MarketIntelSummaryData> {
+  // The environment-scanning collections (signals, scenarios, regulatory
+  // items, indicators, PESTEL) were retired by the market-intelligence audit
+  // (docs/MARKET_INTELLIGENCE_DATA_MODEL_AUDIT_2026_10.md, D-5): nothing ever
+  // wrote them and the rules now deny them. The shape stays so the review
+  // components keep rendering; only the reports feed carries data.
   const empty: MarketIntelSummaryData = {
     recentSignals: [],
     activeScenarios: [],
@@ -271,96 +277,24 @@ async function fetchMarketIntelData(): Promise<MarketIntelSummaryData> {
   };
 
   try {
-    // Signals (last 90 days, high/critical)
-    // Signals (last 90 days)
-    const signalsSnap = await getDocs(
-      query(collection(db, 'environment_signals'), orderBy('detectedAt', 'desc'), limit(20))
+    const reportsSnap = await getDocs(
+      query(collection(db, 'market_intelligence_reports'), orderBy('createdAt', 'desc'), limit(10))
     );
-    const recentSignals = signalsSnap.docs
+    const reports = reportsSnap.docs
       .map(d => {
         const data = d.data();
+        const findings: string[] = Array.isArray(data.keyFindings)
+          ? data.keyFindings
+          : ((data.riskAlerts || []) as { title?: string }[]).map(a => a.title || '').filter(Boolean);
         return {
-          title: data.title || '',
-          category: data.category || '',
-          impact: data.impactLevel || data.impact || '',
-          date: data.detectedAt?.toDate?.()?.toISOString?.() || '',
+          title: reportTitleOf(data) || '',
+          type: reportTypeOf(data) || '',
+          status: data.status || '',
+          keyFindings: findings.slice(0, 5),
         };
       })
-      .filter(s => s.title);
-
-    // Scenarios
-    const scenariosSnap = await getDocs(
-      query(collection(db, 'scenarios'), orderBy('createdAt', 'desc'), limit(10))
-    );
-    const activeScenarios = scenariosSnap.docs.map(d => {
-      const data = d.data();
-      return {
-        title: data.title || '',
-        probability: data.probability || '',
-        impact: data.impact || '',
-      };
-    });
-
-    // Regulatory
-    const regSnap = await getDocs(
-      query(collection(db, 'regulatory_items'), orderBy('trackedAt', 'desc'), limit(10))
-    );
-    const regulatoryItems = regSnap.docs.map(d => {
-      const data = d.data();
-      return {
-        title: data.title || '',
-        status: data.status || '',
-        deadline: data.effectiveDate?.toDate?.()?.toISOString?.() || '',
-      };
-    });
-
-    // Indicators
-    const indSnap = await getDocs(collection(db, 'tracked_indicators'));
-    const trackedIndicators = indSnap.docs.map(d => {
-      const data = d.data();
-      return {
-        name: data.name || '',
-        value: String(data.currentValue ?? ''),
-        trend: data.trend || '',
-      };
-    });
-
-    // PESTEL summary
-    const pestelSnap = await getDocs(
-      query(collection(db, 'pestel_analyses'), orderBy('createdAt', 'desc'), limit(5))
-    );
-    const pestelCategories: Record<string, number> = {};
-    pestelSnap.docs.forEach(d => {
-      const data = d.data();
-      const factors = data.factors || [];
-      factors.forEach((f: { category?: string }) => {
-        const cat = f.category || 'unknown';
-        pestelCategories[cat] = (pestelCategories[cat] || 0) + 1;
-      });
-    });
-    const pestelSummary = Object.entries(pestelCategories)
-      .map(([category, factorCount]) => ({ category, factorCount }));
-
-    // Intelligence Dashboard reports (market_intelligence_reports collection)
-    let reports: MarketIntelSummaryData['reports'] = [];
-    try {
-      const reportsSnap = await getDocs(
-        query(collection(db, 'market_intelligence_reports'), orderBy('createdAt', 'desc'), limit(10))
-      );
-      reports = reportsSnap.docs.map(d => {
-        const data = d.data();
-        return {
-          title: data.title || '',
-          type: data.type || '',
-          status: data.status || '',
-          keyFindings: (data.keyFindings || []).slice(0, 5),
-        };
-      }).filter(r => r.title);
-    } catch {
-      // Collection may not exist yet — that's fine
-    }
-
-    return { recentSignals, activeScenarios, regulatoryItems, trackedIndicators, pestelSummary, reports };
+      .filter(r => r.title);
+    return { ...empty, reports };
   } catch (error) {
     console.warn('[StrategyAggregator] Market intel fetch failed:', error);
     return empty;
