@@ -16,10 +16,10 @@ export interface RailTriggerProps {
 export function RailTrigger({ unread }: RailTriggerProps) {
   const open = useRailStore((s) => s.open);
   const toggle = useRailStore((s) => s.toggle);
-  const { visible, blockingCount } = useActionQueue();
+  const { visible, blockingCount, failed } = useActionQueue();
   const n = visible.length + unread;
 
-  const label = blockingCount > 0 ? `${blockingCount} blocking` : n > 0 ? `${n} need you` : 'All clear';
+  const label = blockingCount > 0 ? `${blockingCount} blocking` : n > 0 ? `${n} need you` : failed ? 'Check failed' : 'All clear';
   const hint = open ? 'Collapse rail  ( ] )' : 'Open rail  ( ] )';
 
   return (

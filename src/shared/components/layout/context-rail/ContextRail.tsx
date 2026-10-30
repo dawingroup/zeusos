@@ -113,7 +113,9 @@ export function ContextRail({ mode, unread, assistantContext }: ContextRailProps
               ? `${queue.visible.length} need you${queue.blockingCount ? ` · ${queue.blockingCount} blocking` : ''}`
               : queue.loading
                 ? 'Checking…'
-                : 'Nothing pending'}
+                : queue.failed
+                  ? 'Could not check everything'
+                  : 'Nothing pending'}
           </div>
           <div className="rail-body rail-actions">
             <ActionCenterList onNavigate={closeIfOverlay} />

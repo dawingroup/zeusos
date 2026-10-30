@@ -94,6 +94,7 @@ export function MyTasksProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = React.useState(true);
   const [failed, setFailed] = React.useState(false);
   const [pickedId, setPickedId] = React.useState<string | null>(readPickedTaskId);
+  const loadedFor = React.useRef<string | null>(null);
 
   // Mounted by the shell, so it outlives every laptop sleep: a listener that
   // errors on wake is closed for good; this re-attaches it on a capped backoff.
@@ -104,7 +105,11 @@ export function MyTasksProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
         return undefined;
       }
-      setLoading(true);
+      // Not on a recovery retry: what is on screen stays until the feed answers.
+      if (loadedFor.current !== uid) {
+        loadedFor.current = uid;
+        setLoading(true);
+      }
       return subscribeToMyOpenTasks(
         uid,
         (next) => {

@@ -37,6 +37,8 @@ function saveDismissed(set: Set<string>): void {
 
 export interface ActionQueue {
   loading: boolean;
+  /** A feed failed, so an empty queue does not mean nothing needs you. */
+  failed: boolean;
   visible: ActionItem[];
   blockingCount: number;
   dismissedCount: number;
@@ -54,6 +56,7 @@ export interface ActionQueue {
 
 const EMPTY: ActionQueue = {
   loading: false,
+  failed: false,
   visible: [],
   blockingCount: 0,
   dismissedCount: 0,
@@ -72,11 +75,16 @@ export function useActionQueue(): ActionQueue {
 }
 
 export function ActionQueueProvider({ children }: { children: React.ReactNode }) {
-  const { openTasks: tasks, loading: tasksLoading, completeTask } = useMyTasks();
+  const { openTasks: tasks, loading: tasksLoading, failed: tasksFailed, completeTask } = useMyTasks();
   const { dawinUser } = useCurrentDawinUser();
   const approvalsScope = React.useMemo(() => resolveApprovalsScope(dawinUser), [dawinUser]);
-  const { items: approvals, loading: approvalsLoading } = useApprovalsInbox(approvalsScope);
-  const loading = tasksLoading || approvalsLoading;
+  const { items: approvals, loading: approvalsLoading, error: approvalsError } = useApprovalsInbox(approvalsScope);
+  // Everything on screen stays through a recovery retry: only the first answer
+  // counts as loading, or the rail would flicker "Checking…" after every sleep.
+  const answered = React.useRef(false);
+  if (!tasksLoading && !approvalsLoading) answered.current = true;
+  const loading = !answered.current;
+  const failed = tasksFailed || Boolean(approvalsError);
   const [dismissed, setDismissed] = React.useState<Set<string>>(loadDismissed);
   const [leavingId, setLeavingId] = React.useState<string | null>(null);
 
@@ -123,6 +131,7 @@ export function ActionQueueProvider({ children }: { children: React.ReactNode })
   const value = React.useMemo<ActionQueue>(
     () => ({
       loading,
+      failed,
       visible,
       blockingCount: visible.filter((v) => v.urgency === 'blocking').length,
       dismissedCount: dismissed.size,
@@ -133,7 +142,7 @@ export function ActionQueueProvider({ children }: { children: React.ReactNode })
       clearAll,
       restoreAll,
     }),
-    [loading, visible, dismissed.size, leavingId, approvals.length, leave, resolve, clearAll, restoreAll],
+    [loading, failed, visible, dismissed.size, leavingId, approvals.length, leave, resolve, clearAll, restoreAll],
   );
 
   return <ActionQueueContext.Provider value={value}>{children}</ActionQueueContext.Provider>;

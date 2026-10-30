@@ -96,6 +96,13 @@ describe('ActionCenterList', () => {
     await waitFor(() => expect(h.toast).toHaveBeenCalledWith(expect.any(String), { tone: 'error' }));
   });
 
+  it('never says caught up when a feed failed', () => {
+    setQueue({ failed: true });
+    render(<ActionCenterList />);
+    expect(screen.getByRole('alert')).toHaveTextContent("didn't load");
+    expect(screen.queryByText("You're all caught up.")).toBeNull();
+  });
+
   it('an empty queue offers back what was dismissed', () => {
     const q = setQueue({ dismissedCount: 2 });
     render(<ActionCenterList />);

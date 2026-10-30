@@ -24,7 +24,7 @@ const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
 export function ActionCenterList({ onNavigate }: ActionCenterListProps) {
   const navigate = useNavigate();
-  const { visible, loading, leavingId, dismissedCount, dismiss, resolve, restoreAll } = useActionQueue();
+  const { visible, loading, failed, leavingId, dismissedCount, dismiss, resolve, restoreAll } = useActionQueue();
 
   const open = (to: string) => {
     navigate(to);
@@ -42,7 +42,12 @@ export function ActionCenterList({ onNavigate }: ActionCenterListProps) {
   return (
     <>
       <ActionCenterFocusStrip />
-      {!loading && visible.length === 0 && (
+      {failed && (
+        <div role="alert" style={{ padding: '8px 10px', borderRadius: 9, fontSize: 12, background: 'var(--rag-red-soft)', color: 'var(--rag-red)' }}>
+          Some of your work didn't load, so this list may be short. Reload to try again.
+        </div>
+      )}
+      {!loading && !failed && visible.length === 0 && (
         <div style={{ padding: '24px 12px', textAlign: 'center', fontSize: 12.5, color: 'var(--fg-tertiary)' }}>
           <Flag size={18} style={{ margin: '0 auto 8px', color: 'var(--rag-green)' }} aria-hidden="true" />
           You're all caught up.

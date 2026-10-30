@@ -147,6 +147,9 @@ describe('the trigger', () => {
     setQueue(2);
     rerender(<RailTrigger unread={3} />);
     expect(screen.getByTestId('rail-trigger')).toHaveTextContent('5 need you');
+    queue.current = { ...(queue.current as object), visible: [], blockingCount: 0, failed: true };
+    rerender(<RailTrigger unread={0} />);
+    expect(screen.getByTestId('rail-trigger')).toHaveTextContent('Check failed');
     setQueue(2, 1);
     rerender(<RailTrigger unread={3} />);
     expect(screen.getByTestId('rail-trigger')).toHaveTextContent('1 blocking');
