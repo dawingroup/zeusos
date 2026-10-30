@@ -9,10 +9,14 @@
  */
 import * as React from 'react';
 
+import { useCurrentDawinUser } from '@/core/settings';
+import { useApprovalsInbox } from '@/modules/approvals/hooks/useApprovalsInbox';
+import { resolveApprovalsScope } from '@/modules/approvals/scope';
 import { useMyTasks } from '@/modules/intelligence-layer/context/MyTasksContext';
 import { buildActionItems, type ActionItem } from './config';
 
-const LS_DISMISSED = 'zeus_ac_dismissed_v1';
+// v2: item ids now carry their source (`task:…`, `approval:…`).
+const LS_DISMISSED = 'zeus_ac_dismissed_v2';
 const LEAVE_MS = 320;
 
 function loadDismissed(): Set<string> {
@@ -38,11 +42,12 @@ export interface ActionQueue {
   dismissedCount: number;
   /** The item animating out, so the row can fade before it is dropped. */
   leavingId: string | null;
-  now: number;
+  /** Approvals waiting, dismissed or not — the sidebar badge matches /approvals. */
+  approvalsCount: number;
   /** Hide an item without completing it; the task itself stays open. */
   dismiss: (id: string) => void;
-  /** Close the task through the engine. The item stays if the call fails. */
-  resolve: (id: string) => Promise<void>;
+  /** Close the item's task through the engine. The item stays if the call fails. */
+  resolve: (item: ActionItem) => Promise<void>;
   clearAll: () => void;
   restoreAll: () => void;
 }
@@ -53,7 +58,7 @@ const EMPTY: ActionQueue = {
   blockingCount: 0,
   dismissedCount: 0,
   leavingId: null,
-  now: 0,
+  approvalsCount: 0,
   dismiss: () => undefined,
   resolve: async () => undefined,
   clearAll: () => undefined,
@@ -67,15 +72,20 @@ export function useActionQueue(): ActionQueue {
 }
 
 export function ActionQueueProvider({ children }: { children: React.ReactNode }) {
-  const { openTasks: tasks, loading, completeTask } = useMyTasks();
+  const { openTasks: tasks, loading: tasksLoading, completeTask } = useMyTasks();
+  const { dawinUser } = useCurrentDawinUser();
+  const approvalsScope = React.useMemo(() => resolveApprovalsScope(dawinUser), [dawinUser]);
+  const { items: approvals, loading: approvalsLoading } = useApprovalsInbox(approvalsScope);
+  const loading = tasksLoading || approvalsLoading;
   const [dismissed, setDismissed] = React.useState<Set<string>>(loadDismissed);
   const [leavingId, setLeavingId] = React.useState<string | null>(null);
 
   React.useEffect(() => saveDismissed(dismissed), [dismissed]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- "now" moves when the tasks do.
-  const now = React.useMemo(() => Date.now(), [tasks]);
-  const visible = React.useMemo(() => buildActionItems(tasks, dismissed, now), [tasks, dismissed, now]);
+  const visible = React.useMemo(
+    () => buildActionItems({ tasks, approvals }, dismissed, Date.now()),
+    [tasks, approvals, dismissed],
+  );
 
   const leave = React.useCallback((id: string) => {
     setLeavingId(id);
@@ -86,15 +96,16 @@ export function ActionQueueProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const resolve = React.useCallback(
-    async (id: string) => {
-      setLeavingId(id);
+    async (item: ActionItem) => {
+      if (!item.completeTaskId) return;
+      setLeavingId(item.id);
       try {
-        await completeTask(id);
+        await completeTask(item.completeTaskId);
       } catch (err) {
         setLeavingId(null);
         throw err;
       }
-      leave(id);
+      leave(item.id);
     },
     [completeTask, leave],
   );
@@ -102,7 +113,7 @@ export function ActionQueueProvider({ children }: { children: React.ReactNode })
   const clearAll = React.useCallback(() => {
     setDismissed((prev) => {
       const next = new Set(prev);
-      visible.forEach((v) => next.add(v.task.id));
+      visible.forEach((v) => next.add(v.id));
       return next;
     });
   }, [visible]);
@@ -116,13 +127,13 @@ export function ActionQueueProvider({ children }: { children: React.ReactNode })
       blockingCount: visible.filter((v) => v.urgency === 'blocking').length,
       dismissedCount: dismissed.size,
       leavingId,
-      now,
+      approvalsCount: approvals.length,
       dismiss: leave,
       resolve,
       clearAll,
       restoreAll,
     }),
-    [loading, visible, dismissed.size, leavingId, now, leave, resolve, clearAll, restoreAll],
+    [loading, visible, dismissed.size, leavingId, approvals.length, leave, resolve, clearAll, restoreAll],
   );
 
   return <ActionQueueContext.Provider value={value}>{children}</ActionQueueContext.Provider>;

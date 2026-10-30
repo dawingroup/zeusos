@@ -71,8 +71,6 @@ import {
   type NavItem,
 } from '@/config/navigation.unified';
 import { adaptManifestToLegacyNavItem, resolveNav, type NavStatus } from '@/core/navigation/manifest';
-import { resolveApprovalsScope } from '@/modules/approvals/scope';
-import { useApprovalsInbox } from '@/modules/approvals/hooks/useApprovalsInbox';
 import { isConflictIsolated } from '@/core/settings/brand-capabilities';
 import { isParentOrgPrincipal as resolveIsParentOrgPrincipal } from '@/core/settings/org-kind';
 import type { SubsidiaryId } from '@/core/settings/types';
@@ -198,10 +196,10 @@ function AppShellFrame({ children }: AppShellProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { dawinUser } = useCurrentDawinUser();
-  // Approvals pending-count badge (port stream F). Same scope rule as the
-  // /approvals page, so the number on the sidebar is the number on the page.
-  const approvalsScope = useMemo(() => resolveApprovalsScope(dawinUser), [dawinUser]);
-  const approvalsCount = useApprovalsInbox(approvalsScope).items.length;
+  // The action queue also carries the approvals pending-count badge: same scope
+  // rule as the /approvals page, so the number on the sidebar is the number there.
+  const actionQueue = useActionQueue();
+  const { approvalsCount } = actionQueue;
   const { allAccessibleModuleIds, isAdmin: isModuleAdmin, isSuperUser } = useUserModules();
   const { sidebarOpen, toggleSidebar, sidebarAutoClose, sidebarCollapsed, toggleSidebarCollapsed, direction, navScope, setNavScope } = useUIStore();
   const { currentSubsidiary, subsidiaries, setCurrentSubsidiary } = useSubsidiary();
@@ -265,7 +263,6 @@ function AppShellFrame({ children }: AppShellProps) {
   const setRailSeg = useRailStore((s) => s.setSeg);
   const applyRailFirstRun = useRailStore((s) => s.applyFirstRun);
   const railMode = useRailMode();
-  const actionQueue = useActionQueue();
   const { collapseAll: collapseDock } = useChatDock();
   useRailShortcut();
   const desktopHeaderRef = React.useRef<HTMLElement>(null);
