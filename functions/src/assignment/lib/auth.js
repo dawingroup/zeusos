@@ -38,8 +38,13 @@ async function loadUserDoc(uid) {
   return snap.data();
 }
 
+/** A super-user address counts only once verified. */
+function isSuperEmailToken(authToken) {
+  return !!authToken && authToken.email_verified === true && SUPER_EMAILS.has(authToken.email);
+}
+
 function isSuper(authToken, user) {
-  if (authToken && authToken.email && SUPER_EMAILS.has(authToken.email)) return true;
+  if (isSuperEmailToken(authToken)) return true;
   if (user && (user.globalRole === 'admin' || user.globalRole === 'owner')) return true;
   return false;
 }
@@ -338,6 +343,7 @@ async function isParentOrgUser(userId) {
 module.exports = {
   PARENT_ORG_ID,
   SUPER_EMAILS,
+  isSuperEmailToken,
   isSuper,
   assertParentOrgPrincipal,
   assertCommercialPrincipal,

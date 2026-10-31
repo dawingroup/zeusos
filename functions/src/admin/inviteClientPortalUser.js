@@ -29,7 +29,7 @@ const SUPERUSER_EMAILS = new Set(['onzimai@dawin.group']);
 async function isCallerStaff(authContext) {
   if (!authContext?.uid) return false;
   if (authContext.token?.firebase?.sign_in_provider === 'anonymous') return false;
-  if (SUPERUSER_EMAILS.has(authContext.token?.email || '')) return true;
+  if (authContext.token?.email_verified === true && SUPERUSER_EMAILS.has(authContext.token?.email || '')) return true;
 
   const userDoc = await admin.firestore().collection('users').doc(authContext.uid).get();
   if (!userDoc.exists) return false;

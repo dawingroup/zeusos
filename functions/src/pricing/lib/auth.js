@@ -34,7 +34,7 @@ async function assertPricingAdmin(auth, { allowOverride = false } = {}) {
   const u = userDoc.data() || {};
   // Super-user bypass — mirror src/router/guards/RoleGuard.tsx.
   const SUPERS = ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group'];
-  if (auth.token && auth.token.email && SUPERS.includes(auth.token.email)) {
+  if (auth.token && auth.token.email_verified === true && SUPERS.includes(auth.token.email)) {
     return { user: u, isOverrideEligible: true };
   }
   const role = u.globalRole;

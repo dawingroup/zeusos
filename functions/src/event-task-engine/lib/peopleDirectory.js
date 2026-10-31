@@ -1,11 +1,17 @@
 /**
  * People directory for the task engine's SERVER-side writers — one scan of
- * `employees` + `users`, indexed by employee doc id AND auth uid AND email.
+ * `employees` + the staff profiles, indexed by employee doc id AND auth uid AND
+ * email.
+ *
+ * A staff profile lives at `organizations/default/users/{uid}` (canonical, what
+ * an accepted invite writes) or `users/{uid}` (legacy): the same order as
+ * `loadUserDoc` in assignment/lib/auth.js, so the person the gates recognise is
+ * the person work can reach.
  *
  * Tasks are assigned by Auth uid (`assignedToUserId`); plans are keyed by uid;
  * managers are found through the employee record (`position.reportingTo`,
  * an employee doc id) and then mapped back to a uid. A uid with no employee
- * record (a parent-org admin) still gets a directory entry from `users`, so
+ * record (a parent-org admin) still gets a directory entry from its profile, so
  * work assigned to them is still planned.
  *
  * `db` is passed in; no Firebase at module load, so the node tests inject the
@@ -13,7 +19,9 @@
  */
 
 const EMPLOYEES_COLLECTION = 'employees';
+const ORG_USERS_COLLECTION = 'organizations/default/users';
 const USERS_COLLECTION = 'users';
+const PROFILE_COLLECTIONS = [ORG_USERS_COLLECTION, USERS_COLLECTION];
 const WORKING_STATUSES = ['active', 'probation', 'notice_period'];
 
 function nameOfEmployee(e) {
@@ -54,17 +62,18 @@ function emailOf(e) {
 async function loadDirectory(db, opts = {}) {
   let q = db.collection(EMPLOYEES_COLLECTION);
   if (!opts.includeExStaff) q = q.where('employmentStatus', 'in', WORKING_STATUSES);
-  const [empSnap, userSnap] = await Promise.all([
+  const [empSnap, ...profileSnaps] = await Promise.all([
     q.get(),
-    db.collection(USERS_COLLECTION).limit(2000).get(),
+    ...PROFILE_COLLECTIONS.map((path) => db.collection(path).limit(2000).get()),
   ]);
 
-  // users/{uid}: email → uid, uid → profile (display name, home org).
+  // Staff profiles: email → uid, uid → profile (display name, home org).
   const uidByEmail = new Map();
   const userById = new Map();
-  for (const d of userSnap.docs) {
+  for (const d of profileSnaps.flatMap((snap) => snap.docs)) {
     const u = d.data() || {};
     const uid = u.uid || d.id;
+    if (userById.has(uid)) continue;
     userById.set(uid, { uid, ...u });
     const email = typeof u.email === 'string' ? u.email.trim().toLowerCase() : null;
     if (email && !uidByEmail.has(email)) uidByEmail.set(email, uid);
@@ -165,6 +174,24 @@ function groupByAssignee(tasks, directory) {
   return byAssignee;
 }
 
+/** A staff profile by doc id, canonical location first; null when neither has it. */
+async function profileById(db, uid) {
+  for (const path of PROFILE_COLLECTIONS) {
+    const snap = await db.collection(path).doc(uid).get();
+    if (snap.exists) return snap.data() || {};
+  }
+  return null;
+}
+
+/** A staff profile doc by email, canonical location first; null when neither has it. */
+async function profileDocByEmail(db, email) {
+  for (const path of PROFILE_COLLECTIONS) {
+    const snap = await db.collection(path).where('email', '==', email).limit(1).get();
+    if (!snap.empty) return snap.docs[0];
+  }
+  return null;
+}
+
 /**
  * ONE person's uid from whatever key a caller sends (uid, employee doc id or
  * email) — the single-lookup counterpart of `loadDirectory` for a callable
@@ -176,10 +203,9 @@ async function resolvePersonUid(db, rawKey) {
   if (!key) return null;
 
   // An existing user doc keyed by uid.
-  const userSnap = await db.collection(USERS_COLLECTION).doc(key).get();
-  if (userSnap.exists) {
-    const u = userSnap.data() || {};
-    return { uid: key, name: u.displayName || u.name || null, employeeId: null };
+  const profile = await profileById(db, key);
+  if (profile) {
+    return { uid: key, name: profile.displayName || profile.name || null, employeeId: null };
   }
 
   // An employee doc id.
@@ -188,14 +214,13 @@ async function resolvePersonUid(db, rawKey) {
     if (empSnap.exists) {
       const e = empSnap.data() || {};
       const linked = e.systemAccess && e.systemAccess.userId;
-      if (linked) {
-        const linkedUser = await db.collection(USERS_COLLECTION).doc(linked).get();
-        if (linkedUser.exists) return { uid: linked, name: nameOfEmployee(e), employeeId: key };
+      if (linked && (await profileById(db, linked))) {
+        return { uid: linked, name: nameOfEmployee(e), employeeId: key };
       }
       const email = emailOf(e);
       if (email) {
-        const byEmail = await db.collection(USERS_COLLECTION).where('email', '==', email).limit(1).get();
-        if (!byEmail.empty) return { uid: byEmail.docs[0].data().uid || byEmail.docs[0].id, name: nameOfEmployee(e), employeeId: key };
+        const byEmail = await profileDocByEmail(db, email);
+        if (byEmail) return { uid: byEmail.data().uid || byEmail.id, name: nameOfEmployee(e), employeeId: key };
       }
       if (linked) return { uid: linked, name: nameOfEmployee(e), employeeId: key };
       return null;
@@ -205,10 +230,10 @@ async function resolvePersonUid(db, rawKey) {
   // An email.
   const email = key.toLowerCase();
   if (email.includes('@')) {
-    const byEmail = await db.collection(USERS_COLLECTION).where('email', '==', email).limit(1).get();
-    if (!byEmail.empty) {
-      const u = byEmail.docs[0].data() || {};
-      return { uid: u.uid || byEmail.docs[0].id, name: u.displayName || null, employeeId: null };
+    const byEmail = await profileDocByEmail(db, email);
+    if (byEmail) {
+      const u = byEmail.data() || {};
+      return { uid: u.uid || byEmail.id, name: u.displayName || null, employeeId: null };
     }
   }
   return null;
@@ -220,9 +245,15 @@ async function resolvePersonUid(db, rawKey) {
  */
 async function findOwnerUser(db) {
   for (const role of ['owner', 'admin']) {
-    const snap = await db.collection(USERS_COLLECTION).where('globalRole', '==', role).get();
-    const people = snap.docs
-      .map((d) => ({ uid: d.data().uid || d.id, ...d.data() }))
+    const snaps = await Promise.all(
+      PROFILE_COLLECTIONS.map((path) => db.collection(path).where('globalRole', '==', role).get()),
+    );
+    const byUid = new Map();
+    for (const d of snaps.flatMap((snap) => snap.docs)) {
+      const uid = d.data().uid || d.id;
+      if (!byUid.has(uid)) byUid.set(uid, { ...d.data(), uid });
+    }
+    const people = [...byUid.values()]
       .filter((u) => u.isActive !== false)
       .sort((a, b) => String(a.email || '').localeCompare(String(b.email || '')));
     if (people.length) {
@@ -235,6 +266,7 @@ async function findOwnerUser(db) {
 
 module.exports = {
   EMPLOYEES_COLLECTION,
+  ORG_USERS_COLLECTION,
   USERS_COLLECTION,
   WORKING_STATUSES,
   loadDirectory,

@@ -323,7 +323,7 @@ async function requireAuthorized(request, requireOwner) {
     throw new HttpsError('unauthenticated', 'Authentication required');
   }
   const email = request.auth.token?.email;
-  const isSuperUser = email && SUPER_USER_EMAILS.includes(email);
+  const isSuperUser = request.auth.token?.email_verified === true && SUPER_USER_EMAILS.includes(email);
   if (isSuperUser) return { uid: request.auth.uid, email, role: 'owner' };
 
   // Look up the DawinUser profile to read globalRole. ZeusOS stores the

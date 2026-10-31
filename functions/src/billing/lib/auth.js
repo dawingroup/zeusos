@@ -28,7 +28,7 @@ async function assertBillingAdmin(auth) {
 
   // Super-users skip the extra admin/owner requirement.
   const isSuperUser =
-    !!(auth.token && auth.token.email && SUPER_EMAILS.has(auth.token.email)) ||
+    !!(auth.token && auth.token.email_verified === true && SUPER_EMAILS.has(auth.token.email)) ||
     user.globalRole === 'owner';
   if (isSuperUser) {
     return { uid, user, isSuperUser: true };
