@@ -333,6 +333,7 @@ const NotificationSettingsPage = lazyWithRetry(() => import('@/pages/profile/Not
 const AppearanceSettingsPage = lazyWithRetry(() => import('@/pages/profile/AppearanceSettingsPage'));
 const SettingsPage = lazyWithRetry(() => import('@/app/pages/SettingsPage'));
 const UserManagementPage = lazyWithRetry(() => import('@/pages/admin/UserManagementPage'));
+const UserDetailPage = lazyWithRetry(() => import('@/pages/admin/UserDetailPage'));
 const RoleManagementPage = lazyWithRetry(() => import('@/pages/admin/RoleManagementPage'));
 const AuditLogPage = lazyWithRetry(() => import('@/pages/admin/AuditLogPage'));
 const DesignSystemPage = lazyWithRetry(() => import('@/pages/admin/DesignSystemPage'));
@@ -699,6 +700,7 @@ export const router = createBrowserRouter([
       // 404'd. Wire it to the built SettingsPage.
       { path: 'admin/settings',      element: <PageWrapper><SettingsPage /></PageWrapper> },
       { path: 'admin/users',         element: <PageWrapper><UserManagementPage /></PageWrapper> },
+      { path: 'admin/users/:userId', element: <PageWrapper><UserDetailPage /></PageWrapper> },
       { path: 'admin/roles',         element: <PageWrapper><RoleManagementPage /></PageWrapper> },
       { path: 'admin/audit-log',     element: <PageWrapper><AuditLogPage /></PageWrapper> },
       { path: 'admin/design-system', element: <PageWrapper><DesignSystemPage /></PageWrapper> },
