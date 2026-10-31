@@ -16,7 +16,7 @@ import { bootstrap, teardown, seedFixtures, PARENT_ADMIN_UID, SUBSIDIARY_USER_UI
 
 let env: RulesTestEnvironment;
 
-const google = { firebase: { sign_in_provider: 'google.com' } };
+const google = { firebase: { sign_in_provider: 'google.com' as const } };
 const stranger = () => env.authenticatedContext('stranger', { ...google, email: 'stranger@else.test', email_verified: true }).firestore();
 const portal = () => env.authenticatedContext('portal-session', { firebase: { sign_in_provider: 'anonymous' } }).firestore();
 const member = () => env.authenticatedContext(SUBSIDIARY_USER_UID, google).firestore();
