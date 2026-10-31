@@ -8,6 +8,7 @@ const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const { logger } = require('firebase-functions');
 const admin = require('firebase-admin');
 const { ALLOWED_ORIGINS } = require('../config/cors');
+const { loadUserDoc: loadUserDocFromFirestore, isSuper } = require('../assignment/lib/auth');
 
 /**
  * Map job level to security role
@@ -114,30 +115,45 @@ const setAdminClaims = onCall({ cors: ALLOWED_ORIGINS }, async (request) => {
 });
 
 /**
+ * Who may mint the first platform_admin claim: an existing administrator.
+ * `deps.loadUserDoc` is for tests.
+ */
+async function assertMayInitializeFirstAdmin(auth, deps = {}) {
+  if (!auth || !auth.uid) {
+    throw new HttpsError(
+      'unauthenticated',
+      'Must be authenticated to initialize admin'
+    );
+  }
+  const load = deps.loadUserDoc || loadUserDocFromFirestore;
+  if (!isSuper(auth.token || {}, await load(auth.uid))) {
+    throw new HttpsError(
+      'permission-denied',
+      'Only an administrator can initialize the first admin'
+    );
+  }
+}
+
+/**
  * Initialize first admin user
  * This should only be called once during initial setup
  */
 const initializeFirstAdmin = onCall({ cors: ALLOWED_ORIGINS }, async (request) => {
+  await assertMayInitializeFirstAdmin(request.auth);
+
   // Check if any admin exists
   const existingAdmins = await admin.auth().listUsers(1);
   const hasAdmin = existingAdmins.users.some(
     user => user.customClaims?.role === 'platform_admin'
   );
-  
+
   if (hasAdmin) {
     throw new HttpsError(
       'already-exists',
       'Admin user already exists'
     );
   }
-  
-  if (!request.auth) {
-    throw new HttpsError(
-      'unauthenticated',
-      'Must be authenticated to initialize admin'
-    );
-  }
-  
+
   // Set the current user as platform admin
   await admin.auth().setCustomUserClaims(request.auth.uid, {
     role: 'platform_admin',
@@ -247,6 +263,7 @@ module.exports = {
   syncEmployeeClaims,
   setAdminClaims,
   initializeFirstAdmin,
+  assertMayInitializeFirstAdmin,
   getCurrentClaims,
   updateUserClaims,
 };

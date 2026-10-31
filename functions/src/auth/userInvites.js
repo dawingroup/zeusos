@@ -29,6 +29,11 @@ const processNewUserInvite = onCall({ cors: ALLOWED_ORIGINS }, async (request) =
     throw new HttpsError('failed-precondition', 'User email is required');
   }
 
+  // An invite goes only to a verified address.
+  if (request.auth.token.email_verified !== true) {
+    return { hasInvite: false, reason: 'unverified_email' };
+  }
+
   // Find pending invite for this email
   const invitesSnap = await db
     .collection(`organizations/${DEFAULT_ORG}/invites`)

@@ -24,14 +24,18 @@ service cloud.firestore {
       return request.auth != null;
     }
     
+    // Zeus Group super-admin emails (project owners). Phase 0 open item #2
+    // tracks the canonical email; both are accepted during transition. The
+    // address only counts once verified.
+    function isSuperEmail() {
+      return request.auth.token.get('email_verified', false) == true
+        && request.auth.token.get('email', '') in ['onzimai@zeusgroup.co.ug', 'onzimai@dawin.group', 'admin@zeusgroup.co.ug'];
+    }
+
     function isAdmin() {
       return isAuthenticated() && (
         // Super-user bypass — kept in sync with isSuperUser() below.
-        // Zeus Group super-admin emails (project owners). Phase 0 open item #2
-        // tracks the canonical email; both are accepted during transition.
-        request.auth.token.email == 'onzimai@zeusgroup.co.ug'
-        || request.auth.token.email == 'onzimai@dawin.group'
-        || request.auth.token.email == 'admin@zeusgroup.co.ug'
+        isSuperEmail()
         // Check root users collection
         || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
             && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin', 'owner'])
@@ -256,9 +260,7 @@ service cloud.firestore {
 
     function isSuperUser() {
       return isAuthenticated() && (
-        request.auth.token.email == 'onzimai@zeusgroup.co.ug'
-        || request.auth.token.email == 'onzimai@dawin.group'
-        || request.auth.token.email == 'admin@zeusgroup.co.ug'
+        isSuperEmail()
         || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
             && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.globalRole in ['admin','owner'])
         || (exists(/databases/$(database)/documents/organizations/default/users/$(request.auth.uid))
@@ -576,8 +578,18 @@ service cloud.firestore {
     // Users collection (for role-based access)
     match /users/{userId} {
       allow read: if isAuthenticated();
-      allow create: if isAuthenticated(); // Allow authenticated users to create their profile
-      allow update, delete: if request.auth.uid == userId || isAdmin();
+      // This document is authority: `globalRole` makes an admin, `homeOrgId` a
+      // brand member, `isActive` a staff member, and merely existing passes
+      // isInternalStaff(). Nobody writes their own into being or edits those
+      // fields; a person keeps only their display fields, as under
+      // organizations/{orgId}/users.
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (isAuthenticated()
+            && request.auth.uid == userId
+            && resource != null
+            && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['displayName', 'phone', 'jobTitle', 'department', 'photoUrl', 'lastLoginAt', 'updatedAt']));
 
       // A person's own settings — `settings/preferences` carries the UI
       // preferences GlobalContext saves and the `notificationSettings` the
@@ -2271,6 +2283,7 @@ service cloud.firestore {
                 .hasOnly(['displayName', 'phone', 'jobTitle', 'department', 'photoUrl', 'lastLoginAt', 'updatedAt']))
           // Allow uid self-heal: user whose email matches can fix a stale uid field
           || (isAuthenticated()
+              && request.auth.token.get('email_verified', false) == true
               && resource.data.email == request.auth.token.email
               && request.resource.data.diff(resource.data).affectedKeys()
                 .hasOnly(['uid', 'updatedAt']));

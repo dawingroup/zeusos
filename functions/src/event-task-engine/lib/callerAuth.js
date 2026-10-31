@@ -26,7 +26,7 @@ function requireSignedIn(request, action = 'do that') {
 
 async function isAdminCaller(auth, deps = {}) {
   if (!auth || !auth.uid) return false;
-  if (auth.token && auth.token.email && SUPER_EMAILS.has(auth.token.email)) return true;
+  if (auth.token && auth.token.email_verified === true && SUPER_EMAILS.has(auth.token.email)) return true;
   const load = deps.loadUserDoc || loadUserDoc;
   const user = await load(auth.uid);
   return Boolean(user && (user.globalRole === 'admin' || user.globalRole === 'owner'));

@@ -50,8 +50,13 @@ test('owners / admins (globalRole) and the super-user emails pass every need', (
   for (const role of ['admin', 'owner']) {
     for (const need of NEEDS) assert.equal(marketIntelAllows({ token: token(), user: staff(role) }, need), true, `${role}/${need}`);
   }
-  const superToken = token({ email: 'admin@zeusgroup.co.ug' });
+  const superToken = token({ email: 'admin@zeusgroup.co.ug', email_verified: true });
   for (const need of NEEDS) assert.equal(marketIntelAllows({ token: superToken, user: null }, need), true, `super/${need}`);
+});
+
+test('a super-user address that is not verified earns nothing', () => {
+  const claimed = token({ email: 'admin@zeusgroup.co.ug', email_verified: false });
+  for (const need of NEEDS) assert.equal(marketIntelAllows({ token: claimed, user: null }, need), false, `claimed/${need}`);
 });
 
 test('an executive claim reads and writes without a profile, but is not an administrator', () => {
