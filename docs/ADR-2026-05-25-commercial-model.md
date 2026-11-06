@@ -45,7 +45,7 @@ This ADR records the final decisions and the consequent reshape work.
 - ⚠️ The `ParentOrgGuard` blanket on `/clients`, `/master-jobs`, `/account-mgmt/*`, `/pricing/*`, `/billing/*` (router) needs to relax into a `BrandAccessGuard` that checks `client.primaryBrandId === caller.brandId` OR `caller.kind === 'PARENT'`.
 - ⚠️ `assertParentOrgPrincipal` in `functions/src/assignment/lib/auth.js` becomes `assertCommercialPrincipal(client.primaryBrandId)` — accepts the brand's home AD OR a parent-org AM.
 - ⚠️ `firestore.rules` `isParentOrgPrincipal()` becomes `canActOnClient(clientId)` — same boundary, finer signal.
-- ⚠️ **The Phase 6.UI.0 sidebar manifest** (just merged in [#81](https://github.com/dawingroup/zeusos/pull/81)) needs a third org-kind variant. Today it has `PARENT` (full commercial sidebar) and `SUBSIDIARY` (delivery-only sidebar). Add **`SUBSIDIARY_SELLING`** — surfaces brand-scoped Account Mgmt / Pricing / Billing entries for subsidiary ADs.
+- ⚠️ **The Phase 6.UI.0 sidebar manifest** (just merged in [#81](https://github.com/Dawin-Technology/zeusos/pull/81)) needs a third org-kind variant. Today it has `PARENT` (full commercial sidebar) and `SUBSIDIARY` (delivery-only sidebar). Add **`SUBSIDIARY_SELLING`** — surfaces brand-scoped Account Mgmt / Pricing / Billing entries for subsidiary ADs.
 - 📋 **Action:** add `clients.primaryBrandId: SubsidiaryId` to the [`Client` type](../src/modules/contracts/types/client.types.ts) and the create-client form. Default new clients via the creator's `homeOrgId`. Backfill existing clients to `primaryBrandId = 'zeus-group'` (preserve current behaviour for already-signed accounts).
 - 📋 **Action:** add a `client_pitch_consent` collection (or a `clients.pitchConsent[]` field) for the cross-brand pitch permission. Out of scope for the first reshape PR; sketch as a follow-up.
 
@@ -73,8 +73,8 @@ This ADR records the final decisions and the consequent reshape work.
 
 **Implications — this means the just-shipped 6.C `conflict_walls` model is the wrong shape:**
 
-- ⚠️ The current PR [#78 (6.C Conflict Firewall)](https://github.com/dawingroup/zeusos/pull/78) ships `categories` + `client_categories` + `conflict_walls` keyed on categoryId. This shape over-blocks and doesn't capture contractual reality.
-- ⚠️ PR [#83 (6.C UI)](https://github.com/dawingroup/zeusos/pull/83) builds the admin UI on top of the category model. Both need a rework.
+- ⚠️ The current PR [#78 (6.C Conflict Firewall)](https://github.com/Dawin-Technology/zeusos/pull/78) ships `categories` + `client_categories` + `conflict_walls` keyed on categoryId. This shape over-blocks and doesn't capture contractual reality.
+- ⚠️ PR [#83 (6.C UI)](https://github.com/Dawin-Technology/zeusos/pull/83) builds the admin UI on top of the category model. Both need a rework.
 - 📋 **New shape:** `client_competitors/{clientId__competitorClientId}` — `{ clientId, competitorClientId, sourceAggregateType: 'MSA' | 'manual', sourceAggregateId, notes, addedBy, addedAt }`. The firewall checks: *"is any candidate brand currently serving a client on the requesting client's competitor list?"*
 - 📋 **Categories survive as a reporting overlay only.** AMs still tag clients by category for portfolio reporting ("we serve 3 FMCG clients across 4 brands"), but routing does not consult categories.
 - 📋 **`excludeConflicted` rewrites** as: query `client_competitors` for the requesting client → for each competitor on the list, query open IWOs across all brands to find which brand serves them → exclude those brands.
@@ -87,11 +87,11 @@ The work below brings the codebase in line with the four decisions. Sequenced fo
 
 | PR | Action | Reason |
 |---|---|---|
-| [#78](https://github.com/dawingroup/zeusos/pull/78) (6.C backend) | **Close** | Categories model wrong shape. Useful pieces (idempotent admin-callable pattern, outbox event `ConflictExclusivityRisk`) are reusable in the rewrite. |
-| [#83](https://github.com/dawingroup/zeusos/pull/83) (6.C UI) | **Close** | UI built on the categories model. The `CategoryPickerDialog` / `WallsPage` shells are reusable shapes but the data model underneath changes. |
-| [#80](https://github.com/dawingroup/zeusos/pull/80) (6.D backend) | **Keep open, rebase onto main** | ECD ladder + briefs + CES are independent of the commercial-model decisions. |
-| [#84](https://github.com/dawingroup/zeusos/pull/84), [#85](https://github.com/dawingroup/zeusos/pull/85) (6.D UI + CES) | **Keep open, rebase onto main after #80** | Same — pure delivery / production work. |
-| [#52](https://github.com/dawingroup/zeusos/pull/52) (Addendum docs) | **Keep open, layer this ADR in** | The docs PR should land as the authoritative reference; this ADR is its supporting decision record. |
+| [#78](https://github.com/Dawin-Technology/zeusos/pull/78) (6.C backend) | **Close** | Categories model wrong shape. Useful pieces (idempotent admin-callable pattern, outbox event `ConflictExclusivityRisk`) are reusable in the rewrite. |
+| [#83](https://github.com/Dawin-Technology/zeusos/pull/83) (6.C UI) | **Close** | UI built on the categories model. The `CategoryPickerDialog` / `WallsPage` shells are reusable shapes but the data model underneath changes. |
+| [#80](https://github.com/Dawin-Technology/zeusos/pull/80) (6.D backend) | **Keep open, rebase onto main** | ECD ladder + briefs + CES are independent of the commercial-model decisions. |
+| [#84](https://github.com/Dawin-Technology/zeusos/pull/84), [#85](https://github.com/Dawin-Technology/zeusos/pull/85) (6.D UI + CES) | **Keep open, rebase onto main after #80** | Same — pure delivery / production work. |
+| [#52](https://github.com/Dawin-Technology/zeusos/pull/52) (Addendum docs) | **Keep open, layer this ADR in** | The docs PR should land as the authoritative reference; this ADR is its supporting decision record. |
 
 ### 3.2 Decision-driven changes (ordered)
 
@@ -124,11 +124,11 @@ The work below brings the codebase in line with the four decisions. Sequenced fo
 
 | PR | Status | Aligned with ADR? |
 |---|---|---|
-| [#81](https://github.com/dawingroup/zeusos/pull/81) Phase 6.UI.0 — Sidebar manifest | Merged | Mostly — needs the `SUBSIDIARY_SELLING` variant added (step 5 above). |
-| [#88](https://github.com/dawingroup/zeusos/pull/88) Phase 6.UI.B — Traffic | Merged | ✅ Routing logic is brand-aware regardless of commercial-ownership model. |
-| [#86](https://github.com/dawingroup/zeusos/pull/86) Phase 6.UI.A — Role Profiles | Merged | ✅ Role profiles are already brand-scoped; verb matrix and approval authorities don't depend on the commercial model. |
-| [#84](https://github.com/dawingroup/zeusos/pull/84) Phase 6.UI.D.2 — ECD Review | Open | ✅ Delivery-side; no commercial-model dependency. Rebase + ship. |
-| [#85](https://github.com/dawingroup/zeusos/pull/85) Phase 6.UI.D — CES + Brief | Open | ✅ Same. Rebase + ship. |
+| [#81](https://github.com/Dawin-Technology/zeusos/pull/81) Phase 6.UI.0 — Sidebar manifest | Merged | Mostly — needs the `SUBSIDIARY_SELLING` variant added (step 5 above). |
+| [#88](https://github.com/Dawin-Technology/zeusos/pull/88) Phase 6.UI.B — Traffic | Merged | ✅ Routing logic is brand-aware regardless of commercial-ownership model. |
+| [#86](https://github.com/Dawin-Technology/zeusos/pull/86) Phase 6.UI.A — Role Profiles | Merged | ✅ Role profiles are already brand-scoped; verb matrix and approval authorities don't depend on the commercial model. |
+| [#84](https://github.com/Dawin-Technology/zeusos/pull/84) Phase 6.UI.D.2 — ECD Review | Open | ✅ Delivery-side; no commercial-model dependency. Rebase + ship. |
+| [#85](https://github.com/Dawin-Technology/zeusos/pull/85) Phase 6.UI.D — CES + Brief | Open | ✅ Same. Rebase + ship. |
 
 ## 4. Consequences
 

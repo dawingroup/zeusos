@@ -23,7 +23,7 @@ LABEL="group.zeus.local-ci"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_ROOT="$(cd "$HERE/../.." && pwd)"
-REPO="${REPO:-dawingroup/zeusos}"
+REPO="${REPO:-Dawin-Technology/zeusos}"
 CANONICAL="${CANONICAL:-/Users/danielonzimai/Developer/zeusos}"
 export PATH="/opt/homebrew/bin:$PATH"
 

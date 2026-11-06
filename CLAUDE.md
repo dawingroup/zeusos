@@ -52,7 +52,7 @@ cp /Users/danielonzimai/Developer/zeusos/.env "$PWD/.env"
 
 ## Branch protection
 
-**Integration branch:** `main`. All PRs target `main`. (`phase-3e-delivery-workspace` was the integration branch earlier in the project — see [PR #11](https://github.com/dawingroup/zeusos/pull/11) — and has since been retired.)
+**Integration branch:** `main`. All PRs target `main`. (`phase-3e-delivery-workspace` was the integration branch earlier in the project — see [PR #11](https://github.com/Dawin-Technology/zeusos/pull/11) — and has since been retired.)
 
 Direct commits to integration branches are blocked by a `pre-commit` hook in `.githooks/pre-commit`. Protected branches: `main`, `master`.
 

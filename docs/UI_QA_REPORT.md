@@ -66,7 +66,7 @@ Result: every token that should flip in dark mode flips correctly; every token t
 | `odd-gorilla` | `#e65b66` | `#fde0e3` |
 | `house-of-zeus` | `#6fa823` | `#ecf6d6` |
 
-Result: all 7 sub-brand accents resolve. Legacy aliases (`boysenberry`, `goldenbell`, `seafoam`, `pesto`) also resolve to their Zeus-mapped targets (covered in [U.0](https://github.com/dawingroup/zeusos/pull/50)).
+Result: all 7 sub-brand accents resolve. Legacy aliases (`boysenberry`, `goldenbell`, `seafoam`, `pesto`) also resolve to their Zeus-mapped targets (covered in [U.0](https://github.com/Dawin-Technology/zeusos/pull/50)).
 
 ### 2.3 Density swap matrix — 3 modes
 

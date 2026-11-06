@@ -3,7 +3,7 @@ set -e
 
 # Configuration
 PROJECT_ID="dawinos"
-GITHUB_ORG="dawingroup"
+GITHUB_ORG="Dawin-Technology"
 GITHUB_REPO="dawinos"
 POOL_NAME="github-pool"
 PROVIDER_NAME="github-provider"

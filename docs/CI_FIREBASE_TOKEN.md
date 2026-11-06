@@ -10,7 +10,7 @@ The token is generated via `firebase login:ci` and is long-lived but can be revo
 ## Symptoms
 
 - Every PR shows a red **Deploy to preview channel** check.
-- `gh secret list --repo dawingroup/zeusos` shows `FIREBASE_TOKEN` exists with a recent timestamp.
+- `gh secret list --repo Dawin-Technology/zeusos` shows `FIREBASE_TOKEN` exists with a recent timestamp.
 - The "Verify FIREBASE_TOKEN is set" step passes (token is non-empty) but the `firebase hosting:channel:deploy` step exits non-zero immediately.
 
 Behaviour after this PR landed: instead of a red check, the `Validate Firebase auth` step actively calls `firebase projects:list` against the token. If it fails to authenticate, the remaining deploy steps are skipped and the job exits 0 with a `::warning::` annotation pointing back to this document. The workflow still surfaces the issue (warning annotation + skipped steps in the run UI) but does not block unrelated PR merges.
@@ -27,13 +27,13 @@ Behaviour after this PR landed: instead of a red check, the `Validate Firebase a
 
 2. **Update the GitHub repository secret** via the GitHub UI (no CLI write — `gh secret set` requires the SSH key to be loaded and we don't currently rotate via CLI):
 
-   - Navigate to <https://github.com/dawingroup/zeusos/settings/secrets/actions>
+   - Navigate to <https://github.com/Dawin-Technology/zeusos/settings/secrets/actions>
    - Click `FIREBASE_TOKEN` → **Update**
    - Paste the new token → **Save**
 
 3. **Re-run the failing checks** on an open PR (e.g. via `gh run rerun <run-id>`) to confirm the gate now passes and the preview deploy succeeds. The first successful run should comment a preview URL into the job summary.
 
-4. **Verify production** by triggering the production workflow manually: `gh workflow run "Deploy to Production" --repo dawingroup/zeusos --ref main`. Confirm the verify-deployment job runs (it only runs when `deploy.outputs.deployed == 'true'`).
+4. **Verify production** by triggering the production workflow manually: `gh workflow run "Deploy to Production" --repo Dawin-Technology/zeusos --ref main`. Confirm the verify-deployment job runs (it only runs when `deploy.outputs.deployed == 'true'`).
 
 ## Why not service-account JSON?
 
