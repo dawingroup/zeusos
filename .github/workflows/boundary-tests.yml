@@ -85,7 +85,11 @@ jobs:
   # ───────────────────────────────────────────────────────────────────────────
   e2e-lifecycle:
     name: Playwright — quote lifecycle (advisory)
-    runs-on: ubuntu-latest
+    # Pinned to 24.04: ubuntu-latest has rolled to Ubuntu 26.04, which
+    # Playwright 1.57.0 does not ship chromium for ("ERROR: Playwright
+    # does not support chromium on ubuntu26.04-x64"). Revisit once the
+    # pinned Playwright version supports the newer runner image.
+    runs-on: ubuntu-24.04
     continue-on-error: true
     # Advisory job — but must not burn the full 6h GH max-duration if
     # the emulator stack or seed script wedges. A clean green run is

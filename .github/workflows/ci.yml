@@ -166,6 +166,16 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
+      # The memos lockstep test (src/modules/memos/__tests__/memoLockstep.test.ts)
+      # pulls Cloud Function JS modules via `createRequire`, and one of them
+      # (functions/src/memos/lib/memoTasks.js) `require`s `firebase-functions`.
+      # That dep lives only in functions/node_modules, not at the root, so the
+      # suite fails to collect ("Cannot find module 'firebase-functions'") on
+      # every PR until functions/ deps are installed here too.
+      - name: Install functions dependencies (for lockstep tests)
+        working-directory: functions
+        run: npm ci --no-audit --no-fund
+
       - name: Run unit tests
         run: npm run test:unit -- --run --coverage
         env:
